@@ -1,0 +1,667 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Components.DictionaryAdapter</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Components.DictionaryAdapter.AttributesUtil">
+            <summary>
+            Helper class for retrieving attributes.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AttributesUtil.GetTypeAttribute``1(System.Type)">
+            <summary>
+            Gets the type attribute.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The type attribute.</returns>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AttributesUtil.GetAttribute``1(System.Reflection.MemberInfo)">
+            <summary>
+            Gets the attribute.
+            </summary>
+            <param name="member">The member.</param>
+            <returns>The member attribute.</returns>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AttributesUtil.GetTypeAttributes``1(System.Type)">
+            <summary>
+            Gets the type attributes.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The type attributes.</returns>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AttributesUtil.GetAttributes``1(System.Reflection.MemberInfo)">
+            <summary>
+            Gets the attributes.
+            </summary>
+            <param name="member">The member.</param>
+            <returns>The member attributes.</returns>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AttributesUtil.GetTypeConverter(System.Reflection.MemberInfo)">
+            <summary>
+            Gets the type converter.
+            </summary>
+            <param name="member">The member.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryBehaviorAttribute">
+            <summary>
+            Assignes a specific dictionary key.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.IDictionaryBehavior">
+            <summary>
+            Defines the contract for customizing dictionary access.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.IDictionaryBehavior.ExecutionOrder">
+            <summary>
+            Determines relative order to apply related behaviors.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.DictionaryBehaviorAttribute.ExecutionOrder">
+            <summary>
+            Determines relative order to apply related behaviors.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryComponentAttribute">
+            <summary>
+            Identifies a property should be represented as a nested component.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.IDictionaryKeyBuilder">
+            <summary>
+            Defines the contract for building typed dictionary keys.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.IDictionaryKeyBuilder.GetKey(System.Collections.IDictionary,System.String,Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Builds the specified key.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The current key.</param>
+            <param name="property">The property.</param>
+            <returns>The updated key</returns>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.IDictionaryPropertyGetter">
+            <summary>
+            Defines the contract for retrieving dictionary values.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.IDictionaryPropertyGetter.GetPropertyValue(Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory,System.Collections.IDictionary,System.String,System.Object,Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Gets the effective dictionary value.
+            </summary>
+            <param name="factory">The dictionary factory.</param>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <param name="storedValue">The stored value.</param>
+            <param name="property">The property.</param>
+            <returns>The effective property value.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.DictionaryComponentAttribute.NoPrefix">
+            <summary>
+            Applies no prefix.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.DictionaryComponentAttribute.Prefix">
+            <summary>
+            Gets or sets the prefix.
+            </summary>
+            <value>The prefix.</value>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryKeyAttribute">
+            <summary>
+            Assignes a specific dictionary key.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryKeyAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.DictionaryAdapter.DictionaryKeyAttribute"/> class.
+            </summary>
+            <param name="key">The key.</param>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryKeyPrefixAttribute">
+            <summary>
+            Assigns a prefix to the keyed properties of an interface.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryKeyPrefixAttribute.#ctor">
+            <summary>
+            Initializes a default instance of the <see cref="T:Castle.Components.DictionaryAdapter.DictionaryKeyPrefixAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryKeyPrefixAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.DictionaryAdapter.DictionaryKeyPrefixAttribute"/> class.
+            </summary>
+            <param name="keyPrefix">The prefix for the keyed properties of the interface.</param>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.DictionaryKeyPrefixAttribute.KeyPrefix">
+            <summary>
+            Gets the prefix key added to the properties of the interface.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryKeySubstitutionAttribute">
+            <summary>
+            Substitutes part of key with another string.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryKeySubstitutionAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.DictionaryAdapter.DictionaryKeySubstitutionAttribute"/> class.
+            </summary>
+            <param name="oldValue">The old value.</param>
+            <param name="newValue">The new value.</param>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryStringListAttribute">
+            <summary>
+            Identifies a property should be represented as a
+            delimited string value.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.IDictionaryPropertySetter">
+            <summary>
+            Defines the contract for updating dictionary values.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.IDictionaryPropertySetter.SetPropertyValue(Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory,System.Collections.IDictionary,System.String,System.Object@,Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Sets the stored dictionary value.
+            </summary>
+            <param name="factory">The dictionary factory.</param>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <param name="value">The stored value.</param>
+            <param name="property">The property.</param>
+            <returns>true if the property should be stored.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.DictionaryStringListAttribute.Separator">
+            <summary>
+            Gets the separator.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryStringValuesAttribute">
+            <summary>
+            Converts all properties to strings.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.DictionaryStringValuesAttribute.Format">
+            <summary>
+            Gets or sets the format.
+            </summary>
+            <value>The format.</value>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryTypeKeyPrefixAttribute">
+            <summary>
+            Assigns a prefix to the keyed properties using the interface name.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter">
+            <summary>
+            Abstract adapter for the <see cref="T:System.Collections.IDictionary"/> support
+            needed by the <see cref="T:Castle.Components.DictionaryAdapter.DictionaryAdapterFactory"/>
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.Add(System.Object,System.Object)">
+            <summary>
+            Adds an element with the provided key and value to the <see cref="T:System.Collections.IDictionary"></see> object.
+            </summary>
+            <param name="key">The <see cref="T:System.Object"></see> to use as the key of the element to add.</param>
+            <param name="value">The <see cref="T:System.Object"></see> to use as the value of the element to add.</param>
+            <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.IDictionary"></see> object. </exception>
+            <exception cref="T:System.ArgumentNullException">key is null. </exception>
+            <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.IDictionary"></see> is read-only.-or- The <see cref="T:System.Collections.IDictionary"></see> has a fixed size. </exception>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.Clear">
+            <summary>
+            Removes all elements from the <see cref="T:System.Collections.IDictionary"></see> object.
+            </summary>
+            <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.IDictionary"></see> object is read-only. </exception>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.Contains(System.Object)">
+            <summary>
+            Determines whether the <see cref="T:System.Collections.IDictionary"></see> object contains an element with the specified key.
+            </summary>
+            <param name="key">The key to locate in the <see cref="T:System.Collections.IDictionary"></see> object.</param>
+            <returns>
+            true if the <see cref="T:System.Collections.IDictionary"></see> contains an element with the key; otherwise, false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">key is null. </exception>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.GetEnumerator">
+            <summary>
+            Returns an <see cref="T:System.Collections.IDictionaryEnumerator"></see> object for the <see cref="T:System.Collections.IDictionary"></see> object.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IDictionaryEnumerator"></see> object for the <see cref="T:System.Collections.IDictionary"></see> object.
+            </returns>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.Remove(System.Object)">
+            <summary>
+            Removes the element with the specified key from the <see cref="T:System.Collections.IDictionary"></see> object.
+            </summary>
+            <param name="key">The key of the element to remove.</param>
+            <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.IDictionary"></see> object is read-only.-or- The <see cref="T:System.Collections.IDictionary"></see> has a fixed size. </exception>
+            <exception cref="T:System.ArgumentNullException">key is null. </exception>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.CopyTo(System.Array,System.Int32)">
+            <summary>
+            Copies the elements of the <see cref="T:System.Collections.ICollection"></see> to an <see cref="T:System.Array"></see>, starting at a particular <see cref="T:System.Array"></see> index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"></see> that is the destination of the elements copied from <see cref="T:System.Collections.ICollection"></see>. The <see cref="T:System.Array"></see> must have zero-based indexing.</param>
+            <param name="index">The zero-based index in array at which copying begins.</param>
+            <exception cref="T:System.ArgumentNullException">array is null. </exception>
+            <exception cref="T:System.ArgumentException">The type of the source <see cref="T:System.Collections.ICollection"></see> cannot be cast automatically to the type of the destination array. </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">index is less than zero. </exception>
+            <exception cref="T:System.ArgumentException">array is multidimensional.-or- index is equal to or greater than the length of array.-or- The number of elements in the source <see cref="T:System.Collections.ICollection"></see> is greater than the available space from index to the end of the destination array. </exception>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.IsFixedSize">
+            <summary>
+            Gets a value indicating whether the <see cref="T:System.Collections.IDictionary"></see> object has a fixed size.
+            </summary>
+            <value></value>
+            <returns>true if the <see cref="T:System.Collections.IDictionary"></see> object has a fixed size; otherwise, false.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.IsReadOnly">
+            <summary>
+            Gets a value indicating whether the <see cref="T:System.Collections.IDictionary"></see> object is read-only.
+            </summary>
+            <value></value>
+            <returns>true if the <see cref="T:System.Collections.IDictionary"></see> object is read-only; otherwise, false.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.Keys">
+            <summary>
+            Gets an <see cref="T:System.Collections.ICollection"></see> object containing the keys of the <see cref="T:System.Collections.IDictionary"></see> object.
+            </summary>
+            <value></value>
+            <returns>An <see cref="T:System.Collections.ICollection"></see> object containing the keys of the <see cref="T:System.Collections.IDictionary"></see> object.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.Values">
+            <summary>
+            Gets an <see cref="T:System.Collections.ICollection"></see> object containing the values in the <see cref="T:System.Collections.IDictionary"></see> object.
+            </summary>
+            <value></value>
+            <returns>An <see cref="T:System.Collections.ICollection"></see> object containing the values in the <see cref="T:System.Collections.IDictionary"></see> object.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.Item(System.Object)">
+            <summary>
+            Gets or sets the <see cref="T:System.Object"/> with the specified key.
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:System.Collections.ICollection"></see>.
+            </summary>
+            <value></value>
+            <returns>The number of elements contained in the <see cref="T:System.Collections.ICollection"></see>.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.IsSynchronized">
+            <summary>
+            Gets a value indicating whether access to the <see cref="T:System.Collections.ICollection"></see> is synchronized (thread safe).
+            </summary>
+            <value></value>
+            <returns>true if access to the <see cref="T:System.Collections.ICollection"></see> is synchronized (thread safe); otherwise, false.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.AbstractDictionaryAdapter.SyncRoot">
+            <summary>
+            Gets an object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"></see>.
+            </summary>
+            <value></value>
+            <returns>An object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"></see>.</returns>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DefaultPropertyGetter">
+            <summary>
+            Manages conversion between property values.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DefaultPropertyGetter.#ctor(System.ComponentModel.TypeConverter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.DictionaryAdapter.DefaultPropertyGetter"/> class.
+            </summary>
+            <param name="converter">The converter.</param>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DefaultPropertyGetter.GetPropertyValue(Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory,System.Collections.IDictionary,System.String,System.Object,Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Gets the effective dictionary value.
+            </summary>
+            <param name="factory">The dictionary factory.</param>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <param name="storedValue">The stored value.</param>
+            <param name="property">The property.</param>
+            <returns>The effective property value.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.DefaultPropertyGetter.ExecutionOrder">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryAdapterFactory">
+            <summary>
+            Uses Reflection.Emit to expose the properties of a dictionary
+            through a dynamic implementation of a typed interface.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory">
+            <summary>
+            Defines the contract for building typed dictionary adapters.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory.GetAdapter``1(System.Collections.IDictionary)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.IDictionary"/>.
+            </summary>
+            <typeparam name="T">The typed interface.</typeparam>
+            <param name="dictionary">The underlying source of properties.</param>
+            <returns>An implementation of the typed interface bound to the dictionary.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory.GetAdapter(System.Type,System.Collections.IDictionary)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.IDictionary"/>.
+            </summary>
+            <param name="type">The typed interface.</param>
+            <param name="dictionary">The underlying source of properties.</param>
+            <returns>An implementation of the typed interface bound to the dictionary.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory.GetAdapter(System.Type,System.Collections.IDictionary,Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.IDictionary"/>.
+            </summary>
+            <param name="type">The typed interface.</param>
+            <param name="dictionary">The underlying source of properties.</param>
+            <param name="descriptor">The property descriptor.</param>
+            <returns>An implementation of the typed interface bound to the dictionary.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory.GetAdapter``1(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.Specialized.NameValueCollection"/>.
+            </summary>
+            <typeparam name="T">The typed interface.</typeparam>
+            <param name="nameValues">The underlying source of properties.</param>
+            <returns>An implementation of the typed interface bound to the namedValues.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory.GetAdapter(System.Type,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.Specialized.NameValueCollection"/>.
+            </summary>
+            <param name="type">The typed interface.</param>
+            <param name="nameValues">The underlying source of properties.</param>
+            <returns>An implementation of the typed interface bound to the namedValues.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryAdapterFactory.GetAdapter``1(System.Collections.IDictionary)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.IDictionary"/>.
+            </summary>
+            <typeparam name="T">The typed interface.</typeparam>
+            <param name="dictionary">The underlying source of properties.</param>
+            <returns>An implementation of the typed interface bound to the dictionary.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryAdapterFactory.GetAdapter(System.Type,System.Collections.IDictionary)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.IDictionary"/>.
+            </summary>
+            <param name="type">The typed interface.</param>
+            <param name="dictionary">The underlying source of properties.</param>
+            <returns>An implementation of the typed interface bound to the dictionary.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryAdapterFactory.GetAdapter(System.Type,System.Collections.IDictionary,Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.IDictionary"/>.
+            </summary>
+            <param name="type">The typed interface.</param>
+            <param name="dictionary">The underlying source of properties.</param>
+            <param name="descriptor">The property descriptor.</param>
+            <returns>An implementation of the typed interface bound to the dictionary.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryAdapterFactory.GetAdapter``1(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.Specialized.NameValueCollection"/>.
+            </summary>
+            <typeparam name="T">The typed interface.</typeparam>
+            <param name="nameValues">The underlying source of properties.</param>
+            <returns>An implementation of the typed interface bound to the namedValues.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryAdapterFactory.GetAdapter(System.Type,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Gets a typed adapter bound to the <see cref="T:System.Collections.Specialized.NameValueCollection"/>.
+            </summary>
+            <param name="type">The typed interface.</param>
+            <param name="nameValues">The underlying source of properties.</param>
+            <returns>An implementation of the typed interface bound to the namedValues.</returns>
+            <remarks>
+            The type represented by T must be an interface with properties.
+            </remarks>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.DictionaryBehaviorComparer`1">
+            <summary>
+            Comparer for ordering the execution of <see cref="T:Castle.Components.DictionaryAdapter.IDictionaryBehavior"/>
+            </summary>
+        </member>
+        <member name="F:Castle.Components.DictionaryAdapter.DictionaryBehaviorComparer`1.Instance">
+            <summary>
+            Singleton instance of <see cref="T:Castle.Components.DictionaryAdapter.DictionaryBehaviorComparer`1"/>
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.DictionaryBehaviorComparer`1.Compare(`0,`0)">
+            <summary>
+            Determines the relative ordering of the behaviors.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.NameValueCollectionAdapter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.NameValueCollectionAdapter.#ctor(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.DictionaryAdapter.NameValueCollectionAdapter"/> class.
+            </summary>
+            <param name="nameValues">The name values.</param>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.NameValueCollectionAdapter.Contains(System.Object)">
+            <summary>
+            Determines whether the <see cref="T:System.Collections.IDictionary"></see> object contains an element with the specified key.
+            </summary>
+            <param name="key">The key to locate in the <see cref="T:System.Collections.IDictionary"></see> object.</param>
+            <returns>
+            true if the <see cref="T:System.Collections.IDictionary"></see> contains an element with the key; otherwise, false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">key is null. </exception>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.NameValueCollectionAdapter.Adapt(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Adapts the specified name values.
+            </summary>
+            <param name="nameValues">The name values.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.NameValueCollectionAdapter.IsReadOnly">
+            <summary>
+            Gets a value indicating whether the <see cref="T:System.Collections.IDictionary"></see> object is read-only.
+            </summary>
+            <value></value>
+            <returns>true if the <see cref="T:System.Collections.IDictionary"></see> object is read-only; otherwise, false.</returns>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.NameValueCollectionAdapter.Item(System.Object)">
+            <summary>
+            Gets or sets the <see cref="T:System.Object"/> with the specified key.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:Castle.Components.DictionaryAdapter.PropertyDescriptor">
+            <summary>
+            Describes a dictionary property.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.#ctor">
+            <summary>
+            Initializes an empty <see cref="T:Castle.Components.DictionaryAdapter.PropertyDescriptor"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.#ctor(System.Reflection.PropertyInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.DictionaryAdapter.PropertyDescriptor"/> class.
+            </summary>
+            <param name="property">The property.</param>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.#ctor(Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.DictionaryAdapter.PropertyDescriptor"/> class
+            with an existing property descriptor.
+            </summary>
+            <param name="other">The other descriptor.</param>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.GetKey(System.Collections.IDictionary,System.String,Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Gets the key.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <param name="descriptor">The descriptor.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddKeyBuilder(Castle.Components.DictionaryAdapter.IDictionaryKeyBuilder)">
+            <summary>
+            Adds the key builder.
+            </summary>
+            <param name="builder">The builder.</param>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddKeyBuilders(System.Collections.Generic.ICollection{Castle.Components.DictionaryAdapter.IDictionaryKeyBuilder})">
+            <summary>
+            Adds the key builders.
+            </summary>
+            <param name="builders">The builders.</param>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.GetPropertyValue(Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory,System.Collections.IDictionary,System.String,System.Object,Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Gets the property value.
+            </summary>
+            <param name="factory">The factory.</param>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <param name="storedValue">The stored value.</param>
+            <param name="descriptor">The descriptor.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddGetter(Castle.Components.DictionaryAdapter.IDictionaryPropertyGetter)">
+            <summary>
+            Adds the dictionary getter.
+            </summary>
+            <param name="getter">The getter.</param>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddGetters(System.Collections.Generic.ICollection{Castle.Components.DictionaryAdapter.IDictionaryPropertyGetter})">
+            <summary>
+            Adds the dictionary getters.
+            </summary>
+            <param name="gets">The getters.</param>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.SetPropertyValue(Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory,System.Collections.IDictionary,System.String,System.Object@,Castle.Components.DictionaryAdapter.PropertyDescriptor)">
+            <summary>
+            Sets the property value.
+            </summary>
+            <param name="factory">The factory.</param>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+            <param name="descriptor">The descriptor.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddSetter(Castle.Components.DictionaryAdapter.IDictionaryPropertySetter)">
+            <summary>
+            Adds the dictionary setter.
+            </summary>
+            <param name="setter">The setter.</param>
+        </member>
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddSetters(System.Collections.Generic.ICollection{Castle.Components.DictionaryAdapter.IDictionaryPropertySetter})">
+            <summary>
+            Adds the dictionary setters.
+            </summary>
+            <param name="sets">The setters.</param>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.PropertyDescriptor.ExecutionOrder">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.PropertyDescriptor.PropertyName">
+            <summary>
+            Gets the property name.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.PropertyDescriptor.PropertyType">
+            <summary>
+            Gets the property type.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.PropertyDescriptor.Property">
+            <summary>
+            Gets the property.
+            </summary>
+            <value>The property.</value>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.PropertyDescriptor.TypeConverter">
+            <summary>
+            Gets the type converter.
+            </summary>
+            <value>The type converter.</value>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.PropertyDescriptor.KeyBuilders">
+            <summary>
+            Gets or sets the key builders.
+            </summary>
+            <value>The key builders.</value>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.PropertyDescriptor.Setters">
+            <summary>
+            Gets or sets the setter.
+            </summary>
+            <value>The setter.</value>
+        </member>
+        <member name="P:Castle.Components.DictionaryAdapter.PropertyDescriptor.Getters">
+            <summary>
+            Gets or sets the getter.
+            </summary>
+            <value>The getter.</value>
+        </member>
+    </members>
+</doc>

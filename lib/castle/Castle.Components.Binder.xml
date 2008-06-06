@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Components.Binder</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Components.Binder.DataBinder">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Binder.IDataBinder">
+            <summary>
+            Defines the contract for a data binder implementation approach.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.IDataBinder.BindObject(System.Type,System.String,Castle.Components.Binder.CompositeNode)">
+            <summary>
+            Create an instance of the specified type and binds the properties that
+            are available on the datasource.
+            </summary>
+            <param name="targetType">The target type. Can be an array</param>
+            <param name="prefix">The obligatory prefix that distinguishes it on the datasource</param>
+            <param name="treeRoot">A hierarchycal representation of flat data</param>
+            <returns>an instance of the specified target type</returns>
+        </member>
+        <member name="M:Castle.Components.Binder.IDataBinder.BindObject(System.Type,System.String,System.String,System.String,Castle.Components.Binder.CompositeNode)">
+            <summary>
+            Create an instance of the specified type and binds the properties that
+            are available on the datasource respecting the white and black list
+            </summary>
+            <param name="targetType">The target type. Can be an array</param>
+            <param name="prefix">The obligatory prefix that distinguishes it on the datasource</param>
+            <param name="excludedProperties">A list of comma separated values specifing the properties that should be ignored</param>
+            <param name="allowedProperties">A list of comma separated values specifing the properties that should not be ignored</param>
+            <param name="treeRoot">A hierarchycal representation of flat data</param>
+            <returns>an instance of the specified target type</returns>
+        </member>
+        <member name="M:Castle.Components.Binder.IDataBinder.BindObjectInstance(System.Object,System.String,Castle.Components.Binder.CompositeNode)">
+            <summary>
+            Binds the properties that are available on the datasource to the specified object instance.
+            </summary>
+            <param name="instance">The target instance.</param>
+            <param name="prefix">The obligatory prefix that distinguishes it on the datasource</param>
+            <param name="treeRoot">A hierarchycal representation of flat data</param>
+            <returns>an instance of the specified target type</returns>
+        </member>
+        <member name="M:Castle.Components.Binder.IDataBinder.BindObjectInstance(System.Object,System.String,System.String,System.String,Castle.Components.Binder.CompositeNode)">
+            <summary>
+            Binds the properties that
+            are available on the datasource respecting the white and black list
+            </summary>
+            <param name="instance">The target type.</param>
+            <param name="prefix">The obligatory prefix that distinguishes it on the datasource</param>
+            <param name="excludedProperties">A list of comma separated values specifing the properties that should be ignored</param>
+            <param name="allowedProperties">A list of comma separated values specifing the properties that should not be ignored</param>
+            <param name="treeRoot">A hierarchycal representation of flat data</param>
+            <returns>an instance of the specified target type</returns>
+        </member>
+        <member name="M:Castle.Components.Binder.IDataBinder.GetValidationSummary(System.Object)">
+            <summary>
+            Gets the validation error summary.
+            </summary>
+            <param name="instance">The instance.</param>
+        </member>
+        <member name="P:Castle.Components.Binder.IDataBinder.ErrorList">
+            <summary>
+            Represents the databind errors
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Binder.IDataBinder.Translator">
+            <summary>
+            Exposes the <see cref="T:Castle.Components.Binder.IBinderTranslator"/> implementation
+            if one was provided
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Binder.IDataBinder.Converter">
+            <summary>
+            Exposes the <see cref="T:Castle.Components.Binder.IConverter"/> implementation
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Binder.IDataBinder.Validator">
+            <summary>
+            Gets or sets the validator runner instance.
+            </summary>
+            <value>The validator instance.</value>
+        </member>
+        <member name="E:Castle.Components.Binder.IDataBinder.OnBeforeBinding">
+            <summary>
+            Invoked before the data binder implementation starts to
+            work on a class instance
+            </summary>
+        </member>
+        <member name="E:Castle.Components.Binder.IDataBinder.OnAfterBinding">
+            <summary>
+            Invoked after the data binder implementation starts to
+            work on a class instance
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Binder.DataBinder.errors">
+            <summary>Collect the databind errors</summary>
+        </member>
+        <member name="F:Castle.Components.Binder.DataBinder.excludedPropertyList">
+            <summary>Holds a sorted array of properties names that should be ignored</summary>
+        </member>
+        <member name="F:Castle.Components.Binder.DataBinder.allowedPropertyList">
+            <summary>Holds a sorted array of properties names that are on the white list</summary>
+        </member>
+        <member name="M:Castle.Components.Binder.DataBinder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Binder.DataBinder"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.DataBinder.GetValidationSummary(System.Object)">
+            <summary>
+            Gets the validation error summary.
+            </summary>
+            <param name="instance">The instance.</param>
+        </member>
+        <member name="M:Castle.Components.Binder.DataBinder.SetPropertyValue(System.Object,System.Reflection.PropertyInfo,System.Object)">
+            <summary>
+            Sets the property value of the object we are binding.
+            Databinders that require different ways to access properties
+            can override this method.
+            </summary>
+            <param name="instance"></param>
+            <param name="prop"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Castle.Components.Binder.DataBinder.BindSpecialObjectInstance(System.Type,System.String,Castle.Components.Binder.Node,System.Boolean@)">
+            <summary>
+            Implementations will bound the instance itself.
+            <seealso cref="M:Castle.Components.Binder.DataBinder.IsSpecialType(System.Type)"/>
+            </summary>
+            <remarks>
+            <seealso cref="M:Castle.Components.Binder.DataBinder.IsSpecialType(System.Type)"/>
+            </remarks>
+            <param name="instanceType"></param>
+            <param name="prefix"></param>
+            <param name="node"></param>
+            <param name="succeeded"></param>
+        </member>
+        <member name="M:Castle.Components.Binder.DataBinder.IsSpecialType(System.Type)">
+            <summary>
+            Invoked during object binding to allow 
+            subclasses to have a chance of binding the types itself.
+            If the implementation returns <c>true</c>
+            the binder will invoke <see cref="M:Castle.Components.Binder.DataBinder.BindSpecialObjectInstance(System.Type,System.String,Castle.Components.Binder.Node,System.Boolean@)"/>
+            </summary>
+            <param name="instanceType">Type about to be bound</param>
+            <returns><c>true</c> if subclass wants to handle binding</returns>
+        </member>
+        <member name="P:Castle.Components.Binder.DataBinder.ErrorList">
+            <summary>
+            Represents the databind errors
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Binder.DataBindError">
+            <summary>
+            Represents an error that occurred when trying to 
+            databind a property of an instance.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.DataBindError.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Binder.DataBindError"/> class.
+            </summary>
+            <param name="parent">The parent.</param>
+            <param name="property">The property.</param>
+        </member>
+        <member name="M:Castle.Components.Binder.DataBindError.#ctor(System.String,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Binder.DataBindError"/> class.
+            </summary>
+            <param name="parent">The parent.</param>
+            <param name="property">The property.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="M:Castle.Components.Binder.DataBindError.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Binder.DataBindError"/> class.
+            </summary>
+            <param name="parent">The parent.</param>
+            <param name="property">The property.</param>
+            <param name="errorMessage">The error message.</param>
+        </member>
+        <member name="M:Castle.Components.Binder.DataBindError.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+            </returns>
+        </member>
+        <member name="P:Castle.Components.Binder.DataBindError.Key">
+            <summary>
+            Gets the key.
+            </summary>
+            <value>The key.</value>
+        </member>
+        <member name="P:Castle.Components.Binder.DataBindError.Parent">
+            <summary>
+            Gets the parent.
+            </summary>
+            <value>The parent.</value>
+        </member>
+        <member name="P:Castle.Components.Binder.DataBindError.Property">
+            <summary>
+            Gets the property.
+            </summary>
+            <value>The property.</value>
+        </member>
+        <member name="P:Castle.Components.Binder.DataBindError.ErrorMessage">
+            <summary>
+            Gets the error message.
+            </summary>
+            <value>The error message.</value>
+        </member>
+        <member name="T:Castle.Components.Binder.DataReaderTreeBuilder">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.DataReaderTreeBuilder.BuildSourceNode(System.Data.IDataReader,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+            <param name="prefix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Binder.DataReaderTreeBuilder.PopulateTree(Castle.Components.Binder.CompositeNode,System.Data.IDataReader,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="root"></param>
+            <param name="reader"></param>
+            <param name="prefix"></param>
+        </member>
+        <member name="M:Castle.Components.Binder.DataReaderTreeBuilder.FindDuplicateFields(System.String[])">
+            <summary>
+            Check the fields for duplicates.
+            </summary>
+            <param name="fields"></param>
+            <returns></returns>
+            <remarks>
+            I have to add this check as some stored procedures
+            return duplicate columns (doh!) and this isn't good
+            for the binder.
+            </remarks>
+        </member>
+        <member name="T:Castle.Components.Binder.IConverter">
+            <summary>
+            Depicts the contract for implementations able to convert an object
+            -- usually a string -- to the specified desired type.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.DefaultConverter.Convert(System.Type,System.Object,System.Boolean@)">
+            <summary>
+            Convert the input param into the desired type
+            </summary>
+            <param name="desiredType">Type of the desired</param>
+            <param name="input">The input</param>
+            <param name="conversionSucceeded">if <c>false</c> the return value must be ignored</param>
+            <remarks>
+            There are 3 possible cases when trying to convert:
+            1) Input data for conversion missing (input is null or an empty String)
+            	Returns default conversion value (based on desired type) and set <c>conversionSucceeded = false</c>
+            2) Has input data but cannot convert to particular type
+            	Throw exception and set <c>conversionSucceeded = false</c>
+            3) Has input data and can convert to particular type
+            	 Return input converted to desired type and set <c>conversionSucceeded = true</c>
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Binder.DefaultConverter.FixInputForMonoIfNeeded(System.Type,System.Object)">
+            <summary>
+            Fix for mod_mono issue where array values are passed as a comma seperated String.
+            </summary>
+            <param name="elemType"></param>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Binder.DefaultConverter.ConvertUsingTypeConverter(System.Type,System.Object,System.Boolean@)">
+            <summary>
+            Support for types that specify a TypeConverter, 
+            i.e.: NullableTypes
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Binder.ErrorList">
+            <summary>
+            A useful representation of a set of IPropertyError instances.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.ErrorList.#ctor(System.Collections.IList)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Binder.ErrorList"/> class.
+            </summary>
+            <param name="initialContents">The initial contents.</param>
+        </member>
+        <member name="M:Castle.Components.Binder.ErrorList.Contains(System.String)">
+            <summary>
+            Determines whether [contains] [the specified property].
+            </summary>
+            <param name="property">The property.</param>
+            <returns>
+            	<c>true</c> if [contains] [the specified property]; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="P:Castle.Components.Binder.ErrorList.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:System.Collections.ICollection"></see>.
+            </summary>
+            <value></value>
+            <returns>The number of elements contained in the <see cref="T:System.Collections.ICollection"></see>.</returns>
+        </member>
+        <member name="P:Castle.Components.Binder.ErrorList.Item(System.String)">
+            <summary>
+            Gets the <see cref="T:Castle.Components.Binder.DataBindError"/> with the specified property.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:Castle.Components.Binder.IBinderTranslator">
+            <summary>
+            Provides a way to properties on the binder target
+            be bound to a different key in the data source.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.IBinderTranslator.Translate(System.Type,System.String)">
+            <summary>
+            Should return the key that gathers the value 
+            to fill the property.
+            </summary>
+            <param name="instanceType">
+            The type which is the target of the binder
+            </param>
+            <param name="paramName">
+            The property name in  the target type
+            </param>
+            <returns>
+            A name of the source data that should be used to populate the property
+            </returns>
+        </member>
+        <member name="T:Castle.Components.Binder.TreeBuilder">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

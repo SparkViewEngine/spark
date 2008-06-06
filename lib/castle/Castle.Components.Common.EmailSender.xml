@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Components.Common.EmailSender</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Components.Common.EmailSender.IEmailSender">
+            <summary>
+            Abstracts an approach to send e-mails
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.IEmailSender.Send(System.String,System.String,System.String,System.String)">
+            <summary>
+            Sends a message. 
+            </summary>
+            <param name="from">From field</param>
+            <param name="to">To field</param>
+            <param name="subject">e-mail's subject</param>
+            <param name="messageText">message's body</param>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.IEmailSender.Send(Castle.Components.Common.EmailSender.Message)">
+            <summary>
+            Sends a message. 
+            </summary>
+            <param name="message">Message instance</param>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.IEmailSender.Send(Castle.Components.Common.EmailSender.Message[])">
+            <summary>
+            Sends multiple messages. 
+            </summary>
+            <param name="messages">Array of messages</param>
+        </member>
+        <member name="T:Castle.Components.Common.EmailSender.Smtp.SmtpSender">
+            <summary>
+            Uses Smtp to send emails.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.Smtp.SmtpSender.#ctor(System.String)">
+            <summary>
+            This service implementation
+            requires a host name in order to work
+            </summary>
+            <param name="hostname">The smtp server name</param>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.Smtp.SmtpSender.Send(System.String,System.String,System.String,System.String)">
+            <summary>
+            Sends a message. 
+            </summary>
+            <exception cref="T:System.ArgumentNullException">If any of the parameters is null</exception>
+            <param name="from">From field</param>
+            <param name="to">To field</param>
+            <param name="subject">e-mail's subject</param>
+            <param name="messageText">message's body</param>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.Smtp.SmtpSender.Send(Castle.Components.Common.EmailSender.Message)">
+            <summary>
+            Sends a message. 
+            </summary>
+            <exception cref="T:System.ArgumentNullException">If the message is null</exception>
+            <param name="message">Message instance</param>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.Smtp.SmtpSender.CreateMailMessage(Castle.Components.Common.EmailSender.Message)">
+            <summary>
+            Converts a message from Castle.Components.Common.EmailSender.Message  type
+            to System.Web.Mail.MailMessage
+            </summary>
+            <param name="message">The message to convert.</param>
+            <returns>The converted message .</returns>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.Smtp.SmtpSender.ConfigureSender(Castle.Components.Common.EmailSender.Message)">
+            <summary>
+            Configures the message or the sender
+            with port information and eventual credential
+            informed
+            </summary>
+            <param name="message">Message instance</param>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.Smtp.SmtpSender.Port">
+            <summary>
+            Gets or sets the port used to 
+            access the SMTP server
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.Smtp.SmtpSender.Hostname">
+            <summary>
+            Gets the hostname.
+            </summary>
+            <value>The hostname.</value>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.Smtp.SmtpSender.AsyncSend">
+            <summary>
+            Gets or sets a value which is used to 
+            configure if emails are going to be sent asyncrhonously or not.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.Smtp.SmtpSender.Timeout">
+            <summary>
+            Gets or sets a value that specifies 
+            the amount of time after which a synchronous Send call times out.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.Smtp.SmtpSender.Domain">
+            <summary>
+            Gets or sets the domain.
+            </summary>
+            <value>The domain.</value>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.Smtp.SmtpSender.UserName">
+            <summary>
+            Gets or sets the name of the user.
+            </summary>
+            <value>The name of the user.</value>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.Smtp.SmtpSender.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+            <value>The password.</value>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.Smtp.SmtpSender.HasCredentials">
+            <summary>
+            Gets a value indicating whether credentials were informed.
+            </summary>
+            <value>
+            <see langword="true"/> if this instance has credentials; otherwise, <see langword="false"/>.
+            </value>
+        </member>
+        <member name="T:Castle.Components.Common.EmailSender.Format">
+            <summary>
+            Message formats
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Common.EmailSender.Format.Html">
+            <summary>
+            The body is composed of html content
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Common.EmailSender.Format.Text">
+            <summary>
+            The body is pure text
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Common.EmailSender.MessagePriority">
+            <summary>
+            Message priority
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Common.EmailSender.Message">
+            <summary>
+            Abstracts an e-mail message
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.Message.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Common.EmailSender.Message"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.Message.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Common.EmailSender.Message"/> class.
+            </summary>
+            <param name="from">From header.</param>
+            <param name="to">To header.</param>
+            <param name="subject">The subject header.</param>
+            <param name="body">The message body.</param>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.Message.Resources">
+            <summary>
+            You can add any number of inline attachments to this mail message. Inline attachments 
+            differ from normal attachments in that they can be displayed withing the email body, 
+            which makes this very handy for displaying images that can be viewed without having to 
+            access an external server. 
+            Provide an unique identifier (id) and use it with a &lt;img src="cid:my_id" /> tag from 
+            within your view code.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Common.EmailSender.MessageAttachment">
+            <summary>
+            Represents a file attachment
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.MessageAttachment.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new attachment
+            </summary>
+            <param name="mediaType">Look at System.Net.Mimie.MediaTypeNames for help.</param>
+            <param name="fileName">Path to the file.</param>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.MessageAttachment.#ctor(System.String,System.IO.Stream)">
+            <summary>
+            Creates a new attachment
+            </summary>
+            <param name="mediaType">Look at System.Net.Mime.MediaTypeNames for help.</param>
+            <param name="stream">File stream.</param>
+        </member>
+        <member name="M:Castle.Components.Common.EmailSender.MessageAttachment.#ctor(System.String,System.String,System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Common.EmailSender.MessageAttachment"/> class.
+            </summary>
+            <param name="fileName">Name of the file.</param>
+            <param name="mediaType">Type of the media.</param>
+            <param name="stream">The stream.</param>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.MessageAttachment.FileName">
+            <summary>
+            Gets the name of the file.
+            </summary>
+            <value>The name of the file.</value>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.MessageAttachment.MediaType">
+            <summary>
+            Gets the type of the media.
+            </summary>
+            <value>The type of the media.</value>
+        </member>
+        <member name="P:Castle.Components.Common.EmailSender.MessageAttachment.Stream">
+            <summary>
+            Gets the stream.
+            </summary>
+            <value>The stream.</value>
+        </member>
+    </members>
+</doc>
