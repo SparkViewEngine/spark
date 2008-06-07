@@ -13,8 +13,8 @@ namespace MvcContrib.SparkViewEngine.Parser
 {
 	public class ViewLoader
 	{
+		static MarkupGrammar _grammar = new MarkupGrammar();
 		private IFileSystem fileSystem;
-		private IParserFactory _parserFactory;
 
 		readonly Dictionary<string, Entry> _entries = new Dictionary<string, Entry>();
 		readonly List<string> _pending = new List<string>();
@@ -25,11 +25,6 @@ namespace MvcContrib.SparkViewEngine.Parser
 			set { fileSystem = value; }
 		}
 
-		public IParserFactory ParserFactory
-		{
-			get { return _parserFactory; }
-			set { _parserFactory = value; }
-		}
 
 		private class Entry
 		{
@@ -114,8 +109,7 @@ namespace MvcContrib.SparkViewEngine.Parser
 			var sourceContext = CreateSourceContext(viewPath);
 			var position = new Position(sourceContext);
 
-			var parser = _parserFactory.CreateParser();
-			var nodes = parser(position);
+			var nodes = _grammar.Nodes(position);
 
 			var partialFileNames = FindPartialFiles(viewPath);
 

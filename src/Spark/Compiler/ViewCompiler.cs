@@ -10,6 +10,11 @@ namespace MvcContrib.SparkViewEngine.Compiler
 {
 	public class ViewCompiler
 	{
+		public ViewCompiler(string baseClass)
+		{
+			BaseClass = baseClass;
+		}
+		public string BaseClass { get; set; }
 		public string SourceCode { get; set; }
 		public Type CompiledType { get; set; }
 
@@ -22,11 +27,11 @@ namespace MvcContrib.SparkViewEngine.Compiler
 		{
 			StringBuilder source = new StringBuilder();
 			var usingGenerator = new UsingNamespaceVisitor(source);
-			var baseClassGenerator = new BaseClassVisitor();
+			var baseClassGenerator = new BaseClassVisitor() { BaseClass = BaseClass };
 			var globalsGenerator = new GlobalMembersVisitor(source);
 			var viewGenerator = new GeneratedCodeVisitor(source);
 
-			usingGenerator.Using("System.Web.Mvc");
+			//usingGenerator.Using("System.Web.Mvc");
 			usingGenerator.Accept(view);
 			usingGenerator.Accept(master);
 

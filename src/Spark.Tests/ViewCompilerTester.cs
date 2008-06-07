@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+using MvcContrib.SparkViewEngine;
 using MvcContrib.SparkViewEngine.Compiler;
-using MvcContrib.UnitTests.SparkViewEngine.Models;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -16,32 +14,20 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 	public class ViewCompilerTester
 	{
 		private MockRepository _mocks;
-		private ViewContext _viewContext;
-		private HttpContextBase _context;
+		private ISparkViewContext _viewContext;
 
 		[SetUp]
 		public void Init()
 		{
 			_mocks = new MockRepository();
-			_context = _mocks.DynamicHttpContextBase();
-			var request = _context.Request;
-			SetupResult.For(request.ApplicationPath).Return("/");
-			SetupResult.For(_context.Response.ApplyAppPathModifier("")).IgnoreArguments().Do(new Func<string, string>(path => path));
 
-			IController controller = _mocks.DynamicMock<IController>();
-
-			RouteData routeData = new RouteData();
-			routeData.Values.Add("Controller", "Home");
-			routeData.Values.Add("Action", "Index");
-			routeData.Values.Add("Id", "");
-
-			_viewContext = new ViewContext(_context, routeData, controller, "index", null, null, null);
+			_viewContext = _mocks.DynamicMock<ISparkViewContext>();
 		}
 
 		[Test]
 		public void MakeAndCompile()
 		{
-			var compiler = new ViewCompiler();
+			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new[] { new SendLiteralChunk { Text = "hello world" } });
 
 			var instance = compiler.CreateInstance();
@@ -54,7 +40,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		public void UnsafeLiteralCharacters()
 		{
 			var text = "hello\t\r\n\"world";
-			var compiler = new ViewCompiler();
+			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new[] { new SendLiteralChunk { Text = text } });
 
 			Assert.That(compiler.SourceCode.Contains("Append(\"hello\\t\\r\\n\\\"world\")"));
@@ -68,7 +54,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		[Test]
 		public void SimpleOutput()
 		{
-			var compiler = new ViewCompiler();
+			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new[] { new SendExpressionChunk { Code = "3 + 4" } });
 			var instance = compiler.CreateInstance();
 			string contents = instance.RenderView(_viewContext);
@@ -78,7 +64,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		[Test]
 		public void LocalVariableDecl()
 		{
-			var compiler = new ViewCompiler();
+			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new Chunk[]
                                      {
                                           new LocalVariableChunk { Name = "i", Value = "5" }, 
@@ -93,7 +79,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		[Test]
 		public void ForEachLoop()
 		{
-			var compiler = new ViewCompiler();
+			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new Chunk[]
                 {
                     new LocalVariableChunk {Name = "data", Value = "new[]{3,4,5}"},
@@ -118,7 +104,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		[Test]
 		public void GlobalVariables()
 		{
-			var compiler = new ViewCompiler();
+			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new Chunk[]
                 {
                     new SendExpressionChunk{Code="title"},
@@ -135,81 +121,81 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
 
 
-		[Test]
-		public void ViewHelpers()
-		{
-			var viewDataContainer = _mocks.DynamicMock<IViewDataContainer>();
+		//[Test]
+		//public void ViewHelpers()
+		//{
+		//    var viewDataContainer = _mocks.DynamicMock<IViewDataContainer>();
 
-			HtmlHelper html = new HtmlHelper(_viewContext, viewDataContainer);
-			RouteTable.Routes.Clear();
-			RouteTable.Routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
-			{
-				Defaults = new RouteValueDictionary(new { action = "Index", id = "" })
-			});
-			_mocks.ReplayAll();
+		//    HtmlHelper html = new HtmlHelper(_viewContext, viewDataContainer);
+		//    RouteTable.Routes.Clear();
+		//    RouteTable.Routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
+		//    {
+		//        Defaults = new RouteValueDictionary(new { action = "Index", id = "" })
+		//    });
+		//    _mocks.ReplayAll();
 
-			viewDataContainer.ViewData = _viewContext.ViewData;
-			string link = html.ActionLink("Click me", "Reboot");
-			Assert.AreEqual("<a href=\"/Home/Reboot\">Click me</a>", link);
+		//    viewDataContainer.ViewData = _viewContext.ViewData;
+		//    string link = html.ActionLink("Click me", "Reboot");
+		//    Assert.AreEqual("<a href=\"/Home/Reboot\">Click me</a>", link);
 
-			var compiler = new ViewCompiler();
-			compiler.CompileView(new Chunk[]
-                {
-                    new SendExpressionChunk{Code="Html.ActionLink(\"Click me\", \"Reboot\")"}
-                });
+		//    var compiler = new ViewCompiler();
+		//    compiler.CompileView(new Chunk[]
+		//        {
+		//            new SendExpressionChunk{Code="Html.ActionLink(\"Click me\", \"Reboot\")"}
+		//        });
 
-			var instance = compiler.CreateInstance();
-			var contents = instance.RenderView(_viewContext);
-			Assert.AreEqual("<a href=\"/Home/Reboot\">Click me</a>", contents);
-		}
+		//    var instance = compiler.CreateInstance();
+		//    var contents = instance.RenderView(_viewContext);
+		//    Assert.AreEqual("<a href=\"/Home/Reboot\">Click me</a>", contents);
+		//}
 
-		[Test]
-		public void DeclareViewData()
-		{
-			var compiler = new ViewCompiler();
-			compiler.CompileView(new Chunk[]
-                                     {
-                                         new ViewDataChunk {Name = "Foo", Type = "string"},
-                                         new ViewDataChunk {Name = "Bar", Type = "MvcContrib.UnitTests.SparkViewEngine.Models.Comment"},
-                                         new SendExpressionChunk {Code = "Foo"},
-                                         new SendExpressionChunk {Code = "Bar.Text"},
-                });
+		//[Test]
+		//public void DeclareViewData()
+		//{
+		//    var compiler = new ViewCompiler();
+		//    compiler.CompileView(new Chunk[]
+		//                             {
+		//                                 new ViewDataChunk {Name = "Foo", Type = "string"},
+		//                                 new ViewDataChunk {Name = "Bar", Type = "MvcContrib.UnitTests.SparkViewEngine.Models.Comment"},
+		//                                 new SendExpressionChunk {Code = "Foo"},
+		//                                 new SendExpressionChunk {Code = "Bar.Text"},
+		//        });
 
-			var instance = compiler.CreateInstance();
+		//    var instance = compiler.CreateInstance();
 
-			var viewContext1 = new ViewContext(
-				_context, _viewContext.RouteData, _viewContext.Controller,
-				"index", null,
-				new ViewDataDictionary(new { Foo = "Hello World", Bar = new Comment { Text = "-yadda-" } }), null);
+		//    var viewContext1 = new ViewContext(
+		//        _context, _viewContext.RouteData, _viewContext.Controller,
+		//        "index", null,
+		//        new ViewDataDictionary(new { Foo = "Hello World", Bar = new Comment { Text = "-yadda-" } }), null);
 
-			var contents = instance.RenderView(viewContext1);
-			Assert.AreEqual("Hello World-yadda-", contents);
-		}
+		//    var contents = instance.RenderView(viewContext1);
+		//    Assert.AreEqual("Hello World-yadda-", contents);
+		//}
 
-		[Test]
-		public void DeclareViewDataModel()
-		{
-			var compiler = new ViewCompiler();
-			compiler.CompileView(new Chunk[]
-                                     {
-                                         new ViewDataModelChunk { TModel = "MvcContrib.UnitTests.SparkViewEngine.Models.Comment" },
-                                         new SendExpressionChunk {Code = "ViewData.Model.Text"},
-                });
-			var instance = compiler.CreateInstance();
+		//[Test]
+		//public void DeclareViewDataModel()
+		//{
+		//    var compiler = new ViewCompiler();
+		//    compiler.CompileView(new Chunk[]
+		//                             {
+		//                                 new ViewDataModelChunk { TModel = "MvcContrib.UnitTests.SparkViewEngine.Models.Comment" },
+		//                                 new SendExpressionChunk {Code = "ViewData.Model.Text"},
+		//        });
+		//    var instance = compiler.CreateInstance();
 
-			var viewContext1 = new ViewContext(
-				_context, _viewContext.RouteData, _viewContext.Controller,
-				"index", null,
-				new ViewDataDictionary(new Comment { Text = "MyCommentText" }), null);
+		//    var viewContext1 = new ViewContext(
+		//        _context, _viewContext.RouteData, _viewContext.Controller,
+		//        "index", null,
+		//        new ViewDataDictionary(new Comment { Text = "MyCommentText" }), null);
 
-			var contents = instance.RenderView(viewContext1);
-			Assert.AreEqual("MyCommentText", contents);
-		}
+		//    var contents = instance.RenderView(viewContext1);
+		//    Assert.AreEqual("MyCommentText", contents);
+		//}
 
 		[Test, ExpectedException(typeof(CompilerException))]
 		public void ProvideFullException()
 		{
-			var compiler = new ViewCompiler();
+			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new Chunk[]
                                      {
                                          new SendExpressionChunk {Code = "NoSuchVariable"}

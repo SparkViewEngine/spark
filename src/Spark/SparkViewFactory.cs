@@ -1,35 +1,38 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Web.Mvc;
 using MvcContrib.SparkViewEngine.Compiler;
 using MvcContrib.SparkViewEngine.Compiler.NodeVisitors;
 using MvcContrib.SparkViewEngine.Parser;
-using MvcContrib.ViewFactories;
+using Spark.FileSystem;
 
 namespace MvcContrib.SparkViewEngine
 {
-	public class SparkViewFactory : IViewEngine
+	public interface ISparkViewFactory
 	{
-		public SparkViewFactory()
-			: this(new FileSystemViewSourceLoader(), new ParserFactory())
-		{
+		ISparkView CreateInstance(string controllerName, string viewName, string masterName);
+	}
 
+	public class SparkViewFactory : ISparkViewFactory
+	{
+		//public SparkViewFactory()
+		//    : this(new FileSystemViewSourceLoader(), new ParserFactory())
+		//{
+
+		//}
+
+		public SparkViewFactory(string baseClass, IFileSystem fileSystem)
+		{
+			BaseClass = baseClass;
+			FileSystem = fileSystem;
 		}
 
-		public SparkViewFactory(IViewSourceLoader viewSourceLoader, IParserFactory parserFactory)
+		public string BaseClass { get; set; }
+		public IFileSystem FileSystem { get; set; }
+
+
+		public ISparkView CreateInstance(string controllerName, string viewName, string masterName)
 		{
-			ViewSourceLoader = viewSourceLoader;
-			ParserFactory = parserFactory;
-		}
-
-		public IViewSourceLoader ViewSourceLoader { get; set; }
-		public IParserFactory ParserFactory { get; set; }
-
-
-		public void RenderView(ViewContext viewContext)
-		{
-			var key = CreateKey(viewContext);
-
+			var key = CreateKey(controllerName, viewName, masterName);
 			var entry = CompiledViewHolder.Current.Lookup(key);
 			if (entry == null)
 			{
@@ -37,19 +40,33 @@ namespace MvcContrib.SparkViewEngine
 				CompiledViewHolder.Current.Store(entry);
 			}
 
-			var view = entry.Compiler.CreateInstance();
-			var content = view.RenderView(viewContext);
-
-			viewContext.HttpContext.Response.Write(content);
+			return entry.Compiler.CreateInstance();
 		}
 
-		public CompiledViewHolder.Key CreateKey(ViewContext viewContext)
-		{
-			return CreateKey(
-				viewContext.RouteData.GetRequiredString("controller"),
-				viewContext.ViewName,
-				viewContext.MasterName);
-		}
+		//public void RenderView(ViewContext viewContext)
+		//{
+		//    var key = CreateKey(viewContext);
+
+		//    var entry = CompiledViewHolder.Current.Lookup(key);
+		//    if (entry == null)
+		//    {
+		//        entry = CreateEntry(key);
+		//        CompiledViewHolder.Current.Store(entry);
+		//    }
+
+		//    var view = entry.Compiler.CreateInstance();
+		//    var content = view.RenderView(viewContext);
+
+		//    viewContext.HttpContext.Response.Write(content);
+		//}
+
+		//public CompiledViewHolder.Key CreateKey(ViewContext viewContext)
+		//{
+		//    return CreateKey(
+		//        viewContext.RouteData.GetRequiredString("controller"),
+		//        viewContext.ViewName,
+		//        viewContext.MasterName);
+		//}
 
 		public CompiledViewHolder.Key CreateKey(string controllerName, string viewName, string masterName)
 		{
@@ -62,11 +79,11 @@ namespace MvcContrib.SparkViewEngine
 
 			if (key.MasterName == string.Empty)
 			{
-				if (ViewSourceLoader.HasView(string.Format("Shared\\{0}.xml", key.ControllerName)))
+				if (FileSystem.HasView(string.Format("Shared\\{0}.xml", key.ControllerName)))
 				{
 					key.MasterName = key.ControllerName;
 				}
-				else if (ViewSourceLoader.HasView("Shared\\Application.xml"))
+				else if (FileSystem.HasView("Shared\\Application.xml"))
 				{
 					key.MasterName = "Application";
 				}
@@ -79,12 +96,8 @@ namespace MvcContrib.SparkViewEngine
 			var entry = new CompiledViewHolder.Entry
 							  {
 								  Key = key,
-								  Loader = new ViewLoader
-											   {
-												   ViewSourceLoader = ViewSourceLoader,
-												   ParserFactory = ParserFactory
-											   },
-								  Compiler = new ViewCompiler()
+								  Loader = new ViewLoader { FileSystem = FileSystem },
+								  Compiler = new ViewCompiler(BaseClass)
 							  };
 
 			var viewChunks = entry.Loader.Load(key.ControllerName, key.ViewName);
@@ -97,5 +110,6 @@ namespace MvcContrib.SparkViewEngine
 
 			return entry;
 		}
+
 	}
 }

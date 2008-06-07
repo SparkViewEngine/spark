@@ -5,19 +5,21 @@ using System.Linq;
 using System.Text;
 using MvcContrib.SparkViewEngine.Parser;
 using MvcContrib.SparkViewEngine.Parser.Markup;
-using MvcContrib.ViewFactories;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Spark.FileSystem;
 
 namespace MvcContrib.UnitTests.SparkViewEngine
 {
+	//hmm... i think these tests are tragically flawed
+
     [TestFixture]
     public class ViewLoaderTester
     {
         private MockRepository mocks;
         private ViewLoader loader;
         private IParserFactory parserFactory;
-        private IViewSourceLoader viewSourceLoader;
+        private IFileSystem viewSourceLoader;
 
         private Dictionary<char, IList<Node>> nodesTable;
 
@@ -32,14 +34,14 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             nodesTable = new Dictionary<char, IList<Node>>();
             SetupResult.For(parserFactory.CreateParser()).Return(input => new ParseResult<IList<Node>>(input, nodesTable[input.Peek()]));
 
-            viewSourceLoader = mocks.CreateMock<IViewSourceLoader>();
+            viewSourceLoader = mocks.CreateMock<IFileSystem>();
             SetupResult.For(viewSourceLoader.ListViews("home")).Return(new[] { "file.xml", "other.xml", "_comment.xml" });
             SetupResult.For(viewSourceLoader.ListViews("Home")).Return(new[] { "file.xml", "other.xml", "_comment.xml" });
             SetupResult.For(viewSourceLoader.ListViews("Account")).Return(new[] { "index.xml" });
             SetupResult.For(viewSourceLoader.ListViews("Shared")).Return(new[] { "layout.xml", "_header.xml", "default.xml", "_footer.xml" });
 
 
-            loader = new ViewLoader {ParserFactory = parserFactory, ViewSourceLoader = viewSourceLoader};
+            loader = new ViewLoader {FileSystem = viewSourceLoader};
         }
 
         long GetLastModified()
