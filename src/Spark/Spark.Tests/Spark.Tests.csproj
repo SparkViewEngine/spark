@@ -49,14 +49,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChunkBuilderVisitorTester.cs" />
+    <Compile Include="CompiledViewHolderTester.cs" />
+    <Compile Include="MarkupGrammarTester.cs" />
     <Compile Include="PositionTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SparkViewFactoryTester.cs" />
+    <Compile Include="ViewCompilerTester.cs" />
+    <Compile Include="ViewLoaderTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj">
       <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
       <Name>Spark</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\childview.xml" />
+    <Content Include="Views\Home\foreach.xml" />
+    <Content Include="Views\Home\globalset.xml" />
+    <Content Include="Views\Home\helpers.xml" />
+    <Content Include="Views\Home\Index.xml" />
+    <Content Include="Views\Home\macros.xml" />
+    <Content Include="Views\Home\namedcontent.xml" />
+    <Content Include="Views\Home\usingnamespace.xml" />
+    <Content Include="Views\Home\usingpartial.xml" />
+    <Content Include="Views\Home\usingpartialimplicit.xml" />
+    <Content Include="Views\Home\viewdata.xml" />
+    <Content Include="Views\Shared\layout.xml" />
+    <Content Include="Views\Shared\partial.xml" />
+    <Content Include="Views\Shared\_comment.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
