@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MvcContrib.SparkViewEngine.Compiler;
 using MvcContrib.SparkViewEngine.Parser;
+using Spark;
 
 namespace MvcContrib.SparkViewEngine
 {
@@ -67,11 +68,21 @@ namespace MvcContrib.SparkViewEngine
 			}
 		}
 
-		public class Entry
+		public class Entry : ISparkViewEntry
 		{
 			public Key Key { get; set; }
 			public ViewLoader Loader { get; set; }
 			public ViewCompiler Compiler { get; set; }
+
+			string ISparkViewEntry.SourceCode
+			{
+				get { return Compiler.SourceCode; }
+			}
+
+			ISparkView ISparkViewEntry.CreateInstance()
+			{
+				return Compiler.CreateInstance();
+			}
 		}
 	}
 }

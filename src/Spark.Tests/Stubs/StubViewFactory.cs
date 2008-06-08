@@ -6,13 +6,13 @@ using Spark.FileSystem;
 
 namespace Spark.Tests.Stubs
 {
-	public class StubViewEngine
+	public class StubViewFactory
 	{
-		public ISparkViewFactory Factory { get; set;}
+		public ISparkViewEngine Engine { get; set;}
 
 		public void RenderView(StubViewContext viewContext)
 		{
-			var sparkView = Factory.CreateInstance(viewContext.ControllerName, viewContext.ViewName, viewContext.MasterName);
+			var sparkView = Engine.CreateInstance(viewContext.ControllerName, viewContext.ViewName, viewContext.MasterName);
 			var result = sparkView.RenderView();
 			viewContext.Output.Append(result);
 		}

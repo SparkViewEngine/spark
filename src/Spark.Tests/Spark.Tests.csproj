@@ -63,7 +63,7 @@
     <Compile Include="SparkViewFactoryTester.cs" />
     <Compile Include="Stubs\StubSparkView.cs" />
     <Compile Include="Stubs\StubViewContext.cs" />
-    <Compile Include="Stubs\StubViewEngine.cs" />
+    <Compile Include="Stubs\StubViewFactory.cs" />
     <Compile Include="ViewCompilerTester.cs" />
     <Compile Include="ViewLoaderTester.cs" />
   </ItemGroup>

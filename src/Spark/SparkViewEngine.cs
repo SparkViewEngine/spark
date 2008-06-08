@@ -9,15 +9,15 @@ using Spark.FileSystem;
 
 namespace Spark
 {
-	public class SparkViewFactory : ISparkViewFactory
+	public class SparkViewEngine : ISparkViewEngine
 	{
-		//public SparkViewFactory()
+		//public SparkViewEngine()
 		//    : this(new FileSystemViewSourceLoader(), new ParserFactory())
 		//{
 
 		//}
 
-		public SparkViewFactory(string baseClass, IViewFolder viewFolder)
+		public SparkViewEngine(string baseClass, IViewFolder viewFolder)
 		{
 			BaseClass = baseClass;
 			ViewFolder = viewFolder;
@@ -26,6 +26,12 @@ namespace Spark
 		public string BaseClass { get; set; }
 		public IViewFolder ViewFolder { get; set; }
 
+
+		public ISparkViewEntry GetEntry(string controllerName, string viewName, string masterName)
+		{
+			var key = CreateKey(controllerName, viewName, masterName);
+			return CompiledViewHolder.Current.Lookup(key);
+		}
 
 		public ISparkView CreateInstance(string controllerName, string viewName, string masterName)
 		{

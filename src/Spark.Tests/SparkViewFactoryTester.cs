@@ -19,10 +19,10 @@ namespace Spark.Tests
 		//private RouteData routeData;
 
 		//		private 
-		//		private SparkViewFactory engine = new SparkViewFactory(new FileSystemViewSourceLoader("SparkViewEngine\\Views"), new ParserFactory());
+		//		private SparkViewEngine factory = new SparkViewEngine(new FileSystemViewSourceLoader("SparkViewEngine\\Views"), new ParserFactory());
 
-		private StubViewEngine engine;
-		private SparkViewFactory factory;
+		private StubViewFactory factory;
+		private SparkViewEngine engine;
 		private StringBuilder sb;
 
 		[SetUp]
@@ -32,8 +32,8 @@ namespace Spark.Tests
 			CompiledViewHolder.Current = null;
 
 
-			factory = new SparkViewFactory("Spark.Tests.Stubs.StubSparkView", new FileSystemViewFolder("Views"));
-			engine = new StubViewEngine { Factory = factory };
+			engine = new SparkViewEngine("Spark.Tests.Stubs.StubSparkView", new FileSystemViewFolder("Views"));
+			factory = new StubViewFactory { Engine = engine };
 
 			sb = new StringBuilder();
 
@@ -64,7 +64,7 @@ namespace Spark.Tests
 			//routeData.Values.Add("controller", "Home");
 			//routeData.Values.Add("action", "Index");
 
-			//engine = new SparkViewFactory(new FileSystemViewSourceLoader("SparkViewEngine\\Views"), new ParserFactory());
+			//factory = new SparkViewEngine(new FileSystemViewSourceLoader("SparkViewEngine\\Views"), new ParserFactory());
 
 		}
 		//delegate void writedelegate(string data);
@@ -92,7 +92,7 @@ namespace Spark.Tests
 		{
 			mocks.ReplayAll();
 
-			engine.RenderView(MakeViewContext("index", null));
+			factory.RenderView(MakeViewContext("index", null));
 
 			mocks.VerifyAll();
 		}
@@ -103,7 +103,7 @@ namespace Spark.Tests
 		{
 			mocks.ReplayAll();
 
-			engine.RenderView(MakeViewContext("foreach", null));
+			factory.RenderView(MakeViewContext("foreach", null));
 
 			mocks.VerifyAll();
 
@@ -120,7 +120,7 @@ namespace Spark.Tests
 
 			mocks.ReplayAll();
 
-			engine.RenderView(MakeViewContext("globalset", null));
+			factory.RenderView(MakeViewContext("globalset", null));
 
 			mocks.VerifyAll();
 
@@ -134,7 +134,7 @@ namespace Spark.Tests
 		{
 			mocks.ReplayAll();
 
-			engine.RenderView(MakeViewContext("childview", "layout"));
+			factory.RenderView(MakeViewContext("childview", "layout"));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -150,7 +150,7 @@ namespace Spark.Tests
 
 			mocks.ReplayAll();
 
-			engine.RenderView(MakeViewContext("namedcontent", "layout"));
+			factory.RenderView(MakeViewContext("namedcontent", "layout"));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -183,7 +183,7 @@ namespace Spark.Tests
 
 			mocks.ReplayAll();
 
-			engine.RenderView(MakeViewContext("helpers", null));
+			factory.RenderView(MakeViewContext("helpers", null));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -196,7 +196,7 @@ namespace Spark.Tests
 		{
 			mocks.ReplayAll();
 
-			engine.RenderView(MakeViewContext("usingpartial", null));
+			factory.RenderView(MakeViewContext("usingpartial", null));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -212,7 +212,7 @@ namespace Spark.Tests
 		{
 			mocks.ReplayAll();
 
-			engine.RenderView(MakeViewContext("usingpartialimplicit", null));
+			factory.RenderView(MakeViewContext("usingpartialimplicit", null));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -228,7 +228,7 @@ namespace Spark.Tests
 			var comments = new[] { new Comment { Text = "foo" }, new Comment { Text = "bar" } };
 			var viewContext = MakeViewContext("viewdata", null, new { Comments = comments, Caption = "Hello world" });
 
-			engine.RenderView(viewContext);
+			factory.RenderView(viewContext);
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -244,11 +244,11 @@ namespace Spark.Tests
 			Expect.Call(viewFolder.HasView("Shared\\Application.xml")).Return(false);
 			SetupResult.For(viewFolder.HasView("Shared\\Foo.xml")).Return(false);
 
-			factory.ViewFolder = viewFolder;
+			engine.ViewFolder = viewFolder;
 
 			mocks.ReplayAll();
 
-			var key = factory.CreateKey("Foo", "Baaz", null);
+			var key = engine.CreateKey("Foo", "Baaz", null);
 
 			Assert.AreEqual("Foo", key.ControllerName);
 			Assert.AreEqual("Baaz", key.ViewName);
@@ -262,12 +262,12 @@ namespace Spark.Tests
 			Expect.Call(viewFolder.HasView("Shared\\Application.xml")).Return(true);
 			SetupResult.For(viewFolder.HasView("Shared\\Foo.xml")).Return(false);
 
-			factory.ViewFolder = viewFolder;
+			engine.ViewFolder = viewFolder;
 
 
 			mocks.ReplayAll();
 
-			var key = factory.CreateKey("Foo", "Baaz", null);
+			var key = engine.CreateKey("Foo", "Baaz", null);
 
 
 			Assert.AreEqual("Foo", key.ControllerName);
@@ -282,12 +282,12 @@ namespace Spark.Tests
 			SetupResult.For(viewFolder.HasView("Shared\\Application.xml")).Return(true);
 			SetupResult.For(viewFolder.HasView("Shared\\Foo.xml")).Return(true);
 
-			factory.ViewFolder = viewFolder;
+			engine.ViewFolder = viewFolder;
 
 			mocks.ReplayAll();
 
 
-			var key = factory.CreateKey("Foo", "Baaz", null);
+			var key = engine.CreateKey("Foo", "Baaz", null);
 
 
 			Assert.AreEqual("Foo", key.ControllerName);
@@ -302,7 +302,7 @@ namespace Spark.Tests
 			mocks.ReplayAll();
 			var viewContext = MakeViewContext("usingnamespace", null);
 
-			engine.RenderView(viewContext);
+			factory.RenderView(viewContext);
 
 			mocks.VerifyAll();
 			string content = sb.ToString();

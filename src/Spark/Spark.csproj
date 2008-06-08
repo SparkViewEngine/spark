@@ -65,7 +65,8 @@
     <Compile Include="FileSystem\FileSystemViewFolder.cs" />
     <Compile Include="FileSystem\FileSystemViewSource.cs" />
     <Compile Include="ISparkView.cs" />
-    <Compile Include="ISparkViewFactory.cs" />
+    <Compile Include="ISparkViewEngine.cs" />
+    <Compile Include="ISparkViewEntry.cs" />
     <Compile Include="Parser\Chain.cs" />
     <Compile Include="Parser\CharGrammar.cs" />
     <Compile Include="Parser\Grammar.cs" />
@@ -81,7 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="SparkControllerFactory.cs" />
     <None Include="SparkViewBase.cs" />
-    <Compile Include="SparkViewFactory.cs" />
+    <Compile Include="SparkViewEngine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
