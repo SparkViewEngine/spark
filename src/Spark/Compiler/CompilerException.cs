@@ -1,6 +1,6 @@
 using System;
 
-namespace MvcContrib.SparkViewEngine.Compiler
+namespace Spark.Compiler
 {
 	public class CompilerException : SystemException
 	{

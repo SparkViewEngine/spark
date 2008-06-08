@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using MvcContrib.SparkViewEngine.Compiler;
-using MvcContrib.SparkViewEngine.Parser.Markup;
+using Spark.Compiler;
+using Spark.Parser.Markup;
 
-namespace MvcContrib.SparkViewEngine.Compiler.NodeVisitors
+namespace Spark.Compiler.NodeVisitors
 {
 	public class ChunkBuilderVisitor : NodeVisitor
 	{
@@ -106,10 +106,10 @@ namespace MvcContrib.SparkViewEngine.Compiler.NodeVisitors
 								Chunks = scope.Body;
 							}
 
-							var typeAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "type");
+							var typeAttr = inspector.TakeAttribute("var");
 							string type = typeAttr != null ? typeAttr.Value : "var";
 
-							foreach (var attr in specialNode.Element.Attributes.Where(a => a != typeAttr))
+							foreach (var attr in inspector.Attributes)
 							{
 								Chunks.Add(new LocalVariableChunk { Type = type.Replace("[[", "<").Replace("]]", ">"), Name = attr.Name, Value = attr.Value.Replace("[[", "<").Replace("]]", ">") });
 							}
@@ -143,10 +143,7 @@ namespace MvcContrib.SparkViewEngine.Compiler.NodeVisitors
 						break;
 					case "set":
 						{
-							var typeAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "type");
-							string type = typeAttr != null ? typeAttr.Value : "object";
-
-							foreach (var attr in specialNode.Element.Attributes.Where(a => a != typeAttr))
+							foreach (var attr in inspector.Attributes)
 							{
 								Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.Value });
 							}

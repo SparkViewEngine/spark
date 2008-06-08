@@ -1,4 +1,4 @@
-namespace MvcContrib.SparkViewEngine.Parser
+namespace Spark.Parser
 {
 	public class Chain<TLeft, TDown>
 	{

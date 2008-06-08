@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MvcContrib.SparkViewEngine.Compiler
+namespace Spark.Compiler
 {
 	public class FileContext
 	{

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MvcContrib.SparkViewEngine.Compiler.ChunkVisitors
+﻿namespace Spark.Compiler.ChunkVisitors
 {
 	public class ChunkVisitor : AbstractChunkVisitor
 	{

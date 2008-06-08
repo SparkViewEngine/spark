@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
-using MvcContrib.SparkViewEngine.Compiler;
+using Spark.Compiler;
 using NUnit.Framework;
 using Rhino.Mocks;
 

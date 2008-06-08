@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MvcContrib.SparkViewEngine.Parser;
-using MvcContrib.SparkViewEngine.Parser.Markup;
+using Spark.Parser;
+using Spark.Parser.Markup;
 using NUnit.Framework;
 
 namespace Spark.Tests

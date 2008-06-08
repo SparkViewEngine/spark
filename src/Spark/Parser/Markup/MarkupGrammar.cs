@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MvcContrib.SparkViewEngine.Parser.Markup
+namespace Spark.Parser.Markup
 {
 	public class MarkupGrammar : CharGrammar
 	{

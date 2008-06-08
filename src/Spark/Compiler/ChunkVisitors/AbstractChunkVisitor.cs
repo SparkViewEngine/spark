@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MvcContrib.SparkViewEngine.Compiler.ChunkVisitors
+namespace Spark.Compiler.ChunkVisitors
 {
 	public abstract class AbstractChunkVisitor
 	{

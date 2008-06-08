@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MvcContrib.SparkViewEngine;
-using MvcContrib.SparkViewEngine.Parser;
+using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;
 

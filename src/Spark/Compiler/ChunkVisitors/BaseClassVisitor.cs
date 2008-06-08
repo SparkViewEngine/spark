@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MvcContrib.SparkViewEngine.Compiler.ChunkVisitors
+﻿namespace Spark.Compiler.ChunkVisitors
 {
 	public class BaseClassVisitor : ChunkVisitor
 	{
@@ -15,10 +10,10 @@ namespace MvcContrib.SparkViewEngine.Compiler.ChunkVisitors
 			get
 			{
 				if (string.IsNullOrEmpty(TModel))
-					return BaseClass ?? "MvcContrib.SparkViewEngine.SparkViewBase";
+					return BaseClass ?? "Spark.SparkViewBase";
 
 				return string.Format("{0}<{1}>",
-									 BaseClass ?? "MvcContrib.SparkViewEngine.SparkViewBase",
+									 BaseClass ?? "Spark.SparkViewBase",
 									 TModel);
 			}
 		}

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using MvcContrib.SparkViewEngine.Compiler;
-using MvcContrib.SparkViewEngine.Parser;
+using Spark.Compiler;
+using Spark.Parser;
 using Spark;
 
-namespace MvcContrib.SparkViewEngine
+namespace Spark
 {
 	public class CompiledViewHolder
 	{
@@ -53,8 +53,8 @@ namespace MvcContrib.SparkViewEngine
 			public override int GetHashCode()
 			{
 				return (ControllerName ?? "").ToLowerInvariant().GetHashCode() ^
-					(ViewName ?? "").ToLowerInvariant().GetHashCode() ^
-					(MasterName ?? "").ToLowerInvariant().GetHashCode();
+				       (ViewName ?? "").ToLowerInvariant().GetHashCode() ^
+				       (MasterName ?? "").ToLowerInvariant().GetHashCode();
 			}
 
 			public override bool Equals(object obj)
@@ -63,8 +63,8 @@ namespace MvcContrib.SparkViewEngine
 				if (that == null || GetType() != that.GetType())
 					return false;
 				return string.Equals(ControllerName, that.ControllerName, StringComparison.InvariantCultureIgnoreCase) &&
-					   string.Equals(ViewName, that.ViewName, StringComparison.InvariantCultureIgnoreCase) &&
-					   string.Equals(MasterName, that.MasterName, StringComparison.InvariantCultureIgnoreCase);
+				       string.Equals(ViewName, that.ViewName, StringComparison.InvariantCultureIgnoreCase) &&
+				       string.Equals(MasterName, that.MasterName, StringComparison.InvariantCultureIgnoreCase);
 			}
 		}
 

@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
-using MvcContrib.SparkViewEngine;
-using MvcContrib.SparkViewEngine.Compiler;
-using MvcContrib.SparkViewEngine.Compiler.NodeVisitors;
-using MvcContrib.SparkViewEngine.Parser;
+using Spark.Compiler;
+using Spark.Parser;
 using Spark;
 using Spark.FileSystem;
 

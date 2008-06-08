@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MvcContrib.SparkViewEngine.Parser
+namespace Spark.Parser
 {
 	public static class ParseActionExtensions
 	{

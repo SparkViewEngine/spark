@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace MvcContrib.SparkViewEngine.Parser
+namespace Spark.Parser
 {
 	public class Position
 	{

@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Spark.FileSystem
 {
 	public class FileSystemViewFolder : IViewFolder
 	{
-		private string _basePath;
+		private readonly string _basePath;
 
 		public FileSystemViewFolder (string basePath)
 		{

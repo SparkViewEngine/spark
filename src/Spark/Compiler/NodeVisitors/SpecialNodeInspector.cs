@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using MvcContrib.SparkViewEngine.Parser.Markup;
+using Spark.Parser.Markup;
 
-namespace MvcContrib.SparkViewEngine.Compiler.NodeVisitors
+namespace Spark.Compiler.NodeVisitors
 {
 	public class SpecialNodeInspector
 	{

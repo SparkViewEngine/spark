@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MvcContrib.SparkViewEngine.Parser
+namespace Spark.Parser
 {
 	public class SourceContext
 	{

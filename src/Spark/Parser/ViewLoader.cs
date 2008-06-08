@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using MvcContrib.SparkViewEngine.Compiler;
-using MvcContrib.SparkViewEngine.Compiler.ChunkVisitors;
-using MvcContrib.SparkViewEngine.Compiler.NodeVisitors;
-using MvcContrib.SparkViewEngine.Parser.Markup;
+using Spark.Compiler;
+using Spark.Compiler.ChunkVisitors;
+using Spark.Compiler.NodeVisitors;
+using Spark.Parser.Markup;
 using Spark.FileSystem;
 
-namespace MvcContrib.SparkViewEngine.Parser
+namespace Spark.Parser
 {
 	public class ViewLoader
 	{

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MvcContrib.SparkViewEngine.Parser.Markup
+namespace Spark.Parser.Markup
 {
 	public abstract class Node
 	{

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 
-namespace MvcContrib.SparkViewEngine.Compiler.ChunkVisitors
+namespace Spark.Compiler.ChunkVisitors
 {
 	public class UsingNamespaceVisitor : ChunkVisitor
 	{
@@ -11,7 +9,7 @@ namespace MvcContrib.SparkViewEngine.Compiler.ChunkVisitors
 
 		private readonly Dictionary<string, object> _used = new Dictionary<string, object>();
 
-		Stack<string> _noncyclic = new Stack<string>();
+		readonly Stack<string> _noncyclic = new Stack<string>();
 
 
 		public UsingNamespaceVisitor(StringBuilder output)

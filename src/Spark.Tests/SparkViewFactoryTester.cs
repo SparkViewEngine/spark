@@ -1,5 +1,4 @@
 using System.Text;
-using MvcContrib.SparkViewEngine;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Spark.FileSystem;

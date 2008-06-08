@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Text;
-using MvcContrib.SparkViewEngine.Compiler.ChunkVisitors;
+using Spark.Compiler.ChunkVisitors;
 
-namespace MvcContrib.SparkViewEngine.Compiler.ChunkVisitors
+namespace Spark.Compiler.ChunkVisitors
 {
 	public class GeneratedCodeVisitor : AbstractChunkVisitor
 	{

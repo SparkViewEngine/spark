@@ -1,18 +1,17 @@
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using MvcContrib.SparkViewEngine.Compiler;
-using MvcContrib.SparkViewEngine.Compiler.NodeVisitors;
-using MvcContrib.SparkViewEngine.Parser.Markup;
+using Spark.Compiler;
+using Spark.Compiler.NodeVisitors;
+using Spark.Parser.Markup;
 
-namespace MvcContrib.SparkViewEngine.Compiler.NodeVisitors
+namespace Spark.Compiler.NodeVisitors
 {
 	public class SpecialNodeVisitor : NodeVisitor
 	{
-		private IList<string> _containingNames;
-		private IList<string> _nonContainingNames;
-		private IList<string> _partialFileNames;
+		private readonly IList<string> _containingNames;
+		private readonly IList<string> _nonContainingNames;
+		private readonly IList<string> _partialFileNames;
 
 		private IList<Node> _nodes = new List<Node>();
 		private readonly Stack<IList<Node>> _stack = new Stack<IList<Node>>();

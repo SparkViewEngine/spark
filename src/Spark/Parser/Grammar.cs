@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MvcContrib.SparkViewEngine.Parser
+namespace Spark.Parser
 {
 	public abstract class Grammar
 	{

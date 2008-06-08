@@ -1,11 +1,10 @@
-using System;
 using System.IO;
 
 namespace Spark.FileSystem
 {
 	public class FileSystemViewSource : IViewSource
 	{
-		private string _fullPath;
+		private readonly string _fullPath;
 
 		public FileSystemViewSource(string fullPath)
 		{

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.CSharp;
-using MvcContrib.SparkViewEngine.Compiler.ChunkVisitors;
+using Spark.Compiler.ChunkVisitors;
 using Spark;
 
-namespace MvcContrib.SparkViewEngine.Compiler
+namespace Spark.Compiler
 {
 	public class ViewCompiler
 	{
@@ -28,7 +28,7 @@ namespace MvcContrib.SparkViewEngine.Compiler
 		{
 			StringBuilder source = new StringBuilder();
 			var usingGenerator = new UsingNamespaceVisitor(source);
-			var baseClassGenerator = new BaseClassVisitor() { BaseClass = BaseClass };
+			var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
 			var globalsGenerator = new GlobalMembersVisitor(source);
 			var viewGenerator = new GeneratedCodeVisitor(source);
 

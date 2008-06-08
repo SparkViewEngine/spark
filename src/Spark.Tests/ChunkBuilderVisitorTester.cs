@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MvcContrib.SparkViewEngine.Compiler;
-using MvcContrib.SparkViewEngine.Compiler.NodeVisitors;
-using MvcContrib.SparkViewEngine.Parser.Markup;
+using Spark.Compiler;
+using Spark.Compiler.NodeVisitors;
+using Spark.Parser.Markup;
 using NUnit.Framework;
 
 namespace Spark.Tests

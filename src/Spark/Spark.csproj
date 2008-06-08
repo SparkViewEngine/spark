@@ -80,8 +80,6 @@
     <Compile Include="Parser\SourceContext.cs" />
     <Compile Include="Parser\ViewLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="SparkControllerFactory.cs" />
-    <None Include="SparkViewBase.cs" />
     <Compile Include="SparkViewEngine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
-namespace MvcContrib.SparkViewEngine.Compiler
+namespace Spark.Compiler
 {
 	public class Chunk
 	{
