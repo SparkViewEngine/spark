@@ -9,147 +9,147 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Spark.FileSystem;
 
-namespace MvcContrib.UnitTests.SparkViewEngine
+namespace Spark.Tests
 {
-	//hmm... i think these tests are tragically flawed
+	[TestFixture]
+	public class ViewLoaderTester
+	{
+		private MockRepository mocks;
+		private ViewLoader loader;
+		
+		private IViewFolder viewSourceLoader;
 
-    [TestFixture]
-    public class ViewLoaderTester
-    {
-        private MockRepository mocks;
-        private ViewLoader loader;
-        private IParserFactory parserFactory;
-        private IFileSystem viewSourceLoader;
+		private Dictionary<char, IList<Node>> nodesTable;
 
-        private Dictionary<char, IList<Node>> nodesTable;
+		private long _lastModified;
 
-        private long _lastModified;
+		[SetUp]
+		public void Init()
+		{
+			mocks = new MockRepository();
 
-        [SetUp]
-        public void Init()
-        {
-            mocks = new MockRepository();
+			nodesTable = new Dictionary<char, IList<Node>>();
 
-            parserFactory = mocks.CreateMock<IParserFactory>();
-            nodesTable = new Dictionary<char, IList<Node>>();
-            SetupResult.For(parserFactory.CreateParser()).Return(input => new ParseResult<IList<Node>>(input, nodesTable[input.Peek()]));
-
-            viewSourceLoader = mocks.CreateMock<IFileSystem>();
-            SetupResult.For(viewSourceLoader.ListViews("home")).Return(new[] { "file.xml", "other.xml", "_comment.xml" });
-            SetupResult.For(viewSourceLoader.ListViews("Home")).Return(new[] { "file.xml", "other.xml", "_comment.xml" });
-            SetupResult.For(viewSourceLoader.ListViews("Account")).Return(new[] { "index.xml" });
-            SetupResult.For(viewSourceLoader.ListViews("Shared")).Return(new[] { "layout.xml", "_header.xml", "default.xml", "_footer.xml" });
+			viewSourceLoader = mocks.CreateMock<IViewFolder>();
+			SetupResult.For(viewSourceLoader.ListViews("home")).Return(new[] { "file.xml", "other.xml", "_comment.xml" });
+			SetupResult.For(viewSourceLoader.ListViews("Home")).Return(new[] { "file.xml", "other.xml", "_comment.xml" });
+			SetupResult.For(viewSourceLoader.ListViews("Account")).Return(new[] { "index.xml" });
+			SetupResult.For(viewSourceLoader.ListViews("Shared")).Return(new[] { "layout.xml", "_header.xml", "default.xml", "_footer.xml" });
 
 
-            loader = new ViewLoader {FileSystem = viewSourceLoader};
-        }
+			loader = new ViewLoader {ViewFolder = viewSourceLoader};
+			loader.Parser = delegate(Position input)
+			                	{
+			                		 return new ParseResult<IList<Node>>(input, nodesTable[input.Peek()]);
+			                	};
+		}
 
-        long GetLastModified()
-        {
-            return _lastModified;
-        }
+		long GetLastModified()
+		{
+			return _lastModified;
+		}
 
-        void ExpectGetSource(string path, IList<Node> nodes)
-        {
-            var source = mocks.CreateMock<IViewSource>();
-            int key = '0' + nodesTable.Count;
-            nodesTable.Add((char)key, nodes);
+		void ExpectGetSource(string path, IList<Node> nodes)
+		{
+			var source = mocks.CreateMock<IViewSource>();
+			int key = '0' + nodesTable.Count;
+			nodesTable.Add((char)key, nodes);
 
-            Stream stream = new MemoryStream(new[] {(byte)key});
-            SetupResult.For(source.OpenViewStream()).Return(stream);
-            SetupResult.For(source.LastModified).Do(new Func<long>(GetLastModified));
+			Stream stream = new MemoryStream(new[] {(byte)key});
+			SetupResult.For(source.OpenViewStream()).Return(stream);
+			SetupResult.For(source.LastModified).Do(new Func<long>(GetLastModified));
 
-            SetupResult.For(viewSourceLoader.GetViewSource(path)).Return(source);
-        }
+			SetupResult.For(viewSourceLoader.GetViewSource(path)).Return(source);
+		}
 
-        static Node ParseElement(string content)
-        {
-            var grammar = new MarkupGrammar();
-            var result = grammar.Element(new Position(new SourceContext(content)));
-            Assert.IsNotNull(result);
-            return result.Value;
-        }
+		static Node ParseElement(string content)
+		{
+			var grammar = new MarkupGrammar();
+			var result = grammar.Element(new Position(new SourceContext(content)));
+			Assert.IsNotNull(result);
+			return result.Value;
+		}
 
-        [Test]
-        public void LoadSimpleFile()
-        {
-            ExpectGetSource("home\\simple.xml", new Node[0]);
+		[Test]
+		public void LoadSimpleFile()
+		{
+			ExpectGetSource("home\\simple.xml", new Node[0]);
             
-            mocks.ReplayAll();
-            loader.Load("home\\simple.xml");
-            mocks.VerifyAll();
-        }
+			mocks.ReplayAll();
+			loader.Load("home\\simple.xml");
+			mocks.VerifyAll();
+		}
 
-        [Test]
-        public void LoadUsedFile()
-        {
-            var useFile = ParseElement("<use file='mypartial'/>");
+		[Test]
+		public void LoadUsedFile()
+		{
+			var useFile = ParseElement("<use file='mypartial'/>");
 
-            ExpectGetSource("Home\\usefile.xml", new[] { useFile });
-            Expect.Call(viewSourceLoader.HasView("Home\\mypartial.xml")).Return(true);
-            ExpectGetSource("Home\\mypartial.xml", new Node[0]);
+			ExpectGetSource("Home\\usefile.xml", new[] { useFile });
+			Expect.Call(viewSourceLoader.HasView("Home\\mypartial.xml")).Return(true);
+			ExpectGetSource("Home\\mypartial.xml", new Node[0]);
 
-            mocks.ReplayAll();
-            loader.Load("Home\\usefile.xml");
-            mocks.VerifyAll();
-        }
-
-
-        [Test]
-        public void LoadSharedFile()
-        {
-            var useFile = ParseElement("<use file='mypartial'/>");
-
-            ExpectGetSource("Home\\usefile.xml", new[] { useFile });
-            Expect.Call(viewSourceLoader.HasView("Home\\mypartial.xml")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Shared\\mypartial.xml")).Return(true);
-            ExpectGetSource("Shared\\mypartial.xml", new Node[0]);
-
-            mocks.ReplayAll();
-            loader.Load("Home\\usefile.xml");
-            mocks.VerifyAll();
-        }
-
-        [Test]
-        public void FindPartialFiles()
-        {
-            mocks.ReplayAll();
-            var partials3 = loader.FindPartialFiles("Home\\other.xml");
-            var partials2 = loader.FindPartialFiles("Account\\index.xml");
-            mocks.VerifyAll();
-
-            Assert.AreEqual(3, partials3.Count);
-            Assert.That(partials3.Contains("comment"));
-            Assert.That(partials3.Contains("header"));
-            Assert.That(partials3.Contains("footer"));
+			mocks.ReplayAll();
+			loader.Load("Home\\usefile.xml");
+			mocks.VerifyAll();
+		}
 
 
-            Assert.AreEqual(2, partials2.Count);
-            Assert.That(partials2.Contains("header"));
-            Assert.That(partials2.Contains("footer"));
-        }
+		[Test]
+		public void LoadSharedFile()
+		{
+			var useFile = ParseElement("<use file='mypartial'/>");
 
-        [Test, ExpectedException(typeof(FileNotFoundException))]
-        public void FileNotFoundException()
-        {
-            Expect.Call(viewSourceLoader.HasView("Home\\nosuchfile.xml")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Shared\\nosuchfile.xml")).Return(false);
+			ExpectGetSource("Home\\usefile.xml", new[] { useFile });
+			Expect.Call(viewSourceLoader.HasView("Home\\mypartial.xml")).Return(false);
+			Expect.Call(viewSourceLoader.HasView("Shared\\mypartial.xml")).Return(true);
+			ExpectGetSource("Shared\\mypartial.xml", new Node[0]);
+
+			mocks.ReplayAll();
+			loader.Load("Home\\usefile.xml");
+			mocks.VerifyAll();
+		}
+
+		[Test]
+		public void FindPartialFiles()
+		{
+			mocks.ReplayAll();
+			var partials3 = loader.FindPartialFiles("Home\\other.xml");
+			var partials2 = loader.FindPartialFiles("Account\\index.xml");
+			mocks.VerifyAll();
+
+			Assert.AreEqual(3, partials3.Count);
+			Assert.That(partials3.Contains("comment"));
+			Assert.That(partials3.Contains("header"));
+			Assert.That(partials3.Contains("footer"));
+
+
+			Assert.AreEqual(2, partials2.Count);
+			Assert.That(partials2.Contains("header"));
+			Assert.That(partials2.Contains("footer"));
+		}
+
+		[Test, ExpectedException(typeof(FileNotFoundException))]
+		public void FileNotFoundException()
+		{
+			Expect.Call(viewSourceLoader.HasView("Home\\nosuchfile.xml")).Return(false);
+			Expect.Call(viewSourceLoader.HasView("Shared\\nosuchfile.xml")).Return(false);
             
-            mocks.ReplayAll();
-            loader.Load("Home", "nosuchfile");
-            mocks.VerifyAll();
-        }
+			mocks.ReplayAll();
+			loader.Load("Home", "nosuchfile");
+			mocks.VerifyAll();
+		}
         
-        [Test]
-        public void ExpiresWhenFilesChange()
-        {
-            ExpectGetSource("home\\changing.xml", new List<Node>());
-            mocks.ReplayAll();
-            loader.Load("home\\changing.xml");
-            Assert.That(loader.IsCurrent());
-            _lastModified = 88;
-            Assert.That(!loader.IsCurrent());
-            mocks.VerifyAll();
-        }
-    }
+		[Test]
+		public void ExpiresWhenFilesChange()
+		{
+			ExpectGetSource("home\\changing.xml", new List<Node>());
+			mocks.ReplayAll();
+			loader.Load("home\\changing.xml");
+			Assert.That(loader.IsCurrent());
+			_lastModified = 88;
+			Assert.That(!loader.IsCurrent());
+			mocks.VerifyAll();
+		}
+	}
 }

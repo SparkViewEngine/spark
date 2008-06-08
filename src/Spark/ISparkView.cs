@@ -1,12 +1,8 @@
 
-namespace MvcContrib.SparkViewEngine
+namespace Spark
 {
 	public interface ISparkView
 	{
-		string RenderView(ISparkViewContext viewContext);
-	}
-
-	public interface ISparkViewContext
-	{
+		string RenderView();
 	}
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MvcContrib.SparkViewEngine;
 
 namespace Spark
 {
@@ -23,11 +22,6 @@ namespace Spark
 			return sb;
 		}
 
-		public string RenderView(ISparkViewContext viewContext)
-		{
-			return ProcessRequest();
-		}
-
-		public abstract string ProcessRequest();
+		public abstract string RenderView();
 	}
 }

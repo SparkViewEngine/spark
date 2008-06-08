@@ -14,16 +14,24 @@ namespace MvcContrib.SparkViewEngine.Parser
 	public class ViewLoader
 	{
 		static MarkupGrammar _grammar = new MarkupGrammar();
-		private IFileSystem fileSystem;
+		private IViewFolder viewFolder;
 
 		readonly Dictionary<string, Entry> _entries = new Dictionary<string, Entry>();
 		readonly List<string> _pending = new List<string>();
 
-		public IFileSystem FileSystem
+
+		public ViewLoader()
 		{
-			get { return fileSystem; }
-			set { fileSystem = value; }
+			Parser = _grammar.Nodes;
 		}
+
+		public IViewFolder ViewFolder
+		{
+			get { return viewFolder; }
+			set { viewFolder = value; }
+		}
+
+		public ParseAction<IList<Node>> Parser { get; set;}
 
 
 		private class Entry
@@ -55,7 +63,7 @@ namespace MvcContrib.SparkViewEngine.Parser
 			if (_entries.ContainsKey(referencePath))
 				return _entries[referencePath];
 
-			var viewSource = fileSystem.GetViewSource(referencePath);
+			var viewSource = viewFolder.GetViewSource(referencePath);
 
 			var newEntry = new Entry { ViewPath = referencePath, LastModified = viewSource.LastModified };
 			_entries.Add(referencePath, newEntry);
@@ -67,7 +75,7 @@ namespace MvcContrib.SparkViewEngine.Parser
 		{
 			foreach (var entry in _entries.Values)
 			{
-				var viewSource = fileSystem.GetViewSource(entry.ViewPath);
+				var viewSource = viewFolder.GetViewSource(entry.ViewPath);
 				if (viewSource.LastModified != entry.LastModified)
 					return false;
 			}
@@ -109,7 +117,7 @@ namespace MvcContrib.SparkViewEngine.Parser
 			var sourceContext = CreateSourceContext(viewPath);
 			var position = new Position(sourceContext);
 
-			var nodes = _grammar.Nodes(position);
+			var nodes = Parser(position);
 
 			var partialFileNames = FindPartialFiles(viewPath);
 
@@ -137,13 +145,13 @@ namespace MvcContrib.SparkViewEngine.Parser
 			var results = new List<string>();
 
 			string controllerPath = Path.GetDirectoryName(viewPath);
-			foreach (var view in FileSystem.ListViews(controllerPath))
+			foreach (var view in ViewFolder.ListViews(controllerPath))
 			{
 				string baseName = Path.GetFileNameWithoutExtension(view);
 				if (baseName.StartsWith("_"))
 					results.Add(baseName.Substring(1));
 			}
-			foreach (var view in FileSystem.ListViews("Shared"))
+			foreach (var view in ViewFolder.ListViews("Shared"))
 			{
 				string baseName = Path.GetFileNameWithoutExtension(view);
 				if (baseName.StartsWith("_"))
@@ -165,11 +173,11 @@ namespace MvcContrib.SparkViewEngine.Parser
 				return null;
 
 			string attempt1 = Path.Combine(controllerName, Path.ChangeExtension(viewName, "xml"));
-			if (FileSystem.HasView(attempt1))
+			if (ViewFolder.HasView(attempt1))
 				return attempt1;
 
 			string attempt2 = Path.Combine("Shared", Path.ChangeExtension(viewName, "xml"));
-			if (FileSystem.HasView(attempt2))
+			if (ViewFolder.HasView(attempt2))
 				return attempt2;
 
 			throw new FileNotFoundException(
@@ -179,7 +187,7 @@ namespace MvcContrib.SparkViewEngine.Parser
 
 		private SourceContext CreateSourceContext(string viewPath)
 		{
-			var viewSource = fileSystem.GetViewSource(viewPath);
+			var viewSource = viewFolder.GetViewSource(viewPath);
 
 			if (viewSource == null)
 				throw new FileNotFoundException("View file not found", viewPath);

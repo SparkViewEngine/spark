@@ -1,17 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
+using MvcContrib.SparkViewEngine;
 using MvcContrib.SparkViewEngine.Compiler;
 using MvcContrib.SparkViewEngine.Compiler.NodeVisitors;
 using MvcContrib.SparkViewEngine.Parser;
+using Spark;
 using Spark.FileSystem;
 
-namespace MvcContrib.SparkViewEngine
+namespace Spark
 {
-	public interface ISparkViewFactory
-	{
-		ISparkView CreateInstance(string controllerName, string viewName, string masterName);
-	}
-
 	public class SparkViewFactory : ISparkViewFactory
 	{
 		//public SparkViewFactory()
@@ -20,14 +17,14 @@ namespace MvcContrib.SparkViewEngine
 
 		//}
 
-		public SparkViewFactory(string baseClass, IFileSystem fileSystem)
+		public SparkViewFactory(string baseClass, IViewFolder viewFolder)
 		{
 			BaseClass = baseClass;
-			FileSystem = fileSystem;
+			ViewFolder = viewFolder;
 		}
 
 		public string BaseClass { get; set; }
-		public IFileSystem FileSystem { get; set; }
+		public IViewFolder ViewFolder { get; set; }
 
 
 		public ISparkView CreateInstance(string controllerName, string viewName, string masterName)
@@ -71,19 +68,19 @@ namespace MvcContrib.SparkViewEngine
 		public CompiledViewHolder.Key CreateKey(string controllerName, string viewName, string masterName)
 		{
 			var key = new CompiledViewHolder.Key
-			{
-				ControllerName = controllerName ?? string.Empty,
-				ViewName = viewName ?? string.Empty,
-				MasterName = masterName ?? string.Empty
-			};
+			          	{
+			          		ControllerName = controllerName ?? string.Empty,
+			          		ViewName = viewName ?? string.Empty,
+			          		MasterName = masterName ?? string.Empty
+			          	};
 
 			if (key.MasterName == string.Empty)
 			{
-				if (FileSystem.HasView(string.Format("Shared\\{0}.xml", key.ControllerName)))
+				if (ViewFolder.HasView(string.Format("Shared\\{0}.xml", key.ControllerName)))
 				{
 					key.MasterName = key.ControllerName;
 				}
-				else if (FileSystem.HasView("Shared\\Application.xml"))
+				else if (ViewFolder.HasView("Shared\\Application.xml"))
 				{
 					key.MasterName = "Application";
 				}
@@ -94,11 +91,11 @@ namespace MvcContrib.SparkViewEngine
 		public CompiledViewHolder.Entry CreateEntry(CompiledViewHolder.Key key)
 		{
 			var entry = new CompiledViewHolder.Entry
-							  {
-								  Key = key,
-								  Loader = new ViewLoader { FileSystem = FileSystem },
-								  Compiler = new ViewCompiler(BaseClass)
-							  };
+			            	{
+			            		Key = key,
+			            		Loader = new ViewLoader { ViewFolder = ViewFolder },
+			            		Compiler = new ViewCompiler(BaseClass)
+			            	};
 
 			var viewChunks = entry.Loader.Load(key.ControllerName, key.ViewName);
 

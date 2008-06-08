@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Spark.FileSystem
 {
-	public interface IFileSystem
+	public interface IViewFolder
 	{
 		IViewSource GetViewSource(string path);
 		IList<string> ListViews(string path);

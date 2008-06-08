@@ -3,25 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
-using MvcContrib.SparkViewEngine;
 using MvcContrib.SparkViewEngine.Compiler;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace MvcContrib.UnitTests.SparkViewEngine
+namespace Spark.Tests
 {
 	[TestFixture]
 	public class ViewCompilerTester
 	{
-		private MockRepository _mocks;
-		private ISparkViewContext _viewContext;
 
 		[SetUp]
 		public void Init()
 		{
-			_mocks = new MockRepository();
-
-			_viewContext = _mocks.DynamicMock<ISparkViewContext>();
 		}
 
 		[Test]
@@ -31,7 +25,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			compiler.CompileView(new[] { new SendLiteralChunk { Text = "hello world" } });
 
 			var instance = compiler.CreateInstance();
-			string contents = instance.RenderView(_viewContext);
+			string contents = instance.RenderView();
 
 			Assert.That(contents.Contains("hello world"));
 		}
@@ -46,7 +40,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			Assert.That(compiler.SourceCode.Contains("Append(\"hello\\t\\r\\n\\\"world\")"));
 
 			var instance = compiler.CreateInstance();
-			string contents = instance.RenderView(_viewContext);
+			string contents = instance.RenderView();
 
 			Assert.AreEqual(text, contents);
 		}
@@ -57,7 +51,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new[] { new SendExpressionChunk { Code = "3 + 4" } });
 			var instance = compiler.CreateInstance();
-			string contents = instance.RenderView(_viewContext);
+			string contents = instance.RenderView();
 			Assert.AreEqual("7", contents);
 		}
 
@@ -66,12 +60,12 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		{
 			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new Chunk[]
-                                     {
-                                          new LocalVariableChunk { Name = "i", Value = "5" }, 
-                                          new SendExpressionChunk { Code = "i" }
-                                     });
+			                     	{
+			                     		new LocalVariableChunk { Name = "i", Value = "5" }, 
+			                     		new SendExpressionChunk { Code = "i" }
+			                     	});
 			var instance = compiler.CreateInstance();
-			string contents = instance.RenderView(_viewContext);
+			string contents = instance.RenderView();
 
 			Assert.AreEqual("5", contents);
 		}
@@ -81,23 +75,23 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		{
 			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new Chunk[]
-                {
-                    new LocalVariableChunk {Name = "data", Value = "new[]{3,4,5}"},
-                    new SendLiteralChunk {Text = "<ul>"},
-                    new ForEachChunk
-                    {
-                        Code = "var item in data",
-                        Body = new Chunk[]
-                        { 
-                            new SendLiteralChunk {Text = "<li>"},
-                            new SendExpressionChunk {Code = "item"},
-                            new SendLiteralChunk {Text = "</li>"}
-                        }
-                    },
-                    new SendLiteralChunk {Text = "</ul>"}
-                });
+			                     	{
+			                     		new LocalVariableChunk {Name = "data", Value = "new[]{3,4,5}"},
+			                     		new SendLiteralChunk {Text = "<ul>"},
+			                     		new ForEachChunk
+			                     			{
+			                     				Code = "var item in data",
+			                     				Body = new Chunk[]
+			                     				       	{ 
+			                     				       		new SendLiteralChunk {Text = "<li>"},
+			                     				       		new SendExpressionChunk {Code = "item"},
+			                     				       		new SendLiteralChunk {Text = "</li>"}
+			                     				       	}
+			                     			},
+			                     		new SendLiteralChunk {Text = "</ul>"}
+			                     	});
 			var instance = compiler.CreateInstance();
-			var contents = instance.RenderView(_viewContext);
+			var contents = instance.RenderView();
 			Assert.AreEqual("<ul><li>3</li><li>4</li><li>5</li></ul>", contents);
 		}
 
@@ -106,16 +100,16 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		{
 			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new Chunk[]
-                {
-                    new SendExpressionChunk{Code="title"},
-                    new AssignVariableChunk{ Name="item", Value="8"},
-                    new SendLiteralChunk{ Text=":"},
-                    new SendExpressionChunk{Code="item"},
-                    new GlobalVariableChunk{ Name="title", Value="\"hello world\""},
-                    new GlobalVariableChunk{ Name="item", Value="3"}
-                });
+			                     	{
+			                     		new SendExpressionChunk{Code="title"},
+			                     		new AssignVariableChunk{ Name="item", Value="8"},
+			                     		new SendLiteralChunk{ Text=":"},
+			                     		new SendExpressionChunk{Code="item"},
+			                     		new GlobalVariableChunk{ Name="title", Value="\"hello world\""},
+			                     		new GlobalVariableChunk{ Name="item", Value="3"}
+			                     	});
 			var instance = compiler.CreateInstance();
-			var contents = instance.RenderView(_viewContext);
+			var contents = instance.RenderView();
 			Assert.AreEqual("hello world:8", contents);
 		}
 
@@ -197,9 +191,9 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		{
 			var compiler = new ViewCompiler("Spark.AbstractSparkView");
 			compiler.CompileView(new Chunk[]
-                                     {
-                                         new SendExpressionChunk {Code = "NoSuchVariable"}
-                });
+			                     	{
+			                     		new SendExpressionChunk {Code = "NoSuchVariable"}
+			                     	});
 		}
 	}
 }

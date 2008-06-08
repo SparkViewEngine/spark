@@ -1,31 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using MvcContrib.SparkViewEngine;
-using MvcContrib.SparkViewEngine.Parser;
-using MvcContrib.UnitTests.SparkViewEngine.Models;
-using MvcContrib.ViewFactories;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Spark.FileSystem;
+using Spark.Tests.Models;
+using Spark.Tests.Stubs;
 
-namespace MvcContrib.UnitTests.SparkViewEngine
+namespace Spark.Tests
 {
 	[TestFixture, Category("SparkViewEngine")]
 	public class SparkViewFactoryTester
 	{
 		private MockRepository mocks;
-		private HttpContextBase context;
-		private HttpRequestBase request;
-		private HttpResponseBase response;
-		private IController controller;
-		private RouteData routeData;
+		//private HttpContextBase context;
+		//private HttpRequestBase request;
+		//private HttpResponseBase response;
+		//private IController controller;
+		//private RouteData routeData;
 
-		private SparkViewFactory factory = new SparkViewFactory(new FileSystemViewSourceLoader("SparkViewEngine\\Views"), new ParserFactory());
+		//		private 
+		//		private SparkViewFactory engine = new SparkViewFactory(new FileSystemViewSourceLoader("SparkViewEngine\\Views"), new ParserFactory());
+
+		private StubViewEngine engine;
+		private SparkViewFactory factory;
+		private StringBuilder sb;
 
 		[SetUp]
 		public void Init()
@@ -33,52 +31,59 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			// clears cache
 			CompiledViewHolder.Current = null;
 
-			// reset routes
-			RouteTable.Routes.Clear();
-			RouteTable.Routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
-									  {
-										  Defaults = new RouteValueDictionary(new { action = "Index", id = "" })
-									  });
 
-			mocks = new MockRepository();
-			context = mocks.DynamicHttpContextBase();
-			response = context.Response;
-			request = context.Request;
-			SetupResult.For(request.ApplicationPath).Return("/");
-			SetupResult.For(response.ApplyAppPathModifier("")).IgnoreArguments().Do(new Func<string, string>(path => path));
+			factory = new SparkViewFactory("Spark.Tests.Stubs.StubSparkView", new FileSystemViewFolder("Views"));
+			engine = new StubViewEngine { Factory = factory };
 
-			Expect.Call(() => response.Write(""))
-				.IgnoreArguments()
-				.Do(new writedelegate(onwrite));
-
-			//            SetupResult.For(delegate() { response.Write(null); }).IgnoreArguments().Callback(onwrite);
-
-			controller = mocks.DynamicMock<IController>();
 			sb = new StringBuilder();
 
-			routeData = new RouteData();
-			routeData.Values.Add("controller", "Home");
-			routeData.Values.Add("action", "Index");
+			// reset routes
+			//RouteTable.Routes.Clear();
+			//RouteTable.Routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
+			//                          {
+			//                              Defaults = new RouteValueDictionary(new { action = "Index", id = "" })
+			//                          });
 
-			factory = new SparkViewFactory(new FileSystemViewSourceLoader("SparkViewEngine\\Views"), new ParserFactory());
+			mocks = new MockRepository();
+			//context = mocks.DynamicHttpContextBase();
+			//response = context.Response;
+			//request = context.Request;
+			//SetupResult.For(request.ApplicationPath).Return("/");
+			//SetupResult.For(response.ApplyAppPathModifier("")).IgnoreArguments().Do(new Func<string, string>(path => path));
+
+			//Expect.Call(() => response.Write(""))
+			//    .IgnoreArguments()
+			//    .Do(new writedelegate(onwrite));
+
+			////            SetupResult.For(delegate() { response.Write(null); }).IgnoreArguments().Callback(onwrite);
+
+			//controller = mocks.DynamicMock<IController>();
+			//sb = new StringBuilder();
+
+			//routeData = new RouteData();
+			//routeData.Values.Add("controller", "Home");
+			//routeData.Values.Add("action", "Index");
+
+			//engine = new SparkViewFactory(new FileSystemViewSourceLoader("SparkViewEngine\\Views"), new ParserFactory());
 
 		}
-		delegate void writedelegate(string data);
-		private StringBuilder sb;
+		//delegate void writedelegate(string data);
+		
 
-		void onwrite(string data)
-		{
-			sb.Append(data);
-		}
+		//void onwrite(string data)
+		//{
+		//    sb.Append(data);
+		//}
 
-		ViewContext MakeViewContext(string viewName, string masterName)
+		StubViewContext MakeViewContext(string viewName, string masterName)
 		{
 			return MakeViewContext(viewName, masterName, null);
 		}
 
-		ViewContext MakeViewContext(string viewName, string masterName, object viewData)
+		StubViewContext MakeViewContext(string viewName, string masterName, object viewData)
 		{
-			return new ViewContext(context, routeData, controller, viewName, masterName, new ViewDataDictionary(viewData), null);
+			return new StubViewContext { ControllerName = "Home", ViewName = viewName, MasterName = masterName, Output = sb };
+			//return new StubViewContext(context, routeData, controller, viewName, masterName, new ViewDataDictionary(viewData), null);
 		}
 
 
@@ -87,7 +92,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		{
 			mocks.ReplayAll();
 
-			factory.RenderView(MakeViewContext("index", null));
+			engine.RenderView(MakeViewContext("index", null));
 
 			mocks.VerifyAll();
 		}
@@ -98,7 +103,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		{
 			mocks.ReplayAll();
 
-			factory.RenderView(MakeViewContext("foreach", null));
+			engine.RenderView(MakeViewContext("foreach", null));
 
 			mocks.VerifyAll();
 
@@ -115,7 +120,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
 			mocks.ReplayAll();
 
-			factory.RenderView(MakeViewContext("globalset", null));
+			engine.RenderView(MakeViewContext("globalset", null));
 
 			mocks.VerifyAll();
 
@@ -129,7 +134,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		{
 			mocks.ReplayAll();
 
-			factory.RenderView(MakeViewContext("childview", "layout"));
+			engine.RenderView(MakeViewContext("childview", "layout"));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -145,7 +150,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
 			mocks.ReplayAll();
 
-			factory.RenderView(MakeViewContext("namedcontent", "layout"));
+			engine.RenderView(MakeViewContext("namedcontent", "layout"));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -155,34 +160,30 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			Assert.That(content.Contains("<p>footer part two</p>"));
 		}
 
-		[Test]
-		public void HtmlHelperWorksOnItsOwn()
-		{
-			mocks.ReplayAll();
+		//[Test]
+		//public void HtmlHelperWorksOnItsOwn()
+		//{
+		//    mocks.ReplayAll();
 
-			var viewContext = MakeViewContext("helpers", null);
-			var html = new HtmlHelper(viewContext, new ViewDataContainer { ViewData = viewContext.ViewData });
-			var link = html.ActionLink("hello", "world");
-			response.Write(link);
+		//    var viewContext = MakeViewContext("helpers", null);
+		//    var html = new HtmlHelper(viewContext, new ViewDataContainer { ViewData = viewContext.ViewData });
+		//    var link = html.ActionLink("hello", "world");
+		//    response.Write(link);
 
-			mocks.VerifyAll();
+		//    mocks.VerifyAll();
 
-			Assert.AreEqual("<a href=\"/Home/world\">hello</a>", link);
-		}
-
-		class ViewDataContainer : IViewDataContainer
-		{
-			public ViewDataDictionary ViewData { get; set; }
-		}
+		//    Assert.AreEqual("<a href=\"/Home/world\">hello</a>", link);
+		//}
 
 
-		[Test]
+
+		[Test, Ignore("Library no longer references asp.net mvc directly")]
 		public void UsingHtmlHelper()
 		{
 
 			mocks.ReplayAll();
 
-			factory.RenderView(MakeViewContext("helpers", null));
+			engine.RenderView(MakeViewContext("helpers", null));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -195,7 +196,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		{
 			mocks.ReplayAll();
 
-			factory.RenderView(MakeViewContext("usingpartial", null));
+			engine.RenderView(MakeViewContext("usingpartial", null));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -211,7 +212,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		{
 			mocks.ReplayAll();
 
-			factory.RenderView(MakeViewContext("usingpartialimplicit", null));
+			engine.RenderView(MakeViewContext("usingpartialimplicit", null));
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -220,14 +221,14 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		}
 
 
-		[Test]
+		[Test, Ignore("Library no longer references asp.net mvc directly")]
 		public void DeclaringViewDataAccessor()
 		{
 			mocks.ReplayAll();
 			var comments = new[] { new Comment { Text = "foo" }, new Comment { Text = "bar" } };
 			var viewContext = MakeViewContext("viewdata", null, new { Comments = comments, Caption = "Hello world" });
 
-			factory.RenderView(viewContext);
+			engine.RenderView(viewContext);
 
 			mocks.VerifyAll();
 			string content = sb.ToString();
@@ -239,29 +240,15 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		[Test]
 		public void MasterEmptyByDefault()
 		{
-			var viewSourceLoader = mocks.CreateMock<IViewSourceLoader>();
-			Expect.Call(viewSourceLoader.HasView("Shared\\Application.xml")).Return(false);
-			SetupResult.For(viewSourceLoader.HasView("Shared\\Foo.xml")).Return(false);
+			var viewFolder = mocks.CreateMock<IViewFolder>();
+			Expect.Call(viewFolder.HasView("Shared\\Application.xml")).Return(false);
+			SetupResult.For(viewFolder.HasView("Shared\\Foo.xml")).Return(false);
 
-			factory.ViewSourceLoader = viewSourceLoader;
-
-			var route = new Route(
-				"{controller}/{action}/{id}",
-				new RouteValueDictionary(new { id = "" }),
-				new MvcRouteHandler());
-			SetupResult.For(request.AppRelativeCurrentExecutionFilePath).Return("~/");
-			SetupResult.For(request.PathInfo).Return("Foo/Bar");
-
-			var controller = mocks.CreateMock<IController>();
+			factory.ViewFolder = viewFolder;
 
 			mocks.ReplayAll();
 
-			var viewContext = new ViewContext(
-				context, route.GetRouteData(context), controller,
-				"Baaz", null, null, null);
-
-			var key = factory.CreateKey(viewContext);
-
+			var key = factory.CreateKey("Foo", "Baaz", null);
 
 			Assert.AreEqual("Foo", key.ControllerName);
 			Assert.AreEqual("Baaz", key.ViewName);
@@ -271,28 +258,16 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		[Test]
 		public void MasterApplicationIfPresent()
 		{
-			var viewSourceLoader = mocks.CreateMock<IViewSourceLoader>();
-			Expect.Call(viewSourceLoader.HasView("Shared\\Application.xml")).Return(true);
-			SetupResult.For(viewSourceLoader.HasView("Shared\\Foo.xml")).Return(false);
+			var viewFolder = mocks.CreateMock<IViewFolder>();
+			Expect.Call(viewFolder.HasView("Shared\\Application.xml")).Return(true);
+			SetupResult.For(viewFolder.HasView("Shared\\Foo.xml")).Return(false);
 
-			factory.ViewSourceLoader = viewSourceLoader;
+			factory.ViewFolder = viewFolder;
 
-			var route = new Route(
-				"{controller}/{action}/{id}",
-				new RouteValueDictionary(new { id = "" }),
-				new MvcRouteHandler());
-			SetupResult.For(request.AppRelativeCurrentExecutionFilePath).Return("~/");
-			SetupResult.For(request.PathInfo).Return("Foo/Bar");
-
-			var controller = mocks.CreateMock<IController>();
 
 			mocks.ReplayAll();
 
-			var viewContext = new ViewContext(
-				context, route.GetRouteData(context), controller,
-				"Baaz", null, null, null);
-
-			var key = factory.CreateKey(viewContext);
+			var key = factory.CreateKey("Foo", "Baaz", null);
 
 
 			Assert.AreEqual("Foo", key.ControllerName);
@@ -303,28 +278,16 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		[Test]
 		public void MasterForControllerIfPresent()
 		{
-			var viewSourceLoader = mocks.CreateMock<IViewSourceLoader>();
-			SetupResult.For(viewSourceLoader.HasView("Shared\\Application.xml")).Return(true);
-			SetupResult.For(viewSourceLoader.HasView("Shared\\Foo.xml")).Return(true);
+			var viewFolder = mocks.CreateMock<IViewFolder>();
+			SetupResult.For(viewFolder.HasView("Shared\\Application.xml")).Return(true);
+			SetupResult.For(viewFolder.HasView("Shared\\Foo.xml")).Return(true);
 
-			factory.ViewSourceLoader = viewSourceLoader;
-
-			var route = new Route(
-				"{controller}/{action}/{id}",
-				new RouteValueDictionary(new { id = "" }),
-				new MvcRouteHandler());
-			SetupResult.For(request.AppRelativeCurrentExecutionFilePath).Return("~/");
-			SetupResult.For(request.PathInfo).Return("Foo/Bar");
-
-			var controller = mocks.CreateMock<IController>();
+			factory.ViewFolder = viewFolder;
 
 			mocks.ReplayAll();
 
-			var viewContext = new ViewContext(
-				context, route.GetRouteData(context), controller,
-				"Baaz", null, null, null);
 
-			var key = factory.CreateKey(viewContext);
+			var key = factory.CreateKey("Foo", "Baaz", null);
 
 
 			Assert.AreEqual("Foo", key.ControllerName);
@@ -339,7 +302,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			mocks.ReplayAll();
 			var viewContext = MakeViewContext("usingnamespace", null);
 
-			factory.RenderView(viewContext);
+			engine.RenderView(viewContext);
 
 			mocks.VerifyAll();
 			string content = sb.ToString();

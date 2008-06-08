@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using Microsoft.CSharp;
 using MvcContrib.SparkViewEngine.Compiler.ChunkVisitors;
+using Spark;
 
 namespace MvcContrib.SparkViewEngine.Compiler
 {
@@ -44,13 +45,13 @@ namespace MvcContrib.SparkViewEngine.Compiler
 			globalsGenerator.Accept(view);
 			globalsGenerator.Accept(master);
 
-			source.AppendLine("public void ProcessView() {");
+			source.AppendLine("public void RenderViewContent() {");
 			source.AppendLine("var output = BindContent(\"view\");");
 			viewGenerator.Accept(view);
 			source.AppendLine("}");
 
-			source.AppendLine("public override string ProcessRequest() {");
-			source.AppendLine("ProcessView();");
+			source.AppendLine("public override string RenderView() {");
+			source.AppendLine("RenderViewContent();");
 			if (master == null || master.Count == 0)
 			{
 				source.AppendLine("return Content[\"view\"].ToString();}");

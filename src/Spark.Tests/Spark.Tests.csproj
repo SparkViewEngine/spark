@@ -55,10 +55,15 @@
   <ItemGroup>
     <Compile Include="ChunkBuilderVisitorTester.cs" />
     <Compile Include="CompiledViewHolderTester.cs" />
+    <Compile Include="FileSystemViewFolderTester.cs" />
     <Compile Include="MarkupGrammarTester.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="PositionTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="SparkViewFactoryTester.cs" />
+    <Compile Include="SparkViewFactoryTester.cs" />
+    <Compile Include="Stubs\StubSparkView.cs" />
+    <Compile Include="Stubs\StubViewContext.cs" />
+    <Compile Include="Stubs\StubViewEngine.cs" />
     <Compile Include="ViewCompilerTester.cs" />
     <Compile Include="ViewLoaderTester.cs" />
   </ItemGroup>
@@ -69,20 +74,48 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\childview.xml" />
-    <Content Include="Views\Home\foreach.xml" />
-    <Content Include="Views\Home\globalset.xml" />
-    <Content Include="Views\Home\helpers.xml" />
-    <Content Include="Views\Home\Index.xml" />
-    <Content Include="Views\Home\macros.xml" />
-    <Content Include="Views\Home\namedcontent.xml" />
-    <Content Include="Views\Home\usingnamespace.xml" />
-    <Content Include="Views\Home\usingpartial.xml" />
-    <Content Include="Views\Home\usingpartialimplicit.xml" />
-    <Content Include="Views\Home\viewdata.xml" />
-    <Content Include="Views\Shared\layout.xml" />
-    <Content Include="Views\Shared\partial.xml" />
-    <Content Include="Views\Shared\_comment.xml" />
+    <Content Include="Views\Home\childview.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\foreach.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\globalset.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\helpers.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\Index.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\macros.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\namedcontent.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\usingnamespace.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\usingpartial.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\usingpartialimplicit.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Home\viewdata.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\layout.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\partial.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\_comment.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
