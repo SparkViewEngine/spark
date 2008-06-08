@@ -11,12 +11,6 @@ namespace Spark
 {
 	public class SparkViewEngine : ISparkViewEngine
 	{
-		//public SparkViewEngine()
-		//    : this(new FileSystemViewSourceLoader(), new ParserFactory())
-		//{
-
-		//}
-
 		public SparkViewEngine(string baseClass, IViewFolder viewFolder)
 		{
 			BaseClass = baseClass;
@@ -45,31 +39,7 @@ namespace Spark
 
 			return entry.Compiler.CreateInstance();
 		}
-
-		//public void RenderView(ViewContext viewContext)
-		//{
-		//    var key = CreateKey(viewContext);
-
-		//    var entry = CompiledViewHolder.Current.Lookup(key);
-		//    if (entry == null)
-		//    {
-		//        entry = CreateEntry(key);
-		//        CompiledViewHolder.Current.Store(entry);
-		//    }
-
-		//    var view = entry.Compiler.CreateInstance();
-		//    var content = view.RenderView(viewContext);
-
-		//    viewContext.HttpContext.Response.Write(content);
-		//}
-
-		//public CompiledViewHolder.Key CreateKey(ViewContext viewContext)
-		//{
-		//    return CreateKey(
-		//        viewContext.RouteData.GetRequiredString("controller"),
-		//        viewContext.ViewName,
-		//        viewContext.MasterName);
-		//}
+	
 
 		public CompiledViewHolder.Key CreateKey(string controllerName, string viewName, string masterName)
 		{
