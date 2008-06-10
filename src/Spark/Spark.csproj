@@ -59,6 +59,7 @@
     <Compile Include="Compiler\FileContext.cs" />
     <Compile Include="Compiler\NodeVisitors\ChunkBuilderVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\ConditionalAttributeVisitor.cs" />
+    <Compile Include="Compiler\NodeVisitors\ForEachAttributeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\NodeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\SpecialNodeInspector.cs" />
     <Compile Include="Compiler\NodeVisitors\SpecialNodeVisitor.cs" />

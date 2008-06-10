@@ -392,5 +392,21 @@ namespace Spark.Tests
                 index = nextIndex + value.Length;
             }
         }
+
+
+        [Test]
+        public void EachAttribute()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("eachattribute", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+            ContainsInOrder(content,
+                "<td>Bob</td>",
+                "<td>James</td>",
+                "<td>SpecialName</td>",
+                "<td>Anonymous</td>");
+        }
 	}
 }

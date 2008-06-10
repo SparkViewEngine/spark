@@ -19,7 +19,9 @@
       <p>Hi $user.Name;!</p>
     </div>
     <else>
-      <p>Anonymous user.</p>
+      <div>
+        <p>Anonymous user.</p>
+      </div>
     </else>
   </for>
 
