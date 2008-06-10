@@ -309,5 +309,88 @@ namespace Spark.Tests
 			Assert.That(content.Contains("<p>Bar</p>"));
 			Assert.That(content.Contains("<p>Hello</p>"));
 		}
+
+        [Test]
+        public void IfElseElements()
+        {
+            mocks.ReplayAll();
+			var viewContext = MakeViewContext("ifelement", null);
+			factory.RenderView(viewContext);
+			mocks.VerifyAll();
+
+            string content = sb.ToString();
+            Assert.That(!content.Contains("<if"));
+            Assert.That(!content.Contains("<else"));
+
+            Assert.That(content.Contains("<p>argis5</p>"));
+            Assert.That(!content.Contains("<p>argis6</p>"));
+            Assert.That(content.Contains("<p>argisstill5</p>"));
+            Assert.That(!content.Contains("<p>argisnotstill5</p>"));
+            Assert.That(!content.Contains("<p>argisnow6</p>"));
+            Assert.That(content.Contains("<p>argisstillnot6</p>"));
+        }
+
+
+        [Test]
+        public void IfElseAttributes()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("ifattribute", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+            Assert.That(!content.Contains("<if"));
+            Assert.That(!content.Contains("<else"));
+
+            Assert.That(content.Contains("<p>argis5</p>"));
+            Assert.That(!content.Contains("<p>argis6</p>"));
+            Assert.That(content.Contains("<p>argisstill5</p>"));
+            Assert.That(!content.Contains("<p>argisnotstill5</p>"));
+            Assert.That(!content.Contains("<p>argisnow6</p>"));
+            Assert.That(content.Contains("<p>argisstillnot6</p>"));
+        }
+
+
+        [Test]
+        public void ChainingElseIfElement()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("elseifelement", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+            ContainsInOrder(content,
+                "<p>Hi Bob!</p>",
+                "<p>Administrator James</p>",
+                "<p>Test user.</p>",
+                "<p>Anonymous user.</p>");
+        }
+
+        [Test]
+        public void ChainingElseIfAttribute()
+        {   
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("elseifattribute", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+            ContainsInOrder(content,
+                "<p>Hi Bob!</p>",
+                "<p>Administrator James</p>",
+                "<p>Test user.</p>",
+                "<p>Anonymous user.</p>");
+        }
+
+        void ContainsInOrder(string content, params string[] values)
+        {
+            int index = 0;
+            foreach(string value in values)
+            {
+                int nextIndex = content.IndexOf(value, index);
+                Assert.GreaterOrEqual(nextIndex, 0, string.Format("Looking for {0}", value));
+                index = nextIndex + value.Length;
+            }
+        }
 	}
 }

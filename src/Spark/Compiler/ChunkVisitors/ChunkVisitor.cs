@@ -54,7 +54,12 @@
 		{
 		}
 
-		protected override void Visit(ViewDataModelChunk chunk)
+	    protected override void Visit(ConditionalChunk chunk)
+	    {
+	        Accept(chunk.Body);
+	    }
+
+	    protected override void Visit(ViewDataModelChunk chunk)
 		{
 
 		}

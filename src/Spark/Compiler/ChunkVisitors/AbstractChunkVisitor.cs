@@ -69,14 +69,18 @@ namespace Spark.Compiler.ChunkVisitors
 			{
 				Visit((UseNamespaceChunk)chunk);
 			}
+            else if (chunk is ConditionalChunk)
+            {
+                Visit((ConditionalChunk)chunk);
+            }
 			else
 			{
 				throw new CompilerException(string.Format("Unknown chunk type {0}", chunk.GetType().Name));
 			}
 		}
 
-		protected abstract void Visit(ViewDataModelChunk chunk);
-
+        protected abstract void Visit(ConditionalChunk chunk);
+	    protected abstract void Visit(ViewDataModelChunk chunk);
 		protected abstract void Visit(ViewDataChunk chunk);
 		protected abstract void Visit(RenderPartialChunk chunk);
 		protected abstract void Visit(AssignVariableChunk chunk);

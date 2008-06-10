@@ -21,7 +21,7 @@ namespace Spark.Compiler.NodeVisitors
 
 		public SpecialNodeVisitor(IList<string> partialFileNames)
 		{
-			_containingNames = new List<string>(new[] { "var", "for", "use", "content" });
+			_containingNames = new List<string>(new[] { "var", "for", "use", "content", "if", "else", "elseif" });
 			_nonContainingNames = new List<string>(new[] { "global", "set", "viewdata" });
 			_partialFileNames = partialFileNames;
 		}

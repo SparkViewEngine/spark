@@ -124,8 +124,11 @@ namespace Spark.Parser
 			var specialNodeVisitor = new SpecialNodeVisitor(partialFileNames);
 			specialNodeVisitor.Accept(nodes.Value);
 
+		    var ifAttributeVisitor = new ConditionalAttributeVisitor();
+            ifAttributeVisitor.Accept(specialNodeVisitor.Nodes);
+
 			var chunkBuilder = new ChunkBuilderVisitor();
-			chunkBuilder.Accept(specialNodeVisitor.Nodes);
+            chunkBuilder.Accept(ifAttributeVisitor.Nodes);
 			newEntry.Chunks = chunkBuilder.Chunks;
 
 			var fileReferenceVisitor = new FileReferenceVisitor();

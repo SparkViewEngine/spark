@@ -110,4 +110,23 @@ namespace Spark.Compiler
 		}
 		public IList<Chunk> Body { get; set; }
 	}
+
+    public class ConditionalChunk : Chunk
+    {
+        public ConditionalChunk()
+		{
+			Body = new List<Chunk>();
+		}
+
+        public ConditionalType Type { get; set; }
+        public string Condition { get; set; }
+        public IList<Chunk> Body { get; set; }
+    }
+
+    public enum ConditionalType
+    {
+        If,
+        Else,
+        ElseIf,
+    }
 }
