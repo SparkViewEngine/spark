@@ -1,10 +1,16 @@
 ﻿<html>
   <head>
-    <title></title>
+    <title>Hello</title>
+    $Ajax.InstallScripts();
   </head>
   <body>
+    <div id="header">
+    </div>
     <div id="main">
       <use content="view"/>
+    </div>
+    <div id="footer">
+
     </div>
   </body>
 </html>

@@ -14,11 +14,15 @@ using Castle.MonoRail.Framework;
 namespace DemoCastleSite.Controllers
 {
 	[Layout("Default")]
-	public class HomeController : Controller
+	public class HomeController : SmartDispatcherController
 	{		
 		public void Index()
 		{
 			
+		}
+		public void Apply(string name, string address)
+		{
+			RenderView("index");
 		}
 	}
 }

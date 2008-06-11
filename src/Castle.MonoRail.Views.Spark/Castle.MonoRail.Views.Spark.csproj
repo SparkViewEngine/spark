@@ -53,9 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HelperExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkView.cs" />
     <Compile Include="SparkViewFactory.cs" />
+    <Compile Include="ModelDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj">

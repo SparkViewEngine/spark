@@ -39,8 +39,8 @@ namespace Castle.MonoRail.Views.Spark
 			if (controllerContext.LayoutNames != null)
 				masterName = string.Join(" ", controllerContext.LayoutNames);
 
-			var view = Engine.CreateInstance(location, viewName, masterName);
-			output.Write(view.RenderView());
+			var view = (SparkView)Engine.CreateInstance(location, viewName, masterName);
+			output.Write(view.RenderView(context, controllerContext));
 		}
 
 		public override void Process(string templateName, string layoutName, TextWriter output,
