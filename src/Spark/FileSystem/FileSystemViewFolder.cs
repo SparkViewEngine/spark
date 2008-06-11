@@ -25,6 +25,9 @@ namespace Spark.FileSystem
 
 		public IList<string> ListViews(string path)
 		{
+			if (!Directory.Exists(Path.Combine(_basePath, path)))
+				return new string[0];
+
 			var files = Directory.GetFiles(Path.Combine(_basePath, path));
 			return files.ToList().ConvertAll(viewPath => Path.GetFileName(viewPath));
 		}

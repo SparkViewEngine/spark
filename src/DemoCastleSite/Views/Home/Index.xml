@@ -1,0 +1,3 @@
+﻿<use namespace="System"/>
+<p>Hello world</p>
+<p>$DateTime.Now;</p>
