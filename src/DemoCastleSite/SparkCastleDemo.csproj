@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
+    <Content Include="Views\Common\SimpleMessage.xml" />
     <Content Include="Views\Home\Index.xml" />
     <Content Include="Views\Shared\Default.xml" />
     <Content Include="Web.config" />

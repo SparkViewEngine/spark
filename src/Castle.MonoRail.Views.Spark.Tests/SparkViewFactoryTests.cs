@@ -53,7 +53,6 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
             controller = mocks.CreateMock<IController>();
 	        controllerContext = mocks.CreateMock<IControllerContext>();
-	        //server = mocks.CreateMock<IServerUtility>();
 	        routingEngine = mocks.CreateMock<IRoutingEngine>();
 	        output = new StringWriter();
 	        helpers = new HelperDictionary();
@@ -82,9 +81,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
 	        SetupResult.For(routingEngine.IsEmpty).Return(true);
 
-            
-
-            var urlBuilder = new TestUrlBuilder(server, routingEngine);
+            var urlBuilder = new DefaultUrlBuilder(server, routingEngine);
 
 	        var serviceProvider = mocks.CreateMock<IServiceProvider>();
             var viewSourceLoader = new FileAssemblyViewSourceLoader("Views");
@@ -105,28 +102,17 @@ namespace Castle.MonoRail.Views.Spark.Tests
             manager.RegisterEngineForView(factory);
         }
 
-        class TestUrlBuilder : DefaultUrlBuilder
-        {
-            public TestUrlBuilder(IServerUtility server, IRoutingEngine engine) : base(server, engine)
-            {
-            }
 
-            public override UrlParts CreateUrlPartsBuilder(UrlInfo current, UrlBuilderParameters parameters, System.Collections.IDictionary routeParameters)
-            {
-                return base.CreateUrlPartsBuilder(current, parameters, routeParameters);
-            }
-        }
-
-        void InitUrlInfo(string area, string controller, string action)
+        void InitUrlInfo(string areaName, string controllerName, string actionName)
         {
-            UrlInfo urlInfo = new UrlInfo(area, controller, action, "/", "castle");
+            var urlInfo = new UrlInfo(areaName, controllerName, actionName, "/", "castle");
             SetupResult.For(engineContext.UrlInfo).Return(urlInfo);
             
-            RouteMatch routeMatch = new RouteMatch();
+            var routeMatch = new RouteMatch();
             SetupResult.For(controllerContext.RouteMatch).Return(routeMatch);
         }
 
-	    void ContainsInOrder(string content, params string[] values)
+	    static void ContainsInOrder(string content, params string[] values)
         {
             int index = 0;
             foreach (string value in values)
@@ -141,7 +127,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 		public void ExtensionIsXml()
 		{
             mocks.ReplayAll();
-            Assert.AreEqual("xml", this.factory.ViewFileExtension);
+            Assert.AreEqual("xml", factory.ViewFileExtension);
 		}
 
 		[Test]
@@ -159,7 +145,8 @@ namespace Castle.MonoRail.Views.Spark.Tests
             manager.Process("Home\\Index", output, engineContext, controller, controllerContext);
             var entry = factory.Engine.GetEntry("Home", "Index", "default");
             var view = (SparkView)entry.CreateInstance();
-            var result = view.RenderView(engineContext, controllerContext);
+            view.Contextualize(engineContext, controllerContext);
+            var result = view.RenderView();
             Assert.AreEqual(result, output.ToString());
             Assert.AreSame(engineContext, view.Context);
             Assert.AreSame(controllerContext, view.ControllerContext);
@@ -193,6 +180,15 @@ namespace Castle.MonoRail.Views.Spark.Tests
                             "<p>foo:baaz</p>",
                             "<p>bar:7</p>",
                             "<p>bar+4:11</p>");
+        }
+
+        [Test]
+        public void TerseHtmlEncode()
+        {
+            mocks.ReplayAll();
+            manager.Process("Home\\TerseHtmlEncode", output, engineContext, controller, controllerContext);
+            ContainsInOrder(output.ToString(), 
+                "<p>This &lt;contains/&gt; html</p>");
         }
 	}
 

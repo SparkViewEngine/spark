@@ -20,9 +20,13 @@ namespace DemoCastleSite.Controllers
 		{
 			
 		}
+
 		public void Apply(string name, string address)
 		{
-			RenderView("index");
+		    PropertyBag["caption"] = "Information submitted";
+            PropertyBag["message"] = string.Format("Name {0}, Address {1}", name, address);
+		    PropertyBag["continue"] = new {controller="Home", action="Index"};
+			RenderSharedView("common/simplemessage");
 		}
 	}
 }
