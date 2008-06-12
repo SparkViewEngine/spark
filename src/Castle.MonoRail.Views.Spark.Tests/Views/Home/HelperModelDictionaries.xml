@@ -1,0 +1,10 @@
+﻿<div>
+  <use namespace="Castle.MonoRail.Views.Spark"/>
+
+  <p>$Url.For(new {action="foo", querystring="bar=quux"});</p>
+
+  $Form.FormTag(new {action="save", method="get"});
+  <p>Input: $Form.TextField("hello", new {@class="world"});</p>
+  $Form.EndFormTag();
+
+</div>

@@ -14,10 +14,18 @@ namespace Castle.MonoRail.Views.Spark
 	{
 		public SparkViewFactory()
 		{			
-			Engine = new SparkViewEngine(typeof(SparkView).FullName, this);
 		}
 
-		ISparkViewEngine Engine { get; set; }
+        public override void Service(IServiceProvider provider)
+        {
+            base.Service(provider);
+
+            Engine = (ISparkViewEngine)provider.GetService(typeof (ISparkViewEngine));
+            if (Engine == null)
+                Engine = new SparkViewEngine(typeof(SparkView).FullName, this);
+        }
+
+		public ISparkViewEngine Engine { get; set; }
 
 		public override string ViewFileExtension
 		{

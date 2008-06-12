@@ -11,12 +11,19 @@ namespace Castle.MonoRail.Views.Spark
 {
 	public abstract class SparkView : AbstractSparkView
 	{
+	    protected SparkView()
+        {
+            ViewData = new SparkViewData(this);
+        }
+
 		private IEngineContext _context;
 		private IControllerContext _controllerContext;
 
-		public IController Controller { get { return _context.CurrentController; } }
-		public IEngineContext Context { get { return _context; } }
-		public IRequest Request { get { return _context.Request; } }
+        public IEngineContext Context { get { return _context; } }
+        public IControllerContext ControllerContext {get { return _controllerContext; } }
+
+        public IController Controller { get { return _context.CurrentController; } }
+        public IRequest Request { get { return _context.Request; } }
 		public IResponse Response { get { return _context.Response; } }
 		public IDictionary Session { get { return _context.Session; } }
 		public Flash Flash { get { return _context.Flash; } }
@@ -37,7 +44,9 @@ namespace Castle.MonoRail.Views.Spark
 		public JSONHelper JSON { get { return Helper<JSONHelper>(); } }
 		public ZebdaHelper Zebda { get { return Helper<ZebdaHelper>(); } }
 
-		public T Helper<T>() where T : class { return _controllerContext.Helpers[typeof(T).Name] as T; }
+        public SparkViewData ViewData { get; set; } 
+
+	    public T Helper<T>() where T : class { return ControllerContext.Helpers[typeof(T).Name] as T; }
 
 
 		public string RenderView(IEngineContext context, IControllerContext controllerContext)

@@ -1,0 +1,6 @@
+﻿<div>
+  <viewdata foo="string" bar="int"/>
+  <p>foo:$foo;</p>
+  <p>bar:$bar;</p>
+  <p>bar+4:$bar+4;</p>
+</div>
