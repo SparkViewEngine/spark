@@ -1,5 +1,6 @@
 ﻿<html>
   <head>
+    <use namespace="System"/>
     <use namespace="Castle.MonoRail.Views.Spark"/>
     <title>Hello</title>
     $Ajax.InstallScripts();

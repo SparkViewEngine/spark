@@ -1,15 +1,14 @@
-﻿<use namespace="System"/>
-<use namespace="Castle.MonoRail.Views.Spark"/>
-
-<h1>Hello world</h1>
+﻿<h1>Hello world</h1>
 
 <div>
   $Form.FormTag(new {action="apply", method="get"});
   <p>$DateTime.UtcNow;</p>
   <p>Name: $Form.TextField("name");</p>
-  <p>Address: $Form.TextField("address", new {@class="w00t", style="margin-left:20px"});</p>
+  <p>
+    Address:
+    $Form.TextField("address", new {@class="w00t", style="margin-left:20px"});
+  </p>
   <p>$Form.Submit("Apply");</p>
   $Form.EndFormTag();
 </div>
 
-<p>$Url.For(new {action="something"});</p>
