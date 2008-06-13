@@ -1,8 +1,22 @@
-﻿using System;
+﻿/*
+   Copyright 2008 Louis DeJardin - http://whereslou.com
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Spark.Compiler;
 using Spark.Compiler.ChunkVisitors;
 using Spark.Compiler.NodeVisitors;
@@ -11,197 +25,197 @@ using Spark.FileSystem;
 
 namespace Spark.Parser
 {
-	public class ViewLoader
-	{
-		static MarkupGrammar _grammar = new MarkupGrammar();
-		private IViewFolder viewFolder;
+    public class ViewLoader
+    {
+        static MarkupGrammar _grammar = new MarkupGrammar();
+        private IViewFolder viewFolder;
 
-		readonly Dictionary<string, Entry> _entries = new Dictionary<string, Entry>();
-		readonly List<string> _pending = new List<string>();
-
-
-		public ViewLoader()
-		{
-			Parser = _grammar.Nodes;
-		}
-
-		public IViewFolder ViewFolder
-		{
-			get { return viewFolder; }
-			set { viewFolder = value; }
-		}
-
-		public ParseAction<IList<Node>> Parser { get; set;}
+        readonly Dictionary<string, Entry> _entries = new Dictionary<string, Entry>();
+        readonly List<string> _pending = new List<string>();
 
 
-		private class Entry
-		{
-			private readonly FileContext fileContext = new FileContext();
+        public ViewLoader()
+        {
+            Parser = _grammar.Nodes;
+        }
 
-			public string ViewPath
-			{
-				get { return FileContext.ViewSourcePath; }
-				set { FileContext.ViewSourcePath = value; }
-			}
+        public IViewFolder ViewFolder
+        {
+            get { return viewFolder; }
+            set { viewFolder = value; }
+        }
 
-			public long LastModified { get; set; }
-
-			public IList<Chunk> Chunks
-			{
-				get { return FileContext.Contents; }
-				set { FileContext.Contents = value; }
-			}
-
-			public FileContext FileContext
-			{
-				get { return fileContext; }
-			}
-		}
-
-		Entry BindEntry(string referencePath)
-		{
-			if (_entries.ContainsKey(referencePath))
-				return _entries[referencePath];
-
-			var viewSource = viewFolder.GetViewSource(referencePath);
-
-			var newEntry = new Entry { ViewPath = referencePath, LastModified = viewSource.LastModified };
-			_entries.Add(referencePath, newEntry);
-			_pending.Add(referencePath);
-			return newEntry;
-		}
-
-		public virtual bool IsCurrent()
-		{
-			foreach (var entry in _entries.Values)
-			{
-				var viewSource = viewFolder.GetViewSource(entry.ViewPath);
-				if (viewSource.LastModified != entry.LastModified)
-					return false;
-			}
-			return true;
-		}
+        public ParseAction<IList<Node>> Parser { get; set; }
 
 
-		public IList<Chunk> Load(string controllerName, string viewName)
-		{
-			return Load(ResolveView(controllerName, viewName));
-		}
+        private class Entry
+        {
+            private readonly FileContext fileContext = new FileContext();
 
-		public IList<Chunk> Load(string viewPath)
-		{
-			if (string.IsNullOrEmpty(viewPath))
-				return null;
+            public string ViewPath
+            {
+                get { return FileContext.ViewSourcePath; }
+                set { FileContext.ViewSourcePath = value; }
+            }
 
-			var entry = BindEntry(viewPath);
-			if (entry == null)
-				return null;
+            public long LastModified { get; set; }
 
-			while (_pending.Count != 0)
-			{
-				string nextPath = _pending.First();
-				_pending.Remove(nextPath);
-				LoadInternal(nextPath);
-			}
+            public IList<Chunk> Chunks
+            {
+                get { return FileContext.Contents; }
+                set { FileContext.Contents = value; }
+            }
 
-			return entry.Chunks;
-		}
+            public FileContext FileContext
+            {
+                get { return fileContext; }
+            }
+        }
 
-		void LoadInternal(string viewPath)
-		{
-			if (string.IsNullOrEmpty(viewPath))
-				return;
+        Entry BindEntry(string referencePath)
+        {
+            if (_entries.ContainsKey(referencePath))
+                return _entries[referencePath];
 
-			var newEntry = BindEntry(viewPath);
+            var viewSource = viewFolder.GetViewSource(referencePath);
 
-			var sourceContext = CreateSourceContext(viewPath);
-			var position = new Position(sourceContext);
+            var newEntry = new Entry { ViewPath = referencePath, LastModified = viewSource.LastModified };
+            _entries.Add(referencePath, newEntry);
+            _pending.Add(referencePath);
+            return newEntry;
+        }
 
-			var nodes = Parser(position);
+        public virtual bool IsCurrent()
+        {
+            foreach (var entry in _entries.Values)
+            {
+                var viewSource = viewFolder.GetViewSource(entry.ViewPath);
+                if (viewSource.LastModified != entry.LastModified)
+                    return false;
+            }
+            return true;
+        }
 
-			var partialFileNames = FindPartialFiles(viewPath);
 
-			var specialNodeVisitor = new SpecialNodeVisitor(partialFileNames);
-			specialNodeVisitor.Accept(nodes.Value);
+        public IList<Chunk> Load(string controllerName, string viewName)
+        {
+            return Load(ResolveView(controllerName, viewName));
+        }
+
+        public IList<Chunk> Load(string viewPath)
+        {
+            if (string.IsNullOrEmpty(viewPath))
+                return null;
+
+            var entry = BindEntry(viewPath);
+            if (entry == null)
+                return null;
+
+            while (_pending.Count != 0)
+            {
+                string nextPath = _pending.First();
+                _pending.Remove(nextPath);
+                LoadInternal(nextPath);
+            }
+
+            return entry.Chunks;
+        }
+
+        void LoadInternal(string viewPath)
+        {
+            if (string.IsNullOrEmpty(viewPath))
+                return;
+
+            var newEntry = BindEntry(viewPath);
+
+            var sourceContext = CreateSourceContext(viewPath);
+            var position = new Position(sourceContext);
+
+            var nodes = Parser(position);
+
+            var partialFileNames = FindPartialFiles(viewPath);
+
+            var specialNodeVisitor = new SpecialNodeVisitor(partialFileNames);
+            specialNodeVisitor.Accept(nodes.Value);
 
             var forEachAttributeVisitor = new ForEachAttributeVisitor();
             forEachAttributeVisitor.Accept(specialNodeVisitor.Nodes);
 
-		    var conditionalAttributeVisitor = new ConditionalAttributeVisitor();
+            var conditionalAttributeVisitor = new ConditionalAttributeVisitor();
             conditionalAttributeVisitor.Accept(forEachAttributeVisitor.Nodes);
 
-			var chunkBuilder = new ChunkBuilderVisitor();
+            var chunkBuilder = new ChunkBuilderVisitor();
             chunkBuilder.Accept(conditionalAttributeVisitor.Nodes);
-			newEntry.Chunks = chunkBuilder.Chunks;
+            newEntry.Chunks = chunkBuilder.Chunks;
 
-			var fileReferenceVisitor = new FileReferenceVisitor();
-			fileReferenceVisitor.Accept(newEntry.Chunks);
+            var fileReferenceVisitor = new FileReferenceVisitor();
+            fileReferenceVisitor.Accept(newEntry.Chunks);
 
-			foreach (var useFile in fileReferenceVisitor.References)
-			{
-				var referencePath = ResolveReference(viewPath, useFile.Name);
+            foreach (var useFile in fileReferenceVisitor.References)
+            {
+                var referencePath = ResolveReference(viewPath, useFile.Name);
 
-				if (!string.IsNullOrEmpty(referencePath))
-					useFile.FileContext = BindEntry(referencePath).FileContext;
-			}
-		}
+                if (!string.IsNullOrEmpty(referencePath))
+                    useFile.FileContext = BindEntry(referencePath).FileContext;
+            }
+        }
 
-		public IList<string> FindPartialFiles(string viewPath)
-		{
-			var results = new List<string>();
+        public IList<string> FindPartialFiles(string viewPath)
+        {
+            var results = new List<string>();
 
-			string controllerPath = Path.GetDirectoryName(viewPath);
-			foreach (var view in ViewFolder.ListViews(controllerPath))
-			{
-				string baseName = Path.GetFileNameWithoutExtension(view);
-				if (baseName.StartsWith("_"))
-					results.Add(baseName.Substring(1));
-			}
-			foreach (var view in ViewFolder.ListViews("Shared"))
-			{
-				string baseName = Path.GetFileNameWithoutExtension(view);
-				if (baseName.StartsWith("_"))
-					results.Add(baseName.Substring(1));
-			}
-			return results;
-		}
+            string controllerPath = Path.GetDirectoryName(viewPath);
+            foreach (var view in ViewFolder.ListViews(controllerPath))
+            {
+                string baseName = Path.GetFileNameWithoutExtension(view);
+                if (baseName.StartsWith("_"))
+                    results.Add(baseName.Substring(1));
+            }
+            foreach (var view in ViewFolder.ListViews("Shared"))
+            {
+                string baseName = Path.GetFileNameWithoutExtension(view);
+                if (baseName.StartsWith("_"))
+                    results.Add(baseName.Substring(1));
+            }
+            return results;
+        }
 
-		string ResolveReference(string existingViewPath, string viewName)
-		{
-			string controllerPath = Path.GetDirectoryName(existingViewPath);
+        string ResolveReference(string existingViewPath, string viewName)
+        {
+            string controllerPath = Path.GetDirectoryName(existingViewPath);
 
-			return ResolveView(controllerPath, viewName);
-		}
+            return ResolveView(controllerPath, viewName);
+        }
 
-		string ResolveView(string controllerName, string viewName)
-		{
-			if (string.IsNullOrEmpty(viewName))
-				return null;
+        string ResolveView(string controllerName, string viewName)
+        {
+            if (string.IsNullOrEmpty(viewName))
+                return null;
 
-			string attempt1 = Path.Combine(controllerName, Path.ChangeExtension(viewName, "xml"));
-			if (ViewFolder.HasView(attempt1))
-				return attempt1;
+            string attempt1 = Path.Combine(controllerName, Path.ChangeExtension(viewName, "xml"));
+            if (ViewFolder.HasView(attempt1))
+                return attempt1;
 
-			string attempt2 = Path.Combine("Shared", Path.ChangeExtension(viewName, "xml"));
-			if (ViewFolder.HasView(attempt2))
-				return attempt2;
+            string attempt2 = Path.Combine("Shared", Path.ChangeExtension(viewName, "xml"));
+            if (ViewFolder.HasView(attempt2))
+                return attempt2;
 
-			throw new FileNotFoundException(
-				string.Format("Unable to find {0} or {1}", attempt1, attempt2),
-				attempt1);
-		}
+            throw new FileNotFoundException(
+                string.Format("Unable to find {0} or {1}", attempt1, attempt2),
+                attempt1);
+        }
 
-		private SourceContext CreateSourceContext(string viewPath)
-		{
-			var viewSource = viewFolder.GetViewSource(viewPath);
+        private SourceContext CreateSourceContext(string viewPath)
+        {
+            var viewSource = viewFolder.GetViewSource(viewPath);
 
-			if (viewSource == null)
-				throw new FileNotFoundException("View file not found", viewPath);
+            if (viewSource == null)
+                throw new FileNotFoundException("View file not found", viewPath);
 
-			using (TextReader reader = new StreamReader(viewSource.OpenViewStream()))
-			{
-				return new SourceContext(reader.ReadToEnd(), viewSource.LastModified);
-			}
-		}
-	}
+            using (TextReader reader = new StreamReader(viewSource.OpenViewStream()))
+            {
+                return new SourceContext(reader.ReadToEnd(), viewSource.LastModified);
+            }
+        }
+    }
 }

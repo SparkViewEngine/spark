@@ -1,26 +1,40 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Castle.Core.Logging;
-using Castle.MonoRail.Framework;
-using Castle.MonoRail.Framework.Helpers;
-using Castle.MonoRail.Framework.Routing;
-using Castle.MonoRail.Framework.Services;
-using Castle.MonoRail.Framework.Test;
-using NUnit.Framework;
-using Rhino.Mocks;
-using Spark;
+﻿// Copyright 2004-2008 Castle Project - http://www.castleproject.org/
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
-	[TestFixture]
-	public class SparkViewFactoryTests 
-	{
-		private MockRepository mocks;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.IO;
+
+    using Castle.Core.Logging;
+    using Castle.MonoRail.Framework;
+    using Castle.MonoRail.Framework.Helpers;
+    using Castle.MonoRail.Framework.Routing;
+    using Castle.MonoRail.Framework.Services;
+    using Castle.MonoRail.Framework.Test;
+
+    using NUnit.Framework;
+    using Rhino.Mocks;
+    using global::Spark;
+
+    [TestFixture]
+    public class SparkViewFactoryTests
+    {
+        private MockRepository mocks;
         private IEngineContext engineContext;
         private IRequest request;
         private IResponse response;
@@ -34,56 +48,56 @@ namespace Castle.MonoRail.Views.Spark.Tests
         private IDictionary session;
 
         private StringWriter output;
-	    private DefaultViewEngineManager manager;
-	    private HelperDictionary helpers;
-	    private IRoutingEngine routingEngine;
+        private DefaultViewEngineManager manager;
+        private HelperDictionary helpers;
+        private IRoutingEngine routingEngine;
         private SparkViewFactory factory;
-	    private NameValueCollection requestParams;
-	    private IDictionary contextItems;
+        private NameValueCollection requestParams;
+        private IDictionary contextItems;
 
-	    [SetUp]
-		public void Init()
-		{
-			mocks = new MockRepository();
+        [SetUp]
+        public void Init()
+        {
+            mocks = new MockRepository();
             factory = new SparkViewFactory();
-	        engineContext = mocks.CreateMock<IEngineContext>();
+            engineContext = mocks.CreateMock<IEngineContext>();
             server = new MockServerUtility();
             request = mocks.CreateMock<IRequest>();
             response = mocks.CreateMock<IResponse>();
 
             controller = mocks.CreateMock<IController>();
-	        controllerContext = mocks.CreateMock<IControllerContext>();
-	        routingEngine = mocks.CreateMock<IRoutingEngine>();
-	        output = new StringWriter();
-	        helpers = new HelperDictionary();
+            controllerContext = mocks.CreateMock<IControllerContext>();
+            routingEngine = mocks.CreateMock<IRoutingEngine>();
+            output = new StringWriter();
+            helpers = new HelperDictionary();
 
-	        propertyBag = new Dictionary<string, object>();
+            propertyBag = new Dictionary<string, object>();
             flash = new Flash();
             session = new Dictionary<string, object>();
             requestParams = new NameValueCollection();
             contextItems = new Dictionary<string, object>();
 
 
-	        SetupResult.For(engineContext.Server).Return(server);
+            SetupResult.For(engineContext.Server).Return(server);
             SetupResult.For(engineContext.Request).Return(request);
             SetupResult.For(engineContext.Response).Return(response);
-	        SetupResult.For(engineContext.CurrentController).Return(controller);
+            SetupResult.For(engineContext.CurrentController).Return(controller);
             SetupResult.For(engineContext.CurrentControllerContext).Return(controllerContext);
             SetupResult.For(engineContext.Flash).Return(flash);
             SetupResult.For(engineContext.Session).Return(session);
-	        SetupResult.For(engineContext.Items).Return(contextItems);
+            SetupResult.For(engineContext.Items).Return(contextItems);
 
             SetupResult.For(request.Params).Return(requestParams);
-	        
-	        SetupResult.For(controllerContext.LayoutNames).Return(new [] {"default"});
-	        SetupResult.For(controllerContext.Helpers).Return(helpers);
-	        SetupResult.For(controllerContext.PropertyBag).Return(propertyBag);
 
-	        SetupResult.For(routingEngine.IsEmpty).Return(true);
+            SetupResult.For(controllerContext.LayoutNames).Return(new[] { "default" });
+            SetupResult.For(controllerContext.Helpers).Return(helpers);
+            SetupResult.For(controllerContext.PropertyBag).Return(propertyBag);
+
+            SetupResult.For(routingEngine.IsEmpty).Return(true);
 
             var urlBuilder = new DefaultUrlBuilder(server, routingEngine);
 
-	        var serviceProvider = mocks.CreateMock<IServiceProvider>();
+            var serviceProvider = mocks.CreateMock<IServiceProvider>();
             var viewSourceLoader = new FileAssemblyViewSourceLoader("Views");
             SetupResult.For(serviceProvider.GetService(typeof(IViewSourceLoader))).Return(viewSourceLoader);
             SetupResult.For(serviceProvider.GetService(typeof(ILoggerFactory))).Return(new NullLogFactory());
@@ -91,13 +105,13 @@ namespace Castle.MonoRail.Views.Spark.Tests
             SetupResult.For(serviceProvider.GetService(typeof(IUrlBuilder))).Return(urlBuilder);
             mocks.Replay(serviceProvider);
 
-	        SetupResult.For(engineContext.GetService(null)).IgnoreArguments().Do(
-	            new Func<Type, object>(serviceProvider.GetService));
+            SetupResult.For(engineContext.GetService(null)).IgnoreArguments().Do(
+                new Func<Type, object>(serviceProvider.GetService));
 
             factory.Service(serviceProvider);
 
 
-	        manager = new DefaultViewEngineManager();
+            manager = new DefaultViewEngineManager();
             manager.RegisterEngineForExtesionLookup(factory);
             manager.RegisterEngineForView(factory);
         }
@@ -107,12 +121,12 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             var urlInfo = new UrlInfo(areaName, controllerName, actionName, "/", "castle");
             SetupResult.For(engineContext.UrlInfo).Return(urlInfo);
-            
+
             var routeMatch = new RouteMatch();
             SetupResult.For(controllerContext.RouteMatch).Return(routeMatch);
         }
 
-	    static void ContainsInOrder(string content, params string[] values)
+        static void ContainsInOrder(string content, params string[] values)
         {
             int index = 0;
             foreach (string value in values)
@@ -123,20 +137,20 @@ namespace Castle.MonoRail.Views.Spark.Tests
             }
         }
 
-		[Test]
-		public void ExtensionIsXml()
-		{
+        [Test]
+        public void ExtensionIsXml()
+        {
             mocks.ReplayAll();
             Assert.AreEqual("xml", factory.ViewFileExtension);
-		}
+        }
 
-		[Test]
-		public void ProcessBasicTemplate()
-		{
+        [Test]
+        public void ProcessBasicTemplate()
+        {
             mocks.ReplayAll();
             manager.Process("Home\\Index", output, engineContext, controller, controllerContext);
             Assert.That(output.ToString().Contains("<h1>Simple test</h1>"));
-		}
+        }
 
         [Test]
         public void ContextAndControllerContextAvailable()
@@ -167,14 +181,14 @@ namespace Castle.MonoRail.Views.Spark.Tests
                             "<input", "type=\"text\"", "id=\"hello\"", "class=\"world\"", "/>",
                             "</form>");
         }
-          
 
-	    [Test]
+
+        [Test]
         public void PropertyBagViewdata()
         {
             mocks.ReplayAll();
-	        propertyBag["foo"] = "baaz";
-	        propertyBag["bar"] = 7;
+            propertyBag["foo"] = "baaz";
+            propertyBag["bar"] = 7;
             manager.Process("Home\\PropertyBagViewdata", output, engineContext, controller, controllerContext);
             ContainsInOrder(output.ToString(),
                             "<p>foo:baaz</p>",
@@ -187,9 +201,9 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             mocks.ReplayAll();
             manager.Process("Home\\TerseHtmlEncode", output, engineContext, controller, controllerContext);
-            ContainsInOrder(output.ToString(), 
+            ContainsInOrder(output.ToString(),
                 "<p>This &lt;contains/&gt; html</p>");
         }
-	}
+    }
 
 }

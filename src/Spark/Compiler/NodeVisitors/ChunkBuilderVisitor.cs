@@ -1,3 +1,19 @@
+/*
+   Copyright 2008 Louis DeJardin - http://whereslou.com
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 using System.Collections.Generic;
 using System.Linq;
 using Spark.Compiler;
@@ -53,13 +69,33 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ExpressionNode expressionNode)
         {
-            Chunks.Add(new SendExpressionChunk { Code = expressionNode.Code.Replace("[[", "<").Replace("]]", ">") });
+            Chunks.Add(new SendExpressionChunk { Code = UnarmorCode(expressionNode.Code) });
         }
 
         protected override void Visit(DoctypeNode docTypeNode)
         {
-            //TODO: repeat from source instead of rebuilding?
-            AddLiteral("<!--doctype-->");
+            //[28]   	doctypedecl	   ::=   	'<!DOCTYPE' S  Name (S  ExternalID)? S? ('[' intSubset ']' S?)? '>'
+            //[75]   	ExternalID	   ::=   	'SYSTEM' S  SystemLiteral | 'PUBLIC' S PubidLiteral S SystemLiteral 
+            //[12]   	PubidLiteral	   ::=   	'"' PubidChar* '"' | "'" (PubidChar - "'")* "'"
+            //[11]   	SystemLiteral	   ::=   	('"' [^"]* '"') | ("'" [^']* "'")
+
+            if (docTypeNode.ExternalId == null)
+            {
+                AddLiteral(string.Format("<!DOCTYPE {0}>",
+                    docTypeNode.Name));
+            }
+            else if (docTypeNode.ExternalId.ExternalIdType == "SYSTEM")
+            {
+                char systemQuote = docTypeNode.ExternalId.SystemId.Contains("\"") ? '\'' : '\"';
+                AddLiteral(string.Format("<!DOCTYPE {0} SYSTEM {2}{1}{2}>",
+                    docTypeNode.Name, docTypeNode.ExternalId.SystemId, systemQuote));
+            }
+            else if (docTypeNode.ExternalId.ExternalIdType == "PUBLIC")
+            {
+                char systemQuote = docTypeNode.ExternalId.SystemId.Contains("\"") ? '\'' : '\"';
+                AddLiteral(string.Format("<!DOCTYPE {0} PUBLIC \"{1}\" {3}{2}{3}>",
+                    docTypeNode.Name, docTypeNode.ExternalId.PublicId, docTypeNode.ExternalId.SystemId, systemQuote));
+            }
         }
 
         protected override void Visit(ElementNode elementNode)
@@ -111,7 +147,7 @@ namespace Spark.Compiler.NodeVisitors
 
                             foreach (var attr in inspector.Attributes)
                             {
-                                Chunks.Add(new LocalVariableChunk { Type = type.Replace("[[", "<").Replace("]]", ">"), Name = attr.Name, Value = attr.Value.Replace("[[", "<").Replace("]]", ">") });
+                                Chunks.Add(new LocalVariableChunk { Type = UnarmorCode(type), Name = attr.Name, Value = UnarmorCode(attr.Value) });
                             }
 
                             Accept(specialNode.Body);
@@ -124,7 +160,7 @@ namespace Spark.Compiler.NodeVisitors
 
                             foreach (var attr in specialNode.Element.Attributes.Where(a => a != typeAttr))
                             {
-                                AddUnordered(new GlobalVariableChunk { Type = type.Replace("[[", "<").Replace("]]", ">"), Name = attr.Name, Value = attr.Value.Replace("[[", "<").Replace("]]", ">") });
+                                AddUnordered(new GlobalVariableChunk { Type = UnarmorCode(type), Name = attr.Name, Value = UnarmorCode(attr.Value) });
                             }
                         }
                         break;
@@ -136,7 +172,7 @@ namespace Spark.Compiler.NodeVisitors
 
                             foreach (var attr in inspector.Attributes)
                             {
-                                string typeName = attr.Value.Replace("[[", "<").Replace("]]", ">");
+                                string typeName = UnarmorCode(attr.Value);
                                 AddUnordered(new ViewDataChunk { Type = typeName, Name = attr.Name });
                             }
                         }
@@ -169,7 +205,7 @@ namespace Spark.Compiler.NodeVisitors
                         {
                             var conditionAttr = inspector.TakeAttribute("condition");
 
-                            var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = CodeAttribute(conditionAttr) };
+                            var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = UnarmorCode(conditionAttr.Value) };
                             Chunks.Add(ifChunk);
                             Chunks = ifChunk.Body;
                             Accept(specialNode.Body);
@@ -192,7 +228,7 @@ namespace Spark.Compiler.NodeVisitors
                                 throw new CompilerException("An 'elseif' may only follow an 'if' or 'elseif'.");
 
                             var conditionAttr = inspector.TakeAttribute("condition");
-                            var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = CodeAttribute(conditionAttr) };
+                            var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = UnarmorCode(conditionAttr.Value) };
                             Chunks.Add(elseIfChunk);
                             Chunks = elseIfChunk.Body;
                             Accept(specialNode.Body);
@@ -261,7 +297,7 @@ namespace Spark.Compiler.NodeVisitors
         private bool SatisfyElsePrecondition()
         {
             var lastChunk = Chunks.LastOrDefault();
-            
+
             // remove any literal that's entirely whitespace
             if (lastChunk is SendLiteralChunk)
             {
@@ -285,9 +321,10 @@ namespace Spark.Compiler.NodeVisitors
             return false;
         }
 
-        string CodeAttribute(AttributeNode attr)
+
+        static string UnarmorCode(string code)
         {
-            return attr.Value.Replace("[[", "<").Replace("]]", ">");
+            return code.Replace("[[", "<").Replace("]]", ">");
         }
     }
 }

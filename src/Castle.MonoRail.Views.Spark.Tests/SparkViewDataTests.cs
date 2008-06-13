@@ -1,16 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using Castle.MonoRail.Framework;
-using Castle.MonoRail.Framework.Resources;
-using Castle.MonoRail.Framework.Test;
-using NUnit.Framework;
-using Rhino.Mocks;
+﻿// Copyright 2004-2008 Castle Project - http://www.castleproject.org/
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
+    using Castle.MonoRail.Framework;
+    using Castle.MonoRail.Framework.Resources;
+    using Castle.MonoRail.Framework.Test;
+    using NUnit.Framework;
+    using Rhino.Mocks;
+
     [TestFixture]
     public class SparkViewDataTests
     {
@@ -26,9 +35,9 @@ namespace Castle.MonoRail.Views.Spark.Tests
             mocks = new MockRepository();
 
             view = mocks.PartialMock<SparkView>();
-            
+
             engineContext = new MockEngineContext(new UrlInfo("", "Home", "Index", "/", "castle"));
-            controllerContext = new ControllerContext();            
+            controllerContext = new ControllerContext();
 
 
             SetupResult.For(view.RenderView()).Return("result-not-needed");
@@ -55,16 +64,9 @@ namespace Castle.MonoRail.Views.Spark.Tests
             //* engineContext.Flash
             //* controller.PropertyBag
 
-            //SetupResult.For(controller.Resources).Return(new Dictionary<string, IResource>());
-            //SetupResult.For(controller.Params).Return(new NameValueCollection());
-            //SetupResult.For(controller.Helpers).Return(new HelperDictionary());
-            //SetupResult.For(engineContext.Flash).Return(new Flash());
-
             var resource = mocks.CreateMock<IResource>();
-            
-//            var controller = mocks.PartialMock<Controller>();
+
             mocks.ReplayAll();
-  //          controller.Contextualize(engineContext, controllerContext);
 
             controllerContext.PropertyBag.Add("controllerPropertyBagKey", "controllerPropertyBagValue");
             engineContext.Flash.Add("contextFlashKey", "contextFlashValue");
