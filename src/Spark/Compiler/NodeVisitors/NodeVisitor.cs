@@ -20,7 +20,13 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public abstract class NodeVisitor
+    public interface INodeVisitor
+    {
+        void Accept(IList<Node> nodes);
+        void Accept(Node node);
+    }
+
+    public abstract class NodeVisitor : INodeVisitor
     {
         public void Accept(IList<Node> nodes)
         {
@@ -48,10 +54,11 @@ namespace Spark.Compiler.NodeVisitors
                 Visit((CommentNode)node);
             else if (node is SpecialNode)
                 Visit((SpecialNode)node);
+            else if (node is ExtensionNode)
+                Visit((ExtensionNode)node);
             else
                 throw new ArgumentException(string.Format("Unknown node type {0}", node.GetType()), "node");
         }
-
 
         protected abstract void Visit(ExpressionNode expressionNode);
         protected abstract void Visit(EntityNode entityNode);
@@ -60,7 +67,8 @@ namespace Spark.Compiler.NodeVisitors
         protected abstract void Visit(ElementNode elementNode);
         protected abstract void Visit(EndElementNode endElementNode);
         protected abstract void Visit(AttributeNode attributeNode);
-        protected abstract void Visit(SpecialNode specialNode);
         protected abstract void Visit(CommentNode commentNode);
+        protected abstract void Visit(SpecialNode specialNode);
+        protected abstract void Visit(ExtensionNode node);
     }
 }

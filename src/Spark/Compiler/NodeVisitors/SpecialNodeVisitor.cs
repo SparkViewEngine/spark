@@ -29,17 +29,21 @@ namespace Spark.Compiler.NodeVisitors
         private readonly IList<string> _nonContainingNames;
         private readonly IList<string> _partialFileNames;
 
+        private readonly ISparkExtensionFactory _extensionFactory;
+        private ExtensionNode _currentExtensionNode;
+
         private IList<Node> _nodes = new List<Node>();
         private readonly Stack<IList<Node>> _stack = new Stack<IList<Node>>();
 
 
 
 
-        public SpecialNodeVisitor(IList<string> partialFileNames)
+        public SpecialNodeVisitor(IList<string> partialFileNames, ISparkExtensionFactory extensionFactory)
         {
             _containingNames = new List<string>(new[] { "var", "for", "use", "content", "if", "else", "elseif" });
             _nonContainingNames = new List<string>(new[] { "global", "set", "viewdata" });
             _partialFileNames = partialFileNames;
+            _extensionFactory = extensionFactory;
         }
 
         public IList<Node> Nodes
@@ -73,6 +77,14 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ElementNode elementNode)
         {
+            if (_currentExtensionNode != null)
+            {
+                // An open extension node is greedy. Capture continues until the end element occurs.
+                _currentExtensionNode.Body.Add(elementNode);
+                return;
+            }
+
+            ISparkExtension extension;
             if (_containingNames.Contains(elementNode.Name))
             {
                 PushSpecial(elementNode);
@@ -83,6 +95,19 @@ namespace Spark.Compiler.NodeVisitors
             {
                 PushSpecial(elementNode);
                 PopSpecial(elementNode.Name);
+            }
+            else if (TryCreateExtension(elementNode, out extension))
+            {
+                ExtensionNode extensionNode = new ExtensionNode(elementNode, extension);
+                extensionNode.Body.Add(elementNode);
+                Nodes.Add(extensionNode);
+
+                if (!elementNode.IsEmptyElement)
+                {
+                    _currentExtensionNode = extensionNode;
+                    _stack.Push(Nodes);
+                    Nodes = extensionNode.Body;
+                }
             }
             else if (_partialFileNames.Contains(elementNode.Name))
             {
@@ -99,9 +124,33 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
+        private bool TryCreateExtension(ElementNode node, out ISparkExtension extension)
+        {
+            if (_extensionFactory == null)
+            {
+                extension = null;
+                return false;
+            }
+
+            extension = _extensionFactory.CreateExtension(node);
+            return extension != null;
+        }
+
 
         protected override void Visit(EndElementNode endElementNode)
         {
+            if (_currentExtensionNode != null)
+            {
+                // An open extension node is greedy. Capture continues until an end element occurs.                
+                Nodes.Add(endElementNode);
+                if (string.Equals(endElementNode.Name, _currentExtensionNode.Element.Name))
+                {
+                    Nodes = _stack.Pop();
+                    _currentExtensionNode = null;
+                }
+                return;
+            }
+
             if (_containingNames.Contains(endElementNode.Name))
             {
                 PopSpecial(endElementNode.Name);
@@ -147,7 +196,12 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(SpecialNode specialNode)
         {
-            Add(specialNode);
+            throw new System.NotImplementedException();
+        }
+
+        protected override void Visit(ExtensionNode node)
+        {
+            throw new System.NotImplementedException();
         }
 
         protected override void Visit(CommentNode commentNode)

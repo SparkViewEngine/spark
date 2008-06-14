@@ -154,4 +154,17 @@ namespace Spark.Parser.Markup
         public ElementNode Element;
         public IList<Node> Body = new List<Node>();
     }
+
+    public class ExtensionNode : Node
+    {
+        public ExtensionNode(ElementNode element, ISparkExtension extension)
+        {
+            Element = element;
+            Extension = extension;
+        }
+
+        public ElementNode Element;
+        public ISparkExtension Extension { get; set; }
+        public IList<Node> Body = new List<Node>();
+    }
 }

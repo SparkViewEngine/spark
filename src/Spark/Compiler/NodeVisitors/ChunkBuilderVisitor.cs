@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Spark.Compiler;
@@ -326,5 +327,23 @@ namespace Spark.Compiler.NodeVisitors
         {
             return code.Replace("[[", "<").Replace("]]", ">");
         }
+
+        protected override void Visit(ExtensionNode extensionNode)
+        {
+            var extensionChunk = new ExtensionChunk {Extension = extensionNode.Extension};
+
+            var prior = Chunks;
+            try
+            {
+                Chunks.Add(extensionChunk);
+                Chunks = extensionChunk.Body;
+                extensionNode.Extension.VisitNode(this, extensionNode.Body, Chunks);
+            }
+            finally
+            {
+                Chunks = prior;
+            }
+        }
+
     }
 }

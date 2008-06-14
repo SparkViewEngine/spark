@@ -47,6 +47,7 @@ namespace Spark.Parser
 
         public ParseAction<IList<Node>> Parser { get; set; }
 
+        public ISparkExtensionFactory ExtensionFactory { get; set; }
 
         private class Entry
         {
@@ -135,7 +136,7 @@ namespace Spark.Parser
 
             var partialFileNames = FindPartialFiles(viewPath);
 
-            var specialNodeVisitor = new SpecialNodeVisitor(partialFileNames);
+            var specialNodeVisitor = new SpecialNodeVisitor(partialFileNames, ExtensionFactory);
             specialNodeVisitor.Accept(nodes.Value);
 
             var forEachAttributeVisitor = new ForEachAttributeVisitor();

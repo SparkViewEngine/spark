@@ -38,6 +38,11 @@ namespace Spark.Compiler.ChunkVisitors
             Using(chunk.Namespace);
         }
 
+        protected override void Visit(ExtensionChunk chunk)
+        {
+            chunk.Extension.VisitChunk(this, OutputLocation.UsingNamespace, chunk.Body, _source);
+        }
+
         protected override void Visit(RenderPartialChunk chunk)
         {
             if (_noncyclic.Contains(chunk.FileContext.ViewSourcePath))

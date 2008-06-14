@@ -145,4 +145,15 @@ namespace Spark.Compiler
         Else,
         ElseIf,
     }
+
+    public class ExtensionChunk : Chunk
+    {
+        public ExtensionChunk()
+        {
+            Body = new List<Chunk>();
+        }
+
+        public ISparkExtension Extension { get; set; }
+        public IList<Chunk> Body { get; set; }
+    }
 }

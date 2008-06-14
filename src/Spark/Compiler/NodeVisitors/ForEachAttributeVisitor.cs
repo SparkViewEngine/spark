@@ -141,6 +141,11 @@ namespace Spark.Compiler.NodeVisitors
             Nodes.Add(reconstructed);
         }
 
+        protected override void Visit(ExtensionNode node)
+        {
+            Nodes.Add(node);
+        }
+
         protected override void Visit(CommentNode node)
         {
             Nodes.Add(node);

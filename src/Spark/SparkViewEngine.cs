@@ -32,6 +32,7 @@ namespace Spark
 
         public string BaseClass { get; set; }
         public IViewFolder ViewFolder { get; set; }
+        public ISparkExtensionFactory ExtensionFactory { get; set; }
 
 
         public ISparkViewEntry GetEntry(string controllerName, string viewName, string masterName)
@@ -82,7 +83,7 @@ namespace Spark
             var entry = new CompiledViewHolder.Entry
                             {
                                 Key = key,
-                                Loader = new ViewLoader { ViewFolder = ViewFolder },
+                                Loader = new ViewLoader { ViewFolder = ViewFolder, ExtensionFactory = ExtensionFactory},
                                 Compiler = new ViewCompiler(BaseClass)
                             };
 

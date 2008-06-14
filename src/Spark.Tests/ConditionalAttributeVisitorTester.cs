@@ -51,7 +51,7 @@ namespace Spark.Tests
 
             string input = "<div if=\"false\">hello</div><div elseif=\"true\">world</div><else>that's all</else>";
             var nodes = grammar.Nodes(new Position(new SourceContext(input))).Value;
-            var visitor0 = new SpecialNodeVisitor(new string[0]);
+            var visitor0 = new SpecialNodeVisitor(new string[0], null);
             visitor0.Accept(nodes);
             var visitor = new ConditionalAttributeVisitor();
             visitor.Accept(visitor0.Nodes);

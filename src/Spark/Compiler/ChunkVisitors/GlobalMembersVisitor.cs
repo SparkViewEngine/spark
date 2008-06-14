@@ -38,5 +38,9 @@ namespace Spark.Compiler.ChunkVisitors
             _source.AppendLine(string.Format("{0} {1} {{get {{return ({0})ViewData[\"{1}\"];}}}}", chunk.Type ?? "object", chunk.Name));
         }
 
+        protected override void Visit(ExtensionChunk chunk)
+        {
+            chunk.Extension.VisitChunk(this, OutputLocation.ClassMembers, chunk.Body, _source);
+        }
     }
 }

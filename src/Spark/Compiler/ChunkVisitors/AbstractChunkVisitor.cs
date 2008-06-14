@@ -19,7 +19,13 @@ using System.Collections.Generic;
 
 namespace Spark.Compiler.ChunkVisitors
 {
-    public abstract class AbstractChunkVisitor
+    public interface IChunkVisitor
+    {
+        void Accept(IList<Chunk> chunks);
+        void Accept(Chunk chunk);
+    }
+
+    public abstract class AbstractChunkVisitor : IChunkVisitor
     {
         public void Accept(IList<Chunk> chunks)
         {
@@ -89,11 +95,17 @@ namespace Spark.Compiler.ChunkVisitors
             {
                 Visit((ConditionalChunk)chunk);
             }
+            else if (chunk is ExtensionChunk)
+            {
+                Visit((ExtensionChunk)chunk);
+            }
             else
             {
                 throw new CompilerException(string.Format("Unknown chunk type {0}", chunk.GetType().Name));
             }
         }
+
+        protected abstract void Visit(ExtensionChunk chunk);
 
         protected abstract void Visit(ConditionalChunk chunk);
         protected abstract void Visit(ViewDataModelChunk chunk);

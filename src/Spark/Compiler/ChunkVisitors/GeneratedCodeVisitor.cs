@@ -102,6 +102,11 @@ namespace Spark.Compiler.ChunkVisitors
 
         }
 
+        protected override void Visit(ExtensionChunk chunk)
+        {
+            chunk.Extension.VisitChunk(this, OutputLocation.RenderMethod, chunk.Body, _source);
+        }
+
         protected override void Visit(ConditionalChunk chunk)
         {
             switch (chunk.Type)

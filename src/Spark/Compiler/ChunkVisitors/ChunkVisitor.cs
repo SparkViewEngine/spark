@@ -79,5 +79,10 @@ namespace Spark.Compiler.ChunkVisitors
         {
 
         }
+
+        protected override void Visit(ExtensionChunk chunk)
+        {
+            Accept(chunk.Body);
+        }
     }
 }
