@@ -8,9 +8,6 @@
     <li each="var item in items">$item;</li>
   </ul>
 
-  <p>
-  </p>
-
   <CaptureFor id='"foo"'>one</CaptureFor>
 
   <DiggStylePagination Page="items" Adjacents="1"/>
@@ -18,7 +15,7 @@
   <CaptureFor id='"foo"' append='"after"'>two</CaptureFor>
 
   <CaptureFor id='"foo"' append='"before"'>
-    <p>wow. $DateTime.Now; indeed</p>
+    <p>It is $DateTime.UtcNow; somewhere</p>
   </CaptureFor>
 
   $foo;
