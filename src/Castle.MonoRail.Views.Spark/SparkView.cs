@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IO;
+using System.Text;
+
 namespace Castle.MonoRail.Views.Spark
 {
     using System;
@@ -30,8 +33,9 @@ namespace Castle.MonoRail.Views.Spark
 
         private IEngineContext _context;
         private IControllerContext _controllerContext;
+    	private SparkViewFactory _viewEngine;
 
-        public IEngineContext Context { get { return _context; } }
+    	public IEngineContext Context { get { return _context; } }
         public IControllerContext ControllerContext { get { return _controllerContext; } }
 
         public IController Controller { get { return _context.CurrentController; } }
@@ -64,15 +68,38 @@ namespace Castle.MonoRail.Views.Spark
 
         public T Helper<T>() where T : class { return ControllerContext.Helpers[typeof(T).Name] as T; }
 
-        public virtual void Contextualize(IEngineContext context, IControllerContext controllerContext)
+        public virtual void Contextualize(IEngineContext context, IControllerContext controllerContext, SparkViewFactory viewEngine)
         {
             _context = context;
             _controllerContext = controllerContext;
+        	_viewEngine = viewEngine;
         }
 
         public string H(object value)
         {
             return Server.HtmlEncode(Convert.ToString(value));
         }
+
+		public void RenderComponent(
+			string name, 
+			IDictionary parameters, 
+			StringBuilder output,
+			Action<StringBuilder> body)
+		{
+			var service = (IViewComponentFactory)_context.GetService(typeof (IViewComponentFactory));
+			var component = service.Create(name);
+			IViewComponentContext viewComponentContext = new ViewComponentContext(_viewEngine, _context, parameters, new StringWriter(output), body);
+			component.Init(_context, viewComponentContext);
+			component.Render();
+			foreach(string key in viewComponentContext.ContextVars.Keys)
+			{
+				if (key.EndsWith(".@bubbleUp"))
+				{
+					string key2 = key.Substring(0, key.Length - ".@bubbleUp".Length);
+					PropertyBag[key2] = viewComponentContext.ContextVars[key2];
+				}
+			}
+		}
+
     }
 }

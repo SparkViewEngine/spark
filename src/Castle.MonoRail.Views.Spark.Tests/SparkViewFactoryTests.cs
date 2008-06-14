@@ -159,7 +159,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             manager.Process("Home\\Index", output, engineContext, controller, controllerContext);
             var entry = factory.Engine.GetEntry("Home", "Index", "default");
             var view = (SparkView)entry.CreateInstance();
-            view.Contextualize(engineContext, controllerContext);
+            view.Contextualize(engineContext, controllerContext, factory);
             var result = view.RenderView();
             Assert.AreEqual(result, output.ToString());
             Assert.AreSame(engineContext, view.Context);
@@ -204,6 +204,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             ContainsInOrder(output.ToString(),
                 "<p>This &lt;contains/&gt; html</p>");
         }
+
     }
 
 }

@@ -66,7 +66,7 @@ namespace Spark.Tests
             
         }
 
-        public void VisitChunk(IChunkVisitor visitor, OutputLocation location, IList<Chunk> body, StringBuilder output)
+        public void VisitChunk(IChunkVisitor visitor, OutputLocation location, IList<Chunk> chunks, StringBuilder output)
         {
             if (location == OutputLocation.UsingNamespace)
                 output.AppendLine("//this was a test");

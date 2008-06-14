@@ -13,130 +13,168 @@
 // limitations under the License.
 
 
+using Spark.Parser.Markup;
+
 namespace Castle.MonoRail.Views.Spark
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
 
-    using Castle.MonoRail.Framework;
+	using Castle.MonoRail.Framework;
 
-    using global::Spark;
-    using global::Spark.FileSystem;
-    using IViewSource = global::Spark.FileSystem.IViewSource;
+	using global::Spark;
+	using global::Spark.FileSystem;
+	using IViewSource = global::Spark.FileSystem.IViewSource;
 
-    public class SparkViewFactory : ViewEngineBase, IViewFolder
-    {
-        public override void Service(IServiceProvider provider)
-        {
-            base.Service(provider);
+	public class SparkViewFactory : ViewEngineBase, IViewFolder, ISparkExtensionFactory
+	{
+		private IViewComponentFactory viewComponentFactory;
 
-            Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
-            if (Engine == null)
-                Engine = new SparkViewEngine(typeof(SparkView).FullName, this);
-        }
+		public override void Service(IServiceProvider provider)
+		{
+			base.Service(provider);
 
-        public ISparkViewEngine Engine { get; set; }
+			viewComponentFactory = (IViewComponentFactory)provider.GetService(typeof(IViewComponentFactory));
 
-        public override string ViewFileExtension
-        {
-            get { return "xml"; }
-        }
+			if (Engine == null)
+				Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
 
-        public override bool HasTemplate(string templateName)
-        {
-            return base.HasTemplate(Path.ChangeExtension(templateName, ViewFileExtension));
-        }
+			if (Engine == null)
+				Engine = new SparkViewEngine(typeof(SparkView).FullName, this);
 
-        public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller,
-                                     IControllerContext controllerContext)
-        {
-            var viewName = Path.GetFileName(templateName);
-            var location = Path.GetDirectoryName(templateName);
+			Engine.ExtensionFactory = this;
+		}
 
-            string masterName = null;
-            if (controllerContext.LayoutNames != null)
-                masterName = string.Join(" ", controllerContext.LayoutNames);
+		public ISparkViewEngine Engine { get; set; }
 
-            var view = (SparkView)Engine.CreateInstance(location, viewName, masterName);
-            view.Contextualize(context, controllerContext);
-            output.Write(view.RenderView());
-        }
+		public override string ViewFileExtension
+		{
+			get { return "xml"; }
+		}
 
-        public override void Process(string templateName, string layoutName, TextWriter output,
-                                     IDictionary<string, object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+		public override bool HasTemplate(string templateName)
+		{
+			return base.HasTemplate(Path.ChangeExtension(templateName, ViewFileExtension));
+		}
 
-        public override void ProcessPartial(string partialName, TextWriter output, IEngineContext context,
-                                            IController controller, IControllerContext controllerContext)
-        {
-            throw new NotImplementedException();
-        }
+		public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller,
+									 IControllerContext controllerContext)
+		{
+			var viewName = Path.GetFileName(templateName);
+			var location = Path.GetDirectoryName(templateName);
 
-        public override void RenderStaticWithinLayout(string contents, IEngineContext context, IController controller,
-                                                      IControllerContext controllerContext)
-        {
-            throw new NotImplementedException();
-        }
+			string masterName = null;
+			if (controllerContext.LayoutNames != null)
+				masterName = string.Join(" ", controllerContext.LayoutNames);
 
-        public override bool SupportsJSGeneration
-        {
-            get { return false; }
-        }
+			var view = (SparkView)Engine.CreateInstance(location, viewName, masterName);
+			view.Contextualize(context, controllerContext, this);
+			output.Write(view.RenderView());
+		}
 
-        public override string JSGeneratorFileExtension
-        {
-            get { return null; }
-        }
+		public override void Process(string templateName, string layoutName, TextWriter output,
+									 IDictionary<string, object> parameters)
+		{
+			throw new NotImplementedException();
+		}
 
-        public override object CreateJSGenerator(JSCodeGeneratorInfo generatorInfo, IEngineContext context,
-                                                 IController controller, IControllerContext controllerContext)
-        {
-            throw new NotImplementedException();
-        }
+		public override void ProcessPartial(string partialName, TextWriter output, IEngineContext context,
+											IController controller, IControllerContext controllerContext)
+		{
+			throw new NotImplementedException();
+		}
 
-        public override void GenerateJS(string templateName, TextWriter output, JSCodeGeneratorInfo generatorInfo,
-                                        IEngineContext context, IController controller, IControllerContext controllerContext)
-        {
-            throw new NotImplementedException();
-        }
+		public override void RenderStaticWithinLayout(string contents, IEngineContext context, IController controller,
+													  IControllerContext controllerContext)
+		{
+			throw new NotImplementedException();
+		}
 
-        IList<string> IViewFolder.ListViews(string path)
-        {
-            return ViewSourceLoader.ListViews(path);
-        }
+		public override bool SupportsJSGeneration
+		{
+			get { return false; }
+		}
 
-        bool IViewFolder.HasView(string path)
-        {
-            return ViewSourceLoader.HasSource(path);
-        }
+		public override string JSGeneratorFileExtension
+		{
+			get { return null; }
+		}
 
-        IViewSource IViewFolder.GetViewSource(string path)
-        {
-            return new ViewSource(ViewSourceLoader.GetViewSource(path));
-        }
+		public override object CreateJSGenerator(JSCodeGeneratorInfo generatorInfo, IEngineContext context,
+												 IController controller, IControllerContext controllerContext)
+		{
+			throw new NotImplementedException();
+		}
 
-        private class ViewSource : IViewSource
-        {
-            private readonly Framework.IViewSource _source;
+		public override void GenerateJS(string templateName, TextWriter output, JSCodeGeneratorInfo generatorInfo,
+										IEngineContext context, IController controller, IControllerContext controllerContext)
+		{
+			throw new NotImplementedException();
+		}
 
-            public ViewSource(Framework.IViewSource source)
-            {
-                _source = source;
-            }
+		IList<string> IViewFolder.ListViews(string path)
+		{
+			return ViewSourceLoader.ListViews(path);
+		}
 
-            public long LastModified
-            {
-                get { return _source.LastModified; }
-            }
+		bool IViewFolder.HasView(string path)
+		{
+			return ViewSourceLoader.HasSource(path);
+		}
 
-            public Stream OpenViewStream()
-            {
-                return _source.OpenViewStream();
-            }
-        }
+		IViewSource IViewFolder.GetViewSource(string path)
+		{
+			return new ViewSource(ViewSourceLoader.GetViewSource(path));
+		}
 
-    }
+		private class ViewSource : IViewSource
+		{
+			private readonly Framework.IViewSource _source;
+
+			public ViewSource(Framework.IViewSource source)
+			{
+				_source = source;
+			}
+
+			public long LastModified
+			{
+				get { return _source.LastModified; }
+			}
+
+			public Stream OpenViewStream()
+			{
+				return _source.OpenViewStream();
+			}
+		}
+
+		readonly Dictionary<string, Type> _cachedViewComponent = new Dictionary<string, Type>();
+
+		ISparkExtension ISparkExtensionFactory.CreateExtension(ElementNode node)
+		{
+			var componentFactory = (IViewComponentFactory)serviceProvider.GetService(typeof(IViewComponentFactory));
+
+			Type viewComponent;
+			lock (_cachedViewComponent)
+			{
+
+				if (!_cachedViewComponent.TryGetValue(node.Name, out viewComponent))
+				{
+					try
+					{
+						viewComponent = componentFactory.Registry.GetViewComponent(node.Name);
+						_cachedViewComponent.Add(node.Name, viewComponent);
+					}
+					catch
+					{
+						_cachedViewComponent.Add(node.Name, null);
+					}
+				}
+			}
+			if (viewComponent != null)
+				return new ViewComponentExtension(node);
+
+			return null;
+		}
+	}
 }

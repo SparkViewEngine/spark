@@ -1,0 +1,26 @@
+﻿
+<div>
+  <viewdata items="System.Collections.IEnumerable" foo="string"/>
+
+  <DiggStylePagination Page="items"/>
+
+  <ul>
+    <li each="var item in items">$item;</li>
+  </ul>
+
+  <p>
+  </p>
+
+  <CaptureFor id='"foo"'>one</CaptureFor>
+
+  <DiggStylePagination Page="items" Adjacents="1"/>
+
+  <CaptureFor id='"foo"' append='"after"'>two</CaptureFor>
+
+  <CaptureFor id='"foo"' append='"before"'>
+    <p>wow. $DateTime.Now; indeed</p>
+  </CaptureFor>
+
+  $foo;
+
+</div>

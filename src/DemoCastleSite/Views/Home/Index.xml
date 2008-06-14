@@ -12,3 +12,6 @@
   $Form.EndFormTag();
 </div>
 
+<p>$Url.Link("Try pagination", new {action="ShowPage"});</p>
+
+<p>$Url.Link("Try script", new {action="script"});</p>

@@ -59,6 +59,8 @@
     <Compile Include="SparkViewData.cs" />
     <Compile Include="SparkViewFactory.cs" />
     <Compile Include="ModelDictionary.cs" />
+    <Compile Include="ViewComponentContext.cs" />
+    <Compile Include="ViewComponentExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj">

@@ -1,0 +1,7 @@
+﻿<div>
+  <ul>
+    <li each="var item in items">${item}</li>
+  </ul>
+  <viewdata items="System.Collections.IEnumerable"/>
+  <DiggStylePagination Page="items"/>
+</div>

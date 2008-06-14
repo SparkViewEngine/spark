@@ -99,7 +99,6 @@ namespace Spark.Compiler.NodeVisitors
             else if (TryCreateExtension(elementNode, out extension))
             {
                 ExtensionNode extensionNode = new ExtensionNode(elementNode, extension);
-                extensionNode.Body.Add(elementNode);
                 Nodes.Add(extensionNode);
 
                 if (!elementNode.IsEmptyElement)
@@ -142,11 +141,14 @@ namespace Spark.Compiler.NodeVisitors
             if (_currentExtensionNode != null)
             {
                 // An open extension node is greedy. Capture continues until an end element occurs.                
-                Nodes.Add(endElementNode);
                 if (string.Equals(endElementNode.Name, _currentExtensionNode.Element.Name))
                 {
                     Nodes = _stack.Pop();
                     _currentExtensionNode = null;
+                }
+				else
+                {
+					Nodes.Add(endElementNode);
                 }
                 return;
             }
