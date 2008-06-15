@@ -19,6 +19,11 @@ namespace Castle.MonoRail.Views.Spark
 
     public static class HelperExtensions
     {
+        public static string BuildQueryString(this AbstractHelper helper, System.Object parameters)
+        {
+            return helper.BuildQueryString(new ModelDictionary(parameters));
+        }
+
         public static string LinkToFunction(this AjaxHelper helper, System.String innerContent, System.String functionCodeOrName, System.Object attributes)
         {
             return helper.LinkToFunction(innerContent, functionCodeOrName, new ModelDictionary(attributes));

@@ -150,5 +150,10 @@ namespace Spark.Compiler.NodeVisitors
         {
             Nodes.Add(node);
         }
+
+        protected override void Visit(StatementNode node)
+        {
+            Nodes.Add(node);
+        }
     }
 }

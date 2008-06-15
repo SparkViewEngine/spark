@@ -62,6 +62,16 @@ namespace Spark.Compiler.NodeVisitors
                 Chunks.Insert(Chunks.Count - 1, chunk);
             }
         }
+        private void AddKillingWhitespace(Chunk chunk)
+        {
+            var sendLiteral = Chunks.LastOrDefault() as SendLiteralChunk;
+            if (sendLiteral != null && sendLiteral.Text.Trim() == string.Empty)
+            {
+                Chunks.Remove(sendLiteral);
+            }
+            Chunks.Add(chunk);
+        }
+
 
         protected override void Visit(EntityNode entityNode)
         {
@@ -72,6 +82,12 @@ namespace Spark.Compiler.NodeVisitors
         {
             Chunks.Add(new SendExpressionChunk { Code = UnarmorCode(expressionNode.Code) });
         }
+
+        protected override void Visit(StatementNode node)
+        {
+            AddKillingWhitespace(new CodeStatementChunk { Code = UnarmorCode(node.Code) });
+        }
+
 
         protected override void Visit(DoctypeNode docTypeNode)
         {

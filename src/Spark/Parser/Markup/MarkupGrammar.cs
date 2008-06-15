@@ -52,15 +52,22 @@ namespace Spark.Parser.Markup
             //[25]   	Eq	   ::=   	 S? '=' S?
             var Eq = Opt(Whitespace).And(Ch('=')).And(Opt(Whitespace));
 
-            Text =
-                Rep1(ChNot('&', '<', '$'))
-                .Build(hit => new TextNode(hit));
+
+            var chNotPercentGreater = ChNot('%').Or(Ch('%').NotNext(Ch('>')));
 
 
-            //[68]   	EntityRef	   ::=   	'&' Name ';'
-            EntityRef =
-                Ch('&').And(Name).And(Ch(';')).Left().Down()
-                .Build(hit => new EntityNode(hit));
+            // Syntax 1: #statement\n
+            var Statement1 = Ch('#').And(Rep1(ChNot('\n'))).And(Ch('\n'))
+                .Build(hit => new StatementNode(hit.Left.Down));
+
+            // Syntax 2: <%statement%> 
+            var Statement2 = Ch("<%").NotNext(Ch('=')).And(Rep1(chNotPercentGreater)).And(Ch("%>"))
+                .Build(hit => new StatementNode(hit.Left.Down));
+
+            Statement = Statement1.Or(Statement2);
+
+
+
 
             //todo: understand csharp_expression
             // simply looking for an excluded char is ultimately insufficient because 
@@ -73,14 +80,22 @@ namespace Spark.Parser.Markup
             var Code2 = Ch('$').And(Rep1(ChNot(';'))).And(Ch(';')).Left().Down().Build(hit => new ExpressionNode(hit));
 
             // Syntax 3: <%=csharp_expression%>;
-            var chNotPercentGreater = ChNot('%').Or(Ch('%').NotNext(Ch('>')));
             var Code3 = Ch("<%=").And(Rep1(chNotPercentGreater)).And(Ch("%>"))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
             // Fallback: $ was single text character
-            var CodeFallback = Ch('$').Build(hit => new TextNode("$"));
+            //var CodeFallback = Ch('$').Build(hit => new TextNode("$"));
 
-            Code = AsNode(Code1).Or(AsNode(Code2)).Or(AsNode(Code3)).Or(AsNode(CodeFallback));
+            Code = AsNode(Code1).Or(AsNode(Code2)).Or(AsNode(Code3));//.Or(AsNode(CodeFallback));
+
+            Text =
+                Rep1(ChNot('&', '<').Unless(Statement).Unless(Code))
+                .Build(hit => new TextNode(hit));
+
+            //[68]   	EntityRef	   ::=   	'&' Name ';'
+            EntityRef =
+                Ch('&').And(Name).And(Ch(';')).Left().Down()
+                .Build(hit => new EntityNode(hit));
 
 
             //[10]   	AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
@@ -141,8 +156,11 @@ namespace Spark.Parser.Markup
                 Ch("<!DOCTYPE").And(Whitespace).And(Name).And(Opt(Whitespace.And(ExternalID).Down())).And(Opt(Whitespace)).And(Ch('>'))
                 .Build(hit => new DoctypeNode { Name = hit.Left.Left.Left.Down, ExternalId = hit.Left.Left.Down });
 
+
+
             AnyNode = AsNode(Text)
                 .Or(AsNode(EntityRef))
+                .Or(AsNode(Statement))
                 .Or(AsNode(Element))
                 .Or(AsNode(EndElement))
                 .Or(AsNode(Code))
@@ -161,11 +179,12 @@ namespace Spark.Parser.Markup
         public ParseAction<DoctypeNode> DoctypeDecl;
         public ParseAction<TextNode> Text;
         public ParseAction<EntityNode> EntityRef;
-        public ParseAction<Node> Code;
         public ParseAction<ElementNode> Element;
         public ParseAction<EndElementNode> EndElement;
         public ParseAction<AttributeNode> Attribute;
         public ParseAction<CommentNode> Comment;
+        public ParseAction<Node> Code;
+        public ParseAction<StatementNode> Statement;
 
 
 

@@ -33,6 +33,11 @@ namespace Spark.Compiler
         public string Code { get; set; }
     }
 
+    public class CodeStatementChunk : Chunk
+    {
+        public string Code { get; set; }
+    }
+
     public class GlobalVariableChunk : Chunk
     {
         public GlobalVariableChunk()

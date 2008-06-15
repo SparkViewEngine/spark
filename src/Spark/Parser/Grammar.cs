@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 
 namespace Spark.Parser
@@ -42,6 +43,20 @@ namespace Spark.Parser
             ParseAction<TValue> p2)
         {
             return input => p1(input) ?? p2(input);
+        }
+
+        public static ParseAction<TValue1> Unless<TValue1, TValue2>(
+            ParseAction<TValue1> p1,
+            ParseAction<TValue2> p2)
+        {
+            return delegate(Position input)
+                       {
+                           var r1 = p1(input);
+                           if (r1 == null) return null;
+                           var r2 = p2(input);
+                           if (r2 != null) return null;
+                           return r1;
+                       };
         }
 
         public static ParseAction<TValue> Opt<TValue>(ParseAction<TValue> parse)

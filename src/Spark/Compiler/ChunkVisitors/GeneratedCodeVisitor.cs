@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+using System.Collections;
+using System.Linq;
 using System.Text;
 using Spark.Compiler.ChunkVisitors;
 
@@ -38,6 +40,12 @@ namespace Spark.Compiler.ChunkVisitors
         {
             _source.AppendLine(string.Format("output.Append({0});", chunk.Code));
         }
+
+        protected override void Visit(CodeStatementChunk chunk)
+        {
+            _source.AppendLine(chunk.Code.Replace("\r", "").Replace("\n", "\r\n"));
+        }
+
 
         protected override void Visit(LocalVariableChunk chunk)
         {
@@ -141,5 +149,6 @@ namespace Spark.Compiler.ChunkVisitors
         {
 
         }
+
     }
 }

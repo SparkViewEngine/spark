@@ -206,6 +206,18 @@ namespace Castle.MonoRail.Views.Spark.Tests
                 "<p>This &lt;contains/&gt; html</p>");
         }
 
+        [Test]
+        public void IncludingStatementsDirectly()
+        {
+            mocks.ReplayAll();
+            manager.Process("Home\\CodeStatements", output, engineContext, controller, controllerContext);
+            ContainsInOrder(output.ToString(),
+                "<p>was true</p>");
+
+
+            Assert.IsFalse(output.ToString().Contains("<p>was false</p>"));
+            
+        }
     }
 
 }

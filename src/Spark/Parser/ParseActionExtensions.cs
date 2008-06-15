@@ -56,6 +56,12 @@ namespace Spark.Parser
         {
             return Grammar.NotNext(p1, p2);
         }
+        public static ParseAction<TValue1> Unless<TValue1, TValue2>(
+            this ParseAction<TValue1> p1,
+            ParseAction<TValue2> p2)
+        {
+            return Grammar.Unless(p1, p2);
+        }
 
         public static ParseAction<TValue2> Build<TValue1, TValue2>(
             this ParseAction<TValue1> parser,

@@ -1,11 +1,39 @@
-﻿
-<div>
-  <viewdata items="System.Collections.IEnumerable" foo="string"/>
+﻿<div>
+  <viewdata items="IEnumerable" foo="string"/>
 
   <DiggStylePagination Page="items"/>
 
+  <use namespace="System.Linq"/>
+  <use namespace="System.Collections"/>
+  <use namespace="System.Collections.Generic"/>
+
+  #if (Params["page"] == "2") {
+  <p>page 2</p>
+  #} else {
+  <p>not page 2</p>
+  #}
+
+
+  # var aslist = new List[[string]]();
+
+  <%
+  foreach(string item in items)
+  {
+  %><p>
+    preparing <%=item%>.
+  </p><%
+    aslist.Add(item);
+  }
+  %>
+
+  # var odd = aslist.Where(i => Convert.ToInt32(i) % 2 == 1);
+
   <ul>
     <li each="var item in items">$item;</li>
+  </ul>
+
+  <ul>
+    <li each="var item in odd">$item;</li>
   </ul>
 
   <CaptureFor id='"foo"'>one</CaptureFor>

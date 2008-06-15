@@ -56,10 +56,13 @@ namespace Spark.Compiler.NodeVisitors
                 Visit((SpecialNode)node);
             else if (node is ExtensionNode)
                 Visit((ExtensionNode)node);
+            else if (node is StatementNode)
+                Visit((StatementNode) node);
             else
                 throw new ArgumentException(string.Format("Unknown node type {0}", node.GetType()), "node");
         }
 
+        protected abstract void Visit(StatementNode node);
         protected abstract void Visit(ExpressionNode expressionNode);
         protected abstract void Visit(EntityNode entityNode);
         protected abstract void Visit(DoctypeNode docTypeNode);

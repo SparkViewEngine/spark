@@ -99,11 +99,17 @@ namespace Spark.Compiler.ChunkVisitors
             {
                 Visit((ExtensionChunk)chunk);
             }
+            else if (chunk is CodeStatementChunk)
+            {
+                Visit((CodeStatementChunk) chunk);
+            }
             else
             {
                 throw new CompilerException(string.Format("Unknown chunk type {0}", chunk.GetType().Name));
             }
         }
+
+        protected abstract void Visit(CodeStatementChunk chunk);
 
         protected abstract void Visit(ExtensionChunk chunk);
 

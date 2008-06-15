@@ -278,5 +278,34 @@ namespace Spark.Tests
             var result3 = grammar.Comment(Source("<!-- hello--world -->"));
             Assert.IsNull(result3);
         }
+
+        [Test]
+        public void CodeStatementsPercentSyntax()
+        {
+            var direct = grammar.Statement(Source("<%int x = 5;%>"));
+            Assert.AreEqual("int x = 5;", direct.Value.Code);
+
+            var result = grammar.Nodes(Source("<div>hello <%int x = 5;%> world</div>"));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(5, result.Value.Count);
+            var stmt = result.Value[2] as StatementNode;
+            Assert.IsNotNull(stmt);
+            Assert.AreEqual("int x = 5;", stmt.Code);
+        }
+
+        [Test]
+        public void CodeStatementsHashSyntax()
+        {
+            var direct = grammar.Statement(Source("#int x = 5;\n"));
+            Assert.AreEqual("int x = 5;", direct.Value.Code);
+
+            var result = grammar.Nodes(Source("<div>hello #int x = 5;\n world</div>"));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(5, result.Value.Count);
+            var stmt = result.Value[2] as StatementNode;
+            Assert.IsNotNull(stmt);
+            Assert.AreEqual("int x = 5;", stmt.Code);
+        }
+
     }
 }
