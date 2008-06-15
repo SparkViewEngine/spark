@@ -13,6 +13,16 @@
   <p>not page 2</p>
   #}
 
+  <p if='Params["Page"] == "3"'>page 3</p>
+  <else>
+    <p>not page 3</p>
+  </else>
+
+  <%if (Params["Page"] == "4") {%>
+  <p>page 4</p>
+  <%} else {%>
+    <p>not page 4</p>
+  <% } %>
 
   # var aslist = new List[[string]]();
 
