@@ -250,6 +250,21 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void AspxStyleOutputInText()
+        {
+            var result=grammar.Nodes(Source("<hello>foo<%=bar%>ex</hello>"));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(5, result.Value.Count);
+            Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
+            var code = result.Value[2] as ExpressionNode;
+            Assert.AreEqual("bar", code.Code);
+
+
+            Assert.AreEqual("foo", ((TextNode)result.Value[1]).Text);
+            Assert.AreEqual("ex", ((TextNode)result.Value[3]).Text);
+        }
+
+        [Test]
         public void CommentParser()
         {
             var result = grammar.Comment(Source("<!-- hello world -->"));

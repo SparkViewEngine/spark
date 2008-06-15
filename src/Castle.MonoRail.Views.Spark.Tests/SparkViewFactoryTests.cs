@@ -103,6 +103,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             SetupResult.For(serviceProvider.GetService(typeof(ILoggerFactory))).Return(new NullLogFactory());
             SetupResult.For(serviceProvider.GetService(typeof(ISparkViewEngine))).Return(null);
             SetupResult.For(serviceProvider.GetService(typeof(IUrlBuilder))).Return(urlBuilder);
+            SetupResult.For(serviceProvider.GetService(typeof(IViewComponentFactory))).Return(null);
             mocks.Replay(serviceProvider);
 
             SetupResult.For(engineContext.GetService(null)).IgnoreArguments().Do(

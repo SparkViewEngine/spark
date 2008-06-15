@@ -105,6 +105,15 @@ namespace Spark.Parser.Markup
         public string Code;
     }
 
+    public class StatementNode : Node
+    {
+        public StatementNode(IList<char> code)
+        {
+            Code = new String(code.ToArray());
+        }
+
+        public string Code;
+    }
 
     public class ExternalIdInfo
     {

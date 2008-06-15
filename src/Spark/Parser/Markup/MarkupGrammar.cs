@@ -72,10 +72,15 @@ namespace Spark.Parser.Markup
             // Syntax 2: $csharp_expression;
             var Code2 = Ch('$').And(Rep1(ChNot(';'))).And(Ch(';')).Left().Down().Build(hit => new ExpressionNode(hit));
 
-            // Fallback: $ was single text character
-            var Code3 = Ch('$').Build(hit => new TextNode("$"));
+            // Syntax 3: <%=csharp_expression%>;
+            var chNotPercentGreater = ChNot('%').Or(Ch('%').NotNext(Ch('>')));
+            var Code3 = Ch("<%=").And(Rep1(chNotPercentGreater)).And(Ch("%>"))
+                .Build(hit => new ExpressionNode(hit.Left.Down));
 
-            Code = AsNode(Code1).Or(AsNode(Code2)).Or(AsNode(Code3));
+            // Fallback: $ was single text character
+            var CodeFallback = Ch('$').Build(hit => new TextNode("$"));
+
+            Code = AsNode(Code1).Or(AsNode(Code2)).Or(AsNode(Code3)).Or(AsNode(CodeFallback));
 
 
             //[10]   	AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
