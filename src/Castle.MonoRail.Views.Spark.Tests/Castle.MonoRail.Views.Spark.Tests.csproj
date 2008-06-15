@@ -66,6 +66,7 @@
     <Compile Include="SparkViewDataTests.cs" />
     <Compile Include="SparkViewFactoryTests.cs" />
     <Compile Include="ViewComponentExtensionTests.cs" />
+    <Compile Include="ViewComponentSectionChunkBuilderVisitorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Castle.MonoRail.Views.Spark\Castle.MonoRail.Views.Spark.csproj">

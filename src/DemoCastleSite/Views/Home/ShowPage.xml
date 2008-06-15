@@ -16,21 +16,20 @@
 
   # var aslist = new List[[string]]();
 
-  <%
-  foreach(string item in items)
-  {
-  %><p>
-    preparing <%=item%>.
-  </p><%
+  <div style="float:right">
+    <%
+    foreach(string item in items)
+    {
+    %><p>
+      preparing <%=item%>.
+    </p><%
     aslist.Add(item);
-  }
-  %>
+    }
+    %>
+  </div>
 
   # var odd = aslist.Where(i => Convert.ToInt32(i) % 2 == 1);
 
-  <ul>
-    <li each="var item in items">$item;</li>
-  </ul>
 
   <ul>
     <li each="var item in odd">$item;</li>
@@ -38,7 +37,25 @@
 
   <CaptureFor id='"foo"'>one</CaptureFor>
 
-  <DiggStylePagination Page="items" Adjacents="1"/>
+  <ul>
+    <li each="var item in items">$item;</li>
+  </ul>
+
+  <DiggStylePagination Page="items" Adjacents="1">
+    <startblock>
+      <hr>
+    </startblock>
+    <endblock>
+      <hr>
+    </endblock>
+    <prev>&laquo;</prev>
+    <next>&raquo;</next>
+    <link>
+      <button type="button" onclick="location.href='${url}';">${text}</button>
+    </link>
+  </DiggStylePagination>
+
+  <viewdata url="string" text="string"/>
 
   <CaptureFor id='"foo"' append='"after"'>two</CaptureFor>
 

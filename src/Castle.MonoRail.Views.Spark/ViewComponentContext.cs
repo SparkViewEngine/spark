@@ -27,15 +27,17 @@ namespace Castle.MonoRail.Views.Spark
         private readonly SparkViewFactory _viewEngine;
         private readonly IDictionary _componentParameters;
         private readonly Action body;
+        private readonly IDictionary<string, Action> sections;
         private readonly IDictionary _contextVarsAdapter;
 
 
-        public ViewComponentContext(SparkView view, SparkViewFactory viewEngine, IDictionary componentParameters, Action body)
+        public ViewComponentContext(SparkView view, SparkViewFactory viewEngine, IDictionary componentParameters, Action body, IDictionary<string, Action> sections)
         {
             _view = view;
             _viewEngine = viewEngine;
             _componentParameters = componentParameters;
             this.body = body;
+            this.sections = sections;
             //_contextVarsAdapter = new ContextVarsAdapter(this);
             _contextVarsAdapter = new Hashtable(view.PropertyBag);
         }
@@ -44,7 +46,7 @@ namespace Castle.MonoRail.Views.Spark
 
         public bool HasSection(string sectionName)
         {
-            return false;
+            return sections.ContainsKey(sectionName);
         }
 
         public void RenderView(string name, TextWriter writer)
@@ -67,7 +69,7 @@ namespace Castle.MonoRail.Views.Spark
 
         public void RenderSection(string sectionName)
         {
-            throw new NotImplementedException();
+            sections[sectionName]();
         }
 
         public void RenderSection(string sectionName, TextWriter writer)

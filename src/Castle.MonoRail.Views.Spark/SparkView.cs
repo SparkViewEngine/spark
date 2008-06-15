@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -34,6 +35,7 @@ namespace Castle.MonoRail.Views.Spark
         private IEngineContext _context;
         private IControllerContext _controllerContext;
         private SparkViewFactory _viewEngine;
+        private IDictionary _contextVars;
 
         public IEngineContext Context { get { return _context; } }
         public IControllerContext ControllerContext { get { return _controllerContext; } }
@@ -46,7 +48,7 @@ namespace Castle.MonoRail.Views.Spark
         public Flash Flash { get { return _context.Flash; } }
         public string SiteRoot { get { return _context.ApplicationPath; } }
 
-        public IDictionary PropertyBag { get { return _controllerContext.PropertyBag; } }
+        public IDictionary PropertyBag { get { return _contextVars ?? _controllerContext.PropertyBag; } }
         public NameValueCollection Params { get { return Request.Params; } }
 
         public AjaxHelper Ajax { get { return Helper<AjaxHelper>(); } }
@@ -83,16 +85,26 @@ namespace Castle.MonoRail.Views.Spark
         public void RenderComponent(
             string name,
             IDictionary parameters,
-            Action body)
+            Action body,
+            IDictionary<string, Action> sections)
         {
             var service = (IViewComponentFactory)_context.GetService(typeof(IViewComponentFactory));
             var component = service.Create(name);
 
-            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _viewEngine, parameters, body);
+            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _viewEngine, parameters, body, sections);
 
-            
-            component.Init(_context, viewComponentContext);
-            component.Render();
+            var oldContextVars = _contextVars;
+            try
+            {
+                _contextVars = viewComponentContext.ContextVars;
+                component.Init(_context, viewComponentContext);
+                component.Render();
+            }
+            finally
+            {
+                _contextVars = oldContextVars;
+            }
+
             foreach (string key in viewComponentContext.ContextVars.Keys)
             {
                 if (key.EndsWith(".@bubbleUp"))
