@@ -63,6 +63,7 @@
     <Compile Include="PositionTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkExtensionTester.cs" />
+    <Compile Include="SparkViewExtensions.cs" />
     <Compile Include="SparkViewFactoryTester.cs" />
     <Compile Include="Stubs\StubSparkView.cs" />
     <Compile Include="Stubs\StubViewContext.cs" />

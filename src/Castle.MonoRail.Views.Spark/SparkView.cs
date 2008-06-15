@@ -83,12 +83,14 @@ namespace Castle.MonoRail.Views.Spark
         public void RenderComponent(
             string name,
             IDictionary parameters,
-            StringBuilder output,
-            Action<StringBuilder> body)
+            Action body)
         {
             var service = (IViewComponentFactory)_context.GetService(typeof(IViewComponentFactory));
             var component = service.Create(name);
-            IViewComponentContext viewComponentContext = new ViewComponentContext(_viewEngine, _context, parameters, new StringWriter(output), body);
+
+            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _viewEngine, parameters, body);
+
+            
             component.Init(_context, viewComponentContext);
             component.Render();
             foreach (string key in viewComponentContext.ContextVars.Keys)

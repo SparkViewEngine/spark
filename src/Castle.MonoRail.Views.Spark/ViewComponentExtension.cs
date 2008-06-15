@@ -50,10 +50,8 @@ namespace Castle.MonoRail.Views.Spark
                     output.AppendFormat("{2}{{\"{0}\",{1}}}", attribute.Name, code, delimiter);
                     delimiter = ", ";
                 }
-                output.AppendLine("}, output, new Action<System.Text.StringBuilder>(delegate(System.Text.StringBuilder output2) {");
-                output.AppendLine("var output3 = output; output = output2;");
+                output.AppendLine("}, new Action(delegate {");
                 visitor.Accept(body);
-                output.AppendLine("output = output3;");
                 output.AppendLine("}));");
             }
         }

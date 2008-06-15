@@ -40,7 +40,6 @@ namespace Castle.MonoRail.Views.Spark.Tests
             controllerContext = new ControllerContext();
 
 
-            SetupResult.For(view.RenderView()).Return("result-not-needed");
         }
 
         [Test]

@@ -33,12 +33,12 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(SendLiteralChunk chunk)
         {
-            _source.AppendLine("output.Append(\"" + chunk.Text.Replace("\\", "\\\\").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\");");
+            _source.AppendLine("Output.Write(\"" + chunk.Text.Replace("\\", "\\\\").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\");");
         }
 
         protected override void Visit(SendExpressionChunk chunk)
         {
-            _source.AppendLine(string.Format("output.Append({0});", chunk.Code));
+            _source.AppendLine(string.Format("Output.Write({0});", chunk.Code));
         }
 
         protected override void Visit(CodeStatementChunk chunk)
@@ -78,18 +78,15 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(ContentChunk chunk)
         {
-            _source.AppendLine(string.Format("{{ var __pushOutput{0}__ = output;", _outputlevel));
-            _source.AppendLine(string.Format("output = BindContent(\"{0}\");", chunk.Name));
-            _outputlevel += 1;
+            _source.AppendLine(string.Format("using(OutputScope(\"{0}\")) {{", chunk.Name));
             Accept(chunk.Body);
-            _outputlevel -= 1;
-            _source.AppendLine(string.Format("output = __pushOutput{0}__; }}", _outputlevel));
+            _source.AppendLine("}");
         }
 
         protected override void Visit(UseContentChunk chunk)
         {
             _source.AppendLine(string.Format("if (Content.ContainsKey(\"{0}\")) {{", chunk.Name));
-            _source.AppendLine(string.Format("output.Append(Content[\"{0}\"]);", chunk.Name));
+            _source.AppendLine(string.Format("Output.Write(Content[\"{0}\"]);", chunk.Name));
             _source.AppendLine("} else {");
             Accept(chunk.Default);
             _source.AppendLine("}");

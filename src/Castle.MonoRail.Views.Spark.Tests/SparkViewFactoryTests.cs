@@ -161,8 +161,10 @@ namespace Castle.MonoRail.Views.Spark.Tests
             var entry = factory.Engine.GetEntry("Home", "Index", "default");
             var view = (SparkView)entry.CreateInstance();
             view.Contextualize(engineContext, controllerContext, factory);
-            var result = view.RenderView();
-            Assert.AreEqual(result, output.ToString());
+            
+            StringWriter result = new StringWriter();
+            view.RenderView(result);
+            Assert.AreEqual(result.ToString(), output.ToString());
             Assert.AreSame(engineContext, view.Context);
             Assert.AreSame(controllerContext, view.ControllerContext);
         }

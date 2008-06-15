@@ -70,7 +70,7 @@ namespace Castle.MonoRail.Views.Spark
 
             var view = (SparkView)Engine.CreateInstance(location, viewName, masterName);
             view.Contextualize(context, controllerContext, this);
-            output.Write(view.RenderView());
+            view.RenderView(output);
         }
 
         public override void Process(string templateName, string layoutName, TextWriter output,

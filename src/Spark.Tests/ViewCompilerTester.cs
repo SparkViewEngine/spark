@@ -47,7 +47,7 @@ namespace Spark.Tests
             var compiler = new ViewCompiler("Spark.AbstractSparkView");
             compiler.CompileView(new[] { new SendLiteralChunk { Text = text } });
 
-            Assert.That(compiler.SourceCode.Contains("Append(\"hello\\t\\r\\n\\\"world\")"));
+            Assert.That(compiler.SourceCode.Contains("Write(\"hello\\t\\r\\n\\\"world\")"));
 
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();

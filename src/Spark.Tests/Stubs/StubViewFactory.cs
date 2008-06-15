@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Spark.FileSystem;
@@ -12,9 +13,8 @@ namespace Spark.Tests.Stubs
 
 		public void RenderView(StubViewContext viewContext)
 		{
-			var sparkView = Engine.CreateInstance(viewContext.ControllerName, viewContext.ViewName, viewContext.MasterName);
-			var result = sparkView.RenderView();
-			viewContext.Output.Append(result);
+			var sparkView = Engine.CreateInstance(viewContext.ControllerName, viewContext.ViewName, viewContext.MasterName);			
+            sparkView.RenderView(new StringWriter(viewContext.Output));			
 		}
 	}
 }

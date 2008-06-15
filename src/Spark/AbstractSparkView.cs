@@ -14,28 +14,57 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Spark
 {
     public abstract class AbstractSparkView : ISparkView
     {
-        private readonly Dictionary<string, StringBuilder> _content = new Dictionary<string, StringBuilder>();
+        private readonly Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
 
-        public Dictionary<string, StringBuilder> Content { get { return _content; } }
+        public Dictionary<string, TextWriter> Content { get { return _content; } }
+        public TextWriter Output { get; set; }
 
-        protected StringBuilder BindContent(string name)
+
+        public IDisposable OutputScope(string name)
         {
-            StringBuilder sb;
-            if (!_content.TryGetValue(name, out sb))
+            TextWriter writer;
+            if (!_content.TryGetValue(name, out writer))
             {
-                sb = new StringBuilder();
-                _content.Add(name, sb);
+                writer = new StringWriter();
+                _content.Add(name, writer);
             }
-            return sb;
+            return new OutputScopeImpl(this, writer);
         }
 
-        public abstract string RenderView();
+        public IDisposable OutputScope(TextWriter writer)
+        {
+            return new OutputScopeImpl(this, writer);
+        }
+
+        class OutputScopeImpl : IDisposable
+        {
+            private readonly AbstractSparkView view;
+            private readonly TextWriter previous;
+
+
+            public OutputScopeImpl(AbstractSparkView view, TextWriter writer)
+            {
+                this.view = view;
+                previous = view.Output;
+                view.Output = writer;
+            }
+
+            public void Dispose()
+            {
+                view.Output = previous;
+            }
+        }
+
+
+        public abstract void RenderView(TextWriter writer);
     }
 }

@@ -15,10 +15,13 @@
 */
 
 
+using System.IO;
+
 namespace Spark
 {
     public interface ISparkView
     {
-        string RenderView();
+        void RenderView(TextWriter writer);
     }
 }
+

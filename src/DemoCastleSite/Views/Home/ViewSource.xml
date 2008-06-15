@@ -1,0 +1,13 @@
+﻿<div>
+  <viewdata entry="Spark.CompiledViewHolder.Entry"/>
+
+  <div if="entry != null">
+    <p style="font-family:lucida console;font-size:8pt;">
+      $H(entry.Compiler.SourceCode).Replace("\r\n", "<br/>");
+    </p>
+  </div>
+  <else>
+    <p>No entry</p>
+  </else>
+
+</div>

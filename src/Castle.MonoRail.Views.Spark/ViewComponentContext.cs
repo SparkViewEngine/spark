@@ -23,23 +23,21 @@ namespace Castle.MonoRail.Views.Spark
 {
     public class ViewComponentContext : IViewComponentContext
     {
+        private readonly SparkView _view;
         private readonly SparkViewFactory _viewEngine;
         private readonly IDictionary _componentParameters;
-        private readonly IEngineContext _context;
-        private readonly StringWriter _writer;
-        private readonly Action<StringBuilder> body;
-        private IDictionary _contextVarsAdapter;
+        private readonly Action body;
+        private readonly IDictionary _contextVarsAdapter;
 
 
-        public ViewComponentContext(SparkViewFactory viewEngine, IEngineContext context, IDictionary componentParameters, StringWriter writer, Action<StringBuilder> body)
+        public ViewComponentContext(SparkView view, SparkViewFactory viewEngine, IDictionary componentParameters, Action body)
         {
+            _view = view;
             _viewEngine = viewEngine;
             _componentParameters = componentParameters;
-            _context = context;
-            _writer = writer;
             this.body = body;
             //_contextVarsAdapter = new ContextVarsAdapter(this);
-            _contextVarsAdapter = new Hashtable(_context.CurrentControllerContext.PropertyBag);
+            _contextVarsAdapter = new Hashtable(view.PropertyBag);
         }
 
 
@@ -56,24 +54,28 @@ namespace Castle.MonoRail.Views.Spark
 
         public void RenderBody()
         {
-            RenderBody(_writer);
+            body();
         }
 
         public void RenderBody(TextWriter writer)
         {
-            var output = new StringBuilder();
-            body(output);
-            writer.Write(output);
+            using(_view.OutputScope(writer))
+            {
+                RenderBody();
+            }
         }
 
         public void RenderSection(string sectionName)
         {
-            RenderSection(sectionName, _writer);
+            throw new NotImplementedException();
         }
 
         public void RenderSection(string sectionName, TextWriter writer)
         {
-            throw new NotImplementedException();
+            using (_view.OutputScope(writer))
+            {
+                RenderSection(sectionName);
+            }
         }
 
         public string ComponentName
@@ -83,7 +85,7 @@ namespace Castle.MonoRail.Views.Spark
 
         public TextWriter Writer
         {
-            get { return _writer; }
+            get { return _view.Output; }
         }
 
         public IDictionary ContextVars

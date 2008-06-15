@@ -62,21 +62,25 @@ namespace Spark.Compiler
             globalsGenerator.Accept(master);
 
             source.AppendLine("public void RenderViewContent() {");
-            source.AppendLine("var output = BindContent(\"view\");");
             viewGenerator.Accept(view);
             source.AppendLine("}");
 
-            source.AppendLine("public override string RenderView() {");
-            source.AppendLine("RenderViewContent();");
             if (master == null || master.Count == 0)
             {
-                source.AppendLine("return Content[\"view\"].ToString();}");
+                source.AppendLine("public override void RenderView(System.IO.TextWriter writer) {");
+                source.AppendLine("using (OutputScope(writer)) {RenderViewContent();}");
+                source.AppendLine("}");
             }
             else
             {
-                source.AppendLine("var output = BindContent(\"master\");");
+                source.AppendLine("public void RenderMasterContent() {");
                 viewGenerator.Accept(master);
-                source.AppendLine("return Content[\"master\"].ToString();}");
+                source.AppendLine("}");
+
+                source.AppendLine("public override void RenderView(System.IO.TextWriter writer) {");
+                source.AppendLine("using (OutputScope(\"view\")) {RenderViewContent();}");
+                source.AppendLine("using (OutputScope(writer)) {RenderMasterContent();}");
+                source.AppendLine("}");
             }
 
             source.AppendLine("}");
