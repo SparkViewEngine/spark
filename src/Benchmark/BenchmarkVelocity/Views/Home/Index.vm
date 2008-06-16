@@ -1,0 +1,67 @@
+﻿<div>  
+  <h3>
+    <a href="#">
+      ${Post.Title}
+    </a>
+  </h3>
+  <div class="byline">
+    By
+    ${Post.Author.Name}
+    ${Post.Created}
+  </div>
+  <div id="lipsum">
+    ${Post.Content}
+  </div>
+  <p>
+    &nbsp;
+  </p>
+  <h3>
+    Comments
+  </h3>
+  <div class="comments">
+    #foreach($comment in ${Post.Comments})
+    <div class="comment">
+      <h4>
+        ${comment.Title}
+      </h4>
+      <div class="byline">
+        By <a href="${comment.Author.HomePage}">${comment.Author.Name}</a>, ${comment.Created}
+      </div>
+      <p>
+        ${comment.Content}
+      </p>
+      <div class="nodeFoot">
+        <a href="#comment">Reply To This Comment</a>
+      </div>
+    </div>
+    #end
+  </div>
+  <a name="comment"></a>
+  <h3>
+    Submit Comment
+  </h3>
+  <form action="#" method="post">
+    <div class="area100">
+      <label for="name">
+        Name
+      </label>
+      <br />
+      <input type="text" name="name" id="name" value="Anonymous" tabindex="31" />
+    </div>
+    <div class="area100">
+      <label for="email2">
+        Email
+      </label>
+      <br />
+      <input type="text" name="email2" id="email2" value="anonymous@tempuri.com" tabindex="32" />
+    </div>
+    <div class="area100">
+      <label for="comment">
+        Comment
+      </label>
+      <br />
+      <textarea name="comment" id="comment" rows="10" cols="40" tabindex="33"></textarea>
+    </div>
+    <input type="submit" name="submitComment" value="Post Comment" class="submit" />
+  </form>
+</div>
