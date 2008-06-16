@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -54,6 +55,10 @@ namespace Spark.Tests
             return new StubViewContext { ControllerName = "Home", ViewName = viewName, MasterName = masterName, Output = sb };
         }
 
+        StubViewContext MakeViewContext(string viewName, string masterName, IDictionary<string, object> data)
+        {
+            return new StubViewContext { ControllerName = "Home", ViewName = viewName, MasterName = masterName, Output = sb, Data = data };
+        }
 
 
 
@@ -364,6 +369,32 @@ namespace Spark.Tests
                 "<td>James</td>",
                 "<td>SpecialName</td>",
                 "<td>Anonymous</td>");
+        }
+
+        [Test]
+        public void MarkupBasedMacros()
+        {
+            var data = new Dictionary<string, object>
+                           {
+                               {"username", "Bob"}, 
+                               {"comments", new[] {
+                                   new Comment {Text = "Alpha"},
+                                   new Comment {Text = "Beta"},
+                                   new Comment {Text = "Gamma"}
+                               }}
+                           };
+
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("macros", null, data);
+
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+            ContainsInOrder(content,
+                "<p>Bob</p>", "<p>Alpha</p>",
+                "<p>Bob</p>", "<p>Beta</p>",
+                "<p>Bob</p>", "<p>Gamma</p>",
+                "<span class=\"yadda\">Rating: 5</span>");
         }
     }
 }

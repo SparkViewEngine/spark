@@ -15,6 +15,7 @@
 */
 
 using System.Collections.Generic;
+using Spark.Parser.Markup;
 
 namespace Spark.Compiler
 {
@@ -121,6 +122,24 @@ namespace Spark.Compiler
         }
         public string Code { get; set; }
         public IList<Chunk> Body { get; set; }
+    }
+
+    public class MacroChunk : Chunk
+    {
+        public MacroChunk()
+        {
+            Body = new List<Chunk>();
+            Parameters = new List<MacroParameter>();
+        }
+        public string Name { get; set; }
+        public IList<MacroParameter> Parameters { get; set; }
+        public IList<Chunk> Body { get; set; }
+    }
+
+    public class MacroParameter
+    {
+        public string Name { get; set; }
+        public string Type { get; set; }
     }
 
     public class ScopeChunk : Chunk

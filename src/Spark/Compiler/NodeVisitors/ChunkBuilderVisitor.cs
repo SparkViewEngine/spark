@@ -301,6 +301,19 @@ namespace Spark.Compiler.NodeVisitors
                             }
                         }
                         break;
+                    case "macro":
+                        {
+                            var name = inspector.TakeAttribute("name");
+                            var macro = new MacroChunk { Name = name.Value };
+                            foreach (var attr in inspector.Attributes)
+                            {
+                                macro.Parameters.Add(new MacroParameter {Name = attr.Name, Type = UnarmorCode(attr.Value)});
+                            }
+                            Chunks.Add(macro);
+                            Chunks = macro.Body;
+                            Accept(specialNode.Body);
+                        }
+                        break;
                     default:
                         throw new CompilerException(string.Format("Unknown special node {0}", specialNode.Element.Name));
                 }
@@ -346,7 +359,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ExtensionNode extensionNode)
         {
-            var extensionChunk = new ExtensionChunk {Extension = extensionNode.Extension};
+            var extensionChunk = new ExtensionChunk { Extension = extensionNode.Extension };
 
             var prior = Chunks;
             try

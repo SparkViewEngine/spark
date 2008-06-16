@@ -42,5 +42,23 @@ namespace Spark.Compiler.ChunkVisitors
         {
             chunk.Extension.VisitChunk(this, OutputLocation.ClassMembers, chunk.Body, _source);
         }
+
+        protected override void Visit(MacroChunk chunk)
+        {
+            _source.Append(string.Format("string {0}(", chunk.Name));
+            string delimiter = "";
+            foreach (var parameter in chunk.Parameters)
+            {
+                _source.Append(delimiter).Append(parameter.Type).Append(" ").Append(parameter.Name);
+                delimiter = ", ";            
+            }
+            _source.AppendLine(")");
+            _source.AppendLine("{ using(OutputScope(new System.IO.StringWriter())) { ");
+            
+            var generator = new GeneratedCodeVisitor(_source);
+            generator.Accept(chunk.Body);
+
+            _source.AppendLine("return Output.ToString(); }}");
+        }
     }
 }

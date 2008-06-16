@@ -6,11 +6,22 @@
     $Ajax.InstallScripts();
   </head>
   <body>
+    
+    <macro name="MessageBox" caption="string" message="string">
+      #Logger.Info(message);
+      <div class="message">
+        <h3>$H(caption);</h3>
+        <div>$message;</div>
+      </div>
+    </macro>
+    
     <div id="header">
     </div>
+    
     <div id="main">
       <use content="view"/>
     </div>
+    
     <div id="footer">
       <p>
         $Url.Link("View source", new {

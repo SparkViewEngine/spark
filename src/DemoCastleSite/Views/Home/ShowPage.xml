@@ -65,8 +65,7 @@
       </link>
     </DiggStylePagination>
 
-    $Foo("Hello");
-
+     
     <viewdata url="string" text="string"/>
 
     <CaptureFor id='"foo"' append='"after"'>two</CaptureFor>

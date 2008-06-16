@@ -24,7 +24,6 @@ namespace Spark.Compiler.ChunkVisitors
     public class GeneratedCodeVisitor : AbstractChunkVisitor
     {
         private readonly StringBuilder _source;
-        private int _outputlevel = 0;
 
         public GeneratedCodeVisitor(StringBuilder output)
         {
@@ -39,6 +38,11 @@ namespace Spark.Compiler.ChunkVisitors
         protected override void Visit(SendExpressionChunk chunk)
         {
             _source.AppendLine(string.Format("Output.Write({0});", chunk.Code));
+        }
+
+        protected override void Visit(MacroChunk chunk)
+        {
+            
         }
 
         protected override void Visit(CodeStatementChunk chunk)

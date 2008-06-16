@@ -103,11 +103,17 @@ namespace Spark.Compiler.ChunkVisitors
             {
                 Visit((CodeStatementChunk) chunk);
             }
+            else if (chunk is MacroChunk)
+            {
+                Visit((MacroChunk) chunk);
+            }
             else
             {
                 throw new CompilerException(string.Format("Unknown chunk type {0}", chunk.GetType().Name));
             }
         }
+
+        protected abstract void Visit(MacroChunk chunk);
 
         protected abstract void Visit(CodeStatementChunk chunk);
 

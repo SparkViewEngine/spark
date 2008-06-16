@@ -7,14 +7,15 @@ using Spark.FileSystem;
 
 namespace Spark.Tests.Stubs
 {
-	public class StubViewFactory
-	{
-		public ISparkViewEngine Engine { get; set;}
+    public class StubViewFactory
+    {
+        public ISparkViewEngine Engine { get; set; }
 
-		public void RenderView(StubViewContext viewContext)
-		{
-			var sparkView = Engine.CreateInstance(viewContext.ControllerName, viewContext.ViewName, viewContext.MasterName);			
-            sparkView.RenderView(new StringWriter(viewContext.Output));			
-		}
-	}
+        public void RenderView(StubViewContext viewContext)
+        {
+            var sparkView = Engine.CreateInstance(viewContext.ControllerName, viewContext.ViewName, viewContext.MasterName);
+            ((StubSparkView)sparkView).ViewData = viewContext.Data;
+            sparkView.RenderView(new StringWriter(viewContext.Output));
+        }
+    }
 }

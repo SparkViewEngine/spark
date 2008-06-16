@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 
 namespace Spark.Tests.Stubs
@@ -8,6 +9,8 @@ namespace Spark.Tests.Stubs
 		public string ViewName { get; set; }
 		public string MasterName { get; set; }
 
-		public StringBuilder Output { get; set; }
+        public IDictionary<string, object> Data { get; set; }
+        
+        public StringBuilder Output { get; set; }
 	}
 }

@@ -13,6 +13,8 @@
 // limitations under the License.
 
 
+using Castle.Core.Logging;
+
 namespace Castle.MonoRail.Views.Spark
 {
     using System;
@@ -22,7 +24,7 @@ namespace Castle.MonoRail.Views.Spark
 
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Helpers;
-    
+
     using global::Spark;
 
     public abstract class SparkView : AbstractSparkView
@@ -36,6 +38,10 @@ namespace Castle.MonoRail.Views.Spark
         private IControllerContext _controllerContext;
         private SparkViewFactory _viewEngine;
         private IDictionary _contextVars;
+
+        private ILogger _logger = NullLogger.Instance;
+        public ILogger Logger { get { return _logger; } set { _logger = value; } }
+
 
         public IEngineContext Context { get { return _context; } }
         public IControllerContext ControllerContext { get { return _controllerContext; } }
@@ -74,7 +80,7 @@ namespace Castle.MonoRail.Views.Spark
         {
             _context = context;
             _controllerContext = controllerContext;
-            _viewEngine = viewEngine;
+            _viewEngine = viewEngine;            
         }
 
         public string H(object value)
