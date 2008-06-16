@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Castle.MonoRail.Views.Spark
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
+
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Helpers;
+    
     using global::Spark;
 
     public abstract class SparkView : AbstractSparkView

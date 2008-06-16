@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-using Spark.Parser.Markup;
-
 namespace Castle.MonoRail.Views.Spark
 {
     using System;
@@ -25,17 +22,13 @@ namespace Castle.MonoRail.Views.Spark
 
     using global::Spark;
     using global::Spark.FileSystem;
-    using IViewSource = global::Spark.FileSystem.IViewSource;
+    using global::Spark.Parser.Markup;
 
     public class SparkViewFactory : ViewEngineBase, IViewFolder, ISparkExtensionFactory
     {
-        private IViewComponentFactory viewComponentFactory;
-
         public override void Service(IServiceProvider provider)
         {
             base.Service(provider);
-
-            viewComponentFactory = (IViewComponentFactory)provider.GetService(typeof(IViewComponentFactory));
 
             if (Engine == null)
                 Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
@@ -123,16 +116,16 @@ namespace Castle.MonoRail.Views.Spark
             return ViewSourceLoader.HasSource(path);
         }
 
-        IViewSource IViewFolder.GetViewSource(string path)
+        IViewFile IViewFolder.GetViewSource(string path)
         {
-            return new ViewSource(ViewSourceLoader.GetViewSource(path));
+            return new ViewFile(ViewSourceLoader.GetViewSource(path));
         }
 
-        private class ViewSource : IViewSource
+        private class ViewFile : IViewFile
         {
-            private readonly Framework.IViewSource _source;
+            private readonly IViewSource _source;
 
-            public ViewSource(Framework.IViewSource source)
+            public ViewFile(IViewSource source)
             {
                 _source = source;
             }

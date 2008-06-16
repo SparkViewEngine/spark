@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using Castle.MonoRail.Framework;
-
 namespace Castle.MonoRail.Views.Spark
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.IO;
+    
+    using Castle.MonoRail.Framework;
+
     public class ViewComponentContext : IViewComponentContext
     {
         private readonly SparkView _view;

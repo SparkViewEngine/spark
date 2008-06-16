@@ -40,8 +40,8 @@ namespace Spark
             var key = CreateKey(controllerName, viewName, masterName);
             return CompiledViewHolder.Current.Lookup(key);
         }
-
-        public ISparkView CreateInstance(string controllerName, string viewName, string masterName)
+        
+        public ISparkViewEntry CreateEntry(string controllerName, string viewName, string masterName)
         {
             var key = CreateKey(controllerName, viewName, masterName);
             var entry = CompiledViewHolder.Current.Lookup(key);
@@ -49,9 +49,14 @@ namespace Spark
             {
                 entry = CreateEntry(key);
                 CompiledViewHolder.Current.Store(entry);
-            }
+            } 
+            return entry;
+        }
 
-            return entry.Compiler.CreateInstance();
+        public ISparkView CreateInstance(string controllerName, string viewName, string masterName)
+        {
+            return CreateEntry(controllerName, viewName, masterName)
+                .CreateInstance();
         }
 
 

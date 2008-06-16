@@ -14,21 +14,27 @@
    limitations under the License.
 */
 
-using System.Collections.Generic;
 using System.IO;
 
 namespace Spark.FileSystem
 {
-    public interface IViewFolder
+    public class FileSystemViewFile : IViewFile
     {
-        IViewFile GetViewSource(string path);
-        IList<string> ListViews(string path);
-        bool HasView(string path);
-    }
+        private readonly string _fullPath;
 
-    public interface IViewFile
-    {
-        long LastModified { get; }
-        Stream OpenViewStream();
+        public FileSystemViewFile(string fullPath)
+        {
+            _fullPath = fullPath;
+        }
+
+        public long LastModified
+        {
+            get { return File.GetLastWriteTimeUtc(_fullPath).Ticks; }
+        }
+
+        public Stream OpenViewStream()
+        {
+            return new FileStream(_fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        }
     }
 }

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 namespace Castle.MonoRail.Views.Spark
 {
     using Castle.MonoRail.Framework.Resources;

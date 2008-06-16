@@ -30,13 +30,13 @@ namespace Spark.FileSystem
         }
 
 
-        public IViewSource GetViewSource(string path)
+        public IViewFile GetViewSource(string path)
         {
             string fullPath = Path.Combine(_basePath, path);
             if (!File.Exists(fullPath))
                 throw new FileNotFoundException("View source file not found.", fullPath);
 
-            return new FileSystemViewSource(fullPath);
+            return new FileSystemViewFile(fullPath);
         }
 
         public IList<string> ListViews(string path)

@@ -19,60 +19,62 @@
   </else>
 
   <%if (Params["Page"] == "4") {%>
-  <p>page 4</p>
-  <%} else {%>
+    <p>page 4</p>
+    <%} else {%>
     <p>not page 4</p>
-  <% } %>
+    <% } %>
 
   # var aslist = new List[[string]]();
 
   <div style="float:right">
-    <%
+      <%
     foreach(string item in items)
-    {
-    %><p>
-      preparing <%=item%>.
-    </p><%
+      {
+      %><p>
+        preparing <%=item%>.
+      </p><%
     aslist.Add(item);
-    }
-    %>
-  </div>
+      }
+      %>
+    </div>
 
-  # var odd = aslist.Where(i => Convert.ToInt32(i) % 2 == 1);
+    # var odd = aslist.Where(i => Convert.ToInt32(i) % 2 == 1);
 
 
-  <ul>
-    <li each="var item in odd">$item;</li>
-  </ul>
+    <ul>
+      <li each="var item in odd">$item;</li>
+    </ul>
 
-  <CaptureFor id='"foo"'>one</CaptureFor>
+    <CaptureFor id='"foo"'>one</CaptureFor>
 
-  <ul>
-    <li each="var item in items">$item;</li>
-  </ul>
+    <ul>
+      <li each="var item in items">$item;</li>
+    </ul>
 
-  <DiggStylePagination Page="items" Adjacents="1">
-    <startblock>
-      <hr>
+    <DiggStylePagination Page="items" Adjacents="1">
+      <startblock>
+        <hr>
     </startblock>
-    <endblock>
-      <hr>
+      <endblock>
+        <hr>
     </endblock>
-    <prev>&laquo;</prev>
-    <next>&raquo;</next>
-    <link>
-      <button type="button" onclick="location.href='${url}';">${text}</button>
-    </link>
-  </DiggStylePagination>
+      <prev>&laquo;</prev>
+      <next>&raquo;</next>
+      <link>
+        <button type="button" onclick="location.href='${url}';">${text}</button>
+      </link>
+    </DiggStylePagination>
 
-  <viewdata url="string" text="string"/>
+    $Foo("Hello");
 
-  <CaptureFor id='"foo"' append='"after"'>two</CaptureFor>
+    <viewdata url="string" text="string"/>
 
-  <CaptureFor id='"foo"' append='"before"'>
-    <p>It is $DateTime.UtcNow; somewhere</p>
-  </CaptureFor>
+    <CaptureFor id='"foo"' append='"after"'>two</CaptureFor>
 
-  $foo;
+    <CaptureFor id='"foo"' append='"before"'>
+      <p>It is $DateTime.UtcNow; somewhere</p>
+    </CaptureFor>
 
-</div>
+    $foo;
+
+  </div>

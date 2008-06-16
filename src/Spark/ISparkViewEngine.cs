@@ -20,8 +20,10 @@ namespace Spark
 {
     public interface ISparkViewEngine
     {
+        ISparkExtensionFactory ExtensionFactory { get; set; }
+
         ISparkViewEntry GetEntry(string controllerName, string viewName, string masterName);
+        ISparkViewEntry CreateEntry(string controllerName, string viewName, string masterName);
         ISparkView CreateInstance(string controllerName, string viewName, string masterName);
-		ISparkExtensionFactory ExtensionFactory { get; set; }
     }
 }

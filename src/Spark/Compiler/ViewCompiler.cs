@@ -112,10 +112,17 @@ namespace Spark.Compiler
             {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("Dynamic view compilation failed.");
-                foreach (var err in compilerResults.Output)
+
+                foreach (CompilerError err in compilerResults.Errors)
                 {
-                    sb.AppendLine(err);
+                    sb.AppendFormat("generated.cs({0},{1}): {2} {3}: ", err.Line, err.Column, err.IsWarning ? "warning" : "error", err.ErrorNumber);
+                    sb.AppendLine(err.ErrorText);
                 }
+
+                //foreach (var text in compilerResults.Output)
+                //{
+                //    sb.AppendLine(text);
+                //}
 
                 sb.AppendLine();
                 using (TextReader reader = new StringReader(SourceCode))

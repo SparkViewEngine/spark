@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Text;
-using Spark;
-using Spark.Compiler;
-using Spark.Compiler.ChunkVisitors;
-using Spark.Compiler.NodeVisitors;
-using Spark.Parser.Markup;
-
 namespace Castle.MonoRail.Views.Spark
 {
+    using System.Collections.Generic;
+    using System.Text;
+
+    using global::Spark;
+    using global::Spark.Compiler;
+    using global::Spark.Compiler.ChunkVisitors;
+    using global::Spark.Compiler.NodeVisitors;
+    using global::Spark.Parser.Markup;
+
     internal class ViewComponentExtension : ISparkExtension
     {
         private readonly ElementNode node;

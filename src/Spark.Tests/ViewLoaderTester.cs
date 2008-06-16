@@ -67,7 +67,7 @@ namespace Spark.Tests
 
         void ExpectGetSource(string path, IList<Node> nodes)
         {
-            var source = mocks.CreateMock<IViewSource>();
+            var source = mocks.CreateMock<IViewFile>();
             int key = '0' + nodesTable.Count;
             nodesTable.Add((char)key, nodes);
 

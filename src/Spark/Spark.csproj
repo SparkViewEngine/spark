@@ -65,7 +65,7 @@
     <Compile Include="Compiler\NodeVisitors\SpecialNodeVisitor.cs" />
     <Compile Include="Compiler\ViewCompiler.cs" />
     <Compile Include="FileSystem\FileSystemViewFolder.cs" />
-    <Compile Include="FileSystem\FileSystemViewSource.cs" />
+    <Compile Include="FileSystem\FileSystemViewFile.cs" />
     <Compile Include="ISparkExtension.cs" />
     <Compile Include="ISparkView.cs" />
     <Compile Include="ISparkViewEngine.cs" />
