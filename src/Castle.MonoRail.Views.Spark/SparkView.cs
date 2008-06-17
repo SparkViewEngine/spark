@@ -13,7 +13,6 @@
 // limitations under the License.
 
 
-using Castle.Core.Logging;
 
 namespace Castle.MonoRail.Views.Spark
 {
@@ -22,6 +21,7 @@ namespace Castle.MonoRail.Views.Spark
     using System.Collections.Generic;
     using System.Collections.Specialized;
 
+    using Castle.Core.Logging;
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Helpers;
 
