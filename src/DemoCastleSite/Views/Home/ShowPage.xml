@@ -76,8 +76,10 @@
 
     $foo;
 
+    <!-- using view component in a macro -->
     <macro name="PaginationHtml" adj="int">
       For adjacents of ${adj}:
+      #if (adj>0) {
       <DiggStylePagination Page="items" Adjacents="adj">
         <startblock>
           <hr/>
@@ -91,8 +93,12 @@
           <button type="button" onclick="location.href='${url}';">${text}</button>
         </link>
       </DiggStylePagination>
+      #}else{
+      <p>Invalid option</p>
+      #}
     </macro>
 
+    <!-- macro returns component output as string -->
     <div>
       <p>html encoded pagination output</p>
       <p>$H(PaginationHtml(1));</p>
