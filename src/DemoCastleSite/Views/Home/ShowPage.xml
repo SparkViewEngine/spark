@@ -65,7 +65,7 @@
       </link>
     </DiggStylePagination>
 
-     
+
     <viewdata url="string" text="string"/>
 
     <CaptureFor id='"foo"' append='"after"'>two</CaptureFor>
@@ -75,5 +75,29 @@
     </CaptureFor>
 
     $foo;
+
+    <macro name="PaginationHtml" adj="int">
+      For adjacents of ${adj}:
+      <DiggStylePagination Page="items" Adjacents="adj">
+        <startblock>
+          <hr/>
+        </startblock>
+        <endblock>
+          That was $adj;
+        </endblock>
+        <prev>&laquo;</prev>
+        <next>&raquo;</next>
+        <link>
+          <button type="button" onclick="location.href='${url}';">${text}</button>
+        </link>
+      </DiggStylePagination>
+    </macro>
+
+    <div>
+      <p>html encoded pagination output</p>
+      <p>$H(PaginationHtml(1));</p>
+      <p>$H(PaginationHtml(3));</p>
+    </div>
+
 
   </div>
