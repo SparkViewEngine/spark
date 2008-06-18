@@ -25,10 +25,25 @@ namespace Spark.Compiler.NodeVisitors
     public class ChunkBuilderVisitor : NodeVisitor
     {
         public IList<Chunk> Chunks { get; set; }
+        private IDictionary<string, Action<SpecialNode, SpecialNodeInspector>> _specialNodeMap;
 
         public ChunkBuilderVisitor()
         {
             Chunks = new List<Chunk>();
+            _specialNodeMap = new Dictionary<string, Action<SpecialNode, SpecialNodeInspector>>
+                                  {
+                                      {"var", VisitVar},
+                                      {"global", (n,i)=>VisitGlobal(n)},
+                                      {"viewdata", (n,i)=>VisitViewdata(i)},
+                                      {"set", (n,i)=>VisitSet(i)},
+                                      {"for", (n,i)=>VisitFor(n)},
+                                      {"if", VisitIf},
+                                      {"else", (n,i)=>VisitElse(i)},
+                                      {"elseif", VisitElseIf},
+                                      {"content", (n,i)=>VisitContent(n)},
+                                      {"use", VisitUse},
+                                      {"macro", (n,i)=>VisitMacro(i)},
+                                  };
         }
 
         protected override void Visit(TextNode textNode)
@@ -144,184 +159,197 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(SpecialNode specialNode)
         {
+            if (!_specialNodeMap.ContainsKey(specialNode.Element.Name))
+            {
+                throw new CompilerException(string.Format("Unknown special node {0}", specialNode.Element.Name));
+            }
+
             var prior = Chunks;
             try
             {
-                var inspector = new SpecialNodeInspector(specialNode);
-                switch (inspector.Name)
-                {
-                    case "var":
-                        {
-                            if (!specialNode.Element.IsEmptyElement)
-                            {
-                                var scope = new ScopeChunk();
-                                Chunks.Add(scope);
-                                Chunks = scope.Body;
-                            }
-
-                            var typeAttr = inspector.TakeAttribute("var");
-                            string type = typeAttr != null ? typeAttr.Value : "var";
-
-                            foreach (var attr in inspector.Attributes)
-                            {
-                                Chunks.Add(new LocalVariableChunk { Type = UnarmorCode(type), Name = attr.Name, Value = UnarmorCode(attr.Value) });
-                            }
-
-                            Accept(specialNode.Body);
-                        }
-                        break;
-                    case "global":
-                        {
-                            var typeAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "type");
-                            string type = typeAttr != null ? typeAttr.Value : "object";
-
-                            foreach (var attr in specialNode.Element.Attributes.Where(a => a != typeAttr))
-                            {
-                                AddUnordered(new GlobalVariableChunk { Type = UnarmorCode(type), Name = attr.Name, Value = UnarmorCode(attr.Value) });
-                            }
-                        }
-                        break;
-                    case "viewdata":
-                        {
-                            var modelAttr = inspector.TakeAttribute("model");
-                            if (modelAttr != null)
-                                AddUnordered(new ViewDataModelChunk { TModel = modelAttr.Value });
-
-                            foreach (var attr in inspector.Attributes)
-                            {
-                                string typeName = UnarmorCode(attr.Value);
-                                AddUnordered(new ViewDataChunk { Type = typeName, Name = attr.Name });
-                            }
-                        }
-                        break;
-                    case "set":
-                        {
-                            foreach (var attr in inspector.Attributes)
-                            {
-                                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.Value });
-                            }
-                        }
-                        break;
-                    case "for":
-                        {
-                            var eachAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "each");
-
-                            var forEachChunk = new ForEachChunk { Code = eachAttr.Value };
-                            Chunks.Add(forEachChunk);
-                            Chunks = forEachChunk.Body;
-
-                            foreach (var attr in specialNode.Element.Attributes.Where(a => a != eachAttr))
-                            {
-                                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.Value });
-                            }
-
-                            Accept(specialNode.Body);
-                        }
-                        break;
-                    case "if":
-                        {
-                            var conditionAttr = inspector.TakeAttribute("condition");
-
-                            var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = UnarmorCode(conditionAttr.Value) };
-                            Chunks.Add(ifChunk);
-                            Chunks = ifChunk.Body;
-                            Accept(specialNode.Body);
-                        }
-                        break;
-                    case "else":
-                        {
-                            if (!SatisfyElsePrecondition())
-                                throw new CompilerException("An 'else' may only follow an 'if' or 'elseif'.");
-
-                            var elseChunk = new ConditionalChunk { Type = ConditionalType.Else };
-                            Chunks.Add(elseChunk);
-                            Chunks = elseChunk.Body;
-                            Accept(specialNode.Body);
-                        }
-                        break;
-                    case "elseif":
-                        {
-                            if (!SatisfyElsePrecondition())
-                                throw new CompilerException("An 'elseif' may only follow an 'if' or 'elseif'.");
-
-                            var conditionAttr = inspector.TakeAttribute("condition");
-                            var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = UnarmorCode(conditionAttr.Value) };
-                            Chunks.Add(elseIfChunk);
-                            Chunks = elseIfChunk.Body;
-                            Accept(specialNode.Body);
-                        }
-                        break;
-                    case "content":
-                        {
-                            var nameAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "name");
-
-                            var contentChunk = new ContentChunk { Name = nameAttr.Value };
-                            Chunks.Add(contentChunk);
-                            Chunks = contentChunk.Body;
-                            Accept(specialNode.Body);
-                        }
-                        break;
-                    case "use":
-                        {
-                            //TODO: change <use file=""> to <render partial="">, to avoid
-                            // random attribute conflicts on parameterized cases
-
-                            var content = inspector.TakeAttribute("content");
-                            var file = inspector.TakeAttribute("file");
-                            var namespaceAttr = inspector.TakeAttribute("namespace");
-                            if (content != null)
-                            {
-                                var useContentChunk = new UseContentChunk { Name = content.Value };
-                                Chunks.Add(useContentChunk);
-                                Chunks = useContentChunk.Default;
-                                Accept(specialNode.Body);
-                            }
-                            else if (file != null)
-                            {
-                                var scope = new ScopeChunk();
-                                Chunks.Add(scope);
-                                Chunks = scope.Body;
-
-                                foreach (var attr in inspector.Attributes)
-                                {
-                                    Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.Value });
-                                }
-
-                                var useFileChunk = new RenderPartialChunk { Name = file.Value };
-                                Chunks.Add(useFileChunk);
-                            }
-                            else if (namespaceAttr != null)
-                            {
-                                var useNamespaceChunk = new UseNamespaceChunk { Namespace = namespaceAttr.Value };
-                                AddUnordered(useNamespaceChunk);
-                            }
-                            else
-                            {
-                                throw new CompilerException("Special node use had no understandable attributes");
-                            }
-                        }
-                        break;
-                    case "macro":
-                        {
-                            var name = inspector.TakeAttribute("name");
-                            var macro = new MacroChunk { Name = name.Value };
-                            foreach (var attr in inspector.Attributes)
-                            {
-                                macro.Parameters.Add(new MacroParameter {Name = attr.Name, Type = UnarmorCode(attr.Value)});
-                            }
-                            Chunks.Add(macro);
-                            Chunks = macro.Body;
-                            Accept(specialNode.Body);
-                        }
-                        break;
-                    default:
-                        throw new CompilerException(string.Format("Unknown special node {0}", specialNode.Element.Name));
-                }
+                var action = _specialNodeMap[specialNode.Element.Name];
+                action(specialNode, new SpecialNodeInspector(specialNode));
             }
             finally
             {
                 Chunks = prior;
             }
+        }
+
+        private void VisitMacro(SpecialNodeInspector inspector)
+        {
+            var name = inspector.TakeAttribute("name");
+            var macro = new MacroChunk { Name = name.Value };
+            foreach (var attr in inspector.Attributes)
+            {
+                macro.Parameters.Add(new MacroParameter { Name = attr.Name, Type = UnarmorCode(attr.Value) });
+            }
+            AddUnordered(macro);
+            Chunks = macro.Body;
+            Accept(inspector.Body);
+        }
+
+        private void VisitUse(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            //TODO: change <use file=""> to <render partial="">, to avoid
+            // random attribute conflicts on parameterized cases
+
+            var content = inspector.TakeAttribute("content");
+            var file = inspector.TakeAttribute("file");
+            var namespaceAttr = inspector.TakeAttribute("namespace");
+            if (content != null)
+            {
+                var useContentChunk = new UseContentChunk { Name = content.Value };
+                Chunks.Add(useContentChunk);
+                Chunks = useContentChunk.Default;
+                Accept(specialNode.Body);
+            }
+            else if (file != null)
+            {
+                var scope = new ScopeChunk();
+                Chunks.Add(scope);
+                Chunks = scope.Body;
+
+                foreach (var attr in inspector.Attributes)
+                {
+                    Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.Value });
+                }
+
+                var useFileChunk = new RenderPartialChunk { Name = file.Value };
+                Chunks.Add(useFileChunk);
+            }
+            else if (namespaceAttr != null)
+            {
+                var useNamespaceChunk = new UseNamespaceChunk { Namespace = namespaceAttr.Value };
+                AddUnordered(useNamespaceChunk);
+            }
+            else
+            {
+                throw new CompilerException("Special node use had no understandable attributes");
+            }
+        }
+
+        private void VisitContent(SpecialNode specialNode)
+        {
+            var nameAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "name");
+
+            var contentChunk = new ContentChunk { Name = nameAttr.Value };
+            Chunks.Add(contentChunk);
+            Chunks = contentChunk.Body;
+            Accept(specialNode.Body);
+        }
+
+        private void VisitIf(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            var conditionAttr = inspector.TakeAttribute("condition");
+
+            var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = UnarmorCode(conditionAttr.Value) };
+            Chunks.Add(ifChunk);
+            Chunks = ifChunk.Body;
+            Accept(specialNode.Body);
+        }
+
+        private void VisitElse(SpecialNodeInspector inspector)
+        {
+            if (!SatisfyElsePrecondition())
+                throw new CompilerException("An 'else' may only follow an 'if' or 'elseif'.");
+
+            var ifAttr = inspector.TakeAttribute("if");
+
+            if (ifAttr == null)
+            {
+                var elseChunk = new ConditionalChunk { Type = ConditionalType.Else };
+                Chunks.Add(elseChunk);
+                Chunks = elseChunk.Body;
+
+            }
+            else
+            {
+                var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = UnarmorCode(ifAttr.Value) };
+                Chunks.Add(elseIfChunk);
+                Chunks = elseIfChunk.Body;
+            }
+            Accept(inspector.Body);
+        }
+
+        private void VisitElseIf(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            if (!SatisfyElsePrecondition())
+                throw new CompilerException("An 'elseif' may only follow an 'if' or 'elseif'.");
+
+            var conditionAttr = inspector.TakeAttribute("condition");
+            var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = UnarmorCode(conditionAttr.Value) };
+            Chunks.Add(elseIfChunk);
+            Chunks = elseIfChunk.Body;
+            Accept(specialNode.Body);
+        }
+
+        private void VisitFor(SpecialNode specialNode)
+        {
+            var eachAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "each");
+
+            var forEachChunk = new ForEachChunk { Code = eachAttr.Value };
+            Chunks.Add(forEachChunk);
+            Chunks = forEachChunk.Body;
+
+            foreach (var attr in specialNode.Element.Attributes.Where(a => a != eachAttr))
+            {
+                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.Value });
+            }
+
+            Accept(specialNode.Body);
+        }
+
+        private void VisitSet(SpecialNodeInspector inspector)
+        {
+            foreach (var attr in inspector.Attributes)
+            {
+                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.Value });
+            }
+        }
+
+        private void VisitViewdata(SpecialNodeInspector inspector)
+        {
+            var modelAttr = inspector.TakeAttribute("model");
+            if (modelAttr != null)
+                AddUnordered(new ViewDataModelChunk { TModel = modelAttr.Value });
+
+            foreach (var attr in inspector.Attributes)
+            {
+                string typeName = UnarmorCode(attr.Value);
+                AddUnordered(new ViewDataChunk { Type = typeName, Name = attr.Name });
+            }
+        }
+
+        private void VisitGlobal(SpecialNode specialNode)
+        {
+            var typeAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "type");
+            string type = typeAttr != null ? typeAttr.Value : "object";
+
+            foreach (var attr in specialNode.Element.Attributes.Where(a => a != typeAttr))
+            {
+                AddUnordered(new GlobalVariableChunk { Type = UnarmorCode(type), Name = attr.Name, Value = UnarmorCode(attr.Value) });
+            }
+        }
+
+        private void VisitVar(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            if (!specialNode.Element.IsEmptyElement)
+            {
+                var scope = new ScopeChunk();
+                Chunks.Add(scope);
+                Chunks = scope.Body;
+            }
+
+            var typeAttr = inspector.TakeAttribute("var");
+            string type = typeAttr != null ? typeAttr.Value : "var";
+
+            foreach (var attr in inspector.Attributes)
+            {
+                Chunks.Add(new LocalVariableChunk { Type = UnarmorCode(type), Name = attr.Name, Value = UnarmorCode(attr.Value) });
+            }
+
+            Accept(specialNode.Body);
         }
 
         private bool SatisfyElsePrecondition()

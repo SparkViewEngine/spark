@@ -93,4 +93,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y "$(TargetPath)" "$(SolutionDir)..\bin\spark\spark.dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

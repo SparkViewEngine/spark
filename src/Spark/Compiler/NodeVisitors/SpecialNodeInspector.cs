@@ -32,6 +32,8 @@ namespace Spark.Compiler.NodeVisitors
 
         public string Name { get { return _node.Element.Name; } }
         public IList<AttributeNode> Attributes { get; set; }
+        public bool IsEmptyElement { get { return _node.Element.IsEmptyElement; } }
+        public IList<Node> Body { get { return _node.Body; } }
 
         public AttributeNode TakeAttribute(string name)
         {

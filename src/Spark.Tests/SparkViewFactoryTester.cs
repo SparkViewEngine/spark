@@ -330,6 +330,21 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void ChainingElseIfElement2()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("elseifelement2", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+            
+            ContainsInOrder(content,
+                "<p>Hi Bob!</p>",
+                "<p>Administrator James</p>",
+                "<p>Test user.</p>",
+                "<p>Anonymous user.</p>");
+        }
+        [Test]
         public void ChainingElseIfAttribute()
         {
             mocks.ReplayAll();
