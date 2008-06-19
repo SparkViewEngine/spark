@@ -79,27 +79,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\CodeStatements.xml">
+    <None Include="Views\Home\CodeStatements.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\HelperModelDictionaries.xml">
+    </None>
+    <None Include="Views\Home\HelperModelDictionaries.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\Index.xml">
+    </None>
+    <None Include="Views\Home\Index.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\PropertyBagViewdata.xml">
+    </None>
+    <None Include="Views\Home\PropertyBagViewdata.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\TerseHtmlEncode.xml">
+    </None>
+    <None Include="Views\Home\TerseHtmlEncode.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\DiggPaginationComponent.xml">
+    </None>
+    <None Include="Views\Home\DiggPaginationComponent.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Shared\Default.xml">
+    </None>
+    <None Include="Views\Shared\Default.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

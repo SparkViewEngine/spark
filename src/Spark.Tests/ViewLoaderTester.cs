@@ -47,10 +47,10 @@ namespace Spark.Tests
             nodesTable = new Dictionary<char, IList<Node>>();
 
             viewSourceLoader = mocks.CreateMock<IViewFolder>();
-            SetupResult.For(viewSourceLoader.ListViews("home")).Return(new[] { "file.xml", "other.xml", "_comment.xml" });
-            SetupResult.For(viewSourceLoader.ListViews("Home")).Return(new[] { "file.xml", "other.xml", "_comment.xml" });
-            SetupResult.For(viewSourceLoader.ListViews("Account")).Return(new[] { "index.xml" });
-            SetupResult.For(viewSourceLoader.ListViews("Shared")).Return(new[] { "layout.xml", "_header.xml", "default.xml", "_footer.xml" });
+            SetupResult.For(viewSourceLoader.ListViews("home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
+            SetupResult.For(viewSourceLoader.ListViews("Home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
+            SetupResult.For(viewSourceLoader.ListViews("Account")).Return(new[] { "index.spark" });
+            SetupResult.For(viewSourceLoader.ListViews("Shared")).Return(new[] { "layout.spark", "_header.spark", "default.spark", "_footer.spark" });
 
 
             loader = new ViewLoader { ViewFolder = viewSourceLoader };
@@ -89,10 +89,10 @@ namespace Spark.Tests
         [Test]
         public void LoadSimpleFile()
         {
-            ExpectGetSource("home\\simple.xml", new Node[0]);
+            ExpectGetSource("home\\simple.spark", new Node[0]);
 
             mocks.ReplayAll();
-            loader.Load("home\\simple.xml");
+            loader.Load("home\\simple.spark");
             mocks.VerifyAll();
         }
 
@@ -101,12 +101,12 @@ namespace Spark.Tests
         {
             var useFile = ParseElement("<use file='mypartial'/>");
 
-            ExpectGetSource("Home\\usefile.xml", new[] { useFile });
-            Expect.Call(viewSourceLoader.HasView("Home\\mypartial.xml")).Return(true);
-            ExpectGetSource("Home\\mypartial.xml", new Node[0]);
+            ExpectGetSource("Home\\usefile.spark", new[] { useFile });
+            Expect.Call(viewSourceLoader.HasView("Home\\mypartial.spark")).Return(true);
+            ExpectGetSource("Home\\mypartial.spark", new Node[0]);
 
             mocks.ReplayAll();
-            loader.Load("Home\\usefile.xml");
+            loader.Load("Home\\usefile.spark");
             mocks.VerifyAll();
         }
 
@@ -116,13 +116,13 @@ namespace Spark.Tests
         {
             var useFile = ParseElement("<use file='mypartial'/>");
 
-            ExpectGetSource("Home\\usefile.xml", new[] { useFile });
-            Expect.Call(viewSourceLoader.HasView("Home\\mypartial.xml")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Shared\\mypartial.xml")).Return(true);
-            ExpectGetSource("Shared\\mypartial.xml", new Node[0]);
+            ExpectGetSource("Home\\usefile.spark", new[] { useFile });
+            Expect.Call(viewSourceLoader.HasView("Home\\mypartial.spark")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Shared\\mypartial.spark")).Return(true);
+            ExpectGetSource("Shared\\mypartial.spark", new Node[0]);
 
             mocks.ReplayAll();
-            loader.Load("Home\\usefile.xml");
+            loader.Load("Home\\usefile.spark");
             mocks.VerifyAll();
         }
 
@@ -130,8 +130,8 @@ namespace Spark.Tests
         public void FindPartialFiles()
         {
             mocks.ReplayAll();
-            var partials3 = loader.FindPartialFiles("Home\\other.xml");
-            var partials2 = loader.FindPartialFiles("Account\\index.xml");
+            var partials3 = loader.FindPartialFiles("Home\\other.spark");
+            var partials2 = loader.FindPartialFiles("Account\\index.spark");
             mocks.VerifyAll();
 
             Assert.AreEqual(3, partials3.Count);
@@ -148,8 +148,8 @@ namespace Spark.Tests
         [Test, ExpectedException(typeof(FileNotFoundException))]
         public void FileNotFoundException()
         {
-            Expect.Call(viewSourceLoader.HasView("Home\\nosuchfile.xml")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Shared\\nosuchfile.xml")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Home\\nosuchfile.spark")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Shared\\nosuchfile.spark")).Return(false);
 
             mocks.ReplayAll();
             loader.Load("Home", "nosuchfile");
@@ -159,9 +159,9 @@ namespace Spark.Tests
         [Test]
         public void ExpiresWhenFilesChange()
         {
-            ExpectGetSource("home\\changing.xml", new List<Node>());
+            ExpectGetSource("home\\changing.spark", new List<Node>());
             mocks.ReplayAll();
-            loader.Load("home\\changing.xml");
+            loader.Load("home\\changing.spark");
             Assert.That(loader.IsCurrent());
             _lastModified = 88;
             Assert.That(!loader.IsCurrent());

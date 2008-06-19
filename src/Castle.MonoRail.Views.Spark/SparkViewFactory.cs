@@ -43,7 +43,7 @@ namespace Castle.MonoRail.Views.Spark
 
         public override string ViewFileExtension
         {
-            get { return "xml"; }
+            get { return "spark"; }
         }
 
         public override bool HasTemplate(string templateName)

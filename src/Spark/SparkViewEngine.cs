@@ -32,7 +32,7 @@ namespace Spark
 
         public string BaseClass { get; set; }
         public IViewFolder ViewFolder { get; set; }
-        public ISparkExtensionFactory ExtensionFactory { get; set; }
+        public ISparkExtensionFactory ExtensionFactory { get; set; }        
 
 
         public ISparkViewEntry GetEntry(string controllerName, string viewName, string masterName)
@@ -71,11 +71,11 @@ namespace Spark
 
             if (key.MasterName == string.Empty)
             {
-                if (ViewFolder.HasView(string.Format("Shared\\{0}.xml", key.ControllerName)))
+                if (ViewFolder.HasView(string.Format("Shared\\{0}.spark", key.ControllerName)))
                 {
                     key.MasterName = key.ControllerName;
                 }
-                else if (ViewFolder.HasView("Shared\\Application.xml"))
+                else if (ViewFolder.HasView("Shared\\Application.spark"))
                 {
                     key.MasterName = "Application";
                 }

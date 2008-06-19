@@ -78,69 +78,69 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\childview.xml">
+    <None Include="Views\Home\childview.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\eachattribute.xml">
+    </None>
+    <None Include="Views\Home\eachattribute.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\elseifattribute.xml">
+    </None>
+    <None Include="Views\Home\elseifattribute.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\elseifelement.xml">
+    </None>
+    <None Include="Views\Home\elseifelement.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\elseifelement2.xml">
+    </None>
+    <None Include="Views\Home\elseifelement2.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\extensionelements.xml">
+    </None>
+    <None Include="Views\Home\extensionelements.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\foreach.xml">
+    </None>
+    <None Include="Views\Home\foreach.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\globalset.xml">
+    </None>
+    <None Include="Views\Home\globalset.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\helpers.xml">
+    </None>
+    <None Include="Views\Home\helpers.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\ifattribute.xml">
+    </None>
+    <None Include="Views\Home\ifattribute.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\ifelement.xml">
+    </None>
+    <None Include="Views\Home\ifelement.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\Index.xml">
+    </None>
+    <None Include="Views\Home\Index.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\macros.xml">
+    </None>
+    <None Include="Views\Home\macros.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\namedcontent.xml">
+    </None>
+    <None Include="Views\Home\namedcontent.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\usingnamespace.xml">
+    </None>
+    <None Include="Views\Home\usingnamespace.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\usingpartial.xml">
+    </None>
+    <None Include="Views\Home\usingpartial.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\usingpartialimplicit.xml">
+    </None>
+    <None Include="Views\Home\usingpartialimplicit.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Home\viewdata.xml">
+    </None>
+    <None Include="Views\Home\viewdata.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Shared\layout.xml">
+    </None>
+    <None Include="Views\Shared\layout.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Shared\partial.xml">
+    </None>
+    <None Include="Views\Shared\partial.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Shared\_comment.xml">
+    </None>
+    <None Include="Views\Shared\_comment.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

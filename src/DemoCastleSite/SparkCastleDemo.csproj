@@ -79,11 +79,11 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="Views\Common\SimpleMessage.xml" />
-    <Content Include="Views\Home\Index.xml" />
-    <Content Include="Views\Home\script.xml" />
-    <Content Include="Views\Home\ShowPage.xml" />
-    <Content Include="Views\Home\ViewSource.xml" />
-    <Content Include="Views\Shared\Default.xml" />
+    <None Include="Views\Home\Index.spark" />
+    <None Include="Views\Home\script.spark" />
+    <None Include="Views\Home\ShowPage.spark" />
+    <None Include="Views\Home\ViewSource.spark" />
+    <None Include="Views\Shared\Default.spark" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

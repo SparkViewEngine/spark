@@ -142,7 +142,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         public void ExtensionIsXml()
         {
             mocks.ReplayAll();
-            Assert.AreEqual("xml", factory.ViewFileExtension);
+            Assert.AreEqual("spark", factory.ViewFileExtension);
         }
 
         [Test]

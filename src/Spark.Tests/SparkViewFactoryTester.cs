@@ -202,8 +202,8 @@ namespace Spark.Tests
         public void MasterEmptyByDefault()
         {
             var viewFolder = mocks.CreateMock<IViewFolder>();
-            Expect.Call(viewFolder.HasView("Shared\\Application.xml")).Return(false);
-            SetupResult.For(viewFolder.HasView("Shared\\Foo.xml")).Return(false);
+            Expect.Call(viewFolder.HasView("Shared\\Application.spark")).Return(false);
+            SetupResult.For(viewFolder.HasView("Shared\\Foo.spark")).Return(false);
 
             engine.ViewFolder = viewFolder;
 
@@ -220,8 +220,8 @@ namespace Spark.Tests
         public void MasterApplicationIfPresent()
         {
             var viewFolder = mocks.CreateMock<IViewFolder>();
-            Expect.Call(viewFolder.HasView("Shared\\Application.xml")).Return(true);
-            SetupResult.For(viewFolder.HasView("Shared\\Foo.xml")).Return(false);
+            Expect.Call(viewFolder.HasView("Shared\\Application.spark")).Return(true);
+            SetupResult.For(viewFolder.HasView("Shared\\Foo.spark")).Return(false);
 
             engine.ViewFolder = viewFolder;
 
@@ -240,8 +240,8 @@ namespace Spark.Tests
         public void MasterForControllerIfPresent()
         {
             var viewFolder = mocks.CreateMock<IViewFolder>();
-            SetupResult.For(viewFolder.HasView("Shared\\Application.xml")).Return(true);
-            SetupResult.For(viewFolder.HasView("Shared\\Foo.xml")).Return(true);
+            SetupResult.For(viewFolder.HasView("Shared\\Application.spark")).Return(true);
+            SetupResult.For(viewFolder.HasView("Shared\\Foo.spark")).Return(true);
 
             engine.ViewFolder = viewFolder;
 

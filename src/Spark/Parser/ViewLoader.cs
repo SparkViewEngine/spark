@@ -27,6 +27,8 @@ namespace Spark.Parser
 {
     public class ViewLoader
     {
+        private const string templateFileExtension = "spark";
+
         static MarkupGrammar _grammar = new MarkupGrammar();
         private IViewFolder viewFolder;
 
@@ -193,11 +195,11 @@ namespace Spark.Parser
             if (string.IsNullOrEmpty(viewName))
                 return null;
 
-            string attempt1 = Path.Combine(controllerName, Path.ChangeExtension(viewName, "xml"));
+            string attempt1 = Path.Combine(controllerName, Path.ChangeExtension(viewName, templateFileExtension));
             if (ViewFolder.HasView(attempt1))
                 return attempt1;
 
-            string attempt2 = Path.Combine("Shared", Path.ChangeExtension(viewName, "xml"));
+            string attempt2 = Path.Combine("Shared", Path.ChangeExtension(viewName, templateFileExtension));
             if (ViewFolder.HasView(attempt2))
                 return attempt2;
 
