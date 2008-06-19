@@ -84,9 +84,8 @@
     <Content Include="Content\Tidy_Blog\css\print.css" />
     <Content Include="Content\Tidy_Blog\css\style.css" />
     <Content Include="Default.aspx" />
-    <Content Include="Views\Home\Index.xml">
-    </Content>
-    <Content Include="Views\Shared\Default.xml" />
+    <None Include="Views\Home\Index.spark" />
+    <None Include="Views\Shared\Default.spark" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
