@@ -57,8 +57,8 @@ namespace Spark.Parser.Markup
 
 
             // Syntax 1: #statement\n
-            var Statement1 = Ch('#').And(Rep1(ChNot('\n'))).And(Ch('\n'))
-                .Build(hit => new StatementNode(hit.Left.Down));
+            var Statement1 = Ch('#').And(Rep1(ChNot('\r','\n'))).And(Opt(Ch('\r'))).And(Ch('\n'))
+                .Build(hit => new StatementNode(hit.Left.Left.Down));
 
             // Syntax 2: <%statement%> 
             var Statement2 = Ch("<%").NotNext(Ch('=')).And(Rep1(chNotPercentGreater)).And(Ch("%>"))
