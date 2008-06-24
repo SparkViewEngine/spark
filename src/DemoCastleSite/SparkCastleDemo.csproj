@@ -50,10 +50,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\castle\Castle.MonoRail.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Spark, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\spark\Spark.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core">
@@ -94,6 +90,10 @@
     <ProjectReference Include="..\Castle.MonoRail.Views.Spark\Castle.MonoRail.Views.Spark.csproj">
       <Project>{33D786A4-C95D-473E-B96F-06EC68527F66}</Project>
       <Name>Castle.MonoRail.Views.Spark</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Spark\Spark.csproj">
+      <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
+      <Name>Spark</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

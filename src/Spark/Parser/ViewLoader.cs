@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -135,6 +136,18 @@ namespace Spark.Parser
             var position = new Position(sourceContext);
 
             var nodes = Parser(position);
+            if (nodes.Rest.PotentialLength() != 0)
+            {
+                string message = string.Format("Unable to parse view {0} around line {1} column {2}", viewPath,
+                                               nodes.Rest.Line, nodes.Rest.Column);
+
+                int beforeLength = Math.Min(30, nodes.Rest.Offset);
+                int afterLength = Math.Min(30, nodes.Rest.PotentialLength());
+                string before = position.Advance(nodes.Rest.Offset - beforeLength).Peek(beforeLength);
+                string after = nodes.Rest.Peek(afterLength);
+
+                throw new CompilerException(message + Environment.NewLine + before + "[error:]" + after);
+            }
 
             var partialFileNames = FindPartialFiles(viewPath);
 
