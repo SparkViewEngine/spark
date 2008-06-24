@@ -14,7 +14,7 @@ using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Helpers;
 using Spark;
 
-namespace DemoCastleSite.Controllers
+namespace SparkCastleDemo.Controllers
 {
     [Layout("Default")]
     public class HomeController : SmartDispatcherController
