@@ -411,5 +411,28 @@ namespace Spark.Tests
                 "<p>Bob</p>", "<p>Gamma</p>",
                 "<span class=\"yadda\">Rating: 5</span>");
         }
+
+        [Test]
+        public void TestForEachIndex()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("foreachindex", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+            ContainsInOrder(content,
+                "<p>0: Alpha</p>",
+                "<p>1: Beta</p>",
+                "<p>2: Gamma</p>",
+                "<p>3: Delta</p>",
+                "<li ", "class=\"even\">Alpha</li>",
+                "<li ", "class=\"odd\">Beta</li>",
+                "<li ", "class=\"even\">Gamma</li>",
+                "<li ", "class=\"odd\">Delta</li>"
+                );
+
+        }
+
     }
 }

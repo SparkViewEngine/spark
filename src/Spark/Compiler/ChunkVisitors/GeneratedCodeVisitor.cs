@@ -58,9 +58,23 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(ForEachChunk chunk)
         {
-            _source.AppendLine(string.Format("foreach({0}) {{", chunk.Code));
-            Accept(chunk.Body);
-            _source.AppendLine(string.Format("}} //foreach {0}", chunk.Code.Replace("\r", "").Replace("\n", " ")));
+            var terms = chunk.Code.Split(' ','\r','\n','\t').ToList();
+            var inIndex = terms.IndexOf("in");
+            string variableName = (inIndex < 2 ? null : terms[inIndex - 1]);
+
+            if (variableName == null)
+            {
+                _source.AppendLine(string.Format("foreach({0}) {{", chunk.Code));
+                Accept(chunk.Body);
+                _source.AppendLine(string.Format("}} //foreach {0}", chunk.Code.Replace("\r", "").Replace("\n", " ")));
+            }
+            else
+            {
+                _source.AppendLine(string.Format("{{ int {1}Index = 0; foreach({0}) {{", chunk.Code, variableName));
+                Accept(chunk.Body);
+                _source.AppendLine(string.Format("++{1}Index; }} }} //foreach {0}", chunk.Code.Replace("\r", "").Replace("\n", " "), variableName));
+                
+            }
         }
 
         protected override void Visit(ScopeChunk chunk)
