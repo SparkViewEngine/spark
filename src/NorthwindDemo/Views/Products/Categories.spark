@@ -6,7 +6,8 @@ $PageTitle("Browse Products");
 <CategoryMenuItems category="(Category)null"/>
 
 <ul class="categorylisting">
-  <li each="var category in ViewData.Model" id="${category.CategoryName}">
+  <var styles='new[] {"odd", "even"}'/>
+  <li each="var category in ViewData.Model"  id="${category.CategoryName}" class='${styles[categoryIndex % 2]}'>
     <%= Html.ActionLink(category.CategoryName, "List", new { id=category.CategoryName })%>
   </li>
 </ul>

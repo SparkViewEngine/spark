@@ -203,7 +203,7 @@ ul.productlist li
     clear:both;
 }
 
-ul.productlist div
+ul.productlist p
 {
     margin-left: 10px;
     float:left;
@@ -216,4 +216,13 @@ ul.productlist div
 
 label.error + td input {
     border: solid 1px #c00;   
+}
+
+.even
+{
+}
+
+.odd
+{
+	background-color:#e8eef4;
 }
