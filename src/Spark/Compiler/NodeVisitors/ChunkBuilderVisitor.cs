@@ -312,7 +312,7 @@ namespace Spark.Compiler.NodeVisitors
         {
             var modelAttr = inspector.TakeAttribute("model");
             if (modelAttr != null)
-                AddUnordered(new ViewDataModelChunk { TModel = modelAttr.Value });
+                AddUnordered(new ViewDataModelChunk { TModel = UnarmorCode(modelAttr.Value) });
 
             foreach (var attr in inspector.Attributes)
             {

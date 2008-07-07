@@ -1,0 +1,3 @@
+﻿<img src="/Content/Images/${product.ProductID}.jpg" 
+     alt="${Html.AttributeEncode(product.ProductName)}" 
+     style="${style}"/>

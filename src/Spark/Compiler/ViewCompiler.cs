@@ -92,6 +92,7 @@ namespace Spark.Compiler
             CSharpCodeProvider codeProvider = new CSharpCodeProvider(providerOptions);
 
             var compilerParameters = new CompilerParameters();
+            compilerParameters.IncludeDebugInformation = true;
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 string location;

@@ -1,0 +1,22 @@
+﻿
+
+$PageTitle((string)ViewData["CategoryName"]);
+
+<viewdata model="IList[[Product]]"/>
+
+<CategoryMenuItems category="ViewData.Model.Select(p=>p.Category).FirstOrDefault()"/>
+
+<ul class="productlist">
+  <li each="var product in ViewData.Model">
+    <ProductImage style='"float:left;"'/>
+    <div>
+      <a href="/Products/Detail/${product.ProductID}">${product.ProductName}</a>
+      <br />
+      Price: $String.Format("{0:C2}", product.UnitPrice);
+      <span class="editlink">
+        ($Html.ActionLink[[ProductsController]](c=>c.Edit(product.ProductID), "Edit");)
+      </span>
+    </div>
+  </li>
+</ul>
+

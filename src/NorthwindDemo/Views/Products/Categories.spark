@@ -1,0 +1,13 @@
+﻿
+<viewdata model="IList[[Category]]"/>
+
+$PageTitle("Browse Products");
+
+<CategoryMenuItems category="(Category)null"/>
+
+<ul class="categorylisting">
+  <li each="var category in ViewData.Model" id="${category.CategoryName}">
+    <%= Html.ActionLink(category.CategoryName, "List", new { id=category.CategoryName })%>
+  </li>
+</ul>
+
