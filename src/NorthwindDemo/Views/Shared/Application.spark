@@ -2,12 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <global Title='"Northwind MVC Demo"' type='string'/>
-    <title>${Title}</title>
-    <link href="/Content/Site.css" rel="stylesheet" type="text/css" />
 
-	<use content="head"/>
-    
     <use namespace="System"/>
 	<use namespace="System.Collections.Generic"/>
     <use namespace="System.Linq"/>
@@ -15,11 +10,17 @@
     <use namespace="NorthwindDemo.Controllers"/>
     <use namespace="NorthwindDemo.Models"/>
 	<use namespace="NorthwindDemo.Views.Helpers"/>
-	
+
+    <global Title='"Northwind MVC Demo"' type='string'/>
+    <title>${Title}</title>
 	<macro name="PageTitle" caption="string">
 		<set Title='string.Format("{0} - {1}", caption, Title)'/>
 		<h2>$Html.Encode(caption);</h2>
 	</macro>
+    
+    <link href="/Content/Site.css" rel="stylesheet" type="text/css" />
+	<use content="head"/>
+
 </head>
 
 <body>
