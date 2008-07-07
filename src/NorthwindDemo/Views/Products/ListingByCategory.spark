@@ -1,8 +1,9 @@
 ﻿
+<viewdata 
+  model="IList[[Product]]" 
+  CategoryName="string"/>
 
-$PageTitle((string)ViewData["CategoryName"]);
-
-<viewdata model="IList[[Product]]"/>
+$PageTitle(CategoryName);
 
 <CategoryMenuItems category="ViewData.Model.Select(p=>p.Category).FirstOrDefault()"/>
 
