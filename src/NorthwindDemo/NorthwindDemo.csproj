@@ -196,15 +196,15 @@
     <None Include="Models\Northwind.dbml.layout">
       <DependentUpon>Northwind.dbml</DependentUpon>
     </None>
-    <None Include="Views\Home\Index.spark" />
-    <None Include="Views\Home\ViewGeneratedSource.spark" />
-    <None Include="Views\Products\Categories.spark" />
-    <None Include="Views\Products\Detail.spark" />
-    <None Include="Views\Products\Edit.spark" />
-    <None Include="Views\Products\ListingByCategory.spark" />
-    <None Include="Views\Products\_CategoryMenuItems.spark" />
-    <None Include="Views\Products\_ProductImage.spark" />
-    <None Include="Views\Shared\Application.spark" />
+    <Content Include="Views\Home\Index.spark" />
+    <Content Include="Views\Home\ViewGeneratedSource.spark" />
+    <Content Include="Views\Products\Categories.spark" />
+    <Content Include="Views\Products\Detail.spark" />
+    <Content Include="Views\Products\Edit.spark" />
+    <Content Include="Views\Products\ListingByCategory.spark" />
+    <Content Include="Views\Products\_CategoryMenuItems.spark" />
+    <Content Include="Views\Products\_ProductImage.spark" />
+    <Content Include="Views\Shared\Application.spark" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MvcContrib.SparkViewEngine\MvcContrib.SparkViewEngine.csproj">
