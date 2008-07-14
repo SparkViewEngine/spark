@@ -94,15 +94,16 @@ namespace Spark.Parser.Markup
 
             //[68]   	EntityRef	   ::=   	'&' Name ';'
             EntityRef =
-                Ch('&').And(Name).And(Ch(';')).Left().Down()
-                .Build(hit => new EntityNode(hit));
+                Ch('&').And(Name).And(Ch(';'))
+                .Build(hit => new EntityNode(hit.Left.Down));
 
+            var EntityRefOrAmpersand = AsNode(EntityRef).Or(Ch('&').Build(hit => (Node)new TextNode("&")));
 
             //[10]   	AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
             var AttValueSingleText = Rep1(ChNot('<', '&', '\'', '$')).Build(hit => new TextNode(hit));
-            var AttValueSingle = Apos.And(Rep(AsNode(AttValueSingleText).Or(AsNode(EntityRef)).Or(AsNode(Code)))).And(Apos);
+            var AttValueSingle = Apos.And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)))).And(Apos);
             var AttValueDoubleText = Rep1(ChNot('<', '&', '\"', '$')).Build(hit => new TextNode(hit));
-            var AttValueDouble = Quot.And(Rep(AsNode(AttValueDoubleText).Or(AsNode(EntityRef)).Or(AsNode(Code)))).And(Quot);
+            var AttValueDouble = Quot.And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)))).And(Quot);
             var AttValue = AttValueSingle.Or(AttValueDouble).Left().Down();
 
 
@@ -159,7 +160,7 @@ namespace Spark.Parser.Markup
 
 
             AnyNode = AsNode(Text)
-                .Or(AsNode(EntityRef))
+                .Or(EntityRefOrAmpersand)
                 .Or(AsNode(Statement))
                 .Or(AsNode(Element))
                 .Or(AsNode(EndElement))

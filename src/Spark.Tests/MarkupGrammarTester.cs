@@ -141,6 +141,55 @@ namespace Spark.Tests
             Assert.AreEqual("w00t", result.Value.Attributes[1].Value);
         }
 
+
+        [Test]
+        public void AttributeWithEntity()
+        {
+            var result = grammar.Element(Source("<blah attr=\"foo &amp; bar\" />"));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("blah", result.Value.Name);
+            Assert.AreEqual(1, result.Value.Attributes.Count);
+            Assert.AreEqual(3, result.Value.Attributes[0].Nodes.Count);
+            Assert.AreEqual("foo ", (result.Value.Attributes[0].Nodes[0] as TextNode).Text);
+            Assert.AreEqual("amp", (result.Value.Attributes[0].Nodes[1] as EntityNode).Name);
+            Assert.AreEqual(" bar", (result.Value.Attributes[0].Nodes[2] as TextNode).Text);
+
+            result = grammar.Element(Source("<blah attr='foo &amp; bar' />"));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("blah", result.Value.Name);
+            Assert.AreEqual(1, result.Value.Attributes.Count);
+            Assert.AreEqual(3, result.Value.Attributes[0].Nodes.Count);
+            Assert.AreEqual("foo ", (result.Value.Attributes[0].Nodes[0] as TextNode).Text);
+            Assert.AreEqual("amp", (result.Value.Attributes[0].Nodes[1] as EntityNode).Name);
+            Assert.AreEqual(" bar", (result.Value.Attributes[0].Nodes[2] as TextNode).Text);
+        }
+
+        [Test]
+        public void AttributeWithConditionalAnd()
+        {
+            var result = grammar.Element(Source("<blah attr=\"foo && bar\" />"));
+            Assert.IsNotNull(result);
+            Assert.AreEqual("blah", result.Value.Name);
+            Assert.AreEqual(1, result.Value.Attributes.Count);
+            Assert.AreEqual(4, result.Value.Attributes[0].Nodes.Count);
+            Assert.AreEqual("foo ", (result.Value.Attributes[0].Nodes[0] as TextNode).Text);
+            Assert.AreEqual("&", (result.Value.Attributes[0].Nodes[1] as TextNode).Text);
+            Assert.AreEqual("&", (result.Value.Attributes[0].Nodes[2] as TextNode).Text);
+            Assert.AreEqual(" bar", (result.Value.Attributes[0].Nodes[3] as TextNode).Text);
+
+            result = grammar.Element(Source("<blah attr='foo && bar' />"));
+            Assert.IsNotNull(result);
+            Assert.AreEqual("blah", result.Value.Name);
+            Assert.AreEqual(1, result.Value.Attributes.Count);
+            Assert.AreEqual(4, result.Value.Attributes[0].Nodes.Count);
+            Assert.AreEqual("foo ", (result.Value.Attributes[0].Nodes[0] as TextNode).Text);
+            Assert.AreEqual("&", (result.Value.Attributes[0].Nodes[1] as TextNode).Text);
+            Assert.AreEqual("&", (result.Value.Attributes[0].Nodes[2] as TextNode).Text);
+            Assert.AreEqual(" bar", (result.Value.Attributes[0].Nodes[3] as TextNode).Text);
+        }
+
         [Test]
         public void ParsingEndElement()
         {
@@ -306,6 +355,5 @@ namespace Spark.Tests
             Assert.IsNotNull(stmt);
             Assert.AreEqual("int x = 5;", stmt.Code);
         }
-
     }
 }
