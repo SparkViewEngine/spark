@@ -52,7 +52,7 @@ namespace Spark.Tests
     {
         public ISparkExtension CreateExtension(ElementNode node)
         {
-            if (node.Name == "test")
+            if (node.Name == "unittest")
                 return new TestExtension();
 
             return null;

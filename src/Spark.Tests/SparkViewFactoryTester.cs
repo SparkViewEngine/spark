@@ -337,7 +337,7 @@ namespace Spark.Tests
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();
-            
+
             ContainsInOrder(content,
                 "<p>Hi Bob!</p>",
                 "<p>Administrator James</p>",
@@ -434,5 +434,39 @@ namespace Spark.Tests
 
         }
 
+
+        [Test]
+        public void ConditionalTestElement()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("testelement", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+            ContainsInOrder(content,
+                            "<p>out-1</p>",
+                            "<p>out-2</p>",
+                            "<p>out-3</p>",
+                            "<p>out-4</p>",
+                            "<p>out-5</p>",
+                            "<p>out-6</p>");
+
+            Assert.IsFalse(content.Contains("fail"));
+
+        }
+
+        [Test]
+        public void ConditionalTestElementNested()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("testelementnested", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
+            Assert.AreEqual("<p>a</p><p>b</p><p>c</p><p>d</p><p>e</p><p>f</p>", content);
+
+        }
     }
 }

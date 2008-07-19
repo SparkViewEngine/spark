@@ -79,14 +79,14 @@ namespace Spark.Parser.Markup
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
             // Syntax 2: $csharp_expression;
-            var Code2 = Ch('$').And(Expression).And(Ch(';'))
-                .Build(hit => new ExpressionNode(hit.Left.Down));
+            //var Code2 = Ch('$').And(Expression).And(Ch(';'))
+            //    .Build(hit => new ExpressionNode(hit.Left.Down));
 
             // Syntax 3: <%=csharp_expression%>;
             var Code3 = Ch("<%=").And(Expression).And(Ch("%>"))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
-            Code = Code1.Or(Code2).Or(Code3);
+            Code = Code1/*.Or(Code2)*/.Or(Code3);
 
             Text =
                 Rep1(ChNot('&', '<').Unless(Statement).Unless(Code))

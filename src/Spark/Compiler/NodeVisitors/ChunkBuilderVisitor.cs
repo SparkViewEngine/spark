@@ -38,6 +38,7 @@ namespace Spark.Compiler.NodeVisitors
                                       {"viewdata", (n,i)=>VisitViewdata(i)},
                                       {"set", (n,i)=>VisitSet(i)},
                                       {"for", (n,i)=>VisitFor(n)},
+                                      {"test", VisitIf},
                                       {"if", VisitIf},
                                       {"else", (n,i)=>VisitElse(i)},
                                       {"elseif", VisitElseIf},
@@ -169,7 +170,7 @@ namespace Spark.Compiler.NodeVisitors
             try
             {
                 var action = _specialNodeMap[specialNode.Element.Name];
-                action(specialNode, new SpecialNodeInspector(specialNode));
+                action(specialNode, new SpecialNodeInspector(specialNode));                
             }
             finally
             {
@@ -213,7 +214,7 @@ namespace Spark.Compiler.NodeVisitors
 
                 foreach (var attr in inspector.Attributes)
                 {
-                    Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.Value });
+                    Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.AsCode() });
                 }
 
                 var useFileChunk = new RenderPartialChunk { Name = file.Value };
@@ -242,7 +243,7 @@ namespace Spark.Compiler.NodeVisitors
 
         private void VisitIf(SpecialNode specialNode, SpecialNodeInspector inspector)
         {
-            var conditionAttr = inspector.TakeAttribute("condition");
+            var conditionAttr = inspector.TakeAttribute("condition") ?? inspector.TakeAttribute("if");
 
             var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = conditionAttr.AsCode() };
             Chunks.Add(ifChunk);
@@ -289,13 +290,13 @@ namespace Spark.Compiler.NodeVisitors
         {
             var eachAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "each");
 
-            var forEachChunk = new ForEachChunk { Code = eachAttr.Value };
+            var forEachChunk = new ForEachChunk { Code = eachAttr.AsCode() };
             Chunks.Add(forEachChunk);
             Chunks = forEachChunk.Body;
 
             foreach (var attr in specialNode.Element.Attributes.Where(a => a != eachAttr))
             {
-                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.Value });
+                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.AsCode() });
             }
 
             Accept(specialNode.Body);
@@ -305,7 +306,7 @@ namespace Spark.Compiler.NodeVisitors
         {
             foreach (var attr in inspector.Attributes)
             {
-                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.Value });
+                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.AsCode() });
             }
         }
 

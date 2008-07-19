@@ -82,6 +82,9 @@
     <None Include="Views\Home\childview.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Views\Home\testelementnested.spark">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\Home\eachattribute.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -123,6 +126,9 @@
     </None>
     <None Include="Views\Home\namedcontent.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Home\testelement.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Views\Home\usingnamespace.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

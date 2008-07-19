@@ -160,8 +160,11 @@ namespace Spark.Parser
             var conditionalAttributeVisitor = new ConditionalAttributeVisitor();
             conditionalAttributeVisitor.Accept(forEachAttributeVisitor.Nodes);
 
+            var testElseElementVisitor = new TestElseElementVisitor();
+            testElseElementVisitor.Accept(conditionalAttributeVisitor.Nodes);
+
             var chunkBuilder = new ChunkBuilderVisitor();
-            chunkBuilder.Accept(conditionalAttributeVisitor.Nodes);
+            chunkBuilder.Accept(testElseElementVisitor.Nodes);
             newEntry.Chunks = chunkBuilder.Chunks;
 
             var fileReferenceVisitor = new FileReferenceVisitor();

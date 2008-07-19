@@ -1,0 +1,19 @@
+﻿<for each="var item in 'abcdef'.ToCharArray()">
+  <test if="item >= (char)'d'">
+    <test if="item==(char)'d'">
+      <p>d</p>
+      <else if="item==(char)'f'"/>
+      <p>f</p>
+      <else/>
+      <p>e</p>
+    </test>
+    <else if="(char)'b' >= item"/>
+    <p if="item==(char)'a'">a</p>
+    <else>
+      <p>b</p>
+    </else>
+    <else/>
+    <p>c</p>
+  </test>
+</for>
+
