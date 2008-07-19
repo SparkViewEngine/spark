@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Web.Mvc;
@@ -35,6 +36,7 @@ namespace MvcContrib.SparkViewEngine
             }
         }
 
+        [DebuggerNonUserCode]
         public string RenderView(ViewContext viewContext)
         {
             ViewContext = viewContext;

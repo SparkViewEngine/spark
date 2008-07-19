@@ -30,12 +30,12 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(GlobalVariableChunk chunk)
         {
-            _source.AppendLine(string.Format("{0} {1}={2};", chunk.Type ?? "object", chunk.Name, chunk.Value));
+            _source.AppendLine(string.Format("\r\n    {0} {1}={2};", chunk.Type ?? "object", chunk.Name, chunk.Value));
         }
 
         protected override void Visit(ViewDataChunk chunk)
         {
-            _source.AppendLine(string.Format("{0} {1} {{get {{return ({0})ViewData.Eval(\"{1}\");}}}}", chunk.Type ?? "object", chunk.Name));
+            _source.AppendLine(string.Format("\r\n    {0} {1}\r\n    {{get {{return ({0})ViewData.Eval(\"{1}\");}}}}", chunk.Type ?? "object", chunk.Name));
         }
 
         protected override void Visit(ExtensionChunk chunk)
@@ -45,7 +45,7 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(MacroChunk chunk)
         {
-            _source.Append(string.Format("string {0}(", chunk.Name));
+            _source.Append(string.Format("\r\n    string {0}(", chunk.Name));
             string delimiter = "";
             foreach (var parameter in chunk.Parameters)
             {
@@ -53,12 +53,16 @@ namespace Spark.Compiler.ChunkVisitors
                 delimiter = ", ";            
             }
             _source.AppendLine(")");
-            _source.AppendLine("{ using(OutputScope(new System.IO.StringWriter())) { ");
+            _source.AppendLine("    {");
+            _source.AppendLine("        using(OutputScope(new System.IO.StringWriter()))");
+            _source.AppendLine("        {");
             
-            var generator = new GeneratedCodeVisitor(_source);
+            var generator = new GeneratedCodeVisitor(_source) {Indent = 12};
             generator.Accept(chunk.Body);
 
-            _source.AppendLine("return Output.ToString(); }}");
+            _source.AppendLine("            return Output.ToString();");
+            _source.AppendLine("        }");
+            _source.AppendLine("    }");
         }
     }
 }

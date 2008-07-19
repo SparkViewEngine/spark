@@ -30,58 +30,71 @@ namespace Spark.Compiler.ChunkVisitors
             _source = output;
         }
 
+        public int Indent { get; set; }
+
         protected override void Visit(SendLiteralChunk chunk)
         {
-            _source.AppendLine("Output.Write(\"" + chunk.Text.Replace("\\", "\\\\").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\");");
+            _source.Append(' ', Indent).AppendLine("Output.Write(\"" + chunk.Text.Replace("\\", "\\\\").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\");");
         }
 
         protected override void Visit(SendExpressionChunk chunk)
         {
-            _source.AppendLine(string.Format("Output.Write({0});", chunk.Code));
+            _source.Append(' ', Indent).AppendLine(string.Format("Output.Write({0});", chunk.Code));
         }
 
         protected override void Visit(MacroChunk chunk)
         {
-            
+
         }
 
         protected override void Visit(CodeStatementChunk chunk)
         {
-            _source.AppendLine(chunk.Code.Replace("\r", "").Replace("\n", "\r\n"));
+            _source.Append(' ', Indent).AppendLine(chunk.Code.Replace("\r", "").Replace("\n", "\r\n"));
         }
 
 
         protected override void Visit(LocalVariableChunk chunk)
         {
-            _source.AppendLine(string.Format("{0} {1} = {2};", chunk.Type, chunk.Name, chunk.Value));
+            _source.Append(' ', Indent).AppendLine(string.Format("{0} {1} = {2};", chunk.Type, chunk.Name, chunk.Value));
         }
 
         protected override void Visit(ForEachChunk chunk)
         {
-            var terms = chunk.Code.Split(' ','\r','\n','\t').ToList();
+            var terms = chunk.Code.Split(' ', '\r', '\n', '\t').ToList();
             var inIndex = terms.IndexOf("in");
             string variableName = (inIndex < 2 ? null : terms[inIndex - 1]);
 
             if (variableName == null)
             {
-                _source.AppendLine(string.Format("foreach({0}) {{", chunk.Code));
-                Accept(chunk.Body);
-                _source.AppendLine(string.Format("}} //foreach {0}", chunk.Code.Replace("\r", "").Replace("\n", " ")));
+                _source.Append(' ', Indent).AppendLine(string.Format("foreach({0})", chunk.Code));
+                _source.Append(' ', Indent).AppendLine("{");
+                Indent += 4;
+                Accept(chunk.Body); 
+                Indent -= 4;
+                _source.Append(' ', Indent).AppendLine(string.Format("}} //foreach {0}", chunk.Code.Replace("\r", "").Replace("\n", " ")));
             }
             else
             {
-                _source.AppendLine(string.Format("{{ int {1}Index = 0; foreach({0}) {{", chunk.Code, variableName));
+                _source.Append(' ', Indent).AppendLine("{");
+                _source.Append(' ', Indent + 4).AppendFormat("int {0}Index = 0;\r\n", variableName);
+                _source.Append(' ', Indent + 4).AppendFormat("foreach({0})\r\n", chunk.Code);
+                _source.Append(' ', Indent + 4).AppendLine("{");
+                Indent += 8;
                 Accept(chunk.Body);
-                _source.AppendLine(string.Format("++{1}Index; }} }} //foreach {0}", chunk.Code.Replace("\r", "").Replace("\n", " "), variableName));
-                
+                Indent -= 8;
+                _source.Append(' ', Indent + 8).AppendFormat("++{0}Index;\r\n", variableName);
+                _source.Append(' ', Indent + 4).AppendLine("}");
+                _source.Append(' ', Indent).AppendFormat("}} //foreach {0}\r\n", chunk.Code.Replace("\r", "").Replace("\n", " "));
             }
         }
 
         protected override void Visit(ScopeChunk chunk)
         {
-            _source.AppendLine("{");
+            _source.Append(' ', Indent).AppendLine("{");
+            Indent += 4;
             Accept(chunk.Body);
-            _source.AppendLine("}");
+            Indent -= 4;
+            _source.Append(' ', Indent).AppendLine("}");
         }
 
         protected override void Visit(GlobalVariableChunk chunk)
@@ -90,24 +103,35 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(AssignVariableChunk chunk)
         {
-            _source.AppendLine(string.Format("{0} = {1};", chunk.Name, chunk.Value));
+            _source.Append(' ', Indent).AppendLine(string.Format("{0} = {1};", chunk.Name, chunk.Value));
         }
 
 
         protected override void Visit(ContentChunk chunk)
         {
-            _source.AppendLine(string.Format("using(OutputScope(\"{0}\")) {{", chunk.Name));
+            _source.Append(' ', Indent).AppendLine(string.Format("using(OutputScope(\"{0}\"))", chunk.Name));
+            _source.Append(' ', Indent).AppendLine("{");
+            Indent += 4;
             Accept(chunk.Body);
-            _source.AppendLine("}");
+            Indent -= 4;
+            _source.Append(' ', Indent).AppendLine("}");
         }
 
         protected override void Visit(UseContentChunk chunk)
         {
-            _source.AppendLine(string.Format("if (Content.ContainsKey(\"{0}\")) {{", chunk.Name));
-            _source.AppendLine(string.Format("Output.Write(Content[\"{0}\"]);", chunk.Name));
-            _source.AppendLine("} else {");
-            Accept(chunk.Default);
-            _source.AppendLine("}");
+            _source.Append(' ', Indent).AppendLine(string.Format("if (Content.ContainsKey(\"{0}\"))", chunk.Name));
+            _source.Append(' ', Indent).AppendLine("{");
+            _source.Append(' ', Indent + 4).AppendLine(string.Format("Output.Write(Content[\"{0}\"]);", chunk.Name));
+            _source.Append(' ', Indent).AppendLine("}");
+            if (chunk.Default.Count != 0)
+            {
+                _source.Append(' ', Indent).AppendLine("else");
+                _source.Append(' ', Indent).AppendLine("{");
+                Indent += 4;
+                Accept(chunk.Default);
+                Indent -= 4;
+                _source.Append(' ', Indent).AppendLine("}");
+            }
         }
 
         protected override void Visit(RenderPartialChunk chunk)
@@ -136,25 +160,34 @@ namespace Spark.Compiler.ChunkVisitors
             {
                 case ConditionalType.If:
                     {
-                        _source.AppendLine(string.Format("if ({0}) {{", chunk.Condition));
+                        _source.Append(' ', Indent).AppendLine(string.Format("if ({0})", chunk.Condition));
+                        _source.Append(' ', Indent).AppendLine("{");
+                        Indent += 4;
                         Accept(chunk.Body);
-                        _source.AppendLine(string.Format("}} // if ({0})",
+                        Indent -= 4;
+                        _source.Append(' ', Indent).AppendLine(string.Format("}} // if ({0})",
                                                          chunk.Condition.Replace("\r", "").Replace("\n", " ")));
                     }
                     break;
                 case ConditionalType.ElseIf:
                     {
-                        _source.AppendLine(string.Format("else if ({0}) {{", chunk.Condition));
+                        _source.Append(' ', Indent).AppendLine(string.Format("else if ({0})", chunk.Condition));
+                        _source.Append(' ', Indent).AppendLine("{");
+                        Indent += 4;
                         Accept(chunk.Body);
-                        _source.AppendLine(string.Format("}} // else if ({0})",
+                        Indent -= 4;
+                        _source.Append(' ', Indent).AppendLine(string.Format("}} // else if ({0})",
                                                          chunk.Condition.Replace("\r", "").Replace("\n", " ")));
                     }
                     break;
                 case ConditionalType.Else:
                     {
-                        _source.AppendLine(string.Format("else {{", chunk.Condition));
+                        _source.Append(' ', Indent).AppendLine("else");
+                        _source.Append(' ', Indent).AppendLine("{");
+                        Indent += 4;
                         Accept(chunk.Body);
-                        _source.AppendLine("}");
+                        Indent -= 4;
+                        _source.Append(' ', Indent).AppendLine("}");
                     }
                     break;
             }

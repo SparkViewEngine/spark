@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Web.Mvc;
 using MvcContrib.ViewFactories;
 using Spark;
@@ -31,6 +32,7 @@ namespace MvcContrib.SparkViewEngine
 			set { _viewSourceLoaderWrapper.ViewSourceLoader = value; }
 		}
 
+        [DebuggerNonUserCode]
 		public void RenderView(ViewContext viewContext)
 		{
 			var view = (SparkView)Engine.CreateInstance(

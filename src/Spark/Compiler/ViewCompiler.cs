@@ -42,11 +42,11 @@ namespace Spark.Compiler
 
         public void CompileView(IList<Chunk> view, IList<Chunk> master)
         {
-            StringBuilder source = new StringBuilder();
+            var source = new StringBuilder();
             var usingGenerator = new UsingNamespaceVisitor(source);
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
             var globalsGenerator = new GlobalMembersVisitor(source);
-            var viewGenerator = new GeneratedCodeVisitor(source);
+            var viewGenerator = new GeneratedCodeVisitor(source) {Indent = 8};
 
             //usingGenerator.Using("System.Web.Mvc");
             usingGenerator.Accept(view);
@@ -56,34 +56,44 @@ namespace Spark.Compiler
             if (string.IsNullOrEmpty(baseClassGenerator.TModel))
                 baseClassGenerator.Accept(master);
 
-            source.AppendLine(string.Format("public class CompiledSparkView : {0} {{", baseClassGenerator.BaseClassTypeName));
+            source.AppendLine();
+            source.AppendLine(string.Format("public class CompiledSparkView : {0}\r\n{{", baseClassGenerator.BaseClassTypeName));
 
             globalsGenerator.Accept(view);
             globalsGenerator.Accept(master);
 
-            source.AppendLine("public void RenderViewContent() {");
+            source.AppendLine();
+            source.AppendLine("    public void RenderViewContent()");
+            source.AppendLine("    {");
             viewGenerator.Accept(view);
-            source.AppendLine("}");
+            source.AppendLine("    }");
 
             if (master == null || master.Count == 0)
             {
-                source.AppendLine("public override void RenderView(System.IO.TextWriter writer) {");
-                source.AppendLine("using (OutputScope(writer)) {RenderViewContent();}");
-                source.AppendLine("}");
+                source.AppendLine();
+                source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
+                source.AppendLine("    {");
+                source.AppendLine("        using (OutputScope(writer)) {RenderViewContent();}");
+                source.AppendLine("    }");
             }
             else
             {
-                source.AppendLine("public void RenderMasterContent() {");
+                source.AppendLine();
+                source.AppendLine("    public void RenderMasterContent()");
+                source.AppendLine("    {");
                 viewGenerator.Accept(master);
-                source.AppendLine("}");
+                source.AppendLine("    }");
 
-                source.AppendLine("public override void RenderView(System.IO.TextWriter writer) {");
-                source.AppendLine("using (OutputScope(\"view\")) {RenderViewContent();}");
-                source.AppendLine("using (OutputScope(writer)) {RenderMasterContent();}");
-                source.AppendLine("}");
+                source.AppendLine();
+                source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
+                source.AppendLine("    {");
+                source.AppendLine("        using (OutputScope(\"view\")) {RenderViewContent();}");
+                source.AppendLine("        using (OutputScope(writer)) {RenderMasterContent();}");
+                source.AppendLine("    }");
             }
 
             source.AppendLine("}");
+
 
             SourceCode = source.ToString();
 
@@ -107,7 +117,18 @@ namespace Spark.Compiler
                 compilerParameters.ReferencedAssemblies.Add(location);
             }
 
-            var compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, SourceCode);
+
+            var codeFile = Path.Combine(AppDomain.CurrentDomain.SetupInformation.DynamicBase ?? Path.GetTempPath(), Guid.NewGuid().ToString("n") + ".cs");
+            using (var stream = new FileStream(codeFile, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(SourceCode);
+                }
+            }
+
+            compilerParameters.OutputAssembly = Path.ChangeExtension(codeFile, "dll");
+            var compilerResults = codeProvider.CompileAssemblyFromFile(compilerParameters, codeFile);
 
             if (compilerResults.Errors.Count != 0)
             {
