@@ -55,7 +55,7 @@ namespace Spark.Tests
             return new StubViewContext { ControllerName = "Home", ViewName = viewName, MasterName = masterName, Output = sb };
         }
 
-        StubViewContext MakeViewContext(string viewName, string masterName, IDictionary<string, object> data)
+        StubViewContext MakeViewContext(string viewName, string masterName, StubViewData data)
         {
             return new StubViewContext { ControllerName = "Home", ViewName = viewName, MasterName = masterName, Output = sb, Data = data };
         }
@@ -389,7 +389,7 @@ namespace Spark.Tests
         [Test]
         public void MarkupBasedMacros()
         {
-            var data = new Dictionary<string, object>
+            var data = new StubViewData
                            {
                                {"username", "Bob"}, 
                                {"comments", new[] {

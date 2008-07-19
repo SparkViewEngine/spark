@@ -56,7 +56,7 @@ namespace Spark.Tests
             loader = new ViewLoader { ViewFolder = viewSourceLoader };
             loader.Parser = delegate(Position input)
                                 {
-                                    return new ParseResult<IList<Node>>(input, nodesTable[input.Peek()]);
+                                    return new ParseResult<IList<Node>>(input.Advance(1), nodesTable[input.Peek()]);
                                 };
         }
 

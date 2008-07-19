@@ -35,7 +35,7 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(ViewDataChunk chunk)
         {
-            _source.AppendLine(string.Format("{0} {1} {{get {{return ({0})ViewData[\"{1}\"];}}}}", chunk.Type ?? "object", chunk.Name));
+            _source.AppendLine(string.Format("{0} {1} {{get {{return ({0})ViewData.Eval(\"{1}\");}}}}", chunk.Type ?? "object", chunk.Name));
         }
 
         protected override void Visit(ExtensionChunk chunk)

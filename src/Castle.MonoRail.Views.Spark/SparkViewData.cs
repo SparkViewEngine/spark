@@ -25,15 +25,20 @@ namespace Castle.MonoRail.Views.Spark
             _view = view;
         }
 
-        public object this[string key]
+        public object Eval(string key)
         {
-            get
-            {
-                return PropertyBag(key) ??
+            return PropertyBag(key) ??
                     Flash(key) ??
                     Helpers(key) ??
                     Params(key) ??
                     Resources(key);
+        }
+
+        public object this[string key]
+        {
+            get
+            {
+                return Eval(key);
             }
         }
 

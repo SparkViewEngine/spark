@@ -228,7 +228,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			var viewContext = MakeViewContext("viewdata", null, new { Comments = comments, Caption = "Hello world" });
 
 			factory.RenderView(viewContext);
-
+            
 			mocks.VerifyAll();
 			string content = sb.ToString();
 			Assert.That(content.Contains("<h1>Hello world</h1>"));

@@ -9,7 +9,7 @@ namespace Spark.Tests.Stubs
 		public string ViewName { get; set; }
 		public string MasterName { get; set; }
 
-        public IDictionary<string, object> Data { get; set; }
+        public StubViewData Data { get; set; }
         
         public StringBuilder Output { get; set; }
 	}
