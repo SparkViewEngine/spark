@@ -2,8 +2,8 @@
 	Comments="System.Collections.Generic.IList[[MvcContrib.UnitTests.SparkViewEngine.Models.Comment]]"
 	Caption="string"/>
 
-<h1>$Caption;</h1>
+<h1>${Caption}</h1>
 
 <for each='var item in Comments'>
-  <p>$item.Text;</p>
+  <p>${item.Text}</p>
 </for>

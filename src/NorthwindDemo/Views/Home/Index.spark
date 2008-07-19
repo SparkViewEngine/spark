@@ -2,4 +2,4 @@
   Welcome to the Northwind Spark demo.
 </h2>
 <p>There's no party like a Northwind party.</p>
-<p>$Html.ActionLink[[ProductsController]](c=>c.Categories(), "Browse Categories");</p>
+<p>${Html.ActionLink[[ProductsController]](c=>c.Categories(), "Browse Categories")}</p>

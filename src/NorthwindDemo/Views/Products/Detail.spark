@@ -1,7 +1,7 @@
 ﻿
 <viewdata model="Product"/>
 
-$PageTitle(ViewData.Model.ProductName);
+${PageTitle(ViewData.Model.ProductName)}
 
 <CategoryMenuItems category="ViewData.Model.Category"/>
 

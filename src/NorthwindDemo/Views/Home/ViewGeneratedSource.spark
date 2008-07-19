@@ -5,6 +5,6 @@
   <p>A compiled view class for that of controller and and view is not currently in memory.</p>
 </div>
 <else>
-  $Html.Encode(ViewData.Model.Compiler.SourceCode).Replace("\r\n", "<br/>");
+  ${Html.Encode(ViewData.Model.Compiler.SourceCode).Replace("\r\n", "<br/>")}
 </else>
 

@@ -9,7 +9,7 @@
   <for each='var user in new [] {bob, james, special, anon}'>
     <if condition='user.UserType == UserType.Administrator'>
       <div>
-        <p>Administrator $user.Name;</p>
+        <p>Administrator ${user.Name}</p>
       </div>
     </if>
     <elseif condition='user.Name == "SpecialName"'>
@@ -19,7 +19,7 @@
     </elseif>
     <elseif condition='user.UserType == UserType.Registered'>
       <div>
-        <p>Hi $user.Name;!</p>
+        <p>Hi ${user.Name}!</p>
       </div>
     </elseif>
     <else>

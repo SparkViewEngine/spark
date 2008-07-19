@@ -1,7 +1,7 @@
 ﻿
 <viewdata model="IList[[Category]]"/>
 
-$PageTitle("Browse Products");
+${PageTitle("Browse Products")}
 
 <CategoryMenuItems category="(Category)null"/>
 

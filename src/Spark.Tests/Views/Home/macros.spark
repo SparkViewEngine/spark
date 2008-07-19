@@ -5,19 +5,19 @@
 
   <macro name="ShowComment" person="string" item="Comment">
     <div class="comment">
-      <p>$person;</p>
-      <p>$item.Text;</p>
+      <p>${person}</p>
+      <p>${item.Text}</p>
     </div>
   </macro>
 
   <div>
     <for each="var comment in comments">
-      $ShowComment(username, comment);
+      ${ShowComment(username, comment)}
     </for>
-    $ShowRating(5);
+    ${ShowRating(5)}
   </div>
 
   <macro name="ShowRating" score="double">
-    <span class="yadda">Rating: $score;</span>
+    <span class="yadda">Rating: ${score}</span>
   </macro>
 </div>

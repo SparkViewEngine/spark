@@ -9,6 +9,6 @@
     <var x="5" y="10" rowclass='new[] {"bar", "bar-alt"}' />
     <p>Hello world</p>
     <var z="x+y" />
-    <h1>$z;</h1>
+    <h1>${z}</h1>
   </body >
 </html>

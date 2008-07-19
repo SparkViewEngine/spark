@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChunkBuilderVisitorTester.cs" />
+    <Compile Include="CodeGrammarTester.cs" />
     <Compile Include="CompiledViewHolderTester.cs" />
     <Compile Include="ConditionalAttributeVisitorTester.cs" />
     <Compile Include="FileSystemViewFolderTester.cs" />

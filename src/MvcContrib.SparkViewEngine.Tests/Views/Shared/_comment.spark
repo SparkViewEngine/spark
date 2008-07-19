@@ -1,1 +1,1 @@
-﻿<li class="$css;">$commentText;</li>
+﻿<li class="${css}">${commentText}</li>

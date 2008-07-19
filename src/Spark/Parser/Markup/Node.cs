@@ -97,6 +97,10 @@ namespace Spark.Parser.Markup
 
     public class ExpressionNode : Node
     {
+        public ExpressionNode(string code)
+        {
+            Code = code;
+        }
         public ExpressionNode(IList<char> code)
         {
             Code = new String(code.ToArray());

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Spark.Compiler;
 using Spark.Parser.Markup;
+using Spark.Parser.Code;
 
 namespace Spark.Compiler.NodeVisitors
 {
@@ -95,7 +96,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ExpressionNode expressionNode)
         {
-            Chunks.Add(new SendExpressionChunk { Code = UnarmorCode(expressionNode.Code) });
+            Chunks.Add(new SendExpressionChunk { Code = expressionNode.Code });
         }
 
         protected override void Visit(StatementNode node)
@@ -182,7 +183,7 @@ namespace Spark.Compiler.NodeVisitors
             var macro = new MacroChunk { Name = name.Value };
             foreach (var attr in inspector.Attributes)
             {
-                macro.Parameters.Add(new MacroParameter { Name = attr.Name, Type = UnarmorCode(attr.Value) });
+                macro.Parameters.Add(new MacroParameter { Name = attr.Name, Type = attr.AsCode() });
             }
             AddUnordered(macro);
             Chunks = macro.Body;
@@ -243,7 +244,7 @@ namespace Spark.Compiler.NodeVisitors
         {
             var conditionAttr = inspector.TakeAttribute("condition");
 
-            var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = UnarmorCode(conditionAttr.Value) };
+            var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = conditionAttr.AsCode() };
             Chunks.Add(ifChunk);
             Chunks = ifChunk.Body;
             Accept(specialNode.Body);
@@ -265,7 +266,7 @@ namespace Spark.Compiler.NodeVisitors
             }
             else
             {
-                var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = UnarmorCode(ifAttr.Value) };
+                var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = ifAttr.AsCode() };
                 Chunks.Add(elseIfChunk);
                 Chunks = elseIfChunk.Body;
             }
@@ -278,7 +279,7 @@ namespace Spark.Compiler.NodeVisitors
                 throw new CompilerException("An 'elseif' may only follow an 'if' or 'elseif'.");
 
             var conditionAttr = inspector.TakeAttribute("condition");
-            var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = UnarmorCode(conditionAttr.Value) };
+            var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = conditionAttr.AsCode() };
             Chunks.Add(elseIfChunk);
             Chunks = elseIfChunk.Body;
             Accept(specialNode.Body);
@@ -312,11 +313,11 @@ namespace Spark.Compiler.NodeVisitors
         {
             var modelAttr = inspector.TakeAttribute("model");
             if (modelAttr != null)
-                AddUnordered(new ViewDataModelChunk { TModel = UnarmorCode(modelAttr.Value) });
+                AddUnordered(new ViewDataModelChunk { TModel = modelAttr.AsCode() });
 
             foreach (var attr in inspector.Attributes)
             {
-                string typeName = UnarmorCode(attr.Value);
+                string typeName = attr.AsCode();
                 AddUnordered(new ViewDataChunk { Type = typeName, Name = attr.Name });
             }
         }
@@ -324,11 +325,11 @@ namespace Spark.Compiler.NodeVisitors
         private void VisitGlobal(SpecialNode specialNode)
         {
             var typeAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "type");
-            string type = typeAttr != null ? typeAttr.Value : "object";
+            string type = typeAttr != null ? typeAttr.AsCode() : "object";
 
             foreach (var attr in specialNode.Element.Attributes.Where(a => a != typeAttr))
             {
-                AddUnordered(new GlobalVariableChunk { Type = UnarmorCode(type), Name = attr.Name, Value = UnarmorCode(attr.Value) });
+                AddUnordered(new GlobalVariableChunk { Type = type, Name = attr.Name, Value = attr.AsCode() });
             }
         }
 
@@ -342,11 +343,11 @@ namespace Spark.Compiler.NodeVisitors
             }
 
             var typeAttr = inspector.TakeAttribute("var");
-            string type = typeAttr != null ? typeAttr.Value : "var";
+            string type = typeAttr != null ? typeAttr.AsCode() : "var";
 
             foreach (var attr in inspector.Attributes)
             {
-                Chunks.Add(new LocalVariableChunk { Type = UnarmorCode(type), Name = attr.Name, Value = UnarmorCode(attr.Value) });
+                Chunks.Add(new LocalVariableChunk { Type = type, Name = attr.Name, Value = attr.AsCode() });
             }
 
             Accept(specialNode.Body);

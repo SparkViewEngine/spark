@@ -15,7 +15,7 @@
     <title>${Title}</title>
 	<macro name="PageTitle" caption="string">
 		<set Title='string.Format("{0} - {1}", caption, Title)'/>
-		<h2>$Html.Encode(caption);</h2>
+		<h2>${Html.Encode(caption)}</h2>
 	</macro>
     
     <link href="/Content/Site.css" rel="stylesheet" type="text/css" />
@@ -47,9 +47,9 @@
                     Spark view engine &bull; Northwind MVC Demo &copy; Copyright 2008                    
                 </p>
                 <p>
-					$Html.ActionLink[[HomeController]](
+					${Html.ActionLink[[HomeController]](
 						c=>c.ViewGeneratedSource(ViewContext.MasterName ?? "Application", ViewContext.RouteData.GetRequiredString("controller"), ViewContext.ViewName),
-						"View generated source");
+						"View generated source")}
                 </p>
             </div>
         </div>

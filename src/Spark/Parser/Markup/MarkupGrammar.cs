@@ -16,10 +16,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Spark.Parser.Code;
 
 namespace Spark.Parser.Markup
 {
-    public class MarkupGrammar : CharGrammar
+    public class MarkupGrammar : CodeGrammar
     {
 
         public MarkupGrammar()
@@ -74,15 +75,15 @@ namespace Spark.Parser.Markup
             // any ; or } could appear, for example, in a string contant
 
             // Syntax 1: ${csharp_expression}
-            var Code1 = Ch("${").And(Rep1(ChNot('}'))).And(Ch('}'))
+            var Code1 = Ch("${").And(Expression).And(Ch('}'))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
             // Syntax 2: $csharp_expression;
-            var Code2 = Ch('$').And(Rep1(ChNot(';'))).And(Ch(';'))
+            var Code2 = Ch('$').And(Expression).And(Ch(';'))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
             // Syntax 3: <%=csharp_expression%>;
-            var Code3 = Ch("<%=").And(Rep1(chNotPercentGreater)).And(Ch("%>"))
+            var Code3 = Ch("<%=").And(Expression).And(Ch("%>"))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
             Code = Code1.Or(Code2).Or(Code3);

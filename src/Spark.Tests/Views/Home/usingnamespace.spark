@@ -3,8 +3,8 @@
 <var args='new List[[string]] { "Foo","Bar" }' comment='new Comment {Text="Hello"}'/>
 
 <for each='var arg in args'>
-  <p>$arg;</p>
+  <p>${arg}</p>
   <use namespace="Spark.Tests.Models"/>
 </for>
 
-<p>$comment.Text;</p>
+<p>${comment.Text}</p>

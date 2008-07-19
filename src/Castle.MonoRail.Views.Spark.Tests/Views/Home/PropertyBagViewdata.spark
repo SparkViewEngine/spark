@@ -1,6 +1,6 @@
 ﻿<div>
   <viewdata foo="string" bar="int"/>
-  <p>foo:$foo;</p>
-  <p>bar:$ViewData["bar"];</p>
-  <p>bar+4:$bar+4;</p>
+  <p>foo:${foo}</p>
+  <p>bar:${ViewData["bar"]}</p>
+  <p>bar+4:${bar+4}</p>
 </div>

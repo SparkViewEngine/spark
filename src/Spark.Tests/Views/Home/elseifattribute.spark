@@ -8,7 +8,7 @@
 
   <for each='var user in new [] {bob, james, special, anon}'>
     <div if='user.UserType == UserType.Administrator'>
-      <p>Administrator $user.Name;</p>
+      <p>Administrator ${user.Name}</p>
     </div>
     <div elseif='user.Name == "SpecialName"'>
       <div class='special'>
@@ -16,7 +16,7 @@
       </div>
     </div>
     <div elseif='user.UserType == UserType.Registered'>
-      <p>Hi $user.Name;!</p>
+      <p>Hi ${user.Name}!</p>
     </div>
     <else>
       <div>

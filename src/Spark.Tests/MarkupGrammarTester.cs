@@ -281,14 +281,14 @@ namespace Spark.Tests
             var code = result.Value[2] as ExpressionNode;
             Assert.AreEqual("bar", code.Code);
 
-            result = grammar.Nodes(Source("<hello>foo$baaz;ex</hello>"));
+            result = grammar.Nodes(Source("<hello>foo<%=baaz%>ex</hello>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
             var code2 = result.Value[2] as ExpressionNode;
             Assert.AreEqual("baaz", code2.Code);
 
-            result = grammar.Nodes(Source("<hello href='${one}' class=\"$two;\"/>"));
+            result = grammar.Nodes(Source("<hello href='${one}' class=\"<%=two%>\"/>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ElementNode), result.Value[0]);

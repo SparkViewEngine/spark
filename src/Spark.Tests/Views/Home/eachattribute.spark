@@ -14,8 +14,8 @@
       <td>Type</td>
     </tr>
     <tr each='var user in users'>
-      <td>$user.Name;</td>
-      <td>$user.UserType;</td>
+      <td>${user.Name}</td>
+      <td>${user.UserType}</td>
     </tr>
   </table>
 </div>

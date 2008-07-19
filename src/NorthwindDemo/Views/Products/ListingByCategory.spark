@@ -3,7 +3,7 @@
   model="IList[[Product]]" 
   CategoryName="string"/>
 
-$PageTitle(CategoryName);
+${PageTitle(CategoryName)}
 
 <CategoryMenuItems category="ViewData.Model.Select(p=>p.Category).FirstOrDefault()"/>
 
@@ -14,9 +14,9 @@ $PageTitle(CategoryName);
     <p>
       <a href="/Products/Detail/${product.ProductID}">${product.ProductName}</a>
       <br />
-      Price: $String.Format("{0:C2}", product.UnitPrice);
+      Price: ${String.Format("{0:C2}", product.UnitPrice)}
       <span class="editlink">
-        ($Html.ActionLink[[ProductsController]](c=>c.Edit(product.ProductID), "Edit");)
+        (${Html.ActionLink[[ProductsController]](c=>c.Edit(product.ProductID), "Edit")})
       </span>
     </p>
     <div style="clear:both;"></div>

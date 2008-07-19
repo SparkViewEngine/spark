@@ -74,6 +74,8 @@
     <Compile Include="ISparkViewEntry.cs" />
     <Compile Include="Parser\Chain.cs" />
     <Compile Include="Parser\CharGrammar.cs" />
+    <Compile Include="Parser\Code\AttributeNodeExtensions.cs" />
+    <Compile Include="Parser\Code\CodeGrammar.cs" />
     <Compile Include="Parser\Grammar.cs" />
     <Compile Include="FileSystem\IViewFolder.cs" />
     <Compile Include="Parser\Markup\MarkupGrammar.cs" />
