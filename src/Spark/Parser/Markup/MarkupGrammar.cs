@@ -57,7 +57,7 @@ namespace Spark.Parser.Markup
 
 
             // Syntax 1: #statement\n
-            var Statement1 = Ch('#').And(Rep1(ChNot('\r','\n'))).And(Opt(Ch('\r'))).And(Ch('\n'))
+            var Statement1 = Ch('#').And(Rep1(ChNot('\r', '\n'))).And(Opt(Ch('\r'))).And(Ch('\n'))
                 .Build(hit => new StatementNode(hit.Left.Left.Down));
 
             // Syntax 2: <%statement%> 
@@ -74,19 +74,18 @@ namespace Spark.Parser.Markup
             // any ; or } could appear, for example, in a string contant
 
             // Syntax 1: ${csharp_expression}
-            var Code1 = Ch("${").And(Rep1(ChNot('}'))).And(Ch('}')).Left().Down().Build(hit => new ExpressionNode(hit));
+            var Code1 = Ch("${").And(Rep1(ChNot('}'))).And(Ch('}'))
+                .Build(hit => new ExpressionNode(hit.Left.Down));
 
             // Syntax 2: $csharp_expression;
-            var Code2 = Ch('$').And(Rep1(ChNot(';'))).And(Ch(';')).Left().Down().Build(hit => new ExpressionNode(hit));
+            var Code2 = Ch('$').And(Rep1(ChNot(';'))).And(Ch(';'))
+                .Build(hit => new ExpressionNode(hit.Left.Down));
 
             // Syntax 3: <%=csharp_expression%>;
             var Code3 = Ch("<%=").And(Rep1(chNotPercentGreater)).And(Ch("%>"))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
-            // Fallback: $ was single text character
-            //var CodeFallback = Ch('$').Build(hit => new TextNode("$"));
-
-            Code = AsNode(Code1).Or(AsNode(Code2)).Or(AsNode(Code3));//.Or(AsNode(CodeFallback));
+            Code = AsNode(Code1).Or(AsNode(Code2)).Or(AsNode(Code3));
 
             Text =
                 Rep1(ChNot('&', '<').Unless(Statement).Unless(Code))
@@ -117,7 +116,10 @@ namespace Spark.Parser.Markup
             //[44]   	EmptyElemTag	   ::=   	'<' Name (S  Attribute)* S? '/>'
             Element =
                 Lt.And(Name).And(Rep(Whitespace.And(Attribute).Down())).And(Opt(Whitespace)).And(Opt(Ch('/'))).And(Gt)
-                .Build(hit => new ElementNode(hit.Left.Left.Left.Left.Down, hit.Left.Left.Left.Down, hit.Left.Down != default(char)));
+                .Build(hit => new ElementNode(
+                    hit.Left.Left.Left.Left.Down,
+                    hit.Left.Left.Left.Down,
+                    hit.Left.Down != default(char)));
 
             //[42]   	ETag	   ::=   	'</' Name  S? '>'
             EndElement =
@@ -146,15 +148,23 @@ namespace Spark.Parser.Markup
             //[75]   	ExternalID	   ::=   	'SYSTEM' S  SystemLiteral | 'PUBLIC' S PubidLiteral S SystemLiteral 
             var ExternalIDSystem =
                 Ch("SYSTEM").And(Whitespace).And(SystemLiteral)
-                .Build(hit => new ExternalIdInfo { ExternalIdType = hit.Left.Left, SystemId = hit.Down });
+                .Build(hit => new ExternalIdInfo
+                                  {
+                                      ExternalIdType = hit.Left.Left,
+                                      SystemId = hit.Down
+                                  });
             var ExternalIDPublic =
                 Ch("PUBLIC").And(Whitespace).And(PubidLiteral).And(Whitespace).And(SystemLiteral)
-                .Build(hit => new ExternalIdInfo { ExternalIdType = hit.Left.Left.Left.Left, PublicId = hit.Left.Left.Down, SystemId = hit.Down });
+                .Build(hit => new ExternalIdInfo
+                                  {
+                                      ExternalIdType = hit.Left.Left.Left.Left,
+                                      PublicId = hit.Left.Left.Down,
+                                      SystemId = hit.Down
+                                  });
             var ExternalID = ExternalIDSystem.Or(ExternalIDPublic);
 
             //[28]   	doctypedecl	   ::=   	'<!DOCTYPE' S  Name (S  ExternalID)? S? ('[' intSubset ']' S?)? '>'
-            DoctypeDecl =
-                Ch("<!DOCTYPE").And(Whitespace).And(Name).And(Opt(Whitespace.And(ExternalID).Down())).And(Opt(Whitespace)).And(Ch('>'))
+            DoctypeDecl = Ch("<!DOCTYPE").And(Whitespace).And(Name).And(Opt(Whitespace.And(ExternalID).Down())).And(Opt(Whitespace)).And(Ch('>'))
                 .Build(hit => new DoctypeNode { Name = hit.Left.Left.Left.Down, ExternalId = hit.Left.Left.Down });
 
 
