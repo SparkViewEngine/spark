@@ -85,7 +85,7 @@ namespace Spark.Parser.Markup
             var Code3 = Ch("<%=").And(Rep1(chNotPercentGreater)).And(Ch("%>"))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
-            Code = AsNode(Code1).Or(AsNode(Code2)).Or(AsNode(Code3));
+            Code = Code1.Or(Code2).Or(Code3);
 
             Text =
                 Rep1(ChNot('&', '<').Unless(Statement).Unless(Code))
@@ -194,7 +194,7 @@ namespace Spark.Parser.Markup
         public ParseAction<EndElementNode> EndElement;
         public ParseAction<AttributeNode> Attribute;
         public ParseAction<CommentNode> Comment;
-        public ParseAction<Node> Code;
+        public ParseAction<ExpressionNode> Code;
         public ParseAction<StatementNode> Statement;
 
 
