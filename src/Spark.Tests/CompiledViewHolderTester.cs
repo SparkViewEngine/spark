@@ -35,10 +35,23 @@ namespace Spark.Tests
             holder = new CompiledViewHolder();
         }
 
+        private CompiledViewHolder.Key BuildKey(string controller, string view, string master)
+        {
+            return new CompiledViewHolder.Key
+            {
+                Descriptor = new SparkViewDescriptor
+                {
+                    ControllerName = controller,
+                    ViewName = view,
+                    MasterName = master
+                }
+            };
+        }
+
         [Test]
         public void LookupNonExistantReturnsNull()
         {
-            var key = new CompiledViewHolder.Key { ControllerName = "c", ViewName = "v", MasterName = "m" };
+            var key = BuildKey("c", "v", "m");
             var entry = holder.Lookup(key);
             Assert.IsNull(entry);
         }
@@ -46,7 +59,7 @@ namespace Spark.Tests
         [Test]
         public void LookupReturnsStoredInstance()
         {
-            var key = new CompiledViewHolder.Key { ControllerName = "c", ViewName = "v", MasterName = "m" };
+            var key = BuildKey("c", "v", "m");
             var entry = new CompiledViewHolder.Entry { Key = key, Loader = new ViewLoader() };
             Assert.IsNull(holder.Lookup(key));
             holder.Store(entry);
@@ -56,17 +69,17 @@ namespace Spark.Tests
         [Test]
         public void VariousKeyEqualities()
         {
-            var key1 = new CompiledViewHolder.Key { ControllerName = "c", ViewName = "v", MasterName = "m" };
-            var key2 = new CompiledViewHolder.Key { ControllerName = "c", ViewName = "v", MasterName = "m" };
+            var key1 = BuildKey("c", "v", "m");
+            var key2 = BuildKey("c", "v", "m");
 
             Assert.AreNotSame(key1, key2);
             Assert.AreEqual(key1, key2);
 
-            var key3 = new CompiledViewHolder.Key { ControllerName = "c", ViewName = "v", MasterName = null };
+            var key3 = BuildKey("c", "v", null);
             Assert.AreNotEqual(key1, key3);
             Assert.AreNotEqual(key2, key3);
 
-            var key4 = new CompiledViewHolder.Key { ControllerName = "c", ViewName = "v", MasterName = "M" };
+            var key4 = BuildKey("c", "v", "M");
             Assert.AreEqual(key1, key4);
 
             Assert.That(!object.Equals(key1, null));
@@ -87,7 +100,7 @@ namespace Spark.Tests
 
             mocks.ReplayAll();
 
-            var key = new CompiledViewHolder.Key { ControllerName = "c", ViewName = "v", MasterName = "m" };
+            var key = BuildKey("c", "v", "m");
             var entry = new CompiledViewHolder.Entry { Key = key, Loader = loader };
             holder.Store(entry);
             Assert.AreSame(entry, holder.Lookup(key));

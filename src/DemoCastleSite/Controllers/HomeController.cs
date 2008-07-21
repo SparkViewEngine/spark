@@ -38,8 +38,8 @@ namespace SparkCastleDemo.Controllers
             for (int i = 100; i != 200; ++i)
                 data.Add(i.ToString());
 
-            
-            
+
+
 
 
             PropertyBag["items"] = PaginationHelper.CreatePagination(data, 10, page);
@@ -54,7 +54,14 @@ namespace SparkCastleDemo.Controllers
 
         public void ViewSource(string controllerName, string viewName, string masterName)
         {
-            var entry = CompiledViewHolder.Current.Lookup(new CompiledViewHolder.Key { ControllerName = controllerName, MasterName = masterName, ViewName = viewName });
+            var descriptor = new SparkViewDescriptor
+            {
+                ControllerName = controllerName,
+                MasterName = masterName,
+                ViewName = viewName
+            };
+
+            var entry = CompiledViewHolder.Current.Lookup(new CompiledViewHolder.Key { Descriptor = descriptor });
 
             PropertyBag["entry"] = entry;
         }

@@ -35,14 +35,16 @@ namespace MvcContrib.SparkViewEngine
         [DebuggerNonUserCode]
 		public void RenderView(ViewContext viewContext)
 		{
-			var view = (SparkView)Engine.CreateInstance(
-				viewContext.RouteData.GetRequiredString("controller"), 
-				viewContext.ViewName,
-				viewContext.MasterName);
+            var descriptor = new SparkViewDescriptor
+                                 {
+                                     ControllerName = viewContext.RouteData.GetRequiredString("controller"),
+                                     ViewName = viewContext.ViewName,
+                                     MasterName = viewContext.MasterName
+                                 };
 
-			var content = view.RenderView(viewContext);
+            var view = (SparkView) Engine.CreateInstance(descriptor);
 
-			viewContext.HttpContext.Response.Write(content);
+			view.RenderView(viewContext);
 		}
 	}
 }

@@ -32,52 +32,59 @@ namespace Spark
 
         public string BaseClass { get; set; }
         public IViewFolder ViewFolder { get; set; }
-        public ISparkExtensionFactory ExtensionFactory { get; set; }        
+        public ISparkExtensionFactory ExtensionFactory { get; set; }
 
 
-        public ISparkViewEntry GetEntry(string controllerName, string viewName, string masterName)
+        public ISparkViewEntry GetEntry(SparkViewDescriptor descriptor)
         {
-            var key = CreateKey(controllerName, viewName, masterName);
+            var key = CreateKey(descriptor);
             return CompiledViewHolder.Current.Lookup(key);
         }
-        
-        public ISparkViewEntry CreateEntry(string controllerName, string viewName, string masterName)
+
+        public ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor)
         {
-            var key = CreateKey(controllerName, viewName, masterName);
+            var key = CreateKey(descriptor);
             var entry = CompiledViewHolder.Current.Lookup(key);
             if (entry == null)
             {
                 entry = CreateEntry(key);
                 CompiledViewHolder.Current.Store(entry);
-            } 
+            }
             return entry;
         }
 
-        public ISparkView CreateInstance(string controllerName, string viewName, string masterName)
+        public ISparkView CreateInstance(SparkViewDescriptor descriptor)
         {
-            return CreateEntry(controllerName, viewName, masterName)
-                .CreateInstance();
+            return CreateEntry(descriptor).CreateInstance();
         }
 
 
-        public CompiledViewHolder.Key CreateKey(string controllerName, string viewName, string masterName)
+        public CompiledViewHolder.Key CreateKey(SparkViewDescriptor descriptor)
         {
+            //TODO: get this logic out of here. it would be much better for the framework-specific 
+            // library to do the work of locating these defaults
+
             var key = new CompiledViewHolder.Key
                         {
-                            ControllerName = controllerName ?? string.Empty,
-                            ViewName = viewName ?? string.Empty,
-                            MasterName = masterName ?? string.Empty
+                            Descriptor = descriptor
                         };
 
-            if (key.MasterName == string.Empty)
+            if (descriptor.ViewName == null)
+                descriptor.ViewName = string.Empty;
+            if (descriptor.ControllerName == null)
+                descriptor.ControllerName = string.Empty;
+            if (descriptor.MasterName == null)
+                descriptor.MasterName = string.Empty;
+
+            if (key.Descriptor.MasterName == string.Empty)
             {
-                if (ViewFolder.HasView(string.Format("Shared\\{0}.spark", key.ControllerName)))
+                if (ViewFolder.HasView(string.Format("Shared\\{0}.spark", key.Descriptor.ControllerName)))
                 {
-                    key.MasterName = key.ControllerName;
+                    key.Descriptor.MasterName = key.Descriptor.ControllerName;
                 }
                 else if (ViewFolder.HasView("Shared\\Application.spark"))
                 {
-                    key.MasterName = "Application";
+                    key.Descriptor.MasterName = "Application";
                 }
             }
             return key;
@@ -88,15 +95,15 @@ namespace Spark
             var entry = new CompiledViewHolder.Entry
                             {
                                 Key = key,
-                                Loader = new ViewLoader { ViewFolder = ViewFolder, ExtensionFactory = ExtensionFactory},
+                                Loader = new ViewLoader { ViewFolder = ViewFolder, ExtensionFactory = ExtensionFactory },
                                 Compiler = new ViewCompiler(BaseClass)
                             };
 
-            var viewChunks = entry.Loader.Load(key.ControllerName, key.ViewName);
+            var viewChunks = entry.Loader.Load(key.Descriptor.ControllerName, key.Descriptor.ViewName);
 
             IList<Chunk> masterChunks = new Chunk[0];
-            if (!string.IsNullOrEmpty(key.MasterName))
-                masterChunks = entry.Loader.Load("Shared", key.MasterName);
+            if (!string.IsNullOrEmpty(key.Descriptor.MasterName))
+                masterChunks = entry.Loader.Load("Shared", key.Descriptor.MasterName);
 
             entry.Compiler.CompileView(viewChunks, masterChunks);
 

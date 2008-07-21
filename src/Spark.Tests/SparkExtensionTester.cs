@@ -43,7 +43,8 @@ namespace Spark.Tests
         [Test]
         public void TestExtensions()
         {
-            var entry = engine.CreateEntry(engine.CreateKey("Home", "extensionelements", null));
+            var descriptor = new SparkViewDescriptor {ControllerName = "Home", ViewName = "extensionelements"};
+            var entry = engine.CreateEntry(engine.CreateKey(descriptor));
             Assert.That(entry.Compiler.SourceCode.Contains("//this was a test"));
         }
     }

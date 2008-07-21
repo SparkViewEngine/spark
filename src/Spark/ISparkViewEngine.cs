@@ -18,12 +18,19 @@ using Spark;
 
 namespace Spark
 {
+    public class SparkViewDescriptor
+    {
+        public string ControllerName { get; set; }
+        public string ViewName { get; set; }
+        public string MasterName { get; set; }
+    }
+
     public interface ISparkViewEngine
     {
         ISparkExtensionFactory ExtensionFactory { get; set; }
 
-        ISparkViewEntry GetEntry(string controllerName, string viewName, string masterName);
-        ISparkViewEntry CreateEntry(string controllerName, string viewName, string masterName);
-        ISparkView CreateInstance(string controllerName, string viewName, string masterName);
+        ISparkViewEntry GetEntry(SparkViewDescriptor descriptor);
+        ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor);
+        ISparkView CreateInstance(SparkViewDescriptor descriptor);
     }
 }

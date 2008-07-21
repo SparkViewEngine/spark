@@ -209,11 +209,12 @@ namespace Spark.Tests
 
             mocks.ReplayAll();
 
-            var key = engine.CreateKey("Foo", "Baaz", null);
+            var descriptor = new SparkViewDescriptor {ControllerName = "Foo", ViewName = "Baaz"};
+            var key = engine.CreateKey(descriptor);
 
-            Assert.AreEqual("Foo", key.ControllerName);
-            Assert.AreEqual("Baaz", key.ViewName);
-            Assert.IsEmpty(key.MasterName);
+            Assert.AreEqual("Foo", key.Descriptor.ControllerName);
+            Assert.AreEqual("Baaz", key.Descriptor.ViewName);
+            Assert.IsEmpty(key.Descriptor.MasterName);
         }
 
         [Test]
@@ -228,12 +229,13 @@ namespace Spark.Tests
 
             mocks.ReplayAll();
 
-            var key = engine.CreateKey("Foo", "Baaz", null);
+            var descriptor = new SparkViewDescriptor { ControllerName = "Foo", ViewName = "Baaz" };
+            var key = engine.CreateKey(descriptor);
 
 
-            Assert.AreEqual("Foo", key.ControllerName);
-            Assert.AreEqual("Baaz", key.ViewName);
-            Assert.AreEqual("Application", key.MasterName);
+            Assert.AreEqual("Foo", key.Descriptor.ControllerName);
+            Assert.AreEqual("Baaz", key.Descriptor.ViewName);
+            Assert.AreEqual("Application", key.Descriptor.MasterName);
         }
 
         [Test]
@@ -248,12 +250,13 @@ namespace Spark.Tests
             mocks.ReplayAll();
 
 
-            var key = engine.CreateKey("Foo", "Baaz", null);
+            var descriptor = new SparkViewDescriptor { ControllerName = "Foo", ViewName = "Baaz" };
+            var key = engine.CreateKey(descriptor);
 
 
-            Assert.AreEqual("Foo", key.ControllerName);
-            Assert.AreEqual("Baaz", key.ViewName);
-            Assert.AreEqual("Foo", key.MasterName);
+            Assert.AreEqual("Foo", key.Descriptor.ControllerName);
+            Assert.AreEqual("Baaz", key.Descriptor.ViewName);
+            Assert.AreEqual("Foo", key.Descriptor.MasterName);
         }
 
 

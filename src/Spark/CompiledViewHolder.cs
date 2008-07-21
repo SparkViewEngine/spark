@@ -62,15 +62,13 @@ namespace Spark
 
         public class Key
         {
-            public string ControllerName { get; set; }
-            public string ViewName { get; set; }
-            public string MasterName { get; set; }
+            public SparkViewDescriptor Descriptor { get; set; }
 
             public override int GetHashCode()
             {
-                return (ControllerName ?? "").ToLowerInvariant().GetHashCode() ^
-                       (ViewName ?? "").ToLowerInvariant().GetHashCode() ^
-                       (MasterName ?? "").ToLowerInvariant().GetHashCode();
+                return (Descriptor.ControllerName ?? "").ToLowerInvariant().GetHashCode() ^
+                       (Descriptor.ViewName ?? "").ToLowerInvariant().GetHashCode() ^
+                       (Descriptor.MasterName ?? "").ToLowerInvariant().GetHashCode();
             }
 
             public override bool Equals(object obj)
@@ -78,9 +76,9 @@ namespace Spark
                 var that = obj as Key;
                 if (that == null || GetType() != that.GetType())
                     return false;
-                return string.Equals(ControllerName, that.ControllerName, StringComparison.InvariantCultureIgnoreCase) &&
-                       string.Equals(ViewName, that.ViewName, StringComparison.InvariantCultureIgnoreCase) &&
-                       string.Equals(MasterName, that.MasterName, StringComparison.InvariantCultureIgnoreCase);
+                return string.Equals(Descriptor.ControllerName, that.Descriptor.ControllerName, StringComparison.InvariantCultureIgnoreCase) &&
+                       string.Equals(Descriptor.ViewName, that.Descriptor.ViewName, StringComparison.InvariantCultureIgnoreCase) &&
+                       string.Equals(Descriptor.MasterName, that.Descriptor.MasterName, StringComparison.InvariantCultureIgnoreCase);
             }
         }
 
@@ -89,6 +87,11 @@ namespace Spark
             public Key Key { get; set; }
             public ViewLoader Loader { get; set; }
             public ViewCompiler Compiler { get; set; }
+
+            public SparkViewDescriptor Descriptor
+            {
+                get { return Key.Descriptor; }
+            }
 
             string ISparkViewEntry.SourceCode
             {
@@ -102,3 +105,4 @@ namespace Spark
         }
     }
 }
+

@@ -54,14 +54,18 @@ namespace Castle.MonoRail.Views.Spark
         public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller,
                                      IControllerContext controllerContext)
         {
-            var viewName = Path.GetFileName(templateName);
-            var location = Path.GetDirectoryName(templateName);
-
             string masterName = null;
             if (controllerContext.LayoutNames != null)
                 masterName = string.Join(" ", controllerContext.LayoutNames);
 
-            var view = (SparkView)Engine.CreateInstance(location, viewName, masterName);
+            var descriptor = new SparkViewDescriptor
+            {
+                ControllerName = Path.GetDirectoryName(templateName),
+                ViewName = Path.GetFileName(templateName),
+                MasterName = masterName
+            };
+
+            var view = (SparkView)Engine.CreateInstance(descriptor);
             view.Contextualize(context, controllerContext, this);
             view.Logger = Logger;
             view.RenderView(output);

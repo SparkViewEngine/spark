@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -47,14 +48,10 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			SetupResult.For(request.ApplicationPath).Return("/");
 			SetupResult.For(response.ApplyAppPathModifier("")).IgnoreArguments().Do(new Func<string, string>(path => path));
 
-			Expect.Call(() => response.Write(""))
-				.IgnoreArguments()
-				.Do(new writedelegate(onwrite));
-
-			//            SetupResult.For(delegate() { response.Write(null); }).IgnoreArguments().Callback(onwrite);
+		    mocks.Replay(response);
+		    output = response.Output;
 
 			controller = mocks.DynamicMock<IController>();
-			sb = new StringBuilder();
 
 			routeData = new RouteData();
 			routeData.Values.Add("controller", "Home");
@@ -64,12 +61,8 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
 		}
 		delegate void writedelegate(string data);
-		private StringBuilder sb;
+		private TextWriter output;
 
-		void onwrite(string data)
-		{
-			sb.Append(data);
-		}
 
 		ViewContext MakeViewContext(string viewName, string masterName)
 		{
@@ -102,7 +95,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
 			mocks.VerifyAll();
 
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains(@"<li class=""odd"">1: foo</li>"));
 			Assert.That(content.Contains(@"<li class=""even"">2: bar</li>"));
 			Assert.That(content.Contains(@"<li class=""odd"">3: baaz</li>"));
@@ -119,7 +112,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
 			mocks.VerifyAll();
 
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<p>default: Global set test</p>"));
 			Assert.That(content.Contains("<p>7==7</p>"));
 		}
@@ -132,7 +125,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			factory.RenderView(MakeViewContext("childview", "layout"));
 
 			mocks.VerifyAll();
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<title>Standalone Index View</title>"));
 			Assert.That(content.Contains("<h1>Standalone Index View</h1>"));
 			Assert.That(content.Contains("<p>no header by default</p>"));
@@ -148,7 +141,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			factory.RenderView(MakeViewContext("namedcontent", "layout"));
 
 			mocks.VerifyAll();
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<p>main content</p>"));
 			Assert.That(content.Contains("<p>this is the header</p>"));
 			Assert.That(content.Contains("<p>footer part one</p>"));
@@ -185,7 +178,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			factory.RenderView(MakeViewContext("helpers", null));
 
 			mocks.VerifyAll();
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<p><a href=\"/Home/Sort\">Click me</a></p>"));
 			Assert.That(content.Contains("<p>foo&gt;bar</p>"));
 		}
@@ -198,7 +191,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			factory.RenderView(MakeViewContext("usingpartial", null));
 
 			mocks.VerifyAll();
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<li>Partial where x=\"zero\"</li>"));
 			Assert.That(content.Contains("<li>Partial where x=\"one\"</li>"));
 			Assert.That(content.Contains("<li>Partial where x=\"two\"</li>"));
@@ -214,7 +207,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			factory.RenderView(MakeViewContext("usingpartialimplicit", null));
 
 			mocks.VerifyAll();
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<li class=\"odd\">one</li>"));
 			Assert.That(content.Contains("<li class=\"even\">two</li>"));
 		}
@@ -230,7 +223,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			factory.RenderView(viewContext);
             
 			mocks.VerifyAll();
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<h1>Hello world</h1>"));
 			Assert.That(content.Contains("<p>foo</p>"));
 			Assert.That(content.Contains("<p>bar</p>"));
@@ -247,7 +240,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			factory.RenderView(viewContext);
 
 			mocks.VerifyAll();
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<p>Foo</p>"));
 			Assert.That(content.Contains("<p>Bar</p>"));
 			Assert.That(content.Contains("<p>Hello</p>"));
@@ -278,7 +271,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			factory.RenderView(viewContext);
 			mocks.VerifyAll();
 
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<p>nothing</p>"));
 		}
 
@@ -290,7 +283,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			factory.RenderView(viewContext);
 			mocks.VerifyAll();
 
-			string content = sb.ToString();
+			string content = output.ToString();
 			Assert.That(content.Contains("<p>Hello</p>"));
 		}
 	}

@@ -18,6 +18,7 @@ namespace Spark
 {
     public interface ISparkViewEntry
     {
+        SparkViewDescriptor Descriptor { get; }
         string SourceCode { get; }
         ISparkView CreateInstance();
     }

@@ -37,7 +37,7 @@ namespace MvcContrib.SparkViewEngine
         }
 
         [DebuggerNonUserCode]
-        public string RenderView(ViewContext viewContext)
+        public void RenderView(ViewContext viewContext)
         {
             ViewContext = viewContext;
             ViewData = viewContext.ViewData;
@@ -45,9 +45,7 @@ namespace MvcContrib.SparkViewEngine
             Url = new UrlHelper(viewContext);
             Ajax = new AjaxHelper(viewContext);
 
-            var writer = new StringWriter();
-            RenderView(writer);
-            return writer.ToString();
+            RenderView(viewContext.HttpContext.Response.Output);
         }
     }
 

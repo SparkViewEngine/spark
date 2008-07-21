@@ -23,8 +23,14 @@ namespace NorthwindDemo.Controllers
 
         public ActionResult ViewGeneratedSource(string masterName, string controllerName, string viewName)
         {
-            var key = new CompiledViewHolder.Key { MasterName = masterName, ControllerName = controllerName, ViewName = viewName };
-            var entry = CompiledViewHolder.Current.Lookup(key);
+            var descriptor = new SparkViewDescriptor()
+                                 {
+                                     MasterName = masterName,
+                                     ControllerName = controllerName,
+                                     ViewName = viewName
+                                 };
+
+            var entry = CompiledViewHolder.Current.Lookup(new CompiledViewHolder.Key { Descriptor = descriptor });
             return View(entry);
         }
     }
