@@ -15,6 +15,7 @@
 */
 
 
+using System;
 using System.IO;
 
 namespace Spark
@@ -22,6 +23,7 @@ namespace Spark
     public interface ISparkView
     {
         void RenderView(TextWriter writer);
+        Guid GeneratedViewId { get; }
     }
 }
 

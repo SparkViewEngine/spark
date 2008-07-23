@@ -22,6 +22,9 @@ namespace Spark
 {
     public abstract class AbstractSparkView : ISparkView
     {
+        public abstract void RenderView(TextWriter writer);
+        public abstract Guid GeneratedViewId { get; }
+
         private readonly Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
 
         public Dictionary<string, TextWriter> Content { get { return _content; } }
@@ -62,8 +65,5 @@ namespace Spark
                 view.Output = previous;
             }
         }
-
-
-        public abstract void RenderView(TextWriter writer);
     }
 }

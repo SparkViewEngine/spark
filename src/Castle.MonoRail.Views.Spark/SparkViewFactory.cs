@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Spark.Compiler;
+
 namespace Castle.MonoRail.Views.Spark
 {
     using System;
@@ -58,12 +60,29 @@ namespace Castle.MonoRail.Views.Spark
             if (controllerContext.LayoutNames != null)
                 masterName = string.Join(" ", controllerContext.LayoutNames);
 
-            var descriptor = new SparkViewDescriptor
+            var descriptor = new SparkViewDescriptor();
+            descriptor.Templates.Add(Path.ChangeExtension(templateName, ViewFileExtension));
+
+            if (controllerContext.LayoutNames != null)
             {
-                ControllerName = Path.GetDirectoryName(templateName),
-                ViewName = Path.GetFileName(templateName),
-                MasterName = masterName
-            };
+                foreach (var layoutName in controllerContext.LayoutNames)
+                {
+                    if (HasTemplate("Layouts\\" + masterName))
+                    {
+                        descriptor.Templates.Add(Path.ChangeExtension("Layouts\\" + masterName, ViewFileExtension));
+                    }
+                    else if (HasTemplate("Shared\\" + masterName))
+                    {
+                        descriptor.Templates.Add(Path.ChangeExtension("Shared\\" + masterName, ViewFileExtension));
+                    }
+                    else
+                    {
+                        throw new CompilerException(string.Format(
+                                                        "Unable to find templates layouts\\{0} or shared\\{0}",
+                                                        layoutName));
+                    }
+                }
+            }
 
             var view = (SparkView)Engine.CreateInstance(descriptor);
             view.Contextualize(context, controllerContext, this);

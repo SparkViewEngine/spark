@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Collections.Generic;
 using Spark.Compiler;
 using NUnit.Framework;
 
@@ -28,11 +29,17 @@ namespace Spark.Tests
         {
         }
 
+        private static void DoCompileView(ViewCompiler compiler, IList<Chunk> chunks)
+        {
+            compiler.CompileView(new[] { chunks }, new[] { chunks });
+        }
+
         [Test]
         public void MakeAndCompile()
         {
             var compiler = new ViewCompiler("Spark.AbstractSparkView");
-            compiler.CompileView(new[] { new SendLiteralChunk { Text = "hello world" } });
+
+            DoCompileView(compiler, new[] { new SendLiteralChunk { Text = "hello world" } });
 
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();
@@ -40,12 +47,13 @@ namespace Spark.Tests
             Assert.That(contents.Contains("hello world"));
         }
 
+
         [Test]
         public void UnsafeLiteralCharacters()
         {
             var text = "hello\t\r\n\"world";
             var compiler = new ViewCompiler("Spark.AbstractSparkView");
-            compiler.CompileView(new[] { new SendLiteralChunk { Text = text } });
+            DoCompileView(compiler, new[] { new SendLiteralChunk { Text = text } });
 
             Assert.That(compiler.SourceCode.Contains("Write(\"hello\\t\\r\\n\\\"world\")"));
 
@@ -59,7 +67,7 @@ namespace Spark.Tests
         public void SimpleOutput()
         {
             var compiler = new ViewCompiler("Spark.AbstractSparkView");
-            compiler.CompileView(new[] { new SendExpressionChunk { Code = "3 + 4" } });
+            DoCompileView(compiler, new[] { new SendExpressionChunk { Code = "3 + 4" } });
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();
             Assert.AreEqual("7", contents);
@@ -69,7 +77,7 @@ namespace Spark.Tests
         public void LocalVariableDecl()
         {
             var compiler = new ViewCompiler("Spark.AbstractSparkView");
-            compiler.CompileView(new Chunk[]
+            DoCompileView(compiler, new Chunk[]
 			                     	{
 			                     		new LocalVariableChunk { Name = "i", Value = "5" }, 
 			                     		new SendExpressionChunk { Code = "i" }
@@ -84,7 +92,7 @@ namespace Spark.Tests
         public void ForEachLoop()
         {
             var compiler = new ViewCompiler("Spark.AbstractSparkView");
-            compiler.CompileView(new Chunk[]
+            DoCompileView(compiler, new Chunk[]
 			                     	{
 			                     		new LocalVariableChunk {Name = "data", Value = "new[]{3,4,5}"},
 			                     		new SendLiteralChunk {Text = "<ul>"},
@@ -109,7 +117,7 @@ namespace Spark.Tests
         public void GlobalVariables()
         {
             var compiler = new ViewCompiler("Spark.AbstractSparkView");
-            compiler.CompileView(new Chunk[]
+            DoCompileView(compiler, new Chunk[]
 			                     	{
 			                     		new SendExpressionChunk{Code="title"},
 			                     		new AssignVariableChunk{ Name="item", Value="8"},
@@ -199,7 +207,7 @@ namespace Spark.Tests
         public void ProvideFullException()
         {
             var compiler = new ViewCompiler("Spark.AbstractSparkView");
-            compiler.CompileView(new Chunk[]
+            DoCompileView(compiler, new Chunk[]
 			                     	{
 			                     		new SendExpressionChunk {Code = "NoSuchVariable"}
 			                     	});
@@ -212,7 +220,7 @@ namespace Spark.Tests
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
-            compiler.CompileView(new Chunk[]
+            DoCompileView(compiler, new Chunk[]
 	                     	{
                                 new SendLiteralChunk {Text = "<p>"},
                                 new LocalVariableChunk{Name="arg", Value="5"},
@@ -231,7 +239,7 @@ namespace Spark.Tests
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
-            compiler.CompileView(new Chunk[]
+            DoCompileView(compiler, new Chunk[]
 	                     	{
                                 new SendLiteralChunk {Text = "<p>"},
                                 new LocalVariableChunk{Name="arg", Value="5"},
@@ -251,7 +259,7 @@ namespace Spark.Tests
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
             var falseChunks = new Chunk[] { new SendLiteralChunk { Text = "wasfalse" } };
 
-            compiler.CompileView(new Chunk[]
+            DoCompileView(compiler, new Chunk[]
 	                     	{
                                 new SendLiteralChunk {Text = "<p>"},
                                 new LocalVariableChunk{Name="arg", Value="5"},

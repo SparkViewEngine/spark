@@ -125,6 +125,11 @@ namespace Spark.Parser
             return entry.Chunks;
         }
 
+        public IEnumerable<IList<Chunk>> GetEverythingLoaded()
+        {
+            return _entries.Values.Select(e => e.Chunks);
+        }
+
         void LoadInternal(string viewPath)
         {
             if (string.IsNullOrEmpty(viewPath))

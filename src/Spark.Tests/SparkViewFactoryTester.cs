@@ -199,68 +199,6 @@ namespace Spark.Tests
         }
 
         [Test]
-        public void MasterEmptyByDefault()
-        {
-            var viewFolder = mocks.CreateMock<IViewFolder>();
-            Expect.Call(viewFolder.HasView("Shared\\Application.spark")).Return(false);
-            SetupResult.For(viewFolder.HasView("Shared\\Foo.spark")).Return(false);
-
-            engine.ViewFolder = viewFolder;
-
-            mocks.ReplayAll();
-
-            var descriptor = new SparkViewDescriptor {ControllerName = "Foo", ViewName = "Baaz"};
-            var key = engine.CreateKey(descriptor);
-
-            Assert.AreEqual("Foo", key.Descriptor.ControllerName);
-            Assert.AreEqual("Baaz", key.Descriptor.ViewName);
-            Assert.IsEmpty(key.Descriptor.MasterName);
-        }
-
-        [Test]
-        public void MasterApplicationIfPresent()
-        {
-            var viewFolder = mocks.CreateMock<IViewFolder>();
-            Expect.Call(viewFolder.HasView("Shared\\Application.spark")).Return(true);
-            SetupResult.For(viewFolder.HasView("Shared\\Foo.spark")).Return(false);
-
-            engine.ViewFolder = viewFolder;
-
-
-            mocks.ReplayAll();
-
-            var descriptor = new SparkViewDescriptor { ControllerName = "Foo", ViewName = "Baaz" };
-            var key = engine.CreateKey(descriptor);
-
-
-            Assert.AreEqual("Foo", key.Descriptor.ControllerName);
-            Assert.AreEqual("Baaz", key.Descriptor.ViewName);
-            Assert.AreEqual("Application", key.Descriptor.MasterName);
-        }
-
-        [Test]
-        public void MasterForControllerIfPresent()
-        {
-            var viewFolder = mocks.CreateMock<IViewFolder>();
-            SetupResult.For(viewFolder.HasView("Shared\\Application.spark")).Return(true);
-            SetupResult.For(viewFolder.HasView("Shared\\Foo.spark")).Return(true);
-
-            engine.ViewFolder = viewFolder;
-
-            mocks.ReplayAll();
-
-
-            var descriptor = new SparkViewDescriptor { ControllerName = "Foo", ViewName = "Baaz" };
-            var key = engine.CreateKey(descriptor);
-
-
-            Assert.AreEqual("Foo", key.Descriptor.ControllerName);
-            Assert.AreEqual("Baaz", key.Descriptor.ViewName);
-            Assert.AreEqual("Foo", key.Descriptor.MasterName);
-        }
-
-
-        [Test]
         public void UsingNamespace()
         {
             mocks.ReplayAll();
@@ -469,6 +407,19 @@ namespace Spark.Tests
 
             string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
             Assert.AreEqual("<p>a</p><p>b</p><p>c</p><p>d</p><p>e</p><p>f</p>", content);
+
+        }
+
+        [Test]
+        public void PartialFilesCanHaveSpecialElements()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("partialspecialelements", null, new StubViewData { { "foo", "alpha" } });
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
+            ContainsInOrder("Hi there, alpha.", "Hi there, alpha.");
 
         }
     }

@@ -1,0 +1,9 @@
+﻿<div class="leftrail">
+  <use content="leftrail"/>
+</div>
+<div class="rightrail">
+  <use content="rightrail"/>
+</div>
+<div class="centerblock">
+  <use content="view" />
+</div>

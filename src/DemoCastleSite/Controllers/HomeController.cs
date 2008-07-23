@@ -52,18 +52,24 @@ namespace SparkCastleDemo.Controllers
 
         public IViewEngine ViewEngine { get; set; }
 
-        public void ViewSource(string controllerName, string viewName, string masterName)
+        //public void ViewSource(string controllerName, string viewName, string masterName)
+        //{
+        //    var descriptor = new SparkViewDescriptor
+        //    {
+        //        ControllerName = controllerName,
+        //        MasterName = masterName,
+        //        ViewName = viewName
+        //    };
+
+        //    var entry = CompiledViewHolder.Current.Lookup(new CompiledViewHolder.Key { Descriptor = descriptor });
+
+        //    PropertyBag["entry"] = entry;
+        //}
+
+        [Layout("Sidebars", "Default")]
+        public void Nested()
         {
-            var descriptor = new SparkViewDescriptor
-            {
-                ControllerName = controllerName,
-                MasterName = masterName,
-                ViewName = viewName
-            };
-
-            var entry = CompiledViewHolder.Current.Lookup(new CompiledViewHolder.Key { Descriptor = descriptor });
-
-            PropertyBag["entry"] = entry;
+            
         }
     }
 }

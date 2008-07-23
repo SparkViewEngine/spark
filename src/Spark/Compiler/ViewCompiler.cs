@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Linq;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -30,17 +31,14 @@ namespace Spark.Compiler
         public ViewCompiler(string baseClass)
         {
             BaseClass = baseClass;
+            GeneratedViewId = Guid.NewGuid();
         }
         public string BaseClass { get; set; }
         public string SourceCode { get; set; }
         public Type CompiledType { get; set; }
+        public Guid GeneratedViewId { get; set; }
 
-        public void CompileView(IList<Chunk> view)
-        {
-            CompileView(view, new Chunk[0]);
-        }
-
-        public void CompileView(IList<Chunk> view, IList<Chunk> master)
+        public void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
             var source = new StringBuilder();
             var usingGenerator = new UsingNamespaceVisitor(source);
@@ -48,49 +46,51 @@ namespace Spark.Compiler
             var globalsGenerator = new GlobalMembersVisitor(source);
             var viewGenerator = new GeneratedCodeVisitor(source) {Indent = 8};
 
-            //usingGenerator.Using("System.Web.Mvc");
-            usingGenerator.Accept(view);
-            usingGenerator.Accept(master);
+            foreach(var resource in allResources)
+                usingGenerator.Accept(resource);
 
-            baseClassGenerator.Accept(view);
-            if (string.IsNullOrEmpty(baseClassGenerator.TModel))
-                baseClassGenerator.Accept(master);
+            foreach (var resource in allResources)
+                baseClassGenerator.Accept(resource);
 
             source.AppendLine();
-            source.AppendLine(string.Format("public class CompiledSparkView : {0}\r\n{{", baseClassGenerator.BaseClassTypeName));
-
-            globalsGenerator.Accept(view);
-            globalsGenerator.Accept(master);
+            source.AppendLine(string.Format("public class CompiledSparkView : {0}", baseClassGenerator.BaseClassTypeName));
+            source.AppendLine("{");
 
             source.AppendLine();
-            source.AppendLine("    public void RenderViewContent()");
+            source.AppendLine("  public override System.Guid GeneratedViewId");
+            source.AppendLine(string.Format("  {{ get {{ return new System.Guid(\"{0:n}\"); }} }}", GeneratedViewId));
+
+            foreach (var resource in allResources)
+                globalsGenerator.Accept(resource);
+
+            int renderLevel = 0;
+            foreach (var viewTemplate in viewTemplates)
+            {
+                source.AppendLine();
+                source.AppendLine(string.Format("    public void RenderViewLevel{0}()", renderLevel));
+                source.AppendLine("    {");
+                viewGenerator.Accept(viewTemplate);
+                source.AppendLine("    }");
+                ++renderLevel;
+            }
+
+
+            source.AppendLine();
+            source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
             source.AppendLine("    {");
-            viewGenerator.Accept(view);
+            for (int invokeLevel = 0; invokeLevel != renderLevel; ++invokeLevel)
+            {
+                if (invokeLevel != renderLevel - 1)
+                {
+                    source.AppendLine(string.Format("        using (OutputScope(new System.IO.StringWriter())) {{RenderViewLevel{0}(); Content[\"view\"] = Output;}}", invokeLevel));
+                }
+                else
+                {
+                    source.AppendLine(string.Format("        using (OutputScope(writer)) {{RenderViewLevel{0}();}}", invokeLevel));
+                }
+            }
             source.AppendLine("    }");
 
-            if (master == null || master.Count == 0)
-            {
-                source.AppendLine();
-                source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
-                source.AppendLine("    {");
-                source.AppendLine("        using (OutputScope(writer)) {RenderViewContent();}");
-                source.AppendLine("    }");
-            }
-            else
-            {
-                source.AppendLine();
-                source.AppendLine("    public void RenderMasterContent()");
-                source.AppendLine("    {");
-                viewGenerator.Accept(master);
-                source.AppendLine("    }");
-
-                source.AppendLine();
-                source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
-                source.AppendLine("    {");
-                source.AppendLine("        using (OutputScope(\"view\")) {RenderViewContent();}");
-                source.AppendLine("        using (OutputScope(writer)) {RenderMasterContent();}");
-                source.AppendLine("    }");
-            }
 
             source.AppendLine("}");
 

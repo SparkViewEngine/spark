@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Spark.Compiler;
 using Spark.Parser;
@@ -52,6 +53,14 @@ namespace Spark
             return entry.Loader.IsCurrent() ? entry : null;
         }
 
+        public Entry Lookup(Guid viewId)
+        {
+            lock (_cache)
+            {
+                return _cache.Values.FirstOrDefault(e => e.Compiler.GeneratedViewId == viewId);
+            }
+        }
+
         public void Store(Entry entry)
         {
             lock (_cache)
@@ -66,9 +75,11 @@ namespace Spark
 
             public override int GetHashCode()
             {
-                return (Descriptor.ControllerName ?? "").ToLowerInvariant().GetHashCode() ^
-                       (Descriptor.ViewName ?? "").ToLowerInvariant().GetHashCode() ^
-                       (Descriptor.MasterName ?? "").ToLowerInvariant().GetHashCode();
+                int hashCode = 0;
+                foreach(var template in Descriptor.Templates)
+                    hashCode ^= template.ToLowerInvariant().GetHashCode();
+
+                return hashCode;
             }
 
             public override bool Equals(object obj)
@@ -76,9 +87,16 @@ namespace Spark
                 var that = obj as Key;
                 if (that == null || GetType() != that.GetType())
                     return false;
-                return string.Equals(Descriptor.ControllerName, that.Descriptor.ControllerName, StringComparison.InvariantCultureIgnoreCase) &&
-                       string.Equals(Descriptor.ViewName, that.Descriptor.ViewName, StringComparison.InvariantCultureIgnoreCase) &&
-                       string.Equals(Descriptor.MasterName, that.Descriptor.MasterName, StringComparison.InvariantCultureIgnoreCase);
+                if (Descriptor.Templates.Count != that.Descriptor.Templates.Count)
+                    return false;
+                for(int index= 0; index != Descriptor.Templates.Count; ++index)
+                {
+                    if (!string.Equals(Descriptor.Templates[index], that.Descriptor.Templates[index], StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
 
@@ -103,6 +121,7 @@ namespace Spark
                 return Compiler.CreateInstance();
             }
         }
+
     }
 }
 

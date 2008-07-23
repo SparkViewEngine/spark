@@ -35,15 +35,13 @@ namespace Spark.Tests
             holder = new CompiledViewHolder();
         }
 
-        private CompiledViewHolder.Key BuildKey(string controller, string view, string master)
+        private CompiledViewHolder.Key BuildKey(params string[] templates)
         {
             return new CompiledViewHolder.Key
             {
                 Descriptor = new SparkViewDescriptor
                 {
-                    ControllerName = controller,
-                    ViewName = view,
-                    MasterName = master
+                    Templates = templates
                 }
             };
         }
@@ -51,7 +49,7 @@ namespace Spark.Tests
         [Test]
         public void LookupNonExistantReturnsNull()
         {
-            var key = BuildKey("c", "v", "m");
+            var key = BuildKey("c\\v", "shared\\m");
             var entry = holder.Lookup(key);
             Assert.IsNull(entry);
         }
@@ -59,7 +57,7 @@ namespace Spark.Tests
         [Test]
         public void LookupReturnsStoredInstance()
         {
-            var key = BuildKey("c", "v", "m");
+            var key = BuildKey("c\\v", "shared\\m");
             var entry = new CompiledViewHolder.Entry { Key = key, Loader = new ViewLoader() };
             Assert.IsNull(holder.Lookup(key));
             holder.Store(entry);
@@ -69,17 +67,17 @@ namespace Spark.Tests
         [Test]
         public void VariousKeyEqualities()
         {
-            var key1 = BuildKey("c", "v", "m");
-            var key2 = BuildKey("c", "v", "m");
+            var key1 = BuildKey("c\\v", "shared\\m");
+            var key2 = BuildKey("c\\v", "shared\\m");
 
             Assert.AreNotSame(key1, key2);
             Assert.AreEqual(key1, key2);
 
-            var key3 = BuildKey("c", "v", null);
+            var key3 = BuildKey("c\\v");
             Assert.AreNotEqual(key1, key3);
             Assert.AreNotEqual(key2, key3);
 
-            var key4 = BuildKey("c", "v", "M");
+            var key4 = BuildKey("c\\v", "shared\\M");
             Assert.AreEqual(key1, key4);
 
             Assert.That(!object.Equals(key1, null));
@@ -100,7 +98,7 @@ namespace Spark.Tests
 
             mocks.ReplayAll();
 
-            var key = BuildKey("c", "v", "m");
+            var key = BuildKey("c\\v", "shared\\m");
             var entry = new CompiledViewHolder.Entry { Key = key, Loader = loader };
             holder.Store(entry);
             Assert.AreSame(entry, holder.Lookup(key));

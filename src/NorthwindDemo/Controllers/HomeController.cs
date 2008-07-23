@@ -21,16 +21,9 @@ namespace NorthwindDemo.Controllers
             return View();
         }
 
-        public ActionResult ViewGeneratedSource(string masterName, string controllerName, string viewName)
+        public ActionResult ViewGeneratedSource(Guid viewId)
         {
-            var descriptor = new SparkViewDescriptor()
-                                 {
-                                     MasterName = masterName,
-                                     ControllerName = controllerName,
-                                     ViewName = viewName
-                                 };
-
-            var entry = CompiledViewHolder.Current.Lookup(new CompiledViewHolder.Key { Descriptor = descriptor });
+            var entry = CompiledViewHolder.Current.Lookup(viewId);
             return View(entry);
         }
     }

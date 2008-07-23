@@ -13,12 +13,11 @@ namespace Spark.Tests.Stubs
 
         public void RenderView(StubViewContext viewContext)
         {
-            var descriptor = new SparkViewDescriptor()
-                                 {
-                                     ControllerName = viewContext.ControllerName,
-                                     ViewName = viewContext.ViewName,
-                                     MasterName = viewContext.MasterName
-                                 };
+            var descriptor = new SparkViewDescriptor();
+            descriptor.Templates.Add(viewContext.ControllerName + "\\" + viewContext.ViewName + ".spark");
+            if (viewContext.MasterName != null)
+                descriptor.Templates.Add("Shared\\" + viewContext.MasterName + ".spark");
+ 
             var sparkView = Engine.CreateInstance(descriptor);
             ((StubSparkView)sparkView).ViewData = viewContext.Data;
             sparkView.RenderView(new StringWriter(viewContext.Output));

@@ -18,13 +18,6 @@ using Spark;
 
 namespace Spark
 {
-    public class SparkViewDescriptor
-    {
-        public string ControllerName { get; set; }
-        public string ViewName { get; set; }
-        public string MasterName { get; set; }
-    }
-
     public interface ISparkViewEngine
     {
         ISparkExtensionFactory ExtensionFactory { get; set; }

@@ -13,6 +13,7 @@ using MvcContrib.ViewFactories;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Spark;
+using Spark.FileSystem;
 
 namespace MvcContrib.UnitTests.SparkViewEngine
 {
@@ -286,5 +287,90 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			string content = output.ToString();
 			Assert.That(content.Contains("<p>Hello</p>"));
 		}
+
+        [Test]
+        public void MasterEmptyByDefault()
+        {
+            var viewSourceLoader = mocks.CreateMock<IViewSourceLoader>();
+            Expect.Call(viewSourceLoader.HasView("Foo\\Baaz.spark")).Return(true);
+            Expect.Call(viewSourceLoader.HasView("Layouts\\Foo.spark")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Shared\\Foo.spark")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Layouts\\Application.spark")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Shared\\Application.spark")).Return(false);
+
+            factory.ViewSourceLoader = viewSourceLoader;
+            
+
+            mocks.ReplayAll();
+
+            routeData.Values["controller"] = "Foo";
+            routeData.Values["action"] = "NotBaaz";
+
+            var viewContext = MakeViewContext("Baaz", null);
+
+            var descriptor = factory.CreateDescriptor(viewContext);
+
+            mocks.VerifyAll();
+
+            Assert.AreEqual(1, descriptor.Templates.Count);
+            Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
+        }
+
+        [Test]
+        public void MasterApplicationIfPresent()
+        {
+            var viewSourceLoader = mocks.CreateMock<IViewSourceLoader>();
+            Expect.Call(viewSourceLoader.HasView("Foo\\Baaz.spark")).Return(true);
+            Expect.Call(viewSourceLoader.HasView("Layouts\\Foo.spark")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Shared\\Foo.spark")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Layouts\\Application.spark")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Shared\\Application.spark")).Return(true);
+
+            factory.ViewSourceLoader = viewSourceLoader;
+
+
+            mocks.ReplayAll();
+
+            routeData.Values["controller"] = "Foo";
+            routeData.Values["action"] = "NotBaaz";
+
+            var viewContext = MakeViewContext("Baaz", null);
+
+            var descriptor = factory.CreateDescriptor(viewContext);
+
+            mocks.VerifyAll();
+
+            Assert.AreEqual(2, descriptor.Templates.Count);
+            Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
+            Assert.AreEqual("Shared\\Application.spark", descriptor.Templates[1]);
+        }
+
+        [Test]
+        public void MasterForControllerIfPresent()
+        {
+            var viewSourceLoader = mocks.CreateMock<IViewSourceLoader>();
+            Expect.Call(viewSourceLoader.HasView("Foo\\Baaz.spark")).Return(true);
+            Expect.Call(viewSourceLoader.HasView("Layouts\\Foo.spark")).Return(false);
+            Expect.Call(viewSourceLoader.HasView("Shared\\Foo.spark")).Return(true);
+
+            factory.ViewSourceLoader = viewSourceLoader;
+
+
+            mocks.ReplayAll();
+
+            routeData.Values["controller"] = "Foo";
+            routeData.Values["action"] = "NotBaaz";
+
+            var viewContext = MakeViewContext("Baaz", null);
+
+            var descriptor = factory.CreateDescriptor(viewContext);
+
+            mocks.VerifyAll();
+
+            Assert.AreEqual(2, descriptor.Templates.Count);
+            Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
+            Assert.AreEqual("Shared\\Foo.spark", descriptor.Templates[1]);
+        }
+
 	}
 }

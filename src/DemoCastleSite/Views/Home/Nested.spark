@@ -1,0 +1,13 @@
+﻿<p>This content is a view</p>
+
+<content name="leftrail">
+  <p>left rail</p>
+</content>
+
+<content name="rightrail">
+  <p>right rail</p>
+</content>
+
+<content name="leftrail">
+  <p>logout</p>
+</content>

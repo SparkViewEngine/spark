@@ -61,33 +61,10 @@ namespace Spark
 
         public CompiledViewHolder.Key CreateKey(SparkViewDescriptor descriptor)
         {
-            //TODO: get this logic out of here. it would be much better for the framework-specific 
-            // library to do the work of locating these defaults
-
-            var key = new CompiledViewHolder.Key
+            return new CompiledViewHolder.Key
                         {
                             Descriptor = descriptor
                         };
-
-            if (descriptor.ViewName == null)
-                descriptor.ViewName = string.Empty;
-            if (descriptor.ControllerName == null)
-                descriptor.ControllerName = string.Empty;
-            if (descriptor.MasterName == null)
-                descriptor.MasterName = string.Empty;
-
-            if (key.Descriptor.MasterName == string.Empty)
-            {
-                if (ViewFolder.HasView(string.Format("Shared\\{0}.spark", key.Descriptor.ControllerName)))
-                {
-                    key.Descriptor.MasterName = key.Descriptor.ControllerName;
-                }
-                else if (ViewFolder.HasView("Shared\\Application.spark"))
-                {
-                    key.Descriptor.MasterName = "Application";
-                }
-            }
-            return key;
         }
 
         public CompiledViewHolder.Entry CreateEntry(CompiledViewHolder.Key key)
@@ -99,13 +76,13 @@ namespace Spark
                                 Compiler = new ViewCompiler(BaseClass)
                             };
 
-            var viewChunks = entry.Loader.Load(key.Descriptor.ControllerName, key.Descriptor.ViewName);
 
-            IList<Chunk> masterChunks = new Chunk[0];
-            if (!string.IsNullOrEmpty(key.Descriptor.MasterName))
-                masterChunks = entry.Loader.Load("Shared", key.Descriptor.MasterName);
+            var chunks = new List<IList<Chunk>>();
 
-            entry.Compiler.CompileView(viewChunks, masterChunks);
+            foreach (var template in key.Descriptor.Templates)
+                chunks.Add(entry.Loader.Load(template));
+
+            entry.Compiler.CompileView(chunks, entry.Loader.GetEverythingLoaded());
 
             return entry;
         }

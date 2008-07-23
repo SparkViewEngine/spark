@@ -48,7 +48,7 @@
                 </p>
                 <p>
 					${Html.ActionLink[[HomeController]](
-						c=>c.ViewGeneratedSource(ViewContext.MasterName ?? "Application", ViewContext.RouteData.GetRequiredString("controller"), ViewContext.ViewName),
+						c=>c.ViewGeneratedSource(GeneratedViewId),
 						"View generated source")}
                 </p>
             </div>

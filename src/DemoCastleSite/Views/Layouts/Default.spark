@@ -1,0 +1,36 @@
+﻿<html>
+  <head>
+    <use namespace="System"/>
+    <use namespace="Castle.MonoRail.Views.Spark"/>
+    <title>Hello</title>
+    $Ajax.InstallScripts();
+  </head>
+  <body>
+    
+    <macro name="MessageBox" caption="string" message="string">
+      #Logger.Info(message);
+      <div class="message">
+        <h3>$H(caption);</h3>
+        <div>$message;</div>
+      </div>
+    </macro>
+    
+    <div id="header">
+    </div>
+    
+    <div id="main">
+      <use content="view"/>
+    </div>
+    
+    <div id="footer">
+      <p>
+        $Url.Link("View source", new {
+          controller="Home", action="ViewSource",
+          queryString=new ModelDictionary(new {
+            controllerName=System.IO.Path.GetDirectoryName(ControllerContext.SelectedViewName),
+            masterName=string.Join(" ", ControllerContext.LayoutNames),
+            viewName=System.IO.Path.GetFileName(ControllerContext.SelectedViewName)})});
+      </p>
+    </div>
+  </body>
+</html>

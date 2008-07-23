@@ -139,7 +139,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         }
 
         [Test]
-        public void ExtensionIsXml()
+        public void ExtensionIsSpark()
         {
             mocks.ReplayAll();
             Assert.AreEqual("spark", factory.ViewFileExtension);
@@ -158,7 +158,10 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             mocks.ReplayAll();
             manager.Process("Home\\Index", output, engineContext, controller, controllerContext);
-            var descriptor = new SparkViewDescriptor {ControllerName = "Home", ViewName = "Index", MasterName = "default"};
+            
+            var descriptor = new SparkViewDescriptor();
+            descriptor.Templates.Add("Home\\Index.spark");
+            descriptor.Templates.Add("Shared\\default.spark");
             var entry = factory.Engine.GetEntry(descriptor);
             var view = (SparkView)entry.CreateInstance();
             view.Contextualize(engineContext, controllerContext, factory);

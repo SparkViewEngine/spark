@@ -79,7 +79,10 @@
     <None Include="Views\Home\script.spark" />
     <None Include="Views\Home\ShowPage.spark" />
     <None Include="Views\Home\ViewSource.spark" />
+    <None Include="Views\Layouts\Default.spark" />
+    <None Include="Views\Layouts\Sidebars.spark" />
     <None Include="Views\Shared\Default.spark" />
+    <None Include="Views\Home\Nested.spark" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
