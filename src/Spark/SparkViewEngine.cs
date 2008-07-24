@@ -19,6 +19,7 @@ using Spark.Compiler;
 using Spark.Parser;
 using Spark;
 using Spark.FileSystem;
+using Spark.Parser.Syntax;
 
 namespace Spark
 {
@@ -28,11 +29,13 @@ namespace Spark
         {
             BaseClass = baseClass;
             ViewFolder = viewFolder;
+            SyntaxProvider = new DefaultSyntaxProvider();
         }
 
         public string BaseClass { get; set; }
         public IViewFolder ViewFolder { get; set; }
         public ISparkExtensionFactory ExtensionFactory { get; set; }
+        public ISparkSyntaxProvider SyntaxProvider { get; set; }
 
 
         public ISparkViewEntry GetEntry(SparkViewDescriptor descriptor)
@@ -72,7 +75,7 @@ namespace Spark
             var entry = new CompiledViewHolder.Entry
                             {
                                 Key = key,
-                                Loader = new ViewLoader { ViewFolder = ViewFolder, ExtensionFactory = ExtensionFactory },
+                                Loader = new ViewLoader { ViewFolder = ViewFolder, SyntaxProvider = SyntaxProvider, ExtensionFactory = ExtensionFactory },
                                 Compiler = new ViewCompiler(BaseClass)
                             };
 

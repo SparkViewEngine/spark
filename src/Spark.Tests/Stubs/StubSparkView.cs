@@ -12,6 +12,11 @@ namespace Spark.Tests.Stubs
 
     public abstract class StubSparkView : AbstractSparkView
     {
+        public StubSparkView()
+        {
+            ViewData = new StubViewData();
+        }
+
         public StubViewData ViewData { get; set; }
     }
 }

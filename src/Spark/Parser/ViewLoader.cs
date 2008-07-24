@@ -23,6 +23,7 @@ using Spark.Compiler.ChunkVisitors;
 using Spark.Compiler.NodeVisitors;
 using Spark.Parser.Markup;
 using Spark.FileSystem;
+using Spark.Parser.Syntax;
 
 namespace Spark.Parser
 {
@@ -30,17 +31,10 @@ namespace Spark.Parser
     {
         private const string templateFileExtension = "spark";
 
-        static MarkupGrammar _grammar = new MarkupGrammar();
         private IViewFolder viewFolder;
 
         readonly Dictionary<string, Entry> _entries = new Dictionary<string, Entry>();
         readonly List<string> _pending = new List<string>();
-
-
-        public ViewLoader()
-        {
-            Parser = _grammar.Nodes;
-        }
 
         public IViewFolder ViewFolder
         {
@@ -51,6 +45,8 @@ namespace Spark.Parser
         public ParseAction<IList<Node>> Parser { get; set; }
 
         public ISparkExtensionFactory ExtensionFactory { get; set; }
+
+        public ISparkSyntaxProvider SyntaxProvider { get; set; }
 
         private class Entry
         {
@@ -101,10 +97,10 @@ namespace Spark.Parser
         }
 
 
-        public IList<Chunk> Load(string controllerName, string viewName)
-        {
-            return Load(ResolveView(controllerName, viewName));
-        }
+        //public IList<Chunk> Load(string controllerName, string viewName)
+        //{
+        //    return Load(ResolveView(controllerName, viewName));
+        //}
 
         public IList<Chunk> Load(string viewPath)
         {
@@ -137,40 +133,7 @@ namespace Spark.Parser
 
             var newEntry = BindEntry(viewPath);
 
-            var sourceContext = CreateSourceContext(viewPath);
-            var position = new Position(sourceContext);
-
-            var nodes = Parser(position);
-            if (nodes.Rest.PotentialLength() != 0)
-            {
-                string message = string.Format("Unable to parse view {0} around line {1} column {2}", viewPath,
-                                               nodes.Rest.Line, nodes.Rest.Column);
-
-                int beforeLength = Math.Min(30, nodes.Rest.Offset);
-                int afterLength = Math.Min(30, nodes.Rest.PotentialLength());
-                string before = position.Advance(nodes.Rest.Offset - beforeLength).Peek(beforeLength);
-                string after = nodes.Rest.Peek(afterLength);
-
-                throw new CompilerException(message + Environment.NewLine + before + "[error:]" + after);
-            }
-
-            var partialFileNames = FindPartialFiles(viewPath);
-
-            var specialNodeVisitor = new SpecialNodeVisitor(partialFileNames, ExtensionFactory);
-            specialNodeVisitor.Accept(nodes.Value);
-
-            var forEachAttributeVisitor = new ForEachAttributeVisitor();
-            forEachAttributeVisitor.Accept(specialNodeVisitor.Nodes);
-
-            var conditionalAttributeVisitor = new ConditionalAttributeVisitor();
-            conditionalAttributeVisitor.Accept(forEachAttributeVisitor.Nodes);
-
-            var testElseElementVisitor = new TestElseElementVisitor();
-            testElseElementVisitor.Accept(conditionalAttributeVisitor.Nodes);
-
-            var chunkBuilder = new ChunkBuilderVisitor();
-            chunkBuilder.Accept(testElseElementVisitor.Nodes);
-            newEntry.Chunks = chunkBuilder.Chunks;
+            newEntry.Chunks = SyntaxProvider.GetChunks(viewPath, ViewFolder, ExtensionFactory);
 
             var fileReferenceVisitor = new FileReferenceVisitor();
             fileReferenceVisitor.Accept(newEntry.Chunks);
@@ -183,6 +146,43 @@ namespace Spark.Parser
                     useFile.FileContext = BindEntry(referencePath).FileContext;
             }
         }
+
+        //private IList<Chunk> GetChunks(string viewPath, SourceContext sourceContext)
+        //{
+        //    var position = new Position(sourceContext);
+
+        //    var nodes = Parser(position);
+        //    if (nodes.Rest.PotentialLength() != 0)
+        //    {
+        //        string message = string.Format("Unable to parse view {0} around line {1} column {2}", viewPath,
+        //                                       nodes.Rest.Line, nodes.Rest.Column);
+
+        //        int beforeLength = Math.Min(30, nodes.Rest.Offset);
+        //        int afterLength = Math.Min(30, nodes.Rest.PotentialLength());
+        //        string before = position.Advance(nodes.Rest.Offset - beforeLength).Peek(beforeLength);
+        //        string after = nodes.Rest.Peek(afterLength);
+
+        //        throw new CompilerException(message + Environment.NewLine + before + "[error:]" + after);
+        //    }
+
+        //    var partialFileNames = FindPartialFiles(viewPath);
+
+        //    var specialNodeVisitor = new SpecialNodeVisitor(partialFileNames, ExtensionFactory);
+        //    specialNodeVisitor.Accept(nodes.Value);
+
+        //    var forEachAttributeVisitor = new ForEachAttributeVisitor();
+        //    forEachAttributeVisitor.Accept(specialNodeVisitor.Nodes);
+
+        //    var conditionalAttributeVisitor = new ConditionalAttributeVisitor();
+        //    conditionalAttributeVisitor.Accept(forEachAttributeVisitor.Nodes);
+
+        //    var testElseElementVisitor = new TestElseElementVisitor();
+        //    testElseElementVisitor.Accept(conditionalAttributeVisitor.Nodes);
+
+        //    var chunkBuilder = new ChunkBuilderVisitor();
+        //    chunkBuilder.Accept(testElseElementVisitor.Nodes);
+        //    return chunkBuilder.Chunks;
+        //}
 
         public IList<string> FindPartialFiles(string viewPath)
         {

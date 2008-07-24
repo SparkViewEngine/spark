@@ -57,6 +57,7 @@
     <Compile Include="CodeGrammarTester.cs" />
     <Compile Include="CompiledViewHolderTester.cs" />
     <Compile Include="ConditionalAttributeVisitorTester.cs" />
+    <Compile Include="CSharpSyntaxProviderTester.cs" />
     <Compile Include="FileSystemViewFolderTester.cs" />
     <Compile Include="MarkupGrammarTester.cs" />
     <Compile Include="Models\Comment.cs" />
@@ -79,6 +80,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\Code\foreach.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Code\simplecode.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\Home\childview.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -70,6 +70,7 @@
     <Compile Include="FileSystem\FileSystemViewFolder.cs" />
     <Compile Include="FileSystem\FileSystemViewFile.cs" />
     <Compile Include="ISparkExtension.cs" />
+    <Compile Include="ISparkSyntaxProvider.cs" />
     <Compile Include="ISparkView.cs" />
     <Compile Include="ISparkViewEngine.cs" />
     <Compile Include="ISparkViewEntry.cs" />
@@ -86,6 +87,9 @@
     <Compile Include="Parser\ParseResult.cs" />
     <Compile Include="Parser\Position.cs" />
     <Compile Include="Parser\SourceContext.cs" />
+    <Compile Include="Parser\Syntax\AbstractSyntaxProvider.cs" />
+    <Compile Include="Parser\Syntax\CSharpSyntaxProvider.cs" />
+    <Compile Include="Parser\Syntax\DefaultSyntaxProvider.cs" />
     <Compile Include="Parser\ViewLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkViewDescriptor.cs" />

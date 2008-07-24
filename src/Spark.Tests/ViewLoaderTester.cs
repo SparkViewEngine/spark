@@ -24,6 +24,7 @@ using Spark.Parser.Markup;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Spark.FileSystem;
+using Spark.Compiler;
 
 namespace Spark.Tests
 {
@@ -34,6 +35,7 @@ namespace Spark.Tests
         private ViewLoader loader;
 
         private IViewFolder viewSourceLoader;
+        private ISparkSyntaxProvider syntaxProvider;
 
         private Dictionary<char, IList<Node>> nodesTable;
 
@@ -52,12 +54,9 @@ namespace Spark.Tests
             SetupResult.For(viewSourceLoader.ListViews("Account")).Return(new[] { "index.spark" });
             SetupResult.For(viewSourceLoader.ListViews("Shared")).Return(new[] { "layout.spark", "_header.spark", "default.spark", "_footer.spark" });
 
+            syntaxProvider = mocks.CreateMock<ISparkSyntaxProvider>();
 
-            loader = new ViewLoader { ViewFolder = viewSourceLoader };
-            loader.Parser = delegate(Position input)
-                                {
-                                    return new ParseResult<IList<Node>>(input.Advance(1), nodesTable[input.Peek()]);
-                                };
+            loader = new ViewLoader { ViewFolder = viewSourceLoader, SyntaxProvider = syntaxProvider };
         }
 
         long GetLastModified()
@@ -65,17 +64,15 @@ namespace Spark.Tests
             return _lastModified;
         }
 
-        void ExpectGetSource(string path, IList<Node> nodes)
+        IViewFile ExpectGetChunks(string path, params Chunk[] chunks)
         {
             var source = mocks.CreateMock<IViewFile>();
-            int key = '0' + nodesTable.Count;
-            nodesTable.Add((char)key, nodes);
 
-            Stream stream = new MemoryStream(new[] { (byte)key });
-            SetupResult.For(source.OpenViewStream()).Return(stream);
-            SetupResult.For(source.LastModified).Do(new Func<long>(GetLastModified));
+            Expect.Call(viewSourceLoader.GetViewSource(path)).Return(source);
+            Expect.Call(source.LastModified).Return(0);
+            Expect.Call(syntaxProvider.GetChunks(path, viewSourceLoader, null)).Return(chunks);
 
-            SetupResult.For(viewSourceLoader.GetViewSource(path)).Return(source);
+            return source;
         }
 
         static Node ParseElement(string content)
@@ -89,25 +86,28 @@ namespace Spark.Tests
         [Test]
         public void LoadSimpleFile()
         {
-            ExpectGetSource("home\\simple.spark", new Node[0]);
+            ExpectGetChunks("home\\simple.spark", new SendLiteralChunk());
 
             mocks.ReplayAll();
-            loader.Load("home\\simple.spark");
+            var chunks = loader.Load("home\\simple.spark");
             mocks.VerifyAll();
+
+            Assert.AreEqual(1, chunks.Count());
+            Assert.AreEqual(1, loader.GetEverythingLoaded().Count());
         }
 
         [Test]
         public void LoadUsedFile()
         {
-            var useFile = ParseElement("<use file='mypartial'/>");
-
-            ExpectGetSource("Home\\usefile.spark", new[] { useFile });
+            ExpectGetChunks("Home\\usefile.spark", new RenderPartialChunk { Name = "mypartial" });
             Expect.Call(viewSourceLoader.HasView("Home\\mypartial.spark")).Return(true);
-            ExpectGetSource("Home\\mypartial.spark", new Node[0]);
+            ExpectGetChunks("Home\\mypartial.spark", new SendLiteralChunk { Text = "Hello world" });
 
             mocks.ReplayAll();
             loader.Load("Home\\usefile.spark");
             mocks.VerifyAll();
+
+            Assert.AreEqual(2, loader.GetEverythingLoaded().Count());
         }
 
 
@@ -116,10 +116,10 @@ namespace Spark.Tests
         {
             var useFile = ParseElement("<use file='mypartial'/>");
 
-            ExpectGetSource("Home\\usefile.spark", new[] { useFile });
+            ExpectGetChunks("Home\\usefile.spark", new RenderPartialChunk { Name = "mypartial" });
             Expect.Call(viewSourceLoader.HasView("Home\\mypartial.spark")).Return(false);
             Expect.Call(viewSourceLoader.HasView("Shared\\mypartial.spark")).Return(true);
-            ExpectGetSource("Shared\\mypartial.spark", new Node[0]);
+            ExpectGetChunks("Shared\\mypartial.spark", new SendLiteralChunk { Text = "Hello world" });
 
             mocks.ReplayAll();
             loader.Load("Home\\usefile.spark");
@@ -148,18 +148,22 @@ namespace Spark.Tests
         [Test, ExpectedException(typeof(FileNotFoundException))]
         public void FileNotFoundException()
         {
-            Expect.Call(viewSourceLoader.HasView("Home\\nosuchfile.spark")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Shared\\nosuchfile.spark")).Return(false);
+            Expect.Call(viewSourceLoader.GetViewSource("Home\\nosuchfile.spark")).Throw(new FileNotFoundException());
 
             mocks.ReplayAll();
-            loader.Load("Home", "nosuchfile");
+            loader.Load("Home\\nosuchfile.spark");
             mocks.VerifyAll();
         }
 
         [Test]
         public void ExpiresWhenFilesChange()
         {
-            ExpectGetSource("home\\changing.spark", new List<Node>());
+            var source = ExpectGetChunks("home\\changing.spark", new SendLiteralChunk { Text = "Hello world" });
+            Expect.Call(viewSourceLoader.GetViewSource("home\\changing.spark")).Return(source);
+            Expect.Call(source.LastModified).Return(0);
+            Expect.Call(viewSourceLoader.GetViewSource("home\\changing.spark")).Return(source);
+            Expect.Call(source.LastModified).Return(42);
+
             mocks.ReplayAll();
             loader.Load("home\\changing.spark");
             Assert.That(loader.IsCurrent());
