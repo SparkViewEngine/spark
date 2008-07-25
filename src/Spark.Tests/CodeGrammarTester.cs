@@ -87,5 +87,43 @@ namespace Spark.Tests
 
         }
 
+        [Test]
+        public void Statement1StopsWithEndOfLine()
+        {
+            var result = _grammar.Statement1(Source("before%>and\r\nafter"));
+            Assert.AreEqual("before%>and", result.Value);
+        }
+
+        [Test]
+        public void Statement2StopsWithPercentAngle()
+        {
+            var result = _grammar.Statement2(Source("before\r\nand%>after"));
+            Assert.AreEqual("before\r\nand", result.Value);
+        }
+
+
+        [Test]
+        public void StringsMayHavePercentAngle()
+        {
+            var result = _grammar.Statement1(Source("before\"%>\"and'%>'after\r\nagain"));
+            Assert.AreEqual("before\"%>\"and\"%>\"after", result.Value);
+            var result2 = _grammar.Statement2(Source("before\"%>\"and'%>'after%>again"));
+            Assert.AreEqual("before\"%>\"and\"%>\"after", result2.Value);
+        }
+
+        [Test]
+        public void StatementMayContainUnmatchedBraces()
+        {
+            var result = _grammar.Statement1(Source("this{that"));
+            Assert.AreEqual("this{that", result.Value);
+            var result2 = _grammar.Statement1(Source("this}that"));
+            Assert.AreEqual("this}that", result2.Value);
+            var result3 = _grammar.Statement2(Source("this{that"));
+            Assert.AreEqual("this{that", result3.Value);
+            var result4 = _grammar.Statement2(Source("this}that"));
+            Assert.AreEqual("this}that", result4.Value);
+        }
+
+
     }
 }

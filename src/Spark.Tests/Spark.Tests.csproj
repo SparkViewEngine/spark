@@ -92,6 +92,9 @@
     <None Include="Views\Home\partialspecialelements.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\Home\statement-terminating-strings.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\Home\testelementnested.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

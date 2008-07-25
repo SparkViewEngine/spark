@@ -418,8 +418,20 @@ namespace Spark.Tests
             factory.RenderView(viewContext);
             mocks.VerifyAll();
 
+            string content = sb.ToString();
+            ContainsInOrder(content, "Hi there, alpha.", "Hi there, alpha.");
+        }
+
+        [Test]
+        public void StatementTerminatingStrings()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("statement-terminating-strings", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
             string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
-            ContainsInOrder("Hi there, alpha.", "Hi there, alpha.");
+            Assert.AreEqual("<p>a:1</p><p>b:2</p><p>c:3%></p><p>d:<%4%></p><p>e:5%></p><p>f:<%6%></p>", content);
 
         }
     }
