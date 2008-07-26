@@ -372,5 +372,17 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             Assert.AreEqual("Shared\\Foo.spark", descriptor.Templates[1]);
         }
 
-	}
+        [Test]
+        public void HtmlEncodeFunctionH()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("html-encode-function-h", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            var content = output.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
+            Assert.AreEqual("<p>&lt;p&gt;&amp;lt;&amp;gt;&lt;/p&gt;</p>", content);
+
+        }
+    }
 }

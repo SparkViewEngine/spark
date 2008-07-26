@@ -15,6 +15,11 @@ namespace MvcContrib.SparkViewEngine
         public UrlHelper Url { get; set; }
         public AjaxHelper Ajax { get; set; }
 
+        public string H(object value)
+        {
+            return Html.Encode(value);
+        }
+
         private ViewDataDictionary _viewData;
 
         protected virtual void SetViewData(ViewDataDictionary viewData)

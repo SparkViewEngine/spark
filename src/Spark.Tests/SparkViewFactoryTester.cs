@@ -447,5 +447,6 @@ namespace Spark.Tests
             Assert.AreEqual("<p>a\\\"b</p><p>c\\\"}d</p>", content);
 
         }
+
     }
 }
