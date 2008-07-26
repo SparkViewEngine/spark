@@ -12,14 +12,22 @@ namespace Measure
     {
         private static string aspxBaseline = "http://localhost/BenchmarkAspx/Content/Tidy_Blog/css/style.css";
         private static string aspxPath = "http://localhost/BenchmarkAspx/Home/Index.aspx";
+
+        private static string mvcAspxBaseline = "http://localhost/BenchmarkMvcAspx/Content/Tidy_Blog/css/style.css";
+        private static string mvcAspxPath = "http://localhost/BenchmarkMvcAspx/Home/Index";
+
+        private static string mvcSparkBaseline = "http://localhost/BenchmarkMvcSpark/Content/Tidy_Blog/css/style.css";
+        private static string mvcSparkPath = "http://localhost/BenchmarkMvcSpark/Home/Index";
+
         private static string sparkBaseline = "http://localhost/BenchmarkSpark/Content/Tidy_Blog/css/style.css";
         private static string sparkPath = "http://localhost/BenchmarkSpark/Home/Index.castle";
+
         private static string velocityBaseline = "http://localhost/BenchmarkVelocity/Content/Tidy_Blog/css/style.css";
         private static string velocityPath = "http://localhost/BenchmarkVelocity/Home/Index.castle";
 
         static void Main(string[] args)
         {
-            var urls = new[] { aspxBaseline, aspxPath, sparkBaseline, sparkPath, velocityBaseline, velocityPath };
+            var urls = new[] { aspxBaseline, aspxPath, mvcAspxBaseline, mvcAspxPath, sparkBaseline, sparkPath, velocityBaseline, velocityPath, mvcSparkBaseline, mvcSparkPath };
             for (int warmup = 0; warmup != 3; ++warmup)
             {
                 for (int index = 0; index != urls.Length; ++index)
@@ -56,8 +64,8 @@ namespace Measure
 
                 for (int index = 0; index != urls.Length; ++index)
                 {
-                    Console.WriteLine("{0}", urls[index]);
-                    Console.Write("{0} k, {1} seconds :",
+                    Console.Write("{0} ", urls[index]);
+                    Console.Write("{0} {1} ",
                                   sizes[index].Sum() / 1024,
                                   (ticks[index].Sum() * 1000) / Stopwatch.Frequency / (double)1000);
                     foreach (var subtotal in ticks[index])
@@ -65,12 +73,11 @@ namespace Measure
                         Console.Write(" {0}", (subtotal * 1000) / Stopwatch.Frequency / (double)1000);
                     }
                     Console.WriteLine();
-                    Console.WriteLine();
                 }
             }
 
-            Console.Write("Press [enter] to exit:");
-            Console.ReadLine();
+            //Console.Write("Press [enter] to exit:");
+            //Console.ReadLine();
         }
 
         private static int Pull(string path)
