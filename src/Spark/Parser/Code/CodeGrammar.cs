@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Spark.Parser.Code
 {
@@ -22,6 +21,14 @@ namespace Spark.Parser.Code
             var quotStringLiteral = Ch('\"').And(Rep(quotHunks)).And(Ch('\"'))
                 .Build(hit => "\"" + js(hit.Left.Down) + "\"");
 
+
+            var quotVerbatimPiece =
+                Ch("\"\"").Or(ChNot('\"').Build(ch => new string(ch, 1)));
+
+            var quotVerbatimLiteral = Ch("@\"").And(Rep(quotVerbatimPiece)).And(Ch('"'))
+                .Build(hit => "@\"" + js(hit.Left.Down) + "\"");
+
+
             var aposHunks =
                 Rep1(ChNot('\'', '\\', '\"')).Build(bs)
                 .Or(escapeSequence)
@@ -30,6 +37,17 @@ namespace Spark.Parser.Code
             var aposStringLiteral = Ch('\'').And(Rep(aposHunks)).And(Ch('\''))
                 .Build(hit => "\"" + js(hit.Left.Down) + "\"");
 
+            // @' " '' ' becomes @" "" ' "
+            var aposVerbatimPiece =
+                Ch("''").Build(ch => "'")
+                .Or(Ch("\"").Build(ch => "\"\""))
+                .Or(ChNot('\'').Build(ch => new string(ch, 1)));
+
+            var aposVerbatimLiteral = Ch("@'").And(Rep(aposVerbatimPiece)).And(Ch('\''))
+                .Build(hit => "@\"" + js(hit.Left.Down) + "\"");
+
+            var stringLiteral = quotStringLiteral.Or(quotVerbatimLiteral).Or(aposStringLiteral).Or(aposVerbatimLiteral);
+
             var SpecialCharCast = Ch("(char)'").And(ChNot('\'', '\\').Build(ch => ch.ToString()).Or(escapeSequence)).And(Ch('\''))
                 .Build(hit => "(char)'" + hit.Left.Down + "'");
 
@@ -37,7 +55,7 @@ namespace Spark.Parser.Code
                 Ch("[[").Build(ch => '<')
                 .Or(Ch("]]").Build(ch => '>'))
                 .Or(ChNot('\"', '\'', '{', '}'))
-                .Unless(Ch("%>").Or(SpecialCharCast)))
+                .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(SpecialCharCast)))
                 .Build(bs);
 
             // braced ::= '{' + terms + '}'
@@ -45,34 +63,29 @@ namespace Spark.Parser.Code
                 .Build(hit => "{" + js(hit.Left.Down) + "}");
 
             // ExpressionTerms ::= (dquot | aquot | braced | codeStretch | specialCharCast)*
-            ExpressionTerms = Rep(quotStringLiteral.Or(aposStringLiteral).Or(braced).Or(codeStretch).Or(SpecialCharCast));
+            ExpressionTerms = Rep(stringLiteral.Or(braced).Or(codeStretch).Or(SpecialCharCast));
 
             Expression = ExpressionTerms.Build(hit => string.Concat(hit.ToArray()));
 
 
-            // similar, but not identical
-            var statement1Stretch = Rep1(
+            var statementPiece =
                 Ch("[[").Build(ch => '<')
                 .Or(Ch("]]").Build(ch => '>'))
                 .Or(ChNot('\"', '\''))
-                .Unless(Ch('\r', '\n'))
-                .Unless(SpecialCharCast))
+                .Unless(SpecialCharCast.Or(Ch("@\"")).Or(Ch("@'")));
+
+            var statement1Stretch = Rep1(statementPiece.Unless(Ch('\r', '\n')))
                 .Build(bs);
 
-            var statement2Stretch = Rep1(
-                Ch("[[").Build(ch => '<')
-                .Or(Ch("]]").Build(ch => '>'))
-                .Or(ChNot('\"', '\''))
-                .Unless(Ch("%>"))
-                .Unless(SpecialCharCast))
+            var statement2Stretch = Rep1(statementPiece.Unless(Ch("%>")))
                 .Build(bs);
 
             // Statement1 ::= (dquot | aquot | statement1Stretch | specialCharCast)*
-            Statement1 = Rep(quotStringLiteral.Or(aposStringLiteral).Or(statement1Stretch).Or(SpecialCharCast))
+            Statement1 = Rep(stringLiteral.Or(statement1Stretch).Or(SpecialCharCast))
                 .Build(hit => string.Concat(hit.ToArray()));
 
             // Statement2 ::= (dquot | aquot | statement2Stretch | specialCharCast)*
-            Statement2 = Rep(quotStringLiteral.Or(aposStringLiteral).Or(statement2Stretch).Or(SpecialCharCast))
+            Statement2 = Rep(stringLiteral.Or(statement2Stretch).Or(SpecialCharCast))
                 .Build(hit => string.Concat(hit.ToArray()));
 
         }

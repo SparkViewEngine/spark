@@ -124,6 +124,30 @@ namespace Spark.Tests
             Assert.AreEqual("this}that", result4.Value);
         }
 
+        [Test]
+        public void VerbatimDoubleQuotes()
+        {
+            var result = _grammar.Expression(Source("a@\" \\\"\" \"b"));
+            Assert.AreEqual("a@\" \\\"\" \"b", result.Value);
 
+            var result2 = _grammar.Expression(Source("a@\" \\\"\"} \"b"));
+            Assert.AreEqual("a@\" \\\"\"} \"b", result2.Value);
+        }
+
+        [Test]
+        public void VerbatimSingleQuotes()
+        {
+            //@' \'' ' becomes @" \' "
+            var result = _grammar.Expression(Source("a@' \\'' 'b"));
+            Assert.AreEqual("a@\" \\' \"b", result.Value);
+
+            //@' \''} ' becomes @" \'} "
+            var result2 = _grammar.Expression(Source("a@' \\''} 'b"));
+            Assert.AreEqual("a@\" \\'} \"b", result2.Value);
+
+            //@' " '' ' becomes @" "" ' "
+            var result3 = _grammar.Expression(Source("a@' \" '' 'b"));
+            Assert.AreEqual("a@\" \"\" ' \"b", result3.Value);
+        }
     }
 }

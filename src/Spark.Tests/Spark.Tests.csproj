@@ -89,6 +89,9 @@
     <None Include="Views\Home\childview.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Views\Home\expression-has-verbatim-strings.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\Home\partialspecialelements.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
