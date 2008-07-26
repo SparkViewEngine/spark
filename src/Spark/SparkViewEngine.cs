@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using Spark.Compiler;
 using Spark.Parser;
@@ -25,9 +26,14 @@ namespace Spark
 {
     public class SparkViewEngine : ISparkViewEngine
     {
-        public SparkViewEngine(string baseClass, IViewFolder viewFolder)
+        public SparkViewEngine(Type baseType, IViewFolder viewFolder):
+            this(baseType.FullName, viewFolder)
         {
-            BaseClass = baseClass;
+        }
+
+        public SparkViewEngine(string baseFullname, IViewFolder viewFolder)
+        {
+            BaseClass = baseFullname;
             ViewFolder = viewFolder;
             SyntaxProvider = new DefaultSyntaxProvider();
         }

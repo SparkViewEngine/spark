@@ -59,6 +59,7 @@
     <Compile Include="ConditionalAttributeVisitorTester.cs" />
     <Compile Include="CSharpSyntaxProviderTester.cs" />
     <Compile Include="FileSystemViewFolderTester.cs" />
+    <Compile Include="InMemoryViewFolderTester.cs" />
     <Compile Include="MarkupGrammarTester.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\UserInfo.cs" />

@@ -14,13 +14,9 @@
    limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Spark.Parser;
-using Spark.Parser.Markup;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Spark.FileSystem;
@@ -37,16 +33,10 @@ namespace Spark.Tests
         private IViewFolder viewSourceLoader;
         private ISparkSyntaxProvider syntaxProvider;
 
-        private Dictionary<char, IList<Node>> nodesTable;
-
-        private long _lastModified;
-
         [SetUp]
         public void Init()
         {
             mocks = new MockRepository();
-
-            nodesTable = new Dictionary<char, IList<Node>>();
 
             viewSourceLoader = mocks.CreateMock<IViewFolder>();
             SetupResult.For(viewSourceLoader.ListViews("home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
@@ -59,11 +49,6 @@ namespace Spark.Tests
             loader = new ViewLoader { ViewFolder = viewSourceLoader, SyntaxProvider = syntaxProvider };
         }
 
-        long GetLastModified()
-        {
-            return _lastModified;
-        }
-
         IViewFile ExpectGetChunks(string path, params Chunk[] chunks)
         {
             var source = mocks.CreateMock<IViewFile>();
@@ -73,14 +58,6 @@ namespace Spark.Tests
             Expect.Call(syntaxProvider.GetChunks(path, viewSourceLoader, null)).Return(chunks);
 
             return source;
-        }
-
-        static Node ParseElement(string content)
-        {
-            var grammar = new MarkupGrammar();
-            var result = grammar.Element(new Position(new SourceContext(content)));
-            Assert.IsNotNull(result);
-            return result.Value;
         }
 
         [Test]
@@ -114,8 +91,6 @@ namespace Spark.Tests
         [Test]
         public void LoadSharedFile()
         {
-            var useFile = ParseElement("<use file='mypartial'/>");
-
             ExpectGetChunks("Home\\usefile.spark", new RenderPartialChunk { Name = "mypartial" });
             Expect.Call(viewSourceLoader.HasView("Home\\mypartial.spark")).Return(false);
             Expect.Call(viewSourceLoader.HasView("Shared\\mypartial.spark")).Return(true);
@@ -167,7 +142,6 @@ namespace Spark.Tests
             mocks.ReplayAll();
             loader.Load("home\\changing.spark");
             Assert.That(loader.IsCurrent());
-            _lastModified = 88;
             Assert.That(!loader.IsCurrent());
             mocks.VerifyAll();
         }

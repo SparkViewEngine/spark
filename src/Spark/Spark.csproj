@@ -69,6 +69,7 @@
     <Compile Include="Compiler\ViewCompiler.cs" />
     <Compile Include="FileSystem\FileSystemViewFolder.cs" />
     <Compile Include="FileSystem\FileSystemViewFile.cs" />
+    <Compile Include="FileSystem\InMemoryViewFolder.cs" />
     <Compile Include="ISparkExtension.cs" />
     <Compile Include="ISparkSyntaxProvider.cs" />
     <Compile Include="ISparkView.cs" />

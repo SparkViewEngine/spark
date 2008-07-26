@@ -15,9 +15,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -80,8 +77,8 @@ namespace Spark.Tests
             var key4 = BuildKey("c\\v", "shared\\M");
             Assert.AreEqual(key1, key4);
 
-            Assert.That(!object.Equals(key1, null));
-            Assert.That(!object.Equals(null, key1));
+            Assert.That(!Equals(key1, null));
+            Assert.That(!Equals(null, key1));
         }
 
         bool isCurrent;

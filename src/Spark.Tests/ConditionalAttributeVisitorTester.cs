@@ -14,10 +14,6 @@
    limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Spark.Compiler.NodeVisitors;
 using Spark.Parser;
@@ -41,6 +37,7 @@ namespace Spark.Tests
             Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[0]);
 
             var ifNode = visitor.Nodes[0] as SpecialNode;
+            Assert.IsNotNull(ifNode);
             Assert.AreEqual("if", ifNode.Element.Name);
         }
 
