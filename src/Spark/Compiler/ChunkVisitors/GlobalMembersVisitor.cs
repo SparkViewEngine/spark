@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Collections.Generic;
 using System.Text;
 using Spark.Compiler.ChunkVisitors;
 
@@ -22,6 +23,7 @@ namespace Spark.Compiler.ChunkVisitors
     public class GlobalMembersVisitor : ChunkVisitor
     {
         private readonly StringBuilder _source;
+        Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
 
         public GlobalMembersVisitor(StringBuilder output)
         {
@@ -35,7 +37,21 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(ViewDataChunk chunk)
         {
-            _source.AppendLine(string.Format("\r\n    {0} {1}\r\n    {{get {{return ({0})ViewData.Eval(\"{1}\");}}}}", chunk.Type ?? "object", chunk.Name));
+            var name = chunk.Name;
+            var type = chunk.Type ?? "object";
+
+            if (_viewDataAdded.ContainsKey(name))
+            {
+                if (_viewDataAdded[name] != type)
+                {
+                    throw new CompilerException(string.Format("The view data named {0} cannot be declared with different types '{1}' and '{2}'",
+                        name, type, _viewDataAdded[name]));
+                }
+                return;
+            }
+
+            _viewDataAdded.Add(name, type);
+            _source.AppendLine(string.Format("\r\n    {0} {1}\r\n    {{get {{return ({0})ViewData.Eval(\"{1}\");}}}}", type, name));
         }
 
         protected override void Visit(ExtensionChunk chunk)

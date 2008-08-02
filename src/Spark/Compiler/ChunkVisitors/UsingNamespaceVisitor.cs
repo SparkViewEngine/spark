@@ -15,6 +15,7 @@
 */
 
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Spark.Compiler.ChunkVisitors
@@ -23,7 +24,8 @@ namespace Spark.Compiler.ChunkVisitors
     {
         private readonly StringBuilder _source;
 
-        private readonly Dictionary<string, object> _used = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _namespaceAdded = new Dictionary<string, object>();
+        private readonly Dictionary<string, Assembly> _assemblyAdded = new Dictionary<string, Assembly>();
 
         readonly Stack<string> _noncyclic = new Stack<string>();
 
@@ -33,10 +35,17 @@ namespace Spark.Compiler.ChunkVisitors
             _source = output;
         }
 
+        public ICollection<Assembly> Assemblies { get { return _assemblyAdded.Values; } }
+
         protected override void Visit(UseNamespaceChunk chunk)
         {
-            Using(chunk.Namespace);
+            UsingNamespace(chunk.Namespace);
         }
+        protected override void Visit(UseAssemblyChunk chunk)
+        {
+            UsingAssembly(chunk.Assembly);
+        }
+
 
         protected override void Visit(ExtensionChunk chunk)
         {
@@ -53,13 +62,22 @@ namespace Spark.Compiler.ChunkVisitors
             _noncyclic.Pop();
         }
 
-        public void Using(string ns)
+        public void UsingNamespace(string ns)
         {
-            if (_used.ContainsKey(ns))
+            if (_namespaceAdded.ContainsKey(ns))
                 return;
 
-            _used.Add(ns, null);
+            _namespaceAdded.Add(ns, null);
             _source.AppendLine(string.Format("using {0};", ns));
+        }
+
+        private void UsingAssembly(string assemblyString)
+        {
+            if (_assemblyAdded.ContainsKey(assemblyString))
+                return;
+
+            var assembly = Assembly.Load(assemblyString);
+            _assemblyAdded.Add(assemblyString, assembly);
         }
     }
 }

@@ -18,7 +18,7 @@
 		<h2>${Html.Encode(caption)}</h2>
 	</macro>
     
-    <link href="/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
 	<use content="head"/>
 
 </head>
@@ -28,7 +28,7 @@
 
         <div id="header">
             <p id="logo">
-                <a href="/">Spark &bull; Northwind MVC Demo</a>
+                <a href="~/">Spark &bull; Northwind MVC Demo</a>
             </p>
             <ul id="menu">
                 <li>

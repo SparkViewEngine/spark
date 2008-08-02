@@ -20,6 +20,27 @@ namespace MvcContrib.SparkViewEngine
             return Html.Encode(value);
         }
 
+        private string _siteRoot;
+        public string SiteRoot
+        {
+            get
+            {
+                if (_siteRoot == null)
+                {
+                    var appPath = ViewContext.HttpContext.Request.ApplicationPath;
+                    if (string.IsNullOrEmpty(appPath) || string.Equals(appPath, "/"))
+                    {
+                        _siteRoot = string.Empty;
+                    }
+                    else
+                    {
+                        _siteRoot = "/" + appPath.Trim('/');
+                    }
+                }
+                return _siteRoot;
+            }
+        }
+
         private ViewDataDictionary _viewData;
 
         protected virtual void SetViewData(ViewDataDictionary viewData)

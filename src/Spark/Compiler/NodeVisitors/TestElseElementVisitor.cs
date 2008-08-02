@@ -21,7 +21,7 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class TestElseElementVisitor : NodeVisitor
+    public class TestElseElementVisitor : AbstractNodeVisitor
     {
 
         private Frame _frame = new Frame { Nodes = new List<Node>() };
@@ -44,11 +44,10 @@ namespace Spark.Compiler.NodeVisitors
             public IList<Node> TestParentNodes { get; set; }
         }
 
-        public IList<Node> Nodes
+        public override IList<Node> Nodes
         {
             get { return _frame.Nodes; }
         }
-
 
 
         protected override void Visit(ExpressionNode node)

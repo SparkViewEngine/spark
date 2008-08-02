@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Spark.Parser.Code;
+
 namespace Castle.MonoRail.Views.Spark
 {
     using System.Collections.Generic;
@@ -53,27 +55,27 @@ namespace Castle.MonoRail.Views.Spark
                 var delimiter = "";
                 foreach (var attribute in node.Attributes)
                 {
-                    var code = attribute.Value.Replace("[[", "<").Replace("]]", ">");
+                    var code = attribute.AsCode();
                     output.AppendFormat("{2}{{\"{0}\",{1}}}", attribute.Name, code, delimiter);
                     delimiter = ", ";
                 }
-                output.AppendLine("}, new Action(delegate {");
+                output.AppendLine("}, new System.Action(delegate {");
                 visitor.Accept(body);
                 output.AppendLine("}),");
 
-                output.AppendLine("new System.Collections.Generic.Dictionary<string,Action> {");
+                output.AppendLine("new System.Collections.Generic.Dictionary<string,System.Action> {");
                 foreach(var section in sections)
                 {
                     output.Append("{\"")
                         .Append(section.Key)
-                        .AppendLine("\", new Action(delegate {");
+                        .AppendLine("\", new System.Action(delegate {");
                     
                     foreach(var attr in attributes[section.Key])
                     {
                         output.Append("var ")
                             .Append(attr.Name)
                             .Append("=(")
-                            .Append(attr.Value)
+                            .Append(attr.AsCode())
                             .Append(")ViewData[\"")
                             .Append(attr.Name)
                             .AppendLine("\"];");

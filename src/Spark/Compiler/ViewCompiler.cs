@@ -62,7 +62,7 @@ namespace Spark.Compiler
 
             foreach (var resource in allResources)
                 globalsGenerator.Accept(resource);
-
+            
             int renderLevel = 0;
             foreach (var viewTemplate in viewTemplates)
             {
@@ -103,6 +103,7 @@ namespace Spark.Compiler
 
             var compilerParameters = new CompilerParameters();
             compilerParameters.IncludeDebugInformation = true;
+
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 string location;

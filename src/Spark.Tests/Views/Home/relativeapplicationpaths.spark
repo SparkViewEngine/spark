@@ -1,0 +1,6 @@
+﻿<div if="true">  
+  <img src="~/content/images/etc.png"/>
+  <script src="~/content/js/${'etc.js'}"/>
+  <p class="~/blah.css"/>
+</div>
+

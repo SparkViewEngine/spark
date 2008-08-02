@@ -75,6 +75,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkControllerFactoryTester.cs" />
     <Compile Include="SparkViewFactoryTester.cs" />
+    <Compile Include="SparkViewTester.cs" />
     <Compile Include="ViewSourceLoaderWrapperTester.cs" />
   </ItemGroup>
   <ItemGroup>

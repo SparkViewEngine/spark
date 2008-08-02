@@ -70,6 +70,10 @@ namespace Spark.Compiler.ChunkVisitors
         {
         }
 
+        protected override void Visit(UseAssemblyChunk chunk)
+        {
+        }
+
         protected override void Visit(ConditionalChunk chunk)
         {
             Accept(chunk.Body);

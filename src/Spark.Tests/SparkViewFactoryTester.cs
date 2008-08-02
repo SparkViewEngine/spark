@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests.Models;
 using Spark.Tests.Stubs;
@@ -445,8 +446,63 @@ namespace Spark.Tests
 
             string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
             Assert.AreEqual("<p>a\\\"b</p><p>c\\\"}d</p>", content);
-
         }
 
+        [Test]
+        public void RelativeApplicationPaths()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("relativeapplicationpaths", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                "<img src=\"/TestApp/content/images/etc.png\"/>",
+                "<script src=\"/TestApp/content/js/etc.js\"/>",
+                "<p class=\"~/blah.css\"/>");
+        }
+
+        [Test]
+        public void UseAssembly()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("useassembly", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                "<p>SortByCategory</p>");
+        }
+
+        [Test]
+        public void AddViewDataMoreThanOnce()
+        {
+            mocks.ReplayAll();
+            var viewData = new StubViewData {{"comment", new Comment {Text = "Hello world"}}};
+            var viewContext = MakeViewContext("addviewdatamorethanonce", null, viewData);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                "<div>Hello world</div>",
+                "<div>\r\n  Again: Hello world\r\n</div>");
+        }
+
+
+        [Test, ExpectedException(typeof(CompilerException))]
+        public void AddViewDataDifferentTypes()
+        {
+            mocks.ReplayAll();
+            var viewData = new StubViewData { { "comment", new Comment { Text = "Hello world" } } };
+            var viewContext = MakeViewContext("addviewdatadifferenttypes", null, viewData);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+        }
     }
 }

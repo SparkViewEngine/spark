@@ -18,5 +18,7 @@ namespace Spark.Tests.Stubs
         }
 
         public StubViewData ViewData { get; set; }
+
+        public string SiteRoot { get { return "/TestApp"; } }
     }
 }

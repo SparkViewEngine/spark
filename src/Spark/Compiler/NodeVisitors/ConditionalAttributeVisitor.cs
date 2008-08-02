@@ -20,13 +20,12 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class ConditionalAttributeVisitor : NodeVisitor
+    public class ConditionalAttributeVisitor : AbstractNodeVisitor
     {
         IList<Node> _nodes = new List<Node>();
-        public IList<Node> Nodes
+        public override IList<Node> Nodes
         {
-            get { return _nodes; }
-            set { _nodes = value; }
+            get { return _nodes; }            
         }
 
         public string ClosingName { get; set; }
@@ -54,7 +53,7 @@ namespace Spark.Compiler.NodeVisitors
             var frame = _stack.Pop();
             ClosingName = frame.ClosingName;
             ClosingNameOutstanding = frame.ClosingNameOutstanding;
-            Nodes = frame.Nodes;
+            _nodes = frame.Nodes;
         }
 
         protected override void Visit(ExpressionNode node)
@@ -94,7 +93,7 @@ namespace Spark.Compiler.NodeVisitors
                     PushFrame();
                     ClosingName = node.Name;
                     ClosingNameOutstanding = 1;
-                    Nodes = specialNode.Body;
+                    _nodes = specialNode.Body;
                 }
             }
             else if (string.Equals(node.Name, ClosingName) && !node.IsEmptyElement)
@@ -134,7 +133,7 @@ namespace Spark.Compiler.NodeVisitors
             PushFrame();
 
             ClosingName = null;
-            Nodes = reconstructed.Body;
+            _nodes = reconstructed.Body;
             Accept(node.Body);
 
             PopFrame();

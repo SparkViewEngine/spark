@@ -12,7 +12,7 @@ ${PageTitle(CategoryName)}
   <li each="var product in ViewData.Model" class="${styles[productIndex%2]}">
     <ProductImage style='"float:left;"'/>
     <p>
-      <a href="/Products/Detail/${product.ProductID}">${product.ProductName}</a>
+      <a href="~/Products/Detail/${product.ProductID}">${product.ProductName}</a>
       <br />
       Price: ${String.Format("{0:C2}", product.UnitPrice)}
       <span class="editlink">

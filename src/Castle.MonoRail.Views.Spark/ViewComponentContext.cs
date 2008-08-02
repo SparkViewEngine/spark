@@ -12,56 +12,84 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Spark;
+
 namespace Castle.MonoRail.Views.Spark
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
-    
+
     using Castle.MonoRail.Framework;
 
     public class ViewComponentContext : IViewComponentContext
     {
         private readonly SparkView _view;
         private readonly SparkViewFactory _viewEngine;
+        private readonly string _name;
         private readonly IDictionary _componentParameters;
-        private readonly Action body;
-        private readonly IDictionary<string, Action> sections;
+        private readonly Action _body;
+        private readonly IDictionary<string, Action> _sections;
         private readonly IDictionary _contextVarsAdapter;
 
 
-        public ViewComponentContext(SparkView view, SparkViewFactory viewEngine, IDictionary componentParameters, Action body, IDictionary<string, Action> sections)
+        public ViewComponentContext(SparkView view, SparkViewFactory viewEngine, string name, IDictionary componentParameters, Action body, IDictionary<string, Action> sections)
         {
             _view = view;
             _viewEngine = viewEngine;
+            _name = name;
             _componentParameters = componentParameters;
-            this.body = body;
-            this.sections = sections;
+            _body = body;
+            _sections = sections;
             //_contextVarsAdapter = new ContextVarsAdapter(this);
             _contextVarsAdapter = new Hashtable(view.PropertyBag);
         }
 
-
-
         public bool HasSection(string sectionName)
         {
-            return sections.ContainsKey(sectionName);
+            return _sections.ContainsKey(sectionName);
         }
 
         public void RenderView(string name, TextWriter writer)
         {
-            throw new NotImplementedException();
+            var descriptor = new SparkViewDescriptor();
+            descriptor.Templates.Add(name);
+            var view = (SparkView)_viewEngine.Engine.CreateInstance(descriptor);
+
+            foreach (var content in _view.Content)
+            {
+                view.Content.Add(content.Key, content.Value);
+            }
+
+            var oldPropertyBag = _view.ControllerContext.PropertyBag;
+            _view.ControllerContext.PropertyBag = ContextVars;
+
+            try
+            {
+                view.Contextualize(_view.Context, _view.ControllerContext, _viewEngine);
+                view.RenderView(writer);
+            }
+            finally
+            {
+                _view.ControllerContext.PropertyBag = oldPropertyBag;
+            }
+
+            foreach (var content in view.Content)
+            {
+                if (!_view.Content.ContainsKey(content.Key))
+                    _view.Content.Add(content.Key, content.Value);
+            }
         }
 
         public void RenderBody()
         {
-            body();
+            _body();
         }
 
         public void RenderBody(TextWriter writer)
         {
-            using(_view.OutputScope(writer))
+            using (_view.OutputScope(writer))
             {
                 RenderBody();
             }
@@ -69,7 +97,7 @@ namespace Castle.MonoRail.Views.Spark
 
         public void RenderSection(string sectionName)
         {
-            sections[sectionName]();
+            _sections[sectionName]();
         }
 
         public void RenderSection(string sectionName, TextWriter writer)
@@ -82,7 +110,7 @@ namespace Castle.MonoRail.Views.Spark
 
         public string ComponentName
         {
-            get { throw new NotImplementedException(); }
+            get { return _name; }
         }
 
         public TextWriter Writer
@@ -100,11 +128,7 @@ namespace Castle.MonoRail.Views.Spark
             get { return _componentParameters; }
         }
 
-        public string ViewToRender
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
+        public string ViewToRender { get; set; }
 
         public IViewEngine ViewEngine
         {

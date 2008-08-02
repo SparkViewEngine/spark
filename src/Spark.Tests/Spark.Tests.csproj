@@ -87,13 +87,22 @@
     <None Include="Views\Code\simplecode.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\Home\addviewdatamorethanonce.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\Home\childview.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Home\addviewdatadifferenttypes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Views\Home\expression-has-verbatim-strings.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Views\Home\partialspecialelements.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Home\relativeapplicationpaths.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Views\Home\statement-terminating-strings.spark">
@@ -147,6 +156,9 @@
     <None Include="Views\Home\testelement.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\Home\useassembly.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\Home\usingnamespace.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -158,6 +170,9 @@
     </None>
     <None Include="Views\Home\viewdata.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Home\_AddViewDataPartial.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Views\Shared\layout.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

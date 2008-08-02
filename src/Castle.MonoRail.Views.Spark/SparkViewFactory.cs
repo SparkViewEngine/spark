@@ -142,7 +142,7 @@ namespace Castle.MonoRail.Views.Spark
 
         IViewFile IViewFolder.GetViewSource(string path)
         {
-            return new ViewFile(ViewSourceLoader.GetViewSource(path));
+            return new ViewFile(ViewSourceLoader.GetViewSource(Path.ChangeExtension(path, ViewFileExtension)));
         }
 
         private class ViewFile : IViewFile

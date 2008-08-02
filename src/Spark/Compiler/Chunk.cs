@@ -104,6 +104,11 @@ namespace Spark.Compiler
         public string Namespace { get; set; }
     }
 
+    public class UseAssemblyChunk : Chunk
+    {
+        public string Assembly { get; set; }
+    }
+
     public class ContentChunk : Chunk
     {
         public ContentChunk()

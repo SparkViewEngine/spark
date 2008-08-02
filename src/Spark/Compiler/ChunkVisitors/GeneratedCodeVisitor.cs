@@ -149,6 +149,11 @@ namespace Spark.Compiler.ChunkVisitors
 
         }
 
+        protected override void Visit(UseAssemblyChunk chunk)
+        {
+
+        }
+
         protected override void Visit(ExtensionChunk chunk)
         {
             chunk.Extension.VisitChunk(this, OutputLocation.RenderMethod, chunk.Body, _source);

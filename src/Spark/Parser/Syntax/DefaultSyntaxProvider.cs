@@ -39,8 +39,11 @@ namespace Spark.Parser.Syntax
             var testElseElementVisitor = new TestElseElementVisitor();
             testElseElementVisitor.Accept(conditionalAttributeVisitor.Nodes);
 
+            var urlAttributeVisitor = new UrlAttributeVisitor();
+            urlAttributeVisitor.Accept(testElseElementVisitor.Nodes);
+
             var chunkBuilder = new ChunkBuilderVisitor();
-            chunkBuilder.Accept(testElseElementVisitor.Nodes);
+            chunkBuilder.Accept(urlAttributeVisitor.Nodes);
             return chunkBuilder.Chunks;
         }
     }

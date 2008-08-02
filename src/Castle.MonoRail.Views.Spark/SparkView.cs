@@ -97,7 +97,7 @@ namespace Castle.MonoRail.Views.Spark
             var service = (IViewComponentFactory)_context.GetService(typeof(IViewComponentFactory));
             var component = service.Create(name);
 
-            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _viewEngine, parameters, body, sections);
+            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _viewEngine, name, parameters, body, sections);
 
             var oldContextVars = _contextVars;
             try
@@ -105,6 +105,12 @@ namespace Castle.MonoRail.Views.Spark
                 _contextVars = viewComponentContext.ContextVars;
                 component.Init(_context, viewComponentContext);
                 component.Render();
+
+                if (viewComponentContext.ViewToRender != null)
+                {
+                    viewComponentContext.RenderView(viewComponentContext.ViewToRender, Output);
+                }
+
             }
             finally
             {

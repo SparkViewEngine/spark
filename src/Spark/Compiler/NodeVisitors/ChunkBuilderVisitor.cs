@@ -23,7 +23,7 @@ using Spark.Parser.Code;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class ChunkBuilderVisitor : NodeVisitor
+    public class ChunkBuilderVisitor : AbstractNodeVisitor
     {
         public IList<Chunk> Chunks { get; set; }
         private IDictionary<string, Action<SpecialNode, SpecialNodeInspector>> _specialNodeMap;
@@ -34,6 +34,7 @@ namespace Spark.Compiler.NodeVisitors
             _specialNodeMap = new Dictionary<string, Action<SpecialNode, SpecialNodeInspector>>
                                   {
                                       {"var", VisitVar},
+                                      {"def", VisitVar},
                                       {"global", (n,i)=>VisitGlobal(n)},
                                       {"viewdata", (n,i)=>VisitViewdata(i)},
                                       {"set", (n,i)=>VisitSet(i)},
@@ -46,6 +47,11 @@ namespace Spark.Compiler.NodeVisitors
                                       {"use", VisitUse},
                                       {"macro", (n,i)=>VisitMacro(i)},
                                   };
+        }
+
+        public override IList<Node> Nodes
+        {
+            get { throw new System.NotImplementedException(); }
         }
 
         protected override void Visit(TextNode textNode)
@@ -99,6 +105,7 @@ namespace Spark.Compiler.NodeVisitors
         {
             Chunks.Add(new SendExpressionChunk { Code = expressionNode.Code });
         }
+
 
         protected override void Visit(StatementNode node)
         {
@@ -199,6 +206,8 @@ namespace Spark.Compiler.NodeVisitors
             var content = inspector.TakeAttribute("content");
             var file = inspector.TakeAttribute("file");
             var namespaceAttr = inspector.TakeAttribute("namespace");
+            var assemblyAttr = inspector.TakeAttribute("assembly");
+
             if (content != null)
             {
                 var useContentChunk = new UseContentChunk { Name = content.Value };
@@ -220,10 +229,18 @@ namespace Spark.Compiler.NodeVisitors
                 var useFileChunk = new RenderPartialChunk { Name = file.Value };
                 Chunks.Add(useFileChunk);
             }
-            else if (namespaceAttr != null)
+            else if (namespaceAttr != null || assemblyAttr != null)
             {
-                var useNamespaceChunk = new UseNamespaceChunk { Namespace = namespaceAttr.Value };
-                AddUnordered(useNamespaceChunk);
+                if (namespaceAttr != null)
+                {
+                    var useNamespaceChunk = new UseNamespaceChunk {Namespace = namespaceAttr.Value};
+                    AddUnordered(useNamespaceChunk);
+                }
+                if (assemblyAttr != null)
+                {
+                    var useAssemblyChunk = new UseAssemblyChunk { Assembly = assemblyAttr.Value };
+                    AddUnordered(useAssemblyChunk);
+                }
             }
             else
             {

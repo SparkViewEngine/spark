@@ -23,7 +23,7 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class SpecialNodeVisitor : NodeVisitor
+    public class SpecialNodeVisitor : AbstractNodeVisitor
     {
         private readonly IList<string> _containingNames;
         private readonly IList<string> _nonContainingNames;
@@ -40,16 +40,15 @@ namespace Spark.Compiler.NodeVisitors
 
         public SpecialNodeVisitor(IList<string> partialFileNames, ISparkExtensionFactory extensionFactory)
         {
-            _containingNames = new List<string>(new[] { "var", "for", "use", "content", "test", "if", "else", "elseif", "macro" });
+            _containingNames = new List<string>(new[] { "var", "def", "for", "use", "content", "test", "if", "else", "elseif", "macro" });
             _nonContainingNames = new List<string>(new[] { "global", "set", "viewdata" });
             _partialFileNames = partialFileNames;
             _extensionFactory = extensionFactory;
         }
 
-        public IList<Node> Nodes
+        public override IList<Node> Nodes
         {
-            get { return _nodes; }
-            set { _nodes = value; }
+            get { return _nodes; }            
         }
 
         private void Add(Node node)
@@ -62,12 +61,12 @@ namespace Spark.Compiler.NodeVisitors
             SpecialNode special = new SpecialNode(element);
             Nodes.Add(special);
             _stack.Push(Nodes);
-            Nodes = special.Body;
+            _nodes = special.Body;
         }
 
         private void PopSpecial(string name)
         {
-            Nodes = _stack.Pop();
+            _nodes = _stack.Pop();
             SpecialNode special = Nodes.Last() as SpecialNode;
             if (special == null)
                 throw new CompilerException(string.Format("Unexpected end element {0}", name));
@@ -105,7 +104,7 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     _currentExtensionNode = extensionNode;
                     _stack.Push(Nodes);
-                    Nodes = extensionNode.Body;
+                    _nodes = extensionNode.Body;
                 }
             }
             else if (_partialFileNames.Contains(elementNode.Name))
@@ -143,7 +142,7 @@ namespace Spark.Compiler.NodeVisitors
                 // An open extension node is greedy. Capture continues until an end element occurs.                
                 if (string.Equals(endElementNode.Name, _currentExtensionNode.Element.Name))
                 {
-                    Nodes = _stack.Pop();
+                    _nodes = _stack.Pop();
                     _currentExtensionNode = null;
                 }
 				else
