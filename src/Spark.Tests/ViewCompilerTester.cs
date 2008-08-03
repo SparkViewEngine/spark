@@ -131,6 +131,17 @@ namespace Spark.Tests
             Assert.AreEqual("hello world:8", contents);
         }
 
+        [Test]
+        public void TargetNamespace()
+        {
+            var compiler = new ViewCompiler("Spark.AbstractSparkView");
+            compiler.TargetNamespace = "Testing.Target.Namespace";
+            DoCompileView(compiler, new Chunk[] {new SendLiteralChunk() {Text = "Hello"}});
+            var instance = compiler.CreateInstance();
+            Assert.AreEqual("Testing.Target.Namespace", instance.GetType().Namespace);
+            
+        }
+
 
         //[Test]
         //public void ViewHelpers()

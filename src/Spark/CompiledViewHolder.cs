@@ -76,6 +76,9 @@ namespace Spark
             public override int GetHashCode()
             {
                 int hashCode = 0;
+
+                hashCode ^= (Descriptor.TargetNamespace ?? "").GetHashCode();
+
                 foreach(var template in Descriptor.Templates)
                     hashCode ^= template.ToLowerInvariant().GetHashCode();
 
@@ -86,6 +89,8 @@ namespace Spark
             {
                 var that = obj as Key;
                 if (that == null || GetType() != that.GetType())
+                    return false;
+                if (!string.Equals(Descriptor.TargetNamespace, that.Descriptor.TargetNamespace))
                     return false;
                 if (Descriptor.Templates.Count != that.Descriptor.Templates.Count)
                     return false;

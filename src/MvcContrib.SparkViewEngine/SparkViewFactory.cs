@@ -49,7 +49,11 @@ namespace MvcContrib.SparkViewEngine
             var viewName = viewContext.ViewName;
             var masterName = viewContext.MasterName;
 
-            var descriptor = new SparkViewDescriptor();
+            var descriptor = new SparkViewDescriptor
+                                 {
+                                     TargetNamespace = viewContext.Controller.GetType().Namespace
+                                 };
+
             if (_viewSourceLoaderWrapper.HasView(controllerName + "\\" + viewName + ".spark"))
             {
                 descriptor.Templates.Add(controllerName + "\\" + viewName + ".spark");

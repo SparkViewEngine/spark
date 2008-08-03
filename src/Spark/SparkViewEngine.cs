@@ -82,7 +82,7 @@ namespace Spark
                             {
                                 Key = key,
                                 Loader = new ViewLoader { ViewFolder = ViewFolder, SyntaxProvider = SyntaxProvider, ExtensionFactory = ExtensionFactory },
-                                Compiler = new ViewCompiler(BaseClass)
+                                Compiler = new ViewCompiler(BaseClass, key.Descriptor.TargetNamespace)
                             };
 
 

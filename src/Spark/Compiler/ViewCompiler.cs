@@ -33,7 +33,15 @@ namespace Spark.Compiler
             BaseClass = baseClass;
             GeneratedViewId = Guid.NewGuid();
         }
+        public ViewCompiler(string baseClass, string targetNamespace)
+        {
+            BaseClass = baseClass;
+            GeneratedViewId = Guid.NewGuid();
+            TargetNamespace = targetNamespace;
+        }
+
         public string BaseClass { get; set; }
+        public string TargetNamespace { get; set; }
         public string SourceCode { get; set; }
         public Type CompiledType { get; set; }
         public Guid GeneratedViewId { get; set; }
@@ -44,13 +52,20 @@ namespace Spark.Compiler
             var usingGenerator = new UsingNamespaceVisitor(source);
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
             var globalsGenerator = new GlobalMembersVisitor(source);
-            var viewGenerator = new GeneratedCodeVisitor(source) {Indent = 8};
+            var viewGenerator = new GeneratedCodeVisitor(source) { Indent = 8 };
 
-            foreach(var resource in allResources)
+            foreach (var resource in allResources)
                 usingGenerator.Accept(resource);
 
             foreach (var resource in allResources)
                 baseClassGenerator.Accept(resource);
+
+            if (!string.IsNullOrEmpty(TargetNamespace))
+            {
+                source.AppendLine();
+                source.AppendLine(string.Format("namespace {0}", TargetNamespace));
+                source.AppendLine("{");
+            }
 
             source.AppendLine();
             source.AppendLine(string.Format("public class CompiledSparkView : {0}", baseClassGenerator.BaseClassTypeName));
@@ -62,7 +77,7 @@ namespace Spark.Compiler
 
             foreach (var resource in allResources)
                 globalsGenerator.Accept(resource);
-            
+
             int renderLevel = 0;
             foreach (var viewTemplate in viewTemplates)
             {
@@ -91,9 +106,12 @@ namespace Spark.Compiler
             }
             source.AppendLine("    }");
 
-
             source.AppendLine("}");
 
+            if (!string.IsNullOrEmpty(TargetNamespace))
+            {
+                source.AppendLine("}");
+            }
 
             SourceCode = source.ToString();
 
@@ -133,7 +151,7 @@ namespace Spark.Compiler
 
             if (compilerResults.Errors.Count != 0)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.AppendLine("Dynamic view compilation failed.");
 
                 foreach (CompilerError err in compilerResults.Errors)
@@ -141,11 +159,6 @@ namespace Spark.Compiler
                     sb.AppendFormat("generated.cs({0},{1}): {2} {3}: ", err.Line, err.Column, err.IsWarning ? "warning" : "error", err.ErrorNumber);
                     sb.AppendLine(err.ErrorText);
                 }
-
-                //foreach (var text in compilerResults.Output)
-                //{
-                //    sb.AppendLine(text);
-                //}
 
                 sb.AppendLine();
                 using (TextReader reader = new StringReader(SourceCode))
@@ -161,7 +174,7 @@ namespace Spark.Compiler
                 throw new CompilerException(sb.ToString());
             }
 
-            CompiledType = compilerResults.CompiledAssembly.GetType("CompiledSparkView");
+            CompiledType = compilerResults.CompiledAssembly.GetType((TargetNamespace ?? "") + ".CompiledSparkView");
         }
 
         public ISparkView CreateInstance()

@@ -60,7 +60,7 @@ namespace Castle.MonoRail.Views.Spark
             if (controllerContext.LayoutNames != null)
                 masterName = string.Join(" ", controllerContext.LayoutNames);
 
-            var descriptor = new SparkViewDescriptor();
+            var descriptor = new SparkViewDescriptor {TargetNamespace = controller.GetType().Namespace};
             descriptor.Templates.Add(Path.ChangeExtension(templateName, ViewFileExtension));
 
             if (controllerContext.LayoutNames != null)
