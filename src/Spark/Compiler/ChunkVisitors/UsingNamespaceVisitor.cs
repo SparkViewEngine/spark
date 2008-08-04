@@ -71,7 +71,7 @@ namespace Spark.Compiler.ChunkVisitors
             _source.AppendLine(string.Format("using {0};", ns));
         }
 
-        private void UsingAssembly(string assemblyString)
+        public void UsingAssembly(string assemblyString)
         {
             if (_assemblyAdded.ContainsKey(assemblyString))
                 return;

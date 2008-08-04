@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using Spark.Compiler;
 using Spark.Parser;
 using Spark;
@@ -26,16 +27,29 @@ namespace Spark
 {
     public class SparkViewEngine : ISparkViewEngine
     {
-        public SparkViewEngine(Type baseType, IViewFolder viewFolder):
-            this(baseType.FullName, viewFolder)
+        public SparkViewEngine()
+        {
+            Settings = (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
+            SyntaxProvider = new DefaultSyntaxProvider();
+        }
+
+        public SparkViewEngine(Type baseType, IViewFolder viewFolder)
+            : this(baseType.FullName, viewFolder)
         {
         }
 
         public SparkViewEngine(string baseFullname, IViewFolder viewFolder)
+            : this()
         {
             BaseClass = baseFullname;
             ViewFolder = viewFolder;
-            SyntaxProvider = new DefaultSyntaxProvider();
+        }
+
+        public SparkViewEngine(ISparkSettings settings, IViewFolder viewFolder)
+            : this()
+        {
+            Settings = settings;
+            ViewFolder = viewFolder;
         }
 
         public string BaseClass { get; set; }
@@ -43,6 +57,7 @@ namespace Spark
         public ISparkExtensionFactory ExtensionFactory { get; set; }
         public ISparkSyntaxProvider SyntaxProvider { get; set; }
 
+        public ISparkSettings Settings { get; set; }
 
         public ISparkViewEntry GetEntry(SparkViewDescriptor descriptor)
         {
@@ -81,8 +96,18 @@ namespace Spark
             var entry = new CompiledViewHolder.Entry
                             {
                                 Key = key,
-                                Loader = new ViewLoader { ViewFolder = ViewFolder, SyntaxProvider = SyntaxProvider, ExtensionFactory = ExtensionFactory },
+                                Loader = new ViewLoader
+                                {
+                                    ViewFolder = ViewFolder,
+                                    SyntaxProvider = SyntaxProvider,
+                                    ExtensionFactory = ExtensionFactory
+                                },
                                 Compiler = new ViewCompiler(BaseClass, key.Descriptor.TargetNamespace)
+                                {
+                                    Debug = Settings.Debug,
+                                    UseAssemblies = Settings.UseAssemblies,
+                                    UseNamespaces = Settings.UseNamespaces
+                                }
                             };
 
 

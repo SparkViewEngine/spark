@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using Spark.FileSystem;
+using Spark.Tests.Stubs;
 
 namespace Spark.Tests
 {
@@ -39,12 +40,14 @@ namespace Spark.Tests
         [Test]
         public void ListViewsInFolder()
         {
-            var folder = new InMemoryViewFolder();
-            folder.Add("Home\\Alpha.spark", "stuff");
-            folder.Add("Home\\Beta.spark", "stuff");
-            folder.Add("Home2\\Gamma.spark", "stuff");
-            folder.Add("home\\Delta.spark", "stuff");
-            folder.Add("Home\\Something\\else.spark", "stuff");
+            var folder = new InMemoryViewFolder
+                             {
+                                 {"Home\\Alpha.spark", "stuff"},
+                                 {"Home\\Beta.spark", "stuff"},
+                                 {"Home2\\Gamma.spark", "stuff"},
+                                 {"home\\Delta.spark", "stuff"},
+                                 {"Home\\Something\\else.spark", "stuff"}
+                             };
 
             var views = folder.ListViews("Home");
 
@@ -99,6 +102,20 @@ namespace Spark.Tests
             Assert.AreNotEqual(lastModified1, lastModified1b);
             Assert.AreEqual(lastModified1b, lastModified2b);
 
+        }
+
+        [Test]
+        public void InMemoryViewFolderUsedByEngine()
+        {
+            var folder = new InMemoryViewFolder();
+            folder.Add("home\\index.spark", "<p>Hello world</p>");
+            var engine = new SparkViewEngine(typeof (StubSparkView), folder);
+
+            var descriptor = new SparkViewDescriptor();
+            descriptor.Templates.Add("home\\index.spark");
+            var view = engine.CreateInstance(descriptor);
+            var contents = view.RenderView();
+            Assert.AreEqual("<p>Hello world</p>", contents);
         }
     }
 }

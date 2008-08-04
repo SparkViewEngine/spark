@@ -40,6 +40,7 @@
       <HintPath>..\..\bin\rhinomocks\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -66,6 +67,7 @@
     <Compile Include="PositionTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkExtensionTester.cs" />
+    <Compile Include="SparkSectionHandlerTester.cs" />
     <Compile Include="SparkViewExtensions.cs" />
     <Compile Include="SparkViewFactoryTester.cs" />
     <Compile Include="Stubs\StubSparkView.cs" />
@@ -81,6 +83,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="Views\Code\foreach.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

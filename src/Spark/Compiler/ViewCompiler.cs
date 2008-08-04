@@ -19,6 +19,7 @@ using System.Linq;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using Microsoft.CSharp;
 using Spark.Compiler.ChunkVisitors;
@@ -46,6 +47,10 @@ namespace Spark.Compiler
         public Type CompiledType { get; set; }
         public Guid GeneratedViewId { get; set; }
 
+        public bool Debug { get; set; }
+        public IList<string> UseNamespaces { get; set; }
+        public IList<string> UseAssemblies { get; set; }
+
         public void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
             var source = new StringBuilder();
@@ -53,6 +58,12 @@ namespace Spark.Compiler
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
             var globalsGenerator = new GlobalMembersVisitor(source);
             var viewGenerator = new GeneratedCodeVisitor(source) { Indent = 8 };
+
+            foreach (var ns in UseNamespaces ?? new string[0])
+                usingGenerator.UsingNamespace(ns);
+
+            foreach (var assembly in UseAssemblies ?? new string[0])
+                usingGenerator.UsingAssembly(assembly);
 
             foreach (var resource in allResources)
                 usingGenerator.Accept(resource);
@@ -120,7 +131,7 @@ namespace Spark.Compiler
             CSharpCodeProvider codeProvider = new CSharpCodeProvider(providerOptions);
 
             var compilerParameters = new CompilerParameters();
-            compilerParameters.IncludeDebugInformation = true;
+
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -137,17 +148,27 @@ namespace Spark.Compiler
             }
 
 
-            var codeFile = Path.Combine(AppDomain.CurrentDomain.SetupInformation.DynamicBase ?? Path.GetTempPath(), Guid.NewGuid().ToString("n") + ".cs");
-            using (var stream = new FileStream(codeFile, FileMode.Create, FileAccess.Write))
+            CompilerResults compilerResults;
+            if (Debug)
             {
-                using (var writer = new StreamWriter(stream))
+                compilerParameters.IncludeDebugInformation = true;
+                var codeFile = Path.Combine(AppDomain.CurrentDomain.SetupInformation.DynamicBase ?? Path.GetTempPath(),
+                                            Guid.NewGuid().ToString("n") + ".cs");
+                using (var stream = new FileStream(codeFile, FileMode.Create, FileAccess.Write))
                 {
-                    writer.Write(SourceCode);
+                    using (var writer = new StreamWriter(stream))
+                    {
+                        writer.Write(SourceCode);
+                    }
                 }
-            }
 
-            compilerParameters.OutputAssembly = Path.ChangeExtension(codeFile, "dll");
-            var compilerResults = codeProvider.CompileAssemblyFromFile(compilerParameters, codeFile);
+                compilerParameters.OutputAssembly = Path.ChangeExtension(codeFile, "dll");
+                compilerResults = codeProvider.CompileAssemblyFromFile(compilerParameters, codeFile);
+            }
+            else
+            {
+                compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, SourceCode);
+            }
 
             if (compilerResults.Errors.Count != 0)
             {

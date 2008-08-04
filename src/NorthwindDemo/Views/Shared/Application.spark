@@ -1,61 +1,54 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+  <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 
-    <use namespace="System"/>
-	<use namespace="System.Collections.Generic"/>
-    <use namespace="System.Linq"/>
-    <use namespace="System.Web.Mvc"/>
-    <use namespace="NorthwindDemo.Controllers"/>
-    <use namespace="NorthwindDemo.Models"/>
-	<use namespace="NorthwindDemo.Views.Helpers"/>
 
     <global Title='"Northwind MVC Demo"' type='string'/>
     <title>${Title}</title>
-	<macro name="PageTitle" caption="string">
-		<set Title='string.Format("{0} - {1}", caption, Title)'/>
-		<h2>${Html.Encode(caption)}</h2>
-	</macro>
-    
+    <macro name="PageTitle" caption="string">
+      <set Title='string.Format("{0} - {1}", caption, Title)'/>
+      <h2>${Html.Encode(caption)}</h2>
+    </macro>
+
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
-	<use content="head"/>
+    <use content="head"/>
 
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="page">
 
-        <div id="header">
-            <p id="logo">
-                <a href="~/">Spark &bull; Northwind MVC Demo</a>
-            </p>
-            <ul id="menu">
-                <li>
-                    <%= Html.ActionLink("Home", "Index", "Products")%>
-                </li>
-                <use content="menu"/>
-            </ul>
-        </div>
+      <div id="header">
+        <p id="logo">
+          <a href="~/">Spark &bull; Northwind MVC Demo</a>
+        </p>
+        <ul id="menu">
+          <li>
+            <%= Html.ActionLink("Home", "Index", "Products")%>
+          </li>
+          <use content="menu"/>
+        </ul>
+      </div>
 
-        <div id="main">
-            <div id="content">
-				<use content="view"/>
-            </div>
-            <div id="footer">
-                <p>
-                    Spark view engine &bull; Northwind MVC Demo &copy; Copyright 2008                    
-                </p>
-                <p>
-					${Html.ActionLink[[HomeController]](
-						c=>c.ViewGeneratedSource(GeneratedViewId),
-						"View generated source")}
-                </p>
-            </div>
+      <div id="main">
+        <div id="content">
+          <use content="view"/>
         </div>
-        
-        
+        <div id="footer">
+          <p>
+            Spark view engine &bull; Northwind MVC Demo &copy; Copyright 2008
+          </p>
+          <p>
+            ${Html.ActionLink[[HomeController]](
+              c=>c.ViewGeneratedSource(GeneratedViewId),
+            "View generated source")}
+          </p>
+        </div>
+      </div>
+
+
 
     </div>
-</body>
+  </body>
 </html>

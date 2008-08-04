@@ -20,7 +20,7 @@ namespace MvcContrib.SparkViewEngine
             _viewSourceLoaderWrapper = new ViewSourceLoaderWrapper(viewSourceLoader);
 
             Engine = new Spark.SparkViewEngine(
-                "MvcContrib.SparkViewEngine.SparkView",
+                typeof(SparkView),
                 _viewSourceLoaderWrapper);
         }
 
