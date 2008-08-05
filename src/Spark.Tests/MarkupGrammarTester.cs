@@ -345,15 +345,63 @@ namespace Spark.Tests
         [Test]
         public void CodeStatementsHashSyntax()
         {
-            var direct = grammar.Statement(Source("#int x = 5;\n"));
+            var direct = grammar.Statement(Source("\n#int x = 5;\n"));
             Assert.AreEqual("int x = 5;", direct.Value.Code);
 
-            var result = grammar.Nodes(Source("<div>hello #int x = 5;\n world</div>"));
+            var result = grammar.Nodes(Source("<div>hello\n #int x = 5;\n world</div>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Value.Count);
             var stmt = result.Value[2] as StatementNode;
             Assert.IsNotNull(stmt);
             Assert.AreEqual("int x = 5;", stmt.Code);
+        }
+
+        [Test]
+        public void SpecialCharactersInAttributes()
+        {
+            var attr1 = grammar.Attribute(Source("foo=\"bar$('hello')\""));
+            Assert.AreEqual("bar$('hello')", attr1.Value.Value);
+
+            var attr2 = grammar.Attribute(Source("foo=\"$('#hello')\""));
+            Assert.AreEqual("$('#hello')", attr2.Value.Value);
+
+            var attr3 = grammar.Attribute(Source("foo='#hello'"));
+            Assert.AreEqual("#hello", attr3.Value.Value);
+        }
+
+        [Test]
+        public void JQueryIdSelectorInAttribute()
+        {
+            var attr1 = grammar.Attribute(Source("foo='javascript:$(\"#diff\").hide()'"));
+            Assert.AreEqual("javascript:$(\"#diff\").hide()", attr1.Value.Value);
+
+            var attr2 = grammar.Attribute(Source("foo=\"javascript:$('#diff').hide()\""));
+            Assert.AreEqual("javascript:$('#diff').hide()", attr2.Value.Value);
+        }
+
+        [Test]
+        public void JQueryIdSelectorInText()
+        {
+            var nodes1 = grammar.Nodes(Source("<script>\r\n$(\"#diff\").hide();\r\n</script>"));
+            Assert.AreEqual(3, nodes1.Value.Count);
+            Assert.AreEqual("\r\n$(\"#diff\").hide();\r\n", ((TextNode) nodes1.Value[1]).Text);
+
+            var nodes2 = grammar.Nodes(Source("<script>\r\n$('#diff').hide();\r\n</script>"));
+            Assert.AreEqual(3, nodes2.Value.Count);
+            Assert.AreEqual("\r\n$('#diff').hide();\r\n", ((TextNode) nodes2.Value[1]).Text);
+        }
+
+
+        [Test]
+        public void HashStatementMustBeFirstNonWhitespaceCharacter()
+        {
+            var nodes1 = grammar.Nodes(Source("<p>abc\r\n \t#Logger.Warn('Hello World');\r\ndef</p>"));
+            Assert.AreEqual(5, nodes1.Value.Count);
+            Assert.AreEqual("Logger.Warn(\"Hello World\");", ((StatementNode)nodes1.Value[2]).Code);
+
+            var nodes2 = grammar.Nodes(Source("<p>abc\r\n \t x#Logger.Warn('Hello World');\r\ndef</p>"));
+            Assert.AreEqual(3, nodes2.Value.Count);
+            Assert.AreEqual("abc\r\n \t x#Logger.Warn('Hello World');\r\ndef", ((TextNode)nodes2.Value[1]).Text);
         }
     }
 }

@@ -2,7 +2,8 @@
   a:<%Output.Write("1");%>
 </p>
 <p>
-  b:#Output.Write("2");
+  b:
+  #Output.Write("2");
 </p>
 <p>
   c:<%Output.Write("3%>");%>
@@ -11,8 +12,10 @@
   d:<%Output.Write("<%4%>");%>
 </p>
 <p>
-  e:#Output.Write("5%>");
+  e:
+  #Output.Write("5%>");
 </p>
 <p>
-  f:#Output.Write("<%6%>");
+  f:
+  #Output.Write("<%6%>");
 </p>

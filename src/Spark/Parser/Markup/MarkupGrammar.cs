@@ -57,11 +57,11 @@ namespace Spark.Parser.Markup
             var chNotPercentGreater = ChNot('%').Or(Ch('%').NotNext(Ch('>')));
 
 
-            // Syntax 1: #statement\n
-            var StatementNode1 = Ch('#').And(Statement1).And(Opt(Ch('\r'))).And(Ch('\n'))
-                .Build(hit => new StatementNode(hit.Left.Left.Down));
+            // Syntax 1: '\r'? '\n' S? '#' (statement ^('\r' | '\n') )
+            var StatementNode1 = Opt(Ch('\r')).And(Ch('\n')).And(Rep(Ch(' ','\t'))).And(Ch('#')).And(Statement1).IfNext(Ch('\r','\n'))
+                .Build(hit => new StatementNode(hit.Down));
 
-            // Syntax 2: <%statement%> 
+            // Syntax 2: '<%' (statement ^'%>')  '%>' 
             var StatementNode2 = Ch("<%").NotNext(Ch('=')).And(Statement2).And(Ch("%>"))
                 .Build(hit => new StatementNode(hit.Left.Down));
 
@@ -100,9 +100,9 @@ namespace Spark.Parser.Markup
             var EntityRefOrAmpersand = AsNode(EntityRef).Or(Ch('&').Build(hit => (Node)new TextNode("&")));
 
             //[10]   	AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
-            var AttValueSingleText = Rep1(ChNot('<', '&', '\'', '$')).Build(hit => new TextNode(hit));
+            var AttValueSingleText = Rep1(ChNot('<', '&', '\'').Unless(Code)).Build(hit => new TextNode(hit));
             var AttValueSingle = Apos.And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)))).And(Apos);
-            var AttValueDoubleText = Rep1(ChNot('<', '&', '\"', '$')).Build(hit => new TextNode(hit));
+            var AttValueDoubleText = Rep1(ChNot('<', '&', '\"').Unless(Code)).Build(hit => new TextNode(hit));
             var AttValueDouble = Quot.And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)))).And(Quot);
             var AttValue = AttValueSingle.Or(AttValueDouble).Left().Down();
 
