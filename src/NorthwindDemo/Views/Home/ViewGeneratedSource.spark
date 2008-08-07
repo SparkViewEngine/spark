@@ -1,5 +1,6 @@
-﻿
-<viewdata model="Spark.CompiledViewHolder.Entry"/>
+﻿<viewdata model="Spark.CompiledViewHolder.Entry"/>
+
+#Break(ViewData.Model == null);
 
 <div if="ViewData.Model == null">
   <p>A compiled view class for that of controller and and view is not currently in memory.</p>

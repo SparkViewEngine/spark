@@ -10,6 +10,17 @@
       <set Title='string.Format("{0} - {1}", caption, Title)'/>
       <h2>${Html.Encode(caption)}</h2>
     </macro>
+    
+    <macro name="Break">
+      # if (System.Diagnostics.Debugger.IsAttached)
+      #   System.Diagnostics.Debugger.Break();
+      # return "";
+    </macro>
+    <macro name="Break" condition="bool">
+      # if (condition && System.Diagnostics.Debugger.IsAttached)
+      #   System.Diagnostics.Debugger.Break();
+      # return "";
+    </macro>
 
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <use content="head"/>

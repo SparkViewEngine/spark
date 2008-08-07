@@ -1,17 +1,7 @@
-﻿using System;
-using System.Data;
-using System.Configuration;
-using System.Linq;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 using MvcContrib.SparkViewEngine;
+using Spark;
 
 namespace NorthwindDemo
 {
@@ -19,7 +9,16 @@ namespace NorthwindDemo
     {
         public static void RegisterControllerFactory(ControllerBuilder builder)
         {
-            builder.SetControllerFactory(new SparkControllerFactory());
+            var settings = new SparkSettings()
+                .SetDebug(true)
+                .AddNamespace("System")
+                .AddNamespace("System.Collections.Generic")
+                .AddNamespace("System.Linq")
+                .AddNamespace("System.Web.Mvc")
+                .AddNamespace("NorthwindDemo.Models")
+                .AddNamespace("NorthwindDemo.Views.Helpers");
+
+            builder.SetControllerFactory(new SparkControllerFactory { Settings = settings });
         }
 
         public static void RegisterRoutes(RouteCollection routes)

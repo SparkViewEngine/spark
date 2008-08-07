@@ -16,12 +16,18 @@ namespace MvcContrib.SparkViewEngine
         }
 
         public SparkViewFactory(IViewSourceLoader viewSourceLoader)
+            : this(null, viewSourceLoader)
+        {
+        }
+
+        public SparkViewFactory(ISparkSettings settings, IViewSourceLoader viewSourceLoader)
         {
             _viewSourceLoaderWrapper = new ViewSourceLoaderWrapper(viewSourceLoader);
 
-            Engine = new Spark.SparkViewEngine(
-                typeof(SparkView),
-                _viewSourceLoaderWrapper);
+            Engine = new Spark.SparkViewEngine(settings, _viewSourceLoaderWrapper)
+            {
+                BaseClass = typeof(SparkView).FullName
+            };
         }
 
         private readonly ViewSourceLoaderWrapper _viewSourceLoaderWrapper;
@@ -103,6 +109,6 @@ namespace MvcContrib.SparkViewEngine
                 }
             }
             return descriptor;
-        }        
+        }
     }
 }

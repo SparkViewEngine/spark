@@ -48,7 +48,9 @@ namespace Spark
         public SparkViewEngine(ISparkSettings settings, IViewFolder viewFolder)
             : this()
         {
-            Settings = settings;
+            if (settings != null)
+                Settings = settings;
+
             ViewFolder = viewFolder;
         }
 
