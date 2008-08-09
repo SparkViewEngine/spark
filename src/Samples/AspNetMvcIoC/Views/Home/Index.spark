@@ -1,0 +1,7 @@
+﻿<viewdata Products="IList[[Product]]" Intro="string"/>
+
+<h3>${H(Intro)}</h3>
+
+<ul each="var product in Products">
+  <li class="${new[]{'even','odd'}[productIndex%2]}">${H(product.Name)}</li>
+</ul>

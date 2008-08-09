@@ -1,0 +1,9 @@
+﻿<html>
+  <head>
+    <global type="string" Title="'IoC Demo'"/>
+    <title>${Title}</title>
+  </head>
+  <body>
+    <use content="view"/>
+  </body>
+</html>
