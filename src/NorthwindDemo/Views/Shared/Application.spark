@@ -2,15 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-
-
     <global Title='"Northwind MVC Demo"' type='string'/>
     <title>${Title}</title>
     <macro name="PageTitle" caption="string">
       <set Title='string.Format("{0} - {1}", caption, Title)'/>
       <h2>${Html.Encode(caption)}</h2>
     </macro>
-    
     <macro name="Break">
       # if (System.Diagnostics.Debugger.IsAttached)
       #   System.Diagnostics.Debugger.Break();
@@ -21,15 +18,11 @@
       #   System.Diagnostics.Debugger.Break();
       # return "";
     </macro>
-
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <use content="head"/>
-
   </head>
-
   <body>
     <div class="page">
-
       <div id="header">
         <p id="logo">
           <a href="~/">Spark &bull; Northwind MVC Demo</a>
@@ -41,7 +34,6 @@
           <use content="menu"/>
         </ul>
       </div>
-
       <div id="main">
         <div id="content">
           <use content="view"/>
@@ -52,14 +44,11 @@
           </p>
           <p>
             ${Html.ActionLink[[HomeController]](
-              c=>c.ViewGeneratedSource(GeneratedViewId),
+            c=>c.ViewGeneratedSource(GeneratedViewId),
             "View generated source")}
           </p>
         </div>
       </div>
-
-
-
     </div>
   </body>
 </html>

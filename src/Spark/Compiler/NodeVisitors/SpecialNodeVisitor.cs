@@ -35,9 +35,6 @@ namespace Spark.Compiler.NodeVisitors
         private IList<Node> _nodes = new List<Node>();
         private readonly Stack<IList<Node>> _stack = new Stack<IList<Node>>();
 
-
-
-
         public SpecialNodeVisitor(IList<string> partialFileNames, ISparkExtensionFactory extensionFactory)
         {
             _containingNames = new List<string>(new[] { "var", "def", "for", "use", "content", "test", "if", "else", "elseif", "macro" });

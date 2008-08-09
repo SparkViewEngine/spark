@@ -34,6 +34,9 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(SendLiteralChunk chunk)
         {
+            if (string.IsNullOrEmpty(chunk.Text))
+                return;
+
             _source.Append(' ', Indent).AppendLine("Output.Write(\"" + chunk.Text.Replace("\\", "\\\\").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\");");
         }
 

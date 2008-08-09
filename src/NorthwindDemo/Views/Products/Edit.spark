@@ -1,12 +1,7 @@
-﻿
-<viewdata model="ProductsEditViewData"/>
-
+﻿<viewdata model="ProductsEditViewData"/>
 ${PageTitle(ViewData.Model.Product.ProductName)}
-
 <CategoryMenuItems category="ViewData.Model.Product.Category"/>
-
 <form action="<%= Url.Action("update", new { ID=ViewData.Model.Product.ProductID }) %>" method="post">
-
     <table>        
         <tr if='ViewData.ContainsKey("ErrorMessage")'>
             <td colspan="2">
@@ -17,26 +12,19 @@ ${PageTitle(ViewData.Model.Product.ProductName)}
             <td><%= Html.Label("Name:", "ProductName") %></td>
             <td><%= Html.TextBox("ProductName", (string)ViewData["ProductName"] ?? ViewData.Model.Product.ProductName) %></td>
         </tr>
-
         <tr>
             <td>Category:</td>
             <td><%= Html.DropDownList("CategoryID") %></td>
         </tr>
-
         <tr>
             <td>Supplier:</td>
             <td><%= Html.DropDownList("SupplierID")%></td>
         </tr>
-
         <tr>
             <td><%= Html.Label("Unit Price:", "UnitPrice") %></td>
             <td><%= Html.TextBox("UnitPrice", (string)ViewData["UnitPrice"] ?? ViewData.Model.Product.UnitPrice.ToString()) %></td>
         </tr>
-        
     </table>
-
     <p></p>
-
     <input type="submit" value="Save" /> <%= Html.ActionLink("cancel", "List", new { id = ViewData.Model.Product.Category.CategoryName })%>
 </form>
-

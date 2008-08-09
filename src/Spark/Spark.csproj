@@ -65,6 +65,7 @@
     <Compile Include="Compiler\NodeVisitors\ConditionalAttributeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\INodeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\NodeVisitor.cs" />
+    <Compile Include="Compiler\NodeVisitors\OmitExtraLinesVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\TestElseElementVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\ForEachAttributeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\AbstractNodeVisitor.cs" />

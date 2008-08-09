@@ -36,8 +36,11 @@ namespace Spark.Parser.Syntax
             var conditionalAttributeVisitor = new ConditionalAttributeVisitor();
             conditionalAttributeVisitor.Accept(forEachAttributeVisitor.Nodes);
 
+            var omitExtraLinesVisitor = new OmitExtraLinesVisitor();
+            omitExtraLinesVisitor.Accept(conditionalAttributeVisitor.Nodes);
+
             var testElseElementVisitor = new TestElseElementVisitor();
-            testElseElementVisitor.Accept(conditionalAttributeVisitor.Nodes);
+            testElseElementVisitor.Accept(omitExtraLinesVisitor.Nodes);
 
             var urlAttributeVisitor = new UrlAttributeVisitor();
             urlAttributeVisitor.Accept(testElseElementVisitor.Nodes);

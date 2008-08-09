@@ -1,12 +1,6 @@
-﻿
-<viewdata 
-  model="IList[[Product]]" 
-  CategoryName="string"/>
-
+﻿<viewdata model="IList[[Product]]"  CategoryName="string"/>
 ${PageTitle(CategoryName)}
-
 <CategoryMenuItems category="ViewData.Model.Select(p=>p.Category).FirstOrDefault()"/>
-
 <ul class="productlist">
   <var styles='new[] {"odd", "even"}'/>
   <li each="var product in ViewData.Model" class="${styles[productIndex%2]}">
@@ -22,4 +16,3 @@ ${PageTitle(CategoryName)}
     <div style="clear:both;"></div>
   </li>
 </ul>
-
