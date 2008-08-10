@@ -15,14 +15,12 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Spark.Parser;
 using Spark.Parser.Markup;
 using NUnit.Framework;
 
-namespace Spark.Tests
+namespace Spark.Tests.Parser
 {
     [TestFixture]
     public class MarkupGrammarTester
@@ -45,10 +43,10 @@ namespace Spark.Tests
         {
             ParseAction<char> digit =
                 delegate(Position input)
-                {
-                    if (input.PotentialLength() == 0 || !char.IsDigit(input.Peek())) return null;
-                    return new ParseResult<char>(input.Advance(1), input.Peek());
-                };
+                    {
+                        if (input.PotentialLength() == 0 || !char.IsDigit(input.Peek())) return null;
+                        return new ParseResult<char>(input.Advance(1), input.Peek());
+                    };
 
             var digits = digit.Rep();
 
@@ -74,7 +72,7 @@ namespace Spark.Tests
             Assert.AreEqual("lt", result.Value.Name);
 
             var result2 = grammar.EntityRef(Source("&lt;world"));
-            Assert.AreEqual("lt", result.Value.Name);
+            Assert.AreEqual("lt", result2.Value.Name);
 
             var result3 = grammar.EntityRef(Source("hello&lt;world"));
             Assert.IsNull(result3);
@@ -278,23 +276,23 @@ namespace Spark.Tests
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
-            var code = result.Value[2] as ExpressionNode;
+            var code = (ExpressionNode)result.Value[2];
             Assert.AreEqual("bar", code.Code);
 
             result = grammar.Nodes(Source("<hello>foo<%=baaz%>ex</hello>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
-            var code2 = result.Value[2] as ExpressionNode;
+            var code2 = (ExpressionNode)result.Value[2];
             Assert.AreEqual("baaz", code2.Code);
 
             result = grammar.Nodes(Source("<hello href='${one}' class=\"<%=two%>\"/>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ElementNode), result.Value[0]);
-            var elt = result.Value[0] as ElementNode;
-            Assert.AreEqual("one", (elt.Attributes[0].Nodes[0] as ExpressionNode).Code);
-            Assert.AreEqual("two", (elt.Attributes[1].Nodes[0] as ExpressionNode).Code);
+            var elt = (ElementNode)result.Value[0];
+            Assert.AreEqual("one", ((ExpressionNode)elt.Attributes[0].Nodes[0]).Code);
+            Assert.AreEqual("two", ((ExpressionNode)elt.Attributes[1].Nodes[0]).Code);
 
         }
 

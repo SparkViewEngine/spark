@@ -1,0 +1,17 @@
+﻿<div class="xbox">
+  <b class="xtop">
+    <b class="xb1"/>
+    <b class="xb2"/>
+    <b class="xb3"/>
+    <b class="xb4"/>
+  </b>
+  <div class="xboxcontent">
+    <render/>
+  </div>
+  <b class="xbottom">
+    <b class="xb4"/>
+    <b class="xb3"/>
+    <b class="xb2"/>
+    <b class="xb1"/>
+  </b>
+</div>

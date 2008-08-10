@@ -170,6 +170,22 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void UsingPartialWithRenderElement()
+        {
+            mocks.ReplayAll();
+
+            factory.RenderView(MakeViewContext("usingpartial-render-element", null));
+
+            mocks.VerifyAll();
+            string content = sb.ToString();
+            Assert.That(content.Contains("<li>Partial where x=\"zero\"</li>"));
+            Assert.That(content.Contains("<li>Partial where x=\"one\"</li>"));
+            Assert.That(content.Contains("<li>Partial where x=\"two\"</li>"));
+            Assert.That(content.Contains("<li>Partial where x=\"three\"</li>"));
+            Assert.That(content.Contains("<li>Partial where x=\"four\"</li>"));
+        }
+
+        [Test]
         public void UsingPartialFileImplicit()
         {
             mocks.ReplayAll();
@@ -503,6 +519,58 @@ namespace Spark.Tests
             var viewContext = MakeViewContext("addviewdatadifferenttypes", null, viewData);
             factory.RenderView(viewContext);
             mocks.VerifyAll();
+        }
+
+        [Test]
+        public void RenderPartialWithContainedContent()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("render-partial-with-contained-content", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                "xbox",
+                "xtop",
+                "xb1",
+                "xb2",
+                "xb3",
+                "xb4",
+                "xboxcontent",
+                "Hello World",
+                "xbottom",
+                "xb4",
+                "xb3",
+                "xb2",
+                "xb1");
+        }
+
+        [Test]
+        public void CaptureContentAsVariable()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("capture-content-as-variable", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                "new-var-new-def-set-var");
+        }
+
+
+        [Test]
+        public void CaptureContentBeforeAndAfter()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("capture-content-before-and-after", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                "<p>beforedataafter</p>");
         }
     }
 }

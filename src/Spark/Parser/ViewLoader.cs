@@ -143,7 +143,13 @@ namespace Spark.Parser
                 var referencePath = ResolveReference(viewPath, useFile.Name);
 
                 if (!string.IsNullOrEmpty(referencePath))
+                {
                     useFile.FileContext = BindEntry(referencePath).FileContext;
+                }
+                else
+                {
+                    int x = 5;
+                }
             }
         }
 

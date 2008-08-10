@@ -17,7 +17,7 @@
 using Spark.Parser;
 using NUnit.Framework;
 
-namespace Spark.Tests
+namespace Spark.Tests.Parser
 {
     [TestFixture, Category("SparkViewEngine")]
     public class PositionTester
@@ -117,7 +117,7 @@ namespace Spark.Tests
             position = position.Advance(1);
             Assert.AreEqual(9, position.Column);
 
-            position = position = new Position(new SourceContext("\t   \t \tx"));
+            position = new Position(new SourceContext("\t   \t \tx"));
             Assert.AreEqual(1, position.Column);
             position = position.Advance(1);
             Assert.AreEqual(5, position.Column);
@@ -129,7 +129,7 @@ namespace Spark.Tests
             Assert.AreEqual(8, position.Column);
             position = position.Advance(1);
             Assert.AreEqual(9, position.Column);
-            position = position = position.Advance(1);
+            position = position.Advance(1);
             Assert.AreEqual(10, position.Column);
             position = position.Advance(1);
             Assert.AreEqual(13, position.Column);

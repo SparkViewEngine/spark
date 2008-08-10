@@ -65,6 +65,10 @@ namespace Spark.Compiler.ChunkVisitors
             {
                 Visit((ContentChunk)chunk);
             }
+            else if (chunk is ContentSetChunk)
+            {
+                Visit((ContentSetChunk)chunk);
+            }
             else if (chunk is UseContentChunk)
             {
                 Visit((UseContentChunk)chunk);
@@ -72,6 +76,10 @@ namespace Spark.Compiler.ChunkVisitors
             else if (chunk is RenderPartialChunk)
             {
                 Visit((RenderPartialChunk)chunk);
+            }
+            else if (chunk is RenderSectionChunk)
+            {
+                Visit((RenderSectionChunk)chunk);
             }
             else if (chunk is ViewDataChunk)
             {
@@ -110,6 +118,10 @@ namespace Spark.Compiler.ChunkVisitors
                 throw new CompilerException(string.Format("Unknown chunk type {0}", chunk.GetType().Name));
             }
         }
+
+        protected abstract void Visit(ContentSetChunk chunk);
+
+        protected abstract void Visit(RenderSectionChunk chunk);
 
         protected abstract void Visit(UseAssemblyChunk chunk);
 

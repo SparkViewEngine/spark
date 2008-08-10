@@ -18,7 +18,7 @@ using NUnit.Framework;
 using Spark.Parser;
 using Spark.Parser.Code;
 
-namespace Spark.Tests
+namespace Spark.Tests.Parser
 {
     [TestFixture]
     public class CodeGrammarTester

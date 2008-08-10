@@ -22,7 +22,7 @@ using Rhino.Mocks;
 using Spark.FileSystem;
 using Spark.Compiler;
 
-namespace Spark.Tests
+namespace Spark.Tests.Parser
 {
     [TestFixture]
     public class ViewLoaderTester

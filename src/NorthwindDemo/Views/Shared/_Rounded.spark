@@ -1,0 +1,20 @@
+﻿<div id="xsnazzy">
+  <b class="xtop">
+    <b class="xb1"></b>
+    <b class="xb2"></b>
+    <b class="xb3"></b>
+    <b class="xb4"></b>
+  </b>
+  #// This adds "const int extraPadding=0;" on the class
+  #// to allow the <Rounded extraPadding="0"/> to be optional
+  <global type="const int" extraPadding="0" />
+  <div class="xboxcontent" style="${extraPadding != 0 ? 'padding:' + extraPadding + 'px' : ''}">
+    <render/>
+  </div>
+  <b class="xbottom">
+    <b class="xb4"></b>
+    <b class="xb3"></b>
+    <b class="xb2"></b>
+    <b class="xb1"></b>
+  </b>
+</div>

@@ -1,11 +1,11 @@
 ﻿<ul>
   <var x='"zero"'>
-    <use file='partial'/>
+    <render partial='partial'/>
   </var>
   <for each='var x in new[] {"one","two","three"}'>
-    <use file='partial'/>
+    <render partial='partial'/>
   </for>
   <var x='"four"'>
-    <use file='partial'/>
+    <render partial='partial'/>
   </var>
 </ul>

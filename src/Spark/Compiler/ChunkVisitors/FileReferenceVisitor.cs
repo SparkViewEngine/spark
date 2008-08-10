@@ -30,6 +30,7 @@ namespace Spark.Compiler.ChunkVisitors
         protected override void Visit(RenderPartialChunk chunk)
         {
             References.Add(chunk);
+            Accept(chunk.Body);
         }
     }
 }

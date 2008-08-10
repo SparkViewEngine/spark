@@ -11,12 +11,10 @@
     <macro name="Break">
       # if (System.Diagnostics.Debugger.IsAttached)
       #   System.Diagnostics.Debugger.Break();
-      # return "";
     </macro>
     <macro name="Break" condition="bool">
       # if (condition && System.Diagnostics.Debugger.IsAttached)
       #   System.Diagnostics.Debugger.Break();
-      # return "";
     </macro>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <use content="head"/>

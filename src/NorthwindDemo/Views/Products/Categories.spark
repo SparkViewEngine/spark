@@ -5,10 +5,11 @@ ${PageTitle("Browse Products")}
 
 <CategoryMenuItems category="(Category)null"/>
 
-<ul class="categorylisting">
-  <var styles='new[] {"odd", "even"}'/>
-  <li each="var category in ViewData.Model"  id="${category.CategoryName}" class='${styles[categoryIndex % 2]}'>
-    <%= Html.ActionLink(category.CategoryName, "List", new { id=category.CategoryName })%>
-  </li>
-</ul>
-
+<Rounded>
+  <ul class="categorylisting">
+    <var styles='new[] {"odd", "even"}'/>
+    <li each="var category in ViewData.Model"  id="${category.CategoryName}" class='${styles[categoryIndex % 2]}'>
+      <%= Html.ActionLink(category.CategoryName, "List", new { id=category.CategoryName })%>
+    </li>
+  </ul>
+</Rounded>

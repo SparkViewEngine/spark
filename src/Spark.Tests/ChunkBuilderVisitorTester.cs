@@ -24,7 +24,7 @@ using NUnit.Framework;
 namespace Spark.Tests
 {
     [TestFixture]
-    public class ChunkBuilderVisitorTester
+    public class ChunkBuilderVisitorTester : BaseVisitorTester
     {
         [Test]
         public void MakeLiteralChunk()
@@ -69,5 +69,20 @@ namespace Spark.Tests
             Assert.AreEqual("<!DOCTYPE html><!DOCTYPE html2 SYSTEM \"my-'system'-id\"><!DOCTYPE html3 PUBLIC \"my-public-id\" 'my-\"other\"system-id'>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
         }
 
+        [Test]
+        public void RenderPartialContainsChunks()
+        {
+            var nodes = ParseNodes(
+                "<foo>hello</foo>",
+                new SpecialNodeVisitor(new[] { "foo" }, null));
+
+            var visitor = new ChunkBuilderVisitor();
+            visitor.Accept(nodes);
+            Assert.AreEqual(1, visitor.Chunks.Count);
+            var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];
+            Assert.AreEqual(1, renderPartial.Body.Count);
+            var literal = (SendLiteralChunk)renderPartial.Body[0];
+            Assert.AreEqual("hello", literal.Text);
+        }
     }
 }

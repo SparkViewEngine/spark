@@ -54,18 +54,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseVisitorTester.cs" />
     <Compile Include="ChunkBuilderVisitorTester.cs" />
-    <Compile Include="CodeGrammarTester.cs" />
+    <Compile Include="Parser\CodeGrammarTester.cs" />
     <Compile Include="CompiledViewHolderTester.cs" />
     <Compile Include="ConditionalAttributeVisitorTester.cs" />
-    <Compile Include="CSharpSyntaxProviderTester.cs" />
+    <Compile Include="Parser\CSharpSyntaxProviderTester.cs" />
     <Compile Include="FileSystemViewFolderTester.cs" />
     <Compile Include="InMemoryViewFolderTester.cs" />
-    <Compile Include="MarkupGrammarTester.cs" />
+    <Compile Include="Parser\MarkupGrammarTester.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="OmitExtraLinesVisitorTester.cs" />
-    <Compile Include="PositionTester.cs" />
+    <Compile Include="Parser\PositionTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkExtensionTester.cs" />
     <Compile Include="SparkSectionHandlerTester.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="Stubs\StubViewContext.cs" />
     <Compile Include="Stubs\StubViewFactory.cs" />
     <Compile Include="ViewCompilerTester.cs" />
-    <Compile Include="ViewLoaderTester.cs" />
+    <Compile Include="Parser\ViewLoaderTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj">
@@ -188,6 +189,23 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\Shared\_UsePartialWithSpecialElements.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\Home\capture-content-as-variable.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Home\capture-content-before-and-after.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Home\usingpartial-render-element.spark">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Home\render-partial-with-contained-content.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Home\_Rounded.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

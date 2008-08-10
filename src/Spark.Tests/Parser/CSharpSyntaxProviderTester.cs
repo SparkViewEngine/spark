@@ -19,7 +19,7 @@ using Spark.FileSystem;
 using Spark.Parser.Syntax;
 using Spark.Tests.Stubs;
 
-namespace Spark.Tests
+namespace Spark.Tests.Parser
 {
     [TestFixture]
     public class CSharpSyntaxProviderTester
@@ -39,10 +39,8 @@ namespace Spark.Tests
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
                 "Spark.Tests.Stubs.StubSparkView",
-                new FileSystemViewFolder("Views"));
-
-            // replace the default grammar
-            engine.SyntaxProvider = _syntax;
+                new FileSystemViewFolder("Views")) 
+                {SyntaxProvider = _syntax};
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();
@@ -63,10 +61,8 @@ namespace Spark.Tests
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
                 "Spark.Tests.Stubs.StubSparkView",
-                new FileSystemViewFolder("Views"));
-
-            // replace the default grammar
-            engine.SyntaxProvider = _syntax;
+                new FileSystemViewFolder("Views")) 
+                {SyntaxProvider = _syntax};
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();

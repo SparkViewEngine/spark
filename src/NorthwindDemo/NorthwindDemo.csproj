@@ -196,6 +196,7 @@
     <None Include="Models\Northwind.dbml.layout">
       <DependentUpon>Northwind.dbml</DependentUpon>
     </None>
+    <None Include="Views\Shared\_Rounded.spark" />
     <Content Include="Views\Home\Index.spark" />
     <Content Include="Views\Home\ViewGeneratedSource.spark" />
     <Content Include="Views\Products\Categories.spark" />

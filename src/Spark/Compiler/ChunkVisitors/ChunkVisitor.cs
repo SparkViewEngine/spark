@@ -47,6 +47,17 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(RenderPartialChunk chunk)
         {
+            Accept(chunk.Body);
+        }
+
+        protected override void Visit(ContentSetChunk chunk)
+        {
+            Accept(chunk.Body);
+        }
+
+        protected override void Visit(RenderSectionChunk chunk)
+        {
+            
         }
 
         protected override void Visit(ViewDataChunk chunk)

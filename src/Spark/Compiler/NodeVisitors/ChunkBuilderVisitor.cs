@@ -26,7 +26,7 @@ namespace Spark.Compiler.NodeVisitors
     public class ChunkBuilderVisitor : AbstractNodeVisitor
     {
         public IList<Chunk> Chunks { get; set; }
-        private IDictionary<string, Action<SpecialNode, SpecialNodeInspector>> _specialNodeMap;
+        private readonly IDictionary<string, Action<SpecialNode, SpecialNodeInspector>> _specialNodeMap;
 
         public ChunkBuilderVisitor()
         {
@@ -43,15 +43,17 @@ namespace Spark.Compiler.NodeVisitors
                                       {"if", VisitIf},
                                       {"else", (n,i)=>VisitElse(i)},
                                       {"elseif", VisitElseIf},
-                                      {"content", (n,i)=>VisitContent(n)},
+                                      {"content", (n,i)=>VisitContent(i)},
                                       {"use", VisitUse},
                                       {"macro", (n,i)=>VisitMacro(i)},
+                                      {"render", VisitRender}
                                   };
         }
 
+
         public override IList<Node> Nodes
         {
-            get { throw new System.NotImplementedException(); }
+            get { throw new NotImplementedException(); }
         }
 
         protected override void Visit(TextNode textNode)
@@ -177,7 +179,7 @@ namespace Spark.Compiler.NodeVisitors
             try
             {
                 var action = _specialNodeMap[specialNode.Element.Name];
-                action(specialNode, new SpecialNodeInspector(specialNode));                
+                action(specialNode, new SpecialNodeInspector(specialNode));
             }
             finally
             {
@@ -228,12 +230,14 @@ namespace Spark.Compiler.NodeVisitors
 
                 var useFileChunk = new RenderPartialChunk { Name = file.Value };
                 Chunks.Add(useFileChunk);
+                Chunks = useFileChunk.Body;
+                Accept(inspector.Body);
             }
             else if (namespaceAttr != null || assemblyAttr != null)
             {
                 if (namespaceAttr != null)
                 {
-                    var useNamespaceChunk = new UseNamespaceChunk {Namespace = namespaceAttr.Value};
+                    var useNamespaceChunk = new UseNamespaceChunk { Namespace = namespaceAttr.Value };
                     AddUnordered(useNamespaceChunk);
                 }
                 if (assemblyAttr != null)
@@ -248,14 +252,92 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
-        private void VisitContent(SpecialNode specialNode)
+        private void VisitRender(SpecialNode node, SpecialNodeInspector inspector)
         {
-            var nameAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "name");
+            var partial = inspector.TakeAttribute("partial");
 
-            var contentChunk = new ContentChunk { Name = nameAttr.Value };
-            Chunks.Add(contentChunk);
-            Chunks = contentChunk.Body;
-            Accept(specialNode.Body);
+            if (partial != null)
+            {
+                var scope = new ScopeChunk();
+                Chunks.Add(scope);
+                Chunks = scope.Body;
+
+                foreach (var attr in inspector.Attributes)
+                {
+                    Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.AsCode() });
+                }
+
+                var renderPartial = new RenderPartialChunk { Name = partial.Value };
+                Chunks.Add(renderPartial);
+
+                Chunks = renderPartial.Body;
+                Accept(inspector.Body);
+            }
+            else
+            {
+                var scope = new ScopeChunk();
+                Chunks.Add(scope);
+                Chunks = scope.Body;
+
+                foreach (var attr in inspector.Attributes)
+                {
+                    Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.AsCode() });
+                }
+                var render = new RenderSectionChunk();
+                Chunks.Add(render);
+            }
+        }
+
+        private void VisitContent(SpecialNodeInspector inspector)
+        {
+            var nameAttr = inspector.TakeAttribute("name");
+            var varAttr = inspector.TakeAttribute("var");
+            var defAttr = inspector.TakeAttribute("def");
+            var setAttr = inspector.TakeAttribute("set");
+
+            if (nameAttr != null)
+            {
+                var contentChunk = new ContentChunk { Name = nameAttr.Value };
+                Chunks.Add(contentChunk);
+                Chunks = contentChunk.Body;
+                Accept(inspector.Body);
+            }
+            else if (varAttr != null || defAttr != null)
+            {
+                var variableChunk = new LocalVariableChunk { Name = (varAttr ?? defAttr).AsCode(), Type = "string"};
+                Chunks.Add(variableChunk);
+
+                var contentSetChunk = new ContentSetChunk { Variable = variableChunk.Name };
+                Chunks.Add(contentSetChunk);
+                Chunks = contentSetChunk.Body;
+                Accept(inspector.Body);
+            }
+            else if (setAttr != null)
+            {
+                var addAttr = inspector.TakeAttribute("add");
+
+                var contentSetChunk = new ContentSetChunk { Variable = setAttr.AsCode() };
+
+                if (addAttr != null)
+                {
+                    if (addAttr.Value == "before")
+                        contentSetChunk.AddType = ContentAddType.InsertBefore;
+                    else if (addAttr.Value == "after")
+                        contentSetChunk.AddType = ContentAddType.AppendAfter;
+                    else if (addAttr.Value == "replace")
+                        contentSetChunk.AddType = ContentAddType.Replace;
+                    else
+                        throw new CompilerException("add attribute must be 'before', 'after', or 'replace");
+                }
+
+                Chunks.Add(contentSetChunk);
+                Chunks = contentSetChunk.Body;
+                Accept(inspector.Body);
+            }
+            else
+            {
+                throw new CompilerException("content element must have name, var, def, or set attribute");
+            }
         }
 
         private void VisitIf(SpecialNode specialNode, SpecialNodeInspector inspector)
@@ -280,7 +362,6 @@ namespace Spark.Compiler.NodeVisitors
                 var elseChunk = new ConditionalChunk { Type = ConditionalType.Else };
                 Chunks.Add(elseChunk);
                 Chunks = elseChunk.Body;
-
             }
             else
             {
@@ -360,7 +441,7 @@ namespace Spark.Compiler.NodeVisitors
                 Chunks = scope.Body;
             }
 
-            var typeAttr = inspector.TakeAttribute("var");
+            var typeAttr = inspector.TakeAttribute("type");
             string type = typeAttr != null ? typeAttr.AsCode() : "var";
 
             foreach (var attr in inspector.Attributes)
@@ -420,6 +501,8 @@ namespace Spark.Compiler.NodeVisitors
                 Chunks = prior;
             }
         }
+
+
 
     }
 }

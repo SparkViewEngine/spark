@@ -94,9 +94,21 @@ namespace Spark.Compiler
 
     public class RenderPartialChunk : Chunk
     {
+        public RenderPartialChunk()
+        {
+            Body = new List<Chunk>();
+        }
+
         public string Name { get; set; }
 
         public FileContext FileContext { get; set; }
+
+        public IList<Chunk> Body { get; set; }
+    }
+
+    public class RenderSectionChunk : Chunk
+    {
+        public string Name { get; set; }
     }
 
     public class UseNamespaceChunk : Chunk
@@ -117,6 +129,25 @@ namespace Spark.Compiler
         }
         public string Name { get; set; }
         public IList<Chunk> Body { get; set; }
+    }
+
+    public enum ContentAddType
+    {
+        Replace,
+        InsertBefore,
+        AppendAfter
+    }
+
+    public class ContentSetChunk : Chunk
+    {
+        public ContentSetChunk()
+        {
+            Body = new List<Chunk>();
+            AddType = ContentAddType.Replace;
+        }
+        public string Variable { get; set; }
+        public IList<Chunk> Body { get; set; }
+        public ContentAddType AddType { get; set; }
     }
 
     public class ForEachChunk : Chunk

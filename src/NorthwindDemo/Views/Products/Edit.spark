@@ -1,7 +1,8 @@
 ﻿<viewdata model="ProductsEditViewData"/>
 ${PageTitle(ViewData.Model.Product.ProductName)}
 <CategoryMenuItems category="ViewData.Model.Product.Category"/>
-<form action="<%= Url.Action("update", new { ID=ViewData.Model.Product.ProductID }) %>" method="post">
+<Rounded extraPadding="10">
+  <form action="<%= Url.Action("update", new { ID=ViewData.Model.Product.ProductID }) %>" method="post">
     <table>        
         <tr if='ViewData.ContainsKey("ErrorMessage")'>
             <td colspan="2">
@@ -27,4 +28,5 @@ ${PageTitle(ViewData.Model.Product.ProductName)}
     </table>
     <p></p>
     <input type="submit" value="Save" /> <%= Html.ActionLink("cancel", "List", new { id = ViewData.Model.Product.Category.CategoryName })%>
-</form>
+  </form>
+</Rounded>

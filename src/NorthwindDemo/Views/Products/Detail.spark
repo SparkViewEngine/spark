@@ -4,7 +4,6 @@
 ${PageTitle(ViewData.Model.ProductName)}
 
 <CategoryMenuItems category="ViewData.Model.Category"/>
-
 <table class="productdetail">
 
   <tr>
@@ -35,4 +34,3 @@ ${PageTitle(ViewData.Model.ProductName)}
   </tr>
 
 </table>
-
