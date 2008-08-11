@@ -1,0 +1,4 @@
+﻿<div>
+  <UsePartialWithSpecialElements/>
+  ${HelloWorld()}
+</div>

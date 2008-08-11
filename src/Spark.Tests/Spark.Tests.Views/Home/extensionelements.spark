@@ -1,0 +1,17 @@
+﻿<div>
+  <h1>Extension element</h1>
+  <p>
+    <unittest/>
+  </p>
+  <p>
+    <unittest></unittest>
+  </p>
+  <p>
+    <unittest foo="34"></unittest>
+  </p>
+  <p>
+    <unittest>
+      <span>hello</span>
+    </unittest>
+  </p>
+</div>
