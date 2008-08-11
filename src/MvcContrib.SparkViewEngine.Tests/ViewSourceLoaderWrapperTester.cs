@@ -16,7 +16,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 		[Test]
 		public void ResultsAreTheSame()
 		{
-			IViewSourceLoader loader = new FileSystemViewSourceLoader("Views");
+			IViewSourceLoader loader = new FileSystemViewSourceLoader("AspNetMvc.Tests.Views");
 			IViewFolder wrapper = new ViewSourceLoaderWrapper(loader);
 
             Assert.AreEqual(loader.HasView("Home\\foreach.spark"), wrapper.HasView("Home\\foreach.spark"));

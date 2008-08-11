@@ -30,7 +30,7 @@ namespace Spark.Tests
         [SetUp]
         public void Init()
         {
-            _viewFolder = new FileSystemViewFolder("Views");
+            _viewFolder = new FileSystemViewFolder("Spark.Tests.Views");
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Spark.Tests
 
             Assert.AreEqual(lastModified1, lastModified2);
 
-            File.SetLastWriteTimeUtc("Views\\Home\\foreach.spark", DateTime.UtcNow);
+            File.SetLastWriteTimeUtc("Spark.Tests.Views\\Home\\foreach.spark", DateTime.UtcNow);
             var lastModified3 = viewSource.LastModified;
 
             Assert.AreNotEqual(lastModified1, lastModified3);

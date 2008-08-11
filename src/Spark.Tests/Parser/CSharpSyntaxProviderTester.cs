@@ -29,7 +29,7 @@ namespace Spark.Tests.Parser
         [Test]
         public void CanParseSimpleFile()
         {
-            var result = _syntax.GetChunks("Home\\childview.spark", new FileSystemViewFolder("Views"), null);
+            var result = _syntax.GetChunks("Home\\childview.spark", new FileSystemViewFolder("Spark.Tests.Views"), null);
             Assert.IsNotNull(result);
         }
 
@@ -39,7 +39,7 @@ namespace Spark.Tests.Parser
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
                 "Spark.Tests.Stubs.StubSparkView",
-                new FileSystemViewFolder("Views")) 
+                new FileSystemViewFolder("Spark.Tests.Views")) 
                 {SyntaxProvider = _syntax};
 
             // describe and instantiate view
@@ -61,7 +61,7 @@ namespace Spark.Tests.Parser
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
                 "Spark.Tests.Stubs.StubSparkView",
-                new FileSystemViewFolder("Views")) 
+                new FileSystemViewFolder("Spark.Tests.Views")) 
                 {SyntaxProvider = _syntax};
 
             // describe and instantiate view

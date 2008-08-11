@@ -161,6 +161,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
+    <Compile Include="Hello.ascx.cs">
+      <DependentUpon>Hello.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Hello.ascx.designer.cs">
+      <DependentUpon>Hello.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Northwind1.designer.cs">
       <AutoGen>True</AutoGen>
@@ -197,6 +204,7 @@
       <DependentUpon>Northwind.dbml</DependentUpon>
     </None>
     <None Include="Views\Shared\_Rounded.spark" />
+    <Content Include="Hello.ascx" />
     <Content Include="Views\Home\Index.spark" />
     <Content Include="Views\Home\ViewGeneratedSource.spark" />
     <Content Include="Views\Products\Categories.spark" />

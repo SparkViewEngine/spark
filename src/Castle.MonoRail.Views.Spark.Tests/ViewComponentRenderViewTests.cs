@@ -37,7 +37,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             mocks = new MockRepository();
 
             var services = new MockServices();
-            services.ViewSourceLoader = new FileAssemblyViewSourceLoader("Views");
+            services.ViewSourceLoader = new FileAssemblyViewSourceLoader("MonoRail.Tests.Views");
             services.AddService(typeof(IViewSourceLoader), services.ViewSourceLoader);
 
             viewComponentFactory = new DefaultViewComponentFactory();

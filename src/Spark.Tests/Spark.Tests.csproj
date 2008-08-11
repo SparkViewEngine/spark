@@ -86,126 +86,126 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Views\Code\foreach.spark">
+    <None Include="Spark.Tests.Views\Code\foreach.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Code\simplecode.spark">
+    <None Include="Spark.Tests.Views\Code\simplecode.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\addviewdatamorethanonce.spark">
+    <None Include="Spark.Tests.Views\Home\addviewdatamorethanonce.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\childview.spark">
+    <None Include="Spark.Tests.Views\Home\childview.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\addviewdatadifferenttypes.spark">
+    <None Include="Spark.Tests.Views\Home\addviewdatadifferenttypes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\expression-has-verbatim-strings.spark">
+    <None Include="Spark.Tests.Views\Home\expression-has-verbatim-strings.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\partialspecialelements.spark">
+    <None Include="Spark.Tests.Views\Home\partialspecialelements.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\relativeapplicationpaths.spark">
+    <None Include="Spark.Tests.Views\Home\relativeapplicationpaths.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\statement-terminating-strings.spark">
+    <None Include="Spark.Tests.Views\Home\statement-terminating-strings.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\testelementnested.spark">
+    <None Include="Spark.Tests.Views\Home\testelementnested.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\eachattribute.spark">
+    <None Include="Spark.Tests.Views\Home\eachattribute.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\elseifattribute.spark">
+    <None Include="Spark.Tests.Views\Home\elseifattribute.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\elseifelement.spark">
+    <None Include="Spark.Tests.Views\Home\elseifelement.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\elseifelement2.spark">
+    <None Include="Spark.Tests.Views\Home\elseifelement2.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\extensionelements.spark">
+    <None Include="Spark.Tests.Views\Home\extensionelements.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\foreach.spark">
+    <None Include="Spark.Tests.Views\Home\foreach.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\foreachindex.spark">
+    <None Include="Spark.Tests.Views\Home\foreachindex.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\globalset.spark">
+    <None Include="Spark.Tests.Views\Home\globalset.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\helpers.spark">
+    <None Include="Spark.Tests.Views\Home\helpers.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\ifattribute.spark">
+    <None Include="Spark.Tests.Views\Home\ifattribute.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\ifelement.spark">
+    <None Include="Spark.Tests.Views\Home\ifelement.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\Index.spark">
+    <None Include="Spark.Tests.Views\Home\Index.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\macros.spark">
+    <None Include="Spark.Tests.Views\Home\macros.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\namedcontent.spark">
+    <None Include="Spark.Tests.Views\Home\namedcontent.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\testelement.spark">
+    <None Include="Spark.Tests.Views\Home\testelement.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\useassembly.spark">
+    <None Include="Spark.Tests.Views\Home\useassembly.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\usingnamespace.spark">
+    <None Include="Spark.Tests.Views\Home\usingnamespace.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\usingpartial.spark">
+    <None Include="Spark.Tests.Views\Home\usingpartial.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\usingpartialimplicit.spark">
+    <None Include="Spark.Tests.Views\Home\usingpartialimplicit.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\viewdata.spark">
+    <None Include="Spark.Tests.Views\Home\viewdata.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\_AddViewDataPartial.spark">
+    <None Include="Spark.Tests.Views\Home\_AddViewDataPartial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Shared\layout.spark">
+    <None Include="Spark.Tests.Views\Shared\layout.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Shared\partial.spark">
+    <None Include="Spark.Tests.Views\Shared\partial.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Shared\_comment.spark">
+    <None Include="Spark.Tests.Views\Shared\_comment.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Shared\_UsePartialWithSpecialElements.spark">
+    <None Include="Spark.Tests.Views\Shared\_UsePartialWithSpecialElements.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Home\capture-content-as-variable.spark">
+    <None Include="Spark.Tests.Views\Home\capture-content-as-variable.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\capture-content-before-and-after.spark">
+    <None Include="Spark.Tests.Views\Home\capture-content-before-and-after.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\usingpartial-render-element.spark">
+    <None Include="Spark.Tests.Views\Home\usingpartial-render-element.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\render-partial-with-contained-content.spark">
+    <None Include="Spark.Tests.Views\Home\render-partial-with-contained-content.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\_Rounded.spark">
+    <None Include="Spark.Tests.Views\Home\_Rounded.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

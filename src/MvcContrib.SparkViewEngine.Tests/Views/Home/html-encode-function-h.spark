@@ -1,5 +1,0 @@
-﻿<p>${H(SomeHtml())}</p>
-
-<macro name="SomeHtml">
-  <p>&lt;&gt;</p>
-</macro>

@@ -10,6 +10,7 @@
   <global type="const int" extraPadding="0" />
   <div class="xboxcontent" style="${extraPadding != 0 ? 'padding:' + extraPadding + 'px' : ''}">
     <render/>
+    #Break();
   </div>
   <b class="xbottom">
     <b class="xb4"></b>

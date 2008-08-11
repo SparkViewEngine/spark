@@ -14,9 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcContrib.SparkViewEngine", "MvcContrib.SparkViewEngine\MvcContrib.SparkViewEngine.csproj", "{286050D6-95A1-4381-93D8-93381D8AB8E2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{27EA43BF-7B12-4048-B2B8-3FC8E335FB07}"
-	ProjectSection(SolutionItems) = preProject
-		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcContrib.SparkViewEngine.Tests", "MvcContrib.SparkViewEngine.Tests\MvcContrib.SparkViewEngine.Tests.csproj", "{C8E58F51-8630-4420-8630-8E634EC8900E}"
 EndProject

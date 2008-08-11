@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--EXTERNAL_PROPERTIES: usdDatabaseVersion-->
+<!--EXTERNAL_PROPERTIES: CCNetLabel-->
+<project name="Spark" default="build" xmlns="http://nant.sf.net/release/0.85/nant.xsd">
+	<property name="solution.dir" value="src"/>
+	<property name="solution.file" value="${solution.dir}\Spark.sln"/>
+	<property name="trunk.dir" value="."/>
+	<property name="company.name" value="Louis DeJardin"/>
+	<property name="bin.dir" value="bin" />
+	<property name="build.base" value="build"/>
+	<property name="results.dir" value="${build.base}\results" />
+  <property name="samples.dir" value="${solution.dir}\samples"/>
+  <property name="version.major" value="1"/>
+	<property name="version.minor" value="0"/>
+	<property name="version.build" value="0"/>
+	<property name="version.revision" value="0"/>
+	<property name="project.fullversion" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true" />
+	<property name="nant.settings.currentframework" value="net-3.5" />
+	<property name="ncover.path" value="${bin.dir}\ncover" />
+
+  
+	<property name="package.dir" value="${build.base}\package" />
+
+	<!-- default configuration -->
+	<property name="project.config" value="release" />
+	<!-- debug|release -->
+	<property name="build.dir" value="${build.base}/${nant.settings.currentframework}.${platform::get-name()}-${project::get-name()}-${project.config}/"/>
+  <property name="out.dir" value="${project::get-base-directory()}\${build.dir}" />
+  
+	<target name="build" depends="clean, version, init, commonassemblyinfo, compile, move-for-test, test, compile-samples"/>
+	<target name="cruise" depends="build, package"/>
+  <target name="cruise-coverage" depends="analyze"/>
+	<target name="commiter" depends="build, analyze, package"/>
+
+
+	<target name="move-for-test"/>
+	<target name="compile-samples"/>
+	<target name="analyze"/>
+
+	<target name="init" description="Initializes build properties">
+		<tstamp>
+			<formatter property="datetime.buildtime" pattern="yyyy-MM-dd, HH:mm:ss" />
+		</tstamp>
+		<delete dir="${build.base}"/>
+		<mkdir dir="${build.dir}" />
+		<echo message="Current Directory: ${project::get-base-directory()}"/>
+	</target>
+	
+	<target name="clean" description="delete build artifacts">
+		<delete dir="${build.dir}" failonerror="false" />
+	</target>
+
+	<target name="version" description="mark AssemblyInfo builds with the build number">
+		<if test="${property::exists('CCNetLabel')}">
+			<property name="version.revision" value="${CCNetLabel}"/>
+		</if>
+	</target>
+
+	<target name="compile" depends="init">
+		<echo message="Build Directory is ${build.dir}" />
+		<exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+				  commandline="${solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir} /v:q" workingdir="." />
+		<exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+				  commandline="${solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir} /v:q" workingdir="." />
+	</target>
+	
+  <target name="commonassemblyinfo" depends="version, init">
+		<echo message="MARKING THIS BUILD AS VERSION ${project.fullversion}" />
+		<delete file="${solution.dir}/CommonAssemblyInfo.cs" failonerror="false"/>
+		<asminfo output="${solution.dir}/CommonAssemblyInfo.cs" language="CSharp">
+			<imports>
+				<import namespace="System" />
+				<import namespace="System.Reflection" />
+				<import namespace="System.Runtime.InteropServices" />
+			</imports>
+			<attributes>
+				<attribute type="ComVisibleAttribute" value="false" />
+				<attribute type="AssemblyVersionAttribute" value="${project.fullversion}" />
+				<attribute type="AssemblyFileVersionAttribute" value="${project.fullversion}" />
+				<attribute type="AssemblyCopyrightAttribute" value="Copyright &#x00A9; ${company.name} ${datetime::get-year(datetime::now())}" />
+				<attribute type="AssemblyProductAttribute" value="${project::get-name()}" />
+				<attribute type="AssemblyCompanyAttribute" value="${company.name}" />
+				<attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
+				<attribute type="AssemblyInformationalVersionAttribute" value="${project.fullversion}" />
+			</attributes>
+			<references>
+				<include name="System.dll" />
+			</references>
+		</asminfo>
+	</target>
+	
+	<target name="test" depends="init">
+		<delete dir="${results.dir}" if="${directory::exists('${results.dir}')}" verbose="true" />
+		<mkdir dir="${results.dir}"/>
+
+		<nunit2 failonerror="true" verbose="true">
+			<formatter type="Xml" outputdir="${results.dir}" usefile="true" extension=".xml"/>
+			<formatter type="Plain" />
+			<test assemblyname="${build.dir}/Spark.Tests.dll">
+				<categories>
+					<exclude name="Integration" />
+				</categories>
+			</test>
+			<test assemblyname="${build.dir}/MvcContrib.SparkViewEngine.Tests.dll">
+				<categories>
+					<exclude name="Integration" />
+				</categories>
+			</test>
+			<test assemblyname="${build.dir}/Castle.MonoRail.Views.Spark.Tests.dll">
+				<categories>
+					<exclude name="Integration" />
+				</categories>
+			</test>
+		</nunit2>
+	</target>
+
+
+  <target name="package">
+		<!-- 		
+			make a new dir for release.
+			include subfolders
+				bin
+					referenceDLLs
+				samples
+		-->
+		<delete dir="${package.dir}"/>
+		<mkdir dir="${package.dir}/" />
+		<mkdir dir="${package.dir}/Bin" />
+		<mkdir dir="${package.dir}/Bin/Dependencies" />
+		<mkdir dir="${package.dir}/Docs" />
+		
+		<copy todir="${package.dir}/Bin" flatten="true">
+			<fileset basedir="${out.dir}">
+        <exclude name="*Tests*"/>
+        <exclude name="*Demo*"/>
+				<include name="*spark*.dll" />
+				<include name="*spark*.pdb" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${package.dir}/Bin/Dependencies" flatten="true">
+			<fileset basedir="${bin.dir}">
+				<include name="aspnetmvc/*.*" />
+				<include name="mvccontrib/*.*" />
+      </fileset>
+    </copy>
+
+    <get src="http://dev.dejardin.org/book/export/html/4" dest="${package.dir}/Docs/index.html"/>
+
+<!--
+		<mkdir dir="${package.dir}/Samples" />
+		<copy todir="${package.dir}/Samples" >
+			<fileset basedir="${solution.dir}/">
+        <exclude name="**/bin/**"/>
+				<exclude name="**/obj/**"/>
+        <exclude name="**/samples/**"/>
+        <include name="/**samples**/**" />
+      </fileset>
+		</copy>
+
+    <copy todir="${package.dir}/Samples" >
+      <fileset basedir="${solution.dir}/Samples">
+        <exclude name="**/bin/**"/>
+        <exclude name="**/obj/**"/>
+        <exclude name="/**resharper**/**"/>
+        <include name="/**/**" />
+      </fileset>
+    </copy>
+
+    <copy todir="${package.dir}/Samples/bin" >
+      <fileset basedir="${solution.dir}/Samples/bin">
+        <include name="*.*"/>
+      </fileset>
+    </copy>
+
+    <mkdir dir="${package.dir}/Helpers/" />
+		<copy todir="${package.dir}/Helpers" >
+			<fileset basedir="extras">
+				<include name="/**/**" />
+			</fileset>
+		</copy>
+-->
+
+    <copy todir="${package.dir}" >
+      <fileset basedir=".">        
+        <include name="license.txt" />
+      </fileset>
+    </copy>
+    
+    <copy todir="${package.dir}/" >
+      <fileset basedir="./build/help">
+        <include name="*.chm" />
+      </fileset>
+    </copy>
+
+    <property name="zipdatetime" value="${datetime::get-year(datetime::now())*10000+datetime::get-month(datetime::now())*100+ datetime::get-day(datetime::now())}"/>
+
+    <zip zipfile="${build.base}/${project::get-name()}.${project.config}.${zipdatetime}.zip" includeemptydirs="false" >
+			<fileset basedir="${package.dir}/">
+        <include name="license.txt" />
+        <include name="**/*.*"/>
+				<exclude name="**/*.CodeAnalysisLog.xml"/>
+				<exclude name="**/*.lastcodeanalysissucceeded"/>
+			</fileset>
+		</zip>
+
+		<zip zipfile="${build.base}/${project::get-name()}.source.${zipdatetime}.zip" includeemptydirs="false" >
+			<fileset basedir="${trunk.dir}" >
+				<exclude name="bin/ncover/**"/>
+				<exclude name="bin/ndepend/**"/>
+				<exclude name="**/build/**"/>
+				<exclude name="src/**/bin/**"/>
+				<exclude name="**/obj/**"/>
+				<exclude name="**/*.resharper*"/>
+				<exclude name="**/*.suo"/>
+				<exclude name="**/*.cache"/>
+				<exclude name="**/*.user"/>
+				<exclude name="**/_ReSharper.*/**"/>
+				<exclude name="**/*.CodeAnalysisLog.xml"/>
+				<exclude name="**/*.lastcodeanalysissucceeded"/>
+				<include name="**/*.*"/>
+			</fileset>
+		</zip>
+	</target>
+</project>
+

@@ -1,9 +1,0 @@
-﻿<viewdata foo="string" bar="List[[string]]"/>
-
-<use namespace="System.Collections.Generic"/>
-
-<macro name="HelloWorld">
-  <p>Hi there, ${foo}.</p>
-</macro>
-
-${HelloWorld()}

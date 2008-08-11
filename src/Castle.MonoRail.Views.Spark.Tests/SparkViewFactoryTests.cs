@@ -98,7 +98,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             var urlBuilder = new DefaultUrlBuilder(server, routingEngine);
 
             var serviceProvider = mocks.CreateMock<IServiceProvider>();
-            var viewSourceLoader = new FileAssemblyViewSourceLoader("Views");
+            var viewSourceLoader = new FileAssemblyViewSourceLoader("MonoRail.Tests.Views");
             SetupResult.For(serviceProvider.GetService(typeof(IViewSourceLoader))).Return(viewSourceLoader);
             SetupResult.For(serviceProvider.GetService(typeof(ILoggerFactory))).Return(new NullLogFactory());
             SetupResult.For(serviceProvider.GetService(typeof(ISparkViewEngine))).Return(null);

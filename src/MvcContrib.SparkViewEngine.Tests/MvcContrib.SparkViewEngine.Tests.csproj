@@ -90,55 +90,55 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Home\childview.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\childview.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\foreach.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\foreach.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\globalset.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\globalset.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\helpers.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\helpers.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\html-encode-function-h.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\html-encode-function-h.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\Index.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\Index.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\macros.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\macros.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\namedcontent.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\namedcontent.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\usingnamespace.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\usingnamespace.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\usingpartial.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\usingpartial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\usingpartialimplicit.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\usingpartialimplicit.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\viewdata.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\viewdata.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\viewdatamodel.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\viewdatamodel.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\viewdatanull.spark">
+    <None Include="AspNetMvc.Tests.Views\Home\viewdatanull.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Shared\layout.spark">
+    <None Include="AspNetMvc.Tests.Views\Shared\layout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Shared\partial.spark">
+    <None Include="AspNetMvc.Tests.Views\Shared\partial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Shared\_comment.spark">
+    <None Include="AspNetMvc.Tests.Views\Shared\_comment.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

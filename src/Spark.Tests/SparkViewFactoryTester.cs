@@ -41,7 +41,7 @@ namespace Spark.Tests
             CompiledViewHolder.Current = null;
 
 
-            engine = new SparkViewEngine("Spark.Tests.Stubs.StubSparkView", new FileSystemViewFolder("Views"));
+            engine = new SparkViewEngine("Spark.Tests.Stubs.StubSparkView", new FileSystemViewFolder("Spark.Tests.Views"));
             factory = new StubViewFactory { Engine = engine };
 
             sb = new StringBuilder();

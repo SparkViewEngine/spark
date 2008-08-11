@@ -84,42 +84,42 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Components\Widget\WithExtraData.spark">
+    <None Include="MonoRail.Tests.Views\Components\Widget\WithExtraData.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Components\Widget\Default.spark">
+    <None Include="MonoRail.Tests.Views\Components\Widget\Default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\CodeStatements.spark">
+    <None Include="MonoRail.Tests.Views\Home\CodeStatements.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\ComponentCallingRenderView.spark">
+    <None Include="MonoRail.Tests.Views\Home\ComponentCallingRenderView.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\ComponentRenderViewWithParameters.spark">
+    <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewWithParameters.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\HelperModelDictionaries.spark">
+    <None Include="MonoRail.Tests.Views\Home\HelperModelDictionaries.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\Index.spark">
+    <None Include="MonoRail.Tests.Views\Home\Index.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\PropertyBagViewdata.spark">
+    <None Include="MonoRail.Tests.Views\Home\PropertyBagViewdata.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\TerseHtmlEncode.spark">
+    <None Include="MonoRail.Tests.Views\Home\TerseHtmlEncode.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Home\DiggPaginationComponent.spark">
+    <None Include="MonoRail.Tests.Views\Home\DiggPaginationComponent.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Shared\Default.spark">
+    <None Include="MonoRail.Tests.Views\Shared\Default.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Home\ComponentRenderViewWithContent.spark">
+    <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewWithContent.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

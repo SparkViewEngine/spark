@@ -59,7 +59,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             routeData.Values.Add("controller", "Home");
             routeData.Values.Add("action", "Index");
 
-            factory = new SparkViewFactory(new FileSystemViewSourceLoader("Views"));
+            factory = new SparkViewFactory(new FileSystemViewSourceLoader("AspNetMvc.Tests.Views"));
 
         }
         delegate void writedelegate(string data);
