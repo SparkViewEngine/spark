@@ -1,0 +1,7 @@
+﻿<div>
+  <p>
+    <Widget Mode="'Delta'" ExtraData="789"/>
+  </p>
+  <use content="messages"/>
+</div>
+

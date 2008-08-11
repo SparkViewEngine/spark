@@ -1,0 +1,12 @@
+﻿<div>
+
+  <% int x = 5; %>
+
+  #if(x == 5){
+  <p>was true</p>
+  #}else{
+  <p>was false</p>
+  #}
+
+</div>
+

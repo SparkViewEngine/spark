@@ -1,0 +1,10 @@
+﻿<html>
+  <head>
+    <title>Unit test</title>
+  </head>
+  <body>
+    <div id="main">
+      <use content="view"/>
+    </div>
+  </body>
+</html>
