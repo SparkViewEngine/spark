@@ -1,0 +1,2 @@
+﻿<viewdata Caption="string"/>
+<p>${Caption ?? "nothing"}</p>
