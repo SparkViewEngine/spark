@@ -29,7 +29,7 @@ namespace MvcContrib.SparkViewEngine
 			var controller = base.CreateController(requestContext, controllerName);
 			var c = controller as Controller;
 			if (c != null)
-				c.ViewEngine = new SparkViewFactory(Settings, ViewSourceLoader);
+                c.ViewEngine = new SparkViewFactory(Settings) { ViewSourceLoader = ViewSourceLoader};
 			return controller;
 		}
 	}

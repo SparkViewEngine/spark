@@ -15,6 +15,8 @@ namespace Spark
         }
 
         public bool Debug { get; set; }
+        public string PageBaseType { get; set; }
+
         public IList<string> UseNamespaces { get; set; }
         public IList<string> UseAssemblies { get; set; }
 
@@ -24,15 +26,21 @@ namespace Spark
             return this;
         }
 
-        public SparkSettings AddAssembly(string assembly)
+        public SparkSettings SetPageBaseType(string typeName)
         {
-            UseAssemblies.Add(assembly);
+            PageBaseType = typeName;
             return this;
         }
 
-        public SparkSettings AddNamespace(string ns)
+        public SparkSettings SetPageBaseType(Type type)
         {
-            UseNamespaces.Add(ns);
+            PageBaseType = type.FullName;
+            return this;
+        }
+
+        public SparkSettings AddAssembly(string assembly)
+        {
+            UseAssemblies.Add(assembly);
             return this;
         }
 
@@ -42,6 +50,10 @@ namespace Spark
             return this;
         }
 
-
+        public SparkSettings AddNamespace(string ns)
+        {
+            UseNamespaces.Add(ns);
+            return this;
+        }
     }
 }

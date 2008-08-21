@@ -15,12 +15,16 @@
 */
 
 using Spark;
+using Spark.FileSystem;
 
 namespace Spark
 {
     public interface ISparkViewEngine
     {
+        ISparkSettings Settings { get; }
+        IViewFolder ViewFolder { get; set; }
         ISparkExtensionFactory ExtensionFactory { get; set; }
+        IViewActivatorFactory ViewActivatorFactory { get; set; }
 
         ISparkViewEntry GetEntry(SparkViewDescriptor descriptor);
         ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor);

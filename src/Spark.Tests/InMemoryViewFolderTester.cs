@@ -109,7 +109,7 @@ namespace Spark.Tests
         {
             var folder = new InMemoryViewFolder();
             folder.Add("home\\index.spark", "<p>Hello world</p>");
-            var engine = new SparkViewEngine(typeof (StubSparkView), folder);
+            var engine = new SparkViewEngine(new SparkSettings().SetPageBaseType(typeof (StubSparkView))){ViewFolder = folder};
 
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add("home\\index.spark");

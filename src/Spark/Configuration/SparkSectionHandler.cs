@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Reflection;
@@ -29,9 +30,28 @@ namespace Spark.Configuration
             set { this["compilation"] = value; }
         }
 
+        [ConfigurationProperty("pages")]
+        public PagesElement Pages
+        {
+            get { return (PagesElement)this["pages"]; }
+            set { this["pages"] = value; }
+        }
+
         public SparkSectionHandler SetDebug(bool debug)
         {
             Compilation.Debug = debug;
+            return this;
+        }
+
+        public SparkSectionHandler SetPageBaseType(string typeName)
+        {
+            Pages.PageBaseType = typeName;
+            return this;
+        }
+
+        public SparkSectionHandler SetPageBaseType(Type type)
+        {
+            Pages.PageBaseType = type.FullName;
             return this;
         }
 
@@ -41,15 +61,15 @@ namespace Spark.Configuration
             return this;
         }
 
-        public SparkSectionHandler AddNamespace(string ns)
-        {
-            Compilation.Namespaces.Add(ns);
-            return this;
-        }
-
         public SparkSectionHandler AddAssembly(Assembly assembly)
         {
             Compilation.Assemblies.Add(assembly.FullName);
+            return this;
+        }
+
+        public SparkSectionHandler AddNamespace(string ns)
+        {
+            Pages.Namespaces.Add(ns);
             return this;
         }
 
@@ -58,12 +78,18 @@ namespace Spark.Configuration
             get { return Compilation.Debug; }
         }
 
+        string ISparkSettings.PageBaseType
+        {
+            get { return Pages.PageBaseType; }
+            set { Pages.PageBaseType = value; }
+        }
+
         IList<string> ISparkSettings.UseNamespaces
         {
             get
             {
                 var result = new List<string>();
-                foreach (NamespaceElement ns in Compilation.Namespaces)
+                foreach (NamespaceElement ns in Pages.Namespaces)
                     result.Add(ns.Namespace);
                 return result;
             }

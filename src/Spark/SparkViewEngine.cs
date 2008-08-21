@@ -27,36 +27,21 @@ namespace Spark
 {
     public class SparkViewEngine : ISparkViewEngine
     {
-        public SparkViewEngine()
+        public SparkViewEngine() : this(null)
         {
-            Settings = (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
+        }
+
+        public SparkViewEngine(ISparkSettings settings)
+        {
+            Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
             SyntaxProvider = new DefaultSyntaxProvider();
+            ViewActivatorFactory = new DefaultViewActivator();
         }
 
-        public SparkViewEngine(Type baseType, IViewFolder viewFolder)
-            : this(baseType.FullName, viewFolder)
-        {
-        }
-
-        public SparkViewEngine(string baseFullname, IViewFolder viewFolder)
-            : this()
-        {
-            BaseClass = baseFullname;
-            ViewFolder = viewFolder;
-        }
-
-        public SparkViewEngine(ISparkSettings settings, IViewFolder viewFolder)
-            : this()
-        {
-            if (settings != null)
-                Settings = settings;
-
-            ViewFolder = viewFolder;
-        }
-
-        public string BaseClass { get; set; }
         public IViewFolder ViewFolder { get; set; }
         public ISparkExtensionFactory ExtensionFactory { get; set; }
+        public IViewActivatorFactory ViewActivatorFactory { get; set; }
+
         public ISparkSyntaxProvider SyntaxProvider { get; set; }
 
         public ISparkSettings Settings { get; set; }
@@ -104,7 +89,7 @@ namespace Spark
                                     SyntaxProvider = SyntaxProvider,
                                     ExtensionFactory = ExtensionFactory
                                 },
-                                Compiler = new ViewCompiler(BaseClass, key.Descriptor.TargetNamespace)
+                                Compiler = new ViewCompiler(Settings.PageBaseType, key.Descriptor.TargetNamespace)
                                 {
                                     Debug = Settings.Debug,
                                     UseAssemblies = Settings.UseAssemblies,
@@ -119,6 +104,8 @@ namespace Spark
                 chunks.Add(entry.Loader.Load(template));
 
             entry.Compiler.CompileView(chunks, entry.Loader.GetEverythingLoaded());
+
+            entry.Activator = ViewActivatorFactory.Register(entry.Compiler.CompiledType);
 
             return entry;
         }

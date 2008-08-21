@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Castle.Core.Logging;
 using Spark.Compiler;
 
 namespace Castle.MonoRail.Views.Spark
@@ -31,17 +32,30 @@ namespace Castle.MonoRail.Views.Spark
         public override void Service(IServiceProvider provider)
         {
             base.Service(provider);
-
-            if (Engine == null)
-                Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
-
-            if (Engine == null)
-                Engine = new SparkViewEngine(typeof(SparkView).FullName, this);
-
-            Engine.ExtensionFactory = this;
+            Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
         }
 
-        public ISparkViewEngine Engine { get; set; }
+        private ISparkViewEngine _engine;
+        public ISparkViewEngine Engine
+        {
+            get
+            {
+                if (_engine == null)
+                    Engine = new SparkViewEngine();
+                return _engine;
+            }
+            set
+            {
+                _engine = value;
+                if (_engine != null)
+                {
+                    _engine.ViewFolder = this;
+                    _engine.ExtensionFactory = this;
+                    if (string.IsNullOrEmpty(_engine.Settings.PageBaseType))
+                        _engine.Settings.PageBaseType = typeof (SparkView).FullName;
+                }
+            }
+        }
 
         public override string ViewFileExtension
         {
@@ -60,7 +74,7 @@ namespace Castle.MonoRail.Views.Spark
             if (controllerContext.LayoutNames != null)
                 masterName = string.Join(" ", controllerContext.LayoutNames);
 
-            var descriptor = new SparkViewDescriptor {TargetNamespace = controller.GetType().Namespace};
+            var descriptor = new SparkViewDescriptor { TargetNamespace = controller.GetType().Namespace };
             descriptor.Templates.Add(Path.ChangeExtension(templateName, ViewFileExtension));
 
             if (controllerContext.LayoutNames != null)
@@ -84,10 +98,13 @@ namespace Castle.MonoRail.Views.Spark
                 }
             }
 
-            var view = (SparkView)Engine.CreateInstance(descriptor);
+            var entry = Engine.CreateEntry(descriptor);
+            var view = (SparkView)entry.CreateInstance();
             view.Contextualize(context, controllerContext, this);
-            view.Logger = Logger;
+            if (view.Logger == null || view.Logger == NullLogger.Instance)
+                view.Logger = Logger;
             view.RenderView(output);
+            entry.ReleaseInstance(view);
         }
 
         public override void Process(string templateName, string layoutName, TextWriter output,

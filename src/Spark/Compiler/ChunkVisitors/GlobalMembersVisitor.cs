@@ -23,7 +23,8 @@ namespace Spark.Compiler.ChunkVisitors
     public class GlobalMembersVisitor : ChunkVisitor
     {
         private readonly StringBuilder _source;
-        Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
+        readonly Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
+        readonly Dictionary<string, GlobalVariableChunk> _globalAdded = new Dictionary<string, GlobalVariableChunk>();
 
         public GlobalMembersVisitor(StringBuilder output)
         {
@@ -32,9 +33,20 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(GlobalVariableChunk chunk)
         {
-            _source.AppendLine(string.Format("\r\n    {0} {1}={2};", chunk.Type ?? "object", chunk.Name, chunk.Value));
-        }
+            if (_globalAdded.ContainsKey(chunk.Name))
+            {
+                if (_globalAdded[chunk.Name].Type != chunk.Type ||
+                    _globalAdded[chunk.Name].Value != chunk.Value)
+                {
+                    throw new CompilerException(string.Format("The global named {0} cannot be declared repeatedly with different types or values",
+                        chunk.Name));
+                }
+                return;
+            }
 
+            _source.AppendLine(string.Format("\r\n    {0} _{1} = {2};\r\n    public {0} {1} {{ get {{return _{1};}} set {{_{1} = value;}} }}", chunk.Type ?? "object", chunk.Name, chunk.Value));
+        }
+        
         protected override void Visit(ViewDataChunk chunk)
         {
             var name = chunk.Name;

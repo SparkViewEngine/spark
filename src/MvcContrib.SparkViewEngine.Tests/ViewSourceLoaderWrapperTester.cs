@@ -30,7 +30,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 			{
 				Assert.That(wrapperViews.Contains(viewName));
 			}
-
+            
             var loaderView = loader.GetViewSource("Home\\foreach.spark");
             var wrapperView = wrapper.GetViewSource("Home\\foreach.spark");
 

@@ -21,5 +21,6 @@ namespace Spark
         SparkViewDescriptor Descriptor { get; }
         string SourceCode { get; }
         ISparkView CreateInstance();
+        void ReleaseInstance(ISparkView view);
     }
 }

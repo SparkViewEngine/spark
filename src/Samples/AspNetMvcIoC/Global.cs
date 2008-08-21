@@ -21,6 +21,8 @@ namespace AspNetMvcIoC
 
             // Replaces the default IViewEngine. 
             container.AddComponent<IViewEngine, SparkViewFactory>();
+            container.AddComponent<ISparkViewEngine, SparkViewEngine>();
+            container.AddComponent<IViewActivatorFactory, WindsorViewActivator>();
 
             // Add anything descended from IController/Controller 
             container.RegisterControllers(typeof(Global).Assembly);
@@ -38,6 +40,7 @@ namespace AspNetMvcIoC
             // These dependencies are resolved as needed.
             container.AddComponent<IViewSourceLoader, FileSystemViewSourceLoader>();
             container.AddComponent<ISampleRepository, SampleRepository>();
+            container.AddComponent<INavRepository, NavRepository>();
 
 
             // Example of providing settings as ISparkSettings instead 
@@ -46,9 +49,11 @@ namespace AspNetMvcIoC
 
             var settings = new SparkSettings()
                 .SetDebug(true)
+                .SetPageBaseType("AspNetMvcIoC.Views.View")
                 .AddNamespace("System.Collections.Generic")
                 .AddNamespace("AspNetMvcIoC.Models");
             container.Kernel.AddComponentInstance<SparkSettings>(typeof(ISparkSettings), settings);
+
         }
 
         public static void AddRoutes(RouteCollection routes)

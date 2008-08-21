@@ -1,0 +1,10 @@
+﻿<global type="INavRepository" Nav="null"/>
+<var menu="Nav.GetMenu(name)"/>
+<ul>
+  <li>${menu.Name}</li>
+  <ul>
+    <li each="var item in menu.Items">
+      <a href="${item.Url}">${H(item.Caption)}</a>
+    </li>
+  </ul>
+</ul>

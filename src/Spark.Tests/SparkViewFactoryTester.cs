@@ -41,7 +41,7 @@ namespace Spark.Tests
             CompiledViewHolder.Current = null;
 
 
-            engine = new SparkViewEngine("Spark.Tests.Stubs.StubSparkView", new FileSystemViewFolder("Spark.Tests.Views"));
+            engine = new SparkViewEngine(new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView")) { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             factory = new StubViewFactory { Engine = engine };
 
             sb = new StringBuilder();
@@ -498,7 +498,7 @@ namespace Spark.Tests
         public void AddViewDataMoreThanOnce()
         {
             mocks.ReplayAll();
-            var viewData = new StubViewData {{"comment", new Comment {Text = "Hello world"}}};
+            var viewData = new StubViewData { { "comment", new Comment { Text = "Hello world" } } };
             var viewContext = MakeViewContext("addviewdatamorethanonce", null, viewData);
             factory.RenderView(viewContext);
             mocks.VerifyAll();

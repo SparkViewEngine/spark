@@ -2,6 +2,10 @@
 
 <h3>${H(Intro)}</h3>
 
+
 <ul each="var product in Products">
   <li class="${new[]{'even','odd'}[productIndex%2]}">${H(product.Name)}</li>
 </ul>
+
+<p>${Yadda()}</p>
+<Menu name="'bottom-nav'"/>

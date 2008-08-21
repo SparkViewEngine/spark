@@ -55,7 +55,8 @@ namespace Castle.MonoRail.Views.Spark
         {
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add(name);
-            var view = (SparkView)_viewEngine.Engine.CreateInstance(descriptor);
+            var entry = _viewEngine.Engine.CreateEntry(descriptor);
+            var view = (SparkView)entry.CreateInstance();
 
             foreach (var content in _view.Content)
             {
@@ -80,6 +81,8 @@ namespace Castle.MonoRail.Views.Spark
                 if (!_view.Content.ContainsKey(content.Key))
                     _view.Content.Add(content.Key, content.Value);
             }
+
+            entry.ReleaseInstance(view);
         }
 
         public void RenderBody()

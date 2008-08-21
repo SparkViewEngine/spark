@@ -28,7 +28,7 @@ namespace Spark
         private readonly Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
 
         public Dictionary<string, TextWriter> Content { get { return _content; } }
-        public TextWriter Output { get; set; }
+        public TextWriter Output { get; private set; }
 
 
         public IDisposable OutputScope(string name)

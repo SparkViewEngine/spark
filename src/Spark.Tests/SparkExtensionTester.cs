@@ -34,7 +34,8 @@ namespace Spark.Tests
         [SetUp]
         public void Init()
         {
-            engine = new SparkViewEngine("Spark.Tests.Stubs.StubSparkView", new FileSystemViewFolder("Spark.Tests.Views"));
+            engine = new SparkViewEngine(new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
+                         {ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")};
             engine.ExtensionFactory = new StubExtensionFactory();
         }
 

@@ -75,6 +75,7 @@
     <Compile Include="Stubs\StubSparkView.cs" />
     <Compile Include="Stubs\StubViewContext.cs" />
     <Compile Include="Stubs\StubViewFactory.cs" />
+    <Compile Include="ViewActivatorTester.cs" />
     <Compile Include="ViewCompilerTester.cs" />
     <Compile Include="Parser\ViewLoaderTester.cs" />
   </ItemGroup>

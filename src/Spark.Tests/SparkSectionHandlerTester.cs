@@ -25,7 +25,8 @@ namespace Spark.Tests
             var config = (SparkSectionHandler)ConfigurationManager.GetSection("spark");
             Assert.IsTrue(config.Compilation.Debug);
             Assert.AreEqual(1, config.Compilation.Assemblies.Count);
-            Assert.AreEqual(1, config.Compilation.Namespaces.Count);
+            Assert.AreEqual(typeof(StubSparkView).FullName, config.Pages.PageBaseType);
+            Assert.AreEqual(1, config.Pages.Namespaces.Count);
         }
 
         [Test]
@@ -40,7 +41,7 @@ namespace Spark.Tests
                 .AddAssembly("Spark.Tests");
 
             Assert.IsTrue(config.Compilation.Debug);
-            Assert.AreEqual(3, config.Compilation.Namespaces.Count);
+            Assert.AreEqual(3, config.Pages.Namespaces.Count);
             Assert.AreEqual(2, config.Compilation.Assemblies.Count);
         }
 
@@ -65,13 +66,13 @@ namespace Spark.Tests
         {
             var settings = new SparkSettings()
                 .AddNamespace("System.Web")
-                .AddAssembly("System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+                .AddAssembly("System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+                .SetPageBaseType(typeof(StubSparkView));
 
             var views = new InMemoryViewFolder();
             views.Add("Home\\Index.spark", "<div>${ProcessStatus.Alive}</div>");
 
-            var engine = new SparkViewEngine(settings, views);
-            engine.BaseClass = typeof(StubSparkView).FullName;
+            var engine = new SparkViewEngine(settings) {ViewFolder = views};
 
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add("home\\index.spark");

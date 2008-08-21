@@ -34,13 +34,5 @@ namespace Spark.Configuration
             get { return (AssemblyElementCollection)this["assemblies"]; }
             set { this["assemblies"] = value; }
         }
-
-        [ConfigurationProperty("namespaces")]
-        [ConfigurationCollection(typeof(NamespaceElementCollection))]
-        public NamespaceElementCollection Namespaces
-        {
-            get { return (NamespaceElementCollection)this["namespaces"]; }
-            set { this["namespaces"] = value; }
-        }
     }
 }

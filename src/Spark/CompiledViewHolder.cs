@@ -110,6 +110,7 @@ namespace Spark
             public Key Key { get; set; }
             public ViewLoader Loader { get; set; }
             public ViewCompiler Compiler { get; set; }
+            public IViewActivator Activator { get; set; }
 
             public SparkViewDescriptor Descriptor
             {
@@ -123,7 +124,12 @@ namespace Spark
 
             ISparkView ISparkViewEntry.CreateInstance()
             {
-                return Compiler.CreateInstance();
+                return Activator.Activate(Compiler.CompiledType);
+            }
+
+            public void ReleaseInstance(ISparkView view)
+            {
+                Activator.Release(Compiler.CompiledType ,view);
             }
         }
 

@@ -38,9 +38,7 @@ namespace Spark.Tests.Parser
         {
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
-                "Spark.Tests.Stubs.StubSparkView",
-                new FileSystemViewFolder("Spark.Tests.Views")) 
-                {SyntaxProvider = _syntax};
+                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView")) { SyntaxProvider = _syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();
@@ -60,9 +58,8 @@ namespace Spark.Tests.Parser
         {
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
-                "Spark.Tests.Stubs.StubSparkView",
-                new FileSystemViewFolder("Spark.Tests.Views")) 
-                {SyntaxProvider = _syntax};
+                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
+                { SyntaxProvider = _syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();

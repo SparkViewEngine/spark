@@ -76,6 +76,8 @@
     <Compile Include="Configuration\AssemblyElement.cs" />
     <Compile Include="Configuration\AssemblyElementCollection.cs" />
     <Compile Include="Configuration\CompilationElement.cs" />
+    <Compile Include="Configuration\PagesElement.cs" />
+    <Compile Include="DefaultViewActivator.cs" />
     <Compile Include="ISparkSettings.cs" />
     <Compile Include="Configuration\NamespaceElement.cs" />
     <Compile Include="Configuration\NamespaceElementCollection.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="ISparkView.cs" />
     <Compile Include="ISparkViewEngine.cs" />
     <Compile Include="ISparkViewEntry.cs" />
+    <Compile Include="IViewActivator.cs" />
     <Compile Include="Parser\Chain.cs" />
     <Compile Include="Parser\CharGrammar.cs" />
     <Compile Include="Parser\Code\AttributeNodeExtensions.cs" />
