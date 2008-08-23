@@ -73,13 +73,6 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ElementNode elementNode)
         {
-            if (_currentExtensionNode != null)
-            {
-                // An open extension node is greedy. Capture continues until the end element occurs.
-                _currentExtensionNode.Body.Add(elementNode);
-                return;
-            }
-
             ISparkExtension extension;
             if (_containingNames.Contains(elementNode.Name))
             {
@@ -134,22 +127,13 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(EndElementNode endElementNode)
         {
-            if (_currentExtensionNode != null)
+            if (_currentExtensionNode != null &&
+                string.Equals(endElementNode.Name, _currentExtensionNode.Element.Name))
             {
-                // An open extension node is greedy. Capture continues until an end element occurs.                
-                if (string.Equals(endElementNode.Name, _currentExtensionNode.Element.Name))
-                {
-                    _nodes = _stack.Pop();
-                    _currentExtensionNode = null;
-                }
-				else
-                {
-					Nodes.Add(endElementNode);
-                }
-                return;
+                _nodes = _stack.Pop();
+                _currentExtensionNode = null;
             }
-
-            if (_containingNames.Contains(endElementNode.Name))
+            else if (_containingNames.Contains(endElementNode.Name))
             {
                 PopSpecial(endElementNode.Name);
             }

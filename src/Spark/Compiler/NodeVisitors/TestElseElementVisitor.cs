@@ -127,7 +127,16 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ExtensionNode node)
         {
-            Nodes.Add(node);
+            var reconstructed = new ExtensionNode(node.Element, node.Extension);
+
+            PushFrame();
+
+            _frame.Nodes = reconstructed.Body;
+            Accept(node.Body);
+
+            PopFrame();
+
+            Nodes.Add(reconstructed);
         }
 
         protected override void Visit(StatementNode node)

@@ -1,0 +1,13 @@
+<p>
+    <ComponentWithSections>
+        <header></header>
+        <body>
+            <span if="2 == 3">this-should-not-show-up</span>
+            <if condition="2 == 2">this-should-show-up</if>
+        </body>
+        <footer>
+            <for each="var i in new[] { 1,2,3 }">${i},</for>
+            <span each="var i in new[] { 10,9,8 }">${i}</span>
+        </footer>
+    </ComponentWithSections>
+</p>

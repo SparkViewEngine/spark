@@ -72,6 +72,7 @@
     <Compile Include="ViewComponentExtensionTests.cs" />
     <Compile Include="ViewComponentRenderViewTests.cs" />
     <Compile Include="ViewComponentSectionChunkBuilderVisitorTests.cs" />
+    <Compile Include="ViewComponentSectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Castle.MonoRail.Views.Spark\Castle.MonoRail.Views.Spark.csproj">
@@ -120,6 +121,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewWithContent.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentWithComplexSections.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentWithSimpleSections.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

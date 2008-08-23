@@ -60,7 +60,8 @@ namespace Castle.MonoRail.Views.Spark
                     delimiter = ", ";
                 }
                 output.AppendLine("}, new System.Action(delegate {");
-                visitor.Accept(body);
+                if (sections.Count == 0)
+                    visitor.Accept(body); //only append body if there are no sections
                 output.AppendLine("}),");
 
                 output.AppendLine("new System.Collections.Generic.Dictionary<string,System.Action> {");

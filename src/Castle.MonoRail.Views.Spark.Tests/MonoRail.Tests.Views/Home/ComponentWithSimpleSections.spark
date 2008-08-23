@@ -1,0 +1,7 @@
+<p>
+    <ComponentWithSections>
+        <header>this-is-a-header</header>
+        <body>this-is-a-body</body>
+        <footer>this-is-a-footer</footer>
+    </ComponentWithSections>
+</p>
