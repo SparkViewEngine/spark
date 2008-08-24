@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using Spark.Compiler.ChunkVisitors;
@@ -44,7 +45,20 @@ namespace Spark.Compiler.ChunkVisitors
                 return;
             }
 
-            _source.AppendLine(string.Format("\r\n    {0} _{1} = {2};\r\n    public {0} {1} {{ get {{return _{1};}} set {{_{1} = value;}} }}", chunk.Type ?? "object", chunk.Name, chunk.Value));
+            var type = chunk.Type ?? "object";
+            var typeParts = type.Split(' ', '\t');
+            if (typeParts.Contains("const") || typeParts.Contains("readonly"))
+            {
+                _source.AppendFormat("\r\n    {0} {1} = {2};",
+                                     type, chunk.Name, chunk.Value);
+            }
+            else
+            {
+                _source.AppendFormat(
+                    "\r\n    {0} _{1} = {2};\r\n    public {0} {1} {{ get {{return _{1};}} set {{_{1} = value;}} }}",
+                    type, chunk.Name, chunk.Value);
+            }
+            _source.AppendLine();
         }
         
         protected override void Visit(ViewDataChunk chunk)

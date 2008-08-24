@@ -572,5 +572,17 @@ namespace Spark.Tests
             ContainsInOrder(content,
                 "<p>beforedataafter</p>");
         }
+
+        [Test]
+        public void ConstAndReadonlyGlobals()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("const-and-readonly-globals", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString().Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace(" ", "");
+
+            Assert.AreEqual("<ol><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol>", content);
+        }
     }
 }
