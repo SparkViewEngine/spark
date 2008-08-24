@@ -15,11 +15,9 @@
 */
 
 using System;
-using System.Linq;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using Microsoft.CSharp;
 using Spark.Compiler.ChunkVisitors;
@@ -29,11 +27,15 @@ namespace Spark.Compiler
 {
     public class ViewCompiler
     {
-        public ViewCompiler(string baseClass)
+        public ViewCompiler()
         {
-            BaseClass = baseClass;
             GeneratedViewId = Guid.NewGuid();
         }
+
+        public ViewCompiler(string baseClass) : this(baseClass, null)
+        {
+        }
+
         public ViewCompiler(string baseClass, string targetNamespace)
         {
             BaseClass = baseClass;
@@ -43,6 +45,8 @@ namespace Spark.Compiler
 
         public string BaseClass { get; set; }
         public string TargetNamespace { get; set; }
+        public string ViewClassFullName { get; set; }
+
         public string SourceCode { get; set; }
         public Type CompiledType { get; set; }
         public Guid GeneratedViewId { get; set; }
@@ -52,6 +56,15 @@ namespace Spark.Compiler
         public IList<string> UseAssemblies { get; set; }
 
         public void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
+        {
+            GenerateSourceCode(allResources, viewTemplates);
+
+            var batchCompiler = new BatchCompiler();
+            var assembly = batchCompiler.Compile(Debug, SourceCode);
+            CompiledType = assembly.GetType(ViewClassFullName);
+        }
+
+        public void GenerateSourceCode(IEnumerable<IList<Chunk>> allResources, IEnumerable<IList<Chunk>> viewTemplates)
         {
             var source = new StringBuilder();
             var usingGenerator = new UsingNamespaceVisitor(source);
@@ -71,15 +84,23 @@ namespace Spark.Compiler
             foreach (var resource in allResources)
                 baseClassGenerator.Accept(resource);
 
-            if (!string.IsNullOrEmpty(TargetNamespace))
+            var viewClassName = "View" + GeneratedViewId.ToString("n");
+
+            if (string.IsNullOrEmpty(TargetNamespace))
             {
+                ViewClassFullName = viewClassName;
+            }
+            else
+            {
+                ViewClassFullName = TargetNamespace + "." + viewClassName;
+
                 source.AppendLine();
                 source.AppendLine(string.Format("namespace {0}", TargetNamespace));
                 source.AppendLine("{");
             }
 
             source.AppendLine();
-            source.AppendLine(string.Format("public class CompiledSparkView : {0}", baseClassGenerator.BaseClassTypeName));
+            source.AppendLine(string.Format("public class {0} : {1}", viewClassName, baseClassGenerator.BaseClassTypeName));
             source.AppendLine("{");
 
             source.AppendLine();
@@ -125,77 +146,6 @@ namespace Spark.Compiler
             }
 
             SourceCode = source.ToString();
-
-            var providerOptions = new Dictionary<string, string> { { "CompilerVersion", "v3.5" } };
-
-            CSharpCodeProvider codeProvider = new CSharpCodeProvider(providerOptions);
-
-            var compilerParameters = new CompilerParameters();
-
-
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                string location;
-                try
-                {
-                    location = assembly.Location;
-                }
-                catch (NotSupportedException)
-                {
-                    continue;
-                }
-                compilerParameters.ReferencedAssemblies.Add(location);
-            }
-
-
-            CompilerResults compilerResults;
-            if (Debug)
-            {
-                compilerParameters.IncludeDebugInformation = true;
-                var codeFile = Path.Combine(AppDomain.CurrentDomain.SetupInformation.DynamicBase ?? Path.GetTempPath(),
-                                            Guid.NewGuid().ToString("n") + ".cs");
-                using (var stream = new FileStream(codeFile, FileMode.Create, FileAccess.Write))
-                {
-                    using (var writer = new StreamWriter(stream))
-                    {
-                        writer.Write(SourceCode);
-                    }
-                }
-
-                compilerParameters.OutputAssembly = Path.ChangeExtension(codeFile, "dll");
-                compilerResults = codeProvider.CompileAssemblyFromFile(compilerParameters, codeFile);
-            }
-            else
-            {
-                compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, SourceCode);
-            }
-
-            if (compilerResults.Errors.Count != 0)
-            {
-                var sb = new StringBuilder();
-                sb.AppendLine("Dynamic view compilation failed.");
-
-                foreach (CompilerError err in compilerResults.Errors)
-                {
-                    sb.AppendFormat("generated.cs({0},{1}): {2} {3}: ", err.Line, err.Column, err.IsWarning ? "warning" : "error", err.ErrorNumber);
-                    sb.AppendLine(err.ErrorText);
-                }
-
-                sb.AppendLine();
-                using (TextReader reader = new StringReader(SourceCode))
-                {
-                    for (int lineNumber = 1; ; ++lineNumber)
-                    {
-                        string line = reader.ReadLine();
-                        if (line == null)
-                            break;
-                        sb.Append(lineNumber).Append(' ').AppendLine(line);
-                    }
-                }
-                throw new CompilerException(sb.ToString());
-            }
-
-            CompiledType = compilerResults.CompiledAssembly.GetType((TargetNamespace ?? "") + ".CompiledSparkView");
         }
 
         public ISparkView CreateInstance()

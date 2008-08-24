@@ -1,7 +1,10 @@
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Web.Mvc;
 using MvcContrib.ViewFactories;
 using Spark;
@@ -20,8 +23,6 @@ namespace MvcContrib.SparkViewEngine
         public SparkViewFactory(ISparkSettings settings)
         {
             Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
-            if (Settings.PageBaseType == null)
-                Settings.PageBaseType = typeof(SparkView).FullName;
         }
 
         public ISparkSettings Settings { get; set; }
@@ -40,7 +41,10 @@ namespace MvcContrib.SparkViewEngine
             {
                 _engine = value;
                 if (_engine != null)
+                {
                     _engine.ViewFolder = this;
+                    _engine.DefaultPageBaseType = typeof (SparkView).FullName;
+                }
             }
         }
 
@@ -59,7 +63,7 @@ namespace MvcContrib.SparkViewEngine
 
         public IViewActivatorFactory ViewActivatorFactory
         {
-            get { return Engine.ViewActivatorFactory;}
+            get { return Engine.ViewActivatorFactory; }
             set { Engine.ViewActivatorFactory = value; }
         }
 
@@ -79,10 +83,16 @@ namespace MvcContrib.SparkViewEngine
             var controllerName = viewContext.RouteData.GetRequiredString("controller");
             var viewName = viewContext.ViewName;
             var masterName = viewContext.MasterName;
+            var targetNamespace = viewContext.Controller.GetType().Namespace;
 
+            return CreateDescriptor(targetNamespace, controllerName, viewName, masterName);
+        }
+
+        private SparkViewDescriptor CreateDescriptor(string targetNamespace, string controllerName, string viewName, string masterName)
+        {
             var descriptor = new SparkViewDescriptor
                                  {
-                                     TargetNamespace = viewContext.Controller.GetType().Namespace
+                                     TargetNamespace = targetNamespace
                                  };
 
             if (ViewSourceLoader.HasView(controllerName + "\\" + viewName + ".spark"))
@@ -110,8 +120,8 @@ namespace MvcContrib.SparkViewEngine
                 }
                 else
                 {
-                    throw new CompilerException(string.Format("Unable to find templates {0}\\{1}.spark or Shared\\{1}.spark", controllerName,
-                                                viewName));
+                    throw new CompilerException(string.Format("Unable to find templates Layouts\\{1}.spark or Shared\\{1}.spark", controllerName,
+                                                              masterName));
                 }
             }
             else
@@ -169,6 +179,112 @@ namespace MvcContrib.SparkViewEngine
             {
                 return _source.OpenViewStream();
             }
+        }
+
+        public Assembly Precompile(SparkBatchDescriptor batch)
+        {
+            return Engine.BatchCompilation(CreateDescriptors(batch));
+        }
+
+        public List<SparkViewDescriptor> CreateDescriptors(SparkBatchDescriptor batch)
+        {
+            var descriptors = new List<SparkViewDescriptor>();
+
+            foreach (var entry in batch.Entries)
+                descriptors.AddRange(CreateDescriptors(entry));
+            return descriptors;
+        }
+
+        public IList<SparkViewDescriptor> CreateDescriptors(SparkBatchEntry entry)
+        {
+            var descriptors = new List<SparkViewDescriptor>();
+
+            var controllerName = RemoveSuffix(entry.ControllerType.Name, "Controller");
+
+            var viewNames = new List<string>();
+            var includeViews = entry.IncludeViews;
+            if (includeViews.Count == 0)
+                includeViews = new[] { "*" };
+
+            foreach (var include in includeViews)
+            {
+                if (include.EndsWith("*"))
+                {
+                    foreach (var fileName in ViewSourceLoader.ListViews(controllerName))
+                    {
+                        var potentialMatch = Path.GetFileNameWithoutExtension(fileName);
+                        if (!TestMatch(potentialMatch, include)) 
+                            continue;
+                        
+                        var isExcluded = false;
+                        foreach (var exclude in entry.ExcludeViews)
+                        {
+                            if (!TestMatch(potentialMatch, RemoveSuffix(exclude, ".spark"))) 
+                                continue;
+                            
+                            isExcluded = true;
+                            break;
+                        }
+                        if (!isExcluded)
+                            viewNames.Add(potentialMatch);
+                    }
+                }
+                else
+                {
+                    // explicitly included views don't test for exclusion
+                    viewNames.Add(RemoveSuffix(include, ".spark"));
+                }
+            }
+
+            foreach (var viewName in viewNames)
+            {
+                if (entry.LayoutNames.Count == 0)
+                {
+                    descriptors.Add(CreateDescriptor(
+                                            entry.ControllerType.Namespace,
+                                            controllerName,
+                                            viewName,
+                                            null /*masterName*/));
+                }
+                else
+                {
+                    foreach (var masterName in entry.LayoutNames)
+                    {
+                        descriptors.Add(CreateDescriptor(
+                                            entry.ControllerType.Namespace,
+                                            controllerName,
+                                            viewName,
+                                            string.Join(" ", masterName.ToArray())));
+                    }
+                }
+            }
+
+            return descriptors;
+        }
+
+        static bool TestMatch(string potentialMatch, string pattern)
+        {
+            if (!pattern.EndsWith("*"))
+            {
+                return string.Equals(potentialMatch, pattern, StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            // raw wildcard matches anything that's not a partial
+            if (pattern == "*")
+            {
+                return !potentialMatch.StartsWith("_");
+            }
+
+            // otherwise the only thing that's supported is "starts with"
+            return potentialMatch.StartsWith(pattern.Substring(0, pattern.Length - 1),
+                                             StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        static string RemoveSuffix(string value, string suffix)
+        {
+            if (value.EndsWith(suffix, StringComparison.InvariantCultureIgnoreCase))
+                return value.Substring(0, value.Length - suffix.Length);
+            return value;
         }
     }
 }

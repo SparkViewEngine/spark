@@ -51,8 +51,7 @@ namespace Castle.MonoRail.Views.Spark
                 {
                     _engine.ViewFolder = this;
                     _engine.ExtensionFactory = this;
-                    if (string.IsNullOrEmpty(_engine.Settings.PageBaseType))
-                        _engine.Settings.PageBaseType = typeof (SparkView).FullName;
+                    _engine.DefaultPageBaseType = typeof(SparkView).FullName;
                 }
             }
         }

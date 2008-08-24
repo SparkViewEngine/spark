@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="AbstractSparkView.cs" />
     <Compile Include="CompiledViewHolder.cs" />
+    <Compile Include="Compiler\BatchCompiler.cs" />
     <Compile Include="Compiler\Chunk.cs" />
     <Compile Include="Compiler\ChunkVisitors\AbstractChunkVisitor.cs" />
     <Compile Include="Compiler\ChunkVisitors\BaseClassVisitor.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Parser\Syntax\DefaultSyntaxProvider.cs" />
     <Compile Include="Parser\ViewLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SparkBatchDescriptor.cs" />
     <Compile Include="SparkSettings.cs" />
     <Compile Include="SparkViewDescriptor.cs" />
     <Compile Include="SparkViewEngine.cs" />

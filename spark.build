@@ -147,7 +147,7 @@
 
     <get src="http://dev.dejardin.org/book/export/html/4" dest="${package.dir}/Docs/index.html"/>
 
-<!--
+
 		<mkdir dir="${package.dir}/Samples" />
 		<copy todir="${package.dir}/Samples" >
 			<fileset basedir="${solution.dir}/">
@@ -163,10 +163,26 @@
         <exclude name="**/bin/**"/>
         <exclude name="**/obj/**"/>
         <exclude name="/**resharper**/**"/>
+				<exclude name="**/*.suo"/>
+				<exclude name="**/*.user"/>
         <include name="/**/**" />
       </fileset>
     </copy>
-
+    
+    <foreach item="File" property="filename">
+      <in>
+        <items basedir="${package.dir}/Samples">
+          <include name="/**/*.csproj" />
+        </items>
+      </in>
+      <do>
+        <echo message="Altering ${filename}" />
+        <loadfile file="${filename}" property="sample.csproj.contents"/>
+        <echo file="${filename}" append="false" 
+              message="${string::replace(sample.csproj.contents, '..\..\..\build\package\Bin', '..\..\Bin')}"/>
+      </do>
+    </foreach>
+<!--
     <copy todir="${package.dir}/Samples/bin" >
       <fileset basedir="${solution.dir}/Samples/bin">
         <include name="*.*"/>

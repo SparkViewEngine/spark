@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Reflection;
 using Spark.Compiler;
 using Spark.Parser;
 using Spark;
@@ -27,7 +28,8 @@ namespace Spark
 {
     public class SparkViewEngine : ISparkViewEngine
     {
-        public SparkViewEngine() : this(null)
+        public SparkViewEngine()
+            : this(null)
         {
         }
 
@@ -45,6 +47,7 @@ namespace Spark
         public ISparkSyntaxProvider SyntaxProvider { get; set; }
 
         public ISparkSettings Settings { get; set; }
+        public string DefaultPageBaseType { get; set; }
 
         public ISparkViewEntry GetEntry(SparkViewDescriptor descriptor)
         {
@@ -70,6 +73,7 @@ namespace Spark
         }
 
 
+
         public CompiledViewHolder.Key CreateKey(SparkViewDescriptor descriptor)
         {
             return new CompiledViewHolder.Key
@@ -83,18 +87,8 @@ namespace Spark
             var entry = new CompiledViewHolder.Entry
                             {
                                 Key = key,
-                                Loader = new ViewLoader
-                                {
-                                    ViewFolder = ViewFolder,
-                                    SyntaxProvider = SyntaxProvider,
-                                    ExtensionFactory = ExtensionFactory
-                                },
-                                Compiler = new ViewCompiler(Settings.PageBaseType, key.Descriptor.TargetNamespace)
-                                {
-                                    Debug = Settings.Debug,
-                                    UseAssemblies = Settings.UseAssemblies,
-                                    UseNamespaces = Settings.UseNamespaces
-                                }
+                                Loader = CreateViewLoader(),
+                                Compiler = CreateViewCompiler(key.Descriptor.TargetNamespace)
                             };
 
 
@@ -110,5 +104,64 @@ namespace Spark
             return entry;
         }
 
+        private ViewCompiler CreateViewCompiler(string targetNamespace)
+        {
+            var pageBaseType = Settings.PageBaseType;
+            if (string.IsNullOrEmpty(pageBaseType))
+                pageBaseType = DefaultPageBaseType;
+
+            return new ViewCompiler(pageBaseType, targetNamespace)
+                       {
+                           Debug = Settings.Debug,
+                           UseAssemblies = Settings.UseAssemblies,
+                           UseNamespaces = Settings.UseNamespaces
+                       };
+        }
+
+        private ViewLoader CreateViewLoader()
+        {
+            return new ViewLoader
+                       {
+                           ViewFolder = ViewFolder,
+                           SyntaxProvider = SyntaxProvider,
+                           ExtensionFactory = ExtensionFactory
+                       };
+        }
+
+        public Assembly BatchCompilation(IList<SparkViewDescriptor> descriptors)
+        {
+            var batch = new List<CompiledViewHolder.Entry>();
+            var sourceCode = new List<string>();
+
+            foreach (var descriptor in descriptors)
+            {
+                var entry = new CompiledViewHolder.Entry
+                {
+                    Key = CreateKey(descriptor),
+                    Loader = CreateViewLoader(),
+                    Compiler = CreateViewCompiler(descriptor.TargetNamespace)
+                };
+
+                var templateChunks = new List<IList<Chunk>>();
+                foreach(var template in descriptor.Templates)
+                    templateChunks.Add(entry.Loader.Load(template));
+
+                entry.Compiler.GenerateSourceCode(entry.Loader.GetEverythingLoaded(), templateChunks);
+                sourceCode.Add(entry.Compiler.SourceCode);
+
+                batch.Add(entry);
+            }
+            
+            var batchCompiler = new BatchCompiler();
+
+            var assembly = batchCompiler.Compile(Settings.Debug, sourceCode.ToArray());
+            foreach(var entry in batch)
+            {
+                entry.Compiler.CompiledType = assembly.GetType(entry.Compiler.ViewClassFullName);
+                entry.Activator = ViewActivatorFactory.Register(entry.Compiler.CompiledType);
+                CompiledViewHolder.Current.Store(entry);
+            }
+            return assembly;
+        }
     }
 }

@@ -74,6 +74,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="MvcMockHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SparkBatchCompilerTester.cs" />
     <Compile Include="SparkControllerFactoryTester.cs" />
     <Compile Include="SparkViewFactoryTester.cs" />
     <Compile Include="SparkViewTester.cs" />
@@ -132,6 +133,12 @@
     <None Include="AspNetMvc.Tests.Views\Home\viewdatanull.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="AspNetMvc.Tests.Views\Shared\ajax.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Shared\alternate.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="AspNetMvc.Tests.Views\Shared\layout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -139,6 +146,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="AspNetMvc.Tests.Views\Shared\_comment.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Stub\Index.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Stub\List.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Stub\_Widget.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

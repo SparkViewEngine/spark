@@ -1,0 +1,10 @@
+﻿<html>
+  <head>
+    <title>Precompile demo</title>
+  </head>
+  <body>
+    <h1>Precompile demo</h1>
+    <Notification/>
+    <use content="view"/>
+  </body>
+</html>

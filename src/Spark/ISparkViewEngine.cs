@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+using System.Collections.Generic;
+using System.Reflection;
 using Spark;
 using Spark.FileSystem;
 
@@ -25,9 +27,12 @@ namespace Spark
         IViewFolder ViewFolder { get; set; }
         ISparkExtensionFactory ExtensionFactory { get; set; }
         IViewActivatorFactory ViewActivatorFactory { get; set; }
+        string DefaultPageBaseType { get; set; }
 
         ISparkViewEntry GetEntry(SparkViewDescriptor descriptor);
         ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor);
         ISparkView CreateInstance(SparkViewDescriptor descriptor);
+
+        Assembly BatchCompilation(IList<SparkViewDescriptor> descriptors);
     }
 }
