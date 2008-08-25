@@ -88,7 +88,7 @@ namespace Spark
                             {
                                 Key = key,
                                 Loader = CreateViewLoader(),
-                                Compiler = CreateViewCompiler(key.Descriptor.TargetNamespace)
+                                Compiler = CreateViewCompiler(key.Descriptor)
                             };
 
 
@@ -104,14 +104,16 @@ namespace Spark
             return entry;
         }
 
-        private ViewCompiler CreateViewCompiler(string targetNamespace)
+        private ViewCompiler CreateViewCompiler(SparkViewDescriptor descriptor)
         {
             var pageBaseType = Settings.PageBaseType;
             if (string.IsNullOrEmpty(pageBaseType))
                 pageBaseType = DefaultPageBaseType;
 
-            return new ViewCompiler(pageBaseType, targetNamespace)
+            return new ViewCompiler
                        {
+                           BaseClass = pageBaseType,
+                           Descriptor = descriptor,
                            Debug = Settings.Debug,
                            UseAssemblies = Settings.UseAssemblies,
                            UseNamespaces = Settings.UseNamespaces
@@ -130,6 +132,11 @@ namespace Spark
 
         public Assembly BatchCompilation(IList<SparkViewDescriptor> descriptors)
         {
+            return BatchCompilation(null /*outputAssembly*/, descriptors);
+        }
+
+        public Assembly BatchCompilation(string outputAssembly, IList<SparkViewDescriptor> descriptors)
+        {
             var batch = new List<CompiledViewHolder.Entry>();
             var sourceCode = new List<string>();
 
@@ -139,11 +146,11 @@ namespace Spark
                 {
                     Key = CreateKey(descriptor),
                     Loader = CreateViewLoader(),
-                    Compiler = CreateViewCompiler(descriptor.TargetNamespace)
+                    Compiler = CreateViewCompiler(descriptor)
                 };
 
                 var templateChunks = new List<IList<Chunk>>();
-                foreach(var template in descriptor.Templates)
+                foreach (var template in descriptor.Templates)
                     templateChunks.Add(entry.Loader.Load(template));
 
                 entry.Compiler.GenerateSourceCode(entry.Loader.GetEverythingLoaded(), templateChunks);
@@ -151,17 +158,47 @@ namespace Spark
 
                 batch.Add(entry);
             }
-            
-            var batchCompiler = new BatchCompiler();
+
+            var batchCompiler = new BatchCompiler{OutputAssembly = outputAssembly};
 
             var assembly = batchCompiler.Compile(Settings.Debug, sourceCode.ToArray());
-            foreach(var entry in batch)
+            foreach (var entry in batch)
             {
                 entry.Compiler.CompiledType = assembly.GetType(entry.Compiler.ViewClassFullName);
                 entry.Activator = ViewActivatorFactory.Register(entry.Compiler.CompiledType);
                 CompiledViewHolder.Current.Store(entry);
             }
             return assembly;
+        }
+
+        public IList<SparkViewDescriptor> LoadBatchCompilation(Assembly assembly)
+        {
+            var descriptors = new List<SparkViewDescriptor>();
+
+            foreach (var type in assembly.GetExportedTypes())
+            {
+                if (!typeof(ISparkView).IsAssignableFrom(type))
+                    continue;
+
+                var attributes = type.GetCustomAttributes(typeof(SparkViewAttribute), false);
+                if (attributes == null || attributes.Length == 0)
+                    continue;
+
+                var descriptor = ((SparkViewAttribute)attributes[0]).BuildDescriptor();
+
+                var entry = new CompiledViewHolder.Entry
+                                {
+                                    Key = new CompiledViewHolder.Key { Descriptor = descriptor },
+                                    Loader = new ViewLoader(),
+                                    Compiler = new ViewCompiler { CompiledType = type },
+                                    Activator = ViewActivatorFactory.Register(type)
+                                };
+                CompiledViewHolder.Current.Store(entry);
+
+                descriptors.Add(descriptor);
+            }
+
+            return descriptors;
         }
     }
 }

@@ -34,5 +34,7 @@ namespace Spark
         ISparkView CreateInstance(SparkViewDescriptor descriptor);
 
         Assembly BatchCompilation(IList<SparkViewDescriptor> descriptors);
+        Assembly BatchCompilation(string outputAssembly, IList<SparkViewDescriptor> descriptors);
+        IList<SparkViewDescriptor> LoadBatchCompilation(Assembly assembly);
     }
 }

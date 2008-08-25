@@ -183,7 +183,7 @@ namespace MvcContrib.SparkViewEngine
 
         public Assembly Precompile(SparkBatchDescriptor batch)
         {
-            return Engine.BatchCompilation(CreateDescriptors(batch));
+            return Engine.BatchCompilation(batch.OutputAssembly, CreateDescriptors(batch));
         }
 
         public List<SparkViewDescriptor> CreateDescriptors(SparkBatchDescriptor batch)

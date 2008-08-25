@@ -11,6 +11,8 @@ namespace Spark.Compiler
 {
     public class BatchCompiler
     {
+        public string OutputAssembly { get; set; }
+
         public Assembly Compile(bool debug, params string[] sourceCode)
         {
             var providerOptions = new Dictionary<string, string> { { "CompilerVersion", "v3.5" } };
@@ -36,13 +38,12 @@ namespace Spark.Compiler
 
 
             CompilerResults compilerResults;
+            var basePath = AppDomain.CurrentDomain.SetupInformation.DynamicBase ?? Path.GetTempPath();
             if (debug)
             {
-
                 compilerParameters.IncludeDebugInformation = true;
 
-                var baseFile = Path.Combine(AppDomain.CurrentDomain.SetupInformation.DynamicBase ?? Path.GetTempPath(),
-                                            Guid.NewGuid().ToString("n"));
+                var baseFile = Path.Combine(basePath, Guid.NewGuid().ToString("n"));
 
                 var codeFiles = new List<string>();
                 int fileCount = 0;
@@ -59,11 +60,23 @@ namespace Spark.Compiler
                     }
                     codeFiles.Add(codeFile);
                 }
-                compilerParameters.OutputAssembly = baseFile + ".dll";
+
+                if (!string.IsNullOrEmpty(OutputAssembly))
+                {
+                    compilerParameters.OutputAssembly = Path.Combine(basePath, OutputAssembly);
+                }
+                else
+                {
+                    compilerParameters.OutputAssembly = baseFile + ".dll";
+                }
                 compilerResults = codeProvider.CompileAssemblyFromFile(compilerParameters, codeFiles.ToArray());
             }
             else
             {
+                if (!string.IsNullOrEmpty(OutputAssembly))
+                {
+                    compilerParameters.OutputAssembly = Path.Combine(basePath, OutputAssembly);
+                }
                 compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, sourceCode);
             }
 

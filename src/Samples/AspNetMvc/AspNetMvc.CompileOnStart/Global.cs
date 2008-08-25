@@ -36,16 +36,18 @@ namespace AspNetMvc.CompileOnStart
 
         public static void PrecompileViews(SparkViewFactory factory)
         {
+            var viewsAssemblyName = typeof (Global).Assembly.GetName().Name + ".Views";
+
             try
             {
                 // production case: load a precompiled assembly
-                var assembly = Assembly.Load("PrecompiledViews");
-                //TODO: factory.Engine.LoadBatchCompilation(assembly);
+                var assembly = Assembly.Load(viewsAssemblyName);
+                factory.Engine.LoadBatchCompilation(assembly);
             }
             catch (FileNotFoundException)
             {
                 // development case: precompile assemblies
-                var batch = new SparkBatchDescriptor();
+                var batch = new SparkBatchDescriptor(viewsAssemblyName + ".dll");
 
                 batch
                     .For<HomeController>()
@@ -58,7 +60,8 @@ namespace AspNetMvc.CompileOnStart
                 if (assembly != null && assembly.Location != null)
                 {
                     var dataDirectory = Convert.ToString(AppDomain.CurrentDomain.GetData("DataDirectory"));
-                    File.Copy(assembly.Location, Path.Combine(dataDirectory, "PrecompiledViews.dll"), true);
+
+                    File.Copy(assembly.Location, Path.Combine(dataDirectory, viewsAssemblyName + ".dll"), true);
                 }
             }
         }

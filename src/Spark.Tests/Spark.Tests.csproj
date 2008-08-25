@@ -68,6 +68,9 @@
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="OmitExtraLinesVisitorTester.cs" />
     <Compile Include="Parser\PositionTester.cs" />
+    <Compile Include="Precompiled\View3.cs" />
+    <Compile Include="Precompiled\View1.cs" />
+    <Compile Include="Precompiled\View2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkExtensionTester.cs" />
     <Compile Include="SparkSectionHandlerTester.cs" />

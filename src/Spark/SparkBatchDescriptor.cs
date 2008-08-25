@@ -5,11 +5,17 @@ namespace Spark
 {
     public class SparkBatchDescriptor
     {
-        public SparkBatchDescriptor()
+        public SparkBatchDescriptor() : this(null /*assemblyName*/)
         {
+        }
+
+        public SparkBatchDescriptor(string assemblyName)
+        {
+            OutputAssembly = assemblyName;
             Entries = new List<SparkBatchEntry>();
         }
 
+        public string OutputAssembly { get; set; }
         public IList<SparkBatchEntry> Entries { get; set; }
 
         public SparkBatchConfigurator For(Type controllerType)

@@ -15,11 +15,9 @@
 */
 
 using System;
-using System.CodeDom.Compiler;
+using System.Linq;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
-using Microsoft.CSharp;
 using Spark.Compiler.ChunkVisitors;
 using Spark;
 
@@ -32,19 +30,8 @@ namespace Spark.Compiler
             GeneratedViewId = Guid.NewGuid();
         }
 
-        public ViewCompiler(string baseClass) : this(baseClass, null)
-        {
-        }
-
-        public ViewCompiler(string baseClass, string targetNamespace)
-        {
-            BaseClass = baseClass;
-            GeneratedViewId = Guid.NewGuid();
-            TargetNamespace = targetNamespace;
-        }
-
         public string BaseClass { get; set; }
-        public string TargetNamespace { get; set; }
+        public SparkViewDescriptor Descriptor { get; set; }
         public string ViewClassFullName { get; set; }
 
         public string SourceCode { get; set; }
@@ -54,6 +41,14 @@ namespace Spark.Compiler
         public bool Debug { get; set; }
         public IList<string> UseNamespaces { get; set; }
         public IList<string> UseAssemblies { get; set; }
+
+        public string TargetNamespace
+        {
+            get
+            {
+                return Descriptor == null ? null : Descriptor.TargetNamespace;
+            }
+        }
 
         public void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
@@ -72,6 +67,8 @@ namespace Spark.Compiler
             var globalsGenerator = new GlobalMembersVisitor(source);
             var viewGenerator = new GeneratedCodeVisitor(source) { Indent = 8 };
 
+
+            // using <namespaces>;
             foreach (var ns in UseNamespaces ?? new string[0])
                 usingGenerator.UsingNamespace(ns);
 
@@ -100,16 +97,33 @@ namespace Spark.Compiler
             }
 
             source.AppendLine();
+
+            if (Descriptor != null)
+            {
+                // [SparkView] attribute
+                source.AppendLine("[global::Spark.SparkViewAttribute(");
+                if (TargetNamespace != null)
+                    source.AppendFormat("    TargetNamespace=\"{0}\",", TargetNamespace).AppendLine();
+                source.AppendLine("    Templates = new string[] {");
+                source.Append("      ").AppendLine(string.Join(",\r\n      ",
+                                                               Descriptor.Templates.Select(
+                                                                   t => "\"" + t.Replace("\\", "\\\\") + "\"").ToArray()));
+                source.AppendLine("    })]");
+            }
+
+            // public class ViewName : BasePageType 
             source.AppendLine(string.Format("public class {0} : {1}", viewClassName, baseClassGenerator.BaseClassTypeName));
             source.AppendLine("{");
 
             source.AppendLine();
-            source.AppendLine("  public override System.Guid GeneratedViewId");
-            source.AppendLine(string.Format("  {{ get {{ return new System.Guid(\"{0:n}\"); }} }}", GeneratedViewId));
+            source.AppendLine("    public override System.Guid GeneratedViewId");
+            source.AppendLine(string.Format("    {{ get {{ return new System.Guid(\"{0:n}\"); }} }}", GeneratedViewId));
 
+            // properties and macros
             foreach (var resource in allResources)
                 globalsGenerator.Accept(resource);
 
+            // public void RenderViewLevelx()
             int renderLevel = 0;
             foreach (var viewTemplate in viewTemplates)
             {
@@ -121,7 +135,7 @@ namespace Spark.Compiler
                 ++renderLevel;
             }
 
-
+            // public void RenderView()
             source.AppendLine();
             source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
             source.AppendLine("    {");

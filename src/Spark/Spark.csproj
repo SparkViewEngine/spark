@@ -112,6 +112,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkBatchDescriptor.cs" />
     <Compile Include="SparkSettings.cs" />
+    <Compile Include="SparkViewAttribute.cs" />
     <Compile Include="SparkViewDescriptor.cs" />
     <Compile Include="SparkViewEngine.cs" />
   </ItemGroup>

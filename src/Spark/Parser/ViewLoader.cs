@@ -146,10 +146,6 @@ namespace Spark.Parser
                 {
                     useFile.FileContext = BindEntry(referencePath).FileContext;
                 }
-                else
-                {
-                    int x = 5;
-                }
             }
         }
 

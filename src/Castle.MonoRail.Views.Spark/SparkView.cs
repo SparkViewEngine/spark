@@ -26,7 +26,7 @@ namespace Castle.MonoRail.Views.Spark
     using Castle.MonoRail.Framework.Helpers;
 
     using global::Spark;
-
+    
     public abstract class SparkView : AbstractSparkView
     {
         protected SparkView()
