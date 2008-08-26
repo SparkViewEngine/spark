@@ -304,7 +304,7 @@ namespace Castle.MonoRail.Views.Spark
 
         private SparkViewDescriptor CreateDescriptor(
             string targetNamespace,
-            string controllerName,
+            string controllerPath,
             string viewName,
             IList<string> layouts)
         {
@@ -313,13 +313,13 @@ namespace Castle.MonoRail.Views.Spark
                 TargetNamespace = targetNamespace
             };
 
-            if (HasTemplate(controllerName + "\\" + viewName + ".spark"))
+            if (HasTemplate(controllerPath + "\\" + viewName + ".spark"))
             {
-                descriptor.Templates.Add(controllerName + "\\" + viewName + ".spark");
+                descriptor.Templates.Add(controllerPath + "\\" + viewName + ".spark");
             }
             else
             {
-                throw new CompilerException(string.Format("Unable to find templates {0}\\{1}.spark", controllerName, viewName));
+                throw new CompilerException(string.Format("Unable to find templates {0}\\{1}.spark", controllerPath, viewName));
             }
 
             foreach (var layoutName in layouts ?? new string[0])
