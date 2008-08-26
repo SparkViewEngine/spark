@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Reflection;
 using Castle.Core.Logging;
 using Spark.Compiler;
 
@@ -33,6 +34,7 @@ namespace Castle.MonoRail.Views.Spark
         {
             base.Service(provider);
             Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
+            _controllerDescriptorProvider = (IControllerDescriptorProvider)provider.GetService(typeof(IControllerDescriptorProvider));
         }
 
         private ISparkViewEngine _engine;
@@ -69,31 +71,28 @@ namespace Castle.MonoRail.Views.Spark
         public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller,
                                      IControllerContext controllerContext)
         {
-            string masterName = null;
-            if (controllerContext.LayoutNames != null)
-                masterName = string.Join(" ", controllerContext.LayoutNames);
+            //string masterName = null;
+            //if (controllerContext.LayoutNames != null)
+            //    masterName = string.Join(" ", controllerContext.LayoutNames);
 
             var descriptor = new SparkViewDescriptor { TargetNamespace = controller.GetType().Namespace };
             descriptor.Templates.Add(Path.ChangeExtension(templateName, ViewFileExtension));
 
-            if (controllerContext.LayoutNames != null)
+            foreach (var layoutName in controllerContext.LayoutNames ?? new string[0])
             {
-                foreach (var layoutName in controllerContext.LayoutNames)
+                if (HasTemplate("Layouts\\" + layoutName))
                 {
-                    if (HasTemplate("Layouts\\" + masterName))
-                    {
-                        descriptor.Templates.Add(Path.ChangeExtension("Layouts\\" + masterName, ViewFileExtension));
-                    }
-                    else if (HasTemplate("Shared\\" + masterName))
-                    {
-                        descriptor.Templates.Add(Path.ChangeExtension("Shared\\" + masterName, ViewFileExtension));
-                    }
-                    else
-                    {
-                        throw new CompilerException(string.Format(
-                                                        "Unable to find templates layouts\\{0} or shared\\{0}",
-                                                        layoutName));
-                    }
+                    descriptor.Templates.Add(Path.ChangeExtension("Layouts\\" + layoutName, ViewFileExtension));
+                }
+                else if (HasTemplate("Shared\\" + layoutName))
+                {
+                    descriptor.Templates.Add(Path.ChangeExtension("Shared\\" + layoutName, ViewFileExtension));
+                }
+                else
+                {
+                    throw new CompilerException(string.Format(
+                                                    "Unable to find templates layouts\\{0} or shared\\{0}",
+                                                    layoutName));
                 }
             }
 
@@ -182,6 +181,7 @@ namespace Castle.MonoRail.Views.Spark
         }
 
         readonly Dictionary<string, Type> _cachedViewComponent = new Dictionary<string, Type>();
+        private IControllerDescriptorProvider _controllerDescriptorProvider;
 
         ISparkExtension ISparkExtensionFactory.CreateExtension(ElementNode node)
         {
@@ -209,5 +209,164 @@ namespace Castle.MonoRail.Views.Spark
 
             return null;
         }
+
+
+        public Assembly Precompile(SparkBatchDescriptor batch)
+        {
+            return Engine.BatchCompilation(batch.OutputAssembly, CreateDescriptors(batch));
+        }
+
+        public IList<SparkViewDescriptor> CreateDescriptors(SparkBatchDescriptor batch)
+        {
+            var descriptors = new List<SparkViewDescriptor>();
+            foreach (var entry in batch.Entries)
+                descriptors.AddRange(CreateDescriptors(entry));
+            return descriptors;
+        }
+
+        public IList<SparkViewDescriptor> CreateDescriptors(SparkBatchEntry entry)
+        {
+            var descriptors = new List<SparkViewDescriptor>();
+
+            var metaDesc = _controllerDescriptorProvider.BuildDescriptor(entry.ControllerType);
+
+            var controllerName = metaDesc.ControllerDescriptor.Name;
+            var controllerPath = controllerName;
+            if (!string.IsNullOrEmpty(metaDesc.ControllerDescriptor.Area))
+                controllerPath = metaDesc.ControllerDescriptor.Area + "\\" + controllerName;
+
+            var viewNames = new List<string>();
+            var includeViews = entry.IncludeViews;
+            if (includeViews.Count == 0)
+                includeViews = new[] { "*" };
+
+            foreach (var include in includeViews)
+            {
+                if (include.EndsWith("*"))
+                {
+                    foreach (var fileName in ViewSourceLoader.ListViews(controllerPath))
+                    {
+                        var potentialMatch = Path.GetFileNameWithoutExtension(fileName);
+                        if (!TestMatch(potentialMatch, include))
+                            continue;
+
+                        var isExcluded = false;
+                        foreach (var exclude in entry.ExcludeViews)
+                        {
+                            if (!TestMatch(potentialMatch, RemoveSuffix(exclude, ".spark")))
+                                continue;
+
+                            isExcluded = true;
+                            break;
+                        }
+                        if (!isExcluded)
+                            viewNames.Add(potentialMatch);
+                    }
+                }
+                else
+                {
+                    // explicitly included views don't test for exclusion
+                    viewNames.Add(RemoveSuffix(include, ".spark"));
+                }
+            }
+
+            foreach (var viewName in viewNames)
+            {
+                var layoutNamesList = entry.LayoutNames;
+                if (layoutNamesList.Count == 0)
+                {
+                    var action = metaDesc.Actions[viewName];
+                    if (action != null)
+                    {
+                        var actionDesc = metaDesc.ActionDescriptors[action];
+                        if (actionDesc != null && actionDesc.Layout != null)
+                            layoutNamesList = new[] { actionDesc.Layout.LayoutNames };
+                    }
+                }
+                if (layoutNamesList.Count == 0)
+                {
+                    if (metaDesc.Layout != null)
+                        layoutNamesList = new[] { metaDesc.Layout.LayoutNames };                    
+                }
+
+                foreach (var layoutNames in layoutNamesList)
+                {
+                    descriptors.Add(CreateDescriptor(
+                                        entry.ControllerType.Namespace,
+                                        controllerPath,
+                                        viewName,
+                                        layoutNames));
+                }
+            }
+
+            return descriptors;
+        }
+
+        private SparkViewDescriptor CreateDescriptor(
+            string targetNamespace,
+            string controllerName,
+            string viewName,
+            IList<string> layouts)
+        {
+            var descriptor = new SparkViewDescriptor
+            {
+                TargetNamespace = targetNamespace
+            };
+
+            if (HasTemplate(controllerName + "\\" + viewName + ".spark"))
+            {
+                descriptor.Templates.Add(controllerName + "\\" + viewName + ".spark");
+            }
+            else
+            {
+                throw new CompilerException(string.Format("Unable to find templates {0}\\{1}.spark", controllerName, viewName));
+            }
+
+            foreach (var layoutName in layouts ?? new string[0])
+            {
+                if (HasTemplate("Layouts\\" + layoutName))
+                {
+                    descriptor.Templates.Add(Path.ChangeExtension("Layouts\\" + layoutName, ViewFileExtension));
+                }
+                else if (HasTemplate("Shared\\" + layoutName))
+                {
+                    descriptor.Templates.Add(Path.ChangeExtension("Shared\\" + layoutName, ViewFileExtension));
+                }
+                else
+                {
+                    throw new CompilerException(string.Format(
+                                                    "Unable to find templates layouts\\{0}.spark or shared\\{0}.spark",
+                                                    layoutName));
+                }
+            }
+
+            return descriptor;
+        }
+
+        static bool TestMatch(string potentialMatch, string pattern)
+        {
+            if (!pattern.EndsWith("*"))
+            {
+                return string.Equals(potentialMatch, pattern, StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            // raw wildcard matches anything that's not a partial
+            if (pattern == "*")
+            {
+                return !potentialMatch.StartsWith("_");
+            }
+
+            // otherwise the only thing that's supported is "starts with"
+            return potentialMatch.StartsWith(pattern.Substring(0, pattern.Length - 1),
+                                             StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        static string RemoveSuffix(string value, string suffix)
+        {
+            if (value.EndsWith(suffix, StringComparison.InvariantCultureIgnoreCase))
+                return value.Substring(0, value.Length - suffix.Length);
+            return value;
+        }
+
     }
 }

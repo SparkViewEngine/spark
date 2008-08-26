@@ -120,7 +120,7 @@ namespace MvcContrib.SparkViewEngine
                 }
                 else
                 {
-                    throw new CompilerException(string.Format("Unable to find templates Layouts\\{1}.spark or Shared\\{1}.spark", controllerName,
+                    throw new CompilerException(string.Format("Unable to find templates Layouts\\{0}.spark or Shared\\{0}.spark",
                                                               masterName));
                 }
             }
@@ -189,7 +189,6 @@ namespace MvcContrib.SparkViewEngine
         public List<SparkViewDescriptor> CreateDescriptors(SparkBatchDescriptor batch)
         {
             var descriptors = new List<SparkViewDescriptor>();
-
             foreach (var entry in batch.Entries)
                 descriptors.AddRange(CreateDescriptors(entry));
             return descriptors;

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Castle.MonoRail.Framework.Providers;
+
 namespace Castle.MonoRail.Views.Spark.Tests
 {
     using System;
@@ -104,6 +106,8 @@ namespace Castle.MonoRail.Views.Spark.Tests
             SetupResult.For(serviceProvider.GetService(typeof(ISparkViewEngine))).Return(null);
             SetupResult.For(serviceProvider.GetService(typeof(IUrlBuilder))).Return(urlBuilder);
             SetupResult.For(serviceProvider.GetService(typeof(IViewComponentFactory))).Return(null);
+            SetupResult.For(serviceProvider.GetService(typeof (IControllerDescriptorProvider))).Return(
+                new DefaultControllerDescriptorProvider());
             mocks.Replay(serviceProvider);
 
             SetupResult.For(engineContext.GetService(null)).IgnoreArguments().Do(
