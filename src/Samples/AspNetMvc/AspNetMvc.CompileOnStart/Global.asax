@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="AspNetMvc.CompileOnStart.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="PrecompiledViews.Global" Language="C#" %>

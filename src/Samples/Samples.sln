@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Asp.Net Mvc", "Asp.Net Mvc", "{B92F64C3-2A6F-4422-8B5B-12CE8CBF7E52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetMvcIoC", "AspNetMvcIoC\AspNetMvcIoC.csproj", "{E2345083-960A-4643-8E04-10B7982C293C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindsorInversionOfControl", "AspNetMvcIoC\WindsorInversionOfControl.csproj", "{E2345083-960A-4643-8E04-10B7982C293C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetMvc.CompileOnStart", "AspNetMvc\AspNetMvc.CompileOnStart\AspNetMvc.CompileOnStart.csproj", "{D02D6E90-F34D-43D8-AC59-EAC67C17D09A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledViews", "AspNetMvc\AspNetMvc.CompileOnStart\PrecompiledViews.csproj", "{D02D6E90-F34D-43D8-AC59-EAC67C17D09A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

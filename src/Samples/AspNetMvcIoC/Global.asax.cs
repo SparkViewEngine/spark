@@ -9,7 +9,7 @@ using System.Web.Security;
 using System.Web.SessionState;
 using System.Xml.Linq;
 
-namespace AspNetMvcIoC
+namespace WindsorInversionOfControl
 {
     public partial class Global : System.Web.HttpApplication
     {

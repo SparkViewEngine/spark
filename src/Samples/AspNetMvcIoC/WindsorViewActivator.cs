@@ -3,7 +3,7 @@ using Castle.Core;
 using Castle.MicroKernel;
 using Spark;
 
-namespace AspNetMvcIoC
+namespace WindsorInversionOfControl
 {
     public class WindsorViewActivator : IViewActivatorFactory
     {

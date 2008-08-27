@@ -1,5 +1,4 @@
-﻿
-using AspNetMvcIoC.Models;
+﻿using WindsorInversionOfControl.Models;
 
 namespace AspNetMvcIoC.Views
 {

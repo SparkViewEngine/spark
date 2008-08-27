@@ -11,7 +11,7 @@ using System.Web.SessionState;
 using System.Xml.Linq;
 using MvcContrib.SparkViewEngine;
 
-namespace AspNetMvc.CompileOnStart
+namespace PrecompiledViews
 {
     public partial class Global : System.Web.HttpApplication
     {

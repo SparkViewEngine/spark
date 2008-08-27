@@ -4,12 +4,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E2345083-960A-4643-8E04-10B7982C293C}</ProjectGuid>
+    <ProjectGuid>{D02D6E90-F34D-43D8-AC59-EAC67C17D09A}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AspNetMvcIoC</RootNamespace>
-    <AssemblyName>AspNetMvcIoC</AssemblyName>
+    <RootNamespace>PrecompiledViews</RootNamespace>
+    <AssemblyName>PrecompiledViews</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -30,49 +30,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Components.Binder, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.Components.Binder.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.DynamicProxy2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.DynamicProxy2.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.MicroKernel.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.Windsor.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\aspnetmvc\Microsoft.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Dependencies\Microsoft.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="MvcContrib, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\mvccontrib\MvcContrib.dll</HintPath>
-    </Reference>
-    <Reference Include="MvcContrib.Castle, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\mvccontrib\MvcContrib.Castle.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Dependencies\MvcContrib.dll</HintPath>
     </Reference>
     <Reference Include="MvcContrib.SparkViewEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\build\package\Bin\MvcContrib.SparkViewEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="NVelocity, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\NVelocity.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\MvcContrib.SparkViewEngine.dll</HintPath>
     </Reference>
     <Reference Include="Spark, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7f8549eed921a12c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\build\package\Bin\Spark.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Spark.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -84,18 +56,18 @@
     </Reference>
     <Reference Include="System.Web.Abstractions, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\aspnetmvc\System.Web.Abstractions.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Dependencies\System.Web.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Extensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Dependencies\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Routing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\aspnetmvc\System.Web.Routing.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Dependencies\System.Web.Routing.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -114,23 +86,26 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
-    <Compile Include="Models\NavRepository.cs" />
-    <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\SampleRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\View.cs" />
-    <Compile Include="WindsorViewActivator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="castle.config" />
-    <Content Include="Views\Home\Index.spark" />
-    <Content Include="Views\Shared\_Menu.spark" />
-    <Content Include="Views\Layouts\Application.spark" />
+    <None Include="Views\Account\Logout.spark" />
+    <None Include="Views\Account\Register.spark" />
+    <None Include="Views\Account\Login.spark" />
+    <None Include="Views\Home\List.spark" />
+    <None Include="Views\Home\Index.spark" />
+    <None Include="Views\Home\Detail.spark" />
+    <None Include="Views\Home\Login.spark" />
+    <None Include="Views\Layouts\Ajax.spark" />
+    <None Include="Views\Layouts\Application.spark" />
+    <None Include="Views\Layouts\Account.spark" />
+    <None Include="Views\Shared\_Notification.spark" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -150,7 +125,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>2016</DevelopmentServerPort>
+          <DevelopmentServerPort>1484</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

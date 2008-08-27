@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using AspNetMvcIoC.Models;
 using Castle.Windsor;
 using MvcContrib.Castle;
 using MvcContrib.ControllerFactories;
@@ -9,8 +8,9 @@ using MvcContrib.Services;
 using MvcContrib.SparkViewEngine;
 using MvcContrib.ViewFactories;
 using Spark;
+using WindsorInversionOfControl.Models;
 
-namespace AspNetMvcIoC
+namespace WindsorInversionOfControl
 {
     public partial class Global
     {
@@ -59,14 +59,14 @@ namespace AspNetMvcIoC
         public static void AddRoutes(RouteCollection routes)
         {
             routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(new { action = "Index", id = "" }),
-            });
+                           {
+                               Defaults = new RouteValueDictionary(new { action = "Index", id = "" }),
+                           });
 
             routes.Add(new Route("Default.aspx", new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(new { controller = "Home", action = "Index", id = "" }),
-            });
+                           {
+                               Defaults = new RouteValueDictionary(new { controller = "Home", action = "Index", id = "" }),
+                           });
 
         }
     }

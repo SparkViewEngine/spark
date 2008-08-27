@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace AspNetMvc.CompileOnStart.Controllers
+namespace PrecompiledViews.Controllers
 {
     public class HomeController : Controller
     {

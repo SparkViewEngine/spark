@@ -11,7 +11,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 
-namespace AspNetMvcIoC.Models
+namespace WindsorInversionOfControl.Models
 {
     public class Menu
     {

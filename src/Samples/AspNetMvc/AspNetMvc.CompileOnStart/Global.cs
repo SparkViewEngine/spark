@@ -3,11 +3,11 @@ using System.IO;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
-using AspNetMvc.CompileOnStart.Controllers;
 using MvcContrib.SparkViewEngine;
+using PrecompiledViews.Controllers;
 using Spark;
 
-namespace AspNetMvc.CompileOnStart
+namespace PrecompiledViews
 {
     public partial class Global
     {
