@@ -1,0 +1,15 @@
+﻿<html>
+  <head>
+    <global type="string" Title="'Medium Trust Example'"/>
+    <title>${Title}</title>
+    <link rel="stylesheet" type="text/css" href="~/content/default.css"/>
+    <use content="head"/>
+  </head>
+  <body>
+    <header/>
+    <div id="main">
+      <use content="view"/>
+    </div>
+    <footer/>
+  </body>
+</html>

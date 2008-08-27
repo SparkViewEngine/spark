@@ -32,47 +32,47 @@
   <ItemGroup>
     <Reference Include="Castle.Components.Binder, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.Components.Binder.dll</HintPath>
+      <HintPath>..\..\..\..\bin\castle\Castle.Components.Binder.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.Core.dll</HintPath>
+      <HintPath>..\..\..\..\bin\castle\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.DynamicProxy2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.DynamicProxy2.dll</HintPath>
+      <HintPath>..\..\..\..\bin\castle\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
     <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.MicroKernel.dll</HintPath>
+      <HintPath>..\..\..\..\bin\castle\Castle.MicroKernel.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\Castle.Windsor.dll</HintPath>
+      <HintPath>..\..\..\..\bin\castle\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\aspnetmvc\Microsoft.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\..\..\bin\aspnetmvc\Microsoft.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="MvcContrib, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\mvccontrib\MvcContrib.dll</HintPath>
+      <HintPath>..\..\..\..\bin\mvccontrib\MvcContrib.dll</HintPath>
     </Reference>
     <Reference Include="MvcContrib.Castle, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\mvccontrib\MvcContrib.Castle.dll</HintPath>
+      <HintPath>..\..\..\..\bin\mvccontrib\MvcContrib.Castle.dll</HintPath>
     </Reference>
     <Reference Include="MvcContrib.SparkViewEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\build\package\Bin\MvcContrib.SparkViewEngine.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\MvcContrib.SparkViewEngine.dll</HintPath>
     </Reference>
     <Reference Include="NVelocity, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\castle\NVelocity.dll</HintPath>
+      <HintPath>..\..\..\..\bin\castle\NVelocity.dll</HintPath>
     </Reference>
     <Reference Include="Spark, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7f8549eed921a12c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\build\package\Bin\Spark.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Spark.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -84,18 +84,18 @@
     </Reference>
     <Reference Include="System.Web.Abstractions, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\aspnetmvc\System.Web.Abstractions.dll</HintPath>
+      <HintPath>..\..\..\..\bin\aspnetmvc\System.Web.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Extensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\..\..\bin\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Routing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\aspnetmvc\System.Web.Routing.dll</HintPath>
+      <HintPath>..\..\..\..\bin\aspnetmvc\System.Web.Routing.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

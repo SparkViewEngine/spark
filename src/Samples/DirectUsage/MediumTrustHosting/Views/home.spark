@@ -1,0 +1,6 @@
+﻿<h1>Direct usage in medium trust</h1>
+<p>This sample shows two unrelated things. One thing is a way you can use the spark engine directly to render html output without using the Castle MonoRail or Asp.Met MVC frameworks.</p>
+<p>The other thing it shows is using precompiled views in a medium trust hosting environment.</p>
+<p>
+  <a href="~/productlist.ashx">Product List</a>
+</p>

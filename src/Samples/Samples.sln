@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Asp.Net Mvc", "Asp.Net Mvc", "{B92F64C3-2A6F-4422-8B5B-12CE8CBF7E52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindsorInversionOfControl", "AspNetMvcIoC\WindsorInversionOfControl.csproj", "{E2345083-960A-4643-8E04-10B7982C293C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindsorInversionOfControl", "AspNetMvc\WindsorInversionOfControl\WindsorInversionOfControl.csproj", "{E2345083-960A-4643-8E04-10B7982C293C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledViews", "AspNetMvc\AspNetMvc.CompileOnStart\PrecompiledViews.csproj", "{D02D6E90-F34D-43D8-AC59-EAC67C17D09A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledViews", "AspNetMvc\PrecompiledViews\PrecompiledViews.csproj", "{D02D6E90-F34D-43D8-AC59-EAC67C17D09A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Direct Usage", "Direct Usage", "{95C10F2D-8E28-4F30-BC13-53ADFF36C196}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediumTrustHosting", "DirectUsage\MediumTrustHosting\MediumTrustHosting.csproj", "{123FBEA2-3323-4051-8F33-734F4C06DD6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,10 @@ Global
 		{D02D6E90-F34D-43D8-AC59-EAC67C17D09A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D02D6E90-F34D-43D8-AC59-EAC67C17D09A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D02D6E90-F34D-43D8-AC59-EAC67C17D09A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{123FBEA2-3323-4051-8F33-734F4C06DD6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{123FBEA2-3323-4051-8F33-734F4C06DD6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{123FBEA2-3323-4051-8F33-734F4C06DD6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{123FBEA2-3323-4051-8F33-734F4C06DD6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -28,5 +36,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E2345083-960A-4643-8E04-10B7982C293C} = {B92F64C3-2A6F-4422-8B5B-12CE8CBF7E52}
 		{D02D6E90-F34D-43D8-AC59-EAC67C17D09A} = {B92F64C3-2A6F-4422-8B5B-12CE8CBF7E52}
+		{123FBEA2-3323-4051-8F33-734F4C06DD6C} = {95C10F2D-8E28-4F30-BC13-53ADFF36C196}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,11 @@
+﻿<h1>Product List</h1>
+
+<viewdata products="IList[[Product]]"/>
+
+<set Title="'Products - ' + Title"/>
+
+<ul>
+  <li each="var product in products">
+    <a href="~/product.ashx?id=${product.Id}">${H(product.Name)}</a>
+  </li>
+</ul>

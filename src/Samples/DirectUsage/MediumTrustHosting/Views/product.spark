@@ -1,0 +1,9 @@
+﻿<h3>Product ${product.Id} Details</h3>
+<p>Id: ${product.Id}</p>
+<p>Name: ${H(product.Name)}</p>
+
+<viewdata product="Product"/>
+
+<set Title="product.Name + ' - ' + Title"/>
+
+<a href="~/productlist.ashx">Return to list</a>
