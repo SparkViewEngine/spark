@@ -63,7 +63,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             mocks = new MockRepository();
             factory = new SparkViewFactory();
             engineContext = mocks.CreateMock<IEngineContext>();
-            server = new MockServerUtility();
+            server = new StubServerUtility();
             request = mocks.CreateMock<IRequest>();
             response = mocks.CreateMock<IResponse>();
 

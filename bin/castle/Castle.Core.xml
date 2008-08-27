@@ -212,7 +212,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:Castle.Core.CustomLifestyleAttribute"/> class.
             </summary>
-            <param name="lifestyleHandler">The lifestyle handler.</param>
+            <param name="lifestyleHandlerType">The lifestyle handler.</param>
         </member>
         <member name="P:Castle.Core.CustomLifestyleAttribute.LifestyleHandlerType">
             <summary>
@@ -483,14 +483,14 @@
             <summary>
             Gets the configuration file.
             </summary>
-            <param name="filename">i.e. log4net.config</param>
+            <param name="fileName">i.e. log4net.config</param>
             <returns></returns>
         </member>
         <member name="M:Castle.Core.Logging.AbstractLoggerFactory.GetConfigFile(System.String)">
             <summary>
             Gets the configuration file.
             </summary>
-            <param name="filename">i.e. log4net.config</param>
+            <param name="fileName">i.e. log4net.config</param>
             <returns></returns>
         </member>
         <member name="T:Castle.Core.Logging.ConsoleFactory">
@@ -839,7 +839,7 @@
             Create a new child logger.
             The name of the child logger is [current-loggers-name].[passed-in-name]
             </summary>
-            <param name="name">The Subname of this logger.</param>
+            <param name="loggerName">The Subname of this logger.</param>
             <returns>The New ILogger instance.</returns> 
             <exception cref="T:System.ArgumentException">If the name has an empty element name.</exception>
         </member>
@@ -1175,8 +1175,8 @@
             Implementors output the log content by implementing this method only.
             Note that exception can be null
             </summary>
-            <param name="level"></param>
-            <param name="name"></param>
+            <param name="loggerLevel"></param>
+            <param name="loggerName"></param>
             <param name="message"></param>
             <param name="exception"></param>
         </member>
@@ -1260,8 +1260,8 @@
             <summary>
             A Common method to log.
             </summary>
-            <param name="level">The level of logging</param>
-            <param name="name">The name of the logger</param>
+            <param name="loggerLevel">The level of logging</param>
+            <param name="loggerName">The name of the logger</param>
             <param name="message">The Message</param>
             <param name="exception">The Exception</param>
         </member>
@@ -1270,7 +1270,7 @@
             Returns a new <c>ConsoleLogger</c> with the name
             added after this loggers name, with a dot in between.
             </summary>
-            <param name="newName">The added hierarchical name.</param>
+            <param name="loggerName">The added hierarchical name.</param>
             <returns>A new <c>ConsoleLogger</c>.</returns> 
         </member>
         <member name="T:Castle.Core.Logging.DiagnosticsLogger">
@@ -1617,7 +1617,7 @@
             <summary>
             Returns this <c>NullLogger</c>.
             </summary>
-            <param name="name">Ignored</param>
+            <param name="loggerName">Ignored</param>
             <returns>This ILogger instance.</returns> 
         </member>
         <member name="P:Castle.Core.Logging.NullLogger.IsDebugEnabled">
@@ -1803,7 +1803,7 @@
             Create a new child logger.
             The name of the child logger is [current-loggers-name].[passed-in-name]
             </summary>
-            <param name="name">The Subname of this logger.</param>
+            <param name="loggerName">The Subname of this logger.</param>
             <returns>The New ILogger instance.</returns> 
         </member>
         <member name="T:Castle.Core.Logging.WebLogger">
@@ -1836,14 +1836,14 @@
             Creates a new WebLogger.
             </summary>
             <param name="name">The Log name.</param>
-            <param name="logLevel">The Log level typecode.</param>
+            <param name="loggerLevel">The Log level typecode.</param>
         </member>
         <member name="M:Castle.Core.Logging.WebLogger.Log(Castle.Core.Logging.LoggerLevel,System.String,System.String,System.Exception)">
             <summary>
             A Common method to log.
             </summary>
-            <param name="level">The level of logging</param>
-            <param name="name">The Log name.</param>
+            <param name="loggerLevel">The level of logging</param>
+            <param name="loggerName">The Log name.</param>
             <param name="message">The Message</param>
             <param name="exception">The Exception</param>
         </member>
@@ -1851,7 +1851,7 @@
             <summary>
             Just returns this logger (<c>WebLogger</c> is not hierarchical).
             </summary>
-            <param name="newName">Ignored</param>
+            <param name="loggerName">Ignored</param>
             <returns>This ILogger instance.</returns> 
         </member>
         <member name="M:Castle.Core.Logging.WebLogger.TryToGetTraceContext">
@@ -2024,80 +2024,16 @@
             Creates a new instance of <c>ConfigurationCollection</c>.
             </summary>
         </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.#ctor(Castle.Core.Configuration.ConfigurationCollection)">
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.#ctor(System.Collections.Generic.IList{Castle.Core.Configuration.IConfiguration})">
             <summary>
             Creates a new instance of <c>ConfigurationCollection</c>.
             </summary>
         </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.#ctor(Castle.Core.Configuration.IConfiguration[])">
-            <summary>
-            Creates a new instance of <c>ConfigurationCollection</c>.
-            </summary>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.Add(Castle.Core.Configuration.IConfiguration)">
-            <summary>
-            Adds an <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
-            </summary>
-            <param name="value">The <see cref="T:Castle.Core.Configuration.IConfiguration"/> to add.</param>
-            <returns>
-            The index at which the new element was inserted.
-            </returns>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.AddRange(Castle.Core.Configuration.IConfiguration[])">
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.AddRange(System.Collections.Generic.IList{Castle.Core.Configuration.IConfiguration})">
             <summary>
             Adds an array of <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
             </summary>
             <param name="value">The Array of <see cref="T:Castle.Core.Configuration.IConfiguration"/> to add.</param>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.AddRange(Castle.Core.Configuration.ConfigurationCollection)">
-            <summary>
-            Adds a <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/>.
-            </summary>
-            <param name="value">The <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/> to add.</param>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.CopyTo(Castle.Core.Configuration.IConfiguration[],System.Int32)">
-            <summary>
-            Copies the elements to a one-dimensional <see cref="T:System.Array"/> instance at the specified index.
-            </summary>
-            <param name="array">
-            The one-dimensional <see cref="T:System.Array"/> must have zero-based indexing.
-            </param>
-            <param name="index">The zero-based index in array at which copying begins.</param>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.Contains(Castle.Core.Configuration.IConfiguration)">
-            <summary>
-            Gets a value indicating whether the <see cref="T:Castle.Core.Configuration.IConfiguration"/> contains
-            in the collection.
-            </summary>
-            <param name="value">The <see cref="T:Castle.Core.Configuration.IConfiguration"/> to locate.</param>
-            <returns>
-            <see langword="true"/> if the <see cref="T:Castle.Core.Configuration.IConfiguration"/> is contained in the collection; 
-            otherwise, <see langword="false"/>.
-            </returns>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.Remove(Castle.Core.Configuration.IConfiguration)">
-            <summary>
-            Removes a specific <see cref="T:Castle.Core.Configuration.IConfiguration"/> from the 
-            collection.   
-            </summary>
-            <param name="value">The <see cref="T:Castle.Core.Configuration.IConfiguration"/> to remove from the collection.</param>
-            <exception cref="T:System.ArgumentException">
-            <paramref name="value"/> is not found in the collection.
-            </exception>
-        </member>
-        <member name="P:Castle.Core.Configuration.ConfigurationCollection.Item(System.Int32)">
-            <summary>
-            Represents the entry at the specified index of the <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
-            </summary>
-            <param name="index">
-            The zero-based index of the entry to locate in the collection.
-            </param>
-            <value>
-            The entry at the specified index of the collection.
-            </value>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-            <paramref name="index"/> is outside the valid range of indexes for the collection.
-            </exception>
         </member>
         <member name="T:Castle.Core.Configuration.MutableConfiguration">
             <summary>
@@ -2213,6 +2149,18 @@
             Constructs a ComponentModel
             </summary>
         </member>
+        <member name="M:Castle.Core.ComponentModel.Requires(System.Predicate{Castle.Core.PropertySet}[])">
+            <summary>
+            Requires the selected property dependencies.
+            </summary>
+            <param name="selectors">The property selector.</param>
+        </member>
+        <member name="M:Castle.Core.ComponentModel.Requires``1">
+            <summary>
+            Requires the property dependencies of type <typeparamref name="D"/>.
+            </summary>
+            <typeparam name="D">The dependency type.</typeparam>
+        </member>
         <member name="P:Castle.Core.ComponentModel.Name">
             <summary>
             Sets or returns the component key
@@ -2315,7 +2263,7 @@
         </member>
         <member name="P:Castle.Core.ComponentModel.CustomDependencies">
             <summary>
-            Gets or sets the custom dependencies.
+            Gets the custom dependencies.
             </summary>
             <value>The custom dependencies.</value>
         </member>
@@ -2347,17 +2295,6 @@
         <member name="T:Castle.Core.ConstructorCandidateCollection">
             <summary>
             Collection of <see cref="T:Castle.Core.ConstructorCandidate"/>
-            </summary>
-        </member>
-        <member name="M:Castle.Core.ConstructorCandidateCollection.Add(Castle.Core.ConstructorCandidate)">
-            <summary>
-            Adds the specified candidate.
-            </summary>
-            <param name="candidate">The candidate.</param>
-        </member>
-        <member name="M:Castle.Core.ConstructorCandidateCollection.Clear">
-            <summary>
-            Clears this instance.
             </summary>
         </member>
         <member name="P:Castle.Core.ConstructorCandidateCollection.FewerArgumentsCandidate">
@@ -2444,43 +2381,11 @@
             Initializes a new instance of the <see cref="T:Castle.Core.DependencyModelCollection"/> class.
             </summary>
         </member>
-        <member name="M:Castle.Core.DependencyModelCollection.#ctor(Castle.Core.DependencyModelCollection)">
+        <member name="M:Castle.Core.DependencyModelCollection.#ctor(System.Collections.Generic.IList{Castle.Core.DependencyModel})">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.Core.DependencyModelCollection"/> class.
             </summary>
             <param name="dependencies">The dependencies.</param>
-        </member>
-        <member name="M:Castle.Core.DependencyModelCollection.#ctor(Castle.Core.DependencyModel[])">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Core.DependencyModelCollection"/> class.
-            </summary>
-            <param name="dependencies">The dependencies.</param>
-        </member>
-        <member name="M:Castle.Core.DependencyModelCollection.Add(Castle.Core.DependencyModel)">
-            <summary>
-            Adds the specified model.
-            </summary>
-            <param name="model">The model.</param>
-        </member>
-        <member name="M:Castle.Core.DependencyModelCollection.Remove(Castle.Core.DependencyModel)">
-            <summary>
-            Removes the specified model.
-            </summary>
-            <param name="model">The model.</param>
-        </member>
-        <member name="M:Castle.Core.DependencyModelCollection.Clear">
-            <summary>
-            Clears this instance.
-            </summary>
-        </member>
-        <member name="M:Castle.Core.DependencyModelCollection.Contains(Castle.Core.DependencyModel)">
-            <summary>
-            Determines whether this collection contains the the specified model.
-            </summary>
-            <param name="model">The model.</param>
-            <returns>
-            <c>true</c> if the collection contains the specified model; otherwise, <c>false</c>.
-            </returns>
         </member>
         <member name="T:Castle.Core.InterceptorReference">
             <summary>
@@ -2756,12 +2661,6 @@
             Collection of <see cref="T:Castle.Core.MethodMetaModel"/>
             </summary>
         </member>
-        <member name="M:Castle.Core.MethodMetaModelCollection.Add(Castle.Core.MethodMetaModel)">
-            <summary>
-            Adds the specified model.
-            </summary>
-            <param name="model">The model.</param>
-        </member>
         <member name="P:Castle.Core.MethodMetaModelCollection.MethodInfo2Model">
             <summary>
             Gets the method info2 model.
@@ -2972,17 +2871,6 @@
         <member name="T:Castle.Core.PropertySetCollection">
             <summary>
             Collection of <see cref="T:Castle.Core.PropertySet"/>
-            </summary>
-        </member>
-        <member name="M:Castle.Core.PropertySetCollection.Add(Castle.Core.PropertySet)">
-            <summary>
-            Adds the specified property.
-            </summary>
-            <param name="property">The property.</param>
-        </member>
-        <member name="M:Castle.Core.PropertySetCollection.Clear">
-            <summary>
-            Clears this instance.
             </summary>
         </member>
         <member name="M:Castle.Core.PropertySetCollection.FindByPropertyInfo(System.Reflection.PropertyInfo)">

@@ -560,11 +560,11 @@
             <param name="descriptor">The descriptor.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddKeyBuilder(Castle.Components.DictionaryAdapter.IDictionaryKeyBuilder)">
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddKeyBuilder(Castle.Components.DictionaryAdapter.IDictionaryKeyBuilder[])">
             <summary>
             Adds the key builder.
             </summary>
-            <param name="builder">The builder.</param>
+            <param name="builders">The builder.</param>
         </member>
         <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddKeyBuilders(System.Collections.Generic.ICollection{Castle.Components.DictionaryAdapter.IDictionaryKeyBuilder})">
             <summary>
@@ -583,11 +583,11 @@
             <param name="descriptor">The descriptor.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddGetter(Castle.Components.DictionaryAdapter.IDictionaryPropertyGetter)">
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddGetter(Castle.Components.DictionaryAdapter.IDictionaryPropertyGetter[])">
             <summary>
             Adds the dictionary getter.
             </summary>
-            <param name="getter">The getter.</param>
+            <param name="getters">The getter.</param>
         </member>
         <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddGetters(System.Collections.Generic.ICollection{Castle.Components.DictionaryAdapter.IDictionaryPropertyGetter})">
             <summary>
@@ -606,11 +606,11 @@
             <param name="descriptor">The descriptor.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddSetter(Castle.Components.DictionaryAdapter.IDictionaryPropertySetter)">
+        <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddSetter(Castle.Components.DictionaryAdapter.IDictionaryPropertySetter[])">
             <summary>
             Adds the dictionary setter.
             </summary>
-            <param name="setter">The setter.</param>
+            <param name="setters">The setter.</param>
         </member>
         <member name="M:Castle.Components.DictionaryAdapter.PropertyDescriptor.AddSetters(System.Collections.Generic.ICollection{Castle.Components.DictionaryAdapter.IDictionaryPropertySetter})">
             <summary>

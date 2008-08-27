@@ -340,5 +340,14 @@ namespace Castle.MonoRail.Views.Spark
         {
             return helper.Select(target, selectedValue, dataSource, new ModelDictionary(attributes));
         }
+
+        public static string PasswordField(this FormHelper helper, System.String target, System.Object attributes, ValueBehaviour valueBehaviour)
+        {
+            return helper.PasswordField(target, new ModelDictionary(attributes), valueBehaviour);
+        }
+        public static string PasswordNumberField(this FormHelper helper, System.String target, System.Object attributes, ValueBehaviour valueBehaviour)
+        {
+            return helper.PasswordNumberField(target, new ModelDictionary(attributes), valueBehaviour);
+        }
     }
 }

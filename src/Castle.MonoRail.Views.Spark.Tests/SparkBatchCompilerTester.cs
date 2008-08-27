@@ -18,7 +18,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             var settings = new SparkSettings();
 
-            var services = new MockServices();
+            var services = new StubMonoRailServices();
             services.AddService(typeof(IViewSourceLoader), new FileAssemblyViewSourceLoader("MonoRail.Tests.Views"));
             services.AddService(typeof(ISparkViewEngine), new SparkViewEngine(settings));
             services.AddService(typeof(IControllerDescriptorProvider), services.ControllerDescriptorProvider);

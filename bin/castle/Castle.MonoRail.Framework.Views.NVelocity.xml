@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.MonoRail.Framework.Views.NVelocity</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.AbstractComponentDirective">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.AbstractComponentDirective.#ctor(Castle.MonoRail.Framework.IViewComponentFactory,Castle.MonoRail.Framework.IViewEngine)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.AbstractComponentDirective"/> class.
+            </summary>
+            <param name="viewComponentFactory">The view component factory.</param>
+            <param name="viewEngine">The view engine instance</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.AbstractComponentDirective.ProcessFirstParam(NVelocity.Runtime.Parser.Node.INode,NVelocity.Context.IInternalContextAdapter,System.Int32)">
+            <summary>
+            Processes the first param.
+            first param can either be the literal string 'with' which means the user
+            is using the syntax #blockcomponent(ComponentName with "param1=value1" "param2=value2")
+            or it could be a dictionary string like: 
+            #blockcomponent(ComponentName "#{ param1='value1', param2='value2' }")
+            anything different than that will throw an exception
+            </summary>
+            <param name="node">The node.</param>
+            <param name="context">The context.</param>
+            <param name="childrenCount">The children count.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.BlockComponentDirective">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.CaptureForDirective.#ctor">
+             <summary>
+             Render's the contents of the directive and store them in the context
+             variable so it can be referenced later on the template
+            
+             #capturefor(someId)
+            		Some content goes here
+             #end
+            
+             $someId
+             </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.ComponentDirective">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.SubSectionDirective.Init(NVelocity.Runtime.IRuntimeServices,NVelocity.Context.IInternalContextAdapter,NVelocity.Runtime.Parser.Node.INode)">
+            <summary>
+            How this directive is to be initialized.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.SubSectionDirective.Render(NVelocity.Context.IInternalContextAdapter,System.IO.TextWriter,NVelocity.Runtime.Parser.Node.INode)">
+            <summary>
+            How this directive is to be rendered
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.SubSectionDirective.Name">
+            <summary>
+            Return the name of this directive
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.SubSectionDirective.Type">
+            <summary>
+            Get the directive type BLOCK/LINE
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.StaticAccessorHelper`1">
+            <summary>
+            Provides a helper to access static operations on types to NVelocity.
+            </summary>
+            <typeparam name="T">the type to access</typeparam>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.StaticAccessorHelper`1.GetInvoke(System.String)">
+            <summary>
+            Invoke a get operation on the value type
+            </summary>
+            <param name="propName">the property or field to get</param>
+            <returns>the value</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.StaticAccessorHelper`1.Invoke(System.String,System.Object[])">
+            <summary>
+            Invoke a method on the value type
+            </summary>
+            <param name="method">the method name</param>
+            <param name="args">the argumenents.</param>
+            <returns>the result of the method invocation.</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.StaticAccessorHelper`1.SetInvoke(System.String,System.Object)">
+            <summary>
+            Invoke a set operation on the value type
+            </summary>
+            <param name="propName">the property or field to set</param>
+            <param name="value">the value to set the property or field to.</param>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSElementGeneratorDuck">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSElementGeneratorDuck.GetInvoke(System.String)">
+            <summary>
+            Defines the behavior when a property is read
+            </summary>
+            <param name="propName">Property name.</param>
+            <returns>value back to the template</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSElementGeneratorDuck.SetInvoke(System.String,System.Object)">
+            <summary>
+            Defines the behavior when a property is written
+            </summary>
+            <param name="propName">Property name.</param>
+            <param name="value">The value to assign.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSElementGeneratorDuck.Invoke(System.String,System.Object[])">
+            <summary>
+            Invokes the specified method.
+            </summary>
+            <param name="method">The method name.</param>
+            <param name="args">The method arguments.</param>
+            <returns>value back to the template</returns>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSGeneratorDuck">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSGeneratorDuck.#ctor(Castle.MonoRail.Framework.JSGeneration.IJSCodeGenerator,Castle.MonoRail.Framework.JSGeneration.IJSGenerator,System.Object[],System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSGeneratorDuck"/> class.
+            </summary>
+            <param name="codeGen">The code gen.</param>
+            <param name="generator">The generator.</param>
+            <param name="extensions">The extensions.</param>
+            <param name="elementExtensions">The element extensions.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSGeneratorDuck.GetInvoke(System.String)">
+            <summary>
+            Defines the behavior when a property is read
+            </summary>
+            <param name="propName">Property name.</param>
+            <returns>value back to the template</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSGeneratorDuck.SetInvoke(System.String,System.Object)">
+            <summary>
+            Defines the behavior when a property is written
+            </summary>
+            <param name="propName">Property name.</param>
+            <param name="value">The value to assign.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSGeneratorDuck.Invoke(System.String,System.Object[])">
+            <summary>
+            Invokes the specified method.
+            </summary>
+            <param name="method">The method name.</param>
+            <param name="args">The method arguments.</param>
+            <returns>value back to the template</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.JSGeneration.JSGeneratorDuck.CreateJSElementGeneratorProxy(Castle.MonoRail.Framework.JSGeneration.IJSCodeGenerator,Castle.MonoRail.Framework.JSGeneration.IJSElementGenerator,System.Object[])">
+            <summary>
+            Creates a JS element generator.
+            </summary>
+            <param name="codeGen">The code gen.</param>
+            <param name="elementGenerator">The element generator.</param>
+            <param name="elementExtensions">The element extensions.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectiveManager">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectiveManager.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Views.NVelocity.CustomDirectiveManager"/> class.
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.CustomResourceManager">
+            <summary>
+             Manages resource (views) loading and processing, calls and is also
+             called by NVelocity to allow recursive expansion of templates
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.CustomTemplate.Process">
+            <summary>
+            gets the named resource as a stream, parses and inits
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter">
+            <summary>
+            <see cref="T:Castle.MonoRail.Framework.IViewComponentContext"/>'s implementation for
+            NVelocity
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.#ctor(System.String,NVelocity.Runtime.Parser.Node.INode,Castle.MonoRail.Framework.IViewEngine,Castle.MonoRail.Framework.Views.NVelocity.CustomDirectives.IViewRenderer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter"/> class.
+            </summary>
+            <param name="componentName">Name of the component.</param>
+            <param name="parentNode">The parent node.</param>
+            <param name="viewEngine">The view engine.</param>
+            <param name="renderer">The view renderer.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.HasSection(System.String)">
+            <summary>
+            Determines whether the current component declaration on the view
+            has the specified section.
+            </summary>
+            <param name="sectionName">Name of the section.</param>
+            <returns>
+            	<c>true</c> if the specified section exists; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.RenderBody">
+            <summary>
+            Renders the component body.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.RenderView(System.String,System.IO.TextWriter)">
+            <summary>
+            Pendent
+            </summary>
+            <param name="name"></param>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.RenderSection(System.String)">
+            <summary>
+            Renders the the specified section
+            </summary>
+            <param name="sectionName">Name of the section.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.RenderSection(System.String,System.IO.TextWriter)">
+            <summary>
+            Renders the the specified section
+            </summary>
+            <param name="sectionName">Name of the section.</param>
+            <param name="writer">The writer.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.RenderBody(System.IO.TextWriter)">
+            <summary>
+            Renders the body into the specified <see cref="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.TextWriter"/>
+            </summary>
+            <param name="writer">The writer.</param>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.ComponentName">
+            <summary>
+            Gets the name of the component.
+            </summary>
+            <value>The name of the component.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.ContextVars">
+            <summary>
+            Gets the dictionary that holds variables for the
+            view and for the view component
+            </summary>
+            <value>The context vars.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.ComponentParameters">
+            <summary>
+            Gets the component parameters that the view has passed
+            to the component
+            </summary>
+            <value>The component parameters.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.ViewToRender">
+            <summary>
+            Gets or sets the view to render.
+            </summary>
+            <value>The view to render.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.Writer">
+            <summary>
+            Gets the writer used to render the component
+            </summary>
+            <value>The writer.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewContextAdapter.ViewEngine">
+            <summary>
+            Gets the view engine instance.
+            </summary>
+            <value>The view engine.</value>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewEngine">
+            <summary>
+            Implements a view engine using the popular Velocity syntax.
+            <para>
+            For details on the syntax, check the VTL Reference Guide
+            http://jakarta.apache.org/velocity/docs/vtl-reference-guide.html
+            </para>
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewEngine.Process(System.String,System.IO.TextWriter,Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Pendent.
+            </summary>
+            <param name="output">The output.</param>
+            <param name="context">The context.</param>
+            <param name="controller">The controller.</param>
+            <param name="controllerContext">The controller context.</param>
+            <param name="viewName">Name of the view.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewEngine.InitializeVelocityProperties(Commons.Collections.ExtendedProperties)">
+            <summary>
+            Initializes basic velocity properties. The main purpose of this method is to
+            allow this logic to be overrided.
+            </summary>
+            <param name="props">The <see cref="T:Commons.Collections.ExtendedProperties"/> collection to populate.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewEngine.ResolveLayoutTemplateName(System.String)">
+            <summary>
+            Resolves the layout template name into a velocity template file name.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewEngine.SupportsJSGeneration">
+            <summary>
+            Gets a value indicating whether the view engine
+            support the generation of JS.
+            </summary>
+            <value>
+            	<c>true</c> if JS generation is supported; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewEngine.ViewFileExtension">
+            <summary>
+            Gets the view file extension.
+            </summary>
+            <value>The view file extension.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewEngine.JSGeneratorFileExtension">
+            <summary>
+            Gets the JS generator file extension.
+            </summary>
+            <value>The JS generator file extension.</value>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Views.NVelocity.ResourceProcessingException">
+            <summary>
+             This exception is thrown when an error occurs during resource processing (expansion)
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -191,6 +191,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Castle.MonoRail.TestSupport.BaseControllerTest.AddEmailServices(Castle.MonoRail.Framework.Test.StubEngineContext)">
+            <summary>
+            Adds the default mock email services to the context.
+            </summary>
+            <param name="stubEngineContext"></param>
+        </member>
         <member name="M:Castle.MonoRail.TestSupport.BaseControllerTest.BuildRailsEngineContext(Castle.MonoRail.Framework.Test.IMockRequest,Castle.MonoRail.Framework.Test.IMockResponse,Castle.MonoRail.Framework.IMonoRailServices,Castle.MonoRail.Framework.ITrace,Castle.MonoRail.Framework.UrlInfo)">
             <summary>
             Builds the a mock context. You can override this method to
@@ -212,11 +218,11 @@
             <param name="actionName">Name of the action.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MonoRail.TestSupport.BaseControllerTest.InitializeEngineContext(Castle.MonoRail.Framework.Test.MockEngineContext)">
+        <member name="M:Castle.MonoRail.TestSupport.BaseControllerTest.InitializeEngineContext(Castle.MonoRail.Framework.Test.StubEngineContext)">
             <summary>
             Allows modifying of the engine context created by <see cref="M:Castle.MonoRail.TestSupport.BaseControllerTest.BuildRailsEngineContext(Castle.MonoRail.Framework.Test.IMockRequest,Castle.MonoRail.Framework.Test.IMockResponse,Castle.MonoRail.Framework.IMonoRailServices,Castle.MonoRail.Framework.ITrace,Castle.MonoRail.Framework.UrlInfo)"/>
             </summary>
-            <param name="mockEngineContext">The engine context to modify</param>
+            <param name="stubEngineContext">The engine context to modify</param>
         </member>
         <member name="M:Castle.MonoRail.TestSupport.BaseControllerTest.HasRenderedEmailTemplateNamed(System.String)">
             <summary>

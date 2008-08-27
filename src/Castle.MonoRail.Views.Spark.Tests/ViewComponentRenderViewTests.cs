@@ -27,7 +27,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         private DefaultViewComponentFactory viewComponentFactory;
         private MockRepository mocks;
         private ControllerContext controllerContext;
-        private MockEngineContext engineContext;
+        private StubEngineContext engineContext;
         private SparkViewFactory factory;
         private IController controller;
 
@@ -36,7 +36,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             mocks = new MockRepository();
 
-            var services = new MockServices();
+            var services = new StubMonoRailServices();
             services.ViewSourceLoader = new FileAssemblyViewSourceLoader("MonoRail.Tests.Views");
             services.AddService(typeof(IViewSourceLoader), services.ViewSourceLoader);
 
@@ -52,7 +52,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
             controller = mocks.CreateMock<IController>();
             controllerContext = new ControllerContext();
-            engineContext = new MockEngineContext(new UrlInfo("", "Home", "Index", "/", "castle"));
+            engineContext = new StubEngineContext(new UrlInfo("", "Home", "Index", "/", "castle"));
             engineContext.AddService(typeof(IViewComponentFactory), viewComponentFactory);
             engineContext.AddService(typeof(IViewComponentRegistry), viewComponentFactory.Registry);
         }

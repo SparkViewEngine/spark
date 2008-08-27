@@ -36,7 +36,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
             view = mocks.PartialMock<SparkView>();
 
-            engineContext = new MockEngineContext(new UrlInfo("", "Home", "Index", "/", "castle"));
+            engineContext = new StubEngineContext(new UrlInfo("", "Home", "Index", "/", "castle"));
             controllerContext = new ControllerContext();
 
 
