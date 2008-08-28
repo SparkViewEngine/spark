@@ -36,7 +36,7 @@ namespace PrecompiledViews
 
         public static void LoadPrecompiledViews(SparkViewFactory factory)
         {
-                factory.Engine.LoadBatchCompilation(Assembly.Load("Precompiled"));
+            factory.Engine.LoadBatchCompilation(Assembly.Load("Precompiled"));
         }
     }
 }

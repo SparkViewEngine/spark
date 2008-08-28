@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwindDemo", "AspNetMvc\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwindDemo.Tests", "AspNetMvc\NorthwindDemo.Tests\NorthwindDemo.Tests.csproj", "{C5F1CCAE-0DE7-4D29-B0CE-76F2FA35E000}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Castle MonoRail", "Castle MonoRail", "{70C08930-35D9-4208-9B28-48500FC98ED4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledViews", "MonoRail\PrecompiledViews\PrecompiledViews.csproj", "{247D9A71-561A-4C7D-BBBC-EE2FB0C5578F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,10 @@ Global
 		{C5F1CCAE-0DE7-4D29-B0CE-76F2FA35E000}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5F1CCAE-0DE7-4D29-B0CE-76F2FA35E000}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5F1CCAE-0DE7-4D29-B0CE-76F2FA35E000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{247D9A71-561A-4C7D-BBBC-EE2FB0C5578F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{247D9A71-561A-4C7D-BBBC-EE2FB0C5578F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{247D9A71-561A-4C7D-BBBC-EE2FB0C5578F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{247D9A71-561A-4C7D-BBBC-EE2FB0C5578F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,5 +59,6 @@ Global
 		{AC33AD98-DC84-4565-BD10-46BE803C5764} = {B92F64C3-2A6F-4422-8B5B-12CE8CBF7E52}
 		{C5F1CCAE-0DE7-4D29-B0CE-76F2FA35E000} = {B92F64C3-2A6F-4422-8B5B-12CE8CBF7E52}
 		{123FBEA2-3323-4051-8F33-734F4C06DD6C} = {95C10F2D-8E28-4F30-BC13-53ADFF36C196}
+		{247D9A71-561A-4C7D-BBBC-EE2FB0C5578F} = {70C08930-35D9-4208-9B28-48500FC98ED4}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,9 @@
+﻿<html>
+  <head>
+    <title>Account - Precompile demo</title>
+  </head>
+  <body>    
+    <h1>Account Section</h1>
+    <use content="view"/>
+  </body>
+</html>
