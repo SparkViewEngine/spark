@@ -71,11 +71,11 @@
     </Compile>
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductRepository.cs" />
-    <Compile Include="PrecompileInstaller.cs">
+    <Compile Include="PostBuildStep.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PrecompileInstaller.Designer.cs">
-      <DependentUpon>PrecompileInstaller.cs</DependentUpon>
+    <Compile Include="PostBuildStep.Designer.cs">
+      <DependentUpon>PostBuildStep.cs</DependentUpon>
     </Compile>
     <Compile Include="Product.ashx.cs">
       <DependentUpon>Product.ashx</DependentUpon>

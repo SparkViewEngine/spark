@@ -16,7 +16,7 @@ namespace NorthwindDemo.Tests
     public class ProductsControllerTester
     {
         [Test]
-        public void TestCompiledViews()
+        public void TestViewsWithBatchPrecompile()
         {
             // Use the Global class to initialize settings
             var builder = new ControllerBuilder();

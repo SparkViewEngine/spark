@@ -13,6 +13,8 @@ namespace NorthwindDemo
             RegisterControllerFactory(ControllerBuilder.Current);
             
             RegisterRoutes(RouteTable.Routes);
+
+            PrecompileViews(ControllerBuilder.Current);
         }
 
     }

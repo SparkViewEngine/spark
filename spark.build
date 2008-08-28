@@ -142,6 +142,7 @@
 			<fileset basedir="${bin.dir}">
 				<include name="aspnetmvc/*.*" />
 				<include name="mvccontrib/*.*" />
+				<include name="nunit/nunit.framework.dll" />
       </fileset>
     </copy>
 

@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
 using MvcContrib.SparkViewEngine;
+using NorthwindDemo.Controllers;
 using Spark;
 
 namespace NorthwindDemo
@@ -18,7 +19,8 @@ namespace NorthwindDemo
                 .AddNamespace("NorthwindDemo.Models")
                 .AddNamespace("NorthwindDemo.Views.Helpers");
 
-            builder.SetControllerFactory(new SparkControllerFactory { Settings = settings });
+            var controllerFactory = new SparkControllerFactory {Settings = settings};
+            builder.SetControllerFactory(controllerFactory);
         }
 
         public static void RegisterRoutes(RouteCollection routes)
@@ -29,6 +31,21 @@ namespace NorthwindDemo
             routes.MapRoute("mvcroute", "{controller}/{action}/{id}"
                 , new { controller = "products", action = "Index", id = "" }
                 , new { controller = @"[^\.]*" });
+        }
+
+        public static void PrecompileViews(ControllerBuilder builder)
+        {
+            var controllerFactory = (SparkControllerFactory)builder.GetControllerFactory();
+
+            var viewFactory = new SparkViewFactory(controllerFactory.Settings);
+
+            var batch = new SparkBatchDescriptor();
+
+            batch
+                .For<HomeController>()
+                .For<ProductsController>();
+            
+            viewFactory.Precompile(batch);
         }
     }
 }

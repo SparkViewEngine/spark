@@ -1,6 +1,6 @@
 ﻿namespace MediumTrustHosting
 {
-    partial class PrecompileInstaller
+    partial class PostBuildStep
     {
         /// <summary>
         /// Required designer variable.

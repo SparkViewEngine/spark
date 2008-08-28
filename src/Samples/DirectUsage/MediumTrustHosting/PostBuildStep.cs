@@ -18,9 +18,9 @@ namespace MediumTrustHosting
     /// This installer is invoked in the post-build step of the csproj
     /// </summary>
     [RunInstaller(true)]
-    public partial class PrecompileInstaller : Installer
+    public partial class PostBuildStep : Installer
     {
-        public PrecompileInstaller()
+        public PostBuildStep()
         {
             InitializeComponent();
         }
