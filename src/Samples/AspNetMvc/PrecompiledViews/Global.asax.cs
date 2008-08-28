@@ -21,9 +21,12 @@ namespace PrecompiledViews
 
             RegisterRoutes(RouteTable.Routes);
 
-            var viewFactory = new SparkViewFactory(controllerFactory.Settings) { ViewSourceLoader = controllerFactory.ViewSourceLoader };
+            var viewFactory = new SparkViewFactory(controllerFactory.Settings)
+                                  {
+                                      ViewSourceLoader = controllerFactory.ViewSourceLoader
+                                  };
 
-            PrecompileViews(viewFactory);
+            LoadPrecompiledViews(viewFactory);
         }
     }
 }

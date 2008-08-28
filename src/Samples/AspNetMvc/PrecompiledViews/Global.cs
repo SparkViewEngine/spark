@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using MvcContrib.SparkViewEngine;
+using MvcContrib.SparkViewEngine.Install;
 using PrecompiledViews.Controllers;
 using Spark;
 
@@ -33,37 +34,9 @@ namespace PrecompiledViews
                            });
         }
 
-
-        public static void PrecompileViews(SparkViewFactory factory)
+        public static void LoadPrecompiledViews(SparkViewFactory factory)
         {
-            var viewsAssemblyName = typeof (Global).Assembly.GetName().Name + ".Views";
-
-            try
-            {
-                // production case: load a precompiled assembly
-                var assembly = Assembly.Load(viewsAssemblyName);
-                factory.Engine.LoadBatchCompilation(assembly);
-            }
-            catch (FileNotFoundException)
-            {
-                // development case: precompile assemblies
-                var batch = new SparkBatchDescriptor(viewsAssemblyName + ".dll");
-
-                batch
-                    .For<HomeController>()
-                    .For<HomeController>().Layout("Ajax").Include("_Notification")
-                    .For<AccountController>();
-
-                var assembly = factory.Precompile(batch);
-
-                // pre-production case: assembly copied to a known location (app_data) for deployment
-                if (assembly != null && assembly.Location != null)
-                {
-                    var dataDirectory = Convert.ToString(AppDomain.CurrentDomain.GetData("DataDirectory"));
-
-                    File.Copy(assembly.Location, Path.Combine(dataDirectory, viewsAssemblyName + ".dll"), true);
-                }
-            }
+                factory.Engine.LoadBatchCompilation(Assembly.Load("Precompiled"));
         }
     }
 }
