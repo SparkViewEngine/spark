@@ -1,0 +1,18 @@
+﻿<html>
+  <head>
+    <global type="string" Title="'IoC Demo'"/>
+    <title>${Title}</title>
+    <link type="text/css" rel="stylesheet" href="~/content/style.css"/>
+  </head>
+  <body>
+
+    <header/>
+    
+    <div id="main">
+      <use content="view"/>
+    </div>
+
+    <footer/>
+
+  </body>
+</html>

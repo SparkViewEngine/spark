@@ -1,0 +1,6 @@
+﻿<ul id="${navId}">
+  <li each="var item in Nav.GetNav(Context, navId).Items">
+    <a href="${item.Url}">${H(item.Caption)}</a>
+  </li>
+  <div class="clearall"/>
+</ul>

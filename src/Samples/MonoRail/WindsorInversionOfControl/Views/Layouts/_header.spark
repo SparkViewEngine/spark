@@ -1,0 +1,4 @@
+﻿<div id="header">
+  <div>${Url.Link("WindsorInversionOfControl", new {controller="home", action="index"})}</div>
+  <ShowNav navId="'primary'"/>
+</div>

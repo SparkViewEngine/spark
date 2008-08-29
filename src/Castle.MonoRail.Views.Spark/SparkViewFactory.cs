@@ -30,11 +30,17 @@ namespace Castle.MonoRail.Views.Spark
 
     public class SparkViewFactory : ViewEngineBase, IViewFolder, ISparkExtensionFactory
     {
+        private IControllerDescriptorProvider _controllerDescriptorProvider;
+        private IViewActivatorFactory _viewActivatorFactory;
+
         public override void Service(IServiceProvider provider)
         {
             base.Service(provider);
-            Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
+
             _controllerDescriptorProvider = (IControllerDescriptorProvider)provider.GetService(typeof(IControllerDescriptorProvider));
+            _viewActivatorFactory = (IViewActivatorFactory)provider.GetService(typeof (IViewActivatorFactory));
+
+            Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
         }
 
         private ISparkViewEngine _engine;
@@ -54,6 +60,9 @@ namespace Castle.MonoRail.Views.Spark
                     _engine.ViewFolder = this;
                     _engine.ExtensionFactory = this;
                     _engine.DefaultPageBaseType = typeof(SparkView).FullName;
+                    
+                    if (_viewActivatorFactory != null)
+                        _engine.ViewActivatorFactory = _viewActivatorFactory;
                 }
             }
         }
@@ -181,7 +190,6 @@ namespace Castle.MonoRail.Views.Spark
         }
 
         readonly Dictionary<string, Type> _cachedViewComponent = new Dictionary<string, Type>();
-        private IControllerDescriptorProvider _controllerDescriptorProvider;
 
         ISparkExtension ISparkExtensionFactory.CreateExtension(ElementNode node)
         {

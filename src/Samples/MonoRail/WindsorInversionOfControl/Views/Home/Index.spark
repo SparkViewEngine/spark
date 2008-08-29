@@ -1,0 +1,23 @@
+﻿
+<p>Home index</p>
+
+#Logger.Debug("Someone is viewing the home page");
+
+<p>
+  This sample shows a few things. The biggest thing it's intended to show is
+  how to use Castle's MonoRail and WindsorContainer together with the SparkViewFactory.
+</p>
+
+<p>
+  The place where the magic occurs is in Global.RegisterComponents. The component ViewActivator is being
+  registered for the service interface Spark.IViewActivatorFactory. Spark will use this interface to register 
+  and instantiate it's views. The implementation here adds the view to the IKernel which will enable 
+  the views to take advantage of the dependency injection and facilites on the WindsorContainer.
+</p>
+
+<p>
+  You can see this being used in the Layouts\_ShowNav.spark partial file. It's using the INavProvider on
+  the base class, which was provided as a service when the view was instantiated. It's also using the
+  ILogger instance which was provided by the LoggingFacility.
+</p>
+

@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.MonoRail.WindsorExtension</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.MonoRail.WindsorExtension.DefaultWizardPageFactory">
+            <summary>
+            Default implementation of <see cref="T:Castle.MonoRail.WindsorExtension.IWizardPageFactory"/>
+            which requests components from the <see cref="T:Castle.MicroKernel.IKernel"/>
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.WindsorExtension.IWizardPageFactory">
+            <summary>
+            This interface allow a wizard controller
+            to request wizard steps from the IKernel without
+            directly refering to it
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.IWizardPageFactory.CreatePage(System.String)">
+            <summary>
+            Requests a <see cref="T:Castle.MonoRail.Framework.WizardStepPage"/> by
+            the key the component was registered on the 
+            controller
+            </summary>
+            <param name="key">The key used to register the component</param>
+            <returns>The step page instance</returns>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.IWizardPageFactory.CreatePage(System.Type)">
+            <summary>
+            Requests a <see cref="T:Castle.MonoRail.Framework.WizardStepPage"/> by
+            the key the component was registered on the 
+            controller
+            </summary>
+            <param name="stepPageType"></param>
+            <returns>The step page instance</returns>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.DefaultWizardPageFactory.#ctor(Castle.MicroKernel.IKernel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.WindsorExtension.DefaultWizardPageFactory"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.DefaultWizardPageFactory.CreatePage(System.String)">
+            <summary>
+            Requests a <see cref="T:Castle.MonoRail.Framework.WizardStepPage"/> by
+            the key the component was registered on the 
+            controller
+            </summary>
+            <param name="key">The key used to register the component</param>
+            <returns>The step page instance</returns>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.DefaultWizardPageFactory.CreatePage(System.Type)">
+            <summary>
+            Requests a <see cref="T:Castle.MonoRail.Framework.WizardStepPage"/> by
+            the key the component was registered on the 
+            controller
+            </summary>
+            <param name="stepPageType"></param>
+            <returns>The step page instance</returns>
+        </member>
+        <member name="T:Castle.MonoRail.WindsorExtension.MonoRailFacility">
+            <summary>
+            Facility responsible for registering the controllers in
+            the controllerTree.
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.WindsorExtension.WindsorControllerFactory">
+            <summary>
+            Custom implementation of <see cref="T:Castle.MonoRail.Framework.IControllerFactory"/>
+            that uses the WindsorContainer to obtain the 
+            controller instances.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.WindsorDynamicActionProviderFactory.#ctor(Castle.MicroKernel.IKernel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.WindsorExtension.WindsorDynamicActionProviderFactory"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.WindsorDynamicActionProviderFactory.Create(System.Type)">
+            <summary>
+            Creates the specified dynamic action provider type.
+            </summary>
+            <param name="dynamicActionProviderType">Type of the dynamic action provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.WindsorDynamicActionProviderFactory.Release(Castle.MonoRail.Framework.IDynamicActionProvider)">
+            <summary>
+            Releases the specified dynamic action provider.
+            </summary>
+            <param name="dynamicActionProvider">The dynamic action provider.</param>
+        </member>
+        <member name="T:Castle.MonoRail.WindsorExtension.WindsorFilterFactory">
+            <summary>
+            Custom implementation of <see cref="T:Castle.MonoRail.Framework.IFilterFactory"/>
+            that uses the WindsorContainer to obtain <see cref="T:Castle.MonoRail.Framework.IFilter"/>
+            instances, and, if not available, uses the default implementation
+            of <see cref="T:Castle.MonoRail.Framework.IFilterFactory"/>.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.WindsorHelperFactory.#ctor(Castle.MicroKernel.IKernel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.WindsorExtension.WindsorHelperFactory"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="M:Castle.MonoRail.WindsorExtension.WindsorHelperFactory.Create(System.Type,Castle.MonoRail.Framework.IEngineContext,System.Boolean@)">
+            <summary>
+            Creates the helper.
+            </summary>
+            <param name="helperType">Type of the helper.</param>
+            <param name="engineContext">The engine context.</param>
+            <param name="initialized">if set to <c>true</c> the helper is already initialized.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.MonoRail.WindsorExtension.WindsorMonoRailSectionHandler">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+    </members>
+</doc>

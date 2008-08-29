@@ -1,0 +1,50 @@
+﻿body
+{
+	font-family:Verdana;
+}
+
+#header
+{
+	background-color:#eeeeee;
+	border:solid 1px #999999;
+	margin:10px 0 10px 0;
+}
+
+#header p
+{
+	margin:0;
+}
+
+#footer
+{
+	background-color:#eeeeee;
+	border:solid 1px #999999;
+	margin:10px 0 10px 0;
+}
+
+#footer p
+{
+	margin:0;
+}
+
+#primary li
+{
+	float: left;
+	list-style:none;
+	padding-left: 12px;
+}
+
+#contents 
+{
+	float:left;
+	list-style:none;
+	background-color:#eeeeee;
+	border:solid 1px #999999;
+	margin:10px 10px 10px 0;
+	padding: 5px;
+}
+
+.clearall
+{
+	clear:both;
+}
