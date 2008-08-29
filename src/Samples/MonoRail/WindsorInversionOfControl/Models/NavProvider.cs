@@ -23,7 +23,7 @@ namespace WindsorInversionOfControl.Models
         {
             Logger.Debug("Getting nav for {0}", section);
 
-            if (section == "primary")
+            if (section == "navigation")
             {
                 return new NavData
                            {

@@ -1,18 +1,22 @@
-﻿<html>
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <head>
     <global type="string" Title="'IoC Demo'"/>
     <title>${Title}</title>
+    <link type="text/css" rel="stylesheet" href="~/content/andreas08/andreas08.css"/>
     <link type="text/css" rel="stylesheet" href="~/content/style.css"/>
   </head>
   <body>
+    <div id="container" >
 
-    <header/>
-    
-    <div id="main">
-      <use content="view"/>
+      <header/>
+
+      <div id="content">
+        <use content="view"/>
+      </div>
+
+      <footer/>
+
     </div>
-
-    <footer/>
-
   </body>
 </html>

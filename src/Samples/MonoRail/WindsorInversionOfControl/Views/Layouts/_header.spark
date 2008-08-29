@@ -1,4 +1,6 @@
 ﻿<div id="header">
-  <div>${Url.Link("WindsorInversionOfControl", new {controller="home", action="index"})}</div>
-  <ShowNav navId="'primary'"/>
+  <h1>${Url.Link(Title, new {controller="home", action="index"})}</h1>
+  <h2>space reserved for your website slogan!</h2>
 </div>
+<ShowNav navId="'navigation'"/>
+

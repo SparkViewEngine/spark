@@ -85,6 +85,8 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\andreas08\andreas08.css" />
+    <Content Include="Content\andreas08\index.html" />
     <Content Include="Content\style.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />

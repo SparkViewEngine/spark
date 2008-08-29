@@ -1,4 +1,4 @@
 ﻿<div id="footer">
-  ${Url.Link("View source", new {controller="home", action="viewsource", @params=new{id=GeneratedViewId}})}
+  <p>${Url.Link("View source", new {controller="home", action="viewsource", @params=new{id=GeneratedViewId}})}</p>
 </div>
 

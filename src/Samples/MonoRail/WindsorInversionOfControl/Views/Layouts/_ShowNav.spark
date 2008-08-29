@@ -1,6 +1,17 @@
-﻿<ul id="${navId}">
-  <li each="var item in Nav.GetNav(Context, navId).Items">
-    <a href="${item.Url}">${H(item.Caption)}</a>
-  </li>
-  <div class="clearall"/>
-</ul>
+﻿<div id="${navId}">
+  <!--
+  The INavProvider Nav being used here is added to the abstract class View in the project
+  
+  If you don't want to use a project wide base class you can
+  add a property with <global type="INavProvider" Nav="null"/> in a spark file
+  and it would also be "set" when the container instantiates the view
+  -->
+  <ul>
+    <li each="var item in Nav.GetNav(Context, navId).Items" class="${IsSelectedClass(item)}">
+      <a href="${SiteRoot + item.Url}">${H(item.Caption)}</a>
+    </li>
+  </ul>
+</div>
+<macro name="IsSelectedClass" item="NavItem">
+  #if (SiteRoot + item.Url == Context.Request.RawUrl) return "selected";
+</macro>
