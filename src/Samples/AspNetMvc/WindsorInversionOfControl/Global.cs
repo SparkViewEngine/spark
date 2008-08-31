@@ -28,7 +28,7 @@ namespace WindsorInversionOfControl
             container.Register(
                 AllTypes.Of<IController>()
                 .FromAssembly(typeof(Global).Assembly)
-                .Configure(c=>c.LifeStyle.Is(LifestyleType.Transient)));
+                .Configure(c=>c.LifeStyle.Transient.Named(c.Implementation.Name.ToLowerInvariant())));
 
             // Place this container as the dependency resolver and hook it into
             // the controller factory mechanism
