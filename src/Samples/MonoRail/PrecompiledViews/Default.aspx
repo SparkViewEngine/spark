@@ -1,1 +1,1 @@
-﻿<%  Response.Redirect("~/home/index.ashx")%>
+﻿<!-- placeholder file - do not delete -->

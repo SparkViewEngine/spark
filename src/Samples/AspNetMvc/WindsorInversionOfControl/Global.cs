@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Castle.Core;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using MvcContrib.Castle;
 using MvcContrib.ControllerFactories;
 using MvcContrib.Services;
 using MvcContrib.SparkViewEngine;
@@ -21,39 +22,24 @@ namespace WindsorInversionOfControl
 
             // Replaces the default IViewEngine. 
             container.AddComponent<IViewEngine, SparkViewFactory>();
-            container.AddComponent<ISparkViewEngine, SparkViewEngine>();
             container.AddComponent<IViewActivatorFactory, WindsorViewActivator>();
 
             // Add anything descended from IController/Controller 
-            container.RegisterControllers(typeof(Global).Assembly);
+            container.Register(
+                AllTypes.Of<IController>()
+                .FromAssembly(typeof(Global).Assembly)
+                .Configure(c=>c.LifeStyle.Is(LifestyleType.Transient)));
 
             // Place this container as the dependency resolver and hook it into
             // the controller factory mechanism
-            DependencyResolver.InitializeWith(new WindsorDependencyResolver(container));
+            DependencyResolver.InitializeWith(new WindsorDependencyResolver(container.Kernel));
             ControllerBuilder.Current.SetControllerFactory(typeof(IoCControllerFactory));
 
 
-            // The following demonstrates a few more techniques, but aren't part of the
-            // bare-minimum code for IoC
-
-            // Throw in a view source loader and a data access component. 
-            // These dependencies are resolved as needed.
+            // Some more components from the sample
             container.AddComponent<IViewSourceLoader, FileSystemViewSourceLoader>();
             container.AddComponent<ISampleRepository, SampleRepository>();
             container.AddComponent<INavRepository, NavRepository>();
-
-
-            // Example of providing settings as ISparkSettings instead 
-            // of using the <spark> in .config... If you use the <spark> section 
-            // don't register this component instance.
-
-            var settings = new SparkSettings()
-                .SetDebug(true)
-                .SetPageBaseType("AspNetMvcIoC.Views.View")
-                .AddNamespace("System.Collections.Generic")
-                .AddNamespace("AspNetMvcIoC.Models");
-            container.Kernel.AddComponentInstance<SparkSettings>(typeof(ISparkSettings), settings);
-
         }
 
         public static void AddRoutes(RouteCollection routes)

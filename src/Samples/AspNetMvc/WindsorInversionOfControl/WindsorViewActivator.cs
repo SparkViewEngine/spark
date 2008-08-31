@@ -5,24 +5,27 @@ using Spark;
 
 namespace WindsorInversionOfControl
 {
+    /// <summary>
+    /// Provides Windsor's Kernel capabilities to Spark's view activator infrastructure
+    /// </summary>
     public class WindsorViewActivator : IViewActivatorFactory
     {
-        private readonly IKernel kernel;
+        private readonly IKernel _kernel;
 
         public WindsorViewActivator(IKernel kernel)
         {
-            this.kernel = kernel;
+            _kernel = kernel;
         }
 
         public IViewActivator Register(Type type)
         {
-            kernel.AddComponent(type.AssemblyQualifiedName, typeof(ISparkView), type, LifestyleType.Transient);
-            return new Activator(kernel, type.AssemblyQualifiedName);
+            _kernel.AddComponent(type.AssemblyQualifiedName, typeof(ISparkView), type, LifestyleType.Transient);
+            return new Activator(_kernel, type.AssemblyQualifiedName);
         }
 
         public void Unregister(Type type, IViewActivator activator)
         {
-            kernel.RemoveComponent(type.AssemblyQualifiedName);            
+            _kernel.RemoveComponent(type.AssemblyQualifiedName);
         }
 
         class Activator : IViewActivator

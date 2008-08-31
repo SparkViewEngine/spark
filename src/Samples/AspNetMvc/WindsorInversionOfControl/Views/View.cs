@@ -1,6 +1,6 @@
 ﻿using WindsorInversionOfControl.Models;
 
-namespace AspNetMvcIoC.Views
+namespace WindsorInversionOfControl.Views
 {
     public abstract class View<T> : MvcContrib.SparkViewEngine.SparkView<T> where T : class
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Web;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Container;
 using Castle.MonoRail.Framework.Routing;
@@ -23,6 +24,16 @@ namespace WindsorInversionOfControl
             RegisterFacilities(_container);
             RegisterComponents(_container);
             RegisterRoutes(RoutingModuleEx.Engine);
+        }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            var path = Request.AppRelativeCurrentExecutionFilePath;
+            if (string.Equals(path, "~/default.aspx", StringComparison.InvariantCultureIgnoreCase) ||
+                string.Equals(path, "~/"))
+            {
+                Context.RewritePath("~/home/index.castle");
+            }
         }
 
     }

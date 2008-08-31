@@ -1,1 +1,1 @@
-﻿<%  Response.Redirect("~/home/index")%>
+﻿<!-- placeholder file - do not delete -->

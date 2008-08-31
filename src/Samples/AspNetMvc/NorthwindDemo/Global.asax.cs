@@ -17,5 +17,15 @@ namespace NorthwindDemo
             PrecompileViews(ControllerBuilder.Current);
         }
 
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            var path = Request.AppRelativeCurrentExecutionFilePath;
+            if (string.Equals(path, "~/default.aspx", StringComparison.InvariantCultureIgnoreCase) ||
+                string.Equals(path, "~/"))
+            {
+                Context.RewritePath("~/home");
+            }
+        }
+
     }
 }
