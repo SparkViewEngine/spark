@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,35 +20,38 @@ namespace Spark.Parser.Syntax
             var sourceContext = CreateSourceContext(viewPath, viewFolder);
             var position = new Position(sourceContext);
 
-            var nodes = _grammar.Nodes(position);
-            if (nodes.Rest.PotentialLength() != 0)
+            var result = _grammar.Nodes(position);
+            if (result.Rest.PotentialLength() != 0)
             {
-                ThrowParseException(viewPath, position, nodes.Rest);
+                ThrowParseException(viewPath, position, result.Rest);
             }
+            var nodes = result.Value;
 
             var partialFileNames = FindPartialFiles(viewPath, viewFolder);
 
-            var specialNodeVisitor = new SpecialNodeVisitor(partialFileNames, extensionFactory);
-            specialNodeVisitor.Accept(nodes.Value);
-
-            var forEachAttributeVisitor = new ForEachAttributeVisitor();
-            forEachAttributeVisitor.Accept(specialNodeVisitor.Nodes);
-
-            var conditionalAttributeVisitor = new ConditionalAttributeVisitor();
-            conditionalAttributeVisitor.Accept(forEachAttributeVisitor.Nodes);
-
-            var omitExtraLinesVisitor = new OmitExtraLinesVisitor();
-            omitExtraLinesVisitor.Accept(conditionalAttributeVisitor.Nodes);
-
-            var testElseElementVisitor = new TestElseElementVisitor();
-            testElseElementVisitor.Accept(omitExtraLinesVisitor.Nodes);
-
-            var urlAttributeVisitor = new UrlAttributeVisitor();
-            urlAttributeVisitor.Accept(testElseElementVisitor.Nodes);
+            foreach(var visitor in BuildNodeVisitors(partialFileNames, extensionFactory))
+            {
+                visitor.Accept(nodes);
+                nodes = visitor.Nodes;                
+            }
 
             var chunkBuilder = new ChunkBuilderVisitor();
-            chunkBuilder.Accept(urlAttributeVisitor.Nodes);
+            chunkBuilder.Accept(nodes);
             return chunkBuilder.Chunks;
+        }
+
+        private IList<INodeVisitor> BuildNodeVisitors(IList<string> partialFileNames, ISparkExtensionFactory extensionFactory)
+        {
+            return new INodeVisitor[]
+                       {
+                           new PrefixExpandingVisitor(),
+                           new SpecialNodeVisitor(partialFileNames, extensionFactory),
+                           new ForEachAttributeVisitor(),
+                           new ConditionalAttributeVisitor(),
+                           new OmitExtraLinesVisitor(),
+                           new TestElseElementVisitor(),
+                           new UrlAttributeVisitor()
+                       };
         }
     }
 }

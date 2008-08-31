@@ -6,25 +6,25 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class FrameData<FrameExtra>
+    public class Frame<FrameData>
     {
-        public FrameData<FrameExtra> PriorFrame { get; set; }
+        public Frame<FrameData> PriorFrame { get; set; }
         public IList<Node> Nodes { get; set; }
-        public FrameExtra Extra { get; set; }
+        public FrameData Data { get; set; }
     }
 
-    public abstract class NodeVisitor<TExtra> : AbstractNodeVisitor where TExtra:class, new()
+    public abstract class NodeVisitor<TFrameData> : AbstractNodeVisitor where TFrameData:class, new()
     {
-        private FrameData<TExtra> _frame;
+        private Frame<TFrameData> _frame;
 
         protected NodeVisitor()
         {
-            PushFrame(new List<Node>(), new TExtra());
+            PushFrame(new List<Node>(), new TFrameData());
         }
 
-        public void PushFrame(IList<Node> nodes, TExtra extra)
+        public void PushFrame(IList<Node> nodes, TFrameData frameData)
         {
-            var frame = new FrameData<TExtra> {Extra = extra, Nodes = nodes, PriorFrame = _frame};
+            var frame = new Frame<TFrameData> {Data = frameData, Nodes = nodes, PriorFrame = _frame};
             _frame = frame;
         }
 
@@ -37,6 +37,8 @@ namespace Spark.Compiler.NodeVisitors
         {
             get { return _frame.Nodes; }
         }
+
+        public TFrameData FrameData { get { return _frame.Data; } }
 
         protected override void Visit(StatementNode node)
         {
@@ -86,7 +88,7 @@ namespace Spark.Compiler.NodeVisitors
         protected override void Visit(SpecialNode node)
         {
             Nodes.Add(node);
-            PushFrame(new List<Node>(), new TExtra());
+            PushFrame(new List<Node>(), new TFrameData());
             Accept(node.Body);
             node.Body = Nodes;
             PopFrame();
@@ -95,10 +97,15 @@ namespace Spark.Compiler.NodeVisitors
         protected override void Visit(ExtensionNode node)
         {
             Nodes.Add(node);
-            PushFrame(new List<Node>(), new TExtra());
+            PushFrame(new List<Node>(), new TFrameData());
             Accept(node.Body);
             node.Body = Nodes;
             PopFrame();
         }
+    }
+
+    public class NodeVisitor : NodeVisitor<object>
+    {
+        
     }
 }

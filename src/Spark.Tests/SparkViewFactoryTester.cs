@@ -584,5 +584,17 @@ namespace Spark.Tests
 
             Assert.AreEqual("<ol><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol>", content);
         }
+
+        [Test]
+        public void PrefixContentNotation()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("prefix-content-notation", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString().Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace(" ", "");
+
+            Assert.That(content.Contains("onetwothree"));
+        }
     }
 }

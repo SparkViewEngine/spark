@@ -21,7 +21,7 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class UrlAttributeVisitor : NodeVisitor<object>
+    public class UrlAttributeVisitor : NodeVisitor
     {
         private readonly IList<ElementSpecs> _specs;
 
