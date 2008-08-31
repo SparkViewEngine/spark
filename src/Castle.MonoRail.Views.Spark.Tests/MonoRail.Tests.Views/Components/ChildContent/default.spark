@@ -1,0 +1,5 @@
+﻿<div>
+  one
+  ${ViewData["componentChildContent"]}
+  two
+</div>

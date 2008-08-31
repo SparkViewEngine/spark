@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Castle.MonoRail.Framework;
 using Spark.Parser.Code;
 
 namespace Castle.MonoRail.Views.Spark
@@ -28,28 +30,36 @@ namespace Castle.MonoRail.Views.Spark
     internal class ViewComponentExtension : ISparkExtension
     {
         private readonly ElementNode node;
-        private IDictionary<string, IList<Chunk>> sections;
-        private IDictionary<string, IList<AttributeNode>> attributes;
+        private readonly ViewComponentInfo info;
 
-        public ViewComponentExtension(ElementNode node)
+        private IDictionary<string, IList<Chunk>> sectionsChunks;
+        private IDictionary<string, IList<AttributeNode>> sectionsAttributes;
+
+        public ViewComponentExtension(ElementNode node, ViewComponentInfo info)
         {
             this.node = node;
+            this.info = info;
         }
 
         public void VisitNode(INodeVisitor visitor, IList<Node> body, IList<Chunk> chunks)
         {
-            visitor.Accept(body);
-
-            var sectionVisitor = new ViewComponentSectionChunkBuilderVisitor();
-            sectionVisitor.Accept(body);
-            sections = sectionVisitor.Sections;
-            attributes = sectionVisitor.Attributes;
+            if (visitor is ChunkBuilderVisitor)
+            {
+                var sectionVisitor = new ViewComponentVisitor((ChunkBuilderVisitor)visitor, info);
+                sectionVisitor.Accept(body);
+                sectionsChunks = sectionVisitor.Sections;
+                sectionsAttributes = sectionVisitor.Attributes;
+            }
+            else
+            {
+                visitor.Accept(body);
+            }
         }
 
         public void VisitChunk(IChunkVisitor visitor, OutputLocation location, IList<Chunk> body, StringBuilder output)
         {
             if (location == OutputLocation.RenderMethod)
-            {                
+            {
                 output.AppendFormat("RenderComponent(\"{0}\", new System.Collections.Generic.Dictionary<string,object> {{", node.Name);
 
                 var delimiter = "";
@@ -60,18 +70,17 @@ namespace Castle.MonoRail.Views.Spark
                     delimiter = ", ";
                 }
                 output.AppendLine("}, new System.Action(delegate {");
-                if (sections.Count == 0)
-                    visitor.Accept(body); //only append body if there are no sections
+                visitor.Accept(body); //only append body if there are no sections
                 output.AppendLine("}),");
 
                 output.AppendLine("new System.Collections.Generic.Dictionary<string,System.Action> {");
-                foreach(var section in sections)
+                foreach (var section in sectionsChunks)
                 {
                     output.Append("{\"")
                         .Append(section.Key)
                         .AppendLine("\", new System.Action(delegate {");
-                    
-                    foreach(var attr in attributes[section.Key])
+
+                    foreach (var attr in sectionsAttributes[section.Key])
                     {
                         output.Append("var ")
                             .Append(attr.Name)
@@ -85,74 +94,6 @@ namespace Castle.MonoRail.Views.Spark
                     output.AppendLine("})},");
                 }
                 output.AppendLine("});");
-            }
-        }
-    }
-
-    public class ViewComponentSectionChunkBuilderVisitor : ChunkBuilderVisitor
-    {
-        private string sectionName;
-        private int sectionDepth;
-
-        private readonly IDictionary<string, IList<Chunk>> sections = new Dictionary<string, IList<Chunk>>();
-
-        public IDictionary<string, IList<Chunk>> Sections
-        {
-            get { return sections; }
-        }
-
-        private readonly IDictionary<string, IList<AttributeNode>> attributes = new Dictionary<string, IList<AttributeNode>>();
-
-        public IDictionary<string, IList<AttributeNode>> Attributes
-        {
-            get { return attributes; }
-        }
-
-        protected override void Visit(ElementNode elementNode)
-        {
-            if (sectionName == null)
-            {
-                if (!sections.ContainsKey(elementNode.Name))
-                {
-                    sections.Add(elementNode.Name, new List<Chunk>());
-                    attributes.Add(elementNode.Name, new List<AttributeNode>());
-                }
-
-                foreach(var attr in elementNode.Attributes)
-                    attributes[elementNode.Name].Add(attr);
-
-                if (!elementNode.IsEmptyElement)
-                {
-                    sectionName = elementNode.Name;
-                    sectionDepth = 1;
-                    Chunks = sections[sectionName];
-                }
-            }
-            else if (string.Equals(sectionName, elementNode.Name))
-            {
-                if (!elementNode.IsEmptyElement)
-                    ++sectionDepth;
-            }
-            else
-            {
-                base.Visit(elementNode);
-            }
-        }
-
-        protected override void Visit(EndElementNode endElementNode)
-        {
-            if (string.Equals(sectionName, endElementNode.Name))
-            {
-                --sectionDepth;
-                if (sectionDepth == 0)
-                {
-                    sectionName = null;
-                    Chunks = new List<Chunk>();
-                }
-            }
-            else
-            {
-                base.Visit(endElementNode);
             }
         }
     }

@@ -1,0 +1,3 @@
+<ChildContent foo="5" bar="'hello'">
+  <p>${ViewData["foo"]}${ViewData["bar"]}</p>
+</ChildContent>

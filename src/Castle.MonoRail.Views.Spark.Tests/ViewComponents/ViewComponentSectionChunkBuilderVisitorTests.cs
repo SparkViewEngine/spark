@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Castle.MonoRail.Views.Spark.Tests
-{
-    using NUnit.Framework;
-    using global::Spark.Compiler;
-    using global::Spark.Parser;
-    using global::Spark.Parser.Markup;
+using Castle.MonoRail.Framework;
+using NUnit.Framework;
+using Spark.Compiler;
+using Spark.Compiler.NodeVisitors;
+using Spark.Parser;
+using Spark.Parser.Markup;
 
+namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
+{
     [TestFixture]
     public class ViewComponentSectionChunkBuilderVisitorTests
     {
@@ -27,11 +29,12 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             var grammar = new MarkupGrammar();
             var nodes = grammar.Nodes(new Position(new SourceContext(
-                "<foo>1<tr>2<td>3</foo> <bar>4</td>5</tr>6</bar> stuff <baaz>yadda<baaz></baaz><quux><quux/></baaz>")));
-            var visitor = new ViewComponentSectionChunkBuilderVisitor();
+                                                       "<foo>1<tr>2<td>3</foo> <bar>4</td>5</tr>6</bar> stuff <baaz>yadda<baaz></baaz><quux><quux/></baaz>")));
+            var details = new ViewComponentDetailsAttribute("Testing") { Sections = "foo,baaz,bar,quux" };
+            var visitor = new ViewComponentVisitor(new ChunkBuilderVisitor(), new ViewComponentInfo { Details = details });
             visitor.Accept(nodes.Value);
             Assert.AreEqual(3, visitor.Sections.Count);
-            
+
             Assert.AreEqual(1, visitor.Sections["foo"].Count);
 
             Assert.AreEqual("1<tr>2<td>3", ((SendLiteralChunk)visitor.Sections["foo"][0]).Text);

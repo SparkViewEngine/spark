@@ -1,0 +1,5 @@
+<div>
+  #PropertyBag["blah"] = "two";
+  <CaptureFor id="'blah'" append="'after'">three</CaptureFor>
+  one${PropertyBag['blah']}four
+</div>

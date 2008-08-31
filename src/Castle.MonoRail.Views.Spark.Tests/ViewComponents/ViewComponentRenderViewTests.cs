@@ -12,50 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Castle.MonoRail.Views.Spark.Tests
+using System.IO;
+using Castle.MonoRail.Framework;
+using NUnit.Framework;
+
+namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 {
-    using System.IO;
-    using Castle.MonoRail.Framework;
-    using Castle.MonoRail.Framework.Services;
-    using Castle.MonoRail.Framework.Test;
-    using NUnit.Framework;
-    using Rhino.Mocks;
-
     [TestFixture]
-    public class ViewComponentRenderViewTests 
+    public class ViewComponentRenderViewTests : BaseViewComponentTests
     {
-        private DefaultViewComponentFactory viewComponentFactory;
-        private MockRepository mocks;
-        private ControllerContext controllerContext;
-        private StubEngineContext engineContext;
-        private SparkViewFactory factory;
-        private IController controller;
-
-        [SetUp]
-        public void Init()
+        public override void Init()
         {
-            mocks = new MockRepository();
-
-            var services = new StubMonoRailServices();
-            services.ViewSourceLoader = new FileAssemblyViewSourceLoader("MonoRail.Tests.Views");
-            services.AddService(typeof(IViewSourceLoader), services.ViewSourceLoader);
-
-            viewComponentFactory = new DefaultViewComponentFactory();
-            viewComponentFactory.Initialize();
-            services.AddService(typeof(IViewComponentFactory), viewComponentFactory);
-            services.AddService(typeof(IViewComponentRegistry), viewComponentFactory.Registry);
+            base.Init();
 
             viewComponentFactory.Registry.AddViewComponent("Widget", typeof(WidgetComponent));
-
-            factory = new SparkViewFactory();
-            factory.Service(services);
-
-            controller = mocks.CreateMock<IController>();
-            controllerContext = new ControllerContext();
-            engineContext = new StubEngineContext(new UrlInfo("", "Home", "Index", "/", "castle"));
-            engineContext.AddService(typeof(IViewComponentFactory), viewComponentFactory);
-            engineContext.AddService(typeof(IViewComponentRegistry), viewComponentFactory.Registry);
         }
+
 
         [Test]
         public void ComponentCallingRenderView()

@@ -73,10 +73,13 @@
     <Compile Include="SparkViewDataTests.cs" />
     <Compile Include="SparkViewFactoryTests.cs" />
     <Compile Include="Stubs\StubController.cs" />
-    <Compile Include="ViewComponentExtensionTests.cs" />
-    <Compile Include="ViewComponentRenderViewTests.cs" />
-    <Compile Include="ViewComponentSectionChunkBuilderVisitorTests.cs" />
-    <Compile Include="ViewComponentSectionTests.cs" />
+    <Compile Include="ViewComponents\AllFrameworkComponentTests.cs" />
+    <Compile Include="ViewComponents\BaseViewComponentTests.cs" />
+    <Compile Include="ViewComponents\ViewComponentExtensionTests.cs" />
+    <Compile Include="ViewComponents\ViewComponentRenderBodyTests.cs" />
+    <Compile Include="ViewComponents\ViewComponentRenderViewTests.cs" />
+    <Compile Include="ViewComponents\ViewComponentSectionChunkBuilderVisitorTests.cs" />
+    <Compile Include="ViewComponents\ViewComponentSectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Castle.MonoRail.Views.Spark\Castle.MonoRail.Views.Spark.csproj">
@@ -124,6 +127,42 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="MonoRail.Tests.Views\Components\ChildContent\default.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-AuthenticatedContent.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-CaptureFor.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-ChildContent.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-ColumnRenderer.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-DiggStylePagination.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-Security.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-SiteMap.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-TreeMaker.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-UpdatePage.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-UpdateTag.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentBodySimpleHtml.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewWithContent.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -131,6 +170,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MonoRail.Tests.Views\Home\ComponentWithSimpleSections.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-SelectStylePagination.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentBodyHtmlHasAttributes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MonoRail.Tests.Views\Shared\Ajax.spark">

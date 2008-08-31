@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Reflection;
 using Castle.Core.Logging;
 using Spark.Compiler;
@@ -189,22 +190,22 @@ namespace Castle.MonoRail.Views.Spark
             }
         }
 
-        readonly Dictionary<string, Type> _cachedViewComponent = new Dictionary<string, Type>();
+        readonly Dictionary<string, ViewComponentInfo> _cachedViewComponent = new Dictionary<string, ViewComponentInfo>();
 
         ISparkExtension ISparkExtensionFactory.CreateExtension(ElementNode node)
         {
             var componentFactory = (IViewComponentFactory)serviceProvider.GetService(typeof(IViewComponentFactory));
 
-            Type viewComponent;
+            ViewComponentInfo viewComponentInfo;
             lock (_cachedViewComponent)
             {
 
-                if (!_cachedViewComponent.TryGetValue(node.Name, out viewComponent))
+                if (!_cachedViewComponent.TryGetValue(node.Name, out viewComponentInfo))
                 {
                     try
                     {
-                        viewComponent = componentFactory.Registry.GetViewComponent(node.Name);
-                        _cachedViewComponent.Add(node.Name, viewComponent);
+                        viewComponentInfo = new ViewComponentInfo(componentFactory.Registry.GetViewComponent(node.Name));
+                        _cachedViewComponent.Add(node.Name, viewComponentInfo);
                     }
                     catch
                     {
@@ -212,8 +213,11 @@ namespace Castle.MonoRail.Views.Spark
                     }
                 }
             }
-            if (viewComponent != null)
-                return new ViewComponentExtension(node);
+
+            if (viewComponentInfo != null)
+            {
+                return new ViewComponentExtension(node, viewComponentInfo);
+            }
 
             return null;
         }

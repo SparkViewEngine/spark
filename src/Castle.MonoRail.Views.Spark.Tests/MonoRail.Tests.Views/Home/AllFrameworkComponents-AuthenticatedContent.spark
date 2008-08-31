@@ -1,0 +1,10 @@
+<div>
+  <AuthenticatedContent>
+    <logged>
+      one
+    </logged>
+    <notlogged>
+      two
+    </notlogged>
+  </AuthenticatedContent>
+</div>

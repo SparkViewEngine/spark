@@ -72,6 +72,7 @@
     <Compile Include="ModelDictionary.cs" />
     <Compile Include="ViewComponentContext.cs" />
     <Compile Include="ViewComponentExtension.cs" />
+    <Compile Include="ViewComponentVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj">

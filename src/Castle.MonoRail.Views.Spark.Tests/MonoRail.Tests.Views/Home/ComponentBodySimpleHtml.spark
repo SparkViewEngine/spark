@@ -1,0 +1,5 @@
+﻿<div>
+  <ComponentWithBody>
+    <p>This is text</p>
+  </ComponentWithBody>
+</div>

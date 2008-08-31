@@ -1,0 +1,31 @@
+<div>
+  <ColumnRenderer Cols="4" Items="'abcdefgh'.ToCharArray()">
+    <start>
+      *start*
+    </start>
+    <endblock>
+      *endblock*
+    </endblock>
+    <startrow>
+      *startrow*
+    </startrow>
+    <endrow>
+      *endrow*
+    </endrow>
+    <startcolumn>
+      *startcolumn*
+    </startcolumn>
+    <endcolumn>
+      *endcolumn*
+    </endcolumn>
+    <item>
+      *${ViewData['item']}*
+    </item>
+    <empty>
+      *empty*
+    </empty>
+    <firstelement>
+      *firstelement*
+    </firstelement>
+  </ColumnRenderer>
+</div>
