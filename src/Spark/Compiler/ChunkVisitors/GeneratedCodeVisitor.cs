@@ -89,14 +89,43 @@ namespace Spark.Compiler.ChunkVisitors
             }
             else
             {
+                var detect = new DetectCodeExpressionVisitor();
+                var autoIndex = detect.Add(variableName + "Index");
+                var autoCount = detect.Add(variableName + "Count");
+                var autoIsFirst = detect.Add(variableName + "IsFirst");
+                var autoIsLast = detect.Add(variableName + "IsLast");
+                detect.Accept(chunk.Body);
+
+                if (autoIsLast.Detected)
+                {
+                    autoIndex.Detected = true;
+                    autoCount.Detected = true;
+                }                
+
                 AppendIndent().AppendLine("{");
-                _source.Append(' ', Indent + 4).AppendFormat("int {0}Index = 0;\r\n", variableName);
+                if (autoIndex.Detected)
+                    _source.Append(' ', Indent + 4).AppendFormat("int {0}Index = 0;\r\n", variableName);
+                if (autoIsFirst.Detected)
+                    _source.Append(' ', Indent + 4).AppendFormat("bool {0}IsFirst = true;\r\n", variableName);
+                if (autoCount.Detected)
+                {
+                    string collectionCode = string.Join(" ", terms.ToArray(), inIndex + 1, terms.Count - inIndex - 1);
+                    _source.Append(' ', Indent + 4).AppendFormat("int {0}Count = global::Spark.Compiler.CollectionUtility.Count({1});\r\n", variableName, collectionCode);
+                }
+
                 _source.Append(' ', Indent + 4).AppendFormat("foreach({0})\r\n", chunk.Code);
                 _source.Append(' ', Indent + 4).AppendLine("{");
+                if (autoIsLast.Detected)
+                    _source.Append(' ', Indent + 8).AppendFormat("bool {0}IsLast = ({0}Index == {0}Count - 1);\r\n", variableName);
+
                 Indent += 8;
                 Accept(chunk.Body);
                 Indent -= 8;
-                _source.Append(' ', Indent + 8).AppendFormat("++{0}Index;\r\n", variableName);
+                if (autoIndex.Detected)
+                    _source.Append(' ', Indent + 8).AppendFormat("++{0}Index;\r\n", variableName);
+                if (autoIsFirst.Detected)
+                    _source.Append(' ', Indent + 8).AppendFormat("{0}IsFirst = false;\r\n", variableName);
+                    
                 _source.Append(' ', Indent + 4).AppendLine("}");
                 AppendIndent().AppendFormat("}} //foreach {0}\r\n", chunk.Code.Replace("\r", "").Replace("\n", " "));
             }

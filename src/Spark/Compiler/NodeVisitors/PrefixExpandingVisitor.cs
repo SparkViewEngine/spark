@@ -8,7 +8,7 @@ namespace Spark.Compiler.NodeVisitors
 {
     public class PrefixExpandingVisitor : NodeVisitor<PrefixExpandingVisitor.Frame>
     {
-        IList<PrefixSpecs> _prefixes = new List<PrefixSpecs>();
+        readonly IList<PrefixSpecs> _prefixes = new List<PrefixSpecs>();
 
         public PrefixExpandingVisitor()
         {
@@ -53,7 +53,7 @@ namespace Spark.Compiler.NodeVisitors
             return colonIndex <= 0 ? elementName : elementName.Substring(colonIndex + 1);
         }
 
-        protected override void Visit(Spark.Parser.Markup.ElementNode node)
+        protected override void Visit(ElementNode node)
         {
             var prefix = GetPrefix(node.Name);
             if (!string.IsNullOrEmpty(prefix))
@@ -72,8 +72,10 @@ namespace Spark.Compiler.NodeVisitors
         private void PushReconstructedNode(ElementNode original, PrefixSpecs specs)
         {
             // For element <foo:blah> add an additional attributes like name="blah"
-            var attributes = new List<AttributeNode>();
-            attributes.Add(new AttributeNode(specs.AttributeName, GetName(original.Name)));
+            var attributes = new List<AttributeNode>
+                                 {
+                                     new AttributeNode(specs.AttributeName, GetName(original.Name))
+                                 };
             attributes.AddRange(original.Attributes);
             
             // Replace <foo:blah> with <foo>
@@ -87,7 +89,7 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
-        protected override void Visit(Spark.Parser.Markup.EndElementNode node)
+        protected override void Visit(EndElementNode node)
         {
             if (string.Equals(node.Name, FrameData.OriginalElementName))
             {

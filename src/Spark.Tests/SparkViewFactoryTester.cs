@@ -389,7 +389,22 @@ namespace Spark.Tests
                 "<li ", "class=\"even\">Gamma</li>",
                 "<li ", "class=\"odd\">Delta</li>"
                 );
+        }
 
+        [Test]
+        public void ForEachMoreAutoVariable()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("foreach-moreautovariables", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString().Replace(" ", "").Replace("\t", "").Replace("\r\n", "");
+            ContainsInOrder(content,
+                "<tr><td>one</td><td>0</td><td>4</td><td>True</td><td>False</td></tr>",
+                "<tr><td>two</td><td>1</td><td>4</td><td>False</td><td>False</td></tr>",
+                "<tr><td>three</td><td>2</td><td>4</td><td>False</td><td>False</td></tr>",
+                "<tr><td>four</td><td>3</td><td>4</td><td>False</td><td>True</td></tr>");
         }
 
 
