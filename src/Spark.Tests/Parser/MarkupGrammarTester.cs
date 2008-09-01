@@ -401,5 +401,17 @@ namespace Spark.Tests.Parser
             Assert.AreEqual(3, nodes2.Value.Count);
             Assert.AreEqual("abc\r\n \t x#Logger.Warn('Hello World');\r\ndef", ((TextNode)nodes2.Value[1]).Text);
         }
+
+        [Test]
+        public void ConditionalSyntaxInAttributes()
+        {
+            var attr = grammar.Attribute(Source("foo=\"one?{true}\""));
+            Assert.AreEqual(0, attr.Rest.PotentialLength());
+            Assert.AreEqual("foo", attr.Value.Name);
+            Assert.AreEqual(2, attr.Value.Nodes.Count);
+            Assert.AreEqual("one?{true}", attr.Value.Value);
+            Assert.AreEqual("one", ((TextNode)attr.Value.Nodes[0]).Text);
+            Assert.AreEqual("true", ((ConditionNode)attr.Value.Nodes[1]).Code);
+        }
     }
 }

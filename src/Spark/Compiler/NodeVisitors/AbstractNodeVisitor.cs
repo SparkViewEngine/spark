@@ -53,7 +53,9 @@ namespace Spark.Compiler.NodeVisitors
             else if (node is ExtensionNode)
                 Visit((ExtensionNode)node);
             else if (node is StatementNode)
-                Visit((StatementNode) node);
+                Visit((StatementNode)node);
+            else if (node is ConditionNode)
+                Visit((ConditionNode)node);
             else
                 throw new ArgumentException(string.Format("Unknown node type {0}", node.GetType()), "node");
         }
@@ -69,5 +71,6 @@ namespace Spark.Compiler.NodeVisitors
         protected abstract void Visit(CommentNode commentNode);
         protected abstract void Visit(SpecialNode specialNode);
         protected abstract void Visit(ExtensionNode node);
+        protected abstract void Visit(ConditionNode node);
     }
 }

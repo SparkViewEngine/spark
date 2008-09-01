@@ -195,5 +195,10 @@ namespace Spark.Compiler.NodeVisitors
         {
             Add(node);
         }
+
+        protected override void Visit(ConditionNode node)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

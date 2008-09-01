@@ -89,10 +89,31 @@ namespace Spark.Parser.Markup
                         sb.Append(((TextNode)node).Text);
                     else if (node is EntityNode)
                         sb.Append('&').Append(((EntityNode)node).Name).Append(';');
+                    else if (node is ExpressionNode)
+                        sb.Append("${").Append(((ExpressionNode) node).Code).Append('}');
+                    else if (node is ConditionNode)
+                        sb.Append("?{").Append(((ConditionNode)node).Code).Append('}');
                 }
                 return sb.ToString();
             }
         }
+    }
+
+    public class ConditionNode : Node
+    {
+        public ConditionNode(string code)
+        {
+            Code = code;
+            Nodes = new List<Node>();
+        }
+        public ConditionNode(IList<char> code)
+        {
+            Code = new String(code.ToArray());
+            Nodes = new List<Node>();
+        }
+
+        public string Code { get; set; }
+        public IList<Node> Nodes { get; set; }
     }
 
     public class ExpressionNode : Node

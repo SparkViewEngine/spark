@@ -88,6 +88,9 @@ namespace Spark.Parser.Markup
 
             Code = Code1/*.Or(Code2)*/.Or(Code3);
 
+            var Condition = Ch("?{").And(Expression).And(Ch('}'))
+                .Build(hit => new ConditionNode(hit.Left.Down));
+
             Text =
                 Rep1(ChNot('&', '<').Unless(Statement).Unless(Code))
                 .Build(hit => new TextNode(hit));
@@ -100,10 +103,10 @@ namespace Spark.Parser.Markup
             var EntityRefOrAmpersand = AsNode(EntityRef).Or(Ch('&').Build(hit => (Node)new TextNode("&")));
 
             //[10]   	AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
-            var AttValueSingleText = Rep1(ChNot('<', '&', '\'').Unless(Code)).Build(hit => new TextNode(hit));
-            var AttValueSingle = Apos.And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)))).And(Apos);
-            var AttValueDoubleText = Rep1(ChNot('<', '&', '\"').Unless(Code)).Build(hit => new TextNode(hit));
-            var AttValueDouble = Quot.And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)))).And(Quot);
+            var AttValueSingleText = Rep1(ChNot('<', '&', '\'').Unless(Code).Unless(Condition)).Build(hit => new TextNode(hit));
+            var AttValueSingle = Apos.And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)))).And(Apos);
+            var AttValueDoubleText = Rep1(ChNot('<', '&', '\"').Unless(Code).Unless(Condition)).Build(hit => new TextNode(hit));
+            var AttValueDouble = Quot.And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)))).And(Quot);
             var AttValue = AttValueSingle.Or(AttValueDouble).Left().Down();
 
 

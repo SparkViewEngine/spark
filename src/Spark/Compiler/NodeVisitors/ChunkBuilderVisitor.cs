@@ -144,17 +144,82 @@ namespace Spark.Compiler.NodeVisitors
         protected override void Visit(ElementNode elementNode)
         {
             AddLiteral("<" + elementNode.Name);
+
             foreach (var attribute in elementNode.Attributes)
                 Accept(attribute);
+
             AddLiteral(elementNode.IsEmptyElement ? "/>" : ">");
         }
 
         protected override void Visit(AttributeNode attributeNode)
         {
-            AddLiteral(" " + attributeNode.Name + "=\"");
+            var unconditionalNodes = new List<Node>();
+            var conditionNodes = new List<ConditionNode>();
             foreach (var node in attributeNode.Nodes)
-                Accept(node);
-            AddLiteral("\"");
+            {
+                if (node is ConditionNode)
+                {
+                    // condition nodes take the prior unconditional nodes as content
+                    var conditionNode = (ConditionNode)node;
+                    conditionNodes.Add(conditionNode);
+                    conditionNode.Nodes = unconditionalNodes;
+                    unconditionalNodes = new List<Node>();
+                }
+                else
+                {
+                    // other types add to the unconditional list
+                    unconditionalNodes.Add(node);
+                }
+            }
+
+            if (unconditionalNodes.Count != 0)
+            {
+                // This attribute may not disapper - send it literally
+                AddLiteral(" " + attributeNode.Name + "=\"");
+                foreach (var node in conditionNodes)
+                    Accept(node);
+                foreach (var node in unconditionalNodes)
+                    Accept(node);
+                AddLiteral("\"");
+            }
+            else
+            {
+                var scope = new ScopeChunk();
+                scope.Body.Add(new LocalVariableChunk { Name = "__just__once__", Value = "0" });
+
+                _sendAttributeOnce = new ConditionalChunk { Condition = "__just__once__++ == 0", Type = ConditionalType.If };
+                _sendAttributeOnce.Body.Add(new SendLiteralChunk { Text = " " + attributeNode.Name + "=\"" });
+
+                var prior = Chunks;
+                Chunks.Add(scope);
+                Chunks = scope.Body;
+
+                foreach (var node in conditionNodes)
+                    Accept(node);
+
+                Chunks = prior;
+                _sendAttributeOnce = null;
+
+                var ifWasSent = new ConditionalChunk { Condition = "__just__once__ != 0", Type = ConditionalType.If };
+                scope.Body.Add(ifWasSent);
+                ifWasSent.Body.Add(new SendLiteralChunk { Text = "\"" });
+            }
+        }
+
+        private ConditionalChunk _sendAttributeOnce;
+
+        protected override void Visit(ConditionNode conditionNode)
+        {
+            var conditionChunk = new ConditionalChunk() { Condition = conditionNode.Code, Type = ConditionalType.If };
+            Chunks.Add(conditionChunk);
+
+            if (_sendAttributeOnce != null)
+                conditionChunk.Body.Add(_sendAttributeOnce);
+
+            var prior = Chunks;
+            Chunks = conditionChunk.Body;
+            Accept(conditionNode.Nodes);
+            Chunks = prior;
         }
 
         protected override void Visit(EndElementNode endElementNode)
@@ -304,7 +369,7 @@ namespace Spark.Compiler.NodeVisitors
             }
             else if (varAttr != null || defAttr != null)
             {
-                var variableChunk = new LocalVariableChunk { Name = (varAttr ?? defAttr).AsCode(), Type = "string"};
+                var variableChunk = new LocalVariableChunk { Name = (varAttr ?? defAttr).AsCode(), Type = "string" };
                 Chunks.Add(variableChunk);
 
                 var contentSetChunk = new ContentSetChunk { Variable = variableChunk.Name };

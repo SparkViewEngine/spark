@@ -102,6 +102,11 @@ namespace Spark.Compiler.NodeVisitors
             node.Body = Nodes;
             PopFrame();
         }
+
+        protected override void Visit(ConditionNode node)
+        {
+            Nodes.Add(node);
+        }
     }
 
     public class NodeVisitor : NodeVisitor<object>

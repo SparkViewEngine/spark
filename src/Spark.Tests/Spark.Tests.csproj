@@ -207,6 +207,9 @@
     <None Include="Spark.Tests.Views\Home\const-and-readonly-globals.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\dynamic-attributes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\foreach-moreautovariables.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
