@@ -102,13 +102,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Home\Alternate.aspx" />
     <Content Include="Views\Home\Index.spark" />
     <Content Include="Views\Shared\Working.aspx" />
     <Content Include="Views\Shared\Footer.aspx" />
     <Content Include="Views\Shared\Yay.ascx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Layouts\Default.spark" />
+    <Content Include="Views\Shared\DefaultLayout.Master" />
+    <None Include="Views\Shared\DefaultLayout.spark" />
     <None Include="Views\Shared\Header.spark" />
     <None Include="Views\Shared\_Status.spark" />
     <None Include="Views\Shared\_Menu.spark" />

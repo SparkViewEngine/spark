@@ -29,7 +29,12 @@ namespace PartialFiles
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-
+            var path = Request.AppRelativeCurrentExecutionFilePath;
+            if (string.Equals(path, "~/default.aspx", StringComparison.InvariantCultureIgnoreCase) ||
+                string.Equals(path, "~/"))
+            {
+                Context.RewritePath("~/Home");
+            }
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

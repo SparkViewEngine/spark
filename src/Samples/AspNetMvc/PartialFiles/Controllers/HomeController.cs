@@ -13,14 +13,21 @@ using System.Xml.Linq;
 
 namespace PartialFiles.Controllers
 {
+    /// <summary>
+    /// Shows the use of index.spark + defaultlayout.spark, 
+    /// and alternate.aspx + defaultlayout.master, both of which
+    /// render a mix of spark, aspx, and ascx partial files.
+    /// </summary>
     public class HomeController : Controller
     {
         public ActionResult Index()
         {
-            //HtmlHelper html;
-            //html.RenderPartial();
-            
-            return View("Index", "Default");
+            return View("Index", "DefaultLayout");
+        }
+
+        public ActionResult Alternate()
+        {
+            return View("Alternate", "DefaultLayout");
         }
     }
 }

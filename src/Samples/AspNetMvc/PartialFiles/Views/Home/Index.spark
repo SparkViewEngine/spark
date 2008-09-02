@@ -1,19 +1,20 @@
-﻿
-<p>Top of the view</p>
-<div style="border:solid 1px grey">
-  <p>RenderPartial Yay ascx</p>
-  <% Html.RenderPartial("Yay"); %>
+﻿<div>
+  <p>Top of the view</p>
+  <div style="border:solid 1px grey">
+    <p>RenderPartial Yay ascx</p>
+    # Html.RenderPartial("Yay");
+  </div>
+  <div style="border:solid 1px grey">
+    <p>RenderPartial Working aspx</p>
+    # Html.RenderPartial("Working");
+  </div>
+  <div style="border:solid 1px grey">
+    <p>RenderPartial _Status spark</p>
+    # Html.RenderPartial("_Status");
+  </div>
+  <div style="border:solid 1px grey">
+    <p>Inclusion _Status spark</p>
+    <Status/>
+  </div>
+  <p>Bottom of the view</p>
 </div>
-<div style="border:solid 1px grey">
-  <p>RenderPartial Working aspx</p>
-  <% Html.RenderPartial("Working"); %>
-</div>
-<div style="border:solid 1px grey">
-  <p>RenderPartial _Status spark</p>
-  <% Html.RenderPartial("_Status"); %>
-</div>
-<div style="border:solid 1px grey">
-  <p>Inclusion _Status spark</p>
-  <Status/>
-</div>
-<p>Bottom of the view</p>
