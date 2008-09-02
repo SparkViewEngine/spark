@@ -180,8 +180,12 @@
       <do>
         <echo message="Altering ${filename}" />
         <loadfile file="${filename}" property="sample.csproj.contents"/>
-        <echo file="${filename}" append="false" 
-              message="${string::replace(sample.csproj.contents, '..\..\..\build\package\Bin', '..\..\Bin')}"/>
+        <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\build\package\Bin', '..\..\Bin')}"/>
+        <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\bin\mvccontrib', '..\..\Bin\Dependencies')}"/>
+        <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\bin\castle', '..\..\Bin\Dependencies')}"/>
+        <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\bin\aspnetmvc', '..\..\Bin\Dependencies')}"/>
+        <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\bin\nunit', '..\..\Bin\Dependencies')}"/>
+        <echo file="${filename}" append="false" message="${sample.csproj.contents}"/>
       </do>
     </foreach>
 <!--
