@@ -7,7 +7,7 @@ using Spark;
 
 namespace MvcContrib.SparkViewEngine
 {
-    public abstract class SparkView : AbstractSparkView, IViewDataContainer
+    public abstract class SparkView : AbstractSparkView, IViewDataContainer, IView
     {
         public ViewContext ViewContext { get; set; }
         public TempDataDictionary TempData { get { return ViewContext.TempData; } }
@@ -62,8 +62,7 @@ namespace MvcContrib.SparkViewEngine
             }
         }
 
-        [DebuggerNonUserCode]
-        public void RenderView(ViewContext viewContext)
+        public void Render(ViewContext viewContext, TextWriter writer)
         {
             ViewContext = viewContext;
             ViewData = viewContext.ViewData;
@@ -71,7 +70,7 @@ namespace MvcContrib.SparkViewEngine
             Url = new UrlHelper(viewContext);
             Ajax = new AjaxHelper(viewContext);
 
-            RenderView(viewContext.HttpContext.Response.Output);
+            RenderView(writer);
         }
     }
 

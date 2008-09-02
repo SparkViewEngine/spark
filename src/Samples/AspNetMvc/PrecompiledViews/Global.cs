@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Reflection;
 using System.Web.Mvc;
@@ -12,14 +13,10 @@ namespace PrecompiledViews
 {
     public partial class Global
     {
-
-        public static SparkControllerFactory RegisterControllerFactory(ControllerBuilder builder)
+        public static void RegisterViewEngine(ViewEngineCollection engines)
         {
-            var factory = new SparkControllerFactory();
-            builder.SetControllerFactory(factory);
-            return factory;
+            engines.Add(new SparkViewFactory());
         }
-
 
         public static void RegisterRoutes(RouteCollection routes)
         {
@@ -34,8 +31,9 @@ namespace PrecompiledViews
                            });
         }
 
-        public static void LoadPrecompiledViews(SparkViewFactory factory)
+        public static void LoadPrecompiledViews(ViewEngineCollection engines)
         {
+            var factory = engines.OfType<SparkViewFactory>().First();
             factory.Engine.LoadBatchCompilation(Assembly.Load("Precompiled"));
         }
     }

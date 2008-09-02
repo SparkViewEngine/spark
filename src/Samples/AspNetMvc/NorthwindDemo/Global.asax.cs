@@ -10,11 +10,11 @@ namespace NorthwindDemo
         {
             AppDomain.CurrentDomain.SetData("SQLServerCompactEditionUnderWebHosting", true);
 
-            RegisterControllerFactory(ControllerBuilder.Current);
+            RegisterViewEngine(ViewEngines.Engines);
             
             RegisterRoutes(RouteTable.Routes);
 
-            PrecompileViews(ControllerBuilder.Current);
+            PrecompileViews(ViewEngines.Engines);
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)

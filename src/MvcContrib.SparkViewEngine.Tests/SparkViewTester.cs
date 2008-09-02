@@ -35,7 +35,7 @@ namespace MvcContrib.SparkViewEngine.Tests
             var httpRequest = mocks.CreateMock<HttpRequestBase>();
             SetupResult.For(httpContext.Request).Return(httpRequest);
 
-            var controller = mocks.CreateMock<IController>();
+            var controller = mocks.CreateMock<ControllerBase>();
 
             Expect.Call(httpRequest.ApplicationPath).Return("/");
             Expect.Call(httpRequest.ApplicationPath).Return("/TestApp");
@@ -47,7 +47,7 @@ namespace MvcContrib.SparkViewEngine.Tests
 
             mocks.ReplayAll();
 
-            var viewContext = new ViewContext(httpContext, new RouteData(), controller, "index", null, null, null);
+            var viewContext = new ViewContext(httpContext, new RouteData(), controller, "index", null, null);
 
             var view = new StubSparkView {ViewContext = viewContext};
             Assert.AreEqual("", view.SiteRoot);

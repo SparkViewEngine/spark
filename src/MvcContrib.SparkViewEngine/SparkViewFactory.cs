@@ -67,28 +67,31 @@ namespace MvcContrib.SparkViewEngine
             set { Engine.ViewActivatorFactory = value; }
         }
 
-        [DebuggerNonUserCode]
-        public void RenderView(ViewContext viewContext)
+        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
         {
-            var descriptor = CreateDescriptor(viewContext);
+            var descriptor = CreateDescriptor(controllerContext, viewName, masterName, true);
             var entry = Engine.CreateEntry(descriptor);
-            var view = (SparkView)entry.CreateInstance();
-            view.RenderView(viewContext);
-            entry.ReleaseInstance(view);
+            var view = (IView)entry.CreateInstance();
+            return new ViewEngineResult(view);
         }
 
-        [DebuggerNonUserCode]
-        public SparkViewDescriptor CreateDescriptor(ViewContext viewContext)
+        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName)
         {
-            var controllerName = viewContext.RouteData.GetRequiredString("controller");
-            var viewName = viewContext.ViewName;
-            var masterName = viewContext.MasterName;
-            var targetNamespace = viewContext.Controller.GetType().Namespace;
-
-            return CreateDescriptor(targetNamespace, controllerName, viewName, masterName);
+            var descriptor = CreateDescriptor(controllerContext, partialViewName, null /*masterName*/, false);
+            var entry = Engine.CreateEntry(descriptor);
+            var view = (IView)entry.CreateInstance();
+            return new ViewEngineResult(view);
         }
 
-        private SparkViewDescriptor CreateDescriptor(string targetNamespace, string controllerName, string viewName, string masterName)
+        public SparkViewDescriptor CreateDescriptor(ControllerContext controllerContext, string viewName, string masterName, bool findDefaultMaster)
+        {
+            var controllerName = controllerContext.RouteData.GetRequiredString("controller");
+            var targetNamespace = controllerContext.Controller.GetType().Namespace;
+
+            return CreateDescriptor(targetNamespace, controllerName, viewName, masterName, findDefaultMaster);
+        }
+
+        private SparkViewDescriptor CreateDescriptor(string targetNamespace, string controllerName, string viewName, string masterName, bool findDefaultMaster)
         {
             var descriptor = new SparkViewDescriptor
                                  {
@@ -124,7 +127,7 @@ namespace MvcContrib.SparkViewEngine
                                                               masterName));
                 }
             }
-            else
+            else if (findDefaultMaster)
             {
                 if (ViewSourceLoader.HasView("Layouts\\" + controllerName + ".spark"))
                 {
@@ -285,5 +288,6 @@ namespace MvcContrib.SparkViewEngine
                 return value.Substring(0, value.Length - suffix.Length);
             return value;
         }
+
     }
 }

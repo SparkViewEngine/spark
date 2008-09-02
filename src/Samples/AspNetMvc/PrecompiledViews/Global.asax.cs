@@ -17,16 +17,11 @@ namespace PrecompiledViews
     {
         protected void Application_Start(object sender, EventArgs e)
         {
-            var controllerFactory = RegisterControllerFactory(ControllerBuilder.Current);
+            RegisterViewEngine(ViewEngines.Engines);
 
             RegisterRoutes(RouteTable.Routes);
 
-            var viewFactory = new SparkViewFactory(controllerFactory.Settings)
-                                  {
-                                      ViewSourceLoader = controllerFactory.ViewSourceLoader
-                                  };
-
-            LoadPrecompiledViews(viewFactory);
+            LoadPrecompiledViews(ViewEngines.Engines);
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)

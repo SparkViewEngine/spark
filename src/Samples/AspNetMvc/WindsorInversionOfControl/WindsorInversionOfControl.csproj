@@ -116,7 +116,7 @@
     <Compile Include="Models\SampleRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\View.cs" />
-    <Compile Include="WindsorDependencyResolver.cs" />
+    <Compile Include="WindsorControllerFactory.cs" />
     <Compile Include="WindsorViewActivator.cs" />
   </ItemGroup>
   <ItemGroup>

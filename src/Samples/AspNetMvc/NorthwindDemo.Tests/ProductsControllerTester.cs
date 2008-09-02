@@ -19,19 +19,14 @@ namespace NorthwindDemo.Tests
         public void TestViewsWithBatchPrecompile()
         {
             // Use the Global class to initialize settings
-            var builder = new ControllerBuilder();
-            Global.RegisterControllerFactory(builder);
-            var controllerFactory = (SparkControllerFactory)builder.GetControllerFactory();
+            var engines = new ViewEngineCollection();
+            Global.RegisterViewEngine(engines);
 
-            // Use the spark view factory to initialize an engine
-            var viewFactory = new SparkViewFactory(controllerFactory.Settings)
-                                  {
-                                      ViewSourceLoader = new FileSystemViewSourceLoader(@"..\..\..\NorthwindDemo\Views")
-                                  };
+            var viewEngine = engines.OfType<SparkViewFactory>().First();
 
             var batch = new SparkBatchDescriptor();
             batch.For<ProductsController>();
-            viewFactory.Precompile(batch);
+            viewEngine.Precompile(batch);
         }
 
         [Test]

@@ -30,16 +30,15 @@ namespace WindsorInversionOfControl
                 .FromAssembly(typeof(Global).Assembly)
                 .Configure(c=>c.LifeStyle.Transient.Named(c.Implementation.Name.ToLowerInvariant())));
 
-            // Place this container as the dependency resolver and hook it into
-            // the controller factory mechanism
-            DependencyResolver.InitializeWith(new WindsorDependencyResolver(container.Kernel));
-            ControllerBuilder.Current.SetControllerFactory(typeof(IoCControllerFactory));
-
-
             // Some more components from the sample
             container.AddComponent<IViewSourceLoader, FileSystemViewSourceLoader>();
             container.AddComponent<ISampleRepository, SampleRepository>();
             container.AddComponent<INavRepository, NavRepository>();
+
+            // Place this container as the dependency resolver and hook it into
+            // the controller factory mechanism
+            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container.Kernel));
+            ViewEngines.Engines.Add(container.Resolve<IViewEngine>());
         }
 
         public static void AddRoutes(RouteCollection routes)

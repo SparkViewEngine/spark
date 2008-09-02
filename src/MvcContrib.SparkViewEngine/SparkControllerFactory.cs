@@ -11,26 +11,26 @@ using DefaultControllerFactory = MvcContrib.ControllerFactories.DefaultControlle
 
 namespace MvcContrib.SparkViewEngine
 {
-	[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-	[AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-	public class SparkControllerFactory : DefaultControllerFactory
-	{
-        public SparkControllerFactory()
-        {
-            ViewSourceLoader = new FileSystemViewSourceLoader();
-        }
+    //[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    //[AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    //public class SparkControllerFactory : DefaultControllerFactory
+    //{
+    //    public SparkControllerFactory()
+    //    {
+    //        ViewSourceLoader = new FileSystemViewSourceLoader();
+    //    }
 
-        public ISparkSettings Settings { get; set; }
+    //    public ISparkSettings Settings { get; set; }
 
-        public IViewSourceLoader ViewSourceLoader { get; set; }
+    //    public IViewSourceLoader ViewSourceLoader { get; set; }
 
-		protected override IController CreateController(System.Web.Routing.RequestContext requestContext, string controllerName)
-		{
-			var controller = base.CreateController(requestContext, controllerName);
-			var c = controller as Controller;
-			if (c != null)
-                c.ViewEngine = new SparkViewFactory(Settings) { ViewSourceLoader = ViewSourceLoader};
-			return controller;
-		}
-	}
+    //    protected override IController CreateController(System.Web.Routing.RequestContext requestContext, string controllerName)
+    //    {
+    //        var controller = base.CreateController(requestContext, controllerName);
+    //        var c = controller as Controller;
+    //        if (c != null)
+    //            c.ViewEngine = new SparkViewFactory(Settings) { ViewSourceLoader = ViewSourceLoader};
+    //        return controller;
+    //    }
+    //}
 }

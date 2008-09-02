@@ -3,12 +3,13 @@ using System.Web.Routing;
 using MvcContrib.SparkViewEngine;
 using NorthwindDemo.Controllers;
 using Spark;
+using System.Linq;
 
 namespace NorthwindDemo
 {
     public partial class Global
     {
-        public static void RegisterControllerFactory(ControllerBuilder builder)
+        public static void RegisterViewEngine(ViewEngineCollection engines)
         {
             var settings = new SparkSettings()
                 .SetDebug(true)
@@ -16,11 +17,12 @@ namespace NorthwindDemo
                 .AddNamespace("System.Collections.Generic")
                 .AddNamespace("System.Linq")
                 .AddNamespace("System.Web.Mvc")
+                .AddNamespace("Microsoft.Web.Mvc")
                 .AddNamespace("NorthwindDemo.Models")
                 .AddNamespace("NorthwindDemo.Views.Helpers");
 
-            var controllerFactory = new SparkControllerFactory {Settings = settings};
-            builder.SetControllerFactory(controllerFactory);
+            var spark = new SparkViewFactory(settings);
+            engines.Add(spark);
         }
 
         public static void RegisterRoutes(RouteCollection routes)
@@ -33,11 +35,9 @@ namespace NorthwindDemo
                 , new { controller = @"[^\.]*" });
         }
 
-        public static void PrecompileViews(ControllerBuilder builder)
+        public static void PrecompileViews(ViewEngineCollection engines)
         {
-            var controllerFactory = (SparkControllerFactory)builder.GetControllerFactory();
-
-            var viewFactory = new SparkViewFactory(controllerFactory.Settings);
+            var viewFactory = engines.OfType<SparkViewFactory>().First();
 
             var batch = new SparkBatchDescriptor();
 

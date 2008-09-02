@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using MvcContrib.SparkViewEngine;
 using MvcContrib.SparkViewEngine.Tests.Controllers;
+using MvcContrib.UnitTests;
 using MvcContrib.UnitTests.SparkViewEngine.Models;
 using MvcContrib.ViewFactories;
 using NUnit.Framework;
@@ -16,7 +17,7 @@ using Rhino.Mocks;
 using Spark;
 using Spark.FileSystem;
 
-namespace MvcContrib.UnitTests.SparkViewEngine
+namespace MvcContrib.SparkViewEngine.Tests
 {
     [TestFixture, Category("SparkViewEngine")]
     public class SparkViewFactoryTester
@@ -25,8 +26,9 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         private HttpContextBase context;
         private HttpRequestBase request;
         private HttpResponseBase response;
-        private IController controller;
+        private ControllerBase controller;
         private RouteData routeData;
+        private ControllerContext controllerContext;
 
         private SparkViewFactory factory;
 
@@ -53,13 +55,16 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             mocks.Replay(response);
             output = response.Output;
 
-            controller = mocks.DynamicMock<IController>();
+            controller = mocks.DynamicMock<ControllerBase>();
+
 
             routeData = new RouteData();
             routeData.Values.Add("controller", "Home");
             routeData.Values.Add("action", "Index");
 
-            factory = new SparkViewFactory(){ViewSourceLoader = new FileSystemViewSourceLoader("AspNetMvc.Tests.Views")};
+            controllerContext = new ControllerContext(context, routeData, controller);
+
+            factory = new SparkViewFactory { ViewSourceLoader = new FileSystemViewSourceLoader("AspNetMvc.Tests.Views") };
 
         }
         delegate void writedelegate(string data);
@@ -73,7 +78,18 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
         ViewContext MakeViewContext(string viewName, string masterName, object viewData)
         {
-            return new ViewContext(context, routeData, controller, viewName, masterName, new ViewDataDictionary(viewData), null);
+            return new ViewContext(context, routeData, controller, viewName, new ViewDataDictionary(viewData), null);
+        }
+
+        void FindViewAndRender(string viewName, string masterName)
+        {
+            FindViewAndRender(MakeViewContext(viewName, masterName), masterName);
+        }
+
+        void FindViewAndRender(ViewContext viewContext, string masterName)
+        {
+            var viewEngineResult = factory.FindView(controllerContext, viewContext.ViewName, masterName);
+            viewEngineResult.View.Render(viewContext, output);
         }
 
 
@@ -82,7 +98,9 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         {
             mocks.ReplayAll();
 
-            factory.RenderView(MakeViewContext("index", null));
+            var viewContext = MakeViewContext("index", null);
+            var viewEngineResult = factory.FindView(controllerContext, "index", null);
+            viewEngineResult.View.Render(viewContext, output);
 
             mocks.VerifyAll();
         }
@@ -93,7 +111,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         {
             mocks.ReplayAll();
 
-            factory.RenderView(MakeViewContext("foreach", null));
+            FindViewAndRender("foreach", null);
 
             mocks.VerifyAll();
 
@@ -110,7 +128,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
             mocks.ReplayAll();
 
-            factory.RenderView(MakeViewContext("globalset", null));
+            FindViewAndRender("globalset", null);
 
             mocks.VerifyAll();
 
@@ -124,7 +142,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         {
             mocks.ReplayAll();
 
-            factory.RenderView(MakeViewContext("childview", "layout"));
+            FindViewAndRender("childview", "layout");
 
             mocks.VerifyAll();
             string content = output.ToString();
@@ -140,7 +158,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
             mocks.ReplayAll();
 
-            factory.RenderView(MakeViewContext("namedcontent", "layout"));
+            FindViewAndRender("namedcontent", "layout");
 
             mocks.VerifyAll();
             string content = output.ToString();
@@ -177,7 +195,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
 
             mocks.ReplayAll();
 
-            factory.RenderView(MakeViewContext("helpers", null));
+            FindViewAndRender("helpers", null);
 
             mocks.VerifyAll();
             string content = output.ToString();
@@ -190,7 +208,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         {
             mocks.ReplayAll();
 
-            factory.RenderView(MakeViewContext("usingpartial", null));
+            FindViewAndRender("usingpartial", null);
 
             mocks.VerifyAll();
             string content = output.ToString();
@@ -206,7 +224,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         {
             mocks.ReplayAll();
 
-            factory.RenderView(MakeViewContext("usingpartialimplicit", null));
+            FindViewAndRender("usingpartialimplicit", null);
 
             mocks.VerifyAll();
             string content = output.ToString();
@@ -222,7 +240,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             var comments = new[] { new Comment { Text = "foo" }, new Comment { Text = "bar" } };
             var viewContext = MakeViewContext("viewdata", null, new { Comments = comments, Caption = "Hello world" });
 
-            factory.RenderView(viewContext);
+            FindViewAndRender(viewContext, null);
 
             mocks.VerifyAll();
             string content = output.ToString();
@@ -239,7 +257,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             mocks.ReplayAll();
             var viewContext = MakeViewContext("usingnamespace", null);
 
-            factory.RenderView(viewContext);
+            FindViewAndRender(viewContext, null);
 
             mocks.VerifyAll();
             string content = output.ToString();
@@ -251,7 +269,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         [Test]
         public void ViewSourceLoaderCanBeChanged()
         {
-            IViewSourceLoader replacement = mocks.DynamicMock<IViewSourceLoader>();
+            var replacement = mocks.DynamicMock<IViewSourceLoader>();
 
             mocks.ReplayAll();
 
@@ -268,9 +286,9 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         public void NullViewDataIsSafe()
         {
             mocks.ReplayAll();
-            var viewContext = new ViewContext(context, routeData, controller, "viewdatanull", null, null, null);
+            var viewContext = new ViewContext(context, routeData, controller, "viewdatanull", null, null);
 
-            factory.RenderView(viewContext);
+            FindViewAndRender(viewContext, null);
             mocks.VerifyAll();
 
             string content = output.ToString();
@@ -282,10 +300,10 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         {
             mocks.ReplayAll();
             var viewContext = MakeViewContext("viewdatamodel", null, new Comment { Text = "Hello" });
-            factory.RenderView(viewContext);
+            FindViewAndRender(viewContext, null);
             mocks.VerifyAll();
 
-            string content = output.ToString();
+            var content = output.ToString();
             Assert.That(content.Contains("<p>Hello</p>"));
         }
 
@@ -307,9 +325,8 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
 
-            var viewContext = MakeViewContext("Baaz", null);
 
-            var descriptor = factory.CreateDescriptor(viewContext);
+            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true);
 
             mocks.VerifyAll();
 
@@ -335,9 +352,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
 
-            var viewContext = MakeViewContext("Baaz", null);
-
-            var descriptor = factory.CreateDescriptor(viewContext);
+            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true);
 
             mocks.VerifyAll();
 
@@ -362,9 +377,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
 
-            var viewContext = MakeViewContext("Baaz", null);
-
-            var descriptor = factory.CreateDescriptor(viewContext);
+            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true);
 
             mocks.VerifyAll();
 
@@ -382,11 +395,11 @@ namespace MvcContrib.UnitTests.SparkViewEngine
             factory.ViewSourceLoader = viewSourceLoader;
 
             controller = new StubController();
+            controllerContext = new ControllerContext(context, routeData, controller);
 
             mocks.ReplayAll();
-            var viewContext = MakeViewContext("Baaz", null);            
 
-            var descriptor = factory.CreateDescriptor(viewContext);
+            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true);
             mocks.VerifyAll();
 
             Assert.AreEqual("MvcContrib.SparkViewEngine.Tests.Controllers", descriptor.TargetNamespace);
@@ -397,7 +410,7 @@ namespace MvcContrib.UnitTests.SparkViewEngine
         {
             mocks.ReplayAll();
             var viewContext = MakeViewContext("html-encode-function-h", null);
-            factory.RenderView(viewContext);
+            FindViewAndRender(viewContext, null);
             mocks.VerifyAll();
 
             var content = output.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");

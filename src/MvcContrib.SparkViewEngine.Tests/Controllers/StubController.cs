@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace MvcContrib.SparkViewEngine.Tests.Controllers
 {
-    public class StubController : IController
+    public class StubController : ControllerBase
     {
-        public void Execute(ControllerContext controllerContext)
+        protected override void ExecuteCore()
         {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -71,7 +71,9 @@
         public object Create()
         {
             Product product = new Product();
-            BindingHelperExtensions.UpdateFrom(product, Request.Form);
+
+            throw new NotImplementedException("Not sure what BindingHelperExtensions turned into");
+            //BindingHelperExtensions.UpdateFrom(product, Request.Form);
 
             repository.InsertProductOnSubmit(product);
             repository.SubmitChanges();
@@ -108,7 +110,8 @@
                 return RedirectToAction("Edit", new { id = id });
             }
 
-            BindingHelperExtensions.UpdateFrom(product, Request.Form);
+            throw new NotImplementedException("Not sure what BindingHelperExtensions turned into");
+            //BindingHelperExtensions.UpdateFrom(product, Request.Form);
             repository.SubmitChanges();
 
             return RedirectToRoute(new RouteValueDictionary(new { Action = "List", ID = product.Category.CategoryName }));

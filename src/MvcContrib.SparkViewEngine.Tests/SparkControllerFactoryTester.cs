@@ -11,21 +11,21 @@ using Rhino.Mocks;
 
 namespace MvcContrib.UnitTests.SparkViewEngine
 {
-    [TestFixture, Category("SparkViewEngine")]
-    public class SparkControllerFactoryTester
-    {
-        [Test]
-        public void ControllerSetsViewEngine()
-        {
-            MockRepository mocks = new MockRepository();
-            RequestContext context = new RequestContext(mocks.DynamicHttpContextBase(), new RouteData());
+    //[TestFixture, Category("SparkViewEngine")]
+    //public class SparkControllerFactoryTester
+    //{
+    //    [Test]
+    //    public void ControllerSetsViewEngine()
+    //    {
+    //        MockRepository mocks = new MockRepository();
+    //        RequestContext context = new RequestContext(mocks.DynamicHttpContextBase(), new RouteData());
 
-            SparkControllerFactory controllerFactory = new SparkControllerFactory();
-            MvcContrib.ConventionController controller =
-                (MvcContrib.ConventionController)((IControllerFactory)controllerFactory).CreateController(context, "Convention");
+    //        SparkControllerFactory controllerFactory = new SparkControllerFactory();
+    //        MvcContrib.ConventionController controller =
+    //            (MvcContrib.ConventionController)((IControllerFactory)controllerFactory).CreateController(context, "Convention");
 
-            Assert.IsNotNull(controller.ViewEngine);
-            Assert.IsAssignableFrom(typeof(SparkViewFactory), controller.ViewEngine);
-        }
-    }
+    //        Assert.IsNotNull(controller.ViewEngine);
+    //        Assert.IsAssignableFrom(typeof(SparkViewFactory), controller.ViewEngine);
+    //    }
+    //}
 }
