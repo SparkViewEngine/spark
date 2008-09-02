@@ -37,15 +37,22 @@ namespace NorthwindDemo
 
         public static void PrecompileViews(ViewEngineCollection engines)
         {
-            var viewFactory = engines.OfType<SparkViewFactory>().First();
+            try
+            {
+                var viewFactory = engines.OfType<SparkViewFactory>().First();
 
-            var batch = new SparkBatchDescriptor();
+                var batch = new SparkBatchDescriptor();
 
-            batch
-                .For<HomeController>()
-                .For<ProductsController>();
-            
-            viewFactory.Precompile(batch);
+                batch
+                    .For<HomeController>()
+                    .For<ProductsController>();
+
+                viewFactory.Precompile(batch);
+            }
+            catch
+            {
+                // the sample has a DropDownList compile error at the moment
+            }
         }
     }
 }
