@@ -66,6 +66,9 @@ namespace MvcContrib.SparkViewEngine.Tests
 
             factory = new SparkViewFactory { ViewSourceLoader = new FileSystemViewSourceLoader("AspNetMvc.Tests.Views") };
 
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(factory);
+
         }
         delegate void writedelegate(string data);
         private TextWriter output;
@@ -416,6 +419,32 @@ namespace MvcContrib.SparkViewEngine.Tests
             var content = output.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
             Assert.AreEqual("<p>&lt;p&gt;&amp;lt;&amp;gt;&lt;/p&gt;</p>", content);
 
+        }
+
+
+        static void ContainsInOrder(string content, params string[] values)
+        {
+            int index = 0;
+            foreach (string value in values)
+            {
+                int nextIndex = content.IndexOf(value, index);
+                Assert.GreaterOrEqual(nextIndex, 0, string.Format("Looking for {0}", value));
+                index = nextIndex + value.Length;
+            }
+        }
+
+        [Test]
+        public void RenderPartialOrderCorrect()
+        {
+            mocks.ReplayAll();
+            FindViewAndRender("renderpartial-ordercorrect", "ajax");
+            mocks.VerifyAll();
+
+            var content = output.ToString();
+            ContainsInOrder(content, 
+                "<p>one</p>",
+                "<p>two</p>",
+                "<p>three</p>");
         }
     }
 }

@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using Spark;
+using HttpContextWrapper=MvcContrib.SparkViewEngine.Wrappers.HttpContextWrapper;
 
 namespace MvcContrib.SparkViewEngine
 {
@@ -14,6 +16,10 @@ namespace MvcContrib.SparkViewEngine
         public HtmlHelper Html { get; set; }
         public UrlHelper Url { get; set; }
         public AjaxHelper Ajax { get; set; }
+        
+        public HttpContextBase Context { get { return ViewContext.HttpContext; } }
+        public HttpRequestBase Request { get { return ViewContext.HttpContext.Request; } }
+        public HttpResponseBase Response { get { return ViewContext.HttpContext.Response; } }
 
         public string H(object value)
         {
@@ -64,11 +70,14 @@ namespace MvcContrib.SparkViewEngine
 
         public void Render(ViewContext viewContext, TextWriter writer)
         {
-            ViewContext = viewContext;
-            ViewData = viewContext.ViewData;
-            Html = new HtmlHelper(viewContext, this);
-            Url = new UrlHelper(viewContext);
-            Ajax = new AjaxHelper(viewContext);
+            var httpContext = new HttpContextWrapper(viewContext.HttpContext, this);
+            var wrapped = new ViewContext(httpContext, viewContext.RouteData, viewContext.Controller, viewContext.ViewName, viewContext.ViewData, viewContext.TempData);
+            
+            ViewContext = wrapped;
+            ViewData = wrapped.ViewData;
+            Html = new HtmlHelper(wrapped, this);
+            Url = new UrlHelper(wrapped);
+            Ajax = new AjaxHelper(wrapped);
 
             RenderView(writer);
         }

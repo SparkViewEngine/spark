@@ -81,6 +81,8 @@
     <Compile Include="SparkView.cs" />
     <Compile Include="SparkViewFactory.cs" />
     <Compile Include="ViewSourceLoaderWrapper.cs" />
+    <Compile Include="Wrappers\HttpContextWrapper.cs" />
+    <Compile Include="Wrappers\HttpResponseWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj">
