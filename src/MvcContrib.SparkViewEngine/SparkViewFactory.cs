@@ -69,15 +69,23 @@ namespace MvcContrib.SparkViewEngine
 
         public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
         {
-            var descriptor = CreateDescriptor(controllerContext, viewName, masterName, true);
-            var entry = Engine.CreateEntry(descriptor);
-            var view = (IView)entry.CreateInstance();
-            return new ViewEngineResult(view);
+            return FindViewInternal(controllerContext, viewName, masterName, true);
         }
 
         public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName)
         {
-            var descriptor = CreateDescriptor(controllerContext, partialViewName, null /*masterName*/, false);
+            return FindViewInternal(controllerContext, partialViewName, null /*masterName*/, false);
+        }
+
+        private ViewEngineResult FindViewInternal(ControllerContext controllerContext, string viewName, string masterName, bool findDefaultMaster)
+        {
+            var controllerName = controllerContext.RouteData.GetRequiredString("controller");
+            var targetNamespace = controllerContext.Controller.GetType().Namespace;
+            var searchedLocations = new List<string>();
+            var descriptor = CreateDescriptorInternal(targetNamespace, controllerName, viewName, masterName, findDefaultMaster, searchedLocations);
+            if (descriptor == null)
+                return new ViewEngineResult(searchedLocations);
+
             var entry = Engine.CreateEntry(descriptor);
             var view = (IView)entry.CreateInstance();
             return new ViewEngineResult(view);
@@ -88,10 +96,23 @@ namespace MvcContrib.SparkViewEngine
             var controllerName = controllerContext.RouteData.GetRequiredString("controller");
             var targetNamespace = controllerContext.Controller.GetType().Namespace;
 
-            return CreateDescriptor(targetNamespace, controllerName, viewName, masterName, findDefaultMaster);
+            return CreateDescriptorInternal(targetNamespace, controllerName, viewName, masterName, findDefaultMaster, null);
         }
 
-        private SparkViewDescriptor CreateDescriptor(string targetNamespace, string controllerName, string viewName, string masterName, bool findDefaultMaster)
+        public SparkViewDescriptor CreateDescriptor(string targetNamespace, string controllerName, string viewName, string masterName, bool findDefaultMaster)
+        {
+            var searchedLocations = new List<string>();
+            var descriptor = CreateDescriptorInternal(targetNamespace, controllerName, viewName, masterName, findDefaultMaster,
+                                     searchedLocations);
+            if (descriptor == null)
+            {
+                throw new CompilerException("Unable to find templates at " +
+                                            string.Join(", ", searchedLocations.ToArray()));
+            }
+            return descriptor;
+        }
+
+        private SparkViewDescriptor CreateDescriptorInternal(string targetNamespace, string controllerName, string viewName, string masterName, bool findDefaultMaster, IList<string> searchedLocations)
         {
             var descriptor = new SparkViewDescriptor
                                  {
@@ -108,7 +129,9 @@ namespace MvcContrib.SparkViewEngine
             }
             else
             {
-                throw new CompilerException(string.Format("Unable to find templates {0}\\{1}.spark or Shared\\{1}.spark", controllerName, viewName));
+                searchedLocations.Add(controllerName + "\\" + viewName + ".spark");
+                searchedLocations.Add("Shared\\" + viewName + ".spark");
+                return null;
             }
 
             if (!string.IsNullOrEmpty(masterName))
@@ -123,8 +146,9 @@ namespace MvcContrib.SparkViewEngine
                 }
                 else
                 {
-                    throw new CompilerException(string.Format("Unable to find templates Layouts\\{0}.spark or Shared\\{0}.spark",
-                                                              masterName));
+                    searchedLocations.Add("Layouts\\" + masterName + ".spark");
+                    searchedLocations.Add("Shared\\" + masterName + ".spark");
+                    return null;
                 }
             }
             else if (findDefaultMaster)
