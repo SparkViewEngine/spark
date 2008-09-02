@@ -246,7 +246,8 @@ namespace MvcContrib.SparkViewEngine
                                             entry.ControllerType.Namespace,
                                             controllerName,
                                             viewName,
-                                            null /*masterName*/));
+                                            null /*masterName*/,
+                                            true));
                 }
                 else
                 {
@@ -256,7 +257,8 @@ namespace MvcContrib.SparkViewEngine
                                             entry.ControllerType.Namespace,
                                             controllerName,
                                             viewName,
-                                            string.Join(" ", masterName.ToArray())));
+                                            string.Join(" ", masterName.ToArray()),
+                                            false));
                     }
                 }
             }
