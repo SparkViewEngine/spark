@@ -1,13 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.IO;
+﻿using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
-using MvcContrib.SparkViewEngine;
-using MvcContrib.SparkViewEngine.Install;
-using PrecompiledViews.Controllers;
-using Spark;
+using Spark.Web.Mvc;
 
 namespace PrecompiledViews
 {

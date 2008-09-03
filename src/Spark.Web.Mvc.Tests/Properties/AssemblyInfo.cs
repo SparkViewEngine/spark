@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MvcContrib.SparkViewEngine")]
+[assembly: AssemblyTitle("MvcContrib.SparkViewEngine.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MarketWatch")]
-[assembly: AssemblyProduct("MvcContrib.SparkViewEngine")]
-[assembly: AssemblyCopyright("Copyright © MarketWatch 2008")]
+[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyProduct("MvcContrib.SparkViewEngine.Tests")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f0042849-6cd2-4ec8-a561-f58ed62e7fc0")]
+[assembly: Guid("1fdea5b5-85c2-4e0a-b811-d0394151ab6a")]
 
 // Version information for an assembly consists of the following four values:
 //

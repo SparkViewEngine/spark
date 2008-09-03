@@ -101,6 +101,11 @@
 					<exclude name="Integration" />
 				</categories>
 			</test>
+			<test assemblyname="${build.dir}/Spark.Web.Mvc.Tests.dll">
+				<categories>
+					<exclude name="Integration" />
+				</categories>
+			</test>
 			<test assemblyname="${build.dir}/MvcContrib.SparkViewEngine.Tests.dll">
 				<categories>
 					<exclude name="Integration" />
@@ -181,10 +186,6 @@
         <echo message="Altering ${filename}" />
         <loadfile file="${filename}" property="sample.csproj.contents"/>
         <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\build\package\Bin', '..\..\Bin')}"/>
-        <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\bin\mvccontrib', '..\..\Bin\Dependencies')}"/>
-        <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\bin\castle', '..\..\Bin\Dependencies')}"/>
-        <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\bin\aspnetmvc', '..\..\Bin\Dependencies')}"/>
-        <property name="sample.csproj.contents" value="${string::replace(sample.csproj.contents, '..\..\..\bin\nunit', '..\..\Bin\Dependencies')}"/>
         <echo file="${filename}" append="false" message="${sample.csproj.contents}"/>
       </do>
     </foreach>

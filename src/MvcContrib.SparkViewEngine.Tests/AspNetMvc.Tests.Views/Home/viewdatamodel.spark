@@ -1,3 +1,0 @@
-﻿
-<viewdata model="MvcContrib.UnitTests.SparkViewEngine.Models.Comment"/>
-<p>${ViewData.Model.Text}</p>

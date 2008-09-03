@@ -1,29 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright 2008 Louis DeJardin - http://whereslou.com
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace MvcContrib.SparkViewEngine.Tests
+namespace Spark.Web.Mvc.Tests
 {
     [TestFixture]
     public class SparkViewTester
     {
-        class StubSparkView : SparkView
+        private class StubSparkView : SparkView
         {
-            public override void RenderView(TextWriter writer)
-            {
-                throw new System.NotImplementedException();
-            }
-
             public override Guid GeneratedViewId
             {
-                get { throw new System.NotImplementedException(); }
+                get { throw new NotImplementedException(); }
+            }
+
+            public override void RenderView(TextWriter writer)
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -51,25 +62,25 @@ namespace MvcContrib.SparkViewEngine.Tests
 
             var view = new StubSparkView {ViewContext = viewContext};
             Assert.AreEqual("", view.SiteRoot);
-            
-            view = new StubSparkView { ViewContext = viewContext };
+
+            view = new StubSparkView {ViewContext = viewContext};
             Assert.AreEqual("/TestApp", view.SiteRoot);
-            
-            view = new StubSparkView { ViewContext = viewContext };
+
+            view = new StubSparkView {ViewContext = viewContext};
             Assert.AreEqual("/TestApp", view.SiteRoot);
-            
-            view = new StubSparkView { ViewContext = viewContext };
+
+            view = new StubSparkView {ViewContext = viewContext};
             Assert.AreEqual("", view.SiteRoot);
-            
-            view = new StubSparkView { ViewContext = viewContext };
+
+            view = new StubSparkView {ViewContext = viewContext};
             Assert.AreEqual("", view.SiteRoot);
-            
-            view = new StubSparkView { ViewContext = viewContext };
+
+            view = new StubSparkView {ViewContext = viewContext};
             Assert.AreEqual("/TestApp", view.SiteRoot);
-            
-            view = new StubSparkView { ViewContext = viewContext };
+
+            view = new StubSparkView {ViewContext = viewContext};
             Assert.AreEqual("/TestApp", view.SiteRoot);
-            
+
             mocks.VerifyAll();
         }
     }

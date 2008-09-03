@@ -1,17 +1,27 @@
-﻿using System;
+﻿// Copyright 2008 Louis DeJardin - http://whereslou.com
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Configuration.Install;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using MvcContrib.ViewFactories;
-using Spark;
+using Spark.FileSystem;
 
-
-namespace MvcContrib.SparkViewEngine.Install
+namespace Spark.Web.Mvc.Install
 {
     [RunInstaller(true)]
     public partial class PrecompileInstaller : Installer
@@ -44,22 +54,23 @@ namespace MvcContrib.SparkViewEngine.Install
             File.Delete(webFileHack);
 
             // GetSection will try to resolve the "Spark" assembly, which the installutil appdomain needs help finding
-            AppDomain.CurrentDomain.AssemblyResolve += ((sender, e) => Assembly.LoadFile(Path.Combine(webBinPath, e.Name + ".dll")));
-            var settings = (ISparkSettings)config.GetSection("spark");
+            AppDomain.CurrentDomain.AssemblyResolve +=
+                ((sender, e) => Assembly.LoadFile(Path.Combine(webBinPath, e.Name + ".dll")));
+            var settings = (ISparkSettings) config.GetSection("spark");
 
 
             // Finally create an engine with the <spark> settings from the web.config
             var factory = new SparkViewFactory(settings)
-            {
-                ViewSourceLoader = new FileSystemViewSourceLoader(viewsLocation)
-            };
+                              {
+                                  ViewFolder = new FileSystemViewFolder(viewsLocation)
+                              };
 
             // And generate all of the known view/master templates into the target assembly
 
             var batch = new SparkBatchDescriptor(targetPath);
             if (DescribeBatch != null)
-                DescribeBatch(this, new DescribeBatchEventArgs { Batch = batch});
-            
+                DescribeBatch(this, new DescribeBatchEventArgs {Batch = batch});
+
             factory.Precompile(batch);
 
             base.Install(stateSaver);

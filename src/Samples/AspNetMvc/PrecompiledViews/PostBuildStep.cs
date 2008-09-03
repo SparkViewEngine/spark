@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Configuration.Install;
-using System.Linq;
-using MvcContrib.SparkViewEngine.Install;
 using PrecompiledViews.Controllers;
-using Spark;
+using Spark.Web.Mvc.Install;
 
 
 namespace PrecompiledViews

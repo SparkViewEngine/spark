@@ -1,9 +1,9 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
-using MvcContrib.SparkViewEngine;
 using NorthwindDemo.Controllers;
 using Spark;
 using System.Linq;
+using Spark.Web.Mvc;
 
 namespace NorthwindDemo
 {

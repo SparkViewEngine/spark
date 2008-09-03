@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using MvcContrib.ControllerFactories;
-using MvcContrib.Services;
-using MvcContrib.SparkViewEngine;
-using MvcContrib.ViewFactories;
 using Spark;
+using Spark.FileSystem;
+using Spark.Web.Mvc;
 using WindsorInversionOfControl.Models;
 
 namespace WindsorInversionOfControl
@@ -31,7 +27,7 @@ namespace WindsorInversionOfControl
                 .Configure(c=>c.LifeStyle.Transient.Named(c.Implementation.Name.ToLowerInvariant())));
 
             // Some more components from the sample
-            container.AddComponent<IViewSourceLoader, FileSystemViewSourceLoader>();
+            container.AddComponent<IViewFolder, FileSystemViewFolder>();
             container.AddComponent<ISampleRepository, SampleRepository>();
             container.AddComponent<INavRepository, NavRepository>();
 

@@ -1,5 +1,5 @@
 <!-- NOT IMPL -->
-<macro name="Comment" person="string" item="MvcContrib.UnitTests.SparkViewEngine.Models.Comment">
+<macro name="Comment" person="string" item="Spark.Web.Mvc.Tests.Models.Comment">
 	<div class="comment">
 		<p>${person}</p>
 		<p>${item.Text}</p>

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Web.Mvc;
-using MvcContrib.SparkViewEngine;
-using MvcContrib.ViewFactories;
 using NorthwindDemo.Controllers;
 using NUnit.Framework;
 using Spark;
 using Spark.FileSystem;
+using Spark.Web.Mvc;
 
 namespace NorthwindDemo.Tests
 {
@@ -37,7 +33,7 @@ namespace NorthwindDemo.Tests
             // in the nunit appdomain.)
             var settings = new SparkSettings()
                 .SetDebug(false)
-                .SetPageBaseType("MvcContrib.SparkViewEngine.SparkView")
+                .SetPageBaseType("Spark.Web.Mvc.SparkView")
                 .AddNamespace("System")
                 .AddNamespace("System.Collections.Generic")
                 .AddNamespace("System.Linq")
@@ -46,9 +42,7 @@ namespace NorthwindDemo.Tests
                 .AddNamespace("NorthwindDemo.Views.Helpers")
                 .AddAssembly("NorthwindDemo")
                 .AddAssembly("System.Web.Mvc")
-                .AddAssembly("MvcContrib")
-                .AddAssembly("MvcContrib.SparkViewEngine")
-                .AddAssembly("System.Web.Routing");
+                .AddAssembly("Spark.Web.Mvc");
 
             // create an engine
             var engine = new SparkViewEngine(settings)

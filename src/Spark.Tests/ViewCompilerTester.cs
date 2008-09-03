@@ -134,85 +134,17 @@ namespace Spark.Tests
         [Test]
         public void TargetNamespace()
         {
-            var compiler = new ViewCompiler { BaseClass = "Spark.AbstractSparkView" };
-            compiler.Descriptor = new SparkViewDescriptor { TargetNamespace = "Testing.Target.Namespace" };
-            DoCompileView(compiler, new Chunk[] { new SendLiteralChunk() { Text = "Hello" } });
+            var compiler = new ViewCompiler
+                               {
+                                   BaseClass = "Spark.AbstractSparkView",
+                                   Descriptor = new SparkViewDescriptor {TargetNamespace = "Testing.Target.Namespace"}
+                               };
+            DoCompileView(compiler, new Chunk[] { new SendLiteralChunk { Text = "Hello" } });
             var instance = compiler.CreateInstance();
             Assert.AreEqual("Testing.Target.Namespace", instance.GetType().Namespace);
 
         }
 
-
-        //[Test]
-        //public void ViewHelpers()
-        //{
-        //    var viewDataContainer = _mocks.DynamicMock<IViewDataContainer>();
-
-        //    HtmlHelper html = new HtmlHelper(_viewContext, viewDataContainer);
-        //    RouteTable.Routes.Clear();
-        //    RouteTable.Routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
-        //    {
-        //        Defaults = new RouteValueDictionary(new { action = "Index", id = "" })
-        //    });
-        //    _mocks.ReplayAll();
-
-        //    viewDataContainer.ViewData = _viewContext.ViewData;
-        //    string link = html.ActionLink("Click me", "Reboot");
-        //    Assert.AreEqual("<a href=\"/Home/Reboot\">Click me</a>", link);
-
-        //    var compiler = new ViewCompiler();
-        //    compiler.CompileView(new Chunk[]
-        //        {
-        //            new SendExpressionChunk{Code="Html.ActionLink(\"Click me\", \"Reboot\")"}
-        //        });
-
-        //    var instance = compiler.CreateInstance();
-        //    var contents = instance.RenderView(_viewContext);
-        //    Assert.AreEqual("<a href=\"/Home/Reboot\">Click me</a>", contents);
-        //}
-
-        //[Test]
-        //public void DeclareViewData()
-        //{
-        //    var compiler = new ViewCompiler();
-        //    compiler.CompileView(new Chunk[]
-        //                             {
-        //                                 new ViewDataChunk {Name = "Foo", Type = "string"},
-        //                                 new ViewDataChunk {Name = "Bar", Type = "MvcContrib.UnitTests.SparkViewEngine.Models.Comment"},
-        //                                 new SendExpressionChunk {Code = "Foo"},
-        //                                 new SendExpressionChunk {Code = "Bar.Text"},
-        //        });
-
-        //    var instance = compiler.CreateInstance();
-
-        //    var viewContext1 = new ViewContext(
-        //        _context, _viewContext.RouteData, _viewContext.Controller,
-        //        "index", null,
-        //        new ViewDataDictionary(new { Foo = "Hello World", Bar = new Comment { Text = "-yadda-" } }), null);
-
-        //    var contents = instance.RenderView(viewContext1);
-        //    Assert.AreEqual("Hello World-yadda-", contents);
-        //}
-
-        //[Test]
-        //public void DeclareViewDataModel()
-        //{
-        //    var compiler = new ViewCompiler();
-        //    compiler.CompileView(new Chunk[]
-        //                             {
-        //                                 new ViewDataModelChunk { TModel = "MvcContrib.UnitTests.SparkViewEngine.Models.Comment" },
-        //                                 new SendExpressionChunk {Code = "ViewData.Model.Text"},
-        //        });
-        //    var instance = compiler.CreateInstance();
-
-        //    var viewContext1 = new ViewContext(
-        //        _context, _viewContext.RouteData, _viewContext.Controller,
-        //        "index", null,
-        //        new ViewDataDictionary(new Comment { Text = "MyCommentText" }), null);
-
-        //    var contents = instance.RenderView(viewContext1);
-        //    Assert.AreEqual("MyCommentText", contents);
-        //}
 
         [Test, ExpectedException(typeof(CompilerException))]
         public void ProvideFullException()

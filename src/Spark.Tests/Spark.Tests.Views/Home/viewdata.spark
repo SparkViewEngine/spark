@@ -1,5 +1,5 @@
 <viewdata
-	Comments="System.Collections.Generic.IList[[MvcContrib.UnitTests.SparkViewEngine.Models.Comment]]"
+	Comments="System.Collections.Generic.IList[[Spark.Web.Mvc.Models.Comment]]"
 	Caption="string"/>
 
 <h1>$Caption;</h1>

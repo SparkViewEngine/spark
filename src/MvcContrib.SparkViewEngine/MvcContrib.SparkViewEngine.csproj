@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{286050D6-95A1-4381-93D8-93381D8AB8E2}</ProjectGuid>
+    <ProjectGuid>{0A2EFD84-C6E3-47EC-8DE8-B2087716C8E6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MvcContrib.SparkViewEngine</RootNamespace>
@@ -36,24 +36,12 @@
       <HintPath>..\..\bin\mvccontrib\MvcContrib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Management" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\AspNetMvc\System.Web.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\AspNetMvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Routing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\AspNetMvc\System.Web.Routing.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -65,26 +53,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Install\DescribeBatchEventArgs.cs" />
-    <Compile Include="Install\DescribeBatchHandler.cs" />
-    <Compile Include="Install\PrecompileInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Install\PrecompileInstaller.Designer.cs">
-      <DependentUpon>PrecompileInstaller.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SparkControllerFactory.cs" />
-    <Compile Include="SparkView.cs" />
     <Compile Include="SparkViewFactory.cs" />
     <Compile Include="ViewSourceLoaderWrapper.cs" />
-    <Compile Include="Wrappers\HttpContextWrapper.cs" />
-    <Compile Include="Wrappers\HttpResponseWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj">
+      <Project>{286050D6-95A1-4381-93D8-93381D8AB8E2}</Project>
+      <Name>Spark.Web.Mvc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Spark\Spark.csproj">
       <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
       <Name>Spark</Name>

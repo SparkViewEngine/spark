@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.precompileInstaller1 = new MvcContrib.SparkViewEngine.Install.PrecompileInstaller();
+            this.precompileInstaller1 = new Spark.Web.Mvc.Install.PrecompileInstaller();
             // 
             // precompileInstaller1
             // 
             this.precompileInstaller1.TargetAssemblyFile = "Precompiled.dll";
-            this.precompileInstaller1.DescribeBatch += new MvcContrib.SparkViewEngine.Install.DescribeBatchHandler(this.precompileInstaller1_DescribeBatch);
+            this.precompileInstaller1.DescribeBatch += new Spark.Web.Mvc.Install.DescribeBatchHandler(this.precompileInstaller1_DescribeBatch);
             // 
             // PostBuildStep
             // 
@@ -44,6 +44,6 @@
 
         #endregion
 
-        private MvcContrib.SparkViewEngine.Install.PrecompileInstaller precompileInstaller1;
+        private Spark.Web.Mvc.Install.PrecompileInstaller precompileInstaller1;
     }
 }

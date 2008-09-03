@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C8E58F51-8630-4420-8630-8E634EC8900E}</ProjectGuid>
+    <ProjectGuid>{63B2C862-484C-4AE3-A974-BE263B7116B0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MvcContrib.SparkViewEngine.Tests</RootNamespace>
@@ -39,26 +39,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.3.0.906, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\rhinomocks\Rhino.Mocks.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\aspnetmvc\System.Web.Abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\aspnetmvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Routing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\aspnetmvc\System.Web.Routing.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -70,18 +57,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\StubController.cs" />
-    <Compile Include="Models\Comment.cs" />
-    <Compile Include="MvcMockHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SparkBatchCompilerTester.cs" />
-    <Compile Include="SparkViewFactoryTester.cs" />
-    <Compile Include="SparkViewTester.cs" />
     <Compile Include="ViewSourceLoaderWrapperTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MvcContrib.SparkViewEngine\MvcContrib.SparkViewEngine.csproj">
-      <Project>{286050D6-95A1-4381-93D8-93381D8AB8E2}</Project>
+      <Project>{0A2EFD84-C6E3-47EC-8DE8-B2087716C8E6}</Project>
       <Name>MvcContrib.SparkViewEngine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Spark\Spark.csproj">
@@ -90,76 +71,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AspNetMvc.Tests.Views\Home\childview.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\foreach.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\globalset.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\helpers.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\html-encode-function-h.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\Index.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\macros.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\namedcontent.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\partial-two.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\renderpartial-ordercorrect.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\usingnamespace.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\usingpartial.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\usingpartialimplicit.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\viewdata.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\viewdatamodel.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Home\viewdatanull.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Shared\ajax.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Shared\alternate.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Shared\layout.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Shared\partial.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Shared\_comment.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Stub\Index.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Stub\List.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="AspNetMvc.Tests.Views\Stub\_Widget.spark">
+    <None Include="MvcContrib.Tests.Views\Home\foreach.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
