@@ -191,6 +191,7 @@
     <Compile Include="Models\ProductsViewData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\Helpers\ValidationHelpers.cs" />
+    <Compile Include="Views\Products\Helpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\NORTHWND.MDF">

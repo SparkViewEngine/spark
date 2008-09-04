@@ -19,6 +19,7 @@ namespace NorthwindDemo.Tests
             Global.RegisterViewEngine(engines);
 
             var viewEngine = engines.OfType<SparkViewFactory>().First();
+            viewEngine.ViewFolder = new FileSystemViewFolder(@"..\..\..\NorthwindDemo\Views");
 
             var batch = new SparkBatchDescriptor();
             batch.For<ProductsController>();
@@ -33,16 +34,23 @@ namespace NorthwindDemo.Tests
             // in the nunit appdomain.)
             var settings = new SparkSettings()
                 .SetDebug(false)
-                .SetPageBaseType("Spark.Web.Mvc.SparkView")
+                .SetPageBaseType("Spark.Web.Mvc.SparkView");
+            
+            settings
                 .AddNamespace("System")
                 .AddNamespace("System.Collections.Generic")
                 .AddNamespace("System.Linq")
                 .AddNamespace("System.Web.Mvc")
+                .AddNamespace("Microsoft.Web.Mvc")
                 .AddNamespace("NorthwindDemo.Models")
-                .AddNamespace("NorthwindDemo.Views.Helpers")
+                .AddNamespace("NorthwindDemo.Views.Helpers");
+
+            settings
                 .AddAssembly("NorthwindDemo")
+                .AddAssembly("Microsoft.Web.Mvc")
+                .AddAssembly("Spark.Web.Mvc")
                 .AddAssembly("System.Web.Mvc")
-                .AddAssembly("Spark.Web.Mvc");
+                .AddAssembly("System.Web.Routing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
 
             // create an engine
             var engine = new SparkViewEngine(settings)

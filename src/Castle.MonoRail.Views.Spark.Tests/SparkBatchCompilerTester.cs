@@ -109,5 +109,18 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\_Widget.spark") && d.Templates.Contains("Shared\\ajax.spark")));
             Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\List.spark") && d.Templates.Contains("Shared\\default.spark")));
         }
+
+        [Test]
+        public void FileWithoutSparkExtensionAreIgnored()
+        {
+            var batch = new SparkBatchDescriptor();
+            batch.For<StubController>();
+            var descriptors = _factory.CreateDescriptors(batch);
+            
+            // no templates
+            Assert.That(descriptors.SelectMany(d=>d.Templates).All(t=>!t.Contains("Helper")));
+
+        }
+
     }
 }

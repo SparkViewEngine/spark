@@ -15,11 +15,11 @@ ${PageTitle(ViewData.Model.Product.ProductName)}
         </tr>
         <tr>
             <td>Category:</td>
-            <td><%= Html.DropDownList("CategoryID") %></td>
+            <td><%= Html.DropDownList("Yeah", "CategoryID") %></td>
         </tr>
         <tr>
             <td>Supplier:</td>
-            <td><%= Html.DropDownList("SupplierID")%></td>
+            <td><%= Html.DropDownList("Yeah", "SupplierID")%></td>
         </tr>
         <tr>
             <td><%= Html.Label("Unit Price:", "UnitPrice") %></td>

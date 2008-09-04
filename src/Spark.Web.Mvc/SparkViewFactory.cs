@@ -248,6 +248,9 @@ namespace Spark.Web.Mvc
                 {
                     foreach (var fileName in ViewFolder.ListViews(controllerName))
                     {
+                        if (!string.Equals(Path.GetExtension(fileName), ".spark", StringComparison.InvariantCultureIgnoreCase))
+                            continue;
+
                         var potentialMatch = Path.GetFileNameWithoutExtension(fileName);
                         if (!TestMatch(potentialMatch, include))
                             continue;

@@ -3,6 +3,7 @@ using System.Web.Routing;
 using NorthwindDemo.Controllers;
 using Spark;
 using System.Linq;
+using Spark.FileSystem;
 using Spark.Web.Mvc;
 
 namespace NorthwindDemo
@@ -11,8 +12,9 @@ namespace NorthwindDemo
     {
         public static void RegisterViewEngine(ViewEngineCollection engines)
         {
-            var settings = new SparkSettings()
-                .SetDebug(true)
+            var settings = new SparkSettings();
+            
+            settings
                 .AddNamespace("System")
                 .AddNamespace("System.Collections.Generic")
                 .AddNamespace("System.Linq")
@@ -21,8 +23,13 @@ namespace NorthwindDemo
                 .AddNamespace("NorthwindDemo.Models")
                 .AddNamespace("NorthwindDemo.Views.Helpers");
 
-            var spark = new SparkViewFactory(settings);
-            engines.Add(spark);
+            settings
+                .AddAssembly("Microsoft.Web.Mvc")
+                .AddAssembly("Spark.Web.Mvc")
+                .AddAssembly("System.Web.Mvc")
+                .AddAssembly("System.Web.Routing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
+
+            engines.Add(new SparkViewFactory(settings));
         }
 
         public static void RegisterRoutes(RouteCollection routes)

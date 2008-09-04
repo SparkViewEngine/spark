@@ -127,5 +127,24 @@ namespace Spark.Web.Mvc.Tests
             Assert.IsNotNull(assembly);
             Assert.AreEqual(3, assembly.GetTypes().Length);
         }
+
+        [Test]
+        public void FileWithoutSparkExtensionAreIgnored()
+        {
+            _factory.ViewFolder = new InMemoryViewFolder
+                                      {
+                                          {"Stub\\Index.spark", "<p>index</p>"},
+                                          {"Stub\\Helper.cs", "// this is a code file"},
+                                          {"Layouts\\Stub.spark", "<p>layout</p><use:view/>"},
+                                      };
+            var batch = new SparkBatchDescriptor();
+            batch.For<StubController>();
+            var descriptors = _factory.CreateDescriptors(batch);
+            Assert.AreEqual(1, descriptors.Count);
+            Assert.AreEqual(2, descriptors[0].Templates.Count);
+            Assert.AreEqual("Stub\\Index.spark", descriptors[0].Templates[0]);
+            Assert.AreEqual("Layouts\\Stub.spark", descriptors[0].Templates[1]);
+
+        }
     }
 }

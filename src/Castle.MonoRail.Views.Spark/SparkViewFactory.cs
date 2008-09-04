@@ -258,6 +258,10 @@ namespace Castle.MonoRail.Views.Spark
                 {
                     foreach (var fileName in ViewSourceLoader.ListViews(controllerPath))
                     {
+                        // ignore files which are not spark extension
+                        if (!string.Equals(Path.GetExtension(fileName) , ".spark", StringComparison.InvariantCultureIgnoreCase))
+                            continue;
+
                         var potentialMatch = Path.GetFileNameWithoutExtension(fileName);
                         if (!TestMatch(potentialMatch, include))
                             continue;
