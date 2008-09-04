@@ -42,7 +42,7 @@ namespace Spark.Parser.Syntax
                 ThrowParseException(viewPath, position, nodes.Rest);
             }
 
-            var chunkBuilder = new ChunkBuilderVisitor();
+            var chunkBuilder = new ChunkBuilderVisitor(nodes.Rest.GetPaint());
             chunkBuilder.Accept(nodes.Value);
             return chunkBuilder.Chunks;
         }

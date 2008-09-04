@@ -88,6 +88,7 @@ namespace Spark.Parser
                 return new ParseResult<TLeft>(result.Rest, result.Value.Left);
             };
         }
+
         public static ParseAction<TDown> Down<TLeft, TDown>(this ParseAction<Chain<TLeft, TDown>> parse)
         {
             return input =>
@@ -96,6 +97,21 @@ namespace Spark.Parser
                 if (result == null) return null;
                 return new ParseResult<TDown>(result.Rest, result.Value.Down);
             };
+        }
+
+        public static ParseAction<TValue> Paint<TValue>(this ParseAction<TValue> parser)
+        {
+            return Grammar.Paint(parser);
+        }
+
+        public static ParseAction<TValue> Paint<TValue, TPaintValue>(this ParseAction<TValue> parser) where TValue : TPaintValue
+        {
+            return Grammar.Paint<TValue, TPaintValue>(parser);
+        }
+
+        public static ParseAction<TValue> Paint<TValue, TPaintValue>(this ParseAction<TValue> parser, TPaintValue value)
+        {
+            return Grammar.Paint(value, parser);
         }
     }
 }

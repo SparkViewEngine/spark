@@ -33,6 +33,7 @@ namespace Spark.Tests
         private StubViewFactory factory;
         private SparkViewEngine engine;
         private StringBuilder sb;
+        private SparkSettings settings;
 
         [SetUp]
         public void Init()
@@ -41,7 +42,8 @@ namespace Spark.Tests
             CompiledViewHolder.Current = null;
 
 
-            engine = new SparkViewEngine(new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView")) { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+            settings = new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
+            engine = new SparkViewEngine(settings) { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             factory = new StubViewFactory { Engine = engine };
 
             sb = new StringBuilder();
@@ -360,6 +362,7 @@ namespace Spark.Tests
             mocks.ReplayAll();
             var viewContext = MakeViewContext("macros", null, data);
 
+            settings.SetDebug(true);
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();

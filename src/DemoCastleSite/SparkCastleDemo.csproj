@@ -83,6 +83,7 @@
     <None Include="Views\Layouts\Sidebars.spark" />
     <None Include="Views\Shared\Default.spark" />
     <None Include="Views\Home\Nested.spark" />
+    <None Include="Views\Shared\_Copyright.spark" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

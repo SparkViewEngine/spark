@@ -27,7 +27,17 @@ namespace Spark.Parser
             Content = content;
             LastModified = lastModified;
         }
+
+        public SourceContext(string content, long lastModified, string fileName)
+        {
+            Content = content;
+            LastModified = lastModified;
+            FileName = fileName;
+        }
+
+
         public string Content { get; set; }
         public long LastModified { get; set; }
+        public string FileName { get; set; }
     }
 }

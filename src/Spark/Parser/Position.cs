@@ -15,10 +15,33 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Spark.Parser
 {
+    public class Paint
+    {
+        public Position Begin { get; set; }
+        public Position End { get; set; }
+        public object Value { get; set; }
+    }
+
+    public class Paint<T> : Paint
+    {
+        public new T Value
+        {
+            get { return (T)base.Value; }
+            set { base.Value = value; }
+        }
+    }
+
+    public class PaintLink
+    {
+        public PaintLink Next { get; set; }
+        public Paint Paint { get; set; }
+    }
+
     public class Position
     {
         private static readonly char[] special = "\r\n\t".ToArray();
@@ -26,24 +49,27 @@ namespace Spark.Parser
         private readonly int _line;
         private readonly int _offset;
         private readonly SourceContext _sourceContext;
+        private readonly PaintLink _paintLink;
 
         public Position(Position position)
-            : this(position.SourceContext, position.Offset, position.Line, position.Column)
+            : this(position.SourceContext, position.Offset, position.Line, position.Column, position.PaintLink)
         {
         }
 
         public Position(SourceContext sourceContext)
-            : this(sourceContext, 0, 1, 1)
+            : this(sourceContext, 0, 1, 1, null)
         {
         }
 
-        public Position(SourceContext sourceContext, int offset, int line, int column)
+        public Position(SourceContext sourceContext, int offset, int line, int column, PaintLink paintLink)
         {
             _sourceContext = sourceContext;
             _offset = offset;
             _line = line;
             _column = column;
+            _paintLink = paintLink;
         }
+
 
         public SourceContext SourceContext
         {
@@ -65,6 +91,11 @@ namespace Spark.Parser
             get { return _column; }
         }
 
+        public PaintLink PaintLink
+        {
+            get { return _paintLink; }
+        }
+
         public Position Advance(int count)
         {
             string content = SourceContext.Content;
@@ -78,7 +109,7 @@ namespace Spark.Parser
                 if (specialIndex < 0)
                 {
                     // no special characters found
-                    return new Position(SourceContext, offset + remaining, line, column + remaining);
+                    return new Position(SourceContext, offset + remaining, line, column + remaining, PaintLink);
                 }
 
                 switch (content[offset + specialIndex])
@@ -109,7 +140,7 @@ namespace Spark.Parser
                                                           (int)content[offset + specialIndex]));
                 }
             }
-            return new Position(SourceContext, offset, line, column);
+            return new Position(SourceContext, offset, line, column, PaintLink);
         }
 
         public string Peek(int count)
@@ -137,6 +168,35 @@ namespace Spark.Parser
             int limit = SourceContext.Content.Length - Offset;
             int length = SourceContext.Content.IndexOfAny(stopChars, Offset, limit) - Offset;
             return length < 0 ? limit : length;
+        }
+
+        public Position Paint<T>(Position begin, T value)
+        {
+            return new Position(
+                _sourceContext,
+                _offset,
+                _line,
+                _column,
+                new PaintLink
+                {
+                    Next = PaintLink,
+                    Paint = new Paint<T>
+                    {
+                        Begin = begin,
+                        End = this,
+                        Value = value
+                    }
+                });
+        }
+
+        public IEnumerable<Paint> GetPaint()
+        {
+            var link = PaintLink;
+            while(link != null)
+            {
+                yield return link.Paint;
+                link = link.Next;
+            }
         }
     }
 }

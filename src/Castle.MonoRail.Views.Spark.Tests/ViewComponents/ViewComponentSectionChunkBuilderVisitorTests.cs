@@ -31,7 +31,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             var nodes = grammar.Nodes(new Position(new SourceContext(
                                                        "<foo>1<tr>2<td>3</foo> <bar>4</td>5</tr>6</bar> stuff <baaz>yadda<baaz></baaz><quux><quux/></baaz>")));
             var details = new ViewComponentDetailsAttribute("Testing") { Sections = "foo,baaz,bar,quux" };
-            var visitor = new ViewComponentVisitor(new ChunkBuilderVisitor(), new ViewComponentInfo { Details = details });
+            var visitor = new ViewComponentVisitor(new ChunkBuilderVisitor(nodes.Rest.GetPaint()), new ViewComponentInfo { Details = details });
             visitor.Accept(nodes.Value);
             Assert.AreEqual(3, visitor.Sections.Count);
 

@@ -67,6 +67,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="OmitExtraLinesVisitorTester.cs" />
+    <Compile Include="Parser\PaintTester.cs" />
     <Compile Include="Parser\PositionTester.cs" />
     <Compile Include="Precompiled\View3.cs" />
     <Compile Include="Precompiled\View1.cs" />

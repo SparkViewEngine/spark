@@ -54,16 +54,19 @@ namespace Spark.Parser.Markup
             var Eq = Opt(Whitespace).And(Ch('=')).And(Opt(Whitespace));
 
 
-            var chNotPercentGreater = ChNot('%').Or(Ch('%').NotNext(Ch('>')));
 
+            var paintedStatement1 = Statement1.Build(hit => new StatementNode(hit)).Paint<StatementNode, Node>();
 
             // Syntax 1: '\r'? '\n' S? '#' (statement ^('\r' | '\n') )
-            var StatementNode1 = Opt(Ch('\r')).And(Ch('\n')).And(Rep(Ch(' ','\t'))).And(Ch('#')).And(Statement1).IfNext(Ch('\r','\n'))
-                .Build(hit => new StatementNode(hit.Down));
+            var StatementNode1 = Opt(Ch('\r')).And(Ch('\n')).And(Rep(Ch(' ','\t'))).And(Ch('#')).And(paintedStatement1).IfNext(Ch('\r','\n'))
+                .Build(hit => hit.Down);
+
+
+            var paintedStatement2 = Statement2.Build(hit => new StatementNode(hit)).Paint<StatementNode, Node>();
 
             // Syntax 2: '<%' (statement ^'%>')  '%>' 
-            var StatementNode2 = Ch("<%").NotNext(Ch('=')).And(Statement2).And(Ch("%>"))
-                .Build(hit => new StatementNode(hit.Left.Down));
+            var StatementNode2 = Ch("<%").NotNext(Ch('=')).And(paintedStatement2).And(Ch("%>"))
+                .Build(hit => hit.Left.Down);
 
             Statement = StatementNode1.Or(StatementNode2);
 
@@ -73,6 +76,8 @@ namespace Spark.Parser.Markup
             //todo: understand csharp_expression
             // simply looking for an excluded char is ultimately insufficient because 
             // any ; or } could appear, for example, in a string contant
+
+            var paintedExpression = Expression.Build(hit => new ExpressionNode(hit));
 
             // Syntax 1: ${csharp_expression}
             var Code1 = Ch("${").And(Expression).And(Ch('}'))
@@ -104,16 +109,16 @@ namespace Spark.Parser.Markup
 
             //[10]   	AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
             var AttValueSingleText = Rep1(ChNot('<', '&', '\'').Unless(Code).Unless(Condition)).Build(hit => new TextNode(hit));
-            var AttValueSingle = Apos.And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)))).And(Apos);
+            var AttValueSingle = Apos.And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Paint())).And(Apos);
             var AttValueDoubleText = Rep1(ChNot('<', '&', '\"').Unless(Code).Unless(Condition)).Build(hit => new TextNode(hit));
-            var AttValueDouble = Quot.And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)))).And(Quot);
+            var AttValueDouble = Quot.And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Paint())).And(Quot);
             var AttValue = AttValueSingle.Or(AttValueDouble).Left().Down();
 
 
             //[41]   	Attribute	   ::=   	 Name  Eq  AttValue  
             Attribute =
                 Name.And(Eq).And(AttValue)
-                .Build(hit => new AttributeNode(hit.Left.Left, hit.Down));
+                .Build(hit => new AttributeNode(hit.Left.Left, hit.Down)).Paint<AttributeNode, Node>();
 
 
             //[40]   	STag	   ::=   	'<' Name (S  Attribute)* S? '>'
@@ -173,14 +178,14 @@ namespace Spark.Parser.Markup
 
 
 
-            AnyNode = AsNode(Text)
-                .Or(EntityRefOrAmpersand)
+            AnyNode = AsNode(Text).Paint()
+                .Or(EntityRefOrAmpersand.Paint())
                 .Or(AsNode(Statement))
-                .Or(AsNode(Element))
-                .Or(AsNode(EndElement))
-                .Or(AsNode(Code))
-                .Or(AsNode(DoctypeDecl))
-                .Or(AsNode(Comment));
+                .Or(AsNode(Element).Paint())
+                .Or(AsNode(EndElement).Paint())
+                .Or(AsNode(Code).Paint())
+                .Or(AsNode(DoctypeDecl).Paint())
+                .Or(AsNode(Comment).Paint());
 
             Nodes = Rep(AnyNode);
         }

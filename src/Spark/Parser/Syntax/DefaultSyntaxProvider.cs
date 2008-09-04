@@ -35,7 +35,7 @@ namespace Spark.Parser.Syntax
                 nodes = visitor.Nodes;                
             }
 
-            var chunkBuilder = new ChunkBuilderVisitor();
+            var chunkBuilder = new ChunkBuilderVisitor(result.Rest.GetPaint());
             chunkBuilder.Accept(nodes);
             return chunkBuilder.Chunks;
         }

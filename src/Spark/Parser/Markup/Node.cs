@@ -23,6 +23,7 @@ namespace Spark.Parser.Markup
 {
     public abstract class Node
     {
+        public Node OriginalNode { get; set; }
     }
 
     public class TextNode : Node

@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
+using Spark.Parser;
 using Spark.Parser.Markup;
 using NUnit.Framework;
 
@@ -29,7 +30,7 @@ namespace Spark.Tests
         [Test]
         public void MakeLiteralChunk()
         {
-            var visitor = new ChunkBuilderVisitor();
+            var visitor = new ChunkBuilderVisitor(new Paint[0]);
             visitor.Accept(new Node[]
 			               	{
 			               		new ElementNode("span", new List<AttributeNode>(), false),
@@ -50,7 +51,7 @@ namespace Spark.Tests
 			                                 		new AttributeNode("href", new []{new TextNode("urn:picture".ToArray())}),
 			                                 		new AttributeNode("alt", new Node[]{new TextNode("A Picture".ToArray()), new EntityNode("amp")})
 			                                 	}, true);
-            var visitor = new ChunkBuilderVisitor();
+            var visitor = new ChunkBuilderVisitor(new Paint[0]);
             visitor.Accept(elt);
             Assert.AreEqual(1, visitor.Chunks.Count);
             Assert.AreEqual("<img href=\"urn:picture\" alt=\"A Picture&amp;\"/>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
@@ -63,7 +64,7 @@ namespace Spark.Tests
             var systemName = new DoctypeNode { Name = "html2", ExternalId = new ExternalIdInfo { ExternalIdType = "SYSTEM", SystemId = "my-'system'-id" } };
             var publicName = new DoctypeNode { Name = "html3", ExternalId = new ExternalIdInfo { ExternalIdType = "PUBLIC", PublicId = "my-public-id", SystemId = "my-\"other\"system-id" } };
 
-            var visitor = new ChunkBuilderVisitor();
+            var visitor = new ChunkBuilderVisitor(new Paint[0]);
             visitor.Accept(new Node[] { justName, systemName, publicName });
             Assert.AreEqual(1, visitor.Chunks.Count);
             Assert.AreEqual("<!DOCTYPE html><!DOCTYPE html2 SYSTEM \"my-'system'-id\"><!DOCTYPE html3 PUBLIC \"my-public-id\" 'my-\"other\"system-id'>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
@@ -76,7 +77,7 @@ namespace Spark.Tests
                 "<foo>hello</foo>",
                 new SpecialNodeVisitor(new[] { "foo" }, null));
 
-            var visitor = new ChunkBuilderVisitor();
+            var visitor = new ChunkBuilderVisitor(new Paint[0]);
             visitor.Accept(nodes);
             Assert.AreEqual(1, visitor.Chunks.Count);
             var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];

@@ -45,7 +45,7 @@ namespace Spark.Compiler.NodeVisitors
 
         public override IList<Node> Nodes
         {
-            get { return _nodes; }            
+            get { return _nodes; }
         }
 
         private void Add(Node node)
@@ -55,7 +55,7 @@ namespace Spark.Compiler.NodeVisitors
 
         private void PushSpecial(ElementNode element)
         {
-            SpecialNode special = new SpecialNode(element);
+            SpecialNode special = new SpecialNode(element) { OriginalNode = element };
             Nodes.Add(special);
             _stack.Push(Nodes);
             _nodes = special.Body;
@@ -101,7 +101,10 @@ namespace Spark.Compiler.NodeVisitors
             {
                 var attributes = new List<AttributeNode>(elementNode.Attributes);
                 attributes.Add(new AttributeNode("file", "_" + elementNode.Name));
-                var useFile = new ElementNode("use", attributes, elementNode.IsEmptyElement);
+                var useFile = new ElementNode("use", attributes, elementNode.IsEmptyElement)
+                                  {
+                                      OriginalNode = elementNode
+                                  };
                 PushSpecial(useFile);
                 if (elementNode.IsEmptyElement)
                     PopSpecial("use");

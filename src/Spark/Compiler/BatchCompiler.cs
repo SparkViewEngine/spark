@@ -82,14 +82,12 @@ namespace Spark.Compiler
 
             if (compilerResults.Errors.Count != 0)
             {
-                //TODO: This will become MUCH more important with batch compilation
-
                 var sb = new StringBuilder();
                 sb.AppendLine("Dynamic view compilation failed.");
 
                 foreach (CompilerError err in compilerResults.Errors)
                 {
-                    sb.AppendFormat("generated.cs({0},{1}): {2} {3}: ", err.Line, err.Column, err.IsWarning ? "warning" : "error", err.ErrorNumber);
+                    sb.AppendFormat("{4}({0},{1}): {2} {3}: ", err.Line, err.Column, err.IsWarning ? "warning" : "error", err.ErrorNumber, err.FileName);
                     sb.AppendLine(err.ErrorText);
                 }
 

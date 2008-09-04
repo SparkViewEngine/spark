@@ -15,13 +15,14 @@
 */
 
 using System.Collections.Generic;
+using Spark.Parser;
 using Spark.Parser.Markup;
 
 namespace Spark.Compiler
 {
     public class Chunk
     {
-
+        public Position Position { get; set; }
     }
 
     public class SendLiteralChunk : Chunk

@@ -21,7 +21,6 @@ namespace SparkCastleDemo.Controllers
     {
         public void Index()
         {
-
         }
 
         public void Apply(string name, string address)

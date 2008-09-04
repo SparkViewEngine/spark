@@ -122,5 +122,35 @@ namespace Spark.Parser
                 return new ParseResult<IList<TValue>>(rest, list);
             };
         }
+
+        public static ParseAction<TValue> Paint<TValue>(ParseAction<TValue> parser)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                return new ParseResult<TValue>(result.Rest.Paint(position, result.Value), result.Value);
+            };
+        }
+
+        public static ParseAction<TValue> Paint<TValue, TPaintValue>(ParseAction<TValue> parser) where TValue : TPaintValue
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                return new ParseResult<TValue>(result.Rest.Paint<TPaintValue>(position, result.Value), result.Value);
+            };
+        }
+
+        public static ParseAction<TValue> Paint<TValue, TPaintValue>(TPaintValue value, ParseAction<TValue> parser)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                return new ParseResult<TValue>(result.Rest.Paint(position, value), result.Value);
+            };
+        }
     }
 }

@@ -42,5 +42,7 @@ namespace Spark.Compiler.NodeVisitors
             Attributes.Remove(attr);
             return attr;
         }
+
+        public ElementNode OriginalNode { get { return _node.Element; } }
     }
 }

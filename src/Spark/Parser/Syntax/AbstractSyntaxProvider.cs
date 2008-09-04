@@ -17,9 +17,16 @@ namespace Spark.Parser.Syntax
             if (viewSource == null)
                 throw new FileNotFoundException("View file not found", viewPath);
 
-            using (TextReader reader = new StreamReader(viewSource.OpenViewStream()))
+            using (var stream = viewSource.OpenViewStream())
             {
-                return new SourceContext(reader.ReadToEnd(), viewSource.LastModified);
+                string fileName = viewPath;
+                if (stream is FileStream)
+                    fileName = ((FileStream) stream).Name;
+
+                using (TextReader reader = new StreamReader(stream))
+                {
+                    return new SourceContext(reader.ReadToEnd(), viewSource.LastModified, fileName);
+                }
             }
         }
 
