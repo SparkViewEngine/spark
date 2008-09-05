@@ -208,6 +208,18 @@
     <None Include="Spark.Tests.Views\Home\const-and-readonly-globals.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\_Data.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\render-partial-with-iteration.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\_RoundedEx.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\render-partial-with-section-content.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\dynamic-attributes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

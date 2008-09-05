@@ -110,7 +110,7 @@ namespace Spark.Compiler.NodeVisitors
             if (transformPath.StartsWith("~/"))
             {
                 first.Text = transformPath.Substring(1);
-                attribute.Nodes.Insert(0, new ExpressionNode("SiteRoot"));
+                attribute.Nodes.Insert(0, new ExpressionNode("SiteRoot") { OriginalNode = first});
             }
         }
 

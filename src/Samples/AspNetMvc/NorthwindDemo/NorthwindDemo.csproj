@@ -241,7 +241,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>52389</DevelopmentServerPort>
+          <DevelopmentServerPort>1200</DevelopmentServerPort>
           <DevelopmentServerVPath>/WindyDemo/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

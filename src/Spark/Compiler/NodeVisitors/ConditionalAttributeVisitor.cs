@@ -82,7 +82,7 @@ namespace Spark.Compiler.NodeVisitors
             if (conditionalAttr != null)
             {
                 var fakeElement = new ElementNode(conditionalAttr.Name, new[] { new AttributeNode("condition", conditionalAttr.Nodes) },
-                                                            false);
+                                                            false) { OriginalNode = conditionalAttr };
                 var specialNode = new SpecialNode(fakeElement);
                 node.Attributes.Remove(conditionalAttr);
                 specialNode.Body.Add(node);

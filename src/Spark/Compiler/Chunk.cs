@@ -98,18 +98,24 @@ namespace Spark.Compiler
         public RenderPartialChunk()
         {
             Body = new List<Chunk>();
+            Sections = new Dictionary<string, IList<Chunk>>();
         }
 
         public string Name { get; set; }
-
         public FileContext FileContext { get; set; }
-
         public IList<Chunk> Body { get; set; }
+        public IDictionary<string, IList<Chunk>> Sections{ get; set; }
     }
 
     public class RenderSectionChunk : Chunk
     {
+        public RenderSectionChunk()
+        {
+            Default = new List<Chunk>();
+        }
+
         public string Name { get; set; }
+        public IList<Chunk> Default { get; set; }
     }
 
     public class UseNamespaceChunk : Chunk

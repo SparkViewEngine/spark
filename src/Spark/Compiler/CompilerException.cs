@@ -15,6 +15,7 @@
 */
 
 using System;
+using Spark.Parser;
 
 namespace Spark.Compiler
 {
@@ -25,5 +26,22 @@ namespace Spark.Compiler
         {
 
         }
+            
+        public CompilerException(string message, Position position)
+            : base(message)
+        {
+            if (position != null)
+            {
+                if (position.SourceContext != null)
+                    Filename = position.SourceContext.FileName;
+
+                Line = position.Line;
+                Column = position.Column;
+            }
+        }
+
+        public string Filename { get; set; }
+        public int Line { get; set; }
+        public int Column { get; set; }
     }
 }

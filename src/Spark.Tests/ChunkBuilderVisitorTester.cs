@@ -85,5 +85,26 @@ namespace Spark.Tests
             var literal = (SendLiteralChunk)renderPartial.Body[0];
             Assert.AreEqual("hello", literal.Text);
         }
+
+        [Test]
+        public void RenderPartialContainsSections()
+        {
+            var nodes = ParseNodes(
+                "<foo><section:two>beta</section:two><section:one>alpha</section:one></foo>",
+                new PrefixExpandingVisitor(),
+                new SpecialNodeVisitor(new[] { "foo" }, null));
+
+            var visitor = new ChunkBuilderVisitor(new Paint[0]);
+            visitor.Accept(nodes);
+            Assert.AreEqual(1, visitor.Chunks.Count);
+            var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];
+            Assert.AreEqual(0, renderPartial.Body.Count);
+            Assert.AreEqual(2, renderPartial.Sections.Count);
+            Assert.That(renderPartial.Sections.ContainsKey("one"));
+            Assert.That(renderPartial.Sections.ContainsKey("two"));
+            var scope = (ScopeChunk)renderPartial.Sections["one"][0];
+            var literal = (SendLiteralChunk)scope.Body[0];
+            Assert.AreEqual("alpha", literal.Text);
+        }
     }
 }

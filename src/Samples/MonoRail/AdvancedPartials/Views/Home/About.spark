@@ -1,0 +1,19 @@
+﻿<h2>About this sample</h2>
+<p>
+  This is a Castle MonoRail demo, but the spark techniques
+  should work equally well in Asp.Net Mvc. The helpers that are used
+  and the references to Context and Request properties would be
+  different.
+</p>
+
+
+<content:aboverightrail>
+  <SmallBox>
+    <strong>Note: </strong> Some of these techniques are practical, but some are very contrived and are only
+    present to show what you can do with certain Spark features. In otherwords you will see some
+    over-kill in here. As always
+    this best practices document so use your best judgement about where some
+    of these ideas could be used appropriately.
+  </SmallBox>
+</content:aboverightrail>
+

@@ -26,5 +26,10 @@ namespace PrecompiledViews
         {
 
         }
+
+        private void precompileInstaller1_AfterInstall_1(object sender, InstallEventArgs e)
+        {
+
+        }
     }
 }

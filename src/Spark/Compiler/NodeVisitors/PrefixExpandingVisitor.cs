@@ -17,7 +17,8 @@ namespace Spark.Compiler.NodeVisitors
                                 new PrefixSpecs("section", "section", "name"),
                                 new PrefixSpecs("macro", "macro", "name"),
                                 new PrefixSpecs("content", "content", "name"),
-                                new PrefixSpecs("use", "use", "content")
+                                new PrefixSpecs("use", "use", "content"),
+                                new PrefixSpecs("render", "render", "section")
                             };
         }
 
@@ -79,7 +80,7 @@ namespace Spark.Compiler.NodeVisitors
             attributes.AddRange(original.Attributes);
             
             // Replace <foo:blah> with <foo>
-            var reconstructed = new ElementNode(specs.ElementName, attributes, original.IsEmptyElement);
+            var reconstructed = new ElementNode(specs.ElementName, attributes, original.IsEmptyElement) { OriginalNode = original };
             Nodes.Add(reconstructed);
 
             // If it's not empty, add a frame to watch for the matching end element

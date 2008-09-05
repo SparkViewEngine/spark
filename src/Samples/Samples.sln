@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindsorInversionOfControl",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartialFiles", "AspNetMvc\PartialFiles\PartialFiles.csproj", "{C8147C10-059C-439F-8DBF-33D7B8EB6D2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedPartials", "MonoRail\AdvancedPartials\AdvancedPartials.csproj", "{410E637F-1436-4889-8029-2AE79F46A252}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{C8147C10-059C-439F-8DBF-33D7B8EB6D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8147C10-059C-439F-8DBF-33D7B8EB6D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8147C10-059C-439F-8DBF-33D7B8EB6D2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{410E637F-1436-4889-8029-2AE79F46A252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{410E637F-1436-4889-8029-2AE79F46A252}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{410E637F-1436-4889-8029-2AE79F46A252}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{410E637F-1436-4889-8029-2AE79F46A252}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,5 +80,6 @@ Global
 		{123FBEA2-3323-4051-8F33-734F4C06DD6C} = {95C10F2D-8E28-4F30-BC13-53ADFF36C196}
 		{247D9A71-561A-4C7D-BBBC-EE2FB0C5578F} = {70C08930-35D9-4208-9B28-48500FC98ED4}
 		{80440072-BC9E-4A8E-BE2F-8EDB8E668176} = {70C08930-35D9-4208-9B28-48500FC98ED4}
+		{410E637F-1436-4889-8029-2AE79F46A252} = {70C08930-35D9-4208-9B28-48500FC98ED4}
 	EndGlobalSection
 EndGlobal

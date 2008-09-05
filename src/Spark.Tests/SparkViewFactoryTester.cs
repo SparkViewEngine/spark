@@ -565,6 +565,33 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void RenderPartialWithSectionContent()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("render-partial-with-section-content", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                "xbox",
+                "xtop",
+                "xb1",
+                "xb2",
+                "xb3",
+                "xb4",
+                "xboxcontent",
+                "title=\"My Tooltip\"",
+                "<h3>This is a test</h3>",
+                "Hello World",
+                "xbottom",
+                "xb4",
+                "xb3",
+                "xb2",
+                "xb1");
+        }
+
+        [Test]
         public void CaptureContentAsVariable()
         {
             mocks.ReplayAll();
@@ -624,25 +651,25 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-                ContainsInOrder(content,
-                            "<div>",
-                            @"<elt1 a1=""1"" a3=""3""></elt1>",
-                            @"<elt2 a1=""1"" a3=""3""></elt2>",
-                            @"<elt3 a1=""1"" a2="""" a3=""3""></elt3>",
-                            @"<elt4 a1=""1"" a2=""2"" a3=""3""></elt4>",
+            ContainsInOrder(content,
+                        "<div>",
+                        @"<elt1 a1=""1"" a3=""3""></elt1>",
+                        @"<elt2 a1=""1"" a3=""3""></elt2>",
+                        @"<elt3 a1=""1"" a2="""" a3=""3""></elt3>",
+                        @"<elt4 a1=""1"" a2=""2"" a3=""3""></elt4>",
 
-                            @"<elt5 a1=""1"" a2="" beta"" a3=""3""></elt5>",
-                            @"<elt6 a1=""1"" a2=""alpha beta"" a3=""3""></elt6>",
-                            @"<elt7 a1=""1"" a2=""alpha"" a3=""3""></elt7>",
-                            @"<elt8 a1=""1"" a3=""3""></elt8>",
+                        @"<elt5 a1=""1"" a2="" beta"" a3=""3""></elt5>",
+                        @"<elt6 a1=""1"" a2=""alpha beta"" a3=""3""></elt6>",
+                        @"<elt7 a1=""1"" a2=""alpha"" a3=""3""></elt7>",
+                        @"<elt8 a1=""1"" a3=""3""></elt8>",
 
-                            @"<elt9 a1=""1"" a2="" beta"" a3=""3""></elt9>",
-                            @"<elt10 a1=""1"" a2=""alpha beta"" a3=""3""></elt10>",
+                        @"<elt9 a1=""1"" a2="" beta"" a3=""3""></elt9>",
+                        @"<elt10 a1=""1"" a2=""alpha beta"" a3=""3""></elt10>",
 
-                            @"<elt11 a1=""1"" a3=""3""></elt11>",
-                            @"<elt12 a1=""1"" a2=""one two "" a3=""3""></elt12>",
-                            "</div>"
-                );
+                        @"<elt11 a1=""1"" a3=""3""></elt11>",
+                        @"<elt12 a1=""1"" a2=""one two "" a3=""3""></elt12>",
+                        "</div>"
+            );
         }
     }
 }

@@ -81,7 +81,7 @@ namespace Spark.Compiler.NodeVisitors
             var conditionalAttr = node.Attributes.FirstOrDefault(attr => attr.Name == "each");
             if (conditionalAttr != null)
             {
-                var fakeElement = new ElementNode("for", new[] { conditionalAttr }, false);
+                var fakeElement = new ElementNode("for", new[] { conditionalAttr }, false) { OriginalNode = conditionalAttr };
                 var specialNode = new SpecialNode(fakeElement);
                 node.Attributes.Remove(conditionalAttr);
                 specialNode.Body.Add(node);

@@ -200,6 +200,7 @@ namespace Spark.Parser.Markup
         {
             Element = element;
             Extension = extension;
+            OriginalNode = element;
         }
 
         public ElementNode Element;

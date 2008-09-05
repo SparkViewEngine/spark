@@ -37,7 +37,7 @@ namespace Spark.Compiler.NodeVisitors
 
         public SpecialNodeVisitor(IList<string> partialFileNames, ISparkExtensionFactory extensionFactory)
         {
-            _containingNames = new List<string>(new[] { "var", "def", "for", "use", "content", "test", "if", "else", "elseif", "macro", "render" });
+            _containingNames = new List<string>(new[] { "var", "def", "for", "use", "content", "test", "if", "else", "elseif", "macro", "render", "section" });
             _nonContainingNames = new List<string>(new[] { "global", "set", "viewdata" });
             _partialFileNames = partialFileNames;
             _extensionFactory = extensionFactory;
