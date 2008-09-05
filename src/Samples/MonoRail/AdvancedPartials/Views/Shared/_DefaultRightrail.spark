@@ -6,12 +6,12 @@
 
 <use:aboverightrail/>
 
-<h2>Favorite Links</h2>
+<h2>Links</h2>
 <ul class="menublock">
-  <li><a href="http://andreasviklund.com/templates">Free website templates</a></li>
-  <li><a href="http://openwebdesign.org">Open Web Design</a></li>
-  <li><a href="http://www.solucija.com/index.php?id=17">sNews CMS</a></li>
-  <li><a href="http://oswd.org">OSWD.org</a></li>
+  <li><a href="http://dev.dejardin.org">Spark</a></li>
+  <li><a href="http://castleproject.org">Castle Project</a></li>
+  <li><a href="http://www.codeplex.com/MVCContrib">MVC Contrib</a></li>
+  <li><a href="http://forums.asp.net/1146.aspx">ASP.NET MVC Forums</a></li>
 </ul>
 
 <div id="searchbar">
