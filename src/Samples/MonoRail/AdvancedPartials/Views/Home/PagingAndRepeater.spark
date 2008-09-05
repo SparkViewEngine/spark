@@ -1,0 +1,42 @@
+﻿<use namespace="Castle.MonoRail.Framework.Helpers"/>
+<use namespace="AdvancedPartials.Models"/>
+<use namespace="System.Linq"/>
+<viewdata items="IPaginatedPage"/>
+
+<Pagination page="items"/>
+
+<content:head>
+  <style type="text/css">
+    .birdtable { border-spacing:0px; clear:both; margin-left:20px; }
+    .birdtable .alt { background-color:#E8EAEC; }
+    .birdtable td {padding:1px 4px 1px 4px}
+  </style>
+</content:head>
+
+<Rows page="items.OfType[[Bird]]()">
+  <section:beforeall>
+    <table class="birdtable">
+  </section:beforeall>
+  <section:each>
+    <tr class="alt?{itemIndex % 2 == 0}">
+      <td>${itemIndex + items.FirstItem}</td>
+      <td>${H(item.Name)}</td>
+      <td>${H(item.State)}</td>
+    </tr>
+  </section:each>
+  <section:afterall>
+    </table>
+  </section:afterall>
+</Rows>
+
+<Pagination page="items">
+  <section:prev>&laquo;</section:prev>
+  <section:next>&raquo;</section:next>
+  <section:item>
+    <test if="pageIndex[[=3">
+      ${new[]{"one","two","three"}[pageIndex - 1]}
+      <else/>
+      ${pageIndex}
+    </test>
+  </section:item>
+</Pagination>

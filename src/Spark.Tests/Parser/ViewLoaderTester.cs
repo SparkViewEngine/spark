@@ -21,6 +21,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Spark.FileSystem;
 using Spark.Compiler;
+using Spark.Parser.Syntax;
 
 namespace Spark.Tests.Parser
 {
@@ -144,6 +145,22 @@ namespace Spark.Tests.Parser
             Assert.That(loader.IsCurrent());
             Assert.That(!loader.IsCurrent());
             mocks.VerifyAll();
+        }
+
+        [Test]
+        public void LoadingPartialInsideNamedSection()
+        {
+            var viewFolder = new InMemoryViewFolder
+                                 {
+                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts><section:foo><Another/></section:foo></Guts></for>"},
+                                     {"home\\_Guts.spark", "<div><render:foo/></div>"},
+                                     {"home\\_Another.spark", "<p>hello world</p>"}
+                                 };
+            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(), ViewFolder = viewFolder };
+            var chunks = loader.Load("home\\index.spark");
+            var everything = loader.GetEverythingLoaded();
+            Assert.AreEqual(3, everything.Count());
+
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
+using AdvancedPartials.Models;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Helpers;
 
@@ -19,18 +20,10 @@ namespace AdvancedPartials.Controllers
     {
         public void Index()
         {
-            //UrlHelper u;
-            //u.Link()
-            //    u.For()
-            
         }
 
         public void About()
         {
-            //UrlHelper u;
-            //u.Link()
-            //    u.For()
-
         }
 
         public void AddingAtPlaceholders()
@@ -41,6 +34,26 @@ namespace AdvancedPartials.Controllers
         public void StyleGuide()
         {
             
+        }
+
+        public void Boxes()
+        {
+            
+        }
+
+        public void PagingAndRepeater(int id)
+        {
+            var repos = new BirdRepository();
+            var birds = repos.GetBirds();
+
+            var items = 
+                PaginationHelper.CreatePagination(
+                    birds, // list
+                    10, // number of items per page
+                    id
+                );
+            
+            PropertyBag["items"] = items;
         }
     }
 }

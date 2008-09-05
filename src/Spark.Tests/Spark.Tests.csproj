@@ -57,6 +57,7 @@
     <Compile Include="BaseVisitorTester.cs" />
     <Compile Include="BatchCompilationTester.cs" />
     <Compile Include="ChunkBuilderVisitorTester.cs" />
+    <Compile Include="DetectCodeExpressionTester.cs" />
     <Compile Include="Parser\CodeGrammarTester.cs" />
     <Compile Include="CompiledViewHolderTester.cs" />
     <Compile Include="ConditionalAttributeVisitorTester.cs" />

@@ -17,6 +17,11 @@ namespace Spark.Compiler.ChunkVisitors
 
         readonly IList<Entry> _entries = new List<Entry>();
 
+        public DetectCodeExpressionVisitor(RenderPartialChunk currentPartial)
+        {
+            _currentPartial = currentPartial;
+        }
+
         public Entry Add(string expression)
         {
             var entry = new Entry {Expression = expression};
@@ -26,6 +31,9 @@ namespace Spark.Compiler.ChunkVisitors
 
         void Examine(string code)
         {
+            if (string.IsNullOrEmpty(code))
+                return;
+
             foreach(var entry in _entries)
             {
                 if (entry.Detected)
@@ -47,13 +55,24 @@ namespace Spark.Compiler.ChunkVisitors
         {
             var priorPartial = _currentPartial;
             _currentPartial = chunk;
-            Accept(chunk.Body);
+            Accept(chunk.FileContext.Contents);
             _currentPartial = priorPartial;
         }
 
         protected override void Visit(RenderSectionChunk chunk)
         {
-            Accept(_currentPartial.Body);
+            if (string.IsNullOrEmpty(chunk.Name))
+            {
+                Accept(_currentPartial.Body);
+            }
+            else if (_currentPartial.Sections.ContainsKey(chunk.Name))
+            {
+                Accept(_currentPartial.Sections[chunk.Name]);
+            }
+            else
+            {
+                Accept(chunk.Default);
+            }
         }
 
         protected override void Visit(UseAssemblyChunk chunk)
@@ -111,7 +130,7 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(ScopeChunk chunk)
         {
-            //no-op
+            Accept(chunk.Body);
         }
 
         protected override void Visit(ForEachChunk chunk)

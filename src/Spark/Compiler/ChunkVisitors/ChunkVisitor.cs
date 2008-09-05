@@ -48,6 +48,8 @@ namespace Spark.Compiler.ChunkVisitors
         protected override void Visit(RenderPartialChunk chunk)
         {
             Accept(chunk.Body);
+            foreach (var chunks in chunk.Sections.Values)
+                Accept(chunks);
         }
 
         protected override void Visit(ContentSetChunk chunk)

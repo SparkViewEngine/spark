@@ -112,7 +112,7 @@ namespace Spark.Compiler.ChunkVisitors
             }
             else
             {
-                var detect = new DetectCodeExpressionVisitor();
+                var detect = new DetectCodeExpressionVisitor(this.OuterPartial);
                 var autoIndex = detect.Add(variableName + "Index");
                 var autoCount = detect.Add(variableName + "Count");
                 var autoIsFirst = detect.Add(variableName + "IsFirst");

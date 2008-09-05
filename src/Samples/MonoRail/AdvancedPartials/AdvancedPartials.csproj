@@ -74,6 +74,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Bird.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,18 +85,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Home\About.spark" />
+    <Content Include="Content\pagination.css" />
+    <EmbeddedResource Include="Models\BirdList.txt" />
     <Content Include="Views\Home\AddingAtPlaceholders.spark" />
+    <None Include="Views\Home\Boxes.spark" />
+    <None Include="Views\Home\PagingAndRepeater.spark" />
     <None Include="Views\Home\Styleguide.spark" />
+    <None Include="Views\Shared\_Box.spark" />
+    <None Include="Views\Shared\_Pagination.spark" />
+    <None Include="Views\Shared\_RoundBox.spark" />
     <None Include="Views\Shared\_AllDemoPages.spark" />
     <None Include="Views\Layouts\Default.spark" />
     <None Include="Views\Shared\_Comment.spark" />
     <None Include="Views\Shared\_DefaultRightrail.spark" />
     <None Include="Views\Shared\_Jabberwocky.spark" />
+    <None Include="Views\Shared\_Rows.spark" />
     <None Include="Views\Shared\_SmallBox.spark" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

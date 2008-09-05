@@ -1,6 +1,7 @@
-﻿<h2>JABBERWOCKY</h2>
-<h3>Lewis Carroll</h3>
-<p>
+﻿<global type="bool" showJabberHeader="true"/>
+<h2 if="showJabberHeader">JABBERWOCKY</h2>
+<h3 if="showJabberHeader">Lewis Carroll</h3>
+<p if="showJabberHeader">
   (from <em>Through the Looking-Glass and What Alice Found There</em>, 1872)
 </p>
 

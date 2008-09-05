@@ -31,6 +31,8 @@ namespace Spark.Compiler.ChunkVisitors
         {
             References.Add(chunk);
             Accept(chunk.Body);
+            foreach (var chunks in chunk.Sections.Values)
+                Accept(chunks);
         }
     }
 }

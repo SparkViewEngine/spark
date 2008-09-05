@@ -1,0 +1,7 @@
+﻿<render:beforeall/>
+<for each="var item in page">
+  <render:before/>
+  <render:each/>
+  <render:after/>
+</for>
+<render:afterall/>
