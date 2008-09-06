@@ -1,0 +1,19 @@
+<ForumData xmlns="http://schemas.datacontract.org/2004/07/ModularForum.Models" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <Forums>
+    <Forum>
+      <Description i:nil="true"/>
+      <Id>1</Id>
+      <Name>Primus</Name>
+    </Forum>
+    <Forum>
+      <Description i:nil="true"/>
+      <Id>2</Id>
+      <Name>Secundus</Name>
+    </Forum>
+    <Forum>
+      <Description i:nil="true"/>
+      <Id>3</Id>
+      <Name>Tertiary</Name>
+    </Forum>
+  </Forums>
+</ForumData>

@@ -1,0 +1,19 @@
+<ForumData xmlns="http://schemas.datacontract.org/2004/07/ModularForum.Models" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <Forums>
+    <Forum>
+      <Description>The March Hare took the watch and looked at it gloomily: then he dipped it into his cup of tea, and looked at it again: but he could think of nothing better to say than his first remark, `It was the best butter, you know.'</Description>
+      <Id>1</Id>
+      <Name>Primus</Name>
+    </Forum>
+    <Forum>
+      <Description>Alice remained looking thoughtfully at the mushroom for a minute, trying to make out which were the two sides of it; and as it was perfectly round, she found this a very difficult question. However, at last she stretched her arms round it as far as they would go, and broke off a bit of the edge with each hand.</Description>
+      <Id>2</Id>
+      <Name>Secundus</Name>
+    </Forum>
+    <Forum>
+      <Description>They had not gone far before they saw the Mock Turtle in the distance, sitting sad and lonely on a little ledge of rock, and, as they came nearer, Alice could hear him sighing as if his heart would break. She pitied him deeply. `What is his sorrow?' she asked the Gryphon, and the Gryphon answered, very nearly in the same words as before, `It's all his fancy, that: he hasn't got no sorrow, you know. Come on!'</Description>
+      <Id>3</Id>
+      <Name>Tertius</Name>
+    </Forum>
+  </Forums>
+</ForumData>

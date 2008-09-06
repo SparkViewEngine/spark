@@ -1,0 +1,5 @@
+﻿<macro:ForumWidgetText>
+  <var forums="new ForumRepository().ListForums()"/>
+  Visit ${forums.Count} forums
+</macro:ForumWidgetText>
+<div>${Html.ActionLink[[ForumController]](c=>c.Index(), ForumWidgetText())}</div>

@@ -1,0 +1,20 @@
+﻿<h2>Modular site</h2>
+<p>
+  This example, ModularHost, has only a home/index view and a normal layout. 
+  It includes another site's primary output assembly, ModularForum. That assembly
+  contains that site's views as embedded resources. Methods are called on on the ModularForum's Global
+  class to register it's instance of the view engine and add routes.
+</p>
+<p>
+  Because of how the HtmlHelper RenderPartial works, you may also render partial components from any
+  modules that have been registered.
+</p>
+<p>
+  In a real-world application you would probably have a mechanism to discover and register modules
+  without hard-coded calls to methods on classes in other library. That dynamic loading is beyond the
+  scope of this sample, which is simply showing how spark can work with multiple engines from different
+  assemblied using embedded views.
+</p>
+<content:subcontent>
+  #Html.RenderPartial("_ForumWidget");
+</content:subcontent>
