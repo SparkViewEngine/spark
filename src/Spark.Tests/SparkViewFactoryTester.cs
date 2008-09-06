@@ -699,7 +699,7 @@ namespace Spark.Tests
 
             ContainsInOrder(content,
                             "<li", "class=", "selected", "blah", "</li>",
-                            "blah","blah");
+                            "blah","blah"   );
                 
         }
     }
