@@ -159,6 +159,19 @@ namespace Spark.Parser.Markup
         public ExternalIdInfo ExternalId;
     }
 
+    public class XMLDeclNode : Node
+    {
+        public string Encoding { get; set; }
+
+        public string Standalone { get; set; }
+    }
+
+    public class ProcessingInstructionNode : Node
+    {
+        public string Name { get; set; }
+        public string Body { get; set; }
+    }
+
     public class ElementNode : Node
     {
         public ElementNode(string name, IList<AttributeNode> attributeNodes, bool isEmptyElement)

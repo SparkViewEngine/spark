@@ -198,6 +198,38 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
+        protected override void Visit(XMLDeclNode node)
+        {
+            //[23]   	XMLDecl	   ::=   	'<?xml' VersionInfo  EncodingDecl? SDDecl? S? '?>'
+            //[24]   	VersionInfo	   ::=   	 S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
+            //[80]   	EncodingDecl	   ::=   	 S 'encoding' Eq ('"' EncName '"' | "'" EncName "'" ) 
+            //[32]   	SDDecl	   ::=   	 S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"')) 
+
+            var encoding = "";
+            if (!string.IsNullOrEmpty(node.Encoding))
+            {
+                if (node.Encoding.Contains("\""))
+                    encoding = string.Concat(" encoding='", node.Encoding, "'");
+                else
+                    encoding = string.Concat(" encoding=\"", node.Encoding, "\"");
+            }
+
+            var standalone = "";
+            if (!string.IsNullOrEmpty(node.Standalone))
+                standalone = string.Concat(" standalone=\"", node.Standalone, "\"");
+
+            AddLiteral(string.Concat("<?xml version=\"1.0\"", encoding, standalone, " ?>"));
+        }
+
+        protected override void Visit(ProcessingInstructionNode node)
+        {
+            //[16]   	PI	   ::=   	'<?' PITarget (S (Char* - (Char* '?>' Char*)))? '?>'
+            if (string.IsNullOrEmpty(node.Body))
+                AddLiteral(string.Concat("<?", node.Name, "?>"));
+            else
+                AddLiteral(string.Concat("<?", node.Name, " ", node.Body, "?>"));
+        }
+
         protected override void Visit(ElementNode elementNode)
         {
             AddLiteral("<" + elementNode.Name);

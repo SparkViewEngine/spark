@@ -56,9 +56,15 @@ namespace Spark.Compiler.NodeVisitors
                 Visit((StatementNode)node);
             else if (node is ConditionNode)
                 Visit((ConditionNode)node);
+            else if (node is XMLDeclNode)
+                Visit((XMLDeclNode) node);
+            else if (node is ProcessingInstructionNode)
+                Visit((ProcessingInstructionNode)node);
             else
                 throw new ArgumentException(string.Format("Unknown node type {0}", node.GetType()), "node");
         }
+
+
 
         protected abstract void Visit(StatementNode node);
         protected abstract void Visit(ExpressionNode expressionNode);
@@ -72,5 +78,7 @@ namespace Spark.Compiler.NodeVisitors
         protected abstract void Visit(SpecialNode specialNode);
         protected abstract void Visit(ExtensionNode node);
         protected abstract void Visit(ConditionNode node);
+        protected abstract void Visit(XMLDeclNode node);
+        protected abstract void Visit(ProcessingInstructionNode node);
     }
 }

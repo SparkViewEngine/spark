@@ -107,6 +107,16 @@ namespace Spark.Compiler.NodeVisitors
         {
             Nodes.Add(node);
         }
+
+        protected override void Visit(XMLDeclNode node)
+        {
+            Nodes.Add(node);
+        }
+
+        protected override void Visit(ProcessingInstructionNode node)
+        {
+            Nodes.Add(node);
+        }
     }
 
     public class NodeVisitor : NodeVisitor<object>

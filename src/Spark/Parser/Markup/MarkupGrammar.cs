@@ -58,7 +58,7 @@ namespace Spark.Parser.Markup
             var paintedStatement1 = Statement1.Build(hit => new StatementNode(hit)).Paint<StatementNode, Node>();
 
             // Syntax 1: '\r'? '\n' S? '#' (statement ^('\r' | '\n') )
-            var StatementNode1 = Opt(Ch('\r')).And(Ch('\n')).And(Rep(Ch(' ','\t'))).And(Ch('#')).And(paintedStatement1).IfNext(Ch('\r','\n'))
+            var StatementNode1 = Opt(Ch('\r')).And(Ch('\n')).And(Rep(Ch(' ', '\t'))).And(Ch('#')).And(paintedStatement1).IfNext(Ch('\r', '\n'))
                 .Build(hit => hit.Down);
 
 
@@ -176,7 +176,38 @@ namespace Spark.Parser.Markup
             DoctypeDecl = Ch("<!DOCTYPE").And(Whitespace).And(Name).And(Opt(Whitespace.And(ExternalID).Down())).And(Opt(Whitespace)).And(Ch('>'))
                 .Build(hit => new DoctypeNode { Name = hit.Left.Left.Left.Down, ExternalId = hit.Left.Left.Down });
 
+            //[26]   	VersionNum	   ::=   	'1.0'
+            var VersionNum = Ch("1.0");
 
+            //[24]   	VersionInfo	   ::=   	 S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
+            var VersionInfo = Whitespace.And(Ch("version")).And(Eq).And(
+                    Apos.And(VersionNum).And(Apos).Or(Quot.And(VersionNum).And(Quot)));
+
+            //[81]   	EncName	   ::=   	[A-Za-z] ([A-Za-z0-9._] | '-')*
+            var EncName = Ch(char.IsLetter).And(Rep(Ch(char.IsLetterOrDigit).Or(Ch('.', '_', '-'))))
+                .Build(hit => hit.Left + new string(hit.Down.ToArray()));
+
+            //[80]   	EncodingDecl	   ::=   	 S 'encoding' Eq ('"' EncName '"' | "'" EncName "'" ) 
+            var EncodingDecl = Whitespace.And(Ch("encoding")).And(Eq).And(
+                Apos.And(EncName).And(Apos).Or(Quot.And(EncName).And(Quot)))
+                .Build(hit => hit.Down.Left.Down);
+
+            //[32]   	SDDecl	   ::=   	 S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"')) 
+            var SSDecl = Whitespace.And(Ch("standalone")).And(Eq).And(
+                Apos.And(Ch("yes").Or(Ch("no"))).And(Apos).Or(Quot.And(Ch("yes").Or(Ch("no"))).And(Quot)))
+                .Build(hit => hit.Down.Left.Down);
+
+            //[23]   	XMLDecl	   ::=   	'<?xml' VersionInfo  EncodingDecl? SDDecl? S? '?>'
+            XMLDecl =
+                Ch("<?xml").And(VersionInfo).And(Opt(EncodingDecl)).And(Opt(SSDecl)).And(Opt(Whitespace)).And(Ch("?>"))
+                .Build(hit => new XMLDeclNode { Encoding = hit.Left.Left.Left.Down, Standalone = hit.Left.Left.Down });
+
+            //[17]   	PITarget	   ::=   	Name - (('X' | 'x') ('M' | 'm') ('L' | 'l'))
+            var PITarget = Name.Unless(Ch('X', 'x').And(Ch('M', 'm')).And(Ch('L', 'l')));
+
+            //[16]   	PI	   ::=   	'<?' PITarget (S (Char* - (Char* '?>' Char*)))? '?>'
+            ProcessingInstruction = Ch("<?").And(PITarget).And(Opt(Whitespace)).And(Rep(Ch(ch => true).Unless(Ch("?>")))).And(Ch("?>"))
+                .Build(hit=>new ProcessingInstructionNode{Name = hit.Left.Left.Left.Down, Body = new string(hit.Left.Down.ToArray())});
 
             AnyNode = AsNode(Text).Paint()
                 .Or(EntityRefOrAmpersand.Paint())
@@ -185,7 +216,9 @@ namespace Spark.Parser.Markup
                 .Or(AsNode(EndElement).Paint())
                 .Or(AsNode(Code).Paint())
                 .Or(AsNode(DoctypeDecl).Paint())
-                .Or(AsNode(Comment).Paint());
+                .Or(AsNode(Comment).Paint())
+                .Or(AsNode(XMLDecl).Paint())
+                .Or(AsNode(ProcessingInstruction).Paint());
 
             Nodes = Rep(AnyNode);
         }
@@ -203,9 +236,11 @@ namespace Spark.Parser.Markup
         public ParseAction<EndElementNode> EndElement;
         public ParseAction<AttributeNode> Attribute;
         public ParseAction<CommentNode> Comment;
+        public ParseAction<ProcessingInstructionNode> ProcessingInstruction;
+        public ParseAction<XMLDeclNode> XMLDecl;
+
         public ParseAction<ExpressionNode> Code;
         public ParseAction<StatementNode> Statement;
-
 
 
         public ParseAction<Node> AsNode<TValue>(ParseAction<TValue> parser) where TValue : Node

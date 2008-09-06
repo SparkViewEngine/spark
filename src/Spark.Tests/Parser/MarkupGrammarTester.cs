@@ -43,10 +43,10 @@ namespace Spark.Tests.Parser
         {
             ParseAction<char> digit =
                 delegate(Position input)
-                    {
-                        if (input.PotentialLength() == 0 || !char.IsDigit(input.Peek())) return null;
-                        return new ParseResult<char>(input.Advance(1), input.Peek());
-                    };
+                {
+                    if (input.PotentialLength() == 0 || !char.IsDigit(input.Peek())) return null;
+                    return new ParseResult<char>(input.Advance(1), input.Peek());
+                };
 
             var digits = digit.Rep();
 
@@ -299,7 +299,7 @@ namespace Spark.Tests.Parser
         [Test]
         public void AspxStyleOutputInText()
         {
-            var result=grammar.Nodes(Source("<hello>foo<%=bar%>ex</hello>"));
+            var result = grammar.Nodes(Source("<hello>foo<%=bar%>ex</hello>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
@@ -382,11 +382,11 @@ namespace Spark.Tests.Parser
         {
             var nodes1 = grammar.Nodes(Source("<script>\r\n$(\"#diff\").hide();\r\n</script>"));
             Assert.AreEqual(3, nodes1.Value.Count);
-            Assert.AreEqual("\r\n$(\"#diff\").hide();\r\n", ((TextNode) nodes1.Value[1]).Text);
+            Assert.AreEqual("\r\n$(\"#diff\").hide();\r\n", ((TextNode)nodes1.Value[1]).Text);
 
             var nodes2 = grammar.Nodes(Source("<script>\r\n$('#diff').hide();\r\n</script>"));
             Assert.AreEqual(3, nodes2.Value.Count);
-            Assert.AreEqual("\r\n$('#diff').hide();\r\n", ((TextNode) nodes2.Value[1]).Text);
+            Assert.AreEqual("\r\n$('#diff').hide();\r\n", ((TextNode)nodes2.Value[1]).Text);
         }
 
 
@@ -413,5 +413,59 @@ namespace Spark.Tests.Parser
             Assert.AreEqual("one", ((TextNode)attr.Value.Nodes[0]).Text);
             Assert.AreEqual("true", ((ConditionNode)attr.Value.Nodes[1]).Code);
         }
+
+        [Test]
+        public void XMLDeclParser()
+        {
+            var result =
+                grammar.XMLDecl(
+                    Source("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+            Assert.IsNotNull(result);
+            Assert.AreEqual("UTF-8", result.Value.Encoding);
+            Assert.IsNull(result.Value.Standalone);
+
+            result =
+                grammar.XMLDecl(
+                    Source("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone='no'  ?>"));
+         
+            Assert.IsNotNull(result);
+            Assert.AreEqual("UTF-8", result.Value.Encoding);
+            Assert.AreEqual("no", result.Value.Standalone);
+
+            result =
+                grammar.XMLDecl(
+                    Source("<?xml version=\"1.0\" standalone=\"yes\"  ?>"));
+
+            Assert.IsNotNull(result);
+            Assert.IsNull(result.Value.Encoding);
+            Assert.AreEqual("yes", result.Value.Standalone);
+        }
+
+        [Test]
+        public void ProcessingInstructionWontParseXMLDecl()
+        {
+            var result =
+                grammar.ProcessingInstruction(
+                    Source("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+            Assert.IsNull(result);
+        }
+
+
+        [Test]
+        public void ProcessingInstruction()
+        {
+            var result = grammar.ProcessingInstruction(
+                    Source("<?foo?>"));
+
+            Assert.AreEqual("foo", result.Value.Name);
+            Assert.That(string.IsNullOrEmpty(result.Value.Body));
+
+            result = grammar.ProcessingInstruction(
+                    Source("<?php hello ?>"));
+
+            Assert.AreEqual("php", result.Value.Name);
+            Assert.AreEqual("hello ", result.Value.Body);
+        }
+
     }
 }

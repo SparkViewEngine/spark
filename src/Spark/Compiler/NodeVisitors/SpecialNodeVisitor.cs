@@ -203,5 +203,15 @@ namespace Spark.Compiler.NodeVisitors
         {
             throw new System.NotImplementedException();
         }
+
+        protected override void Visit(XMLDeclNode node)
+        {
+            Nodes.Add(node);
+        }
+
+        protected override void Visit(ProcessingInstructionNode node)
+        {
+            Nodes.Add(node);
+        }
     }
 }

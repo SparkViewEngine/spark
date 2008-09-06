@@ -671,5 +671,20 @@ namespace Spark.Tests
                         "</div>"
             );
         }
+
+        [Test]
+        public void XMLDeclAndProcessingInstruction()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("xmldecl-and-processing-instruction", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                            "<?xml version=\"1.0\" encoding=\"utf-8\" ?>",
+                            "<?php yadda yadda yadda ?>"
+                );
+        }
     }
 }
