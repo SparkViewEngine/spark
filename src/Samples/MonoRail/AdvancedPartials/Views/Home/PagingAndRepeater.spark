@@ -3,30 +3,40 @@
 <use namespace="System.Linq"/>
 <viewdata items="IPaginatedPage"/>
 
-<Pagination page="items" paginationId="'pagination-flickr'"/>
+<Pagination page="items"/>
 
 <content:head>
   <style type="text/css">
     .birdtable { border-spacing:0px; border-collapse:collapse; clear:both; margin-left:20px; }
-    .birdtable .alt { background-color:#E8EAEC; }
-    .birdtable td {padding:1px 4px 1px 4px}
+    .birdtable .top { background-color:#F5F5F5; border:1px solid #EBEBEB;}
+    .birdtable .alt { background-color:#F5F5F5; }
+    .birdtable .active { background-color:#d5e5ee; }
+
+    .birdtable td {padding:1px 4px 1px 4px;}
+    .birdtable .red {color: #FF1616;}
+    .birdtable .blue {color: #3EA2C7;}
+    .birdtable .mn {font-weight: bold;}
   </style>
 </content:head>
 
+#// This would be a lot easier with a simple {tr each=""}
+#// but its for the sake of a demo. The partial is calling
+#// back repeatedly with different values. item and itemIndex
+#// are provided by _Rows.spark
 <Rows page="items.OfType[[Bird]]()">
   <section:beforeall>
     <table class="birdtable">
-      <tr class="alt">
-        <th></th>
-        <th>Bird</th>
-        <th>State</th>
+      <tr class="top">
+        <th style="width:50px;"></th>
+        <th style="width:150px;">Bird</th>
+        <th style="width:150px;">State</th>
       </tr>
   </section:beforeall>
   <section:each>
-    <tr class="alt?{itemIndex % 2 == 1}">
+    <tr class="alt?{itemIndex % 2 == 1} active?{item.State=='Minnesota'}">
       <td>${itemIndex + items.FirstItem}</td>
-      <td>${H(item.Name)}</td>
-      <td>${H(item.State)}</td>
+      <td class="red?{item.Name=='Cardinal'} blue?{item.Name.Contains('Blue')}">${H(item.Name)}</td>
+      <td class="mn?{item.State=='Minnesota'}">${H(item.State)}</td>
     </tr>
   </section:each>
   <section:afterall>
@@ -34,7 +44,7 @@
   </section:afterall>
 </Rows>
 
-<Pagination page="items" paginationId="'pagination-clean'">
+<Pagination page="items">
   <section:prev>&laquo;</section:prev>
   <section:next>&raquo;</section:next>
   <section:item>

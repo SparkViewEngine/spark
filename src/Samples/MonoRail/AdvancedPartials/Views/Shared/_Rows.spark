@@ -1,7 +1,11 @@
-﻿<render:beforeall/>
-<for each="var item in page">
-  <render:before/>
-  <render:each/>
-  <render:after/>
-</for>
-<render:afterall/>
+﻿<test if="page.Count() == 0">
+  <render:nodata/>
+  <else/>
+  <render:beforeall/>
+  <for each="var item in page">
+    <render:before/>
+    <render:each/>
+    <render:after/>
+  </for>
+  <render:afterall/>
+</test>
