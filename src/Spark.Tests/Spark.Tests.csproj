@@ -209,6 +209,9 @@
     <None Include="Spark.Tests.Views\Home\const-and-readonly-globals.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\foreach-autovariables-used-inline.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\xmldecl-and-processing-instruction.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

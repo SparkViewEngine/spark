@@ -686,5 +686,21 @@ namespace Spark.Tests
                             "<?php yadda yadda yadda ?>"
                 );
         }
+
+
+        [Test]
+        public void ForEachAutovariablesUsedInline()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("foreach-autovariables-used-inline", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                            "<li", "class=", "selected", "blah", "</li>",
+                            "blah","blah");
+                
+        }
     }
 }
