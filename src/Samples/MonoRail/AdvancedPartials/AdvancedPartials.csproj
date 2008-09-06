@@ -80,7 +80,7 @@
   <ItemGroup>
     <Content Include="Content\andreas08\andreas08.css" />
     <Content Include="Content\andreas08\index.html" />
-    <Content Include="Content\default.css" />
+    <Content Include="Content\extra.css" />
     <Content Include="Views\Home\Index.spark" />
   </ItemGroup>
   <ItemGroup>
