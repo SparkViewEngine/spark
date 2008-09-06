@@ -58,12 +58,13 @@
     <Compile Include="BatchCompilationTester.cs" />
     <Compile Include="ChunkBuilderVisitorTester.cs" />
     <Compile Include="DetectCodeExpressionTester.cs" />
+    <Compile Include="FileSystem\EmbeddedViewFolderTester.cs" />
     <Compile Include="Parser\CodeGrammarTester.cs" />
     <Compile Include="CompiledViewHolderTester.cs" />
     <Compile Include="ConditionalAttributeVisitorTester.cs" />
     <Compile Include="Parser\CSharpSyntaxProviderTester.cs" />
-    <Compile Include="FileSystemViewFolderTester.cs" />
-    <Compile Include="InMemoryViewFolderTester.cs" />
+    <Compile Include="FileSystem\FileSystemViewFolderTester.cs" />
+    <Compile Include="FileSystem\InMemoryViewFolderTester.cs" />
     <Compile Include="Parser\MarkupGrammarTester.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\UserInfo.cs" />
@@ -200,6 +201,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FileSystem\Embedded\Home\Index.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileSystem\Embedded\Home\List.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileSystem\Embedded\Shared\Default.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="Spark.Tests.Views\Home\capture-content-as-variable.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

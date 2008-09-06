@@ -23,7 +23,7 @@ namespace Spark.FileSystem
             this[key] = Encoding.Default.GetBytes(value);
         }
 
-        public IViewFile GetViewSource(string path)
+        public virtual IViewFile GetViewSource(string path)
         {
             if (!HasView(path))
                 throw new FileNotFoundException(string.Format("Template {0} not found", path), path);
@@ -31,13 +31,13 @@ namespace Spark.FileSystem
             return new InMemoryViewFile(this, path);
         }
 
-        public IList<string> ListViews(string path)
+        public virtual IList<string> ListViews(string path)
         {
             return
                 Keys.Where(key => Comparer.Equals(path, Path.GetDirectoryName(key))).ToList();
         }
 
-        public bool HasView(string path)
+        public virtual bool HasView(string path)
         {
             return ContainsKey(path);
         }
