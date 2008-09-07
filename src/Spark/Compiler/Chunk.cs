@@ -70,11 +70,13 @@ namespace Spark.Compiler
         }
         public string Name { get; set; }
         public string Type { get; set; }
+        public string Key { get; set; }
     }
 
     public class ViewDataModelChunk : Chunk
     {
         public string TModel { get; set; }
+        public string TModelAlias { get; set; }
     }
 
     public class AssignVariableChunk : Chunk

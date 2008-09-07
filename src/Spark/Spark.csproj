@@ -75,6 +75,7 @@
     <Compile Include="Compiler\NodeVisitors\AbstractNodeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\SpecialNodeInspector.cs" />
     <Compile Include="Compiler\NodeVisitors\SpecialNodeVisitor.cs" />
+    <Compile Include="Compiler\NodeVisitors\TypeInspector.cs" />
     <Compile Include="Compiler\NodeVisitors\UrlAttributeVisitor.cs" />
     <Compile Include="Compiler\ViewCompiler.cs" />
     <Compile Include="Configuration\AssemblyElement.cs" />

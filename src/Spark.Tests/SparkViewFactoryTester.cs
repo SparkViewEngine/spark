@@ -699,8 +699,29 @@ namespace Spark.Tests
 
             ContainsInOrder(content,
                             "<li", "class=", "selected", "blah", "</li>",
-                            "blah","blah"   );
-                
+                            "blah", "blah");
+
         }
+
+        [Test]
+        public void AlternateViewdataSyntax()
+        {
+            mocks.ReplayAll();
+            var viewData = new StubViewData<IList<string>> {{"my-data", "alpha"}};
+            viewData.Model = new[] {"beta", "gamma", "delta"};
+
+            var viewContext = MakeViewContext("alternate-viewdata-syntax", null, viewData);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                            "<p>", "alpha", "</p>",
+                            "<p>", "beta", "</p>",
+                            "<p>", "gamma", "</p>",
+                            "<p>", "delta", "</p>"
+                            );
+        }
+
     }
 }

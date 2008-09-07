@@ -90,14 +90,26 @@ namespace Spark.Compiler.ChunkVisitors
             _source.AppendLine();
         }
 
+
+        protected override void Visit(ViewDataModelChunk chunk)
+        {
+            if (string.IsNullOrEmpty(chunk.TModelAlias))
+                return;
+
+            AppendIndent().Append(chunk.TModel).Append(" ").AppendLine(chunk.TModelAlias);
+            CodeIndent(chunk).AppendLine("{get {return ViewData.Model;}}");
+            CodeDefault();
+        }
+
         protected override void Visit(ViewDataChunk chunk)
         {
+            var key = chunk.Key;
             var name = chunk.Name;
             var type = chunk.Type ?? "object";
 
             if (_viewDataAdded.ContainsKey(name))
             {
-                if (_viewDataAdded[name] != type)
+                if (_viewDataAdded[name] != key + ":" + type)
                 {
                     throw new CompilerException(
                         string.Format("The view data named {0} cannot be declared with different types '{1}' and '{2}'",
@@ -106,9 +118,9 @@ namespace Spark.Compiler.ChunkVisitors
                 return;
             }
 
-            _viewDataAdded.Add(name, type);
+            _viewDataAdded.Add(name, key + ":" + type);
             AppendIndent().Append(type).Append(" ").AppendLine(name);
-            CodeIndent(chunk).Append("{get {return (").Append(type).Append(")ViewData.Eval(\"").Append(name).AppendLine(
+            CodeIndent(chunk).Append("{get {return (").Append(type).Append(")ViewData.Eval(\"").Append(key).AppendLine(
                 "\");}}");
             CodeDefault();
         }

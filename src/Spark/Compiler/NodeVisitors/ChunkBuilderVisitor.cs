@@ -143,6 +143,7 @@ namespace Spark.Compiler.NodeVisitors
                 Chunks.Insert(Chunks.Count - 1, chunk);
             }
         }
+
         private void AddKillingWhitespace(Chunk chunk)
         {
             var sendLiteral = Chunks.LastOrDefault() as SendLiteralChunk;
@@ -611,12 +612,15 @@ namespace Spark.Compiler.NodeVisitors
         {
             var modelAttr = inspector.TakeAttribute("model");
             if (modelAttr != null)
-                AddUnordered(new ViewDataModelChunk { TModel = modelAttr.AsCode() });
+            {
+                var typeInspector = new TypeInspector(modelAttr.AsCode());
+                AddUnordered(new ViewDataModelChunk { TModel = typeInspector.Type, TModelAlias = typeInspector.Name });                
+            }
 
             foreach (var attr in inspector.Attributes)
             {
-                string typeName = attr.AsCode();
-                AddUnordered(new ViewDataChunk { Type = typeName, Name = attr.Name, Position = Locate(attr) });
+                var typeInspector = new TypeInspector(attr.AsCode());
+                AddUnordered(new ViewDataChunk { Type = typeInspector.Type, Name = typeInspector.Name ?? attr.Name, Key = attr.Name, Position = Locate(attr) });
             }
         }
 

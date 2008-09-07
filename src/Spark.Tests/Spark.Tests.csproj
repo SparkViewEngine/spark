@@ -71,6 +71,7 @@
     <Compile Include="OmitExtraLinesVisitorTester.cs" />
     <Compile Include="Parser\PaintTester.cs" />
     <Compile Include="Parser\PositionTester.cs" />
+    <Compile Include="Parser\TypeInspectorTester.cs" />
     <Compile Include="Precompiled\View3.cs" />
     <Compile Include="Precompiled\View1.cs" />
     <Compile Include="Precompiled\View2.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="SparkViewFactoryTester.cs" />
     <Compile Include="Stubs\StubSparkView.cs" />
     <Compile Include="Stubs\StubViewContext.cs" />
+    <Compile Include="Stubs\StubViewData.cs" />
     <Compile Include="Stubs\StubViewFactory.cs" />
     <Compile Include="ViewActivatorTester.cs" />
     <Compile Include="ViewCompilerTester.cs" />
@@ -210,6 +212,9 @@
     <EmbeddedResource Include="FileSystem\Embedded\Shared\Default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Spark.Tests.Views\Home\alternate-viewdata-syntax.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\capture-content-as-variable.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

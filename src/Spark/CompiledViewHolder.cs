@@ -117,12 +117,12 @@ namespace Spark
                 get { return Key.Descriptor; }
             }
 
-            string ISparkViewEntry.SourceCode
+            public string SourceCode
             {
                 get { return Compiler.SourceCode; }
             }
 
-            ISparkView ISparkViewEntry.CreateInstance()
+            public ISparkView CreateInstance()
             {
                 return Activator.Activate(Compiler.CompiledType);
             }
