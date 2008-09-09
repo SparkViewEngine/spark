@@ -3,7 +3,7 @@
   <s:var styles="new[]{'odd', 'even'}"/>
   <s:viewdata Names="IList[[string]]"/>
   <ul>
-    <li s:each="var name in Names" class="${styles[nameIndex % 2]">${name}</li>
+    <li s:each="var name in Names" class="${styles[nameIndex % 2]}">${name}</li>
   </ul>
 
   <var x="1/0">element ignored</var>

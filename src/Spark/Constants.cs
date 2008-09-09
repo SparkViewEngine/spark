@@ -7,6 +7,6 @@ namespace Spark
 {
     public class Constants
     {
-        public const string Namespace = "http://spark.dejardin.org/";
+        public const string Namespace = "http://sparkviewengine.com/";
     }
 }
