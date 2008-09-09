@@ -6,7 +6,7 @@ using Spark.Compiler.NodeVisitors;
 using Spark.Parser;
 using Spark.Parser.Markup;
 
-namespace Spark.Tests
+namespace Spark.Tests.Visitors
 {
     public class BaseVisitorTester
     {

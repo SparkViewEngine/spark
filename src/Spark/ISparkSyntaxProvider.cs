@@ -10,6 +10,6 @@ namespace Spark
 {
     public interface ISparkSyntaxProvider
     {
-        IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory);
+        IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory, string prefix);
     }
 }

@@ -10,7 +10,7 @@ namespace Spark.Compiler.NodeVisitors
     {
         readonly IList<PrefixSpecs> _prefixes = new List<PrefixSpecs>();
 
-        public PrefixExpandingVisitor()
+        public PrefixExpandingVisitor(VisitorContext context) : base(context)
         {
             _prefixes = new[]
                             {

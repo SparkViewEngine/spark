@@ -43,6 +43,24 @@ namespace Spark.Compiler.NodeVisitors
             return attr;
         }
 
+        public AttributeNode TakeAttribute(string name, NamespacesType nsType)
+        {
+            AttributeNode attr;
+            if (nsType == NamespacesType.Unqualified)
+            {
+                attr = Attributes.FirstOrDefault(a => a.Name == name);
+            }
+            else
+            {
+                attr = Attributes.FirstOrDefault(a =>
+                    (_node.Element.Namespace == Constants.Namespace && a.Name == name) ||
+                    (a.Namespace == Constants.Namespace && NameUtility.RemovePrefix(a.Name) == name));
+            }
+
+            Attributes.Remove(attr);
+            return attr;
+        }
+
         public ElementNode OriginalNode { get { return _node.Element; } }
     }
 }

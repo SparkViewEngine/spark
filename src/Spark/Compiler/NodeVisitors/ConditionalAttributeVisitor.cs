@@ -23,6 +23,11 @@ namespace Spark.Compiler.NodeVisitors
     public class ConditionalAttributeVisitor : AbstractNodeVisitor
     {
         IList<Node> _nodes = new List<Node>();
+
+        public ConditionalAttributeVisitor(VisitorContext context) : base(context)
+        {
+        }
+
         public override IList<Node> Nodes
         {
             get { return _nodes; }            
@@ -76,12 +81,26 @@ namespace Spark.Compiler.NodeVisitors
             Nodes.Add(node);
         }
 
+
+        bool IsConditionalAttribute(AttributeNode attr)
+        {
+            if (Context.Namespaces == NamespacesType.Unqualified)
+                return attr.Name == "if" || attr.Name == "elseif";
+
+            if (attr.Namespace != Constants.Namespace)
+                return false;
+
+            var nqName = NameUtility.RemovePrefix(attr.Name);
+            return nqName == "if" || nqName == "elseif";
+        }
+
         protected override void Visit(ElementNode node)
         {
-            var conditionalAttr = node.Attributes.FirstOrDefault(attr => attr.Name == "if" || attr.Name == "elseif");
+            var conditionalAttr = node.Attributes.FirstOrDefault(IsConditionalAttribute);
+
             if (conditionalAttr != null)
             {
-                var fakeElement = new ElementNode(conditionalAttr.Name, new[] { new AttributeNode("condition", conditionalAttr.Nodes) },
+                var fakeElement = new ElementNode(NameUtility.RemovePrefix(conditionalAttr.Name), new[] { new AttributeNode("condition", conditionalAttr.Nodes) },
                                                             false) { OriginalNode = conditionalAttr };
                 var specialNode = new SpecialNode(fakeElement);
                 node.Attributes.Remove(conditionalAttr);

@@ -15,7 +15,7 @@ namespace Spark.Parser.Syntax
     {
         static readonly MarkupGrammar _grammar = new MarkupGrammar();
 
-        public override IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory)
+        public override IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory, string prefix)
         {
             var sourceContext = CreateSourceContext(viewPath, viewFolder);
             var position = new Position(sourceContext);
@@ -29,28 +29,37 @@ namespace Spark.Parser.Syntax
 
             var partialFileNames = FindPartialFiles(viewPath, viewFolder);
 
-            foreach(var visitor in BuildNodeVisitors(partialFileNames, extensionFactory))
+            var context = new VisitorContext
+                              {
+                                  ExtensionFactory = extensionFactory,
+                                  PartialFileNames = partialFileNames,
+                                  Paint = result.Rest.GetPaint(),
+                                  Prefix = prefix
+                              };
+
+            foreach(var visitor in BuildNodeVisitors(context))
             {
                 visitor.Accept(nodes);
                 nodes = visitor.Nodes;                
             }
 
-            var chunkBuilder = new ChunkBuilderVisitor(result.Rest.GetPaint());
+            var chunkBuilder = new ChunkBuilderVisitor(context);
             chunkBuilder.Accept(nodes);
             return chunkBuilder.Chunks;
         }
 
-        private IList<INodeVisitor> BuildNodeVisitors(IList<string> partialFileNames, ISparkExtensionFactory extensionFactory)
+        private IList<INodeVisitor> BuildNodeVisitors(VisitorContext context)
         {
             return new INodeVisitor[]
                        {
-                           new PrefixExpandingVisitor(),
-                           new SpecialNodeVisitor(partialFileNames, extensionFactory),
-                           new ForEachAttributeVisitor(),
-                           new ConditionalAttributeVisitor(),
-                           new OmitExtraLinesVisitor(),
-                           new TestElseElementVisitor(),
-                           new UrlAttributeVisitor()
+                           new NamespaceVisitor(context),
+                           new PrefixExpandingVisitor(context),
+                           new SpecialNodeVisitor(context),
+                           new ForEachAttributeVisitor(context),
+                           new ConditionalAttributeVisitor(context),
+                           new OmitExtraLinesVisitor(context),
+                           new TestElseElementVisitor(context),
+                           new UrlAttributeVisitor(context)
                        };
         }
     }

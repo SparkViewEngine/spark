@@ -23,9 +23,15 @@ namespace Spark.Compiler.NodeVisitors
     public class ForEachAttributeVisitor : AbstractNodeVisitor
     {
         IList<Node> _nodes = new List<Node>();
+
+        public ForEachAttributeVisitor(VisitorContext context)
+            : base(context)
+        {
+        }
+
         public override IList<Node> Nodes
         {
-            get { return _nodes; }            
+            get { return _nodes; }
         }
 
         public string ClosingName { get; set; }
@@ -53,7 +59,7 @@ namespace Spark.Compiler.NodeVisitors
             var frame = _stack.Pop();
             ClosingName = frame.ClosingName;
             ClosingNameOutstanding = frame.ClosingNameOutstanding;
-            _nodes= frame.Nodes;
+            _nodes = frame.Nodes;
         }
 
         protected override void Visit(ExpressionNode node)
@@ -76,14 +82,26 @@ namespace Spark.Compiler.NodeVisitors
             Nodes.Add(node);
         }
 
+        bool IsEachAttribute(AttributeNode attr)
+        {
+            if (Context.Namespaces == NamespacesType.Unqualified)
+                return attr.Name == "each";
+
+            if (attr.Namespace != Constants.Namespace)
+                return false;
+
+            return NameUtility.RemovePrefix(attr.Name) == "each";
+        }
+
         protected override void Visit(ElementNode node)
         {
-            var conditionalAttr = node.Attributes.FirstOrDefault(attr => attr.Name == "each");
-            if (conditionalAttr != null)
+            var eachAttr = node.Attributes.FirstOrDefault(IsEachAttribute);
+            if (eachAttr != null)
             {
-                var fakeElement = new ElementNode("for", new[] { conditionalAttr }, false) { OriginalNode = conditionalAttr };
+                var fakeAttribute = new AttributeNode("each", eachAttr.Nodes) { OriginalNode = eachAttr };
+                var fakeElement = new ElementNode("for", new[] { fakeAttribute }, false) { OriginalNode = eachAttr };
                 var specialNode = new SpecialNode(fakeElement);
-                node.Attributes.Remove(conditionalAttr);
+                node.Attributes.Remove(eachAttr);
                 specialNode.Body.Add(node);
 
                 Nodes.Add(specialNode);

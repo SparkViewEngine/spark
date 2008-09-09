@@ -26,7 +26,6 @@ namespace Spark.Compiler.NodeVisitors
 {
     public class ChunkBuilderVisitor : AbstractNodeVisitor
     {
-        private readonly IEnumerable<Paint> _paints;
         private readonly IDictionary<Node, Paint<Node>> _nodePaint;
         private readonly IDictionary<string, Action<SpecialNode, SpecialNodeInspector>> _specialNodeMap;
 
@@ -67,10 +66,9 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
-        public ChunkBuilderVisitor(IEnumerable<Paint> paints)
+        public ChunkBuilderVisitor(VisitorContext context) : base(context)
         {
-            _paints = paints;
-            _nodePaint = _paints.OfType<Paint<Node>>().ToDictionary(paint => paint.Value);
+            _nodePaint = Context.Paint.OfType<Paint<Node>>().ToDictionary(paint => paint.Value);
 
             Chunks = new List<Chunk>();
             _specialNodeMap = new Dictionary<string, Action<SpecialNode, SpecialNodeInspector>>
@@ -80,7 +78,7 @@ namespace Spark.Compiler.NodeVisitors
                                       {"global", (n,i)=>VisitGlobal(n)},
                                       {"viewdata", (n,i)=>VisitViewdata(i)},
                                       {"set", (n,i)=>VisitSet(i)},
-                                      {"for", (n,i)=>VisitFor(n)},
+                                      {"for", VisitFor},
                                       {"test", VisitIf},
                                       {"if", VisitIf},
                                       {"else", (n,i)=>VisitElse(i)},
@@ -231,14 +229,14 @@ namespace Spark.Compiler.NodeVisitors
                 AddLiteral(string.Concat("<?", node.Name, " ", node.Body, "?>"));
         }
 
-        protected override void Visit(ElementNode elementNode)
+        protected override void Visit(ElementNode node)
         {
-            AddLiteral("<" + elementNode.Name);
+            AddLiteral("<" + node.Name);
 
-            foreach (var attribute in elementNode.Attributes)
+            foreach (var attribute in node.Attributes)
                 Accept(attribute);
 
-            AddLiteral(elementNode.IsEmptyElement ? "/>" : ">");
+            AddLiteral(node.IsEmptyElement ? "/>" : ">");
         }
 
         protected override void Visit(AttributeNode attributeNode)
@@ -312,9 +310,9 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
-        protected override void Visit(EndElementNode endElementNode)
+        protected override void Visit(EndElementNode node)
         {
-            AddLiteral("</" + endElementNode.Name + ">");
+            AddLiteral("</" + node.Name + ">");
         }
 
 
@@ -325,14 +323,23 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(SpecialNode specialNode)
         {
-            if (!_specialNodeMap.ContainsKey(specialNode.Element.Name))
+            string nqName = NameUtility.RemovePrefix(specialNode.Element.Name);
+            if (!_specialNodeMap.ContainsKey(nqName))
             {
                 throw new CompilerException(string.Format("Unknown special node {0}", specialNode.Element.Name));
             }
 
 
-            var action = _specialNodeMap[specialNode.Element.Name];
+            var action = _specialNodeMap[nqName];
             action(specialNode, new SpecialNodeInspector(specialNode));
+        }
+
+        private static string RemovePrefix(string name)
+        {
+            var colonIndex = name.IndexOf(':');
+            if (colonIndex < 0)
+                return name;
+            return name.Substring(colonIndex + 1);
         }
 
         private void VisitMacro(SpecialNodeInspector inspector)
@@ -583,15 +590,15 @@ namespace Spark.Compiler.NodeVisitors
                 Accept(specialNode.Body);
         }
 
-        private void VisitFor(SpecialNode specialNode)
+        private void VisitFor(SpecialNode specialNode, SpecialNodeInspector inspector)
         {
-            var eachAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "each");
+            var eachAttr = inspector.TakeAttribute("each");
 
             var forEachChunk = new ForEachChunk { Code = eachAttr.AsCode(), Position = Locate(specialNode.Element) };
             Chunks.Add(forEachChunk);
             using (new Frame(this, forEachChunk.Body))
             {
-                foreach (var attr in specialNode.Element.Attributes.Where(a => a != eachAttr))
+                foreach (var attr in inspector.Attributes)
                 {
                     Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
                 }

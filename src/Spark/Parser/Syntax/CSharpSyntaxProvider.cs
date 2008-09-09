@@ -31,7 +31,7 @@ namespace Spark.Parser.Syntax
     {
         static readonly CSharpGrammar _grammar = new CSharpGrammar();
         
-        public override IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory)
+        public override IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory, string prefix)
         {
             var sourceContext = CreateSourceContext(viewPath, viewFolder);
             var position = new Position(sourceContext);
@@ -41,8 +41,8 @@ namespace Spark.Parser.Syntax
             {
                 ThrowParseException(viewPath, position, nodes.Rest);
             }
-
-            var chunkBuilder = new ChunkBuilderVisitor(nodes.Rest.GetPaint());
+            VisitorContext context = new VisitorContext {Paint = nodes.Rest.GetPaint()};
+            var chunkBuilder = new ChunkBuilderVisitor(context);
             chunkBuilder.Accept(nodes.Value);
             return chunkBuilder.Chunks;
         }

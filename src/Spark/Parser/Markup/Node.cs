@@ -68,15 +68,18 @@ namespace Spark.Parser.Markup
         public AttributeNode(string name, IList<Node> nodes)
         {
             Name = name;
+            Namespace = "";
             Nodes = nodes;
         }
         public AttributeNode(string name, string value)
         {
             Name = name;
+            Namespace = "";
             Nodes = new List<Node>(new[] { new TextNode(value) });
         }
 
         public string Name;
+        public string Namespace { get; set; }
         public IList<Node> Nodes;
 
         public string Value
@@ -98,6 +101,7 @@ namespace Spark.Parser.Markup
                 return sb.ToString();
             }
         }
+
     }
 
     public class ConditionNode : Node
@@ -177,11 +181,13 @@ namespace Spark.Parser.Markup
         public ElementNode(string name, IList<AttributeNode> attributeNodes, bool isEmptyElement)
         {
             Name = name;
+            Namespace = "";
             IsEmptyElement = isEmptyElement;
             Attributes = attributeNodes;
         }
 
         public string Name;
+        public string Namespace { get; set; }
         public readonly IList<AttributeNode> Attributes;
         public bool IsEmptyElement;
     }
@@ -193,7 +199,8 @@ namespace Spark.Parser.Markup
             Name = name;
         }
 
-        public string Name;
+        public string Name { get; set; }
+        public string Namespace { get; set; }
     }
 
     public class SpecialNode : Node

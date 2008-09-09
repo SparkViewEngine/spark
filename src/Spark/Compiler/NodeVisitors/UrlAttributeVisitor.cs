@@ -25,7 +25,7 @@ namespace Spark.Compiler.NodeVisitors
     {
         private readonly IList<ElementSpecs> _specs;
 
-        public UrlAttributeVisitor()
+        public UrlAttributeVisitor(VisitorContext context) : base(context)
         {
             _specs = new[] 
             {

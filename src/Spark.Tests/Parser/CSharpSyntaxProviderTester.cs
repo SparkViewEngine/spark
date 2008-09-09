@@ -29,7 +29,7 @@ namespace Spark.Tests.Parser
         [Test]
         public void CanParseSimpleFile()
         {
-            var result = _syntax.GetChunks("Home\\childview.spark", new FileSystemViewFolder("Spark.Tests.Views"), null);
+            var result = _syntax.GetChunks("Home\\childview.spark", new FileSystemViewFolder("Spark.Tests.Views"), null, null);
             Assert.IsNotNull(result);
         }
 

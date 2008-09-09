@@ -67,6 +67,8 @@
     <Compile Include="Compiler\NodeVisitors\ChunkBuilderVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\ConditionalAttributeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\INodeVisitor.cs" />
+    <Compile Include="Compiler\NodeVisitors\NamespaceVisitor.cs" />
+    <Compile Include="Compiler\NodeVisitors\NameUtility.cs" />
     <Compile Include="Compiler\NodeVisitors\NodeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\OmitExtraLinesVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\PrefixExpandingVisitor.cs" />
@@ -77,11 +79,13 @@
     <Compile Include="Compiler\NodeVisitors\SpecialNodeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\TypeInspector.cs" />
     <Compile Include="Compiler\NodeVisitors\UrlAttributeVisitor.cs" />
+    <Compile Include="Compiler\NodeVisitors\VisitorContext.cs" />
     <Compile Include="Compiler\ViewCompiler.cs" />
     <Compile Include="Configuration\AssemblyElement.cs" />
     <Compile Include="Configuration\AssemblyElementCollection.cs" />
     <Compile Include="Configuration\CompilationElement.cs" />
     <Compile Include="Configuration\PagesElement.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="DefaultViewActivator.cs" />
     <Compile Include="FileSystem\EmbeddedViewFolder.cs" />
     <Compile Include="ISparkSettings.cs" />

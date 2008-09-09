@@ -15,6 +15,13 @@ namespace Spark.Configuration
             set { this["pageBaseType"] = value; }
         }
 
+        [ConfigurationProperty("prefix")]
+        public string Prefix
+        {
+            get { return (string)this["prefix"]; }
+            set { this["prefix"] = value; }
+        }
+
         [ConfigurationProperty("namespaces")]
         [ConfigurationCollection(typeof(NamespaceElementCollection))]
         public NamespaceElementCollection Namespaces

@@ -48,6 +48,8 @@ namespace Spark.Parser
 
         public ISparkSyntaxProvider SyntaxProvider { get; set; }
 
+        public string Prefix { get; set; }
+
         private class Entry
         {
             private readonly FileContext fileContext = new FileContext();
@@ -133,7 +135,7 @@ namespace Spark.Parser
 
             var newEntry = BindEntry(viewPath);
 
-            newEntry.Chunks = SyntaxProvider.GetChunks(viewPath, ViewFolder, ExtensionFactory);
+            newEntry.Chunks = SyntaxProvider.GetChunks(viewPath, ViewFolder, ExtensionFactory, Prefix);
 
             var fileReferenceVisitor = new FileReferenceVisitor();
             fileReferenceVisitor.Accept(newEntry.Chunks);

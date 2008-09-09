@@ -125,7 +125,8 @@ namespace Spark
                        {
                            ViewFolder = ViewFolder,
                            SyntaxProvider = SyntaxProvider,
-                           ExtensionFactory = ExtensionFactory
+                           ExtensionFactory = ExtensionFactory,
+                           Prefix = Settings.Prefix
                        };
         }
 

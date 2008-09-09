@@ -54,27 +54,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseVisitorTester.cs" />
+    <Compile Include="Visitors\BaseVisitorTester.cs" />
     <Compile Include="BatchCompilationTester.cs" />
-    <Compile Include="ChunkBuilderVisitorTester.cs" />
-    <Compile Include="DetectCodeExpressionTester.cs" />
+    <Compile Include="Visitors\ChunkBuilderVisitorTester.cs" />
+    <Compile Include="Visitors\DetectCodeExpressionTester.cs" />
     <Compile Include="FileSystem\EmbeddedViewFolderTester.cs" />
+    <Compile Include="Visitors\NamespaceVisitorTester.cs" />
     <Compile Include="Parser\CodeGrammarTester.cs" />
     <Compile Include="CompiledViewHolderTester.cs" />
-    <Compile Include="ConditionalAttributeVisitorTester.cs" />
+    <Compile Include="Visitors\ConditionalAttributeVisitorTester.cs" />
     <Compile Include="Parser\CSharpSyntaxProviderTester.cs" />
     <Compile Include="FileSystem\FileSystemViewFolderTester.cs" />
     <Compile Include="FileSystem\InMemoryViewFolderTester.cs" />
     <Compile Include="Parser\MarkupGrammarTester.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\UserInfo.cs" />
-    <Compile Include="OmitExtraLinesVisitorTester.cs" />
+    <Compile Include="Visitors\OmitExtraLinesVisitorTester.cs" />
     <Compile Include="Parser\PaintTester.cs" />
     <Compile Include="Parser\PositionTester.cs" />
     <Compile Include="Parser\TypeInspectorTester.cs" />
     <Compile Include="Precompiled\View3.cs" />
     <Compile Include="Precompiled\View1.cs" />
     <Compile Include="Precompiled\View2.cs" />
+    <Compile Include="PrefixSupportTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkExtensionTester.cs" />
     <Compile Include="SparkSectionHandlerTester.cs" />
@@ -225,6 +227,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\foreach-autovariables-used-inline.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Prefix\conditional-attributes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Prefix\prefix-from-xmlns.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Prefix\prefix-from-settings.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\xmldecl-and-processing-instruction.spark">

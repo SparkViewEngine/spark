@@ -19,7 +19,7 @@ using Spark.Compiler.NodeVisitors;
 using Spark.Parser;
 using Spark.Parser.Markup;
 
-namespace Spark.Tests
+namespace Spark.Tests.Visitors
 {
     [TestFixture]
     public class ConditionalAttributeVisitorTester
@@ -30,7 +30,7 @@ namespace Spark.Tests
             var grammar = new MarkupGrammar();
             string input = "<div if=\"true\">hello</div>";
             var nodes = grammar.Nodes(new Position(new SourceContext(input))).Value;
-            var visitor = new ConditionalAttributeVisitor();
+            var visitor = new ConditionalAttributeVisitor(new VisitorContext());
             visitor.Accept(nodes);
 
             Assert.AreEqual(1, visitor.Nodes.Count);
@@ -48,9 +48,9 @@ namespace Spark.Tests
 
             string input = "<div if=\"false\">hello</div><div elseif=\"true\">world</div><else>that's all</else>";
             var nodes = grammar.Nodes(new Position(new SourceContext(input))).Value;
-            var visitor0 = new SpecialNodeVisitor(new string[0], null);
+            var visitor0 = new SpecialNodeVisitor(new VisitorContext());
             visitor0.Accept(nodes);
-            var visitor = new ConditionalAttributeVisitor();
+            var visitor = new ConditionalAttributeVisitor(new VisitorContext());
             visitor.Accept(visitor0.Nodes);
 
             Assert.AreEqual(3, visitor.Nodes.Count);

@@ -8,8 +8,9 @@ using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Syntax;
+using Spark.Tests.Visitors;
 
-namespace Spark.Tests
+namespace Spark.Tests.Visitors
 {
     [TestFixture]
     public class DetectCodeExpressionTester : BaseVisitorTester
@@ -18,9 +19,9 @@ namespace Spark.Tests
         public void FindLoopParameters()
         {
             var nodes = ParseNodes("<for each='var x in new [] {1,2,3}'>${xIndex}${xIsLast}</for>",
-                       new SpecialNodeVisitor(null, null));
+                                   new SpecialNodeVisitor(new VisitorContext()));
 
-            var visitor = new ChunkBuilderVisitor(new Paint[0]);
+            var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(nodes);
 
             var expressionVisitor = new DetectCodeExpressionVisitor(null);

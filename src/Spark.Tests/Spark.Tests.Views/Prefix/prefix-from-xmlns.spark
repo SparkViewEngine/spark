@@ -1,0 +1,12 @@
+﻿<div xmlns:spark="http://spark.dejardin.org/">
+  <spark:use namespace="System.Collections.Generic"/>
+  <spark:var styles="new[]{'odd', 'even'}"/>
+  <spark:viewdata Names="IList[[string]]"/>
+
+  <ul>
+    <li spark:each="var name in Names" class="${styles[nameIndex % 2]">${name}</li>
+  </ul>
+  
+  <var x="1/0">element ignored</var>
+  <p each="5">attribute ignored</p>
+</div>

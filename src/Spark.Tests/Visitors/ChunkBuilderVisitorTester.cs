@@ -21,8 +21,9 @@ using Spark.Compiler.NodeVisitors;
 using Spark.Parser;
 using Spark.Parser.Markup;
 using NUnit.Framework;
+using Spark.Tests.Visitors;
 
-namespace Spark.Tests
+namespace Spark.Tests.Visitors
 {
     [TestFixture]
     public class ChunkBuilderVisitorTester : BaseVisitorTester
@@ -30,15 +31,15 @@ namespace Spark.Tests
         [Test]
         public void MakeLiteralChunk()
         {
-            var visitor = new ChunkBuilderVisitor(new Paint[0]);
+            var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(new Node[]
-			               	{
-			               		new ElementNode("span", new List<AttributeNode>(), false),
-			               		new TextNode("hello".ToArray()),
-			               		new EntityNode("nbsp"),
-			               		new TextNode("world".ToArray()),
-			               		new EndElementNode("span")
-			               	});
+                               {
+                                   new ElementNode("span", new List<AttributeNode>(), false),
+                                   new TextNode("hello".ToArray()),
+                                   new EntityNode("nbsp"),
+                                   new TextNode("world".ToArray()),
+                                   new EndElementNode("span")
+                               });
             Assert.AreEqual(1, visitor.Chunks.Count);
             Assert.AreEqual("<span>hello&nbsp;world</span>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
         }
@@ -47,11 +48,11 @@ namespace Spark.Tests
         public void SelfClosingElementWithAttributes()
         {
             var elt = new ElementNode("img", new[]
-			                                 	{
-			                                 		new AttributeNode("href", new []{new TextNode("urn:picture".ToArray())}),
-			                                 		new AttributeNode("alt", new Node[]{new TextNode("A Picture".ToArray()), new EntityNode("amp")})
-			                                 	}, true);
-            var visitor = new ChunkBuilderVisitor(new Paint[0]);
+                                                 {
+                                                     new AttributeNode("href", new []{new TextNode("urn:picture".ToArray())}),
+                                                     new AttributeNode("alt", new Node[]{new TextNode("A Picture".ToArray()), new EntityNode("amp")})
+                                                 }, true);
+            var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(elt);
             Assert.AreEqual(1, visitor.Chunks.Count);
             Assert.AreEqual("<img href=\"urn:picture\" alt=\"A Picture&amp;\"/>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
@@ -64,7 +65,7 @@ namespace Spark.Tests
             var systemName = new DoctypeNode { Name = "html2", ExternalId = new ExternalIdInfo { ExternalIdType = "SYSTEM", SystemId = "my-'system'-id" } };
             var publicName = new DoctypeNode { Name = "html3", ExternalId = new ExternalIdInfo { ExternalIdType = "PUBLIC", PublicId = "my-public-id", SystemId = "my-\"other\"system-id" } };
 
-            var visitor = new ChunkBuilderVisitor(new Paint[0]);
+            var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(new Node[] { justName, systemName, publicName });
             Assert.AreEqual(1, visitor.Chunks.Count);
             Assert.AreEqual("<!DOCTYPE html><!DOCTYPE html2 SYSTEM \"my-'system'-id\"><!DOCTYPE html3 PUBLIC \"my-public-id\" 'my-\"other\"system-id'>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
@@ -75,9 +76,9 @@ namespace Spark.Tests
         {
             var nodes = ParseNodes(
                 "<foo>hello</foo>",
-                new SpecialNodeVisitor(new[] { "foo" }, null));
+                new SpecialNodeVisitor(new VisitorContext { PartialFileNames = new[] { "foo" } }));
 
-            var visitor = new ChunkBuilderVisitor(new Paint[0]);
+            var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(nodes);
             Assert.AreEqual(1, visitor.Chunks.Count);
             var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];
@@ -91,10 +92,10 @@ namespace Spark.Tests
         {
             var nodes = ParseNodes(
                 "<foo><section:two>beta</section:two><section:one>alpha</section:one></foo>",
-                new PrefixExpandingVisitor(),
-                new SpecialNodeVisitor(new[] { "foo" }, null));
+                new PrefixExpandingVisitor(null),
+                new SpecialNodeVisitor(new VisitorContext { PartialFileNames = new[] { "foo" } }));
 
-            var visitor = new ChunkBuilderVisitor(new Paint[0]);
+            var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(nodes);
             Assert.AreEqual(1, visitor.Chunks.Count);
             var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];

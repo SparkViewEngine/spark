@@ -22,6 +22,10 @@ namespace Spark.Compiler.NodeVisitors
 {
     public class OmitExtraLinesVisitor : NodeVisitor<object>
     {
+        public OmitExtraLinesVisitor(VisitorContext context) : base(context)
+        {
+        }
+
         protected override void Visit(SpecialNode node)
         {
             RemoveExtraLine();

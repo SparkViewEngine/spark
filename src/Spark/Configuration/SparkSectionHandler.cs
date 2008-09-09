@@ -78,6 +78,11 @@ namespace Spark.Configuration
             get { return Compilation.Debug; }
         }
 
+        string ISparkSettings.Prefix
+        {
+            get { return Pages.Prefix; }
+        }
+
         string ISparkSettings.PageBaseType
         {
             get { return Pages.PageBaseType; }

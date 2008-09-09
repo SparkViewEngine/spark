@@ -15,6 +15,7 @@ namespace Spark
         }
 
         public bool Debug { get; set; }
+        public string Prefix { get; set; }
         public string PageBaseType { get; set; }
 
         public IList<string> UseNamespaces { get; set; }
@@ -55,5 +56,12 @@ namespace Spark
             UseNamespaces.Add(ns);
             return this;
         }
+
+        public SparkSettings SetPrefix(string prefix)
+        {
+            Prefix = prefix;
+            return this;
+        }
+
     }
 }

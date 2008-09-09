@@ -19,7 +19,7 @@ using Spark.Compiler.NodeVisitors;
 using Spark.Parser;
 using Spark.Parser.Markup;
 
-namespace Spark.Tests
+namespace Spark.Tests.Visitors
 {
     [TestFixture]
     public class OmitExtraLinesVisitorTester
@@ -29,7 +29,7 @@ namespace Spark.Tests
         [SetUp]
         public void Init()
         {
-            omit = new OmitExtraLinesVisitor();
+            omit = new OmitExtraLinesVisitor(new VisitorContext());
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Spark.Tests
         {
             var grammar = new MarkupGrammar();
             var nodes = grammar.Nodes(Source("<p>\r\n  <test if='true'>\r\n    <span>was true</span>\r\n  </test>\r\n</p>"));
-            var specialNodeVisitor = new SpecialNodeVisitor(new string[0], null);
+            var specialNodeVisitor = new SpecialNodeVisitor(new VisitorContext());
             specialNodeVisitor.Accept(nodes.Value);
             omit.Accept(specialNodeVisitor.Nodes);
 

@@ -27,20 +27,17 @@ namespace Spark.Compiler.NodeVisitors
     {
         private readonly IList<string> _containingNames;
         private readonly IList<string> _nonContainingNames;
-        private readonly IList<string> _partialFileNames;
 
-        private readonly ISparkExtensionFactory _extensionFactory;
         private ExtensionNode _currentExtensionNode;
 
         private IList<Node> _nodes = new List<Node>();
         private readonly Stack<IList<Node>> _stack = new Stack<IList<Node>>();
 
-        public SpecialNodeVisitor(IList<string> partialFileNames, ISparkExtensionFactory extensionFactory)
+        public SpecialNodeVisitor(VisitorContext context)
+            : base(context)
         {
             _containingNames = new List<string>(new[] { "var", "def", "for", "use", "content", "test", "if", "else", "elseif", "macro", "render", "section" });
             _nonContainingNames = new List<string>(new[] { "global", "set", "viewdata" });
-            _partialFileNames = partialFileNames;
-            _extensionFactory = extensionFactory;
         }
 
         public override IList<Node> Nodes
@@ -71,86 +68,108 @@ namespace Spark.Compiler.NodeVisitors
                 throw new CompilerException(string.Format("End element {0} did not match {1}", name, special.Element.Name));
         }
 
-        protected override void Visit(ElementNode elementNode)
+        protected override void Visit(ElementNode node)
         {
             ISparkExtension extension;
-            if (_containingNames.Contains(elementNode.Name))
+            if (IsContainingElement(node.Name, node.Namespace))
             {
-                PushSpecial(elementNode);
-                if (elementNode.IsEmptyElement)
-                    PopSpecial(elementNode.Name);
+                PushSpecial(node);
+                if (node.IsEmptyElement)
+                    PopSpecial(node.Name);
             }
-            else if (_nonContainingNames.Contains(elementNode.Name))
+            else if (IsNonContainingElement(node.Name, node.Namespace))
             {
-                PushSpecial(elementNode);
-                PopSpecial(elementNode.Name);
+                PushSpecial(node);
+                PopSpecial(node.Name);
             }
-            else if (TryCreateExtension(elementNode, out extension))
+            else if (TryCreateExtension(node, out extension))
             {
-                ExtensionNode extensionNode = new ExtensionNode(elementNode, extension);
+                ExtensionNode extensionNode = new ExtensionNode(node, extension);
                 Nodes.Add(extensionNode);
 
-                if (!elementNode.IsEmptyElement)
+                if (!node.IsEmptyElement)
                 {
                     _currentExtensionNode = extensionNode;
                     _stack.Push(Nodes);
                     _nodes = extensionNode.Body;
                 }
             }
-            else if (_partialFileNames.Contains(elementNode.Name))
+            else if (Context.PartialFileNames.Contains(node.Name))
             {
-                var attributes = new List<AttributeNode>(elementNode.Attributes);
-                attributes.Add(new AttributeNode("file", "_" + elementNode.Name));
-                var useFile = new ElementNode("use", attributes, elementNode.IsEmptyElement)
+                var attributes = new List<AttributeNode>(node.Attributes);
+                attributes.Add(new AttributeNode("file", "_" + node.Name));
+                var useFile = new ElementNode("use", attributes, node.IsEmptyElement)
                                   {
-                                      OriginalNode = elementNode
+                                      OriginalNode = node
                                   };
                 PushSpecial(useFile);
-                if (elementNode.IsEmptyElement)
+                if (node.IsEmptyElement)
                     PopSpecial("use");
             }
             else
             {
-                Add(elementNode);
+                Add(node);
             }
+        }
+
+        private bool IsContainingElement(string name, string ns)
+        {
+            if (Context.Namespaces == NamespacesType.Unqualified)
+                return _containingNames.Contains(name);
+
+            if (ns != Constants.Namespace)
+                return false;
+
+            return _containingNames.Contains(NameUtility.RemovePrefix(name));
+        }
+
+        private bool IsNonContainingElement(string name, string ns)
+        {
+            if (Context.Namespaces == NamespacesType.Unqualified)
+                return _nonContainingNames.Contains(name);
+
+            if (ns != Constants.Namespace)
+                return false;
+
+            return _nonContainingNames.Contains(NameUtility.RemovePrefix(name));
         }
 
         private bool TryCreateExtension(ElementNode node, out ISparkExtension extension)
         {
-            if (_extensionFactory == null)
+            if (Context.ExtensionFactory == null)
             {
                 extension = null;
                 return false;
             }
 
-            extension = _extensionFactory.CreateExtension(node);
+            extension = Context.ExtensionFactory.CreateExtension(node);
             return extension != null;
         }
 
 
-        protected override void Visit(EndElementNode endElementNode)
+        protected override void Visit(EndElementNode node)
         {
             if (_currentExtensionNode != null &&
-                string.Equals(endElementNode.Name, _currentExtensionNode.Element.Name))
+                string.Equals(node.Name, _currentExtensionNode.Element.Name))
             {
                 _nodes = _stack.Pop();
                 _currentExtensionNode = null;
             }
-            else if (_containingNames.Contains(endElementNode.Name))
+            else if (IsContainingElement(node.Name, node.Namespace))
             {
-                PopSpecial(endElementNode.Name);
+                PopSpecial(node.Name);
             }
-            else if (_nonContainingNames.Contains(endElementNode.Name))
+            else if (IsNonContainingElement(node.Name, node.Namespace))
             {
                 // non-contining names are explicitly self-closing
             }
-            else if (_partialFileNames.Contains(endElementNode.Name))
+            else if (Context.PartialFileNames.Contains(node.Name))
             {
                 PopSpecial("use");
             }
             else
             {
-                Add(endElementNode);
+                Add(node);
             }
         }
 

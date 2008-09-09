@@ -27,6 +27,11 @@ namespace Spark.Compiler.NodeVisitors
         private Frame _frame = new Frame { Nodes = new List<Node>() };
         readonly Stack<Frame> _stack = new Stack<Frame>();
 
+        public TestElseElementVisitor(VisitorContext context)
+            : base(context)
+        {
+        }
+
         void PushFrame()
         {
             _stack.Push(_frame);
@@ -88,7 +93,7 @@ namespace Spark.Compiler.NodeVisitors
         protected override void Visit(SpecialNode node)
         {
             bool detachFromParent = false;
-            if (node.Element.Name == "else" &&
+            if (NameUtility.IsMatch("else", Context.Namespaces, node.Element.Name, node.Element.Namespace) &&
                 node.Element.IsEmptyElement &&
                 _frame.TestParentNodes != null)
             {
@@ -107,12 +112,15 @@ namespace Spark.Compiler.NodeVisitors
                 Nodes.Add(reconstructed);
 
                 var parentNodes = _frame.Nodes;
-                
+
                 PushFrame();
 
                 _frame.Nodes = reconstructed.Body;
-                if (node.Element.Name == "if" || node.Element.Name == "test")
+                if (NameUtility.IsMatch("if", Context.Namespaces, node.Element.Name, node.Element.Namespace) ||
+                    NameUtility.IsMatch("test", Context.Namespaces, node.Element.Name, node.Element.Namespace))
+                {
                     _frame.TestParentNodes = parentNodes;
+                }
 
                 Accept(node.Body);
 

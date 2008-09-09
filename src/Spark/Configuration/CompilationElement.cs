@@ -34,5 +34,6 @@ namespace Spark.Configuration
             get { return (AssemblyElementCollection)this["assemblies"]; }
             set { this["assemblies"] = value; }
         }
+
     }
 }

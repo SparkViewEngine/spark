@@ -22,6 +22,12 @@ namespace Spark.Compiler.NodeVisitors
 {
     public abstract class AbstractNodeVisitor : INodeVisitor
     {
+        protected AbstractNodeVisitor(VisitorContext context)
+        {
+            Context = context;
+        }
+        public VisitorContext Context { get; set; }
+
         public abstract IList<Node> Nodes { get; }
 
         public void Accept(IList<Node> nodes)
@@ -71,8 +77,8 @@ namespace Spark.Compiler.NodeVisitors
         protected abstract void Visit(EntityNode entityNode);
         protected abstract void Visit(DoctypeNode docTypeNode);
         protected abstract void Visit(TextNode textNode);
-        protected abstract void Visit(ElementNode elementNode);
-        protected abstract void Visit(EndElementNode endElementNode);
+        protected abstract void Visit(ElementNode node);
+        protected abstract void Visit(EndElementNode node);
         protected abstract void Visit(AttributeNode attributeNode);
         protected abstract void Visit(CommentNode commentNode);
         protected abstract void Visit(SpecialNode specialNode);

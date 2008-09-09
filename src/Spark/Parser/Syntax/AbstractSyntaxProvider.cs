@@ -8,7 +8,7 @@ namespace Spark.Parser.Syntax
 {
     public abstract class AbstractSyntaxProvider : ISparkSyntaxProvider
     {
-        public abstract IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory);
+        public abstract IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory, string prefix);
 
         protected SourceContext CreateSourceContext(string viewPath, IViewFolder viewFolder)
         {

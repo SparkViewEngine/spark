@@ -17,7 +17,7 @@ namespace Spark.Compiler.NodeVisitors
     {
         private Frame<TFrameData> _frame;
 
-        protected NodeVisitor()
+        protected NodeVisitor(VisitorContext context) : base(context)
         {
             PushFrame(new List<Node>(), new TFrameData());
         }
@@ -121,6 +121,8 @@ namespace Spark.Compiler.NodeVisitors
 
     public class NodeVisitor : NodeVisitor<object>
     {
-        
+        public NodeVisitor(VisitorContext context) : base(context)
+        {
+        }
     }
 }
