@@ -104,16 +104,6 @@ namespace Spark.Tests
             Assert.IsFalse(output.ToString().Contains("condition"));
         }
 
-        //new NamespaceVisitor(context),
-        //*new PrefixExpandingVisitor(context),
-        //new SpecialNodeVisitor(context),
-        //new ForEachAttributeVisitor(context),
-        //new ConditionalAttributeVisitor(context),
-        //new OmitExtraLinesVisitor(context),
-        //new TestElseElementVisitor(context),
-        //new UrlAttributeVisitor(context)
-
-        //new PrefixExpandingVisitor(context),
         [Test]
         public void MacroAndContentPrefixes()
         {
@@ -155,6 +145,30 @@ namespace Spark.Tests
                             "<use:ignored>ignored</use:ignored>",
                             "<render:ignored>ignored</render:ignored>",
                             "<section:ignored>ignored</section:ignored>"
+                );
+        }
+
+        [Test]
+        public void MacroAndContentPrefixesFromSettings()
+        {
+            _engine.Settings = new SparkSettings()
+                .SetDebug(true)
+                .SetPageBaseType(typeof(StubSparkView))
+                .SetPrefix("s");
+
+            var view =
+                (StubSparkView)
+                _engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\macro-content-prefix-from-settings.spark"));
+            var output = new StringWriter();
+            view.RenderView(output);
+
+            ContainsInOrder(output.ToString(),
+                            "<p>one</p>",
+                            "<p>two</p>",
+                            "<p>Hello, world!</p>",
+                            "<p>three</p>",
+                            "<p>four</p>",
+                            "<var x=\"1/0\">ignored</var>"
                 );
         }
     }

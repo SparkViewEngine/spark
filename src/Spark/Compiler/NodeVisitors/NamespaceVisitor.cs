@@ -17,6 +17,11 @@ namespace Spark.Compiler.NodeVisitors
             {
                 Context.Namespaces = NamespacesType.Qualified;
                 FrameData.Nametable[context.Prefix] = Constants.Namespace;
+                FrameData.Nametable["content"] = Constants.ContentNamespace;
+                FrameData.Nametable["use"] = Constants.UseNamespace;
+                FrameData.Nametable["macro"] = Constants.MacroNamespace;
+                FrameData.Nametable["section"] = Constants.SectionNamespace;
+                FrameData.Nametable["render"] = Constants.RenderNamespace;
             }
         }
 

@@ -232,6 +232,9 @@
     <None Include="Spark.Tests.Views\Prefix\conditional-attributes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Prefix\macro-content-prefix-from-settings.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Prefix\section-render-prefix.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
