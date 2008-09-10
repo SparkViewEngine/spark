@@ -53,7 +53,7 @@ namespace Spark.Tests
                              };
 
             var view = (StubSparkView)engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\prefix-from-settings.spark"));
-            view.ViewData["Names"] = new[] {"alpha", "beta", "gamma"};
+            view.ViewData["Names"] = new[] { "alpha", "beta", "gamma" };
 
             var output = new StringWriter();
             view.RenderView(output);
@@ -102,7 +102,60 @@ namespace Spark.Tests
             Assert.IsFalse(output.ToString().Contains("if"));
             Assert.IsFalse(output.ToString().Contains("else"));
             Assert.IsFalse(output.ToString().Contains("condition"));
-            
+        }
+
+        //new NamespaceVisitor(context),
+        //*new PrefixExpandingVisitor(context),
+        //new SpecialNodeVisitor(context),
+        //new ForEachAttributeVisitor(context),
+        //new ConditionalAttributeVisitor(context),
+        //new OmitExtraLinesVisitor(context),
+        //new TestElseElementVisitor(context),
+        //new UrlAttributeVisitor(context)
+
+        //new PrefixExpandingVisitor(context),
+        [Test]
+        public void MacroAndContentPrefixes()
+        {
+            var view =
+                (StubSparkView)
+                _engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\macro-content-prefix.spark"));
+            var output = new StringWriter();
+            view.RenderView(output);
+
+            ContainsInOrder(output.ToString(),
+                            "<p>one</p>",
+                            "<p>two</p>",
+                            "<p>Hello, world!</p>",
+                            "<p>three</p>",
+                            "<p>four</p>",
+                            "<macro:ignored>ignored</macro:ignored>",
+                            "<content:ignored>ignored</content:ignored>",
+                            "<use:ignored>ignored</use:ignored>",
+                            "<render:ignored>ignored</render:ignored>",
+                            "<section:ignored>ignored</section:ignored>"
+                );
+        }
+
+        [Test]
+        public void SectionAndRenderPrefixes()
+        {
+            var view =
+                (StubSparkView)
+                _engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\section-render-prefix.spark"));
+            var output = new StringWriter();
+            view.RenderView(output);
+
+            ContainsInOrder(output.ToString(),
+                            "<p>one</p>",
+                            "<p>two</p>",
+                            "<p>three</p>",
+                            "<macro:ignored>ignored</macro:ignored>",
+                            "<content:ignored>ignored</content:ignored>",
+                            "<use:ignored>ignored</use:ignored>",
+                            "<render:ignored>ignored</render:ignored>",
+                            "<section:ignored>ignored</section:ignored>"
+                );
         }
     }
 }

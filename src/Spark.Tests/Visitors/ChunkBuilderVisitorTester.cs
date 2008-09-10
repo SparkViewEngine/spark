@@ -92,7 +92,7 @@ namespace Spark.Tests.Visitors
         {
             var nodes = ParseNodes(
                 "<foo><section:two>beta</section:two><section:one>alpha</section:one></foo>",
-                new PrefixExpandingVisitor(null),
+                new PrefixExpandingVisitor(new VisitorContext()),
                 new SpecialNodeVisitor(new VisitorContext { PartialFileNames = new[] { "foo" } }));
 
             var visitor = new ChunkBuilderVisitor(new VisitorContext());

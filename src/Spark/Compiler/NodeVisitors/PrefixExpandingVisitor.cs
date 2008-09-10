@@ -10,28 +10,32 @@ namespace Spark.Compiler.NodeVisitors
     {
         readonly IList<PrefixSpecs> _prefixes = new List<PrefixSpecs>();
 
-        public PrefixExpandingVisitor(VisitorContext context) : base(context)
+        public PrefixExpandingVisitor(VisitorContext context)
+            : base(context)
         {
             _prefixes = new[]
                             {
-                                new PrefixSpecs("section", "section", "name"),
-                                new PrefixSpecs("macro", "macro", "name"),
-                                new PrefixSpecs("content", "content", "name"),
-                                new PrefixSpecs("use", "use", "content"),
-                                new PrefixSpecs("render", "render", "section")
+                                new PrefixSpecs("section", Constants.SectionNamespace, "section", "name"),
+                                new PrefixSpecs("macro", Constants.MacroNamespace, "macro", "name"),
+                                new PrefixSpecs("content", Constants.ContentNamespace, "content", "name"),
+                                new PrefixSpecs("use", Constants.UseNamespace, "use", "content"),
+                                new PrefixSpecs("render", Constants.RenderNamespace, "render", "section")
                             };
         }
 
 
         public class PrefixSpecs
         {
-            public PrefixSpecs(string prefix, string elementName, string attributeName)
+            public PrefixSpecs(string prefix, string ns, string elementName, string attributeName)
             {
                 Prefix = prefix;
+                Namespace = ns;
                 ElementName = elementName;
                 AttributeName = attributeName;
             }
+
             public string Prefix { get; set; }
+            public string Namespace { get; set; }
             public string ElementName { get; set; }
             public string AttributeName { get; set; }
         }
@@ -42,24 +46,12 @@ namespace Spark.Compiler.NodeVisitors
             public PrefixSpecs Specs { get; set; }
         }
 
-        static string GetPrefix(string elementName)
-        {
-            var colonIndex = elementName.IndexOf(':');
-            return colonIndex <= 0 ? "" : elementName.Substring(0, colonIndex);
-        }
-
-        static string GetName(string elementName)
-        {
-            var colonIndex = elementName.IndexOf(':');
-            return colonIndex <= 0 ? elementName : elementName.Substring(colonIndex + 1);
-        }
-
         protected override void Visit(ElementNode node)
         {
-            var prefix = GetPrefix(node.Name);
+            var prefix = NameUtility.GetPrefix(node.Name);
             if (!string.IsNullOrEmpty(prefix))
             {
-                var specs = _prefixes.FirstOrDefault(spec => string.Equals(spec.Prefix, prefix));
+                var specs = _prefixes.FirstOrDefault(spec => IsMatchingSpec(spec, node));
                 if (specs != null)
                 {
                     PushReconstructedNode(node, specs);
@@ -70,23 +62,33 @@ namespace Spark.Compiler.NodeVisitors
             base.Visit(node);
         }
 
+        bool IsMatchingSpec(PrefixSpecs specs, ElementNode node)
+        {
+            if (Context.Namespaces == NamespacesType.Unqualified)
+            {
+                return specs.Prefix == NameUtility.GetPrefix(node.Name);
+            }
+
+            return specs.Namespace == node.Namespace;
+        }
+
         private void PushReconstructedNode(ElementNode original, PrefixSpecs specs)
         {
             // For element <foo:blah> add an additional attributes like name="blah"
             var attributes = new List<AttributeNode>
                                  {
-                                     new AttributeNode(specs.AttributeName, GetName(original.Name))
+                                     new AttributeNode(specs.AttributeName, NameUtility.GetName(original.Name))
                                  };
             attributes.AddRange(original.Attributes);
-            
+
             // Replace <foo:blah> with <foo>
-            var reconstructed = new ElementNode(specs.ElementName, attributes, original.IsEmptyElement) { OriginalNode = original };
+            var reconstructed = new ElementNode(specs.ElementName, attributes, original.IsEmptyElement) { OriginalNode = original, Namespace = Constants.Namespace };
             Nodes.Add(reconstructed);
 
             // If it's not empty, add a frame to watch for the matching end element
             if (!original.IsEmptyElement)
             {
-                PushFrame(Nodes, new Frame {OriginalElementName = original.Name, Specs = specs});
+                PushFrame(Nodes, new Frame { OriginalElementName = original.Name, Specs = specs });
             }
         }
 
@@ -95,7 +97,7 @@ namespace Spark.Compiler.NodeVisitors
             if (string.Equals(node.Name, FrameData.OriginalElementName))
             {
                 // replace matching </foo:blah> with </foo>
-                Nodes.Add(new EndElementNode(FrameData.Specs.ElementName));
+                Nodes.Add(new EndElementNode(FrameData.Specs.ElementName) { Namespace = Constants.Namespace });
                 PopFrame();
             }
             else

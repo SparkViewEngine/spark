@@ -232,6 +232,12 @@
     <None Include="Spark.Tests.Views\Prefix\conditional-attributes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Prefix\section-render-prefix.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Prefix\macro-content-prefix.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Prefix\prefix-from-xmlns.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -269,6 +275,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\_Rounded.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Prefix\_PartialWithSections.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

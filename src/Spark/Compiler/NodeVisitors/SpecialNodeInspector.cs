@@ -54,7 +54,7 @@ namespace Spark.Compiler.NodeVisitors
             {
                 attr = Attributes.FirstOrDefault(a =>
                     (_node.Element.Namespace == Constants.Namespace && a.Name == name) ||
-                    (a.Namespace == Constants.Namespace && NameUtility.RemovePrefix(a.Name) == name));
+                    (a.Namespace == Constants.Namespace && NameUtility.GetName(a.Name) == name));
             }
 
             Attributes.Remove(attr);

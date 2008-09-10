@@ -90,7 +90,7 @@ namespace Spark.Compiler.NodeVisitors
             if (attr.Namespace != Constants.Namespace)
                 return false;
 
-            var nqName = NameUtility.RemovePrefix(attr.Name);
+            var nqName = NameUtility.GetName(attr.Name);
             return nqName == "if" || nqName == "elseif";
         }
 
@@ -100,7 +100,7 @@ namespace Spark.Compiler.NodeVisitors
 
             if (conditionalAttr != null)
             {
-                var fakeElement = new ElementNode(NameUtility.RemovePrefix(conditionalAttr.Name), new[] { new AttributeNode("condition", conditionalAttr.Nodes) },
+                var fakeElement = new ElementNode(NameUtility.GetName(conditionalAttr.Name), new[] { new AttributeNode("condition", conditionalAttr.Nodes) },
                                                             false) { OriginalNode = conditionalAttr };
                 var specialNode = new SpecialNode(fakeElement);
                 node.Attributes.Remove(conditionalAttr);

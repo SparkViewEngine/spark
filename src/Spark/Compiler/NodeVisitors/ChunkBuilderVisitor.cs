@@ -323,7 +323,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(SpecialNode specialNode)
         {
-            string nqName = NameUtility.RemovePrefix(specialNode.Element.Name);
+            string nqName = NameUtility.GetName(specialNode.Element.Name);
             if (!_specialNodeMap.ContainsKey(nqName))
             {
                 throw new CompilerException(string.Format("Unknown special node {0}", specialNode.Element.Name));

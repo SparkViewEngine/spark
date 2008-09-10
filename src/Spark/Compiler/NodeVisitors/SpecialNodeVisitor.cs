@@ -94,10 +94,10 @@ namespace Spark.Compiler.NodeVisitors
                     _nodes = extensionNode.Body;
                 }
             }
-            else if (Context.PartialFileNames.Contains(node.Name))
+            else if (IsPartialFileElement(node.Name, node.Namespace))
             {
                 var attributes = new List<AttributeNode>(node.Attributes);
-                attributes.Add(new AttributeNode("file", "_" + node.Name));
+                attributes.Add(new AttributeNode("file", "_" + NameUtility.GetName(node.Name)));
                 var useFile = new ElementNode("use", attributes, node.IsEmptyElement)
                                   {
                                       OriginalNode = node
@@ -120,7 +120,7 @@ namespace Spark.Compiler.NodeVisitors
             if (ns != Constants.Namespace)
                 return false;
 
-            return _containingNames.Contains(NameUtility.RemovePrefix(name));
+            return _containingNames.Contains(NameUtility.GetName(name));
         }
 
         private bool IsNonContainingElement(string name, string ns)
@@ -131,8 +131,20 @@ namespace Spark.Compiler.NodeVisitors
             if (ns != Constants.Namespace)
                 return false;
 
-            return _nonContainingNames.Contains(NameUtility.RemovePrefix(name));
+            return _nonContainingNames.Contains(NameUtility.GetName(name));
         }
+
+        private bool IsPartialFileElement(string name, string ns)
+        {
+            if (Context.Namespaces == NamespacesType.Unqualified)
+                return Context.PartialFileNames.Contains(name);
+
+            if (ns != Constants.Namespace)
+                return false;
+
+            return Context.PartialFileNames.Contains(NameUtility.GetName(name));
+        }
+
 
         private bool TryCreateExtension(ElementNode node, out ISparkExtension extension)
         {
@@ -163,7 +175,7 @@ namespace Spark.Compiler.NodeVisitors
             {
                 // non-contining names are explicitly self-closing
             }
-            else if (Context.PartialFileNames.Contains(node.Name))
+            else if (IsPartialFileElement(node.Name, node.Namespace))
             {
                 PopSpecial("use");
             }

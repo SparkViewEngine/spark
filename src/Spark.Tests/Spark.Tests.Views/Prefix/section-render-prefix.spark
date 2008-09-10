@@ -1,0 +1,19 @@
+﻿<div xmlns:s="http://sparkviewengine.com/"
+     xmlns:x="http://sparkviewengine.com/section/">
+
+  <s:PartialWithSections>
+    <x:top>
+      <p>one</p>
+    </x:top>
+    <x:bottom>
+      <p>three</p>
+    </x:bottom>
+  </s:PartialWithSections>
+  
+  <macro:ignored>ignored</macro:ignored>
+  <content:ignored>ignored</content:ignored>
+  <use:ignored>ignored</use:ignored>
+  <render:ignored>ignored</render:ignored>
+  <section:ignored>ignored</section:ignored>
+
+</div>

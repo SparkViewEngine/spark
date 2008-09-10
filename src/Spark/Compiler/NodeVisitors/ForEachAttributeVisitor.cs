@@ -90,7 +90,7 @@ namespace Spark.Compiler.NodeVisitors
             if (attr.Namespace != Constants.Namespace)
                 return false;
 
-            return NameUtility.RemovePrefix(attr.Name) == "each";
+            return NameUtility.GetName(attr.Name) == "each";
         }
 
         protected override void Visit(ElementNode node)

@@ -1,0 +1,26 @@
+﻿<div xmlns:s="http://sparkviewengine.com/"
+     xmlns:m="http://sparkviewengine.com/macro/"
+     xmlns:c="http://sparkviewengine.com/content/"
+     xmlns:u="http://sparkviewengine.com/use/">
+
+  <m:HelloWorld name="string">
+    <p>Hello, ${name}!</p>
+  </m:HelloWorld>
+
+  <c:middle>
+    <p>two</p>
+    ${HelloWorld('world')}
+    <p>three</p>
+  </c:middle>
+
+  <p>one</p>
+  <u:middle/>
+  <p>four</p>
+
+  <macro:ignored>ignored</macro:ignored>
+  <content:ignored>ignored</content:ignored>
+  <use:ignored>ignored</use:ignored>
+  <render:ignored>ignored</render:ignored>
+  <section:ignored>ignored</section:ignored>
+
+</div>
