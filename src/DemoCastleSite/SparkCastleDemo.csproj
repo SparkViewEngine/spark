@@ -81,6 +81,7 @@
     <None Include="Views\Home\ViewSource.spark" />
     <None Include="Views\Layouts\Default.spark" />
     <None Include="Views\Layouts\Sidebars.spark" />
+    <Content Include="Views\Rescues\404.spark" />
     <None Include="Views\Shared\Default.spark" />
     <None Include="Views\Home\Nested.spark" />
     <None Include="Views\Shared\_Copyright.spark" />

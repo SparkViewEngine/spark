@@ -56,6 +56,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -181,6 +182,7 @@
     <None Include="MonoRail.Tests.Views\Home\ComponentBodyHtmlHasAttributes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="MonoRail.Tests.Views\Rescues\404.spark" />
     <None Include="MonoRail.Tests.Views\Shared\Ajax.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

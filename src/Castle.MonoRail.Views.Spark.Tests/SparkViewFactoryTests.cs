@@ -229,6 +229,18 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.IsFalse(output.ToString().Contains("<p>was false</p>"));
             
         }
+
+        [Test, Ignore("The mocking on this test fixture isn't right for this test")]
+        public void Rescue404Rendering()
+        {
+            SetupResult.For(response.StatusCode).PropertyBehavior();
+            SetupResult.For(response.StatusDescription).PropertyBehavior();
+            mocks.ReplayAll();
+            var handler = new MonoRailHttpHandlerFactory.NotFoundHandler("", "nosuchcontroller", engineContext);
+            handler.ProcessRequest(null);
+            Assert.AreEqual(404, response.StatusCode);
+        }
     }
 
 }
+

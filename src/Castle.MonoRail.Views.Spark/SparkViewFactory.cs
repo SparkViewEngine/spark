@@ -12,9 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
+using System.Web;
 using Castle.Core.Logging;
+using Castle.MonoRail.Framework.Descriptors;
+using Castle.MonoRail.Framework.Resources;
+using Castle.MonoRail.Framework.Routing;
 using Spark.Compiler;
 
 namespace Castle.MonoRail.Views.Spark
@@ -39,7 +46,7 @@ namespace Castle.MonoRail.Views.Spark
             base.Service(provider);
 
             _controllerDescriptorProvider = (IControllerDescriptorProvider)provider.GetService(typeof(IControllerDescriptorProvider));
-            _viewActivatorFactory = (IViewActivatorFactory)provider.GetService(typeof (IViewActivatorFactory));
+            _viewActivatorFactory = (IViewActivatorFactory)provider.GetService(typeof(IViewActivatorFactory));
 
             Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
         }
@@ -61,7 +68,7 @@ namespace Castle.MonoRail.Views.Spark
                     _engine.ViewFolder = this;
                     _engine.ExtensionFactory = this;
                     _engine.DefaultPageBaseType = typeof(SparkView).FullName;
-                    
+
                     if (_viewActivatorFactory != null)
                         _engine.ViewActivatorFactory = _viewActivatorFactory;
                 }
@@ -81,11 +88,10 @@ namespace Castle.MonoRail.Views.Spark
         public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller,
                                      IControllerContext controllerContext)
         {
-            //string masterName = null;
-            //if (controllerContext.LayoutNames != null)
-            //    masterName = string.Join(" ", controllerContext.LayoutNames);
+            var descriptor = new SparkViewDescriptor();
+            if (controller != null)
+                descriptor.TargetNamespace = controller.GetType().Namespace;
 
-            var descriptor = new SparkViewDescriptor { TargetNamespace = controller.GetType().Namespace };
             descriptor.Templates.Add(Path.ChangeExtension(templateName, ViewFileExtension));
 
             foreach (var layoutName in controllerContext.LayoutNames ?? new string[0])
@@ -118,7 +124,50 @@ namespace Castle.MonoRail.Views.Spark
         public override void Process(string templateName, string layoutName, TextWriter output,
                                      IDictionary<string, object> parameters)
         {
-            throw new NotImplementedException();
+            IEngineContext engineContext = null;
+            if (HttpContext.Current != null)
+            {
+                engineContext = (IEngineContext) HttpContext.Current.Items["currentmrengineinstance"];
+            }
+
+            var controllerContext = new BasicControllerContext
+                                        {
+                                            SelectedViewName = templateName
+                                        };
+
+            if (!string.IsNullOrEmpty(layoutName))
+                controllerContext.LayoutNames = new[] {layoutName};
+
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                    controllerContext.PropertyBag[parameter.Key] = parameter.Value;
+            }
+
+            Process(templateName, output, engineContext, null, controllerContext);
+        }
+
+        class BasicControllerContext : IControllerContext
+        {
+            public BasicControllerContext()
+            {
+                CustomActionParameters = new Dictionary<string, object>();
+                PropertyBag = new Hashtable();
+            }
+            public IDictionary<string, object> CustomActionParameters { get; set; }
+            public IDictionary PropertyBag { get; set; }
+            public HelperDictionary Helpers { get; set; }
+            public string Name { get; set; }
+            public string AreaName { get; set; }
+            public string[] LayoutNames { get; set; }
+            public string Action { get; set; }
+            public string SelectedViewName { get; set; }
+            public string ViewFolder { get; set; }
+            public IDictionary<string, IResource> Resources { get; private set; }
+            public IDictionary<string, IDynamicAction> DynamicActions { get; private set; }
+            public ControllerMetaDescriptor ControllerDescriptor { get; set; }
+            public RouteMatch RouteMatch { get; set; }
+            public AsyncInvocationInformation Async { get; set; }
         }
 
         public override void ProcessPartial(string partialName, TextWriter output, IEngineContext context,
@@ -259,7 +308,7 @@ namespace Castle.MonoRail.Views.Spark
                     foreach (var fileName in ViewSourceLoader.ListViews(controllerPath))
                     {
                         // ignore files which are not spark extension
-                        if (!string.Equals(Path.GetExtension(fileName) , ".spark", StringComparison.InvariantCultureIgnoreCase))
+                        if (!string.Equals(Path.GetExtension(fileName), ".spark", StringComparison.InvariantCultureIgnoreCase))
                             continue;
 
                         var potentialMatch = Path.GetFileNameWithoutExtension(fileName);
@@ -302,7 +351,7 @@ namespace Castle.MonoRail.Views.Spark
                 if (layoutNamesList.Count == 0)
                 {
                     if (metaDesc.Layout != null)
-                        layoutNamesList = new[] { metaDesc.Layout.LayoutNames };                    
+                        layoutNamesList = new[] { metaDesc.Layout.LayoutNames };
                 }
 
                 foreach (var layoutNames in layoutNamesList)
