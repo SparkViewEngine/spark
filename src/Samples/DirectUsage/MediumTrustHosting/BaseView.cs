@@ -48,8 +48,7 @@ namespace MediumTrustHosting
         }
 
         /// <summary>
-        /// The generated code will use the SiteRoot property when
-        /// an html attribute for a url starts with ~
+        /// Provides a normalized application path
         /// </summary>
         public string SiteRoot
         {
@@ -58,6 +57,15 @@ namespace MediumTrustHosting
                 var parts = Context.Request.ApplicationPath.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
                 return string.Concat(parts.Select(part => "/" + part).ToArray());
             }
+        }
+
+        /// <summary>
+        /// The generated code will use the SiteResource method when
+        /// an html attribute for a url starts with ~
+        /// </summary>
+        public string SiteResource(string path)
+        {
+            return SiteRoot + path;
         }
 
         /// <summary>
