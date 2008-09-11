@@ -31,5 +31,14 @@ namespace Spark.Compiler.NodeVisitors
             return GetName(name) == matchName;
         }
 
+        public static bool IsMatch(string nameA, string namespaceA, string nameB, string namespaceB, NamespacesType type)
+        {
+            if (type == NamespacesType.Unqualified)
+                return nameA == nameB;
+
+            return namespaceA == namespaceB &&
+                   GetName(nameA) == GetName(nameB);
+
+        }
     }
 }

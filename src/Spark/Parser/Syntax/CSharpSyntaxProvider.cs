@@ -27,24 +27,32 @@ namespace Spark.Parser.Syntax
 
         public ParseAction<IList<Node>> Nodes;
     }
+
     public class CSharpSyntaxProvider : AbstractSyntaxProvider
     {
         static readonly CSharpGrammar _grammar = new CSharpGrammar();
-        
-        public override IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory, string prefix)
+
+        public override IList<Chunk> GetChunks(VisitorContext context, string path)
         {
-            var sourceContext = CreateSourceContext(viewPath, viewFolder);
+            context.ViewPath = path;
+            var sourceContext = CreateSourceContext(context.ViewPath, context.ViewFolder);
             var position = new Position(sourceContext);
 
             var nodes = _grammar.Nodes(position);
             if (nodes.Rest.PotentialLength() != 0)
             {
-                ThrowParseException(viewPath, position, nodes.Rest);
+                ThrowParseException(context.ViewPath, position, nodes.Rest);
             }
-            VisitorContext context = new VisitorContext {Paint = nodes.Rest.GetPaint()};
+            context.Paint = nodes.Rest.GetPaint();
+
             var chunkBuilder = new ChunkBuilderVisitor(context);
             chunkBuilder.Accept(nodes.Value);
             return chunkBuilder.Chunks;
+        }
+
+        public override IList<Node> IncludeFile(VisitorContext context, string path, string parse)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

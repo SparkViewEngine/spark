@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 
@@ -83,18 +85,121 @@ namespace Spark.Tests
         }
 
 
-        [Test, Ignore("Not impl yet")]
+        [Test]
         public void IncludeFile()
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
                                           {"including\\index.spark", "<p><include href='stuff.spark'/></p>"},
-                                          {"including\\stuff.spark", "<macro name='foo'>hello</macro>"}
+                                          {"including\\stuff.spark", "hello world"}
                                       }, "including\\index.spark");
             var contents = view.RenderView();
             Assert.AreEqual("<p>hello world</p>", contents);
-            Assert.IsFalse(contents.Contains("include"));
+        }
 
+        [Test, ExpectedException(typeof(CompilerException))]
+        public void MissingFileThrowsException()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p><include href='stuff.spark'/></p>"}
+                                      }, "including\\index.spark");
+            view.RenderView();
+        }
+
+
+        [Test]
+        public void MissingFileWithEmptyFallbackIsBlank()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p><include href='stuff.spark'><fallback/></include></p>"}
+                                      }, "including\\index.spark");
+            var contents = view.RenderView();
+            Assert.AreEqual("<p></p>", contents);
+        }
+
+        [Test]
+        public void MissingFileWithFallbackUsesContents()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"}
+                                      }, "including\\index.spark");
+            var contents = view.RenderView();
+            Assert.AreEqual("<p>hello world</p>", contents);
+        }
+
+        [Test]
+        public void ValidIncludeFallbackDisappears()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"},
+                                          {"including\\stuff.spark", "another file"}
+                                      }, "including\\index.spark");
+            var contents = view.RenderView();
+            Assert.AreEqual("<p>another file</p>", contents);
+        }
+
+        [Test]
+        public void FallbackContainsAnotherInclude()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p><include href='stuff.spark'><fallback><include href='other.spark'/></fallback></include></p>"},
+                                          {"including\\other.spark", "other file"}
+                                      }, "including\\index.spark");
+            var contents = view.RenderView();
+            Assert.AreEqual("<p>other file</p>", contents);
+        }
+
+        [Test]
+        public void IncludeRelativePath()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p><include href='../lib/other.spark'/></p>"},
+                                          {"lib\\other.spark", "other file"}
+                                      }, "including\\index.spark");
+            var contents = view.RenderView();
+            Assert.AreEqual("<p>other file</p>", contents);
+        }
+        [Test]
+        public void IncludeInsideAnInclude()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p><include href='../lib/other.spark'/></p>"},
+                                          {"lib\\other.spark", "other <include href='third.spark'/> file"},
+                                          {"lib\\third.spark", "third file"}
+                                      }, "including\\index.spark");
+            var contents = view.RenderView();
+            Assert.AreEqual("<p>other third file file</p>", contents);
+        }
+
+        [Test]
+        public void UsingXmlns()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p xmlns:x='http://www.w3.org/2001/XInclude'><include/><x:include href='../lib/other.spark'/></p>"},
+                                          {"lib\\other.spark", "other file"}
+                                      }, "including\\index.spark");
+            var contents = view.RenderView();
+            Assert.AreEqual("<p xmlns:x=\"http://www.w3.org/2001/XInclude\"><include/>other file</p>", contents);
+        }
+
+        [Test]
+        public void IncludingAsText()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p><include href='item.spark' parse='text'/></p>"},
+                                          {"including\\item.spark", "<li>at&t</li>"}
+                                      }, "including\\index.spark");
+            var contents = view.RenderView();
+            Assert.AreEqual("<p>&lt;li&gt;at&amp;t&lt;/li&gt;</p>", contents);
         }
     }
 }

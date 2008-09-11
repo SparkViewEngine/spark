@@ -145,7 +145,13 @@ namespace Spark.Parser
 
             var newEntry = BindEntry(viewPath);
 
-            newEntry.Chunks = SyntaxProvider.GetChunks(viewPath, ViewFolder, ExtensionFactory, Prefix);
+            VisitorContext context = new VisitorContext
+                                         {
+                                             ViewFolder = ViewFolder,
+                                             Prefix = Prefix,
+                                             ExtensionFactory = ExtensionFactory
+                                         };
+            newEntry.Chunks = SyntaxProvider.GetChunks(context, viewPath);
 
             var fileReferenceVisitor = new FileReferenceVisitor();
             fileReferenceVisitor.Accept(newEntry.Chunks);

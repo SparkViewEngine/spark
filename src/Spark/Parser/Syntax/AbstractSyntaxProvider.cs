@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Web.Mvc;
 using Spark.Compiler;
+using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
+using Spark.Parser.Markup;
 
 namespace Spark.Parser.Syntax
 {
     public abstract class AbstractSyntaxProvider : ISparkSyntaxProvider
     {
-        public abstract IList<Chunk> GetChunks(string viewPath, IViewFolder viewFolder, ISparkExtensionFactory extensionFactory, string prefix);
+        public abstract IList<Chunk> GetChunks(VisitorContext context, string path);
+        public abstract IList<Node> IncludeFile(VisitorContext context, string path, string parse);
 
         protected SourceContext CreateSourceContext(string viewPath, IViewFolder viewFolder)
         {

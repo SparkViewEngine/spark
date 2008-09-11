@@ -56,7 +56,7 @@ namespace Spark.Tests.Parser
 
             Expect.Call(viewSourceLoader.GetViewSource(path)).Return(source);
             Expect.Call(source.LastModified).Return(0);
-            Expect.Call(syntaxProvider.GetChunks(path, viewSourceLoader, null, null)).Return(chunks);
+            Expect.Call(syntaxProvider.GetChunks(null, null)).IgnoreArguments().Return(chunks);
 
             return source;
         }

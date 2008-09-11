@@ -35,7 +35,7 @@ namespace Spark.Compiler.NodeVisitors
         protected override void Visit(ElementNode node)
         {
             IDictionary<string, string> nametable = null;
-            foreach (var xmlnsAttr in node.Attributes.Where(IsXmlnsAttribute).Where(IsSparkUri))
+            foreach (var xmlnsAttr in node.Attributes.Where(IsXmlnsAttribute).Where(IsKnownUri))
             {
                 // create a nametable based on existing context
                 nametable = nametable ?? new Dictionary<string, string>(FrameData.Nametable);
@@ -125,9 +125,10 @@ namespace Spark.Compiler.NodeVisitors
             return attr.Name.StartsWith("xmlns:") || attr.Name == "xmlns";
         }
 
-        static bool IsSparkUri(AttributeNode attr)
+        static bool IsKnownUri(AttributeNode attr)
         {
-            return attr.Value.StartsWith(Constants.Namespace);
+            return attr.Value.StartsWith(Constants.Namespace) ||
+                attr.Value == Constants.XIncludeNamespace;
         }
     }
 }

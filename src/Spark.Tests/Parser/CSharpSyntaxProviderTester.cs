@@ -15,6 +15,7 @@
 */
 
 using NUnit.Framework;
+using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
 using Spark.Parser.Syntax;
 using Spark.Tests.Stubs;
@@ -29,7 +30,8 @@ namespace Spark.Tests.Parser
         [Test]
         public void CanParseSimpleFile()
         {
-            var result = _syntax.GetChunks("Home\\childview.spark", new FileSystemViewFolder("Spark.Tests.Views"), null, null);
+            var context = new VisitorContext { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+            var result = _syntax.GetChunks(context, "Home\\childview.spark");
             Assert.IsNotNull(result);
         }
 
@@ -58,8 +60,7 @@ namespace Spark.Tests.Parser
         {
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
-                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
-                { SyntaxProvider = _syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView")) { SyntaxProvider = _syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();
