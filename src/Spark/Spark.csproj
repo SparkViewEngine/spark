@@ -84,10 +84,14 @@
     <Compile Include="Configuration\AssemblyElement.cs" />
     <Compile Include="Configuration\AssemblyElementCollection.cs" />
     <Compile Include="Configuration\CompilationElement.cs" />
+    <Compile Include="Configuration\ResourcePathElement.cs" />
     <Compile Include="Configuration\PagesElement.cs" />
+    <Compile Include="Configuration\ResourcePathElementCollection.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DefaultResourcePathManager.cs" />
     <Compile Include="DefaultViewActivator.cs" />
     <Compile Include="FileSystem\EmbeddedViewFolder.cs" />
+    <Compile Include="IResourcePathManager.cs" />
     <Compile Include="ISparkSettings.cs" />
     <Compile Include="Configuration\NamespaceElement.cs" />
     <Compile Include="Configuration\NamespaceElementCollection.cs" />

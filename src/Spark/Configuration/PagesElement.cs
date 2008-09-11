@@ -29,5 +29,13 @@ namespace Spark.Configuration
             get { return (NamespaceElementCollection)this["namespaces"]; }
             set { this["namespaces"] = value; }
         }
+
+        [ConfigurationProperty("resources")]
+        [ConfigurationCollection(typeof(ResourcePathElementCollection))]
+        public ResourcePathElementCollection Resources
+        {
+            get { return (ResourcePathElementCollection)this["resources"]; }
+            set { this["resources"] = value; }
+        }
     }
 }

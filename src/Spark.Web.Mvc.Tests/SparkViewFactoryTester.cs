@@ -339,7 +339,7 @@ namespace Spark.Web.Mvc.Tests
         public void RenderPlainView()
         {
             mocks.ReplayAll();
-
+                
             var viewContext = MakeViewContext("index");
             var viewEngineResult = factory.FindView(controllerContext, "index", null);
             viewEngineResult.View.Render(viewContext, output);

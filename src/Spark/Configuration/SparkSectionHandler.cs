@@ -37,6 +37,7 @@ namespace Spark.Configuration
             set { this["pages"] = value; }
         }
 
+
         public SparkSectionHandler SetDebug(bool debug)
         {
             Compilation.Debug = debug;
@@ -107,6 +108,17 @@ namespace Spark.Configuration
                 var result = new List<string>();
                 foreach (AssemblyElement assembly in Compilation.Assemblies)
                     result.Add(assembly.Assembly);
+                return result;
+            }
+        }
+
+        public IList<ResourceMapping> ResourceMappings
+        {
+            get
+            {
+                var result = new List<ResourceMapping>();
+                foreach (ResourcePathElement resource in Pages.Resources)
+                    result.Add(new ResourceMapping { Match = resource.Match, Location = resource.Location });
                 return result;
             }
         }

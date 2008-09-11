@@ -10,6 +10,13 @@ namespace Spark
         string PageBaseType { get; set; }
         IList<string> UseNamespaces { get; }
         IList<string> UseAssemblies { get; }
+        IList<ResourceMapping> ResourceMappings { get; }
+    }
+
+    public class ResourceMapping
+    {
+        public string Match { get; set; }
+        public string Location { get; set; }
     }
 }
 

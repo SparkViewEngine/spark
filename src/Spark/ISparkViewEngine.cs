@@ -25,6 +25,7 @@ namespace Spark
     {
         ISparkSettings Settings { get; }
         IViewFolder ViewFolder { get; set; }
+        IResourcePathManager ResourcePathManager { get; set; }
         ISparkExtensionFactory ExtensionFactory { get; set; }
         IViewActivatorFactory ViewActivatorFactory { get; set; }
         string DefaultPageBaseType { get; set; }

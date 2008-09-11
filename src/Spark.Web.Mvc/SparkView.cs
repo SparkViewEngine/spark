@@ -49,6 +49,8 @@ namespace Spark.Web.Mvc
             get { return ViewContext.HttpContext.Response; }
         }
 
+        public IResourcePathManager ResourcePathManager { get; set; }
+
         public string SiteRoot
         {
             get
@@ -67,6 +69,10 @@ namespace Spark.Web.Mvc
                 }
                 return _siteRoot;
             }
+        }
+        public string SiteResource(string path)
+        {
+            return ResourcePathManager.GetResourcePath(SiteRoot, path);
         }
 
         #region IView Members

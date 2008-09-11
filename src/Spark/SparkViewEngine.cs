@@ -40,6 +40,19 @@ namespace Spark
         }
 
         public IViewFolder ViewFolder { get; set; }
+
+        private IResourcePathManager _resourcePathManager;
+        public IResourcePathManager ResourcePathManager
+        {
+            get
+            {
+                if (_resourcePathManager == null)
+                    _resourcePathManager = new DefaultResourcePathManager(Settings);
+                return _resourcePathManager;
+            }
+            set { _resourcePathManager = value; }
+        }
+
         public ISparkExtensionFactory ExtensionFactory { get; set; }
         public IViewActivatorFactory ViewActivatorFactory { get; set; }
 

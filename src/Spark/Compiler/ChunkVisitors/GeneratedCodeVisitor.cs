@@ -193,6 +193,11 @@ namespace Spark.Compiler.ChunkVisitors
             AppendIndent().AppendLine("}");
         }
 
+        protected override void Visit(UseImportChunk chunk)
+        {
+            
+        }
+
         protected override void Visit(ContentSetChunk chunk)
         {
             CodeIndent(chunk).AppendLine("using(OutputScope(new System.IO.StringWriter()))");

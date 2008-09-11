@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultResourcePathManagerTester.cs" />
+    <Compile Include="ImportAndIncludeTester.cs" />
     <Compile Include="Visitors\BaseVisitorTester.cs" />
     <Compile Include="BatchCompilationTester.cs" />
     <Compile Include="Visitors\ChunkBuilderVisitorTester.cs" />

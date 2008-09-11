@@ -23,8 +23,8 @@ namespace Spark.Compiler.NodeVisitors
 
         public string Prefix { get; set; }
         public NamespacesType Namespaces { get; set; }
-        public IEnumerable<Paint> Paint {get;set;}
-        public IList<string> PartialFileNames {get;set;}
+        public IEnumerable<Paint> Paint { get; set; }
+        public IList<string> PartialFileNames { get; set; }
         public ISparkExtensionFactory ExtensionFactory { get; set; }
     }
 }

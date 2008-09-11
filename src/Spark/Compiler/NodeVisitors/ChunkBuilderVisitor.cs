@@ -366,6 +366,7 @@ namespace Spark.Compiler.NodeVisitors
             var file = inspector.TakeAttribute("file");
             var namespaceAttr = inspector.TakeAttribute("namespace");
             var assemblyAttr = inspector.TakeAttribute("assembly");
+            var importAttr = inspector.TakeAttribute("import");
 
             if (content != null)
             {
@@ -407,6 +408,11 @@ namespace Spark.Compiler.NodeVisitors
                     var useAssemblyChunk = new UseAssemblyChunk { Assembly = assemblyAttr.Value };
                     AddUnordered(useAssemblyChunk);
                 }
+            }
+            else if (importAttr != null)
+            {
+                var useImportChunk = new UseImportChunk { Name = importAttr.Value };
+                AddUnordered(useImportChunk);
             }
             else
             {

@@ -53,6 +53,10 @@ namespace Castle.MonoRail.Views.Spark
         public IDictionary Session { get { return _context.Session; } }
         public Flash Flash { get { return _context.Flash; } }
         public string SiteRoot { get { return _context.ApplicationPath; } }
+        public string SiteResource(string path)
+        {
+            return _viewEngine.Engine.ResourcePathManager.GetResourcePath(SiteRoot, path);
+        }
 
         public IDictionary PropertyBag { get { return _contextVars ?? _controllerContext.PropertyBag; } }
         public NameValueCollection Params { get { return Request.Params; } }

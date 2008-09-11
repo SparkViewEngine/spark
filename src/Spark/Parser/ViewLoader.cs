@@ -113,6 +113,16 @@ namespace Spark.Parser
             if (entry == null)
                 return null;
 
+            // import _global.spark files from template path and shared path
+
+            var perFolderGlobal = Path.GetDirectoryName(viewPath) + "\\_global.spark";
+            if (ViewFolder.HasView(perFolderGlobal))
+                BindEntry(perFolderGlobal);
+
+            const string sharedGlobal = "Shared\\_global.spark";
+            if (ViewFolder.HasView(sharedGlobal))
+                BindEntry(sharedGlobal);
+
             while (_pending.Count != 0)
             {
                 string nextPath = _pending.First();
@@ -151,42 +161,6 @@ namespace Spark.Parser
             }
         }
 
-        //private IList<Chunk> GetChunks(string viewPath, SourceContext sourceContext)
-        //{
-        //    var position = new Position(sourceContext);
-
-        //    var nodes = Parser(position);
-        //    if (nodes.Rest.PotentialLength() != 0)
-        //    {
-        //        string message = string.Format("Unable to parse view {0} around line {1} column {2}", viewPath,
-        //                                       nodes.Rest.Line, nodes.Rest.Column);
-
-        //        int beforeLength = Math.Min(30, nodes.Rest.Offset);
-        //        int afterLength = Math.Min(30, nodes.Rest.PotentialLength());
-        //        string before = position.Advance(nodes.Rest.Offset - beforeLength).Peek(beforeLength);
-        //        string after = nodes.Rest.Peek(afterLength);
-
-        //        throw new CompilerException(message + Environment.NewLine + before + "[error:]" + after);
-        //    }
-
-        //    var partialFileNames = FindPartialFiles(viewPath);
-
-        //    var specialNodeVisitor = new SpecialNodeVisitor(partialFileNames, ExtensionFactory);
-        //    specialNodeVisitor.Accept(nodes.Value);
-
-        //    var forEachAttributeVisitor = new ForEachAttributeVisitor();
-        //    forEachAttributeVisitor.Accept(specialNodeVisitor.Nodes);
-
-        //    var conditionalAttributeVisitor = new ConditionalAttributeVisitor();
-        //    conditionalAttributeVisitor.Accept(forEachAttributeVisitor.Nodes);
-
-        //    var testElseElementVisitor = new TestElseElementVisitor();
-        //    testElseElementVisitor.Accept(conditionalAttributeVisitor.Nodes);
-
-        //    var chunkBuilder = new ChunkBuilderVisitor();
-        //    chunkBuilder.Accept(testElseElementVisitor.Nodes);
-        //    return chunkBuilder.Chunks;
-        //}
 
         public IList<string> FindPartialFiles(string viewPath)
         {
@@ -231,19 +205,6 @@ namespace Spark.Parser
             throw new FileNotFoundException(
                 string.Format("Unable to find {0} or {1}", attempt1, attempt2),
                 attempt1);
-        }
-
-        private SourceContext CreateSourceContext(string viewPath)
-        {
-            var viewSource = viewFolder.GetViewSource(viewPath);
-
-            if (viewSource == null)
-                throw new FileNotFoundException("View file not found", viewPath);
-
-            using (TextReader reader = new StreamReader(viewSource.OpenViewStream()))
-            {
-                return new SourceContext(reader.ReadToEnd(), viewSource.LastModified);
-            }
         }
     }
 }

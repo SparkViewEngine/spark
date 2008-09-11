@@ -44,6 +44,11 @@ namespace Spark.Compiler.ChunkVisitors
             }
         }
 
+        protected override void Visit(UseImportChunk chunk)
+        {
+            
+        }
+
         protected override void Visit(ContentSetChunk chunk)
         {
             Accept(chunk.Body);

@@ -113,11 +113,17 @@ namespace Spark.Compiler.ChunkVisitors
             {
                 Visit((UseAssemblyChunk)chunk);
             }
+            else if (chunk is UseImportChunk)
+            {
+                Visit((UseImportChunk) chunk);
+            }
             else
             {
                 throw new CompilerException(string.Format("Unknown chunk type {0}", chunk.GetType().Name));
             }
         }
+
+        protected abstract void Visit(UseImportChunk chunk);
 
         protected abstract void Visit(ContentSetChunk chunk);
 

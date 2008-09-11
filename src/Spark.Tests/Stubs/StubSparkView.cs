@@ -13,6 +13,11 @@ namespace Spark.Tests.Stubs
         {
             get { return "/TestApp"; }
         }
+
+        public string SiteResource(string path)
+        {
+            return SiteRoot + path;
+        }
     }
 
     public abstract class StubSparkView<TModel> : StubSparkView

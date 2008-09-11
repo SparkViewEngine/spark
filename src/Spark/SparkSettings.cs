@@ -12,6 +12,7 @@ namespace Spark
         {
             UseNamespaces = new List<string>();
             UseAssemblies = new List<string>();
+            ResourceMappings = new List<ResourceMapping>();
         }
 
         public bool Debug { get; set; }
@@ -20,6 +21,7 @@ namespace Spark
 
         public IList<string> UseNamespaces { get; set; }
         public IList<string> UseAssemblies { get; set; }
+        public IList<ResourceMapping> ResourceMappings { get; set; }
 
         public SparkSettings SetDebug(bool debug)
         {
@@ -63,5 +65,10 @@ namespace Spark
             return this;
         }
 
+        public SparkSettings AddResourceMapping(string match, string replace)
+        {
+            ResourceMappings.Add(new ResourceMapping { Match = match, Location = replace });
+            return this;
+        }
     }
 }

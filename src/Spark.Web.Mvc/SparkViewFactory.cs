@@ -127,6 +127,10 @@ namespace Spark.Web.Mvc
 
             var entry = Engine.CreateEntry(descriptor);
             var view = (IView)entry.CreateInstance();
+            if (view is SparkView)
+            {
+                ((SparkView) view).ResourcePathManager = Engine.ResourcePathManager;
+            }
             return new ViewEngineResult(view);
         }
 

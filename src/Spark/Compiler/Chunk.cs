@@ -106,7 +106,12 @@ namespace Spark.Compiler
         public string Name { get; set; }
         public FileContext FileContext { get; set; }
         public IList<Chunk> Body { get; set; }
-        public IDictionary<string, IList<Chunk>> Sections{ get; set; }
+        public IDictionary<string, IList<Chunk>> Sections { get; set; }
+    }
+
+    public class UseImportChunk : Chunk
+    {
+        public string Name { get; set; }
     }
 
     public class RenderSectionChunk : Chunk

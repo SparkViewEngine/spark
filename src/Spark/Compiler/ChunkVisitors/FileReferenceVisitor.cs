@@ -22,6 +22,7 @@ namespace Spark.Compiler.ChunkVisitors
     {
         private readonly IList<RenderPartialChunk> _references = new List<RenderPartialChunk>();
 
+        //refactor: see how this is used and change it's type
         public IList<RenderPartialChunk> References
         {
             get { return _references; }
@@ -33,6 +34,11 @@ namespace Spark.Compiler.ChunkVisitors
             Accept(chunk.Body);
             foreach (var chunks in chunk.Sections.Values)
                 Accept(chunks);
+        }
+
+        protected override void Visit(UseImportChunk chunk)
+        {
+            References.Add(new RenderPartialChunk { Name = chunk.Name });
         }
     }
 }

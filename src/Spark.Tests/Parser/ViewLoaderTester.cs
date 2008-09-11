@@ -65,6 +65,8 @@ namespace Spark.Tests.Parser
         public void LoadSimpleFile()
         {
             ExpectGetChunks("home\\simple.spark", new SendLiteralChunk());
+            SetupResult.For(viewSourceLoader.HasView("home\\_global.spark")).Return(false);
+            SetupResult.For(viewSourceLoader.HasView("Shared\\_global.spark")).Return(false);
 
             mocks.ReplayAll();
             var chunks = loader.Load("home\\simple.spark");
@@ -80,6 +82,8 @@ namespace Spark.Tests.Parser
             ExpectGetChunks("Home\\usefile.spark", new RenderPartialChunk { Name = "mypartial" });
             Expect.Call(viewSourceLoader.HasView("Home\\mypartial.spark")).Return(true);
             ExpectGetChunks("Home\\mypartial.spark", new SendLiteralChunk { Text = "Hello world" });
+            SetupResult.For(viewSourceLoader.HasView("Home\\_global.spark")).Return(false);
+            SetupResult.For(viewSourceLoader.HasView("Shared\\_global.spark")).Return(false);
 
             mocks.ReplayAll();
             loader.Load("Home\\usefile.spark");
@@ -96,6 +100,9 @@ namespace Spark.Tests.Parser
             Expect.Call(viewSourceLoader.HasView("Home\\mypartial.spark")).Return(false);
             Expect.Call(viewSourceLoader.HasView("Shared\\mypartial.spark")).Return(true);
             ExpectGetChunks("Shared\\mypartial.spark", new SendLiteralChunk { Text = "Hello world" });
+
+            SetupResult.For(viewSourceLoader.HasView("Home\\_global.spark")).Return(false);
+            SetupResult.For(viewSourceLoader.HasView("Shared\\_global.spark")).Return(false);
 
             mocks.ReplayAll();
             loader.Load("Home\\usefile.spark");
@@ -139,6 +146,9 @@ namespace Spark.Tests.Parser
             Expect.Call(source.LastModified).Return(0);
             Expect.Call(viewSourceLoader.GetViewSource("home\\changing.spark")).Return(source);
             Expect.Call(source.LastModified).Return(42);
+
+            SetupResult.For(viewSourceLoader.HasView("home\\_global.spark")).Return(false);
+            SetupResult.For(viewSourceLoader.HasView("Shared\\_global.spark")).Return(false);
 
             mocks.ReplayAll();
             loader.Load("home\\changing.spark");
