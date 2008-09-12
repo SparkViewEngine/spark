@@ -38,6 +38,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\AspNetMvc\System.Web.Mvc.dll</HintPath>
@@ -95,7 +96,11 @@
     <Compile Include="Constants.cs" />
     <Compile Include="DefaultResourcePathManager.cs" />
     <Compile Include="DefaultViewActivator.cs" />
+    <Compile Include="FileSystem\CombinedViewFolder.cs" />
     <Compile Include="FileSystem\EmbeddedViewFolder.cs" />
+    <Compile Include="FileSystem\IViewFolderExtensions.cs" />
+    <Compile Include="FileSystem\SubViewFolder.cs" />
+    <Compile Include="FileSystem\VirtualPathProviderViewFolder.cs" />
     <Compile Include="IResourcePathManager.cs" />
     <Compile Include="ISparkSettings.cs" />
     <Compile Include="Configuration\NamespaceElement.cs" />
