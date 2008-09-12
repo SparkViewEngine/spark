@@ -104,7 +104,8 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(ExtensionChunk chunk)
         {
-            Accept(chunk.Body);
+            chunk.Extension.VisitChunk(this, OutputLocation.NotWriting, chunk.Body, null);
+            //Accept(chunk.Body);
         }
 
         protected override void Visit(MacroChunk chunk)

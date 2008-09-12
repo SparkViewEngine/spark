@@ -74,6 +74,18 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             Assert.IsFalse(output.Contains("span each"));
         }
 
+		[Test]
+		public void ComponentWithPartialsInSection()
+		{
+			mocks.ReplayAll();
+
+			var writer = new StringWriter();
+			factory.Process("Home\\ComponentWithPartialsInSection.spark", writer, engineContext, controller, controllerContext);
+
+			var output = writer.ToString();
+			Assert.IsTrue(output.Contains("this is some text: test123"));
+		}
+
         [ViewComponentDetails("ComponentWithSections",Sections="header,body,footer")]
         class ComponentWithSections : ViewComponent
         {
@@ -84,6 +96,5 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                 RenderSection("footer");
             }
         }
-
     }
 }

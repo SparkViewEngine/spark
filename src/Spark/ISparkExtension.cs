@@ -37,6 +37,7 @@ namespace Spark
 
     public enum OutputLocation
     {
+        NotWriting,
         UsingNamespace,
         ClassMembers,
         RenderMethod,

@@ -95,6 +95,12 @@ namespace Castle.MonoRail.Views.Spark
                 }
                 output.AppendLine("});");
             }
+            else
+            {
+                visitor.Accept(body);
+                foreach(var sectionChunks in sectionsChunks.Values)
+                    visitor.Accept(sectionChunks);
+            }
         }
     }
 }

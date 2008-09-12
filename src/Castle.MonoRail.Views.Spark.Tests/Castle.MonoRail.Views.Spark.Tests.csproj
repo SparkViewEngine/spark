@@ -173,6 +173,9 @@
     <None Include="MonoRail.Tests.Views\Home\ComponentWithComplexSections.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentWithPartialsInSection.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MonoRail.Tests.Views\Home\ComponentWithSimpleSections.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -180,6 +183,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MonoRail.Tests.Views\Home\ComponentBodyHtmlHasAttributes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\_PartialComponentSection.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MonoRail.Tests.Views\Rescues\404.spark" />

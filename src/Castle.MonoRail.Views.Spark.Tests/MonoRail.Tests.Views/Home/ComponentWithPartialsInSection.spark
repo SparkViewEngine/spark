@@ -1,0 +1,9 @@
+<p>
+    <ComponentWithSections>
+        <header>header-text</header>
+        <body>
+            <PartialComponentSection item="'test123'" />
+        </body>
+        <footer>footer-text</footer>
+    </ComponentWithSections>
+</p>
