@@ -1,0 +1,30 @@
+﻿<p>This page is put together from several locations</p>
+<Box>
+  <section:header>&lt;FromExtraCommonFolder/&gt;</section:header>
+  <FromExtraCommonFolder/>
+</Box>
+<Box>
+  <section:header>&lt;WasEmbedded/&gt;</section:header>
+  <WasEmbedded/>
+</Box>
+
+<p>But here's a tricky part... If you're using XInclude, the files appear to have their
+standard locations relative to each other. They don't look like they're "all over the place". 
+To illustrate that let's import the text of some of these files using relative paths.
+</p>
+
+<Box>
+  <section:header>../Shared/_FromExtraCommonFolder.spark</section:header>
+  <code>
+    <include href="../Shared/_FromExtraCommonFolder.spark" parse="text"/>
+  </code>
+</Box>
+
+<Box>
+  <section:header>../Shared/_WasEmbedded.spark</section:header>
+  <code>
+    <include href="../Shared/_WasEmbedded.spark" parse="text"/>
+  </code>
+</Box>
+
+<p>Just saying it's interesting, not that there's any practical reason to do something like that.</p>

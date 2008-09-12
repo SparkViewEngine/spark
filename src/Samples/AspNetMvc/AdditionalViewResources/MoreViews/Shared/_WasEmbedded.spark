@@ -1,0 +1,5 @@
+﻿<p>This partial was embedded in a referenced assembly and was used with
+<code>engine.AddEmbeddedResources(
+  Assembly.Load("AdditionalViewResources"), 
+  "AdditionalViewResources.MoreViews");</code>
+</p>

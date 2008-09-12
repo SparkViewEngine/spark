@@ -1,0 +1,4 @@
+﻿<p>
+  This partial came from an extra location for common 
+  files with <code>engine.AddSharedPath("~/ExtraCommon");</code>
+</p>
