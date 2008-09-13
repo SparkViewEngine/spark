@@ -1,0 +1,5 @@
+﻿<div>
+  <ComponentWithBodyAndNoDetailsAttrib>
+    <p>This is text</p>
+  </ComponentWithBodyAndNoDetailsAttrib>
+</div>

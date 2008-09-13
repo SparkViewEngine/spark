@@ -16,6 +16,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             base.Init();
 
             viewComponentFactory.Registry.AddViewComponent("ComponentWithBody", typeof(ComponentWithBody));
+            viewComponentFactory.Registry.AddViewComponent("ComponentWithBodyAndNoDetailsAttrib", typeof(ComponentWithBodyAndNoDetailsAttrib));
         }
 
         [Test]
@@ -51,10 +52,35 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             Assert.IsFalse(content.Contains("<ComponentWithBody>"));
             Assert.IsFalse(content.Contains("</ComponentWithBody>"));
         }
+
+        
+        [Test]
+        public void RenderingComponentWithBodyAndNoDetailsAttrib()
+        {
+            mocks.ReplayAll();
+
+            var writer = new StringWriter();
+            factory.Process("Home\\RenderingComponentWithBodyAndNoDetailsAttrib.spark", writer, engineContext, controller, controllerContext);
+
+            mocks.VerifyAll();
+
+            var content = writer.ToString();
+            Assert.That(content.Contains("<p>This is text</p>"));
+            Assert.IsFalse(content.Contains("<ComponentWithBodyAndNoDetailsAttrib>"));
+            Assert.IsFalse(content.Contains("</ComponentWithBodyAndNoDetailsAttrib>"));
+        }
     }
 
     [ViewComponentDetails("ComponentWithBody")]
     public class ComponentWithBody : ViewComponent
+    {
+        public override void Render()
+        {
+            RenderBody();
+        }
+    }
+
+    public class ComponentWithBodyAndNoDetailsAttrib : ViewComponent
     {
         public override void Render()
         {

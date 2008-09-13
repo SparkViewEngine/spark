@@ -229,6 +229,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             manager.Process("Home\\ControllerHelperAttributeCanBeUsed", output, engineContext, controller, controllerContext);
             Assert.That(output.ToString().Contains("<p>Hello</p>"));            
         }
+
     }
 
 }
