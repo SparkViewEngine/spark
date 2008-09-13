@@ -132,7 +132,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="MonoRail.Tests.Views\Components\ChildContent\default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

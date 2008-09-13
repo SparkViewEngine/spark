@@ -224,7 +224,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             controller = new Helpers.HomeController();
             controllerContext.ControllerDescriptor = serviceProvider.ControllerDescriptorProvider.BuildDescriptor(controller);
-            controllerContext.Helpers.Add("TestingHelper", new Helpers.TestingHelper());
+            controllerContext.Helpers.Add("bar", new Helpers.TestingHelper());
             mocks.ReplayAll();
             manager.Process("Home\\ControllerHelperAttributeCanBeUsed", output, engineContext, controller, controllerContext);
             Assert.That(output.ToString().Contains("<p>Hello</p>"));            
