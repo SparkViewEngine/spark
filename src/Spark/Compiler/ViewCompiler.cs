@@ -119,6 +119,16 @@ namespace Spark.Compiler
             source.AppendLine("    public override System.Guid GeneratedViewId");
             source.AppendLine(string.Format("    {{ get {{ return new System.Guid(\"{0:n}\"); }} }}", GeneratedViewId));
 
+            if (Descriptor != null && Descriptor.Accessors != null)
+            {
+                foreach (var accessor in Descriptor.Accessors)
+                {
+                    source.AppendLine();
+                    source.Append("    public ").AppendLine(accessor.Property);
+                    source.Append("    { get { return ").Append(accessor.GetValue).AppendLine("; } }");
+                }
+            }
+
             // properties and macros
             foreach (var resource in allResources)
                 globalsGenerator.Accept(resource);

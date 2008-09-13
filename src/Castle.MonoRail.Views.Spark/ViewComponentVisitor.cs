@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Castle.MonoRail.Framework;
 using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
 using Spark.Parser.Markup;
@@ -103,33 +100,6 @@ namespace Castle.MonoRail.Views.Spark
             }
 
             chunkBuilderVisitor.Accept(endElementNode);
-        }
-    }
-
-    public class ViewComponentInfo
-    {
-        public ViewComponentInfo()
-        {
-            
-        }
-        public ViewComponentInfo(Type type)
-        {
-            Type = type;
-            Details = type.GetCustomAttributes(typeof(ViewComponentDetailsAttribute), false).OfType<ViewComponentDetailsAttribute>().FirstOrDefault();
-            if (Details == null)
-                Instance = (ViewComponent)Activator.CreateInstance(type);
-        }
-        public Type Type { get; set; }
-        public ViewComponentDetailsAttribute Details { get; set; }
-        public ViewComponent Instance { get; set; }
-
-        public bool SupportsSection(string sectionName)
-        {
-            if (Details != null)
-                return Details.SupportsSection(sectionName);
-            if (Instance != null)
-                return Instance.SupportsSection(sectionName);
-            return false;
         }
     }
 }

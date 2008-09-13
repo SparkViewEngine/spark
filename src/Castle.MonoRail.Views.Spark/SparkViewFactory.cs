@@ -22,6 +22,7 @@ using Castle.Core.Logging;
 using Castle.MonoRail.Framework.Descriptors;
 using Castle.MonoRail.Framework.Resources;
 using Castle.MonoRail.Framework.Routing;
+using Castle.MonoRail.Views.Spark.Wrappers;
 using Spark.Compiler;
 
 namespace Castle.MonoRail.Views.Spark
@@ -36,7 +37,7 @@ namespace Castle.MonoRail.Views.Spark
     using global::Spark.FileSystem;
     using global::Spark.Parser.Markup;
 
-    public class SparkViewFactory : ViewEngineBase, IViewFolder, ISparkExtensionFactory
+    public class SparkViewFactory : ViewEngineBase, IViewSourceLoaderContainer
     {
         private IControllerDescriptorProvider _controllerDescriptorProvider;
         private IViewActivatorFactory _viewActivatorFactory;
@@ -48,7 +49,7 @@ namespace Castle.MonoRail.Views.Spark
             _controllerDescriptorProvider = (IControllerDescriptorProvider)provider.GetService(typeof(IControllerDescriptorProvider));
             _viewActivatorFactory = (IViewActivatorFactory)provider.GetService(typeof(IViewActivatorFactory));
 
-            Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
+            SetEngine((ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine)));
         }
 
         private ISparkViewEngine _engine;
@@ -57,22 +58,32 @@ namespace Castle.MonoRail.Views.Spark
             get
             {
                 if (_engine == null)
-                    Engine = new SparkViewEngine();
+                    SetEngine(new SparkViewEngine());
                 return _engine;
             }
-            set
-            {
-                _engine = value;
-                if (_engine != null)
-                {
-                    _engine.ViewFolder = this;
-                    _engine.ExtensionFactory = this;
-                    _engine.DefaultPageBaseType = typeof(SparkView).FullName;
-
-                    if (_viewActivatorFactory != null)
-                        _engine.ViewActivatorFactory = _viewActivatorFactory;
-                }
+            set {
+                SetEngine(value);
             }
+        }
+
+        private void SetEngine(ISparkViewEngine engine)
+        {
+            _engine = engine;
+            if (_engine == null) 
+                return;
+
+            _engine.ViewFolder = new ViewSourceLoaderWrapper(this);
+            _engine.ExtensionFactory = new ViewComponentExtensionFactory(serviceProvider);
+            _engine.DefaultPageBaseType = typeof(SparkView).FullName;
+
+            if (_viewActivatorFactory != null)
+                _engine.ViewActivatorFactory = _viewActivatorFactory;
+        }
+
+        IViewSourceLoader IViewSourceLoaderContainer.ViewSourceLoader
+        {
+            get { return ViewSourceLoader; }
+            set { ViewSourceLoader = value; }
         }
 
         public override string ViewFileExtension
@@ -109,6 +120,18 @@ namespace Castle.MonoRail.Views.Spark
                     throw new CompilerException(string.Format(
                                                     "Unable to find templates layouts\\{0} or shared\\{0}",
                                                     layoutName));
+                }
+            }
+
+            if (controllerContext.ControllerDescriptor != null)
+            {
+                foreach (var helper in controllerContext.ControllerDescriptor.Helpers)
+                {
+                    var typeName = helper.HelperType.FullName;
+                    var propertyName = helper.Name ?? helper.HelperType.Name;
+                    descriptor.AddAccessor(
+                        typeName + " " + propertyName,
+                        "Helper<" + typeName + ">(\"" + propertyName + "\")");
                 }
             }
 
@@ -202,73 +225,6 @@ namespace Castle.MonoRail.Views.Spark
                                         IEngineContext context, IController controller, IControllerContext controllerContext)
         {
             throw new NotImplementedException();
-        }
-
-        IList<string> IViewFolder.ListViews(string path)
-        {
-            return ViewSourceLoader.ListViews(path);
-        }
-
-        bool IViewFolder.HasView(string path)
-        {
-            return ViewSourceLoader.HasSource(path);
-        }
-
-        IViewFile IViewFolder.GetViewSource(string path)
-        {
-            return new ViewFile(ViewSourceLoader.GetViewSource(Path.ChangeExtension(path, ViewFileExtension)));
-        }
-
-        private class ViewFile : IViewFile
-        {
-            private readonly IViewSource _source;
-
-            public ViewFile(IViewSource source)
-            {
-                _source = source;
-            }
-
-            public long LastModified
-            {
-                get { return _source.LastModified; }
-            }
-
-            public Stream OpenViewStream()
-            {
-                return _source.OpenViewStream();
-            }
-        }
-
-        readonly Dictionary<string, ViewComponentInfo> _cachedViewComponent = new Dictionary<string, ViewComponentInfo>();
-
-        ISparkExtension ISparkExtensionFactory.CreateExtension(ElementNode node)
-        {
-            var componentFactory = (IViewComponentFactory)serviceProvider.GetService(typeof(IViewComponentFactory));
-
-            ViewComponentInfo viewComponentInfo;
-            lock (_cachedViewComponent)
-            {
-
-                if (!_cachedViewComponent.TryGetValue(node.Name, out viewComponentInfo))
-                {
-                    try
-                    {
-                        viewComponentInfo = new ViewComponentInfo(componentFactory.Registry.GetViewComponent(node.Name));
-                        _cachedViewComponent.Add(node.Name, viewComponentInfo);
-                    }
-                    catch
-                    {
-                        _cachedViewComponent.Add(node.Name, null);
-                    }
-                }
-            }
-
-            if (viewComponentInfo != null)
-            {
-                return new ViewComponentExtension(node, viewComponentInfo);
-            }
-
-            return null;
         }
 
 

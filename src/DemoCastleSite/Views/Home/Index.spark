@@ -18,6 +18,8 @@
     ${Form.EndFormTag()}
   </div>
 
+    ${Magic.Tada("one ", 2)}
+    
   <Copyright year="2008"/>
 
   ${MessageBox("**<Welcome>**", "Welcome to the machine")}

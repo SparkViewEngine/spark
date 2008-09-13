@@ -16,7 +16,16 @@ using Spark;
 
 namespace SparkCastleDemo.Controllers
 {
+    public class MagicHelper :AbstractHelper
+    {
+        public string Tada(string foo, int bar)
+        {
+            return foo + (bar*5);
+        }
+    }
+
     [Layout("Default")]
+    [Helper(typeof(MagicHelper), "Magic")]
     public class HomeController : SmartDispatcherController
     {
         public void Index()

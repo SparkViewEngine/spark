@@ -79,6 +79,7 @@ namespace Castle.MonoRail.Views.Spark
         public SparkViewData ViewData { get; set; }
 
         public T Helper<T>() where T : class { return ControllerContext.Helpers[typeof(T).Name] as T; }
+        public T Helper<T>(string name) where T : class { return ControllerContext.Helpers[name] as T; }
 
         public virtual void Contextualize(IEngineContext context, IControllerContext controllerContext, SparkViewFactory viewEngine)
         {

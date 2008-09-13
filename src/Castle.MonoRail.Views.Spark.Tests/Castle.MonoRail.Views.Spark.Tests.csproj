@@ -71,6 +71,7 @@
     <None Include="MonoRail.Tests.Views\Stub\Helper.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="Helpers\HomeController.cs" />
     <Compile Include="PrecompileInstallerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkBatchCompilerTester.cs" />
@@ -131,6 +132,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="MonoRail.Tests.Views\Components\ChildContent\default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -185,10 +187,15 @@
     <None Include="MonoRail.Tests.Views\Home\ComponentBodyHtmlHasAttributes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="MonoRail.Tests.Views\Home\ControllerHelperAttributeCanBeUsed.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MonoRail.Tests.Views\Home\_PartialComponentSection.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Rescues\404.spark" />
+    <None Include="MonoRail.Tests.Views\Rescues\404.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MonoRail.Tests.Views\Shared\Ajax.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
