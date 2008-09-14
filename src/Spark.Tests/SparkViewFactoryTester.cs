@@ -362,7 +362,6 @@ namespace Spark.Tests
             mocks.ReplayAll();
             var viewContext = MakeViewContext("macros", null, data);
 
-            settings.SetDebug(true);
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();

@@ -77,6 +77,12 @@ namespace Spark.Compiler
                 {
                     compilerParameters.OutputAssembly = Path.Combine(basePath, OutputAssembly);
                 }
+                else
+                {
+                    // This should result in the assembly being loaded without keeping the file on disk
+                    compilerParameters.GenerateInMemory = true;
+                }
+
                 compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, sourceCode);
             }
 

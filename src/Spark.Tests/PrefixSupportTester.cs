@@ -19,7 +19,6 @@ namespace Spark.Tests
         public void Init()
         {
             _settings = new SparkSettings()
-                .SetDebug(true)
                 .SetPageBaseType(typeof(StubSparkView));
 
             _engine = new SparkViewEngine(_settings)
@@ -43,7 +42,6 @@ namespace Spark.Tests
         public void PrefixFromSettings()
         {
             var settings = new SparkSettings()
-                .SetDebug(true)
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetPrefix("s");
 
@@ -152,7 +150,6 @@ namespace Spark.Tests
         public void MacroAndContentPrefixesFromSettings()
         {
             _engine.Settings = new SparkSettings()
-                .SetDebug(true)
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetPrefix("s");
 

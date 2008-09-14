@@ -18,7 +18,6 @@ namespace Spark.Tests
         public void Init()
         {
             var settings = new SparkSettings()
-                .SetDebug(true)
                 .SetPageBaseType(typeof(Stubs.StubSparkView));
 
             engine = new SparkViewEngine(settings)

@@ -30,7 +30,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             services.AddService(typeof(IViewComponentFactory), viewComponentFactory);
             services.AddService(typeof(IViewComponentRegistry), viewComponentFactory.Registry);
 
-            var settings = new SparkSettings().SetDebug(true);
+            var settings = new SparkSettings();
             services.AddService(typeof(ISparkViewEngine), new SparkViewEngine(settings));
 
             factory = new SparkViewFactory();
