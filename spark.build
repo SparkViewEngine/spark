@@ -27,6 +27,7 @@
 	<property name="build.dir" value="${build.base}/${nant.settings.currentframework}.${platform::get-name()}-${project::get-name()}-${project.config}/"/>
   <property name="out.dir" value="${project::get-base-directory()}\${build.dir}" />
   
+  
 	<target name="build" depends="clean, version, init, commonassemblyinfo, compile, move-for-test, test, compile-samples"/>
 	<target name="cruise" depends="build, package"/>
   <target name="cruise-coverage" depends="analyze"/>
@@ -93,9 +94,13 @@
 		<delete dir="${results.dir}" if="${directory::exists('${results.dir}')}" verbose="true" />
 		<mkdir dir="${results.dir}"/>
 
+    <if test="${not property::exists('outputType')}">
+      <property name="outputType" value="Plain"/>
+    </if>
+    
 		<nunit2 failonerror="true" verbose="true">
 			<formatter type="Xml" outputdir="${results.dir}" usefile="true" extension=".xml"/>
-			<formatter type="Plain" />
+			<formatter type="${outputType}" />
 			<test assemblyname="${build.dir}/Spark.Tests.dll">
 				<categories>
 					<exclude name="Integration" />
