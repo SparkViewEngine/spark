@@ -176,7 +176,10 @@ namespace Castle.MonoRail.Views.Spark
             {
                 CustomActionParameters = new Dictionary<string, object>();
                 PropertyBag = new Hashtable();
+                Helpers = new HelperDictionary();
+                Resources = new Dictionary<string, IResource>();
             }
+
             public IDictionary<string, object> CustomActionParameters { get; set; }
             public IDictionary PropertyBag { get; set; }
             public HelperDictionary Helpers { get; set; }
