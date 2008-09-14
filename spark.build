@@ -27,6 +27,7 @@
 	<property name="build.dir" value="${build.base}/${nant.settings.currentframework}.${platform::get-name()}-${project::get-name()}-${project.config}/"/>
   <property name="out.dir" value="${project::get-base-directory()}\${build.dir}" />
   
+  <property name="dist.revision" value="${datetime::get-year(datetime::now())*10000+datetime::get-month(datetime::now())*100+ datetime::get-day(datetime::now())}"/>
   
 	<target name="build" depends="clean, version, init, commonassemblyinfo, compile, move-for-test, test, compile-samples"/>
 	<target name="cruise" depends="build, package"/>
@@ -54,6 +55,7 @@
 	<target name="version" description="mark AssemblyInfo builds with the build number">
 		<if test="${property::exists('CCNetLabel')}">
 			<property name="version.revision" value="${CCNetLabel}"/>
+			<property name="dist.revision" value="${project.fullversion}"/>
 		</if>
 	</target>
 
@@ -221,9 +223,10 @@
       </fileset>
     </copy>
 
-    <property name="zipdatetime" value="${datetime::get-year(datetime::now())*10000+datetime::get-month(datetime::now())*100+ datetime::get-day(datetime::now())}"/>
+		<delete dir="${build.base}/dist"/>
+		<mkdir dir="${build.base}/dist"/>
 
-    <zip zipfile="${build.base}/${project::get-name()}.${project.config}.${zipdatetime}.zip" includeemptydirs="false" >
+    <zip zipfile="${build.base}/dist/${project::get-name()}-${dist.revision}-${project.config}.zip" includeemptydirs="false" >
 			<fileset basedir="${package.dir}/">
         <include name="license.txt" />
         <include name="**/*.*"/>
@@ -232,7 +235,7 @@
 			</fileset>
 		</zip>
 
-		<zip zipfile="${build.base}/${project::get-name()}.source.${zipdatetime}.zip" includeemptydirs="false" >
+		<zip zipfile="${build.base}/dist/${project::get-name()}-${dist.revision}-source.zip" includeemptydirs="false" >
 			<fileset basedir="${trunk.dir}" >
 				<exclude name="bin/ncover/**"/>
 				<exclude name="bin/ndepend/**"/>
