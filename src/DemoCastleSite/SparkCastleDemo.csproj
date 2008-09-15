@@ -79,6 +79,7 @@
     <None Include="Views\Home\script.spark" />
     <None Include="Views\Home\ShowPage.spark" />
     <None Include="Views\Home\ViewSource.spark" />
+    <None Include="Views\Home\_Widget.spark" />
     <None Include="Views\Layouts\Default.spark" />
     <None Include="Views\Layouts\Sidebars.spark" />
     <Content Include="Views\Rescues\404.spark" />

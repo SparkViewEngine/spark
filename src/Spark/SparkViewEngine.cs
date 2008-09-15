@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Reflection;
 using Spark.Compiler;
+using Spark.Compiler.CSharp;
+using Spark.Compiler.Javascript;
 using Spark.Parser;
 using Spark;
 using Spark.FileSystem;
@@ -116,22 +118,6 @@ namespace Spark
             return entry;
         }
 
-        private ViewCompiler CreateViewCompiler(SparkViewDescriptor descriptor)
-        {
-            var pageBaseType = Settings.PageBaseType;
-            if (string.IsNullOrEmpty(pageBaseType))
-                pageBaseType = DefaultPageBaseType;
-
-            return new ViewCompiler
-                       {
-                           BaseClass = pageBaseType,
-                           Descriptor = descriptor,
-                           Debug = Settings.Debug,
-                           UseAssemblies = Settings.UseAssemblies,
-                           UseNamespaces = Settings.UseNamespaces
-                       };
-        }
-
         private ViewLoader CreateViewLoader()
         {
             return new ViewLoader
@@ -141,6 +127,33 @@ namespace Spark
                            ExtensionFactory = ExtensionFactory,
                            Prefix = Settings.Prefix
                        };
+        }
+
+        private ViewCompiler CreateViewCompiler(SparkViewDescriptor descriptor)
+        {
+            var pageBaseType = Settings.PageBaseType;
+            if (string.IsNullOrEmpty(pageBaseType))
+                pageBaseType = DefaultPageBaseType;
+
+            ViewCompiler viewCompiler;
+            switch (descriptor.Language)
+            {
+                case LanguageType.CSharp:
+                    viewCompiler = new DefaultViewCompiler();
+                    break;
+                case LanguageType.Javascript:
+                    viewCompiler = new JavascriptViewCompiler();
+                    break;
+                default:
+                    throw new CompilerException(string.Format("Unknown language type {0}", descriptor.Language));
+            }
+
+            viewCompiler.BaseClass = pageBaseType;
+            viewCompiler.Descriptor = descriptor;
+            viewCompiler.Debug = Settings.Debug;
+            viewCompiler.UseAssemblies = Settings.UseAssemblies;
+            viewCompiler.UseNamespaces = Settings.UseNamespaces;
+            return viewCompiler;
         }
 
         public Assembly BatchCompilation(IList<SparkViewDescriptor> descriptors)
@@ -166,7 +179,7 @@ namespace Spark
                 foreach (var template in descriptor.Templates)
                     templateChunks.Add(entry.Loader.Load(template));
 
-                entry.Compiler.GenerateSourceCode(entry.Loader.GetEverythingLoaded(), templateChunks);
+                entry.Compiler.GenerateSourceCode(templateChunks, entry.Loader.GetEverythingLoaded());
                 sourceCode.Add(entry.Compiler.SourceCode);
 
                 batch.Add(entry);
@@ -203,7 +216,7 @@ namespace Spark
                                 {
                                     Key = new CompiledViewHolder.Key { Descriptor = descriptor },
                                     Loader = new ViewLoader(),
-                                    Compiler = new ViewCompiler { CompiledType = type },
+                                    Compiler = new DefaultViewCompiler { CompiledType = type },
                                     Activator = ViewActivatorFactory.Register(type)
                                 };
                 CompiledViewHolder.Current.Store(entry);

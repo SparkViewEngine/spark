@@ -1,0 +1,3 @@
+﻿<var x="'everyone'"/>
+<set x="'world'"/>
+<p>Hello ${x}</p>

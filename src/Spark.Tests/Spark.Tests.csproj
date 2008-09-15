@@ -54,10 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler\ForEachInspectorTester.cs" />
     <Compile Include="DefaultResourcePathManagerTester.cs" />
     <Compile Include="FileSystem\CombinedViewFolderTester.cs" />
     <Compile Include="FileSystem\SubViewFolderTester.cs" />
     <Compile Include="ImportAndIncludeTester.cs" />
+    <Compile Include="ClientsideCompilerTester.cs" />
     <Compile Include="Visitors\BaseVisitorTester.cs" />
     <Compile Include="BatchCompilationTester.cs" />
     <Compile Include="Visitors\ChunkBuilderVisitorTester.cs" />
@@ -91,7 +93,7 @@
     <Compile Include="Stubs\StubViewData.cs" />
     <Compile Include="Stubs\StubViewFactory.cs" />
     <Compile Include="ViewActivatorTester.cs" />
-    <Compile Include="ViewCompilerTester.cs" />
+    <Compile Include="DefaultViewCompilerTester.cs" />
     <Compile Include="Parser\ViewLoaderTester.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +220,9 @@
     <EmbeddedResource Include="FileSystem\Embedded\Shared\Default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Spark.Tests.Views\Clientside\simple.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\alternate-viewdata-syntax.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

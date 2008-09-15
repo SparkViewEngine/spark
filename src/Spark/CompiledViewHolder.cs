@@ -132,7 +132,6 @@ namespace Spark
                 Activator.Release(Compiler.CompiledType ,view);
             }
         }
-
     }
 }
 

@@ -1,0 +1,20 @@
+﻿<div xmlns:s="http://sparkviewengine.com/">
+
+  <p s:if="false">fail</p>
+  <p s:elseif="false">fail</p>
+  <s:else>ok1</s:else>
+
+  <s:if condition="false">fail</s:if>
+  <s:else if="false">fail</s:else>
+  <s:elseif condition="false">fail</s:elseif>
+  <s:else>ok2</s:else>
+
+  <s:test if="false">
+    fail
+    <s:else if="false"/>
+    fail
+    <s:else/>
+    ok3
+  </s:test>
+
+</div>

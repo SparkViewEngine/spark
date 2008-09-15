@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Untitled Page</title>
+
+    <script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+    <script type="text/javascript" src="Generate.ashx/OutputContent/_UseContent"></script>
+
+    <script type="text/javascript" src="Generate.ashx/OutputContent/_ContentChangedAfterwardsIsOkay"></script>
+
+    <script type="text/javascript" src="Generate.ashx/OutputContent/_CaptureContentAsVariable"></script>
+
+    <script type="text/javascript" src="Generate.ashx/OutputContent/_BeforeAfterAndReplace"></script>
+
+</head>
+<body>
+
+    <script type="text/javascript">
+    
+    function testUseContent()
+    {
+        var contents = Spark.OutputContent._UseContent.RenderView();
+        assertContains("onealphabetatwo", contents);
+    }
+
+    function testContentChangedAfterwardsIsOkay()
+    {
+        var contents = Spark.OutputContent._ContentChangedAfterwardsIsOkay.RenderView();
+        assertContains("onealphabetatwo", contents);
+        assertContains("threealphabetagammafour", contents);
+    }
+    
+    function testCaptureContentAsVariable()
+    {
+        var contents = Spark.OutputContent._CaptureContentAsVariable.RenderView();
+        assertContains("onegrabtwo", contents);
+    }
+    
+    function testBeforeAfterAndReplace()
+    {
+        var contents = Spark.OutputContent._BeforeAfterAndReplace.RenderView();        
+        assertContains("onebeforegrabaftertwo", contents);
+    }
+    
+    </script>
+
+</body>
+</html>

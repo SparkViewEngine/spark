@@ -2,10 +2,18 @@ using System.Collections.Generic;
 
 namespace Spark
 {
+    public enum LanguageType
+    {
+        CSharp,
+        Javascript
+    }
+
     public class SparkViewDescriptor
     {
         public SparkViewDescriptor()
         {
+            //TODO: make language and accessors part of entry key
+            Language = LanguageType.CSharp;
             Templates = new List<string>();
             Accessors = new List<Accessor>();
         }
@@ -13,6 +21,7 @@ namespace Spark
         public string TargetNamespace { get; set; }
         public IList<string> Templates { get; set; }
         public IList<Accessor> Accessors { get; set; }
+        public LanguageType Language { get; set; }
 
         public class Accessor
         {
@@ -23,6 +32,12 @@ namespace Spark
         public SparkViewDescriptor SetTargetNamespace(string targetNamespace)
         {
             TargetNamespace = targetNamespace;
+            return this;
+        }
+
+        public SparkViewDescriptor SetLanguage(LanguageType language)
+        {
+            Language = language;
             return this;
         }
 

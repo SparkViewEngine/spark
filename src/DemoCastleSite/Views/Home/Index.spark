@@ -1,5 +1,9 @@
 ﻿<div>
 
+  <content:head>
+    <script type="text/javascript" src="~/home/clientside.castle"></script>
+  </content:head>
+  
   <h1>Hello world</h1>
 
   <% Logger.Warn("This is nuts"); %>
@@ -19,6 +23,8 @@
   </div>
 
     ${Magic.Tada("one ", 2)}
+    
+    <Widget/>
     
   <Copyright year="2008"/>
 

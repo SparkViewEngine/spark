@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Untitled Page</title>
+
+    <script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="Generate.ashx/CodeConstructs/_Conditionals"></script>
+    <script type="text/javascript" src="Generate.ashx/CodeConstructs/_Iteration"></script>
+
+</head>
+<body>
+
+    <script type="text/javascript">
+    
+    function testConditionals()
+    {
+        var contents = Spark.CodeConstructs._Conditionals.RenderView();
+        assertContains("ok1", contents);
+        assertContains("ok2", contents);
+        assertContains("ok3", contents);        
+    }
+
+    function testIteration()
+    {
+        var contents = Spark.CodeConstructs._Iteration.RenderView({stuff:['alpha','beta','gamma']});
+        assertContains("<p>alpha</p>", contents);
+        assertContains("<p>beta</p>", contents);
+        assertContains("<p>gamma</p>", contents);        
+    }
+
+    </script>
+
+</body>
+</html>

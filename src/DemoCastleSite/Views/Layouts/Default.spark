@@ -4,6 +4,7 @@
     <use namespace="Castle.MonoRail.Views.Spark"/>
     <title>Hello</title>
     ${Ajax.InstallScripts()}
+    <use:head/>
   </head>
   <body>
     

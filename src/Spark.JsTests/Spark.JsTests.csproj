@@ -1,0 +1,417 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E3D6EDAD-3C8F-4C0D-AD96-740566A055F3}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Spark.JsTests</RootNamespace>
+    <AssemblyName>Spark.JsTests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AllTests.html" />
+    <Content Include="Default.html" />
+    <Content Include="jsunit\app\css\jsUnitStyle.css" />
+    <Content Include="jsunit\app\emptyPage.html" />
+    <Content Include="jsunit\app\jsUnitCore.js" />
+    <Content Include="jsunit\app\jsUnitMockTimeout.js" />
+    <Content Include="jsunit\app\jsUnitTestManager.js" />
+    <Content Include="jsunit\app\jsUnitTestSuite.js" />
+    <Content Include="jsunit\app\jsUnitTracer.js" />
+    <Content Include="jsunit\app\jsUnitVersionCheck.js" />
+    <Content Include="jsunit\app\main-counts-errors.html" />
+    <Content Include="jsunit\app\main-counts-failures.html" />
+    <Content Include="jsunit\app\main-counts-runs.html" />
+    <Content Include="jsunit\app\main-counts.html" />
+    <Content Include="jsunit\app\main-data.html" />
+    <Content Include="jsunit\app\main-errors.html" />
+    <Content Include="jsunit\app\main-frame.html" />
+    <Content Include="jsunit\app\main-loader.html" />
+    <Content Include="jsunit\app\main-progress.html" />
+    <Content Include="jsunit\app\main-results.html" />
+    <Content Include="jsunit\app\main-status.html" />
+    <Content Include="jsunit\app\testContainer.html" />
+    <Content Include="jsunit\app\testContainerController.html" />
+    <Content Include="jsunit\app\xbDebug.js" />
+    <Content Include="jsunit\bin\mac\readme.txt" />
+    <Content Include="jsunit\build.xml" />
+    <Content Include="jsunit\changelog.txt" />
+    <Content Include="jsunit\css\jsUnitStyle.css" />
+    <Content Include="jsunit\images\green.gif" />
+    <Content Include="jsunit\images\logo_jsunit.gif" />
+    <Content Include="jsunit\images\powerby-transparent.gif" />
+    <Content Include="jsunit\images\red.gif" />
+    <Content Include="jsunit\java\bin\jsunit.jar" />
+    <Content Include="jsunit\java\config\farm_xwork.xml" />
+    <Content Include="jsunit\java\config\xwork.xml" />
+    <Content Include="jsunit\java\lib\ant.jar" />
+    <Content Include="jsunit\java\lib\commons-el.jar" />
+    <Content Include="jsunit\java\lib\commons-logging.jar" />
+    <Content Include="jsunit\java\lib\jasper-compiler.jar" />
+    <Content Include="jsunit\java\lib\jasper-runtime.jar" />
+    <Content Include="jsunit\java\lib\javax.servlet.jar" />
+    <Content Include="jsunit\java\lib\jdom.jar" />
+    <Content Include="jsunit\java\lib\junit.jar" />
+    <Content Include="jsunit\java\lib\ognl.jar" />
+    <Content Include="jsunit\java\lib\org.mortbay.jetty.jar" />
+    <Content Include="jsunit\java\lib\oscore.jar" />
+    <Content Include="jsunit\java\lib\rife-continuations.jar" />
+    <Content Include="jsunit\java\lib\start.jar" />
+    <Content Include="jsunit\java\lib\stop.jar" />
+    <Content Include="jsunit\java\lib\webwork-2.2-beta-4.jar" />
+    <Content Include="jsunit\java\lib\xercesImpl-2.6.2.jar" />
+    <Content Include="jsunit\java\lib\xwork-1.1.jar" />
+    <Content Include="jsunit\java\source_core\net\jsunit\BrowserLaunchSpecification.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\BrowserTestRunner.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\ClientSideConnection.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\ArgumentsConfigurationSource.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\CompositeConfigurationSource.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\Configuration.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\ConfigurationException.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\ConfigurationProperty.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\ConfigurationSource.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\DelegatingConfigurationSource.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\EnvironmentVariablesConfigurationSource.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\FarmConfiguration.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\FarmConfigurationSource.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\PropertiesFileConfigurationSource.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\configuration\ServerType.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\InvalidBrowserIdException.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\logging\BrowserResultRepository.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\logging\FileBrowserResultRepository.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\logging\StubBrowserResultRepository.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\MessageReceiver.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\AbstractResult.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\Browser.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\BrowserResult.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\BrowserResultBuilder.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\BrowserResultWriter.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\BrowserSource.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\DistributedTestRunResult.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\DistributedTestRunResultBuilder.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\Result.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\ResultType.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\TestCaseResult.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\TestCaseResultBuilder.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\TestCaseResultWriter.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\TestPageResult.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\TestRunResult.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\model\TestRunResultBuilder.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\RemoteTestRunClient.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\ServerSideConnection.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\TestRunListener.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\TestRunNotifierServer.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\utility\CollectionUtility.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\utility\FileUtility.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\utility\StreamUtility.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\utility\StringUtility.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\utility\SystemUtility.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\utility\XmlUtility.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\version\JsUnitWebsiteVersionGrabber.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\version\VersionChecker.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\version\VersionGrabber.java" />
+    <Content Include="jsunit\java\source_core\net\jsunit\XmlRenderable.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\AbstractJsUnitServer.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\BrowserResultAware.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\BrowserTestRunnerConfigurationAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\DistributedTestRunnerAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\ErrorXmlRenderable.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\FarmServerConfigurationAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\IndexAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\JsUnitBrowserTestRunnerAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\JsUnitFarmServerAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\JsUnitServerAware.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\LatestVersionAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\LatestVersionResult.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\LatestVersionSource.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\RemoteRunnerHitterAware.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\RequestSourceAware.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\ResultAcceptorAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\ResultDisplayerAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\StandaloneTestAware.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\TestRunnerAction.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\VersionGrabberAware.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\XmlProducer.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\action\XmlResult.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\BlowingUpProcessStarter.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\BrowserResultLogWriter.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\DefaultProcessStarter.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\DistributedTest.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\DistributedTestRunManager.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\DistributedTestSuiteBuilder.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\interceptor\BrowserResultInterceptor.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\interceptor\BrowserTestRunnerInterceptor.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\interceptor\BrowserTestRunnerSource.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\interceptor\DefaultBrowserTestRunnerSource.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\interceptor\FarmServerInterceptor.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\interceptor\JsUnitInterceptor.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\interceptor\RemoteRunnerHitterInterceptor.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\interceptor\RequestSourceInterceptor.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\interceptor\VersionGrabberInterceptor.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\JsUnitFarmServer.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\JsUnitServer.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\JsUnitStandardServer.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\LaunchTestRunCommand.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\NoUrlSpecifiedException.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\PlatformType.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\ProcessStarter.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\RemoteConfigurationSource.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\RemoteMachineServerHitter.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\RemoteServerHitter.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\ServerRegistry.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\StandaloneTest.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\TestRunManager.java" />
+    <Content Include="jsunit\java\source_server\net\jsunit\TimeoutChecker.java" />
+    <Content Include="jsunit\java\testlib\ashcroft.jar" />
+    <Content Include="jsunit\java\testlib\httpunit-1.5.4.jar" />
+    <Content Include="jsunit\java\testlib\js-1.5R4.1.jar" />
+    <Content Include="jsunit\java\testlib\jwebunit-1.2.jar" />
+    <Content Include="jsunit\java\testlib\nekohtml-0.8.1.jar" />
+    <Content Include="jsunit\java\testlib\xml-apis-1.0.b2.jar" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\BrowserLaunchSpecificationTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\ClientServerConnectionTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\ClientServerInteractionTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\configuration\ArgumentsConfigurationSourceTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\configuration\CompositeConfigurationSourceTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\configuration\ConfigurationSourceResolutionTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\configuration\ConfigurationTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\configuration\EnvironmentVariablesConfigurationSourceTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\configuration\PropertiesConfigurationSourceTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\DistributedTestRunResultTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\DummyBrowserResult.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\MockBrowserTestRunner.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\MockMessageReceiver.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\MockTestRunListener.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\BrowserResultTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\BrowserTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\DistributedTestRunResultBuilderTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\DummyBrowserSource.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\ExternallyShutDownBrowserResultTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\FailedToLaunchBrowserResultTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\TestCaseResultTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\TestPageResultTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\TestRunResultBuilderTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\model\TimedOutBrowerResultTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\RemoteTestRunClientTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\StubConfigurationSource.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\TestRunNotifierServerTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\TestRunResultTest.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\version\BlowingUpVersionGrabber.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\version\MockVersionGrabber.java" />
+    <Content Include="jsunit\java\tests_core\net\jsunit\version\VersionCheckerTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\AcceptorFunctionalTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\action\BlockingTestRunner.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\action\DistributedTestRunnerActionTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\action\ErrorXmlRenderableTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\action\FarmServerConfigurationActionTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\action\LatestVersionActionTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\action\ResultAcceptorActionTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\action\ResultDisplayerActionTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\action\TestRunnerActionSimultaneousRunBlockingTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\action\TestRunnerActionTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\BlowingUpRemoteServerHitter.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\BrowserResultLogWriterTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\ConfigurationFunctionalTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\DisplayerFunctionalTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\DistributedTestRunManagerTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\DistributedTestSuiteBuilderTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\DummyConfigurationSource.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\DummyFarmConfigurationSource.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\DummyHttpRequest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\EndToEndTestCase.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\ExternallyShutDownStandaloneTestTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\FailedToLaunchBrowserStandaloneTestTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\FarmServerFunctionalTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\FarmServerFunctionalTestSuite.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\FarmServerLandingPageFunctionalTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\FunctionalTestCase.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\FunctionalTestConfigurationSource.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\FunctionalTestFarmConfigurationSource.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\FunctionalTestSuite.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\ImpureUnitTestSuite.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\interceptor\BrowserResultInterceptorTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\interceptor\BrowserTestRunnerInterceptorTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\interceptor\FarmServerInterceptorTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\interceptor\MockActionInvocation.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\interceptor\RemoteRunnerHitterInterceptorTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\interceptor\RequestSourceInterceptorTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\interceptor\VersionGrabberInterceptorTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\InvalidRemoteMachinesDistributedTestTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\JsUnitFarmServerTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\JsUnitStandardServerTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\MockBrowserResultRepository.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\MockProcessStarter.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\MockRemoteServerHitter.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\OverrideURLDistributedTestTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\PureUnitTestSuite.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\RemoteConfigurationSourceFunctionalTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\RemoteConfigurationSourceTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\RemoteMachineRunnerHitterTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\ResultAcceptorTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\RunnerFunctionalTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\ServerLandingPageFunctionalTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\SpecificBrowserDistributedTestTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\SuccessfulStandaloneTestTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\TestPortManager.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\TestRunManagerTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\TimedOutBrowserStandaloneTestTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\TimeoutCheckerTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\TwoValidLocalhostsDistributedTestTest.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\UnitTestSuite.java" />
+    <Content Include="jsunit\java\tests_server\net\jsunit\UrlOverrideStandaloneTestTest.java" />
+    <Content Include="jsunit\licenses\gpl-2.txt" />
+    <Content Include="jsunit\licenses\index.html" />
+    <Content Include="jsunit\licenses\JDOM_license.txt" />
+    <Content Include="jsunit\licenses\Jetty_license.html" />
+    <Content Include="jsunit\licenses\lgpl-2.1.txt" />
+    <Content Include="jsunit\licenses\MPL-1.1.txt" />
+    <Content Include="jsunit\licenses\mpl-tri-license-c.txt" />
+    <Content Include="jsunit\licenses\mpl-tri-license-html.txt" />
+    <Content Include="jsunit\readme.txt" />
+    <Content Include="jsunit\testRunner.html" />
+    <Content Include="jsunit\tests\data\data.html" />
+    <Content Include="jsunit\tests\data\staff.css" />
+    <Content Include="jsunit\tests\data\staff.xml" />
+    <Content Include="jsunit\tests\jsUnitAssertionTests.html" />
+    <Content Include="jsunit\tests\jsUnitFrameworkUtilityTests.html" />
+    <Content Include="jsunit\tests\jsUnitMockTimeoutTest.html" />
+    <Content Include="jsunit\tests\jsUnitOnLoadTests.html" />
+    <Content Include="jsunit\tests\jsUnitRestoredHTMLDivTests.html" />
+    <Content Include="jsunit\tests\jsUnitSetUpTearDownTests.html" />
+    <Content Include="jsunit\tests\jsUnitTestLoadData.html" />
+    <Content Include="jsunit\tests\jsUnitTestLoadStaff.html" />
+    <Content Include="jsunit\tests\jsUnitTestSetUpPages.html" />
+    <Content Include="jsunit\tests\jsUnitTestSetUpPagesSuite.html" />
+    <Content Include="jsunit\tests\jsUnitTestSuite.html" />
+    <Content Include="jsunit\tests\jsUnitUtilityTests.html" />
+    <Content Include="jsunit\tests\jsUnitVersionCheckTests.html" />
+    <Content Include="SimpleTests.html" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Generate.ashx.cs">
+      <DependentUpon>Generate.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CodeConstructsTests.html" />
+    <Content Include="OutputContentTests.html" />
+    <Content Include="PartialTests.html" />
+    <Content Include="Generate.ashx" />
+    <Content Include="Scratch.html" />
+    <None Include="jsunit\app\css\readme" />
+    <None Include="jsunit\bin\mac\start-firefox.scpt" />
+    <None Include="jsunit\bin\mac\start-firefox.sh" />
+    <None Include="jsunit\bin\mac\start-safari.scpt" />
+    <None Include="jsunit\bin\mac\start-safari.sh" />
+    <None Include="jsunit\bin\mac\stop-firefox.scpt" />
+    <None Include="jsunit\bin\mac\stop-firefox.sh" />
+    <None Include="jsunit\bin\mac\stop-safari.scpt" />
+    <None Include="jsunit\bin\mac\stop-safari.sh" />
+    <None Include="jsunit\bin\unix\start-firefox.sh" />
+    <None Include="jsunit\bin\unix\stop-firefox.sh" />
+    <None Include="jsunit\index.jsp" />
+    <None Include="jsunit\jsunit.properties.sample" />
+    <None Include="jsunit\logging.properties" />
+    <None Include="jsunit\tests\data\staff.dtd" />
+    <None Include="Views\CodeConstructs\_Iteration.spark" />
+    <None Include="Views\CodeConstructs\_Conditionals.spark" />
+    <None Include="Views\OutputContent\_BeforeAfterAndReplace.spark" />
+    <None Include="Views\OutputContent\_CaptureContentAsVariable.spark" />
+    <None Include="Views\OutputContent\_ContentChangedAfterwardsIsOkay.spark" />
+    <None Include="Views\OutputContent\_UseContent.spark" />
+    <None Include="Views\Partial\_HelloWorld.spark" />
+    <None Include="Views\Partial\_UsesPartial.spark" />
+    <None Include="Views\Simple\_SetVariables.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Simple\_GlobalVariables.spark" />
+    <None Include="Views\Simple\_VariableUsage.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Simple\_LiteralHtml.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Simple\_ViewData.spark" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Spark\Spark.csproj">
+      <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
+      <Name>Spark</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="jsunit\logs\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>2990</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,4 @@
+﻿<content name="foo">alpha</content>
+<content:foo>beta</content:foo>
+
+one<use:foo/>two

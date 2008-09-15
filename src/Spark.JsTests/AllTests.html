@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Untitled Page</title>
+
+    <script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+</head>
+<body>
+
+    <script type="text/javascript">
+        function suite() {
+            var result = new top.jsUnitTestSuite();
+            result.addTestPage("/SimpleTests.html");
+            result.addTestPage("/CodeConstructsTests.html");
+            result.addTestPage("/OutputContentTests.html");
+            result.addTestPage("/PartialTests.html");
+            return result;
+        }
+    </script>
+
+</body>
+</html>

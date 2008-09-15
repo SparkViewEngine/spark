@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Untitled Page</title>
+
+    <script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+    <script type="text/javascript" src="Generate.ashx/Simple/_LiteralHtml"></script>
+    <script type="text/javascript" src="Generate.ashx/Simple/_VariableUsage"></script>
+    <script type="text/javascript" src="Generate.ashx/Simple/_ViewData"></script>
+    <script type="text/javascript" src="Generate.ashx/Simple/_SetVariables"></script>
+    <script type="text/javascript" src="Generate.ashx/Simple/_GlobalVariables"></script>
+
+</head>
+<body>
+
+    <script type="text/javascript">
+    function testHowToUseJsUnit()
+    {
+        assert(true);
+    }
+
+    function testLiteralHtml()
+    {
+        var contents = Spark.Simple._LiteralHtml.RenderView();
+        assertContains("<p>Hello world</p>", contents);
+    }
+
+    function testVariableUsage()
+    {
+        var contents = Spark.Simple._VariableUsage.RenderView();
+        assertContains("<p>Hello world</p>", contents);
+    }
+
+    function testViewData()
+    {
+        var contents = Spark.Simple._ViewData.RenderView({x:"alpha"});
+        assertContains("<p>x is alpha</p>", contents);
+    }
+    
+    function testSetVariables()
+    {
+        var contents = Spark.Simple._SetVariables.RenderView();
+        assertContains("<p>Hello world</p>", contents);
+    }
+    
+    function testGlobalVariables()
+    {
+        var contents = Spark.Simple._GlobalVariables.RenderView();
+        assertContains("<p>something:thedefault</p>", contents);
+        assertContains("<p>calls:1</p>", contents);
+
+        Spark.Simple._GlobalVariables.something = "different";
+        contents = Spark.Simple._GlobalVariables.RenderView();
+        assertContains("<p>something:different</p>", contents);
+        assertContains("<p>calls:2</p>", contents);
+    }
+
+    </script>
+
+</body>
+</html>

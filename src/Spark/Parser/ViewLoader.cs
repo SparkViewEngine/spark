@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Spark.Compiler;
-using Spark.Compiler.ChunkVisitors;
+using Spark.Compiler.CSharp.ChunkVisitors;
 using Spark.Compiler.NodeVisitors;
 using Spark.Parser.Markup;
 using Spark.FileSystem;

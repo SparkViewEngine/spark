@@ -1,0 +1,8 @@
+﻿<content name="foo">alpha</content>
+<content:foo>beta</content:foo>
+
+one<use:foo/>two
+
+<content name="foo">gamma</content>
+
+three<use:foo/>four

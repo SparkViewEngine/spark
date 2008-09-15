@@ -13,14 +13,15 @@ using System.Xml.Linq;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Helpers;
 using Spark;
+using Spark.FileSystem;
 
 namespace SparkCastleDemo.Controllers
 {
-    public class MagicHelper :AbstractHelper
+    public class MagicHelper : AbstractHelper
     {
         public string Tada(string foo, int bar)
         {
-            return foo + (bar*5);
+            return foo + (bar * 5);
         }
     }
 
@@ -30,6 +31,21 @@ namespace SparkCastleDemo.Controllers
     {
         public void Index()
         {
+        }
+
+        public void Clientside()
+        {
+            var engine = new SparkViewEngine
+                             {
+                                 ViewFolder = new VirtualPathProviderViewFolder("~/Views")
+                             };
+
+            var entry = engine.CreateEntry(new SparkViewDescriptor()
+                .SetLanguage(LanguageType.Javascript)
+                .AddTemplate("home\\_widget.spark"));
+
+            Response.ContentType = "text/javascript";
+            RenderText(entry.SourceCode);
         }
 
         public void Apply(string name, string address)
@@ -77,7 +93,7 @@ namespace SparkCastleDemo.Controllers
         [Layout("Sidebars", "Default")]
         public void Nested()
         {
-            
+
         }
     }
 }

@@ -1,0 +1,2 @@
+﻿<content var="blah">grab</content>
+one${blah}two

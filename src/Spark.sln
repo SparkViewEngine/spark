@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcContrib.SparkViewEngine"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcContrib.SparkViewEngine.Tests", "MvcContrib.SparkViewEngine.Tests\MvcContrib.SparkViewEngine.Tests.csproj", "{63B2C862-484C-4AE3-A974-BE263B7116B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.JsTests", "Spark.JsTests\Spark.JsTests.csproj", "{E3D6EDAD-3C8F-4C0D-AD96-740566A055F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{63B2C862-484C-4AE3-A974-BE263B7116B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63B2C862-484C-4AE3-A974-BE263B7116B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63B2C862-484C-4AE3-A974-BE263B7116B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3D6EDAD-3C8F-4C0D-AD96-740566A055F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3D6EDAD-3C8F-4C0D-AD96-740566A055F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3D6EDAD-3C8F-4C0D-AD96-740566A055F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3D6EDAD-3C8F-4C0D-AD96-740566A055F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
