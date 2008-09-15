@@ -33,5 +33,20 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
                 .Append(chunk.Key)
                 .AppendLine("\"];");
         }
+
+        protected override void Visit(MacroChunk chunk)
+        {
+            _source.Append("function ").Append(chunk.Name).Append("(");
+            string delimiter = "";
+            foreach (var parameter in chunk.Parameters)
+            {
+                _source.Append(delimiter).Append(parameter.Name);
+                delimiter = ", ";
+            }
+            _source.AppendLine(") {var __output__ = new StringWriter(); OutputScope(__output__);");
+            var codeVisitor = new JavascriptGeneratedCodeVisitor(_source);
+            codeVisitor.Accept(chunk.Body);
+            _source.AppendLine("DisposeOutputScope(); return __output__.toString();}");            
+        }         
     }
 }

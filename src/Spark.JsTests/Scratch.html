@@ -4,11 +4,13 @@
     <title>Untitled Page</title>
     <script type="text/javascript" src="Generate.ashx/Simple/_LiteralHtml"></script>
     <script type="text/javascript" src="Generate.ashx/Simple/_VariableUsage"></script>
+    <script type="text/javascript" src="Generate.ashx/Macros/_SimpleMacros"></script>
 </head>
 <body>
 <script type="text/javascript">
-document.write(Spark.Simple._LiteralHtml());
-document.write(Spark.Simple._VariableUsage());
+document.write(Spark.Simple._LiteralHtml.RenderView());
+document.write(Spark.Simple._VariableUsage.RenderView());
+document.write(Spark.Macros._SimpleMacros.RenderView());
 </script>
 </body>
 </html>

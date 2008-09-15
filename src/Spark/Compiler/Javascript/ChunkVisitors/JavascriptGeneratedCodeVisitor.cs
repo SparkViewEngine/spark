@@ -36,6 +36,11 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
             _source.Append(chunk.Code);
         }
 
+        protected override void Visit(MacroChunk chunk)
+        {
+            // Must not do anything here. Macro is written out in PreRender.
+        }
+
         protected override void Visit(LocalVariableChunk chunk)
         {
             if (string.IsNullOrEmpty(chunk.Value))
@@ -184,9 +189,5 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
             _source.AppendLine("DisposeOutputScope();}");
         }
 
-        protected override void Visit(MacroChunk chunk)
-        {
-            throw new NotImplementedException();
-        }         
     }
 }

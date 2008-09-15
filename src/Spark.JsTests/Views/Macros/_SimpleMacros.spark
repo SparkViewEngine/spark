@@ -1,0 +1,11 @@
+﻿
+<macro name="Box" hdr="var" contents="var">
+  <div class="box">
+    <h3>${hdr}</h3>
+    ${contents}
+  </div>
+</macro>
+
+<div id="sidebar">
+  ${Box("Note", "<p>This is text</p>")}
+</div>

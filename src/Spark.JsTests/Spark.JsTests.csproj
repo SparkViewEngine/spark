@@ -340,6 +340,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeConstructsTests.html" />
+    <Content Include="MacrosTests.html" />
     <Content Include="OutputContentTests.html" />
     <Content Include="PartialTests.html" />
     <Content Include="Generate.ashx" />
@@ -361,6 +362,7 @@
     <None Include="jsunit\tests\data\staff.dtd" />
     <None Include="Views\CodeConstructs\_Iteration.spark" />
     <None Include="Views\CodeConstructs\_Conditionals.spark" />
+    <None Include="Views\Macros\_SimpleMacros.spark" />
     <None Include="Views\OutputContent\_BeforeAfterAndReplace.spark" />
     <None Include="Views\OutputContent\_CaptureContentAsVariable.spark" />
     <None Include="Views\OutputContent\_ContentChangedAfterwardsIsOkay.spark" />
