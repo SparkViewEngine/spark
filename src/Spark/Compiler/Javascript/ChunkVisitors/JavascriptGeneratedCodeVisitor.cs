@@ -33,7 +33,7 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
 
         protected override void Visit(CodeStatementChunk chunk)
         {
-            throw new NotImplementedException();
+            _source.Append(chunk.Code);
         }
 
         protected override void Visit(LocalVariableChunk chunk)

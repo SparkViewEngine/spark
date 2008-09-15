@@ -367,6 +367,7 @@
     <None Include="Views\OutputContent\_UseContent.spark" />
     <None Include="Views\Partial\_HelloWorld.spark" />
     <None Include="Views\Partial\_UsesPartial.spark" />
+    <None Include="Views\Simple\_InlineCode.spark" />
     <None Include="Views\Simple\_SetVariables.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

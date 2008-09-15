@@ -10,7 +10,7 @@
     <script type="text/javascript" src="Generate.ashx/Simple/_ViewData"></script>
     <script type="text/javascript" src="Generate.ashx/Simple/_SetVariables"></script>
     <script type="text/javascript" src="Generate.ashx/Simple/_GlobalVariables"></script>
-
+    <script type="text/javascript" src="Generate.ashx/Simple/_InlineCode"></script>
 </head>
 <body>
 
@@ -56,6 +56,12 @@
         assertContains("<p>calls:2</p>", contents);
     }
 
+    function testInlineCode()
+    {
+        var contents = Spark.Simple._InlineCode.RenderView({x:"foo"});
+        assertContains("<p>x is foo</p>", contents);
+        assertEquals("foo", window.inlineCodeSomething);
+    }
     </script>
 
 </body>

@@ -1,0 +1,3 @@
+﻿<viewdata x="var"/>
+<p>x is ${x}</p>
+#window.inlineCodeSomething = x;
