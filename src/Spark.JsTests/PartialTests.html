@@ -6,6 +6,8 @@
     <script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
 
     <script type="text/javascript" src="Generate.ashx/Partial/_UsesPartial"></script>
+    <script type="text/javascript" src="Generate.ashx/Partial/_PartialRendersBody"></script>
+    <script type="text/javascript" src="Generate.ashx/Partial/_PartialRendersSection"></script>
 
 </head>
 <body>
@@ -19,6 +21,17 @@
         assertContains("<p>Hello world</p>", contents);
     }
 
+    function testPartialRendersBody()
+    {
+        var contents = Spark.Partial._PartialRendersBody.RenderView();
+        assertContains("<div class=\"wrapped\"><p>Hello world</p></div>", contents);
+    }
+
+    function testPartialRendersBody()
+    {
+        var contents = Spark.Partial._PartialRendersSection.RenderView();
+        assertContains("<div class=\"wrapped\"><h3>TITLE</h3><p>Hello world</p></div>", contents);
+    }
 
     </script>
 

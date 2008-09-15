@@ -127,7 +127,18 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
 
         protected override void Visit(RenderSectionChunk chunk)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(chunk.Name))
+            {
+                Accept(OuterPartial.Body);
+            }
+            else if (OuterPartial.Sections.ContainsKey(chunk.Name))
+            {
+                Accept(OuterPartial.Sections[chunk.Name]);
+            }
+            else
+            {
+                Accept(chunk.Default);
+            }
         }
 
         protected override void Visit(ScopeChunk chunk)

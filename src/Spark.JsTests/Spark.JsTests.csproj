@@ -367,6 +367,10 @@
     <None Include="Views\OutputContent\_CaptureContentAsVariable.spark" />
     <None Include="Views\OutputContent\_ContentChangedAfterwardsIsOkay.spark" />
     <None Include="Views\OutputContent\_UseContent.spark" />
+    <None Include="Views\Partial\_DivWrappedSectioned.spark" />
+    <None Include="Views\Partial\_PartialRendersSection.spark" />
+    <None Include="Views\Partial\_DivWrapped.spark" />
+    <None Include="Views\Partial\_PartialRendersBody.spark" />
     <None Include="Views\Partial\_HelloWorld.spark" />
     <None Include="Views\Partial\_UsesPartial.spark" />
     <None Include="Views\Simple\_InlineCode.spark" />
