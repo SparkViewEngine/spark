@@ -86,6 +86,28 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 			Assert.IsTrue(output.Contains("this is some text: test123"));
 		}
 
+		[Test]
+		public void NestedComponentInSection()
+		{
+			mocks.ReplayAll();
+
+			var writer = new StringWriter();
+			factory.Process("Home\\NestedComponentInSection.spark", writer, engineContext, controller, controllerContext);
+
+			var output = writer.ToString();
+			Assert.IsTrue(output.Contains("header1"));
+			Assert.IsTrue(output.Contains("header2"));
+			Assert.IsTrue(output.Contains("body1"));
+			Assert.IsTrue(output.Contains("body2"));
+			Assert.IsTrue(output.Contains("footer1"));
+			Assert.IsTrue(output.Contains("footer2"));
+
+			Assert.IsFalse(output.Contains("<header>"));
+			Assert.IsFalse(output.Contains("<body>"));
+			Assert.IsFalse(output.Contains("<footer>"));
+			Assert.IsFalse(output.Contains("</ComponentWithSections>"));
+		}
+
         [ViewComponentDetails("ComponentWithSections",Sections="header,body,footer")]
         class ComponentWithSections : ViewComponent
         {

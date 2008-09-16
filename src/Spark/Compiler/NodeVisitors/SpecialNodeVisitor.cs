@@ -28,7 +28,7 @@ namespace Spark.Compiler.NodeVisitors
         private readonly IList<string> _containingNames;
         private readonly IList<string> _nonContainingNames;
 
-        private ExtensionNode _currentExtensionNode;
+		private readonly Stack<ExtensionNode> _extensionNodes = new Stack<ExtensionNode>();
 
         private IList<Node> _nodes = new List<Node>();
         private readonly Stack<IList<Node>> _stack = new Stack<IList<Node>>();
@@ -89,7 +89,7 @@ namespace Spark.Compiler.NodeVisitors
 
                 if (!node.IsEmptyElement)
                 {
-                    _currentExtensionNode = extensionNode;
+					_extensionNodes.Push(extensionNode);
                     _stack.Push(Nodes);
                     _nodes = extensionNode.Body;
                 }
@@ -161,11 +161,11 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(EndElementNode node)
         {
-            if (_currentExtensionNode != null &&
-                string.Equals(node.Name, _currentExtensionNode.Element.Name))
+            if (_extensionNodes.Count > 0 &&
+                string.Equals(node.Name, _extensionNodes.Peek().Element.Name))
             {
                 _nodes = _stack.Pop();
-                _currentExtensionNode = null;
+				_extensionNodes.Pop();
             }
             else if (IsContainingElement(node.Name, node.Namespace))
             {

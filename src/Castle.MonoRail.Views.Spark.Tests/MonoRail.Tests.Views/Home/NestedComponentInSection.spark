@@ -1,0 +1,12 @@
+<ComponentWithSections>
+    <header>header1</header>
+    <body>
+        body1
+        <ComponentWithSections>
+            <header>header2</header>
+            <body>body2</body>
+            <footer>footer2</footer>
+        </ComponentWithSections>
+    </body>
+    <footer>footer1</footer>
+</ComponentWithSections>

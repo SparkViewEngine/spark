@@ -189,6 +189,9 @@
     <None Include="MonoRail.Tests.Views\Home\ControllerHelperAttributeCanBeUsed.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="MonoRail.Tests.Views\Home\NestedComponentInSection.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MonoRail.Tests.Views\Home\RenderingComponentWithBodyAndNoDetailsAttrib.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
