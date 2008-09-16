@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<xsd:schema
+	version="1.0" 
+	xmlns='http://sparkviewengine.com/'
+	targetNamespace='http://sparkviewengine.com/' 
+	xmlns:xsd='http://www.w3.org/2001/XMLSchema' 
+	xmlns:vs='http://schemas.microsoft.com/Visual-Studio-Intellisense' 
+	vs:ishtmlschema="false" 
+	vs:isserverschema="true"  
+	vs:htmlflavor="4.0" 
+	vs:nonbrowseable="true"	
+	vs:SuccinctFriendlyName="Spark"
+	vs:defaultns="s">
+
+	<!--
+	 Warning:																					
+	 Warning: 
+	 Warning: Do not change the TargetNamespace above 
+	 Warning: 
+	 Warning: 
+-->
+	<xsd:element name="viewdata">
+		<xsd:complexType>
+			<xsd:anyAttribute processContents="skip" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="global">
+		<xsd:complexType>
+			<xsd:attribute name="type" />
+			<xsd:anyAttribute processContents="skip" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="if">
+		<xsd:complexType mixed="true">
+			<xsd:attribute name="condition" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="use">
+		<xsd:complexType>
+			<xsd:attribute name="file" />
+			<!--
+			<xsd:attribute name="ClassID" />
+			<xsd:attribute name="Id" vs:nonfilterable="true" minOccurs="1" maxOccurs="1" vs:renametype="classmember" />
+			<xsd:attribute name="RunAt" type="runatType" vs:readonly="true" vs:nonfilterable="true" minOccurs="1" maxOccurs="1" />
+			<xsd:attribute name="Scope">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="application" />
+						<xsd:enumeration value="appinstance" />
+						<xsd:enumeration value="session" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="ProgId" />
+			-->
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="content">
+		<xsd:complexType>
+			<xsd:attribute name="name" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<!--
+	<xsd:element name="script">
+		<xsd:complexType mixed="true">
+			<xsd:attribute name="Language" vs:readonly="true" />
+			<xsd:attribute name="RunAt" type="runatType" vs:readonly="true" vs:nonfilterable="true" minOccurs="1" maxOccurs="1" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:simpleType name="runatType">
+		<xsd:restriction base="xsd:NMTOKEN">
+			<xsd:enumeration value="server" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	-->
+</xsd:schema>
