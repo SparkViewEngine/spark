@@ -131,9 +131,11 @@
 		<!-- 		
 			make a new dir for release.
 			include subfolders
-				bin
+				Bin
 					referenceDLLs
-				samples
+				Docs
+				Samples
+				Tools
 		-->
 		<delete dir="${package.dir}"/>
 		<mkdir dir="${package.dir}/" />
@@ -163,6 +165,7 @@
 
 
 		<mkdir dir="${package.dir}/Samples" />
+		
 		<copy todir="${package.dir}/Samples" >
 			<fileset basedir="${solution.dir}/">
         <exclude name="**/bin/**"/>
@@ -182,6 +185,18 @@
         <include name="/**/**" />
       </fileset>
     </copy>
+    
+    <copy todir="${package.dir}/Tools" >
+      <fileset basedir="${solution.dir}/Tools">
+        <exclude name="**/bin/**"/>
+        <exclude name="**/obj/**"/>
+        <exclude name="/**resharper**/**"/>
+				<exclude name="**/*.suo"/>
+				<exclude name="**/*.user"/>
+        <include name="/**/**" />
+      </fileset>
+    </copy>
+    
     
     <foreach item="File" property="filename">
       <in>
