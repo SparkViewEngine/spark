@@ -159,7 +159,7 @@ namespace Spark.Web.Mvc
             return descriptor;
         }
 
-        private SparkViewDescriptor CreateDescriptorInternal(string targetNamespace, string controllerName,
+        internal SparkViewDescriptor CreateDescriptorInternal(string targetNamespace, string controllerName,
                                                              string viewName, string masterName, bool findDefaultMaster,
                                                              ICollection<string> searchedLocations)
         {

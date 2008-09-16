@@ -1,0 +1,24 @@
+﻿<table class="cartdetail" width="100%">
+  <tr class="top">
+    <td></td>
+    <td>Item</td>
+    <td align="right">Total</td>
+  </tr>
+  <viewdata cart="Models.Cart"/>
+  <var type="decimal" grandTotal="0"/>
+  <tr each="var item in cart.Items">
+    <set grandTotal="grandTotal + item.Quantity * item.Product.UnitPrice"/>
+    <td align="right">
+      ${item.Quantity}
+    </td>
+    <td>${item.Product.Name}</td>
+    <td align="right">${Html.FormatPrice(item.Quantity * item.Product.UnitPrice)}</td>
+    <td>
+      <a class="cartajax" href="~/home/remove/${item.Product.Id}">[X]</a>
+    </td>
+  </tr>
+  <tr class="total" if="grandTotal != 0">
+    <td colspan="2">Grand total</td>
+    <td align="right">${Html.FormatPrice(grandTotal)}</td>
+  </tr>
+</table>

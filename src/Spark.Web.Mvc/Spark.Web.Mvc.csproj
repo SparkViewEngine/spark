@@ -64,6 +64,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="JavascriptViewResult.cs" />
     <Compile Include="Install\DescribeBatchEventArgs.cs" />
     <Compile Include="Install\DescribeBatchHandler.cs" />
     <Compile Include="Install\PrecompileInstaller.cs">
