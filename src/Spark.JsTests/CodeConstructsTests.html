@@ -6,6 +6,7 @@
     <script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
     <script type="text/javascript" src="Generate.ashx/CodeConstructs/_Conditionals"></script>
     <script type="text/javascript" src="Generate.ashx/CodeConstructs/_Iteration"></script>
+    <script type="text/javascript" src="Generate.ashx/CodeConstructs/_ForEachAutovariables"></script>
 
 </head>
 <body>
@@ -26,6 +27,14 @@
         assertContains("<p>alpha</p>", contents);
         assertContains("<p>beta</p>", contents);
         assertContains("<p>gamma</p>", contents);        
+    }
+
+    function testForEachAutovariables()
+    {
+        var contents = Spark.CodeConstructs._ForEachAutovariables.RenderView({stuff:['alpha','beta','gamma']});
+        assertContains("<p class=\"first\">0/3:alpha</p>", contents);
+        assertContains("<p>1/3:beta</p>", contents);
+        assertContains("<p class=\" last\">2/3:gamma</p>", contents);
     }
 
     </script>

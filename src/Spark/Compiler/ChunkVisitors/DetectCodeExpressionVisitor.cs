@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Spark.Compiler.ChunkVisitors;
 
-namespace Spark.Compiler.CSharp.ChunkVisitors
+namespace Spark.Compiler.ChunkVisitors
 {
     public class DetectCodeExpressionVisitor : AbstractChunkVisitor
     {

@@ -1,0 +1,3 @@
+﻿<viewdata stuff=""/>
+<p each="var item in stuff" class="first?{itemIsFirst} last?{itemIsLast}">${itemIndex}/${itemCount}:${item}</p>
+

@@ -360,6 +360,7 @@
     <None Include="jsunit\jsunit.properties.sample" />
     <None Include="jsunit\logging.properties" />
     <None Include="jsunit\tests\data\staff.dtd" />
+    <None Include="Views\CodeConstructs\_ForEachAutovariables.spark" />
     <None Include="Views\CodeConstructs\_Iteration.spark" />
     <None Include="Views\CodeConstructs\_Conditionals.spark" />
     <None Include="Views\Macros\_SimpleMacros.spark" />

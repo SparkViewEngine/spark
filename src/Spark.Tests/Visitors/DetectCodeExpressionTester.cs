@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using Spark.Compiler.CSharp.ChunkVisitors;
+using Spark.Compiler.ChunkVisitors;
 using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
 using Spark.Parser;

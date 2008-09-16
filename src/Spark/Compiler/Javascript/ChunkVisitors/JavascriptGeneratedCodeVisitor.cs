@@ -91,22 +91,93 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
             var inspector = new ForEachInspector(chunk.Code);
             if (inspector.Recognized)
             {
+                var detect = new DetectCodeExpressionVisitor(OuterPartial);
+                var autoIndex = detect.Add(inspector.VariableName + "Index");
+                var autoCount = detect.Add(inspector.VariableName + "Count");
+                var autoIsFirst = detect.Add(inspector.VariableName + "IsFirst");
+                var autoIsLast = detect.Add(inspector.VariableName + "IsLast");
+                detect.Accept(chunk.Body);
+                if (autoIsLast.Detected)
+                {
+                    autoIndex.Detected = true;
+                    autoCount.Detected = true;
+                }
+
+                if (autoCount.Detected)
+                {
+                    // var itemCount=0;for(var __iter__item in coll){++itemCount;}
+                    _source
+                        .Append("var ")
+                        .Append(inspector.VariableName)
+                        .Append("Count=0;for(var __iter__")
+                        .Append(inspector.VariableName)
+                        .Append(" in ")
+                        .Append(inspector.CollectionCode)
+                        .Append("){++")
+                        .Append(inspector.VariableName)
+                        .Append("Count;}");
+                }
+
+                if (autoIndex.Detected)
+                {
+                    // var itemIndex=0;
+                    _source.Append("var ").Append(inspector.VariableName).Append("Index=0;");
+                }
+
+                if (autoIsFirst.Detected)
+                {
+                    // var itemIsFirst=true;
+                    _source.Append("var ").Append(inspector.VariableName).Append("IsFirst=true;");
+                }
+
+                // for(var __iter__item in coll) {
                 _source
                     .Append("for (var __iter__")
                     .Append(inspector.VariableName)
                     .Append(" in ")
                     .Append(inspector.CollectionCode)
-                    .AppendLine(") {");
+                    .Append(") {");
+
+                // var item=coll[__iter__item];
                 _source
                     .Append("var ")
                     .Append(inspector.VariableName)
-                    .Append(" = ")
+                    .Append("=")
                     .Append(inspector.CollectionCode)
                     .Append("[__iter__")
                     .Append(inspector.VariableName)
-                    .AppendLine("];");
+                    .Append("];");
+
+                if (autoIsLast.Detected)
+                {
+                    // var itemIsLast=(itemIndex==itemCount-1);
+                    _source
+                        .Append("var ")
+                        .Append(inspector.VariableName)
+                        .Append("IsLast=(")
+                        .Append(inspector.VariableName)
+                        .Append("Index==")
+                        .Append(inspector.VariableName)
+                        .Append("Count-1);");
+                }
+
+                _source.AppendLine();
+
                 Accept(chunk.Body);
-                _source.Append("}");
+
+                if (autoIsFirst.Detected)
+                {
+                    // itemIsFirst=false;
+                    _source.Append(inspector.VariableName).Append("IsFirst=false;");
+                }
+
+                if (autoIndex.Detected)
+                {
+                    // ++itemIndex;
+                    _source.Append("++").Append(inspector.VariableName).Append("Index;");
+                }
+
+                _source.AppendLine("}");
             }
             else
             {
