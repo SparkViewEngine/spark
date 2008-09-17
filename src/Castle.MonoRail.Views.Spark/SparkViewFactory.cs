@@ -96,6 +96,28 @@ namespace Castle.MonoRail.Views.Spark
             return base.HasTemplate(Path.ChangeExtension(templateName, ViewFileExtension));
         }
 
+		private string LayoutPath(string layoutName)
+		{
+			if (HasTemplate(layoutName))
+			{
+				return layoutName;
+			}
+			else if (HasTemplate("Layouts\\" + layoutName))
+			{
+				return "Layouts\\" + layoutName;
+			}
+			else if (HasTemplate("Shared\\" + layoutName))
+			{
+				return "Shared\\" + layoutName;
+			}
+			else
+			{
+				throw new CompilerException(string.Format(
+											"Unable to find templates {0} or layouts\\{0} or shared\\{0}",
+											layoutName));
+			}
+		}
+
         public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller,
                                      IControllerContext controllerContext)
         {
@@ -107,20 +129,7 @@ namespace Castle.MonoRail.Views.Spark
 
             foreach (var layoutName in controllerContext.LayoutNames ?? new string[0])
             {
-                if (HasTemplate("Layouts\\" + layoutName))
-                {
-                    descriptor.Templates.Add(Path.ChangeExtension("Layouts\\" + layoutName, ViewFileExtension));
-                }
-                else if (HasTemplate("Shared\\" + layoutName))
-                {
-                    descriptor.Templates.Add(Path.ChangeExtension("Shared\\" + layoutName, ViewFileExtension));
-                }
-                else
-                {
-                    throw new CompilerException(string.Format(
-                                                    "Unable to find templates layouts\\{0} or shared\\{0}",
-                                                    layoutName));
-                }
+				descriptor.Templates.Add(Path.ChangeExtension(LayoutPath(layoutName), ViewFileExtension));
             }
 
             if (controllerContext.ControllerDescriptor != null)
