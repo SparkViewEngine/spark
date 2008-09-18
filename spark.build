@@ -190,9 +190,12 @@
       <fileset basedir="${solution.dir}/Tools">
         <exclude name="**/bin/**"/>
         <exclude name="**/obj/**"/>
-        <exclude name="/**resharper**/**"/>
+        <exclude name="*resharper*"/>
+        <exclude name="**resharper**/**"/>
 				<exclude name="**/*.suo"/>
+				<exclude name="**/*.sln"/>
 				<exclude name="**/*.user"/>
+				<exclude name="SparkVsPackage/**"/>
         <include name="/**/**" />
       </fileset>
     </copy>

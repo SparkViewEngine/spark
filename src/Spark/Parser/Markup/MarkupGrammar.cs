@@ -58,14 +58,14 @@ namespace Spark.Parser.Markup
             var paintedStatement1 = Statement1.Build(hit => new StatementNode(hit)).Paint<StatementNode, Node>();
 
             // Syntax 1: '\r'? '\n' S? '#' (statement ^('\r' | '\n') )
-            var StatementNode1 = Opt(Ch('\r')).And(Ch('\n')).And(Rep(Ch(' ', '\t'))).And(Ch('#')).And(paintedStatement1).IfNext(Ch('\r', '\n'))
+            var StatementNode1 = Opt(Ch('\r')).And(Ch('\n')).And(Rep(Ch(' ', '\t'))).And(TkDelim(Ch('#'))).And(paintedStatement1).IfNext(Ch('\r', '\n'))
                 .Build(hit => hit.Down);
 
 
             var paintedStatement2 = Statement2.Build(hit => new StatementNode(hit)).Paint<StatementNode, Node>();
 
             // Syntax 2: '<%' (statement ^'%>')  '%>' 
-            var StatementNode2 = Ch("<%").NotNext(Ch('=')).And(paintedStatement2).And(Ch("%>"))
+            var StatementNode2 = TkDelim(Ch("<%")).NotNext(Ch('=')).And(paintedStatement2).And(TkDelim(Ch("%>")))
                 .Build(hit => hit.Left.Down);
 
             Statement = StatementNode1.Or(StatementNode2);
@@ -80,7 +80,7 @@ namespace Spark.Parser.Markup
             var paintedExpression = Expression.Build(hit => new ExpressionNode(hit));
 
             // Syntax 1: ${csharp_expression}
-            var Code1 = Ch("${").And(Expression).And(Ch('}'))
+            var Code1 = TkDelim(Ch("${")).And(Expression).And(TkDelim(Ch('}')))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
             // Syntax 2: $csharp_expression;
@@ -88,12 +88,12 @@ namespace Spark.Parser.Markup
             //    .Build(hit => new ExpressionNode(hit.Left.Down));
 
             // Syntax 3: <%=csharp_expression%>;
-            var Code3 = Ch("<%=").And(Expression).And(Ch("%>"))
+            var Code3 = TkDelim(Ch("<%=")).And(Expression).And(TkDelim(Ch("%>")))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
             Code = Code1/*.Or(Code2)*/.Or(Code3);
 
-            var Condition = Ch("?{").And(Expression).And(Ch('}'))
+            var Condition = TkDelim(Ch("?{")).And(Expression).And(TkDelim(Ch('}')))
                 .Build(hit => new ConditionNode(hit.Left.Down));
 
             Text =
@@ -108,23 +108,23 @@ namespace Spark.Parser.Markup
             var EntityRefOrAmpersand = AsNode(EntityRef).Or(Ch('&').Build(hit => (Node)new TextNode("&")));
 
             //[10]   	AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
-            var AttValueSingleText = Rep1(ChNot('<', '&', '\'').Unless(Code).Unless(Condition)).Build(hit => new TextNode(hit));
-            var AttValueSingle = Apos.And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Paint())).And(Apos);
-            var AttValueDoubleText = Rep1(ChNot('<', '&', '\"').Unless(Code).Unless(Condition)).Build(hit => new TextNode(hit));
-            var AttValueDouble = Quot.And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Paint())).And(Quot);
+            var AttValueSingleText = TkAttVal(Rep1(ChNot('<', '&', '\'').Unless(Code).Unless(Condition))).Build(hit => new TextNode(hit));
+            var AttValueSingle = TkAttQuo(Apos).And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Paint())).And(TkAttQuo(Apos));
+            var AttValueDoubleText = TkAttVal(Rep1(ChNot('<', '&', '\"').Unless(Code).Unless(Condition))).Build(hit => new TextNode(hit));
+            var AttValueDouble = TkAttQuo(Quot).And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Paint())).And(TkAttQuo(Quot));
             var AttValue = AttValueSingle.Or(AttValueDouble).Left().Down();
 
 
             //[41]   	Attribute	   ::=   	 Name  Eq  AttValue  
             Attribute =
-                Name.And(Eq).And(AttValue)
+                TkAttNam(Name).And(TkDelim(Eq)).And(AttValue)
                 .Build(hit => new AttributeNode(hit.Left.Left, hit.Down)).Paint<AttributeNode, Node>();
 
 
             //[40]   	STag	   ::=   	'<' Name (S  Attribute)* S? '>'
             //[44]   	EmptyElemTag	   ::=   	'<' Name (S  Attribute)* S? '/>'
             Element =
-                Lt.And(Name).And(Rep(Whitespace.And(Attribute).Down())).And(Opt(Whitespace)).And(Opt(Ch('/'))).And(Gt)
+                TkDelim(Lt).And(TkEleNam(Name)).And(Rep(Whitespace.And(Attribute).Down())).And(Opt(Whitespace)).And(Opt(TkDelim(Ch('/')))).And(TkDelim(Gt))
                 .Build(hit => new ElementNode(
                     hit.Left.Left.Left.Left.Down,
                     hit.Left.Left.Left.Down,
@@ -132,12 +132,12 @@ namespace Spark.Parser.Markup
 
             //[42]   	ETag	   ::=   	'</' Name  S? '>'
             EndElement =
-                Lt.And(Ch('/')).And(Name).And(Opt(Whitespace)).And(Gt)
+                TkDelim(Lt.And(Ch('/'))).And(TkEleNam(Name)).And(Opt(Whitespace)).And(TkDelim(Gt))
                 .Build(hit => new EndElementNode(hit.Left.Left.Down));
 
             //[15]   	Comment	   ::=   	'<!--' ((Char - '-') | ('-' (Char - '-')))* '-->'
             Comment =
-                Ch("<!--").And(Rep(ChNot('-').Or(Ch('-').IfNext(ChNot('-'))))).And(Ch("-->"))
+                TkDelim(Ch("<!--")).And(TkComm(Rep(ChNot('-').Or(Ch('-').IfNext(ChNot('-')))))).And(TkDelim(Ch("-->")))
                 .Build(hit => new CommentNode(hit.Left.Down));
 
             //[11]   	SystemLiteral	   ::=   	('"' [^"]* '"') | ("'" [^']* "'")
@@ -207,7 +207,7 @@ namespace Spark.Parser.Markup
 
             //[16]   	PI	   ::=   	'<?' PITarget (S (Char* - (Char* '?>' Char*)))? '?>'
             ProcessingInstruction = Ch("<?").And(PITarget).And(Opt(Whitespace)).And(Rep(Ch(ch => true).Unless(Ch("?>")))).And(Ch("?>"))
-                .Build(hit=>new ProcessingInstructionNode{Name = hit.Left.Left.Left.Down, Body = new string(hit.Left.Down.ToArray())});
+                .Build(hit => new ProcessingInstructionNode { Name = hit.Left.Left.Left.Down, Body = new string(hit.Left.Down.ToArray()) });
 
             AnyNode = AsNode(Text).Paint()
                 .Or(EntityRefOrAmpersand.Paint())
@@ -222,6 +222,8 @@ namespace Spark.Parser.Markup
 
             Nodes = Rep(AnyNode);
         }
+
+
 
 
         public ParseAction<IList<char>> Whitespace;
@@ -253,4 +255,22 @@ namespace Spark.Parser.Markup
                        };
         }
     }
+
+    public enum SparkTokenType
+    {
+        Default,
+        AttributeName,
+        AttributeQuotes,
+        AttributeValue,
+        CDATASection,
+        Comment,
+        Delimiter,
+        Keyword,
+        Code,
+        ElementName,
+        Text,
+        ProcessingInstruction,
+        String
+    }
+
 }

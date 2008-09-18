@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Spark.Parser.Markup;
 
 namespace Spark.Parser.Code
 {
@@ -46,20 +47,20 @@ namespace Spark.Parser.Code
             var aposVerbatimLiteral = Ch("@'").And(Rep(aposVerbatimPiece)).And(Ch('\''))
                 .Build(hit => "@\"" + js(hit.Left.Down) + "\"");
 
-            var stringLiteral = quotStringLiteral.Or(quotVerbatimLiteral).Or(aposStringLiteral).Or(aposVerbatimLiteral);
+            var stringLiteral = TkStr(quotStringLiteral.Or(quotVerbatimLiteral).Or(aposStringLiteral).Or(aposVerbatimLiteral));
 
             var SpecialCharCast = Ch("(char)'").And(ChNot('\'', '\\').Build(ch => ch.ToString()).Or(escapeSequence)).And(Ch('\''))
                 .Build(hit => "(char)'" + hit.Left.Down + "'");
 
-            var codeStretch = Rep1(
+            var codeStretch = TkCode(Rep1(
                 Ch("[[").Build(ch => '<')
                 .Or(Ch("]]").Build(ch => '>'))
                 .Or(ChNot('\"', '\'', '{', '}'))
-                .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(SpecialCharCast)))
+                .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(SpecialCharCast))))
                 .Build(bs);
 
             // braced ::= '{' + terms + '}'
-            var braced = Ch('{').And((ParseAction<IList<string>>)FnTerms).And(Ch('}'))
+            var braced = TkDelim(Ch('{')).And((ParseAction<IList<string>>)FnTerms).And(TkDelim(Ch('}')))
                 .Build(hit => "{" + js(hit.Left.Down) + "}");
 
             // ExpressionTerms ::= (dquot | aquot | braced | codeStretch | specialCharCast)*
@@ -74,10 +75,10 @@ namespace Spark.Parser.Code
                 .Or(ChNot('\"', '\''))
                 .Unless(SpecialCharCast.Or(Ch("@\"")).Or(Ch("@'")));
 
-            var statement1Stretch = Rep1(statementPiece.Unless(Ch('\r', '\n')))
+            var statement1Stretch = TkCode(Rep1(statementPiece.Unless(Ch('\r', '\n'))))
                 .Build(bs);
 
-            var statement2Stretch = Rep1(statementPiece.Unless(Ch("%>")))
+            var statement2Stretch = TkCode(Rep1(statementPiece.Unless(Ch("%>"))))
                 .Build(bs);
 
             // Statement1 ::= (dquot | aquot | statement1Stretch | specialCharCast)*
@@ -100,5 +101,31 @@ namespace Spark.Parser.Code
         {
             return ExpressionTerms(position);
         }
+
+        protected static ParseAction<TValue> TkAttNam<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.AttributeName, parser); }
+        protected static ParseAction<TValue> TkAttQuo<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.AttributeQuotes, parser); }
+        protected static ParseAction<TValue> TkAttVal<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.AttributeValue, parser); }
+        protected static ParseAction<TValue> TkCDATA<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.CDATASection, parser); }
+        protected static ParseAction<TValue> TkComm<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.Comment, parser); }
+        protected static ParseAction<TValue> TkDelim<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.Delimiter, parser); }
+        protected static ParseAction<TValue> TkKword<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.Keyword, parser); }
+        protected static ParseAction<TValue> TkCode<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.Code, parser); }
+        protected static ParseAction<TValue> TkEleNam<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.ElementName, parser); }
+        protected static ParseAction<TValue> TkText<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.Text, parser); }
+        protected static ParseAction<TValue> TkPI<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.ProcessingInstruction, parser); }
+        protected static ParseAction<TValue> TkStr<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.String, parser); }
+
     }
 }

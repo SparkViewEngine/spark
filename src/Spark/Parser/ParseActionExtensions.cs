@@ -113,5 +113,27 @@ namespace Spark.Parser
         {
             return Grammar.Paint(value, parser);
         }
+
+        //public static ParseAction<TValue> TokenText<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.Text); }
+        //public static ParseAction<TValue> TokenKeyword<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.Keyword); }
+        //public static ParseAction<TValue> TokenIdentifier<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.Identifier); }
+        //public static ParseAction<TValue> TokenString<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.String); }
+        //public static ParseAction<TValue> TokenLiteral<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.Literal); }
+        //public static ParseAction<TValue> TokenOperator<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.Operator); }
+        //public static ParseAction<TValue> TokenDelimiter<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.Delimiter); }
+        //public static ParseAction<TValue> TokenWhiteSpace<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.WhiteSpace); }
+        //public static ParseAction<TValue> TokenLineComment<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.LineComment); }
+        //public static ParseAction<TValue> TokenComment<TValue>(this ParseAction<TValue> parser)
+        //{ return parser.Paint(SparkTokenType.Comment); }
     }
+
 }
