@@ -58,6 +58,7 @@
     <Compile Include="DefaultResourcePathManagerTester.cs" />
     <Compile Include="FileSystem\CombinedViewFolderTester.cs" />
     <Compile Include="FileSystem\SubViewFolderTester.cs" />
+    <Compile Include="FileSystem\ViewFolderSettingsTester.cs" />
     <Compile Include="ImportAndIncludeTester.cs" />
     <Compile Include="ClientsideCompilerTester.cs" />
     <Compile Include="Visitors\BaseVisitorTester.cs" />

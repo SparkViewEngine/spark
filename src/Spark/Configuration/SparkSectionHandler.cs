@@ -37,6 +37,12 @@ namespace Spark.Configuration
             set { this["pages"] = value; }
         }
 
+        [ConfigurationProperty("views")]
+        public ViewFolderElementCollection Views
+        {
+            get { return (ViewFolderElementCollection)this["views"]; }
+            set { this["views"] = value; }
+        }
 
         public SparkSectionHandler SetDebug(bool debug)
         {
@@ -90,36 +96,39 @@ namespace Spark.Configuration
             set { Pages.PageBaseType = value; }
         }
 
-        IList<string> ISparkSettings.UseNamespaces
+        IEnumerable<string> ISparkSettings.UseNamespaces
         {
             get
             {
-                var result = new List<string>();
                 foreach (NamespaceElement ns in Pages.Namespaces)
-                    result.Add(ns.Namespace);
-                return result;
+                    yield return ns.Namespace;
             }
         }
 
-        IList<string> ISparkSettings.UseAssemblies
+        IEnumerable<string> ISparkSettings.UseAssemblies
         {
             get
             {
-                var result = new List<string>();
                 foreach (AssemblyElement assembly in Compilation.Assemblies)
-                    result.Add(assembly.Assembly);
-                return result;
+                    yield return assembly.Assembly;
             }
         }
 
-        public IList<ResourceMapping> ResourceMappings
+        IEnumerable<ResourceMapping> ISparkSettings.ResourceMappings
         {
             get
             {
-                var result = new List<ResourceMapping>();
                 foreach (ResourcePathElement resource in Pages.Resources)
-                    result.Add(new ResourceMapping { Match = resource.Match, Location = resource.Location });
-                return result;
+                    yield return new ResourceMapping { Match = resource.Match, Location = resource.Location };
+            }
+        }
+
+        IEnumerable<IViewFolderSettings> ISparkSettings.ViewFolders
+        {
+            get
+            {
+                foreach (ViewFolderElement viewFolder in Views)
+                    yield return viewFolder;
             }
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Spark.FileSystem;
 
 namespace Spark
 {
@@ -10,18 +11,39 @@ namespace Spark
     {
         public SparkSettings()
         {
-            UseNamespaces = new List<string>();
-            UseAssemblies = new List<string>();
-            ResourceMappings = new List<ResourceMapping>();
+            _useNamespaces = new List<string>();
+            _useAssemblies = new List<string>();
+            _resourceMappings = new List<ResourceMapping>();
+            _viewFolders = new List<IViewFolderSettings>();
         }
 
         public bool Debug { get; set; }
         public string Prefix { get; set; }
         public string PageBaseType { get; set; }
 
-        public IList<string> UseNamespaces { get; set; }
-        public IList<string> UseAssemblies { get; set; }
-        public IList<ResourceMapping> ResourceMappings { get; set; }
+        private readonly IList<string> _useNamespaces;
+        public IEnumerable<string> UseNamespaces
+        {
+            get { return _useNamespaces; }
+        }
+
+        private readonly IList<string> _useAssemblies;
+        public IEnumerable<string> UseAssemblies
+        {
+            get { return _useAssemblies; }
+        }
+
+        private readonly IList<ResourceMapping> _resourceMappings;
+        public IEnumerable<ResourceMapping> ResourceMappings
+        {
+            get { return _resourceMappings; }
+        }
+
+        private readonly IList<IViewFolderSettings> _viewFolders;
+        public IEnumerable<IViewFolderSettings> ViewFolders
+        {
+            get { return _viewFolders; }
+        }
 
         public SparkSettings SetDebug(bool debug)
         {
@@ -43,19 +65,19 @@ namespace Spark
 
         public SparkSettings AddAssembly(string assembly)
         {
-            UseAssemblies.Add(assembly);
+            _useAssemblies.Add(assembly);
             return this;
         }
 
         public SparkSettings AddAssembly(Assembly assembly)
         {
-            UseAssemblies.Add(assembly.FullName);
+            _useAssemblies.Add(assembly.FullName);
             return this;
         }
 
         public SparkSettings AddNamespace(string ns)
         {
-            UseNamespaces.Add(ns);
+            _useNamespaces.Add(ns);
             return this;
         }
 
@@ -67,7 +89,28 @@ namespace Spark
 
         public SparkSettings AddResourceMapping(string match, string replace)
         {
-            ResourceMappings.Add(new ResourceMapping { Match = match, Location = replace });
+            _resourceMappings.Add(new ResourceMapping { Match = match, Location = replace });
+            return this;
+        }
+
+        public SparkSettings AddViewFolder(ViewFolderType type, IDictionary<string, string> parameters)
+        {
+            _viewFolders.Add(new ViewFolderSettings
+                                 {
+                                     FolderType = type,
+                                     Parameters = parameters
+                                 });
+            return this;
+        }
+
+        public SparkSettings AddViewFolder(Type customType, IDictionary<string, string> parameters)
+        {
+            _viewFolders.Add(new ViewFolderSettings
+                                 {
+                                     FolderType = ViewFolderType.Custom,
+                                     Type = customType.AssemblyQualifiedName,
+                                     Parameters = parameters
+                                 });
             return this;
         }
     }

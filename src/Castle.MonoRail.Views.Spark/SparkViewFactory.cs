@@ -93,29 +93,24 @@ namespace Castle.MonoRail.Views.Spark
 
         public override bool HasTemplate(string templateName)
         {
-            return base.HasTemplate(Path.ChangeExtension(templateName, ViewFileExtension));
+            //return base.HasTemplate(Path.ChangeExtension(templateName, ViewFileExtension));
+            return Engine.ViewFolder.HasView(Path.ChangeExtension(templateName, ViewFileExtension));
         }
 
 		private string LayoutPath(string layoutName)
 		{
-			if (HasTemplate(layoutName))
-			{
+		    if (HasTemplate(layoutName))
 				return layoutName;
-			}
-			else if (HasTemplate("Layouts\\" + layoutName))
-			{
-				return "Layouts\\" + layoutName;
-			}
-			else if (HasTemplate("Shared\\" + layoutName))
-			{
-				return "Shared\\" + layoutName;
-			}
-			else
-			{
-				throw new CompilerException(string.Format(
-											"Unable to find templates {0} or layouts\\{0} or shared\\{0}",
-											layoutName));
-			}
+
+            if (HasTemplate("Layouts\\" + layoutName))
+		        return "Layouts\\" + layoutName;
+		    
+		    if (HasTemplate("Shared\\" + layoutName))
+		        return "Shared\\" + layoutName;
+
+            throw new CompilerException(string.Format(
+		                                    "Unable to find templates {0} or layouts\\{0} or shared\\{0}",
+		                                    layoutName));
 		}
 
         public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller,

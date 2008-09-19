@@ -16,6 +16,11 @@ namespace Spark.FileSystem
             _virtualBaseDir = virtualBaseDir.TrimEnd('/', '\\') + "/";
         }
 
+        public string VirtualBaseDir
+        {
+            get { return _virtualBaseDir; }
+        }
+
         public IViewFile GetViewSource(string path)
         {
             var file = HostingEnvironment.VirtualPathProvider.GetFile(Combine(path));
@@ -35,7 +40,7 @@ namespace Spark.FileSystem
             {
                 get
                 {
-                    var hash = HostingEnvironment.VirtualPathProvider.GetFileHash(_file.VirtualPath, new string[0]);
+                    var hash = HostingEnvironment.VirtualPathProvider.GetFileHash(_file.VirtualPath, new[] { _file.VirtualPath });
                     return hash.GetHashCode();
                 }
             }
@@ -60,9 +65,9 @@ namespace Spark.FileSystem
         private string Combine(string path)
         {
             if (string.IsNullOrEmpty(path))
-                return _virtualBaseDir;
+                return VirtualBaseDir;
 
-            return HostingEnvironment.VirtualPathProvider.CombineVirtualPaths(_virtualBaseDir, path);
+            return HostingEnvironment.VirtualPathProvider.CombineVirtualPaths(VirtualBaseDir, path);
             //return _virtualBaseDir.TrimEnd('/', '\\') + '/' + path.TrimStart('/', '\\');
         }
     }

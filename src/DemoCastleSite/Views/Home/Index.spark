@@ -4,7 +4,7 @@
     <script type="text/javascript" src="~/home/clientside.castle"></script>
   </content:head>
   
-  <h1>Hello world</h1>
+  <h1>Hello world?</h1>
 
   <% Logger.Warn("This is nuts"); %>
 

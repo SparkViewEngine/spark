@@ -14,9 +14,13 @@
    limitations under the License.
 */
 
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Reflection;
+using System.Web.Hosting;
 using Spark.Compiler;
 using Spark.Compiler.CSharp;
 using Spark.Compiler.Javascript;
@@ -41,7 +45,87 @@ namespace Spark
             ViewActivatorFactory = new DefaultViewActivator();
         }
 
-        public IViewFolder ViewFolder { get; set; }
+        private IViewFolder _viewFolder;
+        public IViewFolder ViewFolder
+        {
+            get
+            {
+                if (_viewFolder == null)
+                    SetViewFolder(DefaultViewFolder());
+                return _viewFolder;
+            }
+            set { SetViewFolder(value); }
+        }
+
+        private static IViewFolder DefaultViewFolder()
+        {
+            if (HostingEnvironment.IsHosted && HostingEnvironment.VirtualPathProvider != null)
+                return new VirtualPathProviderViewFolder("~/Views");
+            var appBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            return new FileSystemViewFolder(Path.Combine(appBase, "Views"));
+        }
+
+        private void SetViewFolder(IViewFolder value)
+        {
+            var aggregateViewFolder = value;
+            foreach(var viewFolderSettings in Settings.ViewFolders)
+            {
+                IViewFolder viewFolder = ActivateViewFolder(viewFolderSettings);
+                if (!string.IsNullOrEmpty(viewFolderSettings.Subfolder))
+                    viewFolder = new SubViewFolder(viewFolder, viewFolderSettings.Subfolder);
+                aggregateViewFolder = aggregateViewFolder.Append(viewFolder);
+
+            }
+            _viewFolder = aggregateViewFolder;
+        }
+
+        private IViewFolder ActivateViewFolder(IViewFolderSettings viewFolderSettings)
+        {
+            Type type;
+            switch(viewFolderSettings.FolderType)
+            {
+                case ViewFolderType.FileSystem:
+                    type = typeof (FileSystemViewFile);
+                    break;
+                case ViewFolderType.EmbeddedResource:
+                    type = typeof(EmbeddedViewFolder);
+                    break;
+                case ViewFolderType.VirtualPathProvider:
+                    type = typeof (VirtualPathProviderViewFolder);
+                    break;
+                case ViewFolderType.Custom:
+                    type = Type.GetType(viewFolderSettings.Type);
+                    break;
+                default:
+                    throw new ArgumentException("Unknown value for view folder type");
+            }
+
+            ConstructorInfo bestConstructor = null;
+            foreach(var constructor in type.GetConstructors())
+            {
+                if (bestConstructor == null || bestConstructor.GetParameters().Length < constructor.GetParameters().Length)
+                {
+                    if (constructor.GetParameters().All(param => viewFolderSettings.Parameters.ContainsKey(param.Name)))
+                    {
+                        bestConstructor = constructor;
+                    }
+                }
+            }
+            if (bestConstructor == null)
+                throw new MissingMethodException(string.Format("No suitable constructor for {0} located", type.FullName));
+            var args = bestConstructor.GetParameters()
+                .Select(param => ChangeType(viewFolderSettings, param))
+                .ToArray(); 
+            return (IViewFolder)Activator.CreateInstance(type, args);
+        }
+
+        private object ChangeType(IViewFolderSettings viewFolderSettings, ParameterInfo param)
+        {
+            if (param.ParameterType == typeof(Assembly))
+                return Assembly.Load(viewFolderSettings.Parameters[param.Name]);
+
+            return Convert.ChangeType(viewFolderSettings.Parameters[param.Name], param.ParameterType);
+        }
 
         private IResourcePathManager _resourcePathManager;
         public IResourcePathManager ResourcePathManager

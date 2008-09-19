@@ -23,6 +23,11 @@ namespace Spark.FileSystem
         {
             var vppFolder = new SubViewFolder(new VirtualPathProviderViewFolder(virtualPath), "Layouts");
             return Append(viewFolder, vppFolder);
-        }        
+        }
+
+        public static IViewFolder ApplySettings(this IViewFolder viewFolder, ISparkSettings settings)
+        {
+            return viewFolder;
+        }
     }
 }

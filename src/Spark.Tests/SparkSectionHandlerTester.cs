@@ -57,8 +57,8 @@ namespace Spark.Tests
                 .AddAssembly("Spark.Tests");
 
             Assert.IsTrue(settings.Debug);
-            Assert.AreEqual(3, settings.UseNamespaces.Count);
-            Assert.AreEqual(2, settings.UseAssemblies.Count);
+            Assert.AreEqual(3, settings.UseNamespaces.Count());
+            Assert.AreEqual(2, settings.UseAssemblies.Count());
         }
 
         [Test]

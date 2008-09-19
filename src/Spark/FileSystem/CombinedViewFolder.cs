@@ -16,19 +16,29 @@ namespace Spark.FileSystem
             _second = second;
         }
 
+        public IViewFolder First
+        {
+            get { return _first; }
+        }
+
+        public IViewFolder Second
+        {
+            get { return _second; }
+        }
+
         public IViewFile GetViewSource(string path)
         {
-            return _first.HasView(path) ? _first.GetViewSource(path) : _second.GetViewSource(path);
+            return First.HasView(path) ? First.GetViewSource(path) : Second.GetViewSource(path);
         }
 
         public IList<string> ListViews(string path)
         {
-            return _first.ListViews(path).Union(_second.ListViews(path)).Distinct().ToArray();
+            return First.ListViews(path).Union(Second.ListViews(path)).Distinct().ToArray();
         }
 
         public bool HasView(string path)
         {
-            return _first.HasView(path) || _second.HasView(path);
+            return First.HasView(path) || Second.HasView(path);
         }
     }
 }

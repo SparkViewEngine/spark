@@ -80,8 +80,8 @@
     <None Include="Views\Home\ShowPage.spark" />
     <None Include="Views\Home\ViewSource.spark" />
     <None Include="Views\Home\_Widget.spark" />
-    <None Include="Views\Layouts\Default.spark" />
-    <None Include="Views\Layouts\Sidebars.spark" />
+    <None Include="Masters\Default.spark" />
+    <None Include="Masters\Sidebars.spark" />
     <Content Include="Views\Rescues\404.spark" />
     <None Include="Views\Shared\Default.spark" />
     <None Include="Views\Home\Nested.spark" />

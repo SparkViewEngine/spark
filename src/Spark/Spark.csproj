@@ -100,6 +100,9 @@
     <Compile Include="Configuration\ResourcePathElement.cs" />
     <Compile Include="Configuration\PagesElement.cs" />
     <Compile Include="Configuration\ResourcePathElementCollection.cs" />
+    <Compile Include="Configuration\ViewFolderElement.cs" />
+    <Compile Include="Configuration\ViewFolderElementCollection.cs" />
+    <Compile Include="FileSystem\ViewFolderType.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DefaultResourcePathManager.cs" />
     <Compile Include="DefaultViewActivator.cs" />
