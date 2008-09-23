@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System.IO;
+using System.Reflection;
 using Castle.MonoRail.Framework;
 using NUnit.Framework;
+using Spark.FileSystem;
 
 namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 {
@@ -67,6 +69,28 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             Assert.IsTrue(output.Contains("<p class=\"message\">!!Delta!!</p>"));
         }
 
+        [Test]
+        public void ComponentRenderViewFromEmbeddedResource()
+        {
+            viewComponentFactory.Registry.AddViewComponent("UseEmbeddedViews", typeof(UseEmbeddedViews));
+
+            var embeddedViewFolder = new EmbeddedViewFolder(
+                Assembly.Load("Castle.MonoRail.Views.Spark.Tests"),
+                "Castle.MonoRail.Views.Spark.Tests.EmbeddedViews");
+
+            engine.ViewFolder = engine.ViewFolder.Append(embeddedViewFolder);
+
+            mocks.ReplayAll();
+
+            var writer = new StringWriter();
+            factory.Process("Home\\ComponentRenderViewFromEmbeddedResource.spark", writer, engineContext, controller, controllerContext);
+
+            mocks.VerifyAll();
+
+            var content = writer.ToString();
+            Assert.That(content.Contains("<p>This was embedded</p>"));
+        }
+
         [ViewComponentDetails("WidgetComponent")]
         public class WidgetComponent : ViewComponent
         {
@@ -87,6 +111,15 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                 PropertyBag["Mode"] = Mode;
                 PropertyBag["ExtraData"] = ExtraData;
                 RenderView("withextradata");
+            }
+        }
+
+        [ViewComponentDetails("UseEmbeddedViews")]
+        public class UseEmbeddedViews : ViewComponent
+        {
+            public override void Render()
+            {
+                RenderView("default");
             }
         }
     }

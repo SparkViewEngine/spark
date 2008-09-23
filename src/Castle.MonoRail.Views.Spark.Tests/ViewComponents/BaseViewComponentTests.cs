@@ -15,6 +15,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         protected StubEngineContext engineContext;
         protected SparkViewFactory factory;
         protected IController controller;
+        protected SparkViewEngine engine;
 
         [SetUp]
         public virtual void Init()
@@ -31,7 +32,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             services.AddService(typeof(IViewComponentRegistry), viewComponentFactory.Registry);
 
             var settings = new SparkSettings();
-            services.AddService(typeof(ISparkViewEngine), new SparkViewEngine(settings));
+            engine = new SparkViewEngine(settings);
+            services.AddService(typeof(ISparkViewEngine), engine);
 
             factory = new SparkViewFactory();
             factory.Service(services);

@@ -54,7 +54,7 @@ namespace Castle.MonoRail.Views.Spark
         public void RenderView(string name, TextWriter writer)
         {
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add(name);
+            descriptor.Templates.Add(Path.ChangeExtension(name, ".spark"));
             var entry = _viewEngine.Engine.CreateEntry(descriptor);
             var view = (SparkView)entry.CreateInstance();
 
