@@ -61,7 +61,8 @@ namespace Castle.MonoRail.Views.Spark
                     SetEngine(new SparkViewEngine());
                 return _engine;
             }
-            set {
+            set
+            {
                 SetEngine(value);
             }
         }
@@ -69,7 +70,7 @@ namespace Castle.MonoRail.Views.Spark
         private void SetEngine(ISparkViewEngine engine)
         {
             _engine = engine;
-            if (_engine == null) 
+            if (_engine == null)
                 return;
 
             _engine.ViewFolder = new ViewSourceLoaderWrapper(this);
@@ -97,21 +98,21 @@ namespace Castle.MonoRail.Views.Spark
             return Engine.ViewFolder.HasView(Path.ChangeExtension(templateName, ViewFileExtension));
         }
 
-		private string LayoutPath(string layoutName)
-		{
-		    if (HasTemplate(layoutName))
-				return layoutName;
+        private string LayoutPath(string layoutName)
+        {
+            if (HasTemplate(layoutName))
+                return layoutName;
 
             if (HasTemplate("Layouts\\" + layoutName))
-		        return "Layouts\\" + layoutName;
-		    
-		    if (HasTemplate("Shared\\" + layoutName))
-		        return "Shared\\" + layoutName;
+                return "Layouts\\" + layoutName;
+
+            if (HasTemplate("Shared\\" + layoutName))
+                return "Shared\\" + layoutName;
 
             throw new CompilerException(string.Format(
-		                                    "Unable to find templates {0} or layouts\\{0} or shared\\{0}",
-		                                    layoutName));
-		}
+                                            "Unable to find templates {0} or layouts\\{0} or shared\\{0}",
+                                            layoutName));
+        }
 
         public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller,
                                      IControllerContext controllerContext)
@@ -124,7 +125,7 @@ namespace Castle.MonoRail.Views.Spark
 
             foreach (var layoutName in controllerContext.LayoutNames ?? new string[0])
             {
-				descriptor.Templates.Add(Path.ChangeExtension(LayoutPath(layoutName), ViewFileExtension));
+                descriptor.Templates.Add(Path.ChangeExtension(LayoutPath(layoutName), ViewFileExtension));
             }
 
             if (controllerContext.ControllerDescriptor != null)
@@ -154,7 +155,7 @@ namespace Castle.MonoRail.Views.Spark
             IEngineContext engineContext = null;
             if (HttpContext.Current != null)
             {
-                engineContext = (IEngineContext) HttpContext.Current.Items["currentmrengineinstance"];
+                engineContext = (IEngineContext)HttpContext.Current.Items["currentmrengineinstance"];
             }
 
             var controllerContext = new BasicControllerContext
@@ -163,7 +164,7 @@ namespace Castle.MonoRail.Views.Spark
                                         };
 
             if (!string.IsNullOrEmpty(layoutName))
-                controllerContext.LayoutNames = new[] {layoutName};
+                controllerContext.LayoutNames = new[] { layoutName };
 
             if (parameters != null)
             {
@@ -264,6 +265,18 @@ namespace Castle.MonoRail.Views.Spark
             if (includeViews.Count == 0)
                 includeViews = new[] { "*" };
 
+            var accessors = new List<SparkViewDescriptor.Accessor>();
+            foreach (var helper in metaDesc.Helpers)
+            {
+                var typeName = helper.HelperType.FullName;
+                var propertyName = helper.Name ?? helper.HelperType.Name;
+                accessors.Add(new SparkViewDescriptor.Accessor
+                                  {
+                                      Property = typeName + " " + propertyName,
+                                      GetValue = "Helper<" + typeName + ">(\"" + propertyName + "\")"
+                                  });
+            }
+
             foreach (var include in includeViews)
             {
                 if (include.EndsWith("*"))
@@ -315,6 +328,8 @@ namespace Castle.MonoRail.Views.Spark
                 {
                     if (metaDesc.Layout != null)
                         layoutNamesList = new[] { metaDesc.Layout.LayoutNames };
+                    else
+                        layoutNamesList = new[] { new string[0] };
                 }
 
                 foreach (var layoutNames in layoutNamesList)
@@ -323,18 +338,21 @@ namespace Castle.MonoRail.Views.Spark
                                         entry.ControllerType.Namespace,
                                         controllerPath,
                                         viewName,
-                                        layoutNames));
+                                        layoutNames,
+                                        accessors));
                 }
             }
 
             return descriptors;
         }
 
+
         private SparkViewDescriptor CreateDescriptor(
             string targetNamespace,
             string controllerPath,
             string viewName,
-            IList<string> layouts)
+            IList<string> layouts,
+            IEnumerable<SparkViewDescriptor.Accessor> accessors)
         {
             var descriptor = new SparkViewDescriptor
             {
@@ -366,6 +384,11 @@ namespace Castle.MonoRail.Views.Spark
                                                     "Unable to find templates layouts\\{0}.spark or shared\\{0}.spark",
                                                     layoutName));
                 }
+            }
+
+            foreach(var accessor in accessors)
+            {
+                descriptor.AddAccessor(accessor.Property, accessor.GetValue);
             }
 
             return descriptor;

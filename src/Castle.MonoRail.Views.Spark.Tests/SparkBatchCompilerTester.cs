@@ -1,10 +1,12 @@
 ﻿using Castle.MonoRail.Framework;
+using Castle.MonoRail.Framework.Helpers;
 using Castle.MonoRail.Framework.Test;
 using Castle.MonoRail.Views.Spark;
 using Castle.MonoRail.Views.Spark.Tests.Stubs;
 using NUnit.Framework;
 using Spark;
 using System.Linq;
+using Spark.FileSystem;
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
@@ -119,8 +121,29 @@ namespace Castle.MonoRail.Views.Spark.Tests
             
             // no templates
             Assert.That(descriptors.SelectMany(d=>d.Templates).All(t=>!t.Contains("Helper")));
-
         }
 
+        [Test]
+        public void ControllersWithHelpersGenerateAccessors()
+        {
+            var batch = new SparkBatchDescriptor();
+            batch.For<FooController>().Include("index");
+            _factory.Engine.ViewFolder = new InMemoryViewFolder {{"foo\\index.spark", "<p>foo</p>"}};
+            var descriptors = _factory.CreateDescriptors(batch);
+            Assert.AreEqual(1, descriptors.Count);
+            Assert.AreEqual(1, descriptors[0].Accessors.Count);
+            Assert.AreEqual(typeof(FooHelper).FullName + " Foo", descriptors[0].Accessors[0].Property);            
+        }
+    }
+
+
+    [Helper(typeof(FooHelper), "Foo")]
+    public class FooController : Controller
+    {
+
+    }
+
+    public class FooHelper : AbstractHelper
+    {
     }
 }
