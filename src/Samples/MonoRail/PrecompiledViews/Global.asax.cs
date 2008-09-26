@@ -45,11 +45,5 @@ namespace PrecompiledViews
             factory.Engine.LoadBatchCompilation(precompiled);
         }
 
-        public static void FillBatchDescriptor(SparkBatchDescriptor batch)
-        {
-            batch
-                .For<HomeController>().Include("*")
-                .For<AccountController>();
-        }
     }
 }

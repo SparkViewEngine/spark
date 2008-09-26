@@ -61,6 +61,9 @@
     <Compile Include="FileSystem\ViewFolderSettingsTester.cs" />
     <Compile Include="ImportAndIncludeTester.cs" />
     <Compile Include="ClientsideCompilerTester.cs" />
+    <Compile Include="Precompiled\ComplexPrecompileController.cs" />
+    <Compile Include="Precompiled\SimplePrecompileController.cs" />
+    <Compile Include="SparkBatchDescriptorTester.cs" />
     <Compile Include="Visitors\BaseVisitorTester.cs" />
     <Compile Include="BatchCompilationTester.cs" />
     <Compile Include="Visitors\ChunkBuilderVisitorTester.cs" />

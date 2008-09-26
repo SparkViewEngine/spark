@@ -142,6 +142,7 @@
     <Compile Include="Parser\Syntax\CSharpSyntaxProvider.cs" />
     <Compile Include="Parser\Syntax\DefaultSyntaxProvider.cs" />
     <Compile Include="Parser\ViewLoader.cs" />
+    <Compile Include="PrecompileAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkBatchDescriptor.cs" />
     <Compile Include="SparkSettings.cs" />

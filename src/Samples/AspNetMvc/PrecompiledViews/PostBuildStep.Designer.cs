@@ -33,8 +33,7 @@
             // precompileInstaller1
             // 
             this.precompileInstaller1.TargetAssemblyFile = "Precompiled.dll";
-            this.precompileInstaller1.DescribeBatch += new Spark.Web.Mvc.Install.DescribeBatchHandler(this.precompileInstaller1_DescribeBatch);
-            this.precompileInstaller1.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.precompileInstaller1_AfterInstall_1);
+
             // 
             // PostBuildStep
             // 

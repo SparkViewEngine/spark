@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
 using System.Configuration.Install;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Test;
@@ -70,8 +67,12 @@ namespace Castle.MonoRail.Views.Spark.Install
             factory.Service(services);
 
             // And generate all of the known view/master templates into the target assembly
-
             var batch = new SparkBatchDescriptor(targetPath);
+
+            // create entries for controller attributes in the parent installer's assembly
+            batch.FromAssembly(Parent.GetType().Assembly);
+
+            // and give the containing installer a change to add entries
             if (DescribeBatch != null)
                 DescribeBatch(this, new DescribeBatchEventArgs { Batch = batch });
 

@@ -66,6 +66,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ComplexPrecompileController.cs" />
+    <Compile Include="Controllers\SimplePrecompileController.cs" />
     <Compile Include="Controllers\StubController.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="MvcMockHelpers.cs" />

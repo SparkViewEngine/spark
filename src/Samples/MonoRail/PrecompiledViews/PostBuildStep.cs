@@ -16,9 +16,5 @@ namespace PrecompiledViews
             InitializeComponent();
         }
 
-        private void precompileInstaller1_DescribeBatch(object sender, Castle.MonoRail.Views.Spark.Install.DescribeBatchEventArgs e)
-        {
-            Global.FillBatchDescriptor(e.Batch);
-        }
     }
 }

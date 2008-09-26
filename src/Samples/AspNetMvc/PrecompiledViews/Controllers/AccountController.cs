@@ -1,7 +1,9 @@
 ﻿using System.Web.Mvc;
+using Spark;
 
 namespace PrecompiledViews.Controllers
 {
+    [Precompile]
     public class AccountController : Controller
     {
         public ActionResult Login()

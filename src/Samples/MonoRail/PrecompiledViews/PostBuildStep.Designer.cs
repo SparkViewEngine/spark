@@ -34,7 +34,7 @@
             // 
             this.precompileInstaller1.TargetAssemblyFile = null;
             this.precompileInstaller1.ViewPath = null;
-            this.precompileInstaller1.DescribeBatch += new Castle.MonoRail.Views.Spark.Install.DescribeBatchEventHandler(this.precompileInstaller1_DescribeBatch);
+
             // 
             // PostBuildStep
             // 

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Spark
 {
     public class SparkBatchDescriptor
     {
-        public SparkBatchDescriptor() : this(null /*assemblyName*/)
+        public SparkBatchDescriptor()
+            : this(null /*assemblyName*/)
         {
         }
 
@@ -28,6 +30,51 @@ namespace Spark
         public SparkBatchConfigurator For<TController>()
         {
             return For(typeof(TController));
+        }
+
+        public SparkBatchDescriptor FromAttributes<TController>()
+        {
+            return FromAttributes(typeof(TController));
+        }
+
+        public SparkBatchDescriptor FromAttributes(Type controllerType)
+        {
+            var precompileAttributes = controllerType.GetCustomAttributes(typeof(PrecompileAttribute), true);
+            foreach (PrecompileAttribute precompileAttribute in precompileAttributes ?? new object[0])
+            {
+                var config = For(controllerType);
+                foreach (var item in SplitParts(precompileAttribute.Include))
+                {
+                    config.Include(item);
+                }
+                foreach (var item in SplitParts(precompileAttribute.Exclude))
+                {
+                    config.Exclude(item);
+                }
+                foreach (var item in SplitParts(precompileAttribute.Layout))
+                {
+                    config.Layout(item.Split('+'));
+                }
+            }
+            return this;
+        }
+
+        private static string[] SplitParts(string value)
+        {
+            return (value ?? "").Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public SparkBatchDescriptor FromAssemblyNamed(string assemblyString)
+        {
+            return FromAssembly(Assembly.Load(assemblyString));
+        }
+
+        public SparkBatchDescriptor FromAssembly(Assembly assembly)
+        {
+            foreach (var type in assembly.GetExportedTypes())
+                FromAttributes(type);
+
+            return this;
         }
     }
 
@@ -55,6 +102,25 @@ namespace Spark
         {
             this.descriptor = descriptor;
             this.entry = entry;
+        }
+
+        public SparkBatchDescriptor FromAssemblyNamed(string assemblyString)
+        {
+            return descriptor.FromAssemblyNamed(assemblyString);
+        }
+        public SparkBatchDescriptor FromAssembly(Assembly assembly)
+        {
+            return descriptor.FromAssembly(assembly);
+        }
+
+        public SparkBatchDescriptor FromAttributes<TController>()
+        {
+            return descriptor.FromAttributes<TController>();
+        }
+
+        public SparkBatchDescriptor FromAttributes(Type controllerType)
+        {
+            return descriptor.FromAttributes(controllerType);
         }
 
         public SparkBatchConfigurator For(Type controllerType, params string[] layoutNames)

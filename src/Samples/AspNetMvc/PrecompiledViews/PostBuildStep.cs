@@ -14,22 +14,5 @@ namespace PrecompiledViews
             InitializeComponent();
         }
 
-        private void precompileInstaller1_DescribeBatch(object sender, DescribeBatchEventArgs e)
-        {
-            e.Batch
-                .For<HomeController>()
-                .For<HomeController>().Layout("Ajax").Include("_Notification")
-                .For<AccountController>();
-        }
-
-        private void precompileInstaller1_AfterInstall(object sender, InstallEventArgs e)
-        {
-
-        }
-
-        private void precompileInstaller1_AfterInstall_1(object sender, InstallEventArgs e)
-        {
-
-        }
     }
 }

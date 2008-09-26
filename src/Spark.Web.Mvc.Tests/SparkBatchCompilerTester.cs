@@ -29,8 +29,7 @@ namespace Spark.Web.Mvc.Tests
         {
             var settings = new SparkSettings();
 
-            _factory = new SparkViewFactory(settings)
-                           {ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views")};
+            _factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
         }
 
         #endregion
@@ -144,7 +143,7 @@ namespace Spark.Web.Mvc.Tests
             Assert.AreEqual(2, descriptors[0].Templates.Count);
             Assert.AreEqual("Stub\\Index.spark", descriptors[0].Templates[0]);
             Assert.AreEqual("Layouts\\Stub.spark", descriptors[0].Templates[1]);
-
         }
+
     }
 }

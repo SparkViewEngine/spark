@@ -1,7 +1,10 @@
 ﻿using System.Web.Mvc;
+using Spark;
 
 namespace PrecompiledViews.Controllers
 {
+    [Precompile]
+    [Precompile("_Notification", "Ajax")]
     public class HomeController : Controller
     {
         public ActionResult Index()
