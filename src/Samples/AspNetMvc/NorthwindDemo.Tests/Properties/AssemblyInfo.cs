@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MarketWatch")]
 [assembly: AssemblyProduct("NorthwindDemo.Tests")]
-[assembly: AssemblyCopyright("Copyright © MarketWatch 2008")]
+[assembly: AssemblyCopyright("Copyright � MarketWatch 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
