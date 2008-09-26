@@ -1,4 +1,4 @@
-﻿// Copyright 2008 Louis DeJardin - http://whereslou.com
+// Copyright 2008 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
-using System.Linq;
-
 
 namespace PrecompiledViews
 {
@@ -29,6 +24,5 @@ namespace PrecompiledViews
         {
             InitializeComponent();
         }
-
     }
 }

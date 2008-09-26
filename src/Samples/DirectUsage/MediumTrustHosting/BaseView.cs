@@ -14,17 +14,8 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
 using Spark;
 
 namespace MediumTrustHosting
@@ -53,14 +44,6 @@ namespace MediumTrustHosting
         /// </summary>
         public ViewDataDictionary ViewData { get; set; }
 
-        public class ViewDataDictionary : Dictionary<string, object>
-        {
-            public object Eval(string key)
-            {
-                return this[key];
-            }
-        }
-
         /// <summary>
         /// Provides a normalized application path
         /// </summary>
@@ -68,7 +51,8 @@ namespace MediumTrustHosting
         {
             get
             {
-                var parts = Context.Request.ApplicationPath.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = Context.Request.ApplicationPath.Split(new[] {'/', '\\'},
+                                                                       StringSplitOptions.RemoveEmptyEntries);
                 return string.Concat(parts.Select(part => "/" + part).ToArray());
             }
         }
@@ -92,5 +76,16 @@ namespace MediumTrustHosting
             return Context.Server.HtmlEncode(Convert.ToString(text));
         }
 
+        #region Nested type: ViewDataDictionary
+
+        public class ViewDataDictionary : Dictionary<string, object>
+        {
+            public object Eval(string key)
+            {
+                return this[key];
+            }
+        }
+
+        #endregion
     }
 }

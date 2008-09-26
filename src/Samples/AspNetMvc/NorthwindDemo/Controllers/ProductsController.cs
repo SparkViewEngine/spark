@@ -12,28 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
+using NorthwindDemo.Models;
+
 namespace NorthwindDemo.Controllers
 {
-    using System;
-    using System.Web.Mvc;
-    using System.Linq;
-    using System.Collections.Specialized;
-    using System.Collections.Generic;
-    using System.Data;
-    using NorthwindDemo.Models;
-    using System.Web.Routing;
+    public class ProductsController : Controller
+    {
+        private readonly NorthwindRepository repository;
 
-    public class ProductsController : Controller {
         public ProductsController()
             : this(new NorthwindRepository(new NorthwindDataContext()))
-        { }
-
-        public ProductsController(NorthwindRepository context)
-        {            
-            this.repository = context;
+        {
         }
 
-        NorthwindRepository repository;
+        public ProductsController(NorthwindRepository context)
+        {
+            repository = context;
+        }
 
         public object Index()
         {
@@ -47,17 +46,17 @@ namespace NorthwindDemo.Controllers
 
         public object Detail(int id)
         {
-            Product product = this.repository.Products.SingleOrDefault(p => p.ProductID == id);
+            Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
             return View(product);
         }
 
         public object List(string id)
         {
-            var category = repository.Categories.SingleOrDefault(c => c.CategoryName == id);
+            Category category = repository.Categories.SingleOrDefault(c => c.CategoryName == id);
 
-            var products = from p in repository.Products
-                           where p.CategoryID == category.CategoryID
-                           select p;
+            IQueryable<Product> products = from p in repository.Products
+                                           where p.CategoryID == category.CategoryID
+                                           select p;
 
             ViewData["Title"] = "Hello World!";
             ViewData["CategoryName"] = id;
@@ -74,7 +73,7 @@ namespace NorthwindDemo.Controllers
 
         public object New()
         {
-            ProductsNewViewData viewData = new ProductsNewViewData();
+            var viewData = new ProductsNewViewData();
 
             viewData.Suppliers = repository.Suppliers.ToList();
             viewData.Categories = repository.Categories.ToList();
@@ -84,7 +83,7 @@ namespace NorthwindDemo.Controllers
 
         public object Create()
         {
-            Product product = new Product();
+            var product = new Product();
 
             throw new NotImplementedException("Not sure what BindingHelperExtensions turned into");
             //BindingHelperExtensions.UpdateFrom(product, Request.Form);
@@ -92,24 +91,28 @@ namespace NorthwindDemo.Controllers
             repository.InsertProductOnSubmit(product);
             repository.SubmitChanges();
 
-            return RedirectToRoute(new RouteValueDictionary(new { Action = "List", ID = product.Category.CategoryName }));
+            return RedirectToRoute(new RouteValueDictionary(new {Action = "List", ID = product.Category.CategoryName}));
         }
 
         public object Edit(int id)
         {
-            ProductsEditViewData viewData = new ProductsEditViewData();
+            var viewData = new ProductsEditViewData();
 
             Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
             viewData.Product = product;
 
-            if (TempData.ContainsKey("ErrorMessage")) {
-                foreach (var item in TempData) {
+            if (TempData.ContainsKey("ErrorMessage"))
+            {
+                foreach (var item in TempData)
+                {
                     ViewData[item.Key] = item.Value;
                 }
             }
 
-            ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName", ViewData["CategoryID"] ?? product.CategoryID);
-            ViewData["SupplierID"]= new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName", ViewData["SupplierID"] ?? product.SupplierID);
+            ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName",
+                                                    ViewData["CategoryID"] ?? product.CategoryID);
+            ViewData["SupplierID"] = new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName",
+                                                    ViewData["SupplierID"] ?? product.SupplierID);
 
             return View("Edit", viewData);
         }
@@ -117,29 +120,32 @@ namespace NorthwindDemo.Controllers
         public object Update(int id)
         {
             Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
-            if(!IsValid())
+            if (!IsValid())
             {
                 Request.Form.CopyTo(TempData);
                 TempData["ErrorMessage"] = "An error occurred";
-                return RedirectToAction("Edit", new { id = id });
+                return RedirectToAction("Edit", new {id});
             }
 
             throw new NotImplementedException("Not sure what BindingHelperExtensions turned into");
             //BindingHelperExtensions.UpdateFrom(product, Request.Form);
             repository.SubmitChanges();
 
-            return RedirectToRoute(new RouteValueDictionary(new { Action = "List", ID = product.Category.CategoryName }));
+            return RedirectToRoute(new RouteValueDictionary(new {Action = "List", ID = product.Category.CategoryName}));
         }
 
-        bool IsValid() {
+        private bool IsValid()
+        {
             bool valid = true;
-            
-            if (!IsValidPrice(Request.Form["UnitPrice"])) {
+
+            if (!IsValidPrice(Request.Form["UnitPrice"]))
+            {
                 valid = false;
                 SetInvalid("UnitPrice");
             }
 
-            if (String.IsNullOrEmpty(Request.Form["ProductName"])) {
+            if (String.IsNullOrEmpty(Request.Form["ProductName"]))
+            {
                 valid = false;
                 SetInvalid("ProductName");
             }
@@ -147,11 +153,13 @@ namespace NorthwindDemo.Controllers
             return valid;
         }
 
-        void SetInvalid(string key) {
+        private void SetInvalid(string key)
+        {
             TempData["Error:" + key] = Request.Form[key];
         }
 
-        bool IsValidPrice(string price) {
+        private bool IsValidPrice(string price)
+        {
             if (String.IsNullOrEmpty(price))
                 return false;
 

@@ -14,17 +14,13 @@
 // 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Configuration.Install;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Web.Configuration;
 using Spark;
 using Spark.FileSystem;
-
 
 namespace MediumTrustHosting
 {
@@ -39,24 +35,25 @@ namespace MediumTrustHosting
             InitializeComponent();
         }
 
-        public override void Install(System.Collections.IDictionary stateSaver)
+        public override void Install(IDictionary stateSaver)
         {
             // figure out all paths based on this assembly in the bin dir
-            var assemblyPath = GetType().Assembly.Location;
-            var targetPath = Path.ChangeExtension(assemblyPath, ".Views.dll");
-            var webSitePath = Path.GetDirectoryName(Path.GetDirectoryName(assemblyPath));
-            var webBinPath = Path.Combine(webSitePath, "bin");
-            var webFileHack = Path.Combine(webSitePath, "web");
-            var viewsLocation = Path.Combine(webSitePath, "Views");
+            string assemblyPath = GetType().Assembly.Location;
+            string targetPath = Path.ChangeExtension(assemblyPath, ".Views.dll");
+            string webSitePath = Path.GetDirectoryName(Path.GetDirectoryName(assemblyPath));
+            string webBinPath = Path.Combine(webSitePath, "bin");
+            string webFileHack = Path.Combine(webSitePath, "web");
+            string viewsLocation = Path.Combine(webSitePath, "Views");
 
             // this hack enables you to open the web.config as if it was an .exe.config
             File.Create(webFileHack).Close();
-            var config = ConfigurationManager.OpenExeConfiguration(webFileHack);
+            Configuration config = ConfigurationManager.OpenExeConfiguration(webFileHack);
             File.Delete(webFileHack);
 
             // GetSection will try to resolve the "Spark" assembly, which the installutil appdomain needs help finding
-            AppDomain.CurrentDomain.AssemblyResolve += ((sender, e) => Assembly.LoadFile(Path.Combine(webBinPath, e.Name + ".dll")));
-            var settings = (ISparkSettings)config.GetSection("spark");
+            AppDomain.CurrentDomain.AssemblyResolve +=
+                ((sender, e) => Assembly.LoadFile(Path.Combine(webBinPath, e.Name + ".dll")));
+            var settings = (ISparkSettings) config.GetSection("spark");
 
             // Finally create an engine with the <spark> settings from the web.config
             var engine = new SparkViewEngine(settings)
@@ -70,7 +67,6 @@ namespace MediumTrustHosting
 
         public override void Commit(IDictionary savedState)
         {
-
         }
     }
 }

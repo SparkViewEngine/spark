@@ -12,16 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System.Data;
-using System.Configuration;
-using System.Linq;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.MonoRail.Framework;
@@ -33,7 +23,7 @@ using WindsorInversionOfControl.Models;
 
 namespace WindsorInversionOfControl
 {
-    public partial class Global 
+    public partial class Global
     {
         public static void RegisterFacilities(IWindsorContainer container)
         {
@@ -46,10 +36,8 @@ namespace WindsorInversionOfControl
             container.Register(
                 // add all the controllers
                 AllTypes.Of<Controller>().FromAssemblyNamed("WindsorInversionOfControl"),
-
                 // this component will result in the views also being registered in the container
                 Component.For<IViewActivatorFactory>().ImplementedBy<ViewActivator>(),
-
                 // here's an example of a component used by the views. see the View class.
                 Component.For<INavProvider>().ImplementedBy<NavProvider>());
         }
@@ -57,8 +45,8 @@ namespace WindsorInversionOfControl
         public static void RegisterRoutes(IRoutingRuleContainer engine)
         {
             engine.Add(new PatternRoute("/<controller>/[action]/[id]")
-                .DefaultForAction().Is("index")
-                .DefaultFor("id").Is(""));
+                           .DefaultForAction().Is("index")
+                           .DefaultFor("id").Is(""));
         }
     }
 }

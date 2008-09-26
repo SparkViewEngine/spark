@@ -37,8 +37,8 @@ namespace WindsorInversionOfControl
             // Add anything descended from IController/Controller 
             container.Register(
                 AllTypes.Of<IController>()
-                .FromAssembly(typeof(Global).Assembly)
-                .Configure(c=>c.LifeStyle.Transient.Named(c.Implementation.Name.ToLowerInvariant())));
+                    .FromAssembly(typeof (Global).Assembly)
+                    .Configure(c => c.LifeStyle.Transient.Named(c.Implementation.Name.ToLowerInvariant())));
 
             // Some more components from the sample
             container.AddComponent<IViewFolder, FileSystemViewFolder>();
@@ -55,14 +55,13 @@ namespace WindsorInversionOfControl
         {
             routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
                            {
-                               Defaults = new RouteValueDictionary(new { action = "Index", id = "" }),
+                               Defaults = new RouteValueDictionary(new {action = "Index", id = ""}),
                            });
 
             routes.Add(new Route("Default.aspx", new MvcRouteHandler())
                            {
-                               Defaults = new RouteValueDictionary(new { controller = "Home", action = "Index", id = "" }),
+                               Defaults = new RouteValueDictionary(new {controller = "Home", action = "Index", id = ""}),
                            });
-
         }
     }
 }

@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NorthwindDemo.Controllers;
 using Spark;
-using System.Linq;
-using Spark.FileSystem;
 using Spark.Web.Mvc;
 
 namespace NorthwindDemo
@@ -27,7 +26,7 @@ namespace NorthwindDemo
         public static void RegisterViewEngine(ViewEngineCollection engines)
         {
             var settings = new SparkSettings();
-            
+
             settings
                 .AddNamespace("System")
                 .AddNamespace("System.Collections.Generic")
@@ -52,15 +51,15 @@ namespace NorthwindDemo
             //       automatic support on IIS6 and IIS7 classic mode
 
             routes.MapRoute("mvcroute", "{controller}/{action}/{id}"
-                , new { controller = "products", action = "Index", id = "" }
-                , new { controller = @"[^\.]*" });
+                            , new {controller = "products", action = "Index", id = ""}
+                            , new {controller = @"[^\.]*"});
         }
 
         public static void PrecompileViews(ViewEngineCollection engines)
         {
             try
             {
-                var viewFactory = engines.OfType<SparkViewFactory>().First();
+                SparkViewFactory viewFactory = engines.OfType<SparkViewFactory>().First();
 
                 var batch = new SparkBatchDescriptor();
 

@@ -24,7 +24,7 @@ namespace WindsorInversionOfControl.Controllers
         public HomeController(ISampleRepository repository)
         {
             _repository = repository;
-            
+
             //default intro message
             IntroMessage = "Hello World";
         }

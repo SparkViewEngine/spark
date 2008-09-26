@@ -30,7 +30,7 @@ namespace ClientRenderingViews
         {
             routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
                            {
-                               Defaults = new RouteValueDictionary(new { action = "Index", id = "" }),
+                               Defaults = new RouteValueDictionary(new {action = "Index", id = ""}),
                            });
         }
     }

@@ -26,30 +26,15 @@ namespace NorthwindDemo.Tests
     public class ProductsControllerTester
     {
         [Test]
-        public void TestViewsWithBatchPrecompile()
-        {
-            // Use the Global class to initialize settings
-            var engines = new ViewEngineCollection();
-            Global.RegisterViewEngine(engines);
-
-            var viewEngine = engines.OfType<SparkViewFactory>().First();
-            viewEngine.ViewFolder = new FileSystemViewFolder(@"..\..\..\NorthwindDemo\Views");
-
-            var batch = new SparkBatchDescriptor();
-            batch.For<ProductsController>();
-            viewEngine.Precompile(batch);
-        }
-
-        [Test]
         public void TestCompiledViewsWithJustEngine()
         {
             // Make the same settings the web app provides.
             // (Assemblies are forced to be added because many aren't loaded 
             // in the nunit appdomain.)
-            var settings = new SparkSettings()
+            SparkSettings settings = new SparkSettings()
                 .SetDebug(false)
                 .SetPageBaseType("Spark.Web.Mvc.SparkView");
-            
+
             settings
                 .AddNamespace("System")
                 .AddNamespace("System.Collections.Generic")
@@ -92,7 +77,21 @@ namespace NorthwindDemo.Tests
                                    .SetTargetNamespace("NorthwindDemo.Controllers")
                                    .AddTemplate("Products/ListingByCategory.spark")
                                    .AddTemplate("Shared/Application.spark"));
+        }
 
+        [Test]
+        public void TestViewsWithBatchPrecompile()
+        {
+            // Use the Global class to initialize settings
+            var engines = new ViewEngineCollection();
+            Global.RegisterViewEngine(engines);
+
+            SparkViewFactory viewEngine = engines.OfType<SparkViewFactory>().First();
+            viewEngine.ViewFolder = new FileSystemViewFolder(@"..\..\..\NorthwindDemo\Views");
+
+            var batch = new SparkBatchDescriptor();
+            batch.For<ProductsController>();
+            viewEngine.Precompile(batch);
         }
     }
 }

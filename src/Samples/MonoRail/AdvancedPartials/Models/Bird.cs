@@ -14,17 +14,8 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
 
 namespace AdvancedPartials.Models
 {
@@ -38,10 +29,12 @@ namespace AdvancedPartials.Models
     {
         public IList<Bird> GetBirds()
         {
-            using(var stream = typeof (BirdRepository).Assembly.GetManifestResourceStream(typeof (BirdRepository), "BirdList.txt"))
+            using (
+                Stream stream = typeof (BirdRepository).Assembly.GetManifestResourceStream(typeof (BirdRepository),
+                                                                                           "BirdList.txt"))
             {
                 if (stream != null)
-                    using(var reader = new StreamReader(stream))
+                    using (var reader = new StreamReader(stream))
                     {
                         return reader.ReadToEnd()
                             .Split("\r\n".ToArray(), StringSplitOptions.RemoveEmptyEntries)
@@ -53,5 +46,4 @@ namespace AdvancedPartials.Models
             return null;
         }
     }
-
 }

@@ -31,9 +31,11 @@ namespace WindsorInversionOfControl
             _kernel = kernel;
         }
 
+        #region IViewActivatorFactory Members
+
         public IViewActivator Register(Type type)
         {
-            _kernel.AddComponent(type.AssemblyQualifiedName, typeof(ISparkView), type, LifestyleType.Transient);
+            _kernel.AddComponent(type.AssemblyQualifiedName, typeof (ISparkView), type, LifestyleType.Transient);
             return new Activator(_kernel, type.AssemblyQualifiedName);
         }
 
@@ -42,7 +44,11 @@ namespace WindsorInversionOfControl
             _kernel.RemoveComponent(type.AssemblyQualifiedName);
         }
 
-        class Activator : IViewActivator
+        #endregion
+
+        #region Nested type: Activator
+
+        private class Activator : IViewActivator
         {
             private readonly IKernel kernel;
             private readonly string key;
@@ -53,15 +59,21 @@ namespace WindsorInversionOfControl
                 this.key = key;
             }
 
+            #region IViewActivator Members
+
             public ISparkView Activate(Type type)
             {
-                return (ISparkView)kernel.Resolve(key, typeof(ISparkView));
+                return (ISparkView) kernel.Resolve(key, typeof (ISparkView));
             }
 
             public void Release(Type type, ISparkView view)
             {
                 kernel.ReleaseComponent(view);
             }
+
+            #endregion
         }
+
+        #endregion
     }
 }

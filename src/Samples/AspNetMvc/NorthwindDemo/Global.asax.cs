@@ -13,19 +13,20 @@
 // limitations under the License.
 // 
 using System;
-using System.Web.Routing;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace NorthwindDemo
 {
-    public partial class Global : System.Web.HttpApplication
+    public partial class Global : HttpApplication
     {
         protected void Application_Start(object sender, EventArgs e)
         {
             AppDomain.CurrentDomain.SetData("SQLServerCompactEditionUnderWebHosting", true);
 
             RegisterViewEngine(ViewEngines.Engines);
-            
+
             RegisterRoutes(RouteTable.Routes);
 
             PrecompileViews(ViewEngines.Engines);
@@ -33,13 +34,12 @@ namespace NorthwindDemo
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            var path = Request.AppRelativeCurrentExecutionFilePath;
+            string path = Request.AppRelativeCurrentExecutionFilePath;
             if (string.Equals(path, "~/default.aspx", StringComparison.InvariantCultureIgnoreCase) ||
                 string.Equals(path, "~/"))
             {
                 Context.RewritePath("~/home");
             }
         }
-
     }
 }

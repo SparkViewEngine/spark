@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Data.Linq;
-using System.Linq;
 
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 
 namespace NorthwindDemo.Models
 {
     public partial class NorthwindDataContext
     {
+        private readonly IList<Category> categories;
+
         public NorthwindDataContext(IList<Category> categories)
-            : base(global::System.Configuration.ConfigurationManager.ConnectionStrings["NORTHWNDConnectionString"].ConnectionString, mappingSource)
+            : base(ConfigurationManager.ConnectionStrings["NORTHWNDConnectionString"].ConnectionString, mappingSource)
         {
             this.categories = categories;
         }
@@ -34,14 +35,12 @@ namespace NorthwindDemo.Models
             this.categories = categories;
         }
 
-        IList<Category> categories;
-
         public virtual IList<Category> GetCategories()
         {
-            if (this.categories == null)
-                return this.Categories.ToList();
+            if (categories == null)
+                return Categories.ToList();
             else
-                return this.categories;
+                return categories;
         }
     }
 }

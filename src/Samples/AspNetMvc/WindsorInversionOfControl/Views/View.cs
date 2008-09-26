@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using Spark.Web.Mvc;
 using WindsorInversionOfControl.Models;
 
 namespace WindsorInversionOfControl.Views
@@ -20,19 +21,22 @@ namespace WindsorInversionOfControl.Views
     /// Base class for typed spark view files
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class View<T> : Spark.Web.Mvc.SparkView<T> where T : class
+    public abstract class View<T> : SparkView<T> where T : class
     {
         public INavRepository Nav { get; set; }
+
+        /// <summary>
+        /// Throw in a for ViewData.Model
+        /// </summary>
+        public T Model
+        {
+            get { return ViewData.Model; }
+        }
 
         public string Yadda()
         {
             return "Adding a convenience function";
         }
-
-        /// <summary>
-        /// Throw in a for ViewData.Model
-        /// </summary>
-        public T Model {get { return ViewData.Model;}}
     }
 
     /// <summary>
@@ -40,6 +44,5 @@ namespace WindsorInversionOfControl.Views
     /// </summary>
     public abstract class View : View<object>
     {
-        
     }
 }

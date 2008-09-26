@@ -28,16 +28,7 @@ namespace WindsorInversionOfControl
             this.kernel = kernel;
         }
 
-        public IViewActivator Register(Type type)
-        {
-            kernel.AddComponent(type.FullName, typeof(ISparkView), type, LifestyleType.Transient);
-            return this;
-        }
-
-        public void Unregister(Type type, IViewActivator activator)
-        {
-            kernel.RemoveComponent(type.FullName);
-        }
+        #region IViewActivator Members
 
         public ISparkView Activate(Type type)
         {
@@ -48,5 +39,22 @@ namespace WindsorInversionOfControl
         {
             kernel.ReleaseComponent(view);
         }
+
+        #endregion
+
+        #region IViewActivatorFactory Members
+
+        public IViewActivator Register(Type type)
+        {
+            kernel.AddComponent(type.FullName, typeof (ISparkView), type, LifestyleType.Transient);
+            return this;
+        }
+
+        public void Unregister(Type type, IViewActivator activator)
+        {
+            kernel.RemoveComponent(type.FullName);
+        }
+
+        #endregion
     }
 }

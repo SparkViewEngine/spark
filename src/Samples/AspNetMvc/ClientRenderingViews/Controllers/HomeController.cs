@@ -1,15 +1,20 @@
+// Copyright 2008 Louis DeJardin - http://whereslou.com
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
 using System;
-using System.Data;
-using System.Configuration;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
 using ClientRenderingViews.Models;
 using Spark.Web.Mvc;
 
@@ -18,25 +23,27 @@ namespace ClientRenderingViews.Controllers
     public class HomeController : Controller
     {
         private CartRepository _cartRepos = new CartRepository();
+
+        private ProductRepository _productRepos = new ProductRepository();
+
         public CartRepository CartRepos
         {
             get { return _cartRepos; }
             set { _cartRepos = value; }
         }
 
-        private ProductRepository _productRepos = new ProductRepository();
         public ProductRepository ProductRepos
         {
             get { return _productRepos; }
             set { _productRepos = value; }
         }
 
-        Cart GetCurrentCart()
+        private Cart GetCurrentCart()
         {
             Cart cart = null;
             if (Session["cartId"] != null)
-                cart = CartRepos.GetCurrentCart(new Guid((string)Session["cartId"]));
-            
+                cart = CartRepos.GetCurrentCart(new Guid((string) Session["cartId"]));
+
             if (cart == null)
                 cart = CartRepos.GetCurrentCart(Guid.Empty);
 
@@ -47,7 +54,7 @@ namespace ClientRenderingViews.Controllers
 
         public object Index(string ajax)
         {
-            ViewData["ajaxEnabled"] = (string)Session["ajax"] == "disabled" ? false : true;
+            ViewData["ajaxEnabled"] = (string) Session["ajax"] == "disabled" ? false : true;
             ViewData["products"] = ProductRepos.GetProducts();
             ViewData["cart"] = GetCurrentCart();
             return View();
@@ -67,7 +74,7 @@ namespace ClientRenderingViews.Controllers
 
         public object ShowCart()
         {
-            return new JavascriptViewResult { ViewName = "_ShowCart" };
+            return new JavascriptViewResult {ViewName = "_ShowCart"};
         }
 
         public object RefreshCart()
@@ -78,7 +85,7 @@ namespace ClientRenderingViews.Controllers
         public object Reset()
         {
             Session["cartId"] = null;
-            var cart = GetCurrentCart();
+            Cart cart = GetCurrentCart();
 
             if (Request.AcceptTypes.Contains("application/json"))
                 return Json(cart);
@@ -88,8 +95,8 @@ namespace ClientRenderingViews.Controllers
 
         public object Remove(int id)
         {
-            var cart = GetCurrentCart();
-            var item = cart.Items.FirstOrDefault(i => i.Product.Id == id);
+            Cart cart = GetCurrentCart();
+            CartItem item = cart.Items.FirstOrDefault(i => i.Product.Id == id);
             if (item != null)
                 cart.Items.Remove(item);
 
@@ -101,12 +108,12 @@ namespace ClientRenderingViews.Controllers
 
         public object AddToCart(int id)
         {
-            var cart = GetCurrentCart();
-            var item = cart.Items.FirstOrDefault(i => i.Product.Id == id);
+            Cart cart = GetCurrentCart();
+            CartItem item = cart.Items.FirstOrDefault(i => i.Product.Id == id);
             if (item == null)
             {
-                var product = ProductRepos.FindProduct(id);
-                cart.Items.Add(new CartItem { Product = product, Quantity = 1 });
+                Product product = ProductRepos.FindProduct(id);
+                cart.Items.Add(new CartItem {Product = product, Quantity = 1});
             }
             else
             {

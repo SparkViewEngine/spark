@@ -27,11 +27,14 @@ namespace WindsorInversionOfControl.Models
     public class NavProvider : INavProvider
     {
         private ILogger _logger = NullLogger.Instance;
+
         public ILogger Logger
         {
             get { return _logger; }
             set { _logger = value; }
         }
+
+        #region INavProvider Members
 
         public NavData GetNav(IEngineContext context, string section)
         {
@@ -67,7 +70,9 @@ namespace WindsorInversionOfControl.Models
             throw new ApplicationException("Unknown nav section " + section);
         }
 
-        static NavItem Item(IEngineContext context, string caption, string controller, string action)
+        #endregion
+
+        private static NavItem Item(IEngineContext context, string caption, string controller, string action)
         {
             var parameters = new UrlBuilderParameters(controller, action);
             return new NavItem

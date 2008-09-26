@@ -13,18 +13,10 @@
 // limitations under the License.
 // 
 using System;
-using System.Collections;
-using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.Services;
-using System.Web.Services.Protocols;
-using System.Xml.Linq;
 using MediumTrustHosting.Models;
 
 namespace MediumTrustHosting
 {
-    
     public class Product : BaseHandler
     {
         public override void Process()
@@ -33,7 +25,7 @@ namespace MediumTrustHosting
 
             var repos = new ProductRepository();
 
-            var view = CreateView("product.spark", "master.spark");
+            BaseView view = CreateView("product.spark", "master.spark");
             view.ViewData["product"] = repos.Fetch(id);
             view.RenderView(Context.Response.Output);
         }
