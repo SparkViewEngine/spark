@@ -34,11 +34,13 @@ namespace Spark.Compiler.CSharp
 
         public override void GenerateSourceCode(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
+            var globalSymbols = new Dictionary<string, object>();
+
             var source = new StringBuilder();
             var usingGenerator = new UsingNamespaceVisitor(source);
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
-            var globalsGenerator = new GlobalMembersVisitor(source);
-            var viewGenerator = new GeneratedCodeVisitor(source) { Indent = 8 };
+            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols);
+            
 
 
             // using <namespaces>;
@@ -113,6 +115,7 @@ namespace Spark.Compiler.CSharp
                 source.AppendLine();
                 source.AppendLine(string.Format("    public void RenderViewLevel{0}()", renderLevel));
                 source.AppendLine("    {");
+                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols) { Indent = 8 };
                 viewGenerator.Accept(viewTemplate);
                 source.AppendLine("    }");
                 ++renderLevel;

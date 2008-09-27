@@ -80,6 +80,7 @@ namespace Spark.Compiler
         public string Name { get; set; }
         public string Type { get; set; }
         public string Key { get; set; }
+        public string Default { get; set; }
     }
 
     public class ViewDataModelChunk : Chunk

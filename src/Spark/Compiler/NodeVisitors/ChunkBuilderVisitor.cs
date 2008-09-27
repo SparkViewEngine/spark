@@ -64,7 +64,8 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
-        public ChunkBuilderVisitor(VisitorContext context) : base(context)
+        public ChunkBuilderVisitor(VisitorContext context)
+            : base(context)
         {
             _nodePaint = Context.Paint.OfType<Paint<Node>>().ToDictionary(paint => paint.Value);
 
@@ -622,17 +623,29 @@ namespace Spark.Compiler.NodeVisitors
 
         private void VisitViewdata(SpecialNodeInspector inspector)
         {
+            var defaultAttr = inspector.TakeAttribute("default");
+            string defaultValue = null;
+            if (defaultAttr != null)
+                defaultValue = defaultAttr.AsCode();
+
             var modelAttr = inspector.TakeAttribute("model");
             if (modelAttr != null)
             {
                 var typeInspector = new TypeInspector(modelAttr.AsCode());
-                AddUnordered(new ViewDataModelChunk { TModel = typeInspector.Type, TModelAlias = typeInspector.Name });                
+                AddUnordered(new ViewDataModelChunk { TModel = typeInspector.Type, TModelAlias = typeInspector.Name });
             }
 
             foreach (var attr in inspector.Attributes)
             {
                 var typeInspector = new TypeInspector(attr.AsCode());
-                AddUnordered(new ViewDataChunk { Type = typeInspector.Type, Name = typeInspector.Name ?? attr.Name, Key = attr.Name, Position = Locate(attr) });
+                AddUnordered(new ViewDataChunk
+                                 {
+                                     Type = typeInspector.Type,
+                                     Name = typeInspector.Name ?? attr.Name,
+                                     Key = attr.Name,
+                                     Default = defaultValue,
+                                     Position = Locate(attr)
+                                 });
             }
         }
 

@@ -788,7 +788,8 @@ namespace Spark.Tests
         public void DefaultValuesStandInForNullViewData()
         {
             mocks.ReplayAll();
-            var viewContext = MakeViewContext("DefaultValuesStandInForNullViewData", null);
+            var viewData = new StubViewData();
+            var viewContext = MakeViewContext("DefaultValuesStandInForNullViewData", null, viewData);
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();

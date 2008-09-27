@@ -22,13 +22,15 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
     public class GlobalMembersVisitor : ChunkVisitor
     {
         private readonly StringBuilder _source;
+        private readonly Dictionary<string, object> _globalSymbols;
         readonly Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
         readonly Dictionary<string, GlobalVariableChunk> _globalAdded = new Dictionary<string, GlobalVariableChunk>();
         private int _indent = 4;
 
-        public GlobalMembersVisitor(StringBuilder output)
+        public GlobalMembersVisitor(StringBuilder output, Dictionary<string, object> globalSymbols)
         {
             _source = output;
+            _globalSymbols = globalSymbols;
         }
 
         private int Indent
@@ -61,6 +63,9 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(GlobalVariableChunk chunk)
         {
+            if (!_globalSymbols.ContainsKey(chunk.Name))
+                _globalSymbols.Add(chunk.Name, null);
+
             if (_globalAdded.ContainsKey(chunk.Name))
             {
                 if (_globalAdded[chunk.Name].Type != chunk.Type ||
@@ -105,6 +110,9 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             var name = chunk.Name;
             var type = chunk.Type ?? "object";
 
+            if (!_globalSymbols.ContainsKey(chunk.Name))
+                _globalSymbols.Add(chunk.Name, null);
+
             if (_viewDataAdded.ContainsKey(name))
             {
                 if (_viewDataAdded[name] != key + ":" + type)
@@ -118,8 +126,26 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
             _viewDataAdded.Add(name, key + ":" + type);
             AppendIndent().Append(type).Append(" ").AppendLine(name);
-            CodeIndent(chunk).Append("{get {return (").Append(type).Append(")ViewData.Eval(\"").Append(key).AppendLine(
-                "\");}}");
+            if (string.IsNullOrEmpty(chunk.Default))
+            {
+                CodeIndent(chunk)
+                    .Append("{get {return (")
+                    .Append(type)
+                    .Append(")ViewData.Eval(\"")
+                    .Append(key)
+                    .AppendLine("\");}}");
+            }
+            else
+            {
+                CodeIndent(chunk)
+                    .Append("{get {return (")
+                    .Append(type)
+                    .Append(")(ViewData.Eval(\"")
+                    .Append(key)
+                    .Append("\")??")
+                    .Append(chunk.Default)
+                    .AppendLine(");}}");
+            }
             CodeDefault();
         }
 
@@ -144,7 +170,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             _source.AppendLine("        {");
 
             CodeDefault();
-            var generator = new GeneratedCodeVisitor(_source) { Indent = 12 };
+            var generator = new GeneratedCodeVisitor(_source, null) { Indent = 12 };
             generator.Accept(chunk.Body);
 
             CodeHidden();
