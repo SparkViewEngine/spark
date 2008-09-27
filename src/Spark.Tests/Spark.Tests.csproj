@@ -239,6 +239,21 @@
     <None Include="Spark.Tests.Views\Home\const-and-readonly-globals.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\DefaultValuesStandInForNullViewData.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\DefaultValuesActAsLocal.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\DefaultValuesDontReplaceViewData.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\DefaultValuesDontReplaceGlobals.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\DefaultValuesDontCollideWithExistingLocals.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\foreach-autovariables-used-inline.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

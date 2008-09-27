@@ -73,6 +73,7 @@ namespace Spark.Compiler.NodeVisitors
                                   {
                                       {"var", VisitVar},
                                       {"def", VisitVar},
+                                      {"default", VisitDefault},
                                       {"global", (n,i)=>VisitGlobal(n)},
                                       {"viewdata", (n,i)=>VisitViewdata(i)},
                                       {"set", (n,i)=>VisitSet(i)},
@@ -670,6 +671,29 @@ namespace Spark.Compiler.NodeVisitors
                 frame.Dispose();
         }
 
+        private void VisitDefault(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            Frame frame = null;
+            if (!specialNode.Element.IsEmptyElement)
+            {
+                var scope = new ScopeChunk { Position = Locate(specialNode.Element) };
+                Chunks.Add(scope);
+                frame = new Frame(this, scope.Body);
+            }
+
+            var typeAttr = inspector.TakeAttribute("type");
+            string type = typeAttr != null ? typeAttr.AsCode() : "var";
+
+            foreach (var attr in inspector.Attributes)
+            {
+                Chunks.Add(new DefaultVariableChunk { Type = type, Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+            }
+
+            Accept(specialNode.Body);
+
+            if (frame != null)
+                frame.Dispose();
+        }
 
         private bool SatisfyElsePrecondition()
         {

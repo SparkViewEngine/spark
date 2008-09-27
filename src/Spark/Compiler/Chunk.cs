@@ -60,6 +60,17 @@ namespace Spark.Compiler
         public string Value { get; set; }
     }
 
+    public class DefaultVariableChunk : Chunk
+    {
+        public DefaultVariableChunk()
+        {
+            Type = "var";
+        }
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Value { get; set; }
+    }
+
     public class ViewDataChunk : Chunk
     {
         public ViewDataChunk()

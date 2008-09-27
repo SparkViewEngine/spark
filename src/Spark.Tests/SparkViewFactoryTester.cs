@@ -720,5 +720,83 @@ namespace Spark.Tests
                             );
         }
 
+        [Test]
+        public void DefaultValuesDontCollideWithExistingLocals()
+        {
+            mocks.ReplayAll();
+
+            var viewContext = MakeViewContext("DefaultValuesDontCollideWithExistingLocals", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.IsFalse(content.Contains("default"));
+
+            ContainsInOrder(content, "ok1", "ok2");
+            Assert.IsFalse(content.Contains("fail"));
+        }
+
+        [Test]
+        public void DefaultValuesDontReplaceGlobals()
+        {
+            mocks.ReplayAll();
+
+            var viewContext = MakeViewContext("DefaultValuesDontReplaceGlobals", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.IsFalse(content.Contains("default"));
+
+            ContainsInOrder(content, "ok1", "ok2");
+            Assert.IsFalse(content.Contains("fail"));
+        }
+
+        [Test]
+        public void DefaultValuesDontReplaceViewData()
+        {
+            mocks.ReplayAll();
+            var viewData = new StubViewData {{"x1", 5}, {"x2", 5}};
+            var viewContext = MakeViewContext("DefaultValuesDontReplaceViewData", null, viewData);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.IsFalse(content.Contains("default"));
+
+            ContainsInOrder(content, "ok1", "ok2");
+            Assert.IsFalse(content.Contains("fail"));
+        }
+
+
+        [Test]
+        public void DefaultValuesActAsLocal()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("DefaultValuesActAsLocal", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.IsFalse(content.Contains("default"));
+
+            ContainsInOrder(content, "ok1", "ok2");
+            Assert.IsFalse(content.Contains("fail"));
+        }
+
+        [Test]
+        public void DefaultValuesStandInForNullViewData()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("DefaultValuesStandInForNullViewData", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.IsFalse(content.Contains("default"));
+
+            ContainsInOrder(content, "ok1", "ok2");
+            Assert.IsFalse(content.Contains("fail"));
+        }
     }
 }

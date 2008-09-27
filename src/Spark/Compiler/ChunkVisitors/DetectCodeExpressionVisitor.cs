@@ -169,6 +169,11 @@ namespace Spark.Compiler.ChunkVisitors
             Examine(chunk.Value);
         }
 
+        protected override void Visit(DefaultVariableChunk chunk)
+        {
+            Examine(chunk.Value);
+        }
+
         protected override void Visit(SendExpressionChunk chunk)
         {
             Examine(chunk.Code);

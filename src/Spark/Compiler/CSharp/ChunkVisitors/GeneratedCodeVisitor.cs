@@ -92,6 +92,10 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             CodeDefault();
         }
 
+        protected override void Visit(DefaultVariableChunk chunk)
+        {
+        }
+
         protected override void Visit(ForEachChunk chunk)
         {
             var terms = chunk.Code.Split(' ', '\r', '\n', '\t').ToList();
