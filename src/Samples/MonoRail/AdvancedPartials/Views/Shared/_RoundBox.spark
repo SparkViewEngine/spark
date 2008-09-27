@@ -25,10 +25,7 @@
       .color_d {background:#b2ab9b; color:#000;}
     </style>
   </content:head>
-  #// use section:color or default to color_a
-  <content var="color">
-    <render:color>color_a</render:color>
-  </content>
+  <default color="'color_a'"/>
   <b class="xtop">
     <b class="xb1"></b>
     <b class="xb2 ${color}"></b>

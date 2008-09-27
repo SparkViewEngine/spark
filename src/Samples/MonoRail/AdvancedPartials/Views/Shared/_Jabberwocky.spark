@@ -1,4 +1,4 @@
-﻿<global type="bool" showJabberHeader="true"/>
+﻿<default showJabberHeader="true"/>
 <h2 if="showJabberHeader">JABBERWOCKY</h2>
 <h3 if="showJabberHeader">Lewis Carroll</h3>
 <p if="showJabberHeader">

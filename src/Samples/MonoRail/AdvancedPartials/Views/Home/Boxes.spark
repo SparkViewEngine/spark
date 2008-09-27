@@ -10,8 +10,7 @@
 </content:splitcontentleft>
 
 <macro:JabberBoxy>
-  <RoundBox>
-    <section:color>color_c</section:color>
+  <RoundBox color="'color_c'">
     <section:header>Jabberwocky - Lewis Carroll</section:header>
     <section:body>
       <Jabberwocky showJabberHeader="false"/>
