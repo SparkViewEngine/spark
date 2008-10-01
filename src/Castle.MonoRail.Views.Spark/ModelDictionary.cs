@@ -17,20 +17,38 @@ namespace Castle.MonoRail.Views.Spark
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Collections;
 
     public class ModelDictionary : Dictionary<string, object>
     {
         public ModelDictionary(object model)
             : base(StringComparer.InvariantCultureIgnoreCase)
         {
+
             foreach (var member in model.GetType().GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.GetProperty))
             {
-                if (member is FieldInfo)
-                    Add(member.Name, (member as FieldInfo).GetValue(model));
+                object value;
 
-                if (member is PropertyInfo)
-                    Add(member.Name, (member as PropertyInfo).GetValue(model, null));
+                if (member is FieldInfo)
+                    value = (member as FieldInfo).GetValue(model);
+                else if (member is PropertyInfo)
+                    value = (member as PropertyInfo).GetValue(model, null);
+                else
+                    value = null;
+
+                if (string.Equals(member.Name, "querystring", StringComparison.InvariantCultureIgnoreCase) || 
+                    string.Equals(member.Name, "params", StringComparison.InvariantCultureIgnoreCase) ||
+                    string.Equals(member.Name, "routeparams", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (!(value is IDictionary) && !(value is string))
+                    {
+                        value = new ModelDictionary(value);
+                    }
+                }
+
+                Add(member.Name, value);
             }
+
         }
     }
 }
