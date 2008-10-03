@@ -465,5 +465,18 @@ namespace Spark.Tests.Parser
             Assert.AreEqual("hello ", result.Value.Body);
         }
 
+        [Test]
+        public void LessThanCanBeUsedAsText()
+        {
+            var result = grammar.Nodes(
+                    Source("<p class=\"three<four\">One<Two</p>"));
+
+            Assert.AreEqual(5, result.Value.Count);
+            Assert.AreEqual("<", ((TextNode)result.Value[2]).Text);
+
+            var elt = (ElementNode) result.Value[0];
+            Assert.AreEqual(3, elt.Attributes[0].Nodes.Count);
+            Assert.AreEqual("<", ((TextNode)elt.Attributes[0].Nodes[1]).Text);
+        }
     }
 }

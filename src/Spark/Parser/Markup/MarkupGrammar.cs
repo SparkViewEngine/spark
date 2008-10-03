@@ -102,6 +102,9 @@ namespace Spark.Parser.Markup
                 Rep1(ChNot('&', '<').Unless(Statement).Unless(Code))
                 .Build(hit => new TextNode(hit));
 
+            var LessThanTextNode = TkText(Ch('<'))
+                .Build(hit => (Node)new TextNode("<"));
+
             //[68]   	EntityRef	   ::=   	'&' Name ';'
             EntityRef =
                 Ch('&').And(Name).And(Ch(';'))
@@ -111,9 +114,9 @@ namespace Spark.Parser.Markup
 
             //[10]   	AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
             var AttValueSingleText = TkAttVal(Rep1(ChNot('<', '&', '\'').Unless(Code).Unless(Condition))).Build(hit => new TextNode(hit));
-            var AttValueSingle = TkAttQuo(Apos).And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Paint())).And(TkAttQuo(Apos));
+            var AttValueSingle = TkAttQuo(Apos).And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Or(LessThanTextNode).Paint())).And(TkAttQuo(Apos));
             var AttValueDoubleText = TkAttVal(Rep1(ChNot('<', '&', '\"').Unless(Code).Unless(Condition))).Build(hit => new TextNode(hit));
-            var AttValueDouble = TkAttQuo(Quot).And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Paint())).And(TkAttQuo(Quot));
+            var AttValueDouble = TkAttQuo(Quot).And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Or(LessThanTextNode).Paint())).And(TkAttQuo(Quot));
             var AttValue = AttValueSingle.Or(AttValueDouble).Left().Down();
 
 
@@ -211,6 +214,7 @@ namespace Spark.Parser.Markup
             ProcessingInstruction = Ch("<?").And(PITarget).And(Opt(Whitespace)).And(Rep(Ch(ch => true).Unless(Ch("?>")))).And(Ch("?>"))
                 .Build(hit => new ProcessingInstructionNode { Name = hit.Left.Left.Left.Down, Body = new string(hit.Left.Down.ToArray()) });
 
+
             AnyNode = AsNode(Text).Paint()
                 .Or(EntityRefOrAmpersand.Paint())
                 .Or(AsNode(Statement))
@@ -220,7 +224,8 @@ namespace Spark.Parser.Markup
                 .Or(AsNode(DoctypeDecl).Paint())
                 .Or(AsNode(Comment).Paint())
                 .Or(AsNode(XMLDecl).Paint())
-                .Or(AsNode(ProcessingInstruction).Paint());
+                .Or(AsNode(ProcessingInstruction).Paint())
+                .Or(AsNode(LessThanTextNode).Paint());
 
             Nodes = Rep(AnyNode);
         }
