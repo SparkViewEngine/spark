@@ -102,14 +102,31 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                 return;
 
             CodeHidden();
-            AppendIndent().AppendLine("Output.Write(\"" + chunk.Text.Replace("\\", "\\\\").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\");");
+            AppendIndent().Append("Output.Write(\"").Append(EscapeStringContents(chunk.Text)).AppendLine("\");");
             CodeDefault();
         }
 
         protected override void Visit(SendExpressionChunk chunk)
         {
+            AppendIndent().AppendLine("try");
+            AppendIndent().AppendLine("{");
             CodeIndent(chunk).Append("Output.Write(").Append(chunk.Code).AppendLine(");");
             CodeDefault();
+            AppendIndent().AppendLine("}");
+            AppendIndent().AppendLine("catch(System.NullReferenceException)");
+            AppendIndent().AppendLine("{");
+            if (!chunk.SilentNulls)
+            {
+                AppendIndent().Append("    Output.Write(\"${")
+                    .Append(EscapeStringContents(chunk.Code))
+                    .AppendLine("}\");");
+            }
+            AppendIndent().AppendLine("}");
+        }
+
+        static string EscapeStringContents(string text)
+        {
+            return text.Replace("\\", "\\\\").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"");
         }
 
         protected override void Visit(MacroChunk chunk)

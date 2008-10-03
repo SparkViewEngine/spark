@@ -799,5 +799,23 @@ namespace Spark.Tests
             ContainsInOrder(content, "ok1", "ok2");
             Assert.IsFalse(content.Contains("fail"));
         }
+
+        [Test]
+        public void NullExceptionHandledAutomatically()
+        {
+            mocks.ReplayAll();
+            var viewData = new StubViewData();
+            var viewContext = MakeViewContext("NullExceptionHandledAutomatically", null, viewData);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.IsFalse(content.Contains("default"));
+
+            ContainsInOrder(content,
+                "<p>name kaboom *${user.Name}*</p>", 
+                "<p>name silently **</p>",
+                "<p>name fixed *fred*</p>");
+        }
     }
 }

@@ -131,6 +131,7 @@ namespace Spark.Parser.Markup
         }
 
         public string Code { get; set; }
+        public bool SilentNulls { get; set; }
     }
 
     public class StatementNode : Node

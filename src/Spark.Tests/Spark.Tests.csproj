@@ -239,6 +239,9 @@
     <None Include="Spark.Tests.Views\Home\const-and-readonly-globals.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\NullExceptionHandledAutomatically.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\DefaultValuesStandInForNullViewData.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

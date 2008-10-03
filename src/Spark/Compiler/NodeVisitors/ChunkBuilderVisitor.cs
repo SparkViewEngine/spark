@@ -160,7 +160,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ExpressionNode expressionNode)
         {
-            Chunks.Add(new SendExpressionChunk { Code = expressionNode.Code, Position = Locate(expressionNode) });
+            Chunks.Add(new SendExpressionChunk { Code = expressionNode.Code, Position = Locate(expressionNode), SilentNulls = expressionNode.SilentNulls });
         }
 
 

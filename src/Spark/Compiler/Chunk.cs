@@ -31,6 +31,8 @@ namespace Spark.Compiler
     public class SendExpressionChunk : Chunk
     {
         public string Code { get; set; }
+
+        public bool SilentNulls { get; set; }
     }
 
     public class CodeStatementChunk : Chunk

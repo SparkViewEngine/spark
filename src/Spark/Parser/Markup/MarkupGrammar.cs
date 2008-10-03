@@ -89,7 +89,11 @@ namespace Spark.Parser.Markup
             var Code3 = TkDelim(Ch("<%=")).And(Expression).And(TkDelim(Ch("%>")))
                 .Build(hit => new ExpressionNode(hit.Left.Down));
 
-            Code = Code1/*.Or(Code2)*/.Or(Code3);
+            // Syntax 4: $!{csharp_expression}
+            var Code4 = TkDelim(Ch("$!{")).And(Expression).And(TkDelim(Ch('}')))
+                .Build(hit => new ExpressionNode(hit.Left.Down) { SilentNulls = true });
+
+            Code = Code1/*.Or(Code2)*/.Or(Code3).Or(Code4);
 
             var Condition = TkDelim(Ch("?{")).And(Expression).And(TkDelim(Ch('}')))
                 .Build(hit => new ConditionNode(hit.Left.Down));
