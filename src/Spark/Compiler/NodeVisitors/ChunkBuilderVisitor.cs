@@ -241,32 +241,37 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(AttributeNode attributeNode)
         {
-            var unconditionalNodes = new List<Node>();
-            var conditionNodes = new List<ConditionNode>();
+            var accumulatedNodes = new List<Node>();
+            var processedNodes = new List<Node>();
             foreach (var node in attributeNode.Nodes)
             {
                 if (node is ConditionNode)
                 {
                     // condition nodes take the prior unconditional nodes as content
                     var conditionNode = (ConditionNode)node;
-                    conditionNodes.Add(conditionNode);
-                    conditionNode.Nodes = unconditionalNodes;
-                    unconditionalNodes = new List<Node>();
+                    MovePriorNodesUnderCondition(conditionNode, accumulatedNodes);
+
+                    // prior nodes and condition are set for output
+                    processedNodes.AddRange(accumulatedNodes);
+                    processedNodes.Add(conditionNode);
+
+                    accumulatedNodes.Clear();
                 }
                 else
                 {
                     // other types add to the unconditional list
-                    unconditionalNodes.Add(node);
+                    accumulatedNodes.Add(node);
                 }
             }
+            processedNodes.AddRange(accumulatedNodes);
 
-            if (unconditionalNodes.Count != 0)
+            bool allNodesAreConditional = processedNodes.All(node => node is ConditionNode);
+
+            if (!allNodesAreConditional)
             {
                 // This attribute may not disapper - send it literally
                 AddLiteral(" " + attributeNode.Name + "=\"");
-                foreach (var node in conditionNodes)
-                    Accept(node);
-                foreach (var node in unconditionalNodes)
+                foreach (var node in processedNodes)
                     Accept(node);
                 AddLiteral("\"");
             }
@@ -275,7 +280,7 @@ namespace Spark.Compiler.NodeVisitors
                 var scope = new ScopeChunk();
                 scope.Body.Add(new LocalVariableChunk { Name = "__just__once__", Value = "0" });
 
-                _sendAttributeOnce = new ConditionalChunk { Condition = "__just__once__++ == 0", Type = ConditionalType.If };
+                _sendAttributeOnce = new ConditionalChunk { Type = ConditionalType.If, Condition = "__just__once__++ == 0" };
                 _sendAttributeOnce.Body.Add(new SendLiteralChunk { Text = " " + attributeNode.Name + "=\"" });
 
 
@@ -283,14 +288,47 @@ namespace Spark.Compiler.NodeVisitors
 
                 using (new Frame(this, scope.Body))
                 {
-                    foreach (var node in conditionNodes)
+                    foreach (var node in processedNodes)
                         Accept(node);
                 }
                 _sendAttributeOnce = null;
 
-                var ifWasSent = new ConditionalChunk { Condition = "__just__once__ != 0", Type = ConditionalType.If };
+                var ifWasSent = new ConditionalChunk { Type = ConditionalType.If, Condition = "__just__once__ != 0" };
                 scope.Body.Add(ifWasSent);
                 ifWasSent.Body.Add(new SendLiteralChunk { Text = "\"" });
+            }
+        }
+
+        private static void MovePriorNodesUnderCondition(ConditionNode condition, ICollection<Node> priorNodes)
+        {
+            while (priorNodes.Count != 0)
+            {
+                var priorNode = priorNodes.Last();
+                priorNodes.Remove(priorNode);
+                if (!(priorNode is TextNode))
+                {
+                    condition.Nodes.Insert(0, priorNode);
+                    continue;
+                }
+
+                // for text, extend back to and include the last whitespace
+                var priorText = ((TextNode)priorNode).Text;
+                var finalPieceIndex = priorText.LastIndexOfAny(new[] { ' ', '\t', '\r', '\n' }) + 1;
+                if (finalPieceIndex == 0)
+                {
+                    condition.Nodes.Insert(0, priorNode);
+                    continue;
+                }
+
+                while (finalPieceIndex != 0 && char.IsWhiteSpace(priorText[finalPieceIndex - 1]))
+                    --finalPieceIndex;
+
+                condition.Nodes.Insert(0, new TextNode(priorText.Substring(finalPieceIndex)) { OriginalNode = priorNode });
+                if (finalPieceIndex != 0)
+                {
+                    priorNodes.Add(new TextNode(priorText.Substring(0, finalPieceIndex)) { OriginalNode = priorNode });
+                }
+                return;
             }
         }
 

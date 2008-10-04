@@ -13,8 +13,8 @@
   <elt9 a1="1" a2="alpha?{false} beta" a3="3"></elt9>
   <elt10 a1="1" a2="alpha?{true} beta" a3="3"></elt10>
 
-  <elt11 a1="1" a2="${'one'} ${'two'} ?{false}" a3="3"></elt11>
-  <elt12 a1="1" a2="${'one'} ${'two'} ?{true}" a3="3"></elt12>
+  <elt11 a1="1" a2="${'one'}${'two'}?{false}" a3="3"></elt11>
+  <elt12 a1="1" a2="${'one'}${'two'}?{true}" a3="3"></elt12>
 </div>
 
 

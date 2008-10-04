@@ -640,7 +640,7 @@ namespace Spark.Tests
         }
 
         [Test]
-        public void DynamicAttributes()
+        public void     DynamicAttributes()
         {
             mocks.ReplayAll();
             var viewContext = MakeViewContext("dynamic-attributes", null);
@@ -664,7 +664,7 @@ namespace Spark.Tests
                         @"<elt10 a1=""1"" a2=""alpha beta"" a3=""3""></elt10>",
 
                         @"<elt11 a1=""1"" a3=""3""></elt11>",
-                        @"<elt12 a1=""1"" a2=""one two "" a3=""3""></elt12>",
+                        @"<elt12 a1=""1"" a2=""onetwo"" a3=""3""></elt12>",
                         "</div>"
             );
         }
@@ -704,8 +704,8 @@ namespace Spark.Tests
         public void AlternateViewdataSyntax()
         {
             mocks.ReplayAll();
-            var viewData = new StubViewData<IList<string>> {{"my-data", "alpha"}};
-            viewData.Model = new[] {"beta", "gamma", "delta"};
+            var viewData = new StubViewData<IList<string>> { { "my-data", "alpha" } };
+            viewData.Model = new[] { "beta", "gamma", "delta" };
 
             var viewContext = MakeViewContext("alternate-viewdata-syntax", null, viewData);
             factory.RenderView(viewContext);
@@ -756,7 +756,7 @@ namespace Spark.Tests
         public void DefaultValuesDontReplaceViewData()
         {
             mocks.ReplayAll();
-            var viewData = new StubViewData {{"x1", 5}, {"x2", 5}};
+            var viewData = new StubViewData { { "x1", 5 }, { "x2", 5 } };
             var viewContext = MakeViewContext("DefaultValuesDontReplaceViewData", null, viewData);
             factory.RenderView(viewContext);
             mocks.VerifyAll();
@@ -813,7 +813,7 @@ namespace Spark.Tests
             Assert.IsFalse(content.Contains("default"));
 
             ContainsInOrder(content,
-                "<p>name kaboom *${user.Name}*</p>", 
+                "<p>name kaboom *${user.Name}*</p>",
                 "<p>name silently **</p>",
                 "<p>name fixed *fred*</p>");
         }
@@ -830,5 +830,26 @@ namespace Spark.Tests
             Assert.IsFalse(content.Contains("broken"));
             ContainsInOrder(content, "one", "two", "three", "four", "five");
         }
+
+        [Test]
+        public void ConditionalAttributeDelimitedBySpaces()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("ConditionalAttributeDelimitedBySpaces", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.IsFalse(content.Contains("broken"));
+            ContainsInOrder(content,
+                "<h1 class=\"one three\"/>",
+                "<h2/>",
+                "<h3 class=\" two three\"/>",
+                "<h4 class=\"one three\"/>",
+                "<h5 class=\"one two\"/>",
+                "<h6/>",
+                "<h7 class=\"one&two<three\"/>");
+        }
+
     }
 }

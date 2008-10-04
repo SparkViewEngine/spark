@@ -242,6 +242,9 @@
     <None Include="Spark.Tests.Views\Home\CodeCommentsCanHaveQuotes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\NullExceptionHandledAutomatically.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
