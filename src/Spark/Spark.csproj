@@ -58,6 +58,7 @@
     <Compile Include="Compiler\BatchCompiler.cs" />
     <Compile Include="Compiler\Chunk.cs" />
     <Compile Include="Compiler\ChunkVisitors\AbstractChunkVisitor.cs" />
+    <Compile Include="Compiler\ExpressionBuilder.cs" />
     <Compile Include="Compiler\CSharp\ChunkVisitors\BaseClassVisitor.cs" />
     <Compile Include="Compiler\ChunkVisitors\ChunkVisitor.cs" />
     <Compile Include="Compiler\ChunkVisitors\DetectCodeExpressionVisitor.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Compiler\Javascript\JavascriptViewCompiler.cs" />
     <Compile Include="Compiler\NodeVisitors\ChunkBuilderVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\ConditionalAttributeVisitor.cs" />
+    <Compile Include="Compiler\NodeVisitors\OnceAttributeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\IncludeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\INodeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\NamespaceVisitor.cs" />

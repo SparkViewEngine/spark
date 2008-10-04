@@ -593,10 +593,36 @@ namespace Spark.Compiler.NodeVisitors
         {
             var conditionAttr = inspector.TakeAttribute("condition") ?? inspector.TakeAttribute("if");
 
-            var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = conditionAttr.AsCode(), Position = Locate(inspector.OriginalNode) };
-            Chunks.Add(ifChunk);
-            using (new Frame(this, ifChunk.Body))
-                Accept(specialNode.Body);
+            var onceAttr = inspector.TakeAttribute("once");
+
+            if (conditionAttr == null && onceAttr == null)
+            {
+                throw new CompilerException("Element must contain an if, condition, or once attribute");
+            }
+
+            Frame ifFrame = null;
+            if (conditionAttr != null)
+            {
+                var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = conditionAttr.AsCode(), Position = Locate(inspector.OriginalNode) };
+                Chunks.Add(ifChunk);
+                ifFrame = new Frame(this, ifChunk.Body);
+            }
+
+            Frame onceFrame = null;
+            if (onceAttr != null)
+            {
+                var onceChunk = new ConditionalChunk { Type = ConditionalType.Once, Condition = onceAttr.AsCodeInverted(), Position = Locate(inspector.OriginalNode) };
+                Chunks.Add(onceChunk);
+                onceFrame = new Frame(this, onceChunk.Body);
+            }
+
+            Accept(specialNode.Body);
+
+            if (onceFrame != null)
+                onceFrame.Dispose();
+
+            if (ifFrame != null)
+                ifFrame.Dispose();
         }
 
         private void VisitElse(SpecialNodeInspector inspector)

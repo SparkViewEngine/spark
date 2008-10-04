@@ -44,6 +44,21 @@ namespace Spark
             return new OutputScopeImpl(this, writer);
         }
 
+        IDictionary<string, string> _once = new Dictionary<string, string>();
+        public bool Once(string flag)
+        {
+            if (_once.ContainsKey(flag))
+                return false;
+
+            _once.Add(flag, null);
+            return true;
+        }
+
+        public bool Once(object flag)
+        {
+            return Once(Convert.ToString(flag));
+        }
+
         class OutputScopeImpl : IDisposable
         {
             private readonly AbstractSparkView view;

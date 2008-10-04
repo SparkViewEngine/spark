@@ -113,6 +113,7 @@ namespace Spark.Parser.Syntax
                            new ConditionalAttributeVisitor(context),
                            new OmitExtraLinesVisitor(context),
                            new TestElseElementVisitor(context),
+                           new OnceAttributeVisitor(context),
                            new UrlAttributeVisitor(context)
                        };
         }

@@ -851,5 +851,27 @@ namespace Spark.Tests
                 "<h7 class=\"one&two<three\"/>");
         }
 
+
+        [Test]
+        public void OnceAttribute()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("OnceAttribute", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                            "foo1",
+                            "bar0",
+                            "quux2",
+                            "a1");
+
+            Assert.IsFalse(content.Contains("foo2"));
+            Assert.IsFalse(content.Contains("foo3"));
+            Assert.IsFalse(content.Contains("bar1"));
+            Assert.IsFalse(content.Contains("bar3"));
+            Assert.IsFalse(content.Contains("a2"));
+        }
     }
 }

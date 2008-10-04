@@ -444,6 +444,21 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                         PopScope();
                     }
                     break;
+                case ConditionalType.Once:
+                    {
+                        CodeIndent(chunk).Append("if (Once(").Append(chunk.Condition).AppendLine("))");
+                        PushScope();
+                        AppendIndent().AppendLine("{");
+                        CodeDefault();
+                        Indent += 4;
+                        Accept(chunk.Body);
+                        Indent -= 4;
+                        AppendIndent().AppendLine("}");
+                        PopScope();
+                    }
+                    break;
+                default:
+                    throw new CompilerException("Unexpected conditional type " + chunk.Type);
             }
         }
 

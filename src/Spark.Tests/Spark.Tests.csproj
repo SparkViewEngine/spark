@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler\ExpressionBuilderTester.cs" />
     <Compile Include="Compiler\ForEachInspectorTester.cs" />
     <Compile Include="DefaultResourcePathManagerTester.cs" />
     <Compile Include="FileSystem\CombinedViewFolderTester.cs" />
@@ -243,6 +244,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\OnceAttribute.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\NullExceptionHandledAutomatically.spark">

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Spark.Compiler;
 using Spark.Parser.Markup;
 
 namespace Spark.Parser.Code
@@ -24,11 +25,33 @@ namespace Spark.Parser.Code
     {
         static CodeGrammar _grammar = new CodeGrammar();
 
-        public static string AsCode(this AttributeNode node)
+        public static string AsCode(this AttributeNode attr)
         {
-            var position = new Position(new SourceContext(node.Value));
+            var position = new Position(new SourceContext(attr.Value));
             var result = _grammar.Expression(position);
             return result.Value + result.Rest.Peek(result.Rest.PotentialLength());
         }
+
+        public static string AsCodeInverted(this AttributeNode attr)
+        {
+            var expression = new ExpressionBuilder();
+            foreach (var node in attr.Nodes)
+            {
+                if (node is TextNode)
+                {
+                    expression.AppendLiteral(((TextNode)node).Text);
+                }
+                else if (node is ExpressionNode)
+                {
+                    expression.AppendExpression(((ExpressionNode)node).Code);
+                }
+                else if (node is EntityNode)
+                {
+                    expression.AppendLiteral("&" + ((EntityNode)node).Name + ";");
+                }
+            }
+            return expression.ToCode();
+        }
+
     }
 }
