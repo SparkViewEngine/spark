@@ -18,11 +18,11 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class ForEachAttributeVisitor : AbstractNodeVisitor
+    public class OnceAttributeVisitor : AbstractNodeVisitor
     {
         IList<Node> _nodes = new List<Node>();
 
-        public ForEachAttributeVisitor(VisitorContext context)
+        public OnceAttributeVisitor(VisitorContext context)
             : base(context)
         {
         }
@@ -46,11 +46,11 @@ namespace Spark.Compiler.NodeVisitors
         void PushFrame()
         {
             _stack.Push(new Frame
-                            {
-                                ClosingName = ClosingName,
-                                ClosingNameOutstanding = ClosingNameOutstanding,
-                                Nodes = Nodes
-                            });
+            {
+                ClosingName = ClosingName,
+                ClosingNameOutstanding = ClosingNameOutstanding,
+                Nodes = Nodes
+            });
         }
         void PopFrame()
         {
@@ -80,26 +80,26 @@ namespace Spark.Compiler.NodeVisitors
             Nodes.Add(node);
         }
 
-        bool IsEachAttribute(AttributeNode attr)
+        bool IsOnceAttribute(AttributeNode attr)
         {
             if (Context.Namespaces == NamespacesType.Unqualified)
-                return attr.Name == "each";
+                return attr.Name == "once";
 
             if (attr.Namespace != Constants.Namespace)
                 return false;
 
-            return NameUtility.GetName(attr.Name) == "each";
+            return NameUtility.GetName(attr.Name) == "once";
         }
 
         protected override void Visit(ElementNode node)
         {
-            var eachAttr = node.Attributes.FirstOrDefault(IsEachAttribute);
-            if (eachAttr != null)
+            var onceAttr = node.Attributes.FirstOrDefault(IsOnceAttribute);
+            if (onceAttr != null)
             {
-                var fakeAttribute = new AttributeNode("each", eachAttr.Nodes) { OriginalNode = eachAttr };
-                var fakeElement = new ElementNode("for", new[] { fakeAttribute }, false) { OriginalNode = eachAttr };
+                var fakeAttribute = new AttributeNode("once", onceAttr.Nodes) { OriginalNode = onceAttr };
+                var fakeElement = new ElementNode("test", new[] { fakeAttribute }, false) { OriginalNode = onceAttr };
                 var specialNode = new SpecialNode(fakeElement);
-                node.Attributes.Remove(eachAttr);
+                node.Attributes.Remove(onceAttr);
                 specialNode.Body.Add(node);
 
                 Nodes.Add(specialNode);
