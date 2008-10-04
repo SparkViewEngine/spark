@@ -817,5 +817,18 @@ namespace Spark.Tests
                 "<p>name silently **</p>",
                 "<p>name fixed *fred*</p>");
         }
+
+        [Test]
+        public void CodeCommentsCanHaveQuotes()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("CodeCommentsCanHaveQuotes", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.IsFalse(content.Contains("broken"));
+            ContainsInOrder(content, "one", "two", "three", "four", "five");
+        }
     }
 }

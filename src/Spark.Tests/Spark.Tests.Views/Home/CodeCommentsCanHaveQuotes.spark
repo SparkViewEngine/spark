@@ -1,0 +1,7 @@
+﻿one
+#// this isn't broken
+two
+<% /* this isn't broken */ %>
+three
+${'four' /* this isn't broken */}
+five

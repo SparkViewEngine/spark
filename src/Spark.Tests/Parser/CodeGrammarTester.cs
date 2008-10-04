@@ -159,5 +159,21 @@ namespace Spark.Tests.Parser
             var result3 = _grammar.Expression(Source("a@' \" '' 'b"));
             Assert.AreEqual("a@\" \"\" ' \"b", result3.Value);
         }
+
+        [Test]
+        public void CommentHasQuotes()
+        {
+            var result = _grammar.Statement1(Source(" // this ' has \" quotes \r\n after "));
+            Assert.AreEqual(" // this ' has \" quotes ", result.Value);
+
+            var result2 = _grammar.Statement1(Source(" /* this ' has \" quotes \r\n */ more \r\n after "));
+            Assert.AreEqual(" /* this ' has \" quotes \r\n */ more ", result2.Value);
+
+            var result3 = _grammar.Statement2(Source(" // this ' has \" quotes \r\n more %> after "));
+            Assert.AreEqual(" // this ' has \" quotes \r\n more ", result3.Value);
+
+            var result4 = _grammar.Statement2(Source(" /* this ' has \" quotes \r\n */ more %> after "));
+            Assert.AreEqual(" /* this ' has \" quotes \r\n */ more ", result4.Value);
+        }
     }
 }

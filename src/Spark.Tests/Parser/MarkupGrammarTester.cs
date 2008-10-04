@@ -478,5 +478,7 @@ namespace Spark.Tests.Parser
             Assert.AreEqual(3, elt.Attributes[0].Nodes.Count);
             Assert.AreEqual("<", ((TextNode)elt.Attributes[0].Nodes[1]).Text);
         }
+
+        
     }
 }

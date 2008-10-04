@@ -66,11 +66,17 @@ namespace Spark.Parser.Code
             var SpecialCharCast = Ch("(char)'").And(ChNot('\'', '\\').Build(ch => ch.ToString()).Or(escapeSequence)).And(Ch('\''))
                 .Build(hit => "(char)'" + hit.Left.Down + "'");
 
+            var oneLineComment = TkComm(Ch("//").And(Rep(ChNot('\r', '\n'))))
+                .Build(hit=>"//" + bs(hit.Down));
+
+            var multiLineComment = TkComm(Ch("/*").And(Rep(Ch(c=>true).Unless(Ch("*/")))).And(Ch("*/")))
+                .Build(hit=>"/*" + bs(hit.Left.Down) + "*/");
+
             var codeStretch = TkCode(Rep1(
                 Ch("[[").Build(ch => '<')
                 .Or(Ch("]]").Build(ch => '>'))
                 .Or(ChNot('\"', '\'', '{', '}'))
-                .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(SpecialCharCast))))
+                .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")).Or(SpecialCharCast))))
                 .Build(bs);
 
             // braced ::= '{' + terms + '}'
@@ -78,7 +84,13 @@ namespace Spark.Parser.Code
                 .Build(hit => "{" + js(hit.Left.Down) + "}");
 
             // ExpressionTerms ::= (dquot | aquot | braced | codeStretch | specialCharCast)*
-            ExpressionTerms = Rep(stringLiteral.Or(braced).Or(codeStretch).Or(SpecialCharCast));
+            ExpressionTerms = Rep(
+                stringLiteral
+                .Or(braced)
+                .Or(codeStretch)
+                .Or(SpecialCharCast)
+                .Or(oneLineComment)
+                .Or(multiLineComment));
 
             Expression = ExpressionTerms.Build(hit => string.Concat(hit.ToArray()));
 
@@ -87,7 +99,7 @@ namespace Spark.Parser.Code
                 Ch("[[").Build(ch => '<')
                 .Or(Ch("]]").Build(ch => '>'))
                 .Or(ChNot('\"', '\''))
-                .Unless(SpecialCharCast.Or(Ch("@\"")).Or(Ch("@'")));
+                .Unless(SpecialCharCast.Or(Ch("@\"")).Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")));
 
             var statement1Stretch = TkCode(Rep1(statementPiece.Unless(Ch('\r', '\n'))))
                 .Build(bs);
@@ -96,11 +108,21 @@ namespace Spark.Parser.Code
                 .Build(bs);
 
             // Statement1 ::= (dquot | aquot | statement1Stretch | specialCharCast)*
-            Statement1 = Rep(stringLiteral.Or(statement1Stretch).Or(SpecialCharCast))
+            Statement1 = Rep(
+                stringLiteral
+                .Or(statement1Stretch)
+                .Or(SpecialCharCast)
+                .Or(oneLineComment)
+                .Or(multiLineComment))
                 .Build(hit => string.Concat(hit.ToArray()));
 
             // Statement2 ::= (dquot | aquot | statement2Stretch | specialCharCast)*
-            Statement2 = Rep(stringLiteral.Or(statement2Stretch).Or(SpecialCharCast))
+            Statement2 = Rep(
+                stringLiteral
+                .Or(statement2Stretch)
+                .Or(SpecialCharCast)
+                .Or(oneLineComment)
+                .Or(multiLineComment))
                 .Build(hit => string.Concat(hit.ToArray()));
 
         }
