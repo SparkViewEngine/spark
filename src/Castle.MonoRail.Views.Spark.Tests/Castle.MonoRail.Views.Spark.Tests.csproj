@@ -193,6 +193,15 @@
     <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewFromEmbeddedResource.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentsSupportEachAttribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentsSupportIfAttribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentsSupportOnceAttribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MonoRail.Tests.Views\Home\NestedComponentInSection.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -246,6 +246,15 @@
     <None Include="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\IfAttributeWorksOnSpecialNodes.spark">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\_SimpleValue.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\EachAttributeWorksOnSpecialNodes.spark">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\OnceAttribute.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

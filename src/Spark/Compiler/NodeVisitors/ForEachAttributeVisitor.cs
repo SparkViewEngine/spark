@@ -18,182 +18,131 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class ForEachAttributeVisitor : AbstractNodeVisitor
-    {
-        IList<Node> _nodes = new List<Node>();
+	public class ForEachAttributeVisitor : NodeVisitor<ForEachAttributeVisitor.Frame>
+	{
+		public ForEachAttributeVisitor(VisitorContext context)
+			: base(context)
+		{
+		}
 
-        public ForEachAttributeVisitor(VisitorContext context)
-            : base(context)
-        {
-        }
+		public class Frame
+		{
+			public string ClosingName { get; set; }
+			public int ClosingNameOutstanding { get; set; }
+		}
 
-        public override IList<Node> Nodes
-        {
-            get { return _nodes; }
-        }
+		bool IsEachAttribute(AttributeNode attr)
+		{
+			if (Context.Namespaces == NamespacesType.Unqualified)
+				return attr.Name == "each";
 
-        public string ClosingName { get; set; }
-        public int ClosingNameOutstanding { get; set; }
+			if (attr.Namespace != Constants.Namespace)
+				return false;
 
-        readonly Stack<Frame> _stack = new Stack<Frame>();
-        class Frame
-        {
-            public string ClosingName { get; set; }
-            public int ClosingNameOutstanding { get; set; }
-            public IList<Node> Nodes { get; set; }
-        }
+			return NameUtility.GetName(attr.Name) == "each";
+		}
 
-        void PushFrame()
-        {
-            _stack.Push(new Frame
-            {
-                ClosingName = ClosingName,
-                ClosingNameOutstanding = ClosingNameOutstanding,
-                Nodes = Nodes
-            });
-        }
-        void PopFrame()
-        {
-            var frame = _stack.Pop();
-            ClosingName = frame.ClosingName;
-            ClosingNameOutstanding = frame.ClosingNameOutstanding;
-            _nodes = frame.Nodes;
-        }
+		static SpecialNode CreateWrappingNode(AttributeNode eachAttr)
+		{
+			var fakeAttribute = new AttributeNode("each", eachAttr.Nodes) { OriginalNode = eachAttr };
+			var fakeElement = new ElementNode("for", new[] { fakeAttribute }, false) { OriginalNode = eachAttr };
+			return new SpecialNode(fakeElement);
+		}
 
-        protected override void Visit(ExpressionNode node)
-        {
-            Nodes.Add(node);
-        }
+		protected override void Visit(ElementNode node)
+		{
+			var eachAttr = node.Attributes.FirstOrDefault(IsEachAttribute);
+			if (eachAttr != null)
+			{
+				var wrapping = CreateWrappingNode(eachAttr);
+				node.Attributes.Remove(eachAttr);
+				wrapping.Body.Add(node);
 
-        protected override void Visit(EntityNode node)
-        {
-            Nodes.Add(node);
-        }
+				Nodes.Add(wrapping);
+				if (!node.IsEmptyElement)
+				{
+					PushFrame(wrapping.Body, new Frame { ClosingName = node.Name, ClosingNameOutstanding = 1 });					
+				}
+			}
+			else if (string.Equals(node.Name, FrameData.ClosingName) && !node.IsEmptyElement)
+			{
+				++FrameData.ClosingNameOutstanding;
+				Nodes.Add(node);
+			}
+			else
+			{
+				Nodes.Add(node);
+			}
+		}
 
-        protected override void Visit(DoctypeNode node)
-        {
-            Nodes.Add(node);
-        }
+		protected override void Visit(EndElementNode node)
+		{
+			Nodes.Add(node);
 
-        protected override void Visit(TextNode node)
-        {
-            Nodes.Add(node);
-        }
+			if (string.Equals(node.Name, FrameData.ClosingName))
+			{
+				--FrameData.ClosingNameOutstanding;
+				if (FrameData.ClosingNameOutstanding == 0)
+				{
+					PopFrame();
+				}
+			}
+		}
 
-        bool IsEachAttribute(AttributeNode attr)
-        {
-            if (Context.Namespaces == NamespacesType.Unqualified)
-                return attr.Name == "each";
+		protected override void Visit(SpecialNode node)
+		{
+			var reconstructed = new SpecialNode(node.Element);
 
-            if (attr.Namespace != Constants.Namespace)
-                return false;
+			var nqName = NameUtility.GetName(node.Element.Name);
 
-            return NameUtility.GetName(attr.Name) == "each";
-        }
+			AttributeNode eachAttr = null;
+			if (nqName != "for")
+				eachAttr = reconstructed.Element.Attributes.FirstOrDefault(IsEachAttribute);
 
-        protected override void Visit(ElementNode node)
-        {
-            var eachAttr = node.Attributes.FirstOrDefault(IsEachAttribute);
-            if (eachAttr != null)
-            {
-                var fakeAttribute = new AttributeNode("each", eachAttr.Nodes) { OriginalNode = eachAttr };
-                var fakeElement = new ElementNode("for", new[] { fakeAttribute }, false) { OriginalNode = eachAttr };
-                var specialNode = new SpecialNode(fakeElement);
-                node.Attributes.Remove(eachAttr);
-                specialNode.Body.Add(node);
+			if (eachAttr != null)
+			{
+				reconstructed.Element.Attributes.Remove(eachAttr);
 
-                Nodes.Add(specialNode);
-                if (!node.IsEmptyElement)
-                {
-                    PushFrame();
-                    ClosingName = node.Name;
-                    ClosingNameOutstanding = 1;
-                    _nodes = specialNode.Body;
-                }
-            }
-            else if (string.Equals(node.Name, ClosingName) && !node.IsEmptyElement)
-            {
-                ++ClosingNameOutstanding;
-                Nodes.Add(node);
-            }
-            else
-            {
-                Nodes.Add(node);
-            }
-        }
+				var wrapping = CreateWrappingNode(eachAttr);
+				Nodes.Add(wrapping);
+				PushFrame(wrapping.Body, new Frame());
+			}
 
-        protected override void Visit(EndElementNode node)
-        {
-            Nodes.Add(node);
+			Nodes.Add(reconstructed);
+			PushFrame(reconstructed.Body, new Frame());
+			Accept(node.Body);
+			PopFrame();
 
-            if (string.Equals(node.Name, ClosingName))
-            {
-                --ClosingNameOutstanding;
-                if (ClosingNameOutstanding == 0)
-                {
-                    PopFrame();
-                }
-            }
-        }
+			if (eachAttr != null)
+			{
+				PopFrame();
+			}
+		}
 
-        protected override void Visit(AttributeNode node)
-        {
-            Nodes.Add(node);
-        }
+		protected override void Visit(ExtensionNode node)
+		{
+			var reconstructed = new ExtensionNode(node.Element, node.Extension);
 
-        protected override void Visit(SpecialNode node)
-        {
-            var reconstructed = new SpecialNode(node.Element);
+			var eachAttr = reconstructed.Element.Attributes.FirstOrDefault(IsEachAttribute);
+			if (eachAttr != null)
+			{
+				reconstructed.Element.Attributes.Remove(eachAttr);
 
-            PushFrame();
+				var wrapping = CreateWrappingNode(eachAttr);
+				Nodes.Add(wrapping);
+				PushFrame(wrapping.Body, new Frame());
+			}
 
-            ClosingName = null;
-            _nodes = reconstructed.Body;
-            Accept(node.Body);
+			Nodes.Add(reconstructed);
+			PushFrame(reconstructed.Body, new Frame());
+			Accept(node.Body);
+			PopFrame();
 
-            PopFrame();
+			if (eachAttr != null)
+			{
+				PopFrame();
+			}
+		}
 
-            Nodes.Add(reconstructed);
-        }
-
-        protected override void Visit(ExtensionNode node)
-        {
-            var reconstructed = new ExtensionNode(node.Element, node.Extension);
-
-            PushFrame();
-
-            ClosingName = null;
-            _nodes = reconstructed.Body;
-            Accept(node.Body);
-
-            PopFrame();
-
-            Nodes.Add(reconstructed);
-        }
-
-        protected override void Visit(CommentNode node)
-        {
-            Nodes.Add(node);
-        }
-
-        protected override void Visit(StatementNode node)
-        {
-            Nodes.Add(node);
-        }
-
-        protected override void Visit(ConditionNode node)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void Visit(XMLDeclNode node)
-        {
-            Nodes.Add(node);
-        }
-
-        protected override void Visit(ProcessingInstructionNode node)
-        {
-            Nodes.Add(node);
-        }
-    }
+	}
 }

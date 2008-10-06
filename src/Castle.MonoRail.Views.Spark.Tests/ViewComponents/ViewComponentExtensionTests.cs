@@ -54,5 +54,62 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                 index = nextIndex + value.Length;
             }
         }
-    }
+
+
+		[ViewComponentDetails("Simple")]
+		public class SimpleViewComponent : ViewComponent
+		{
+			[ViewComponentParam]
+			public string Caption { get; set; }
+
+			public override void Render()
+			{
+				RenderText("<p>" + Caption + "</p>");
+			}
+		}
+
+		[Test]
+		public void ComponentsSupportEachAttribute()
+		{
+			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
+
+			var writer = new StringWriter();
+			factory.Process("Home\\ComponentsSupportEachAttribute", writer, engineContext, controller, controllerContext);
+
+			ContainsInOrder(writer.ToString(),
+							"<p>alpha</p>",
+							"<p>beta</p>",
+							"<p>gamma</p>");
+		}
+
+    	[Test]
+		public void ComponentsSupportIfAttribute()
+		{
+			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
+
+			var writer = new StringWriter();
+			factory.Process("Home\\ComponentsSupportIfAttribute", writer, engineContext, controller, controllerContext);
+
+			ContainsInOrder(writer.ToString(),
+							"<p>foo1</p>",
+							"<p>alpha</p>",
+							"<p>gamma</p>");
+			Assert.IsFalse(writer.ToString().Contains("foo2"));
+			Assert.IsFalse(writer.ToString().Contains("beta"));
+		}
+
+		[Test, Ignore("Not implemented yet")]
+		public void ComponentsSupportOnceAttribute()
+		{
+			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
+
+			var writer = new StringWriter();
+			factory.Process("Home\\ComponentsSupportOnceAttribute", writer, engineContext, controller, controllerContext);
+
+			ContainsInOrder(writer.ToString(),
+							"<p>foo1</p>",
+							"<p>foo2</p>");
+			Assert.IsFalse(writer.ToString().Contains("foo3"));
+		}
+	}
 }

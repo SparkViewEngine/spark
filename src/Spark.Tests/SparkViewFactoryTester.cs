@@ -873,5 +873,43 @@ namespace Spark.Tests
             Assert.IsFalse(content.Contains("bar3"));
             Assert.IsFalse(content.Contains("a2"));
         }
+
+
+		[Test]
+		public void EachAttributeWorksOnSpecialNodes()
+		{
+			mocks.ReplayAll();
+			var viewContext = MakeViewContext("EachAttributeWorksOnSpecialNodes", null);
+			factory.RenderView(viewContext);
+			mocks.VerifyAll();
+			string content = sb.ToString();
+
+			ContainsInOrder(content,
+			                "<p>name-0-alpha</p>",
+			                "<p>name-1-beta</p>",
+			                "<p>name-2-gamma</p>",
+							"<span>one</span>",
+							"<span>two</span>",
+							"<span>three</span>");
+		}
+
+		[Test]
+		public void IfAttributeWorksOnSpecialNodes()
+		{
+			mocks.ReplayAll();
+			var viewContext = MakeViewContext("IfAttributeWorksOnSpecialNodes", null);
+			factory.RenderView(viewContext);
+			mocks.VerifyAll();
+			string content = sb.ToString();
+
+			ContainsInOrder(content,
+							"<p>name-0-alpha</p>",
+							"<p>name-2-gamma</p>",
+							"<span>one</span>",
+							"<span>three</span>");
+
+			Assert.IsFalse(content.Contains("beta"));
+			Assert.IsFalse(content.Contains("two"));
+		}
     }
 }

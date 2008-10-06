@@ -12,73 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System.Collections.Generic;
 using System.Linq;
 using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class ConditionalAttributeVisitor : AbstractNodeVisitor
+	public class ConditionalAttributeVisitor : NodeVisitor<ConditionalAttributeVisitor.Frame>
     {
-        IList<Node> _nodes = new List<Node>();
+		public ConditionalAttributeVisitor(VisitorContext context)
+			: base(context)
+		{
+		}
 
-        public ConditionalAttributeVisitor(VisitorContext context) : base(context)
-        {
-        }
-
-        public override IList<Node> Nodes
-        {
-            get { return _nodes; }            
-        }
-
-        public string ClosingName { get; set; }
-        public int ClosingNameOutstanding { get; set; }
-
-        readonly Stack<Frame> _stack = new Stack<Frame>();
-        class Frame
-        {
-            public string ClosingName { get; set; }
-            public int ClosingNameOutstanding { get; set; }
-            public IList<Node> Nodes { get; set; }
-        }
-
-        void PushFrame()
-        {
-            _stack.Push(new Frame
-                            {
-                                ClosingName = ClosingName,
-                                ClosingNameOutstanding = ClosingNameOutstanding,
-                                Nodes = Nodes
-                            });
-        }
-        void PopFrame()
-        {
-            var frame = _stack.Pop();
-            ClosingName = frame.ClosingName;
-            ClosingNameOutstanding = frame.ClosingNameOutstanding;
-            _nodes = frame.Nodes;
-        }
-
-        protected override void Visit(ExpressionNode node)
-        {
-            Nodes.Add(node);
-        }
-
-        protected override void Visit(EntityNode node)
-        {
-            Nodes.Add(node);
-        }
-
-        protected override void Visit(DoctypeNode node)
-        {
-            Nodes.Add(node);
-        }
-
-        protected override void Visit(TextNode node)
-        {
-            Nodes.Add(node);
-        }
-
+		public class Frame
+		{
+			public string ClosingName { get; set; }
+			public int ClosingNameOutstanding { get; set; }
+		}
 
         bool IsConditionalAttribute(AttributeNode attr)
         {
@@ -92,110 +42,108 @@ namespace Spark.Compiler.NodeVisitors
             return nqName == "if" || nqName == "elseif";
         }
 
+		static SpecialNode CreateWrappingNode(AttributeNode conditionalAttr)
+		{
+			var fakeAttribute = new AttributeNode("condition", conditionalAttr.Nodes);
+			var fakeElement = new ElementNode(NameUtility.GetName(conditionalAttr.Name), new[] { fakeAttribute }, false) { OriginalNode = conditionalAttr };
+			return new SpecialNode(fakeElement);
+		}
+
         protected override void Visit(ElementNode node)
         {
             var conditionalAttr = node.Attributes.FirstOrDefault(IsConditionalAttribute);
+			if (conditionalAttr != null)
+			{
+				var wrapping = CreateWrappingNode(conditionalAttr);
+				node.Attributes.Remove(conditionalAttr);
+				wrapping.Body.Add(node);
 
-            if (conditionalAttr != null)
-            {
-                var fakeElement = new ElementNode(NameUtility.GetName(conditionalAttr.Name), new[] { new AttributeNode("condition", conditionalAttr.Nodes) },
-                                                            false) { OriginalNode = conditionalAttr };
-                var specialNode = new SpecialNode(fakeElement);
-                node.Attributes.Remove(conditionalAttr);
-                specialNode.Body.Add(node);
-
-                Nodes.Add(specialNode);
-                if (!node.IsEmptyElement)
-                {
-                    PushFrame();
-                    ClosingName = node.Name;
-                    ClosingNameOutstanding = 1;
-                    _nodes = specialNode.Body;
-                }
-            }
-            else if (string.Equals(node.Name, ClosingName) && !node.IsEmptyElement)
-            {
-                ++ClosingNameOutstanding;
-                Nodes.Add(node);
-            }
-            else
-            {
-                Nodes.Add(node);
-            }
+				Nodes.Add(wrapping);
+				if (!node.IsEmptyElement)
+				{
+					PushFrame(wrapping.Body, new Frame { ClosingName = node.Name, ClosingNameOutstanding = 1 });
+				}
+			}
+			else if (string.Equals(node.Name, FrameData.ClosingName) && !node.IsEmptyElement)
+			{
+				++FrameData.ClosingNameOutstanding;
+				Nodes.Add(node);
+			}
+			else
+			{
+				Nodes.Add(node);
+			}
         }
 
-        protected override void Visit(EndElementNode node)
-        {
-            Nodes.Add(node);
+		protected override void Visit(EndElementNode node)
+		{
+			Nodes.Add(node);
 
-            if (string.Equals(node.Name, ClosingName))
-            {
-                --ClosingNameOutstanding;
-                if (ClosingNameOutstanding == 0)
-                {
-                    PopFrame();
-                }
-            }
-        }
-
-        protected override void Visit(AttributeNode node)
-        {
-            Nodes.Add(node);
-        }
+			if (string.Equals(node.Name, FrameData.ClosingName))
+			{
+				--FrameData.ClosingNameOutstanding;
+				if (FrameData.ClosingNameOutstanding == 0)
+				{
+					PopFrame();
+				}
+			}
+		}
 
         protected override void Visit(SpecialNode node)
         {
-            var reconstructed = new SpecialNode(node.Element);
+			var reconstructed = new SpecialNode(node.Element);
 
-            PushFrame();
+			var nqName = NameUtility.GetName(node.Element.Name);
 
-            ClosingName = null;
-            _nodes = reconstructed.Body;
-            Accept(node.Body);
+			AttributeNode attr = null;
+			if (nqName != "test" && node.Element.Name != "if" && node.Element.Name != "elseif" && node.Element.Name != "else")
+				attr = reconstructed.Element.Attributes.FirstOrDefault(IsConditionalAttribute);
 
-            PopFrame();
+			if (attr != null)
+			{
+				reconstructed.Element.Attributes.Remove(attr);
 
-            Nodes.Add(reconstructed);
+				var wrapping = CreateWrappingNode(attr);
+				Nodes.Add(wrapping);
+				PushFrame(wrapping.Body, new Frame());
+			}
+
+			Nodes.Add(reconstructed);
+			PushFrame(reconstructed.Body, new Frame());
+			Accept(node.Body);
+			PopFrame();
+
+			if (attr != null)
+			{
+				PopFrame();
+			}
         }
 
-        protected override void Visit(CommentNode node)
-        {
-            Nodes.Add(node);
-        }
 
         protected override void Visit(ExtensionNode node)
         {
-            var reconstructed = new ExtensionNode(node.Element, node.Extension);
+			var reconstructed = new ExtensionNode(node.Element, node.Extension);
 
-            PushFrame();
+			var attr = reconstructed.Element.Attributes.FirstOrDefault(IsConditionalAttribute);
+			if (attr != null)
+			{
+				reconstructed.Element.Attributes.Remove(attr);
 
-            ClosingName = null;
-            _nodes = reconstructed.Body;
-            Accept(node.Body);
+				var wrapping = CreateWrappingNode(attr);
+				Nodes.Add(wrapping);
+				PushFrame(wrapping.Body, new Frame());
+			}
 
-            PopFrame();
+			Nodes.Add(reconstructed);
+			PushFrame(reconstructed.Body, new Frame());
+			Accept(node.Body);
+			PopFrame();
 
-            Nodes.Add(reconstructed);
+			if (attr != null)
+			{
+				PopFrame();
+			}
         }
 
-        protected override void Visit(StatementNode node)
-        {
-            Nodes.Add(node);
-        }
-
-        protected override void Visit(ConditionNode node)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void Visit(XMLDeclNode node)
-        {
-            Nodes.Add(node);
-        }
-
-        protected override void Visit(ProcessingInstructionNode node)
-        {
-            Nodes.Add(node);
-        }
     }
 }

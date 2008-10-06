@@ -1,0 +1,5 @@
+﻿<div>
+  <Simple Caption="'foo1'" once="alpha"/>
+  <Simple Caption="'foo2'" once="beta"/>
+  <Simple Caption="'foo3'" once="alpha"/>
+</div>

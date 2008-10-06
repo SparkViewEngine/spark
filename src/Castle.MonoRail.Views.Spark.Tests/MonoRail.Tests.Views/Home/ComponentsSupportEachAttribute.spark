@@ -1,0 +1,3 @@
+﻿<div>
+  <Simple Caption="name" each="var name in new[] {'alpha', 'beta', 'gamma'}"/>
+</div>
