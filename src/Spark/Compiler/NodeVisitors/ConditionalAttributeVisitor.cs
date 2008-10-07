@@ -96,7 +96,7 @@ namespace Spark.Compiler.NodeVisitors
 			var nqName = NameUtility.GetName(node.Element.Name);
 
 			AttributeNode attr = null;
-			if (nqName != "test" && node.Element.Name != "if" && node.Element.Name != "elseif" && node.Element.Name != "else")
+            if (nqName != "test" && nqName != "if" && nqName != "elseif" && nqName != "else")
 				attr = reconstructed.Element.Attributes.FirstOrDefault(IsConditionalAttribute);
 
 			if (attr != null)
@@ -118,7 +118,6 @@ namespace Spark.Compiler.NodeVisitors
 				PopFrame();
 			}
         }
-
 
         protected override void Visit(ExtensionNode node)
         {
@@ -144,6 +143,5 @@ namespace Spark.Compiler.NodeVisitors
 				PopFrame();
 			}
         }
-
     }
 }

@@ -98,7 +98,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 			Assert.IsFalse(writer.ToString().Contains("beta"));
 		}
 
-		[Test, Ignore("Not implemented yet")]
+		[Test]
 		public void ComponentsSupportOnceAttribute()
 		{
 			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
