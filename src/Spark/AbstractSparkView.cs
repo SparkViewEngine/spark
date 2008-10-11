@@ -25,7 +25,7 @@ namespace Spark
         public abstract Guid GeneratedViewId { get; }
 
         private readonly Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
-        readonly IDictionary<string, string> _once = new Dictionary<string, string>();
+        protected IDictionary<string, string> _once = new Dictionary<string, string>();
 
         public Dictionary<string, TextWriter> Content { get { return _content; } }
         public TextWriter Output { get; private set; }        

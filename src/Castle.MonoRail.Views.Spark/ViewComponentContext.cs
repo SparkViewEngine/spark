@@ -56,34 +56,34 @@ namespace Castle.MonoRail.Views.Spark
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add(Path.ChangeExtension(name, ".spark"));
             var entry = _viewEngine.Engine.CreateEntry(descriptor);
-            var view = (SparkView)entry.CreateInstance();
+            var componentView = (SparkView)entry.CreateInstance();
 
             foreach (var content in _view.Content)
             {
-                view.Content.Add(content.Key, content.Value);
-            }            
+                componentView.Content.Add(content.Key, content.Value);
+            }
 
             var oldPropertyBag = _view.ControllerContext.PropertyBag;
             _view.ControllerContext.PropertyBag = ContextVars;
 
             try
             {
-                view.Contextualize(_view.Context, _view.ControllerContext, _viewEngine);
-                view.RenderView(writer);
+                componentView.Contextualize(_view.Context, _view.ControllerContext, _viewEngine, _view);
+                componentView.RenderView(writer);
             }
             finally
             {
                 _view.ControllerContext.PropertyBag = oldPropertyBag;
             }
 
-            foreach (var content in view.Content)
+            foreach (var content in componentView.Content)
             {
                 if (!_view.Content.ContainsKey(content.Key))
                     _view.Content.Add(content.Key, content.Value);
             }
-            view.Content.Clear();
+            componentView.Content.Clear();
 
-            entry.ReleaseInstance(view);
+            entry.ReleaseInstance(componentView);
         }
 
         public void RenderBody()

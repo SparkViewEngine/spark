@@ -1,4 +1,4 @@
-﻿// Copyright 2008 Louis DeJardin - http://whereslou.com
+// Copyright 2008 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             controllerContext.PropertyBag.Add("foo", "bar");
 
             mocks.ReplayAll();
-            view.Contextualize(engineContext, controllerContext, null);
+            view.Contextualize(engineContext, controllerContext, null, null);
 
             Assert.AreEqual("bar", view.ViewData["foo"]);
         }
@@ -73,7 +73,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             engineContext.Request.Params.Add("contextParamsKey", "contextParamsValue");
             controllerContext.Resources.Add("controllerResourcesKey", resource);
 
-            view.Contextualize(engineContext, controllerContext, null);
+            view.Contextualize(engineContext, controllerContext, null, null);
 
             Assert.AreEqual("controllerPropertyBagValue", view.ViewData["controllerPropertyBagKey"]);
             Assert.AreEqual("contextFlashValue", view.ViewData["contextFlashKey"]);

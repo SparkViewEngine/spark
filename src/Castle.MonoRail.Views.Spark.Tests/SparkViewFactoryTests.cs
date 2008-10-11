@@ -1,4 +1,4 @@
-﻿// Copyright 2008 Louis DeJardin - http://whereslou.com
+// Copyright 2008 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -145,7 +145,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             descriptor.Templates.Add("Shared\\default.spark");
             var entry = factory.Engine.GetEntry(descriptor);
             var view = (SparkView)entry.CreateInstance();
-            view.Contextualize(engineContext, controllerContext, factory);
+            view.Contextualize(engineContext, controllerContext, factory, null);
             
             var result = new StringWriter();
             view.RenderView(result);

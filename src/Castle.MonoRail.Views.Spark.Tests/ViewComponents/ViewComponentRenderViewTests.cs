@@ -91,6 +91,24 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             Assert.That(content.Contains("<p>This was embedded</p>"));
         }
 
+        [Test]
+        public void ComponentRenderViewSharesOnceFlags()
+        {
+            viewComponentFactory.Registry.AddViewComponent("OnceWidget", typeof(OnceWidget));
+
+            mocks.ReplayAll();
+
+            var writer = new StringWriter();
+            factory.Process("Home\\ComponentRenderViewSharesOnceFlags.spark", writer, engineContext, controller, controllerContext);
+
+            mocks.VerifyAll();
+
+            var content = writer.ToString();
+            Assert.That(content.Contains("<p>ok1</p>"));
+            Assert.That(content.Contains("<p>ok2</p>"));
+            Assert.IsFalse(content.Contains("fail"));
+        }
+
         [ViewComponentDetails("WidgetComponent")]
         public class WidgetComponent : ViewComponent
         {
@@ -116,6 +134,16 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 
         [ViewComponentDetails("UseEmbeddedViews")]
         public class UseEmbeddedViews : ViewComponent
+        {
+            public override void Render()
+            {
+                RenderView("default");
+            }
+        }
+
+
+        [ViewComponentDetails("OnceWidget")]
+        public class OnceWidget : ViewComponent
         {
             public override void Render()
             {

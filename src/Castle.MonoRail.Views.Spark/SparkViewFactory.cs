@@ -142,7 +142,7 @@ namespace Castle.MonoRail.Views.Spark
 
             var entry = Engine.CreateEntry(descriptor);
             var view = (SparkView)entry.CreateInstance();
-            view.Contextualize(context, controllerContext, this);
+            view.Contextualize(context, controllerContext, this, null);
             if (view.Logger == null || view.Logger == NullLogger.Instance)
                 view.Logger = Logger;
             view.RenderView(output);

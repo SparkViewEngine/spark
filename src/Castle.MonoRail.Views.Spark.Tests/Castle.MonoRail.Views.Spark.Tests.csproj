@@ -136,6 +136,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="EmbeddedViews\Components\UseEmbeddedViews\default.spark" />
+    <None Include="MonoRail.Tests.Views\Components\OnceWidget\default.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-AuthenticatedContent.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -200,6 +203,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MonoRail.Tests.Views\Home\ComponentsSupportOnceAttribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewSharesOnceFlags.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MonoRail.Tests.Views\Home\NestedComponentInSection.spark">

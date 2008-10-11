@@ -1,0 +1,4 @@
+﻿<p once="alpha">ok1</p>
+<OnceWidget/>
+<p once="alpha">fail</p>
+<p once="beta">fail</p>
