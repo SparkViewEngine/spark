@@ -129,7 +129,7 @@ namespace Spark.Compiler.CSharp
             {
                 if (invokeLevel != renderLevel - 1)
                 {
-                    source.AppendLine(string.Format("        using (OutputScope(new System.IO.StringWriter())) {{RenderViewLevel{0}(); Content[\"view\"] = Output;}}", invokeLevel));
+                    source.AppendLine(string.Format("        using (OutputScope()) {{RenderViewLevel{0}(); Content[\"view\"] = Output;}}", invokeLevel));
                 }
                 else
                 {

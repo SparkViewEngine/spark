@@ -335,7 +335,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             CodeHidden();
             PushScope();
             AppendIndent().AppendLine("{");
-            _source.Append(' ', Indent + 4).AppendLine(string.Format("Output.Write(Content[\"{0}\"]);", chunk.Name));
+            _source.Append(' ', Indent + 4).AppendLine(string.Format("global::Spark.Spool.TextWriterExtensions.WriteTo(Content[\"{0}\"], Output);", chunk.Name));
             AppendIndent().AppendLine("}");
             PopScope();
 

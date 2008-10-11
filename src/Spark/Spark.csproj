@@ -151,6 +151,9 @@
     <Compile Include="SparkViewAttribute.cs" />
     <Compile Include="SparkViewDescriptor.cs" />
     <Compile Include="SparkViewEngine.cs" />
+    <Compile Include="Spool\SpoolPage.cs" />
+    <Compile Include="Spool\SpoolWriter.cs" />
+    <Compile Include="Spool\TextWriterExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SparkKey.snk" />

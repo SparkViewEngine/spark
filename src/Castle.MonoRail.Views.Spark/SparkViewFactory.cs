@@ -146,6 +146,13 @@ namespace Castle.MonoRail.Views.Spark
             if (view.Logger == null || view.Logger == NullLogger.Instance)
                 view.Logger = Logger;
             view.RenderView(output);
+
+            // proactively dispose named content. pools spoolwriter pages. avoids finalizers.
+            foreach(var writer in view.Content.Values)
+                writer.Close();
+
+            view.Content.Clear();
+
             entry.ReleaseInstance(view);
         }
 

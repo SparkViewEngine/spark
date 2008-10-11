@@ -61,7 +61,7 @@ namespace Castle.MonoRail.Views.Spark
             foreach (var content in _view.Content)
             {
                 view.Content.Add(content.Key, content.Value);
-            }
+            }            
 
             var oldPropertyBag = _view.ControllerContext.PropertyBag;
             _view.ControllerContext.PropertyBag = ContextVars;
@@ -81,6 +81,7 @@ namespace Castle.MonoRail.Views.Spark
                 if (!_view.Content.ContainsKey(content.Key))
                     _view.Content.Add(content.Key, content.Value);
             }
+            view.Content.Clear();
 
             entry.ReleaseInstance(view);
         }

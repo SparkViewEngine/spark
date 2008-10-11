@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Spark.Spool;
 
 namespace Spark
 {
@@ -24,6 +25,7 @@ namespace Spark
         public abstract Guid GeneratedViewId { get; }
 
         private readonly Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
+        readonly IDictionary<string, string> _once = new Dictionary<string, string>();
 
         public Dictionary<string, TextWriter> Content { get { return _content; } }
         public TextWriter Output { get; private set; }        
@@ -33,7 +35,7 @@ namespace Spark
             TextWriter writer;
             if (!_content.TryGetValue(name, out writer))
             {
-                writer = new StringWriter();
+                writer = new SpoolWriter();
                 _content.Add(name, writer);
             }
             return new OutputScopeImpl(this, writer);
@@ -44,7 +46,12 @@ namespace Spark
             return new OutputScopeImpl(this, writer);
         }
 
-        IDictionary<string, string> _once = new Dictionary<string, string>();
+        public IDisposable OutputScope()
+        {
+            return new OutputScopeImpl(this, new SpoolWriter());
+        }
+
+        
         public bool Once(string flag)
         {
             if (_once.ContainsKey(flag))

@@ -90,6 +90,12 @@ namespace Spark.Web.Mvc
             Ajax = new AjaxHelper(wrapped);
 
             RenderView(writer);
+
+            // proactively dispose named content. pools spoolwriter pages. avoids finalizers.
+            foreach (var content in Content.Values)
+                content.Close();
+
+            Content.Clear();
         }
 
         #endregion
