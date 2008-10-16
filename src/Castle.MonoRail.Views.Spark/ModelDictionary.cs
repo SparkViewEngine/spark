@@ -30,22 +30,28 @@ namespace Castle.MonoRail.Views.Spark
                 object value;
 
                 if (member is FieldInfo)
+                {
                     value = (member as FieldInfo).GetValue(model);
+                }
                 else if (member is PropertyInfo)
+                {
                     value = (member as PropertyInfo).GetValue(model, null);
+                }
                 else
-                    value = null;
+                {
+                    continue;
+                }
 
                 if (string.Equals(member.Name, "querystring", StringComparison.InvariantCultureIgnoreCase) || 
                     string.Equals(member.Name, "params", StringComparison.InvariantCultureIgnoreCase) ||
                     string.Equals(member.Name, "routeparams", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if (!(value is IDictionary) && !(value is string))
+                    if (value != null && !(value is IDictionary) && !(value is string))
                     {
                         value = new ModelDictionary(value);
                     }
                 }
-
+    
                 Add(member.Name, value);
             }
 
