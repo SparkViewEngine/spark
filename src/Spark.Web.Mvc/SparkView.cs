@@ -81,7 +81,7 @@ namespace Spark.Web.Mvc
         {
             var httpContext = new HttpContextWrapper(viewContext.HttpContext, this);
             var wrapped = new ViewContext(httpContext, viewContext.RouteData, viewContext.Controller,
-                                          viewContext.ViewName, viewContext.ViewData, viewContext.TempData);
+                                          viewContext.View, viewContext.ViewData, viewContext.TempData);
 
             ViewContext = wrapped;
             ViewData = wrapped.ViewData;

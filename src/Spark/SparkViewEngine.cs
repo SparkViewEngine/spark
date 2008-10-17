@@ -168,7 +168,14 @@ namespace Spark
             return CreateEntry(descriptor).CreateInstance();
         }
 
+        public void ReleaseInstance(ISparkView view)
+        {
+            if (view == null) throw new ArgumentNullException("view");
 
+            var entry = CompiledViewHolder.Current.Lookup(view.GeneratedViewId);
+            if (entry != null)
+                entry.ReleaseInstance(view);
+        }
 
         public CompiledViewHolder.Key CreateKey(SparkViewDescriptor descriptor)
         {

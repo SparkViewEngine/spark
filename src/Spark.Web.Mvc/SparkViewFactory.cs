@@ -112,6 +112,11 @@ namespace Spark.Web.Mvc
             return FindViewInternal(controllerContext, partialViewName, null /*masterName*/, false);
         }
 
+        public void ReleaseView(ControllerContext controllerContext, IView view)
+        {
+            Engine.ReleaseInstance((ISparkView)view);
+        }
+
         #endregion
 
         private ViewEngineResult FindViewInternal(ControllerContext controllerContext, string viewName,
@@ -131,7 +136,7 @@ namespace Spark.Web.Mvc
             {
                 ((SparkView) view).ResourcePathManager = Engine.ResourcePathManager;
             }
-            return new ViewEngineResult(view);
+            return new ViewEngineResult(view, this);
         }
 
         public SparkViewDescriptor CreateDescriptor(ControllerContext controllerContext, string viewName,

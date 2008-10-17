@@ -16,6 +16,7 @@ using System;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Html;
 using System.Web.Routing;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -63,7 +64,8 @@ namespace Spark.Web.Mvc.Tests
 
             controllerContext = new ControllerContext(context, routeData, controller);
 
-            factory = new SparkViewFactory {ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views")};
+            var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html");
+            factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
 
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(factory);
@@ -83,26 +85,32 @@ namespace Spark.Web.Mvc.Tests
 
         private TextWriter output;
 
-
         private ViewContext MakeViewContext(string viewName)
         {
-            return MakeViewContext(viewName, null);
+            var result = factory.FindView(controllerContext, viewName, null);
+            return new ViewContext(controllerContext, result.View, null, null);
         }
 
-        private ViewContext MakeViewContext(string viewName, object viewData)
+        private void FindViewAndRender(string viewName)
         {
-            return new ViewContext(context, routeData, controller, viewName, new ViewDataDictionary(viewData), null);
+            FindViewAndRender(viewName, null, null);
         }
 
         private void FindViewAndRender(string viewName, string masterName)
         {
-            FindViewAndRender(MakeViewContext(viewName), masterName);
+            FindViewAndRender(viewName, masterName, null);
         }
 
-        private void FindViewAndRender(ViewContext viewContext, string masterName)
+        private void FindViewAndRender(string viewName, object viewData)
         {
-            var viewEngineResult = factory.FindView(controllerContext, viewContext.ViewName, masterName);
-            viewEngineResult.View.Render(viewContext, output);
+            FindViewAndRender(viewName, null, viewData);
+        }
+
+        private void FindViewAndRender(string viewName, string masterName, object viewData)
+        {
+            var result = factory.FindView(controllerContext, viewName, masterName);
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(viewData), null);
+            viewContext.View.Render(viewContext, output);
         }
 
         private class ViewDataContainer : IViewDataContainer
@@ -145,9 +153,8 @@ namespace Spark.Web.Mvc.Tests
         {
             mocks.ReplayAll();
             var comments = new[] {new Comment {Text = "foo"}, new Comment {Text = "bar"}};
-            var viewContext = MakeViewContext("viewdata", new {Comments = comments, Caption = "Hello world"});
 
-            FindViewAndRender(viewContext, null);
+            FindViewAndRender("viewdata", new {Comments = comments, Caption = "Hello world"});
 
             mocks.VerifyAll();
             var content = output.ToString();
@@ -191,8 +198,7 @@ namespace Spark.Web.Mvc.Tests
         public void HtmlEncodeFunctionH()
         {
             mocks.ReplayAll();
-            var viewContext = MakeViewContext("html-encode-function-h");
-            FindViewAndRender(viewContext, null);
+            FindViewAndRender("html-encode-function-h");
             mocks.VerifyAll();
 
             var content = output.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
@@ -312,9 +318,7 @@ namespace Spark.Web.Mvc.Tests
         public void NullViewDataIsSafe()
         {
             mocks.ReplayAll();
-            var viewContext = new ViewContext(context, routeData, controller, "viewdatanull", null, null);
-
-            FindViewAndRender(viewContext, null);
+            FindViewAndRender("viewdatanull", null);
             mocks.VerifyAll();
 
             var content = output.ToString();
@@ -384,9 +388,7 @@ namespace Spark.Web.Mvc.Tests
         public void UsingNamespace()
         {
             mocks.ReplayAll();
-            var viewContext = MakeViewContext("usingnamespace");
-
-            FindViewAndRender(viewContext, null);
+            FindViewAndRender("usingnamespace");
 
             mocks.VerifyAll();
             var content = output.ToString();
@@ -429,8 +431,7 @@ namespace Spark.Web.Mvc.Tests
         public void ViewDataWithModel()
         {
             mocks.ReplayAll();
-            var viewContext = MakeViewContext("viewdatamodel", new Comment {Text = "Hello"});
-            FindViewAndRender(viewContext, null);
+            FindViewAndRender("viewdatamodel", new Comment { Text = "Hello" });
             mocks.VerifyAll();
 
             var content = output.ToString();

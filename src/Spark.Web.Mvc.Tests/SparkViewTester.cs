@@ -58,9 +58,10 @@ namespace Spark.Web.Mvc.Tests
 
             mocks.ReplayAll();
 
-            var viewContext = new ViewContext(httpContext, new RouteData(), controller, "index", null, null);
+            var view = new StubSparkView();
+            var viewContext = new ViewContext(httpContext, new RouteData(), controller, view, null, null);
 
-            var view = new StubSparkView {ViewContext = viewContext};
+            view = new StubSparkView { ViewContext = viewContext };
             Assert.AreEqual("", view.SiteRoot);
 
             view = new StubSparkView {ViewContext = viewContext};
