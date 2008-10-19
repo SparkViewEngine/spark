@@ -165,12 +165,13 @@
             <param name="dependency">The dependency model</param>
             <returns><c>true</c> if the dependency can be satisfied</returns>
         </member>
-        <member name="F:Castle.MicroKernel.CreationContext.handler">
+        <member name="F:Castle.MicroKernel.CreationContext.dependencies">
             <summary>
-            
+            Holds the scoped dependencies being resolved. 
+            If a dependency appears twice on the same scope, we'd have a cycle.
             </summary>
         </member>
-        <member name="F:Castle.MicroKernel.CreationContext.handlersChain">
+        <member name="F:Castle.MicroKernel.CreationContext.handlerStack">
             <summary>
             The list of handlers that are used to resolve
             the component.
@@ -178,11 +179,47 @@
             with itself.
             </summary>
         </member>
-        <member name="F:Castle.MicroKernel.CreationContext.dependencies">
+        <member name="M:Castle.MicroKernel.CreationContext.#ctor(Castle.MicroKernel.IHandler,Castle.MicroKernel.IReleasePolicy,System.Collections.IDictionary)">
             <summary>
-            Holds the scoped dependencies being resolved. 
-            If a dependency appears twice on the same scope, we'd have a cycle.
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.CreationContext"/> class.
             </summary>
+            <param name="handler">The handler.</param>
+            <param name="releasePolicy">The release policy.</param>
+            <param name="additionalArguments">The additional arguments.</param>
+        </member>
+        <member name="M:Castle.MicroKernel.CreationContext.#ctor(Castle.Core.DependencyModel[],Castle.MicroKernel.IReleasePolicy)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.CreationContext"/> class.
+            </summary>
+            <param name="dependencies">The dependencies.</param>
+            <param name="releasePolicy">The release policy.</param>
+        </member>
+        <member name="M:Castle.MicroKernel.CreationContext.#ctor(Castle.MicroKernel.IHandler,Castle.MicroKernel.IReleasePolicy,Castle.Core.DependencyModelCollection,System.Collections.Generic.IEnumerable{Castle.MicroKernel.IHandler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.CreationContext"/> class.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="releasePolicy">The release policy.</param>
+            <param name="dependencies">The dependencies.</param>
+            <param name="handlersChain">The handlers chain.</param>
+        </member>
+        <member name="M:Castle.MicroKernel.CreationContext.#ctor(Castle.MicroKernel.IHandler,Castle.MicroKernel.IReleasePolicy,System.Type,System.Collections.IDictionary)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.CreationContext"/> class.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="releasePolicy">The release policy.</param>
+            <param name="typeToExtractGenericArguments">The type to extract generic arguments.</param>
+            <param name="additionalArguments">The additional arguments.</param>
+        </member>
+        <member name="M:Castle.MicroKernel.CreationContext.#ctor(Castle.MicroKernel.IHandler,Castle.MicroKernel.IReleasePolicy,System.Type,Castle.MicroKernel.CreationContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.CreationContext"/> class.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="releasePolicy">The release policy.</param>
+            <param name="typeToExtractGenericArguments">The type to extract generic arguments.</param>
+            <param name="parentContext">The parent context.</param>
         </member>
         <member name="M:Castle.MicroKernel.CreationContext.HandlerIsCurrentlyBeingResolved(Castle.MicroKernel.IHandler)">
             <summary>
@@ -734,8 +771,17 @@
         </member>
         <member name="T:Castle.MicroKernel.LifecycleConcerns.ILifecycleConcern">
             <summary>
-            Summary description for ILifecycleConcern.
+            Represents a concern that will be applied to a component instance
+            during commission or decomission phase. 
             </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.LifecycleConcerns.ILifecycleConcern.Apply(Castle.Core.ComponentModel,System.Object)">
+            <summary>
+            Implementors should act on the instance in response to 
+            a decomission or commission phase. 
+            </summary>
+            <param name="model">The model.</param>
+            <param name="component">The component.</param>
         </member>
         <member name="T:Castle.Facilities.TypedFactory.FactoryInterceptor">
             <summary>
@@ -1534,6 +1580,36 @@
             </summary>
             <value>The contributors.</value>
         </member>
+        <member name="T:Castle.MicroKernel.Proxy.IModelInterceptorsSelector">
+            <summary>
+            Select the appropriate interecptors based on the application specific
+            business logic
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Proxy.IModelInterceptorsSelector.SelectInterceptors(Castle.Core.ComponentModel)">
+            <summary>
+            Select the appropriate intereceptor references.
+            The intereceptor references aren't neccessarily registered in the model.Intereceptors
+            </summary>
+            <param name="model">The model to select the interceptors for</param>
+            <returns>The intereceptors for this model (in the current context) or a null reference</returns>
+            <remarks>
+            If the selector is not interested in modifying the interceptors for this model, it 
+            should return a null reference and the next selector in line would be executed (or the default
+            model.Interceptors).
+            If the selector return a non null value, this is the value that is used, and the model.Interectors are ignored, if this
+            is not the desirable behavior, you need to merge your interceptors with the ones in model.Interecptors yourself.
+            </remarks>
+        </member>
+        <member name="M:Castle.MicroKernel.Proxy.IModelInterceptorsSelector.HasInterceptors(Castle.Core.ComponentModel)">
+            <summary>
+            Determain whatever the specified has interecptors.
+            The selector should only return true from this method if it has determained that is
+            a model that it would likely add interceptors to.
+            </summary>
+            <param name="model">The model</param>
+            <returns>Whatever this selector is likely to add intereceptors to the specified model</returns>
+        </member>
         <member name="T:Castle.MicroKernel.IProxyFactory">
             <summary>
             Defines the contract used by the kernel 
@@ -1542,7 +1618,7 @@
             the invocation to the registered interceptors in the model
             </summary>
         </member>
-        <member name="M:Castle.MicroKernel.IProxyFactory.Create(Castle.MicroKernel.IKernel,System.Object,Castle.Core.ComponentModel,System.Object[])">
+        <member name="M:Castle.MicroKernel.IProxyFactory.Create(Castle.MicroKernel.IKernel,System.Object,Castle.Core.ComponentModel,Castle.MicroKernel.CreationContext,System.Object[])">
             <summary>
             Implementors must create a proxy based on 
             the information exposed by ComponentModel
@@ -1551,6 +1627,7 @@
             <param name="model">The component model</param>
             <param name="instance">The component instance to be proxy (only required in some cases)</param>
             <param name="constructorArguments">array of parameters to the constructor (if any)</param>
+            <param name="context">The creation context</param>
             <returns>proxy instance</returns>
         </member>
         <member name="M:Castle.MicroKernel.IProxyFactory.RequiresTargetInstance(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
@@ -1561,7 +1638,20 @@
             </summary>
             <param name="kernel">The kernel instance</param>
             <param name="model">The component model</param>
-            <returns><c>true</c> if an instance must be passed to <see cref="M:Castle.MicroKernel.IProxyFactory.Create(Castle.MicroKernel.IKernel,System.Object,Castle.Core.ComponentModel,System.Object[])"/></returns>
+            <returns><c>true</c> if an instance must be passed to <see cref="M:Castle.MicroKernel.IProxyFactory.Create(Castle.MicroKernel.IKernel,System.Object,Castle.Core.ComponentModel,Castle.MicroKernel.CreationContext,System.Object[])"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.IProxyFactory.AddInterceptorSelector(Castle.MicroKernel.Proxy.IModelInterceptorsSelector)">
+            <summary>
+            Add the selector to the list of selectors that can affect interecptors decisions
+            in the container.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.IProxyFactory.ShouldCreateProxy(Castle.Core.ComponentModel)">
+            <summary>
+            Determains whatever we need to create a proxy for this model
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
         </member>
         <member name="T:Castle.MicroKernel.Proxy.IProxyHook">
             <summary>
@@ -1743,6 +1833,20 @@
             <param name="assembly">The assembly.</param>
             <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.FromDescriptor"/></returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.AllTypes.FromAssemblyContaining(System.Type)">
+            <summary>
+            Prepares to register types from an assembly containing the type.
+            </summary>
+            <param name="type">The type belonging to the assembly.</param>
+            <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.FromDescriptor"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.AllTypes.FromAssemblyContaining``1">
+            <summary>
+            Prepares to register types from an assembly containing the type.
+            </summary>
+            <typeparam name="T">The type belonging to the assembly.</typeparam>
+            <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.FromDescriptor"/></returns>
+        </member>
         <member name="M:Castle.MicroKernel.Registration.AllTypes.From(System.Collections.Generic.IEnumerable{System.Type})">
             <summary>
             Prepares to register types from a list of types.
@@ -1804,6 +1908,14 @@
             <param name="types">The list of types.</param>
             <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.BasedOnDescriptor"/></returns>
         </member>
+        <member name="T:Castle.MicroKernel.Registration.ConfigureDelegate`1">
+            <summary>
+            Delegate for custom registration configuration.
+            </summary>
+            <typeparam name="T">The return type.</typeparam>
+            <param name="registration">The component registration.</param>
+            <returns>Not uaed.</returns>
+        </member>
         <member name="T:Castle.MicroKernel.Registration.BasedOnDescriptor">
             <summary>
             Describes how to register a group of related types.
@@ -1846,6 +1958,13 @@
             <param name="configurer">The configuration action.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.BasedOnDescriptor.Configure``1(Castle.MicroKernel.Registration.ConfigureDelegate{``0})">
+            <summary>
+            Allows customized configurations of each matching type.
+            </summary>
+            <param name="configurer">The configuration action.</param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.MicroKernel.Registration.BasedOnDescriptor.AllowMultipleMatches">
             <summary>
             Allows a type to be registered multiple times.
@@ -1865,6 +1984,13 @@
             <param name="basedOn">The base type.</param>
             <returns>The descriptor for the type.</returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.BasedOnDescriptor.Where(System.Predicate{System.Type})">
+            <summary>
+            Returns the descriptor for accepting a type based on a condition.
+            </summary>
+            <param name="accepted">The accepting condition.</param>
+            <returns>The descriptor for the type.</returns>
+        </member>
         <member name="P:Castle.MicroKernel.Registration.BasedOnDescriptor.InternalBasedOn">
             <summary>
             Gets the type all types must be based on.
@@ -1873,6 +1999,11 @@
         <member name="P:Castle.MicroKernel.Registration.BasedOnDescriptor.WithService">
             <summary>
             Gets the service descriptor.
+            </summary>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.FromAssemblyDescriptor">
+            <summary>
+            Selects a set of types from an assembly.
             </summary>
         </member>
         <member name="T:Castle.MicroKernel.Registration.FromDescriptor">
@@ -1899,6 +2030,18 @@
             <param name="basedOn">The base type.</param>
             <returns>The descriptor for the type.</returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.FromDescriptor.Where(System.Predicate{System.Type})">
+            <summary>
+            Returns the descriptor for accepting a type based on a condition.
+            </summary>
+            <param name="accepted">The accepting condition.</param>
+            <returns>The descriptor for the type.</returns>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.FromTypesDescriptor">
+            <summary>
+            Selects an existing set of types to register.
+            </summary>
+        </member>
         <member name="T:Castle.MicroKernel.Registration.ServiceDescriptor">
             <summary>
             Describes how to select a types service.
@@ -1913,6 +2056,24 @@
         <member name="M:Castle.MicroKernel.Registration.ServiceDescriptor.FirstInterface">
             <summary>
             Uses the first interface of a type.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceDescriptor.FromInterface(System.Type)">
+            <summary>
+            Uses <paramref name="implements"/> to lookup the sub interface.
+            For example: if you have IService and 
+            IProductService : ISomeInterface, IService, ISomeOtherInterface.
+            When you call FromInterface(typeof(IService)) then IProductService
+            will be used. Useful when you want to register _all_ your services
+            and but not want to specify all of them.
+            </summary>
+            <param name="implements"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceDescriptor.FromInterface">
+            <summary>
+            Uses base type to lookup the sub interface.
             </summary>
             <returns></returns>
         </member>
@@ -2003,13 +2164,34 @@
             <param name="model">The component model.</param>
             <returns>The component registration.</returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.Component.ServiceAlreadyRegistred(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+        <member name="M:Castle.MicroKernel.Registration.Component.ServiceAlreadyRegistered(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
             <summary>
             Determines if the component service is already registered.
             </summary>
             <param name="kernel">The kernel.</param>
             <param name="model">The component model.</param>
             <returns>true if the service is already registered.</returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.IsInNamespace(System.String)">
+            <summary>
+            Creates a predicate to check if a component is in a namespace.
+            </summary>
+            <param name="namespace">The namespace.</param>
+            <returns>true if the component type is in the namespace.</returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.IsInSameNamespaceAs(System.Type)">
+            <summary>
+            Creates a predicate to check if a component shares a namespace with another.
+            </summary>
+            <param name="type">The component type to test namespace against.</param>
+            <returns>true if the component is in the same namespace.</returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.IsInSameNamespaceAs``1">
+            <summary>
+            Creates a predicate to check if a component shares a namespace with another.
+            </summary>
+            <typeparam name="T">The component type to test namespace against.</typeparam>
+            <returns>true if the component is in the same namespace.</returns>
         </member>
         <member name="T:Castle.MicroKernel.Registration.ComponentFilter">
             <summary>
@@ -2575,11 +2757,6 @@
             Gets the service override key name.
             </summary>
         </member>
-        <member name="T:Castle.MicroKernel.Releasers.AllComponentsReleasePolicy">
-            <summary>
-            Summary description for AllComponentsReleasePolicy.
-            </summary>
-        </member>
         <member name="T:Castle.MicroKernel.IReleasePolicy">
             <summary>
             Summary description for IReleasePolicy.
@@ -2588,12 +2765,7 @@
         <member name="T:Castle.MicroKernel.Releasers.LifecycledComponentsReleasePolicy">
             <summary>
             Only tracks components that have decommission steps
-            registered
-            </summary>
-        </member>
-        <member name="M:Castle.MicroKernel.Releasers.LifecycledComponentsReleasePolicy.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Releasers.LifecycledComponentsReleasePolicy"/> class.
+            registered or have pooled lifestyle.
             </summary>
         </member>
         <member name="T:Castle.MicroKernel.Releasers.NoTrackingReleasePolicy">
@@ -3353,6 +3525,12 @@
             List of handler by service
             </summary>
         </member>
+        <member name="M:Castle.MicroKernel.INamingSubSystem.AddHandlerSelector(Castle.MicroKernel.IHandlerSelector)">
+            <summary>
+            Register a new component resolver that can take part in the decision
+            making about which handler to resolve
+            </summary>
+        </member>
         <member name="P:Castle.MicroKernel.INamingSubSystem.ComponentCount">
             <summary>
             Returns the number of components registered.
@@ -3391,6 +3569,35 @@
             <summary>
             Initializes a new instance of the <see cref="T:Castle.MicroKernel.SubSystems.Naming.DefaultNamingSubSystem"/> class.
             </summary>
+        </member>
+        <member name="T:Castle.MicroKernel.IHandlerSelector">
+            <summary>
+            Implementors of this interface allow to extend the way the container perform
+            component resolution based on some application specific business logic.
+            </summary>
+            <remarks>
+            This is the sibling interface to <seealso cref="T:Castle.MicroKernel.ISubDependencyResolver"/>.
+            This is dealing strictly with root components, while the <seealso cref="T:Castle.MicroKernel.ISubDependencyResolver"/> is dealing with
+            dependent components.
+            </remarks>
+        </member>
+        <member name="M:Castle.MicroKernel.IHandlerSelector.HasOpinionAbout(System.String,System.Type)">
+            <summary>
+            Whatever the selector has an opinion about resolving a component with the 
+            specified service and key.
+            </summary>
+            <param name="key">The service key - can be null</param>
+            <param name="service">The service interface that we want to resolve</param>
+        </member>
+        <member name="M:Castle.MicroKernel.IHandlerSelector.SelectHandler(System.String,System.Type,Castle.MicroKernel.IHandler[])">
+            <summary>
+            Select the appropriate handler from the list of defined handlers.
+            The returned handler should be a member from the <paramref name="handlers"/> array.
+            </summary>
+            <param name="key">The service key - can be null</param>
+            <param name="service">The service interface that we want to resolve</param>
+            <param name="handlers">The defined handlers</param>
+            <returns>The selected handler, or null</returns>
         </member>
         <member name="T:Castle.MicroKernel.SubSystems.Naming.KeySearchNamingSubSystem">
             <summary>
@@ -3580,7 +3787,7 @@
             <summary>
             Event fired when a dependency is being resolved,
             it allows the dependency to be changed,
-            but the client ComponentModel must not be altered.
+            but the client ComponentModel must not be changed.
             </summary>
         </member>
         <member name="E:Castle.MicroKernel.KernelEventSupport.HandlerRegistered">
@@ -4220,6 +4427,12 @@
             to valid state.
             </summary>
             <param name="handler"></param>
+        </member>
+        <member name="M:Castle.MicroKernel.IKernel.AddHandlerSelector(Castle.MicroKernel.IHandlerSelector)">
+            <summary>
+            Register a new component resolver that can take part in the decision
+            making about which handler to resolve
+            </summary>
         </member>
         <member name="P:Castle.MicroKernel.IKernel.Item(System.String)">
             <summary>

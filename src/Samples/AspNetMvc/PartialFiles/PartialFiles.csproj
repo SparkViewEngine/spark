@@ -108,6 +108,7 @@
     <Content Include="Views\Shared\DefaultLayout.Master" />
     <None Include="Views\Shared\DefaultLayout.spark" />
     <None Include="Views\Shared\Header.spark" />
+    <None Include="Views\Shared\_global.spark" />
     <None Include="Views\Shared\_Status.spark" />
     <None Include="Views\Shared\_Menu.spark" />
   </ItemGroup>

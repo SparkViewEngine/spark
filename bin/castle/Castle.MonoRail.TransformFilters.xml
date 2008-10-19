@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.MonoRail.TransformFilters</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.MonoRail.TransformFilters.MarkdownTransformFilter">
+            <summary>
+            Post process the request via Markdown 
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.TransformFilters.MarkdownTransformFilter.#ctor(System.IO.Stream)">
+            <summary>
+            Constructor of the MarkdownTransformFilter
+            </summary>
+            <param name="baseStream">output stream</param>
+        </member>
+        <member name="M:Castle.MonoRail.TransformFilters.MarkdownTransformFilter.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Pulls the http stream through the Markdown filter.
+            </summary>
+            <param name="buffer">The content stream</param>
+            <param name="offset">Start of the stream</param>
+            <param name="count">Lenght of the stream</param>
+        </member>
+    </members>
+</doc>

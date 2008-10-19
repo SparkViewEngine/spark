@@ -1,0 +1,468 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Facilities.WcfIntegration</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Facilities.WcfIntegration.Behaviors.LogMessageInspector">
+            <summary>
+            Message interceptor for logging client requests.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Behaviors.LogMessageInspector.#ctor(Castle.Core.Logging.IExtendedLogger,System.IFormatProvider,System.String)">
+            <summary>
+            Constructs a new <see cref="T:Castle.Facilities.WcfIntegration.Behaviors.LogMessageInspector"/>
+            </summary>
+            <param name="logger">The logger.</param>
+            <param name="formatter">The formatter.</param>
+            <param name="format">The format.</param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Behaviors.LogMessageInspector.BeforeSendRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel)">
+            <summary>
+            Logs the outgoing request.
+            </summary>
+            <param name="request"></param>
+            <param name="channel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Behaviors.LogMessageInspector.AfterReceiveReply(System.ServiceModel.Channels.Message@,System.Object)">
+            <summary>
+            Logs the incoming response.
+            </summary>
+            <param name="reply"></param>
+            <param name="correlationState"></param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Behaviors.LogMessageInspector.AfterReceiveRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel,System.ServiceModel.InstanceContext)">
+            <summary>
+            Logs the incoming request.
+            </summary>
+            <param name="request"></param>
+            <param name="channel"></param>
+            <param name="instanceContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Behaviors.LogMessageInspector.BeforeSendReply(System.ServiceModel.Channels.Message@,System.Object)">
+            <summary>
+            Logs the outgoing response.
+            </summary>
+            <param name="reply"></param>
+            <param name="correlationState"></param>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.WcfBehaviorScope">
+            <summary>
+            Determines how a global behavior will be applied.
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.WcfIntegration.WcfBehaviorScope.Clients">
+            <summary>
+            Only apply to client endpoints.
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.WcfIntegration.WcfBehaviorScope.Services">
+            <summary>
+            Only apply to service hosts.
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.WcfIntegration.WcfBehaviorScope.Explicit">
+            <summary>
+            Do not apply automatically.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.DefaultChannelBuilder">
+            <summary>
+            The default implementation of <see cref="T:Castle.Facilities.WcfIntegration.IClientChannelBuilder`1"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.IClientChannelBuilder`1">
+            <summary>
+            The contract for building client channels.
+            </summary>
+            <typeparam name="M">The <see cref="T:Castle.Facilities.WcfIntegration.IWcfClientModel"/> type.</typeparam>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.IClientChannelBuilder`1.GetChannelCreator(`0)">
+            <summary>
+            Get a delegate capable of creating channels.
+            </summary>
+            <param name="clientModel">The client model.</param>
+            <returns>The <see cref="T:Castle.Facilities.WcfIntegration.ChannelCreator"/></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.IClientChannelBuilder`1.GetChannelCreator(`0,System.Type)">
+            <summary>
+            Get a delegate capable of creating channels.
+            </summary>
+            <param name="clientModel">The client model.</param>
+            <param name="contract">The contract override.</param>
+            <returns>The <see cref="T:Castle.Facilities.WcfIntegration.ChannelCreator"/></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.AbstractChannelBuilder`1.GetChannelCreator(`0)">
+            <summary>
+            Get a delegate capable of creating channels.
+            </summary>
+            <param name="clientModel">The client model.</param>
+            <returns>The <see cref="T:Castle.Facilities.WcfIntegration.ChannelCreator"/></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.AbstractChannelBuilder`1.GetChannelCreator(`0,System.Type)">
+            <summary>
+            Get a delegate capable of creating channels.
+            </summary>
+            <param name="clientModel">The client model.</param>
+            <param name="contract">The contract override.</param>
+            <returns>The <see cref="T:Castle.Facilities.WcfIntegration.ChannelCreator"/></returns>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.IWcfClientModel">
+            <summary>
+            Contract for all WCF client models.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.IWcfClientModel.Contract">
+            <summary>
+            Gets the endpoint contract.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.IWcfClientModel.Endpoint">
+            <summary>
+            Gets the endpoint of the service.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.IWcfClientModel.Behaviors">
+            <summary>
+            Gets the service behaviors.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.WcfClient">
+            <summary>
+            Simplifies registration of a list of WCF client channels.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WcfClient.ForChannels(Castle.Facilities.WcfIntegration.IWcfClientModel[])">
+            <summary>
+            Prepares to register a list of WCF client channels.
+            </summary>
+            <param name="channels">The channels.</param>
+            <returns>The <see cref="T:Castle.Facilities.WcfIntegration.WcfClientDescriptor"/></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WcfClient.ForChannels(System.Collections.Generic.IEnumerable{Castle.Facilities.WcfIntegration.IWcfClientModel})">
+            <summary>
+            Prepares to register a list of WCF client channels.
+            </summary>
+            <param name="channels">The channels.</param>
+            <returns>The <see cref="T:Castle.Facilities.WcfIntegration.WcfClientDescriptor"/></returns>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.WcfClientDescriptor">
+            <summary>
+            Describes a list of WCF channels to register.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WcfClientDescriptor.Configure(System.Action{Castle.MicroKernel.Registration.ComponentRegistration})">
+            <summary>
+            Allows customized configurations of the channels.
+            </summary>
+            <param name="configurer">The configuration action.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WcfManagedChannelInterceptor.#ctor(Castle.MicroKernel.IKernel)">
+            <summary>
+            Constructs a new <see cref="T:Castle.Facilities.WcfIntegration.WcfManagedChannelInterceptor"/>.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper">
+            <summary>
+            Simple wrapper for <see cref="T:System.ServiceModel.ICommunicationObject"/>
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.#ctor(System.ServiceModel.ICommunicationObject)">
+            <summary>
+            
+            </summary>
+            <param name="inner"></param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Open">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Open(System.TimeSpan)">
+            <summary>
+            
+            </summary>
+            <param name="timeout"></param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.BeginOpen(System.TimeSpan,System.AsyncCallback,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="timeout"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.BeginOpen(System.AsyncCallback,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.EndOpen(System.IAsyncResult)">
+            <summary>
+            
+            </summary>
+            <param name="result"></param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Close">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Close(System.TimeSpan)">
+            <summary>
+            
+            </summary>
+            <param name="timeout"></param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.BeginClose(System.TimeSpan,System.AsyncCallback,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="timeout"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.BeginClose(System.AsyncCallback,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.EndClose(System.IAsyncResult)">
+            <summary>
+            
+            </summary>
+            <param name="result"></param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Abort">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.State">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Opened">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Opening">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Closed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Closing">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Castle.Facilities.WcfIntegration.Internal.CommunicationObjectWrapper.Faulted">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.Internal.WcfCommunicationDecomissionConcern">
+            <summary>
+            Ensure that the communication channel is properly disposed.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Internal.WcfCommunicationDecomissionConcern.Apply(Castle.Core.ComponentModel,System.Object)">
+            <summary>
+            Performs the cleanup necessary to properly release a client channel.
+            </summary>
+            <param name="model">The component model.</param>
+            <param name="component">The component instance.</param>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.IWcfServiceHost">
+            <summary>
+            Contract extension for <see cref="T:System.ServiceModel.ServiceHost"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.DefaultServiceHostBuilder">
+            <summary>
+            The default implementation of <see cref="T:Castle.Facilities.WcfIntegration.IServiceHostBuilder`1"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.IServiceHostBuilder`1">
+            <summary>
+            The contract for building service hosts.
+            </summary>
+            <typeparam name="M">The <see cref="T:Castle.Facilities.WcfIntegration.IWcfServiceModel"/> type.</typeparam>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.IServiceHostBuilder`1.Build(Castle.Core.ComponentModel,`0,System.Uri[])">
+            <summary>
+            Builds a service host.
+            </summary>
+            <param name="model">The component model.</param>
+            <param name="serviceModel">The service model.</param>
+            <param name="baseAddresses">The base addresses.</param>
+            <returns>The service host.</returns>
+            
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.IServiceHostBuilder`1.Build(Castle.Core.ComponentModel,System.Uri[])">
+            <summary>
+             Builds a service host for a hosted environment.
+            </summary>
+            <param name="model">The component model.</param>
+            <param name="baseAddresses">The base addresses.</param>
+            <returns>The service host.</returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.IServiceHostBuilder`1.Build(System.Type,System.Uri[])">
+            <summary>
+             Builds a service host for a hosted environment.
+            </summary>
+            <param name="serviceType">The service type.</param>
+            <param name="baseAddresses">The base addresses.</param>
+            <returns>The service host.</returns>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.DefaultServiceHostBuilder.#ctor(Castle.MicroKernel.IKernel)">
+            <summary>
+            Constructs a new <see cref="T:Castle.Facilities.WcfIntegration.DefaultServiceHostBuilder"/>.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.IWcfServiceModel">
+            <summary>
+            Contract for all WCF service models.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.IWcfServiceModel.IsHosted">
+            <summary>
+            Determines if the service will be hosted.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.IWcfServiceModel.BaseAddresses">
+            <summary>
+            Gets the service base addresses.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.IWcfServiceModel.Endpoints">
+            <summary>
+            Gets the service endpoints.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.IWcfServiceModel.Behaviors">
+            <summary>
+            Gets the service behaviors.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.Rest.RestServiceHostBuilder">
+            <summary>
+            Implementation of <see cref="T:Castle.Facilities.WcfIntegration.IServiceHostBuilder`1"/>. for restful services.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.Rest.RestServiceHostBuilder.#ctor(Castle.MicroKernel.IKernel)">
+            <summary>
+            Constructs a new <see cref="T:Castle.Facilities.WcfIntegration.Rest.RestServiceHostBuilder"/>.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WindsorDependencyInjectionServiceBehavior.Validate(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase)">
+            <summary>
+            Provides the ability to inspect the service host and the service description to confirm that the service can run successfully.
+            </summary>
+            <param name="serviceHostBase">The service host that is currently being constructed.</param>
+            <param name="serviceDescription">The service description.</param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WindsorDependencyInjectionServiceBehavior.AddBindingParameters(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase,System.Collections.ObjectModel.Collection{System.ServiceModel.Description.ServiceEndpoint},System.ServiceModel.Channels.BindingParameterCollection)">
+            <summary>
+            Provides the ability to pass custom data to binding elements to support the contract implementation.
+            </summary>
+            <param name="serviceHostBase">The host of the service.</param>
+            <param name="bindingParameters">Custom objects to which binding elements have access.</param>
+            <param name="serviceDescription">The service description of the service.</param>
+            <param name="endpoints">The service endpoints.</param>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.WindsorInstanceProvider">
+            <summary>
+            Initialize a service using Windsor
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WindsorInstanceProvider.#ctor(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel,System.Type,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.WcfIntegration.WindsorInstanceProvider" /> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WindsorInstanceProvider.GetInstance(System.ServiceModel.InstanceContext)">
+            <summary>
+            Returns a service object given the specified <see cref="T:System.ServiceModel.InstanceContext"></see> object.
+            </summary>
+            
+            <returns>
+            A user-defined service object.
+            </returns>
+            
+            <param name="instanceContext">The current <see cref="T:System.ServiceModel.InstanceContext"></see> object.</param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WindsorInstanceProvider.GetInstance(System.ServiceModel.InstanceContext,System.ServiceModel.Channels.Message)">
+            <summary>
+            Returns a service object given the specified <see cref="T:System.ServiceModel.InstanceContext"></see> object.
+            </summary>
+            
+            <returns>
+            The service object.
+            </returns>
+            
+            <param name="message">The message that triggered the creation of a service object.</param>
+            <param name="instanceContext">The current <see cref="T:System.ServiceModel.InstanceContext"></see> object.</param>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.WindsorInstanceProvider.ReleaseInstance(System.ServiceModel.InstanceContext,System.Object)">
+            <summary>
+            Called when an <see cref="T:System.ServiceModel.InstanceContext"></see> object recycles a service object.
+            </summary>
+            
+            <param name="instanceContext">The service's instance context.</param>
+            <param name="instance">The service object to be recycled.</param>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.ChannelCreator">
+            <summary>
+            Delegate for creating channels.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.IWcfEndpoint">
+            <summary>
+            Contract for all WCF endpoints.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.WcfIntegration.IWcfEndpoint.Accept(Castle.Facilities.WcfIntegration.IWcfEndpointVisitor)">
+            <summary>
+            Supports management of endpoints.
+            </summary>
+            <param name="visitor"></param>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.IWcfEndpoint.Contract">
+            <summary>
+            Gets the endpoint contract.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.WcfIntegration.IWcfEndpoint.Behaviors">
+            <summary>
+            Gets the service behaviors.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.WcfIntegration.WcfFacility">
+            <summary>
+            Facility to simplify the management of WCF clients and services. 
+            </summary>
+        </member>
+    </members>
+</doc>

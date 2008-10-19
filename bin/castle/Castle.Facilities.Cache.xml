@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Facilities.Cache</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Facilities.Cache.Manager.DefaultCacheKeyGenerator">
+            <summary>
+            Generates the key to retrieve/save objects from/to the cache.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Cache.Manager.ICacheKeyGenerator">
+            <summary>
+             Generates the key to retrieve/save objects from/to the cache.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.Manager.ICacheKeyGenerator.GenerateKey(Castle.Core.Interceptor.IInvocation)">
+            <summary>
+            Generates the key for a cache entry.
+            </summary>
+            <param name="invocation">the description of an invocation to the intercepted method.</param>
+            <returns>the key for a cache entry.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Cache.Manager.DefaultCacheKeyGenerator.GenerateKey(Castle.Core.Interceptor.IInvocation)">
+            <summary>
+            Generates the key for a cache entry.
+            </summary>
+            <param name="invocation">the description of an invocation to the intercepted method.</param>
+            <returns>the key for a cache entry.</returns>
+        </member>
+        <member name="T:Castle.Facilities.Cache.Manager.ICacheManager">
+            <summary>
+            Description résumée de ICacheManager.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.Manager.ICacheManager.Clear">
+            <summary>
+            Clears all elements from the cache.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Cache.Manager.ICacheManager.CacheKeyGenerator">
+            <summary>
+            Generates the key to retrieve/save objects from/to the cache.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Cache.Manager.ICacheManager.Item(System.Object)">
+            <summary>
+            Adds an item with the specified key and value into cached data.
+            Gets a cached object with the specified key.
+            </summary>
+            <value>The cached object or <c>null</c></value>
+        </member>
+        <member name="T:Castle.Facilities.Cache.Manager.MemoryCacheManager">
+            <summary>
+            Description résumée de MemoryCache.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.Manager.MemoryCacheManager.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Cache.Manager.MemoryCacheManager"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.Manager.MemoryCacheManager.Clear">
+            <summary>
+            Clears all elements from the cache.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Cache.Manager.MemoryCacheManager.CacheKeyGenerator">
+            <summary>
+            A generator of keys for a cache entry.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Cache.Manager.MemoryCacheManager.Item(System.Object)">
+            <summary>
+            Adds an item with the specified key and value into cached data.
+            Gets a cached object with the specified key.
+            </summary>
+            <value>The cached object or <c>null</c></value>
+        </member>
+        <member name="T:Castle.Facilities.Cache.CacheAttribute">
+            <summary>
+            Indicates the cache support for a method.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Cache.CacheAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Cache.CacheAttribute"/> class.
+            </summary>
+            <param name="cacheManagerId">The cache manager id.</param>
+        </member>
+        <member name="P:Castle.Facilities.Cache.CacheAttribute.CacheManagerId">
+            <summary>
+            Gets the cache manager id.
+            </summary>
+            <value>The cache manager id.</value>
+        </member>
+        <member name="T:Castle.Facilities.Cache.CacheComponentInspector">
+            <summary>
+            Summary description for CacheComponentInspector.
+            </summary>
+            <example>
+            	<component id="ServiceA"
+            		 cache="true"
+            	     service="TestConfig.IServiceA, TestConfig" 
+            	     type="TestConfig.ServiceA, TestConfig">
+            	  <cache ref="CacheManager">
+            	    <method>MyMethod</method>
+            	  </cache>
+            	</component>
+            </example>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheComponentInspector.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+            <summary>
+            Usually the implementation will look in the configuration property
+            of the model or the service interface, or the implementation looking for
+            something.
+            </summary>
+            <param name="kernel">The kernel instance</param>
+            <param name="model">The component model</param>
+        </member>
+        <member name="T:Castle.Facilities.Cache.CacheConfig">
+            <summary>
+            Summary description for CacheConfig.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheConfig.#ctor(Castle.MicroKernel.IKernel,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="kernel"></param>
+            <param name="globalCacheManagerId"></param>
+            <remarks>The globalCacheManagerId us only used when configure by attribute</remarks>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheConfig.GetCacheManager(System.Reflection.MethodInfo)">
+            <summary>
+            Gets the cache manager.
+            </summary>
+            <param name="method">The method.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheConfig.AddMethod(System.Reflection.MethodInfo,System.String)">
+            <summary>
+            Adds the method.
+            </summary>
+            <param name="method">The method.</param>
+            <param name="cacheManagerId">The cache manager id.</param>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheConfig.AddMethodName(System.String,System.String)">
+            <summary>
+            Adds the method with the specified name.
+            </summary>
+            <param name="methodName">Name of the method.</param>
+            <param name="cacheManagerId">The cache manager id.</param>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheConfig.IsMethodCache(System.Reflection.MethodInfo)">
+            <summary>
+            A 
+            </summary>
+            <param name="method"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.Facilities.Cache.CacheConfigHolder">
+            <summary>
+            Summary description for CacheConfigHolder.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheConfigHolder.Register(System.Type,Castle.Facilities.Cache.CacheConfig)">
+            <summary>
+            Registers the specified implementation.
+            </summary>
+            <param name="implementation">The implementation.</param>
+            <param name="config">The config.</param>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheConfigHolder.GetConfig(System.Type)">
+            <summary>
+            Gets the configuration for the specified type.
+            </summary>
+            <param name="implementation">The implementation.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.Facilities.Cache.CacheFacility">
+            <summary>
+            Summary description for CacheFacility.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheFacility.Init">
+            <summary>
+            The custom initialization for the Facility.
+            </summary>
+            <remarks>It must be overriden.</remarks>
+        </member>
+        <member name="T:Castle.Facilities.Cache.CacheInterceptor">
+            <summary>
+            Caches the return value of the intercepted method.
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.Cache.CacheInterceptor.NullObject">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheInterceptor.#ctor(Castle.Facilities.Cache.CacheConfigHolder)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Cache.CacheInterceptor"/> class.
+            </summary>
+            <param name="transactionConfHolder">The transaction conf holder.</param>
+        </member>
+        <member name="M:Castle.Facilities.Cache.CacheInterceptor.Intercept(Castle.Core.Interceptor.IInvocation)">
+            <summary>
+            Returns from the cache provider the value saved with the key generated
+            using the specified <code>IMethodInvocation</code>. If the object is not
+            found in the cache, the intercepted method is executed and its returned
+            value is saved in the cached and returned by this method.
+            </summary>
+            <param name="invocation">the description of the intercepted method.</param>
+            <returns>the object stored in the cache.</returns>
+        </member>
+    </members>
+</doc>

@@ -34,7 +34,7 @@ namespace WindsorInversionOfControl
             return (IController) _kernel.Resolve(controllerName + "controller", typeof (IController));
         }
 
-        public void DisposeController(IController controller)
+        public void ReleaseController(IController controller)
         {
             _kernel.ReleaseComponent(controller);
         }

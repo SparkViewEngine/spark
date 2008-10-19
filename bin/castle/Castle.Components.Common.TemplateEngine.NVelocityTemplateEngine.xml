@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine">
+            <summary>
+            Implementation of <see cref="T:Castle.Components.Common.TemplateEngine.ITemplateEngine"/> 
+            that uses NVelocity
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.#ctor">
+            <summary>
+            Constructs a NVelocityTemplateEngine instance
+            assuming the default values
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.#ctor(System.String)">
+            <summary>
+            Constructs a NVelocityTemplateEngine instance
+            specifing the template directory
+            </summary>
+            <param name="templateDir"></param>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.AddResourceAssembly(System.String)">
+            <summary>
+            Add an assembly to the resource collection.
+            </summary>
+            <param name="assembly"></param>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.BeginInit">
+            <summary>
+            Starts/configure NVelocity based on the properties.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.HasTemplate(System.String)">
+            <summary>
+            Returns <c>true</c> only if the 
+            specified template exists and can be used
+            </summary>
+            <param name="templateName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.Process(System.Collections.IDictionary,System.String,System.IO.TextWriter)">
+            <summary>
+            Process the template with data from the context.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.Process(System.Collections.IDictionary,System.String,System.IO.TextWriter,System.String)">
+            <summary>
+            Process the input template with data from the context.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="templateName">Name of the template.  Used only for information during logging</param>
+            <param name="output">The output.</param>
+            <param name="inputTemplate">The input template.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.Process(System.Collections.IDictionary,System.String,System.IO.TextWriter,System.IO.TextReader)">
+            <summary>
+            Process the input template with data from the context.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="templateName">Name of the template.  Used only for information during logging</param>
+            <param name="output">The output.</param>
+            <param name="inputTemplate">The input template.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.AssemblyName">
+            <summary>
+            Gets or sets the assembly name. This
+            forces NVelocityTemplateEngine to use an assembly resource loader
+            instead of File resource loader (which is the default) 
+            </summary>
+            <remarks>
+            The property is obsolete, please use the AddResourceAssembly function.
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.TemplateDir">
+            <summary>
+            Gets or sets the template directory
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.EnableCache">
+            <summary>
+            Enable/Disable caching. Default is <c>true</c>
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Common.TemplateEngine.NVelocityTemplateEngine.NVelocityTemplateEngine.Log">
+            <summary>
+            Gets or sets the logger.
+            </summary>
+            <value>The log.</value>
+        </member>
+    </members>
+</doc>

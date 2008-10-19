@@ -1,0 +1,726 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Facilities.Synchronize</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Facilities.Synchronize.AbstractAsyncResult">
+            <summary>
+            Abstract result for asynchronous operations.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.#ctor(System.AsyncCallback,System.Object)">
+            <summary>
+            Initializes a new <see cref="T:Castle.Facilities.Synchronize.AbstractAsyncResult"/>
+            </summary>
+            <param name="callback">The async callback.</param>
+            <param name="state">The async state</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.TimeoutAfter(System.Int32)">
+            <summary>
+            Establishes an async timeout for the interval.
+            </summary>
+            <param name="interval">The timeout interval without units.</param>
+            <returns>The timeout specification.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.End(System.IAsyncResult)">
+            <summary>
+            Ends the asynchronous request.
+            </summary>
+            <param name="asyncResult">The asynchronous result.</param>
+            <returns>The result.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.Complete(System.Boolean)">
+            <summary>
+            Completes the asynchronous request.
+            </summary>
+            <param name="synchronously">true if synchronously.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.Complete(System.Boolean,System.Object)">
+            <summary>
+            Completes the asynchronous request.
+            </summary>
+            <param name="synchronously">true if synchronously.</param>
+            <param name="result">The result.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.Complete(System.Boolean,System.Exception)">
+            <summary>
+            Completes the asynchronous request with exception.
+            </summary>
+            <param name="synchronously">true if synchronously.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.OnTimeout">
+            <summary>
+            Performs any behavior when a timeout occurs.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.Cleanup">
+            <summary>
+            Performs any cleanup.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.Finalize">
+            <summary>
+            Finalizer to ensure cleanup.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.AbstractAsyncResult.AsyncState">
+            <summary>
+            Gets the asynchournous state.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.AbstractAsyncResult.IsCompleted">
+            <summary>
+            Determines if the result is available.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.AbstractAsyncResult.CompletedSynchronously">
+            <summary>
+            Determines if the result completed synchronously.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.AbstractAsyncResult.AsyncWaitHandle">
+            <summary>
+            Gets the asynchronous <see cref="T:System.Threading.WaitHandle"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.AbstractAsyncResult.Timeout">
+            <summary>
+            Represents the timeout description.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.Timeout.#ctor(Castle.Facilities.Synchronize.AbstractAsyncResult,System.Int32)">
+            <summary>
+            Constructs a new <see cref="T:Castle.Facilities.Synchronize.AbstractAsyncResult.Timeout"/>
+            </summary>
+            <param name="result">The async result.</param>
+            <param name="interval">The timeout interval.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.Timeout.MilliSeconds">
+            <summary>
+            Registers the timeout in milliseconds.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.Timeout.Seconds">
+            <summary>
+            Registers the timeout in seconds. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.AbstractAsyncResult.Timeout.Minutes">
+            <summary>
+            Registers the timeout in minutes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.Constants">
+            <summary>
+            Exposes constants used by the facility and its internal 
+            components
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.Synchronize.Constants.SynchronizedAttrib">
+            <summary>
+            Configuration attribute to enable synchronization.
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.Synchronize.Constants.ContextRefAttribute">
+            <summary>
+            Configuration attribute to specify context key reference.
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.Synchronize.Constants.ContextTypeAttribute">
+            <summary>
+            Configuration attribute to specify context service reference.
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.Synchronize.Constants.ControlProxyHookAttrib">
+            <summary>
+            Configuration attribute to specify a custom control proxy hook.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.ControlComponentActivator.#ctor(Castle.Core.ComponentModel,Castle.MicroKernel.IKernel,Castle.MicroKernel.ComponentInstanceDelegate,Castle.MicroKernel.ComponentInstanceDelegate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Synchronize.ControlComponentActivator"/> class.
+            </summary>
+            <param name="model">The model.</param>
+            <param name="kernel">The kernel.</param>
+            <param name="onCreation">Delegate called on construction.</param>
+            <param name="onDestruction">Delegate called on destruction.</param>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.ControlComponentHook">
+            <summary>
+            Proxy generation hook to filter all System methods when
+            proxying a Windows Forms Control.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.ControlComponentHook.ShouldInterceptMethod(System.Type,System.Reflection.MethodInfo)">
+            <summary>
+            Filters System methods.
+            </summary>
+            <param name="type">The type.</param>
+            <param name="methodInfo">The method info.</param>
+            <returns>true if not a System namespace, false otherwise.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.ControlComponentHook.NonVirtualMemberNotification(System.Type,System.Reflection.MemberInfo)">
+            <summary>
+            Not used.
+            </summary>
+            <param name="type"></param>
+            <param name="memberInfo"></param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.ControlComponentHook.MethodsInspected">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.ControlComponentInspector">
+            <summary>
+            Checks for <see cref="T:System.Windows.Forms.Control"/> implementations a registers
+            components to ensure the controls can be safely created and
+            accessed from different threads.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.ControlComponentInspector.#ctor(Castle.MicroKernel.IKernel,Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Synchronize.ControlComponentInspector"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="config">The config.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.ControlComponentInspector.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+            <summary>
+            Processes <see cref="T:System.Windows.Forms.Control"/> implementations.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.ControlComponentInspector.Dispose">
+            <summary>
+            Releases the marshaling control.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.ControlUtils">
+            <summary>
+            Common support for Windows Form Controls.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.Result">
+            <summary>
+            Represents the result of an asynchronous operation.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.Result.#ctor">
+            <summary>
+            Initializes the <see cref="T:Castle.Facilities.Synchronize.Result"/>.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.Result.#ctor(System.Object)">
+            <summary>
+            Initializes the <see cref="T:Castle.Facilities.Synchronize.Result"/> with value.
+            </summary>
+            <param name="value">The result value.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.Result.SetValue(System.Boolean,System.Object)">
+            <summary>
+            Completes the asynchronous request.
+            </summary>
+            <param name="synchronously">true if synchronously.</param>
+            <param name="result">The result.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.Result.SetException(System.Boolean,System.Exception)">
+            <summary>
+            Completes the asynchronous request with exception.
+            </summary>
+            <param name="synchronously">true if synchronously.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.Result.Of``1(``0)">
+            <summary>
+            Gets the result of the last called made.
+            </summary>
+            <typeparam name="T">The result type.</typeparam>
+            <param name="ignored"></param>
+            <returns>The result handle.</returns>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.Result.Value">
+            <summary>
+            Gets the result value, blocking if not available yet.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.Result`1">
+            <summary>
+            Represents the typed result of an asynchronous operation.
+            </summary>
+            <typeparam name="T">The result type.</typeparam>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.Result`1.op_Implicit(Castle.Facilities.Synchronize.Result{`0})~`0">
+            <summary>
+            Provide implicit conversion to the actual value.
+            </summary>
+            <param name="result">The result holder.</param>
+            <returns>The actual result value.</returns>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.Result`1.Value">
+            <summary>
+            Gets the result value, blocking if not available yet.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.Result`1.AsyncState">
+            <summary>
+            Gets the asynchournous state.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.Result`1.AsyncWaitHandle">
+            <summary>
+            Gets the asynchronous <see cref="T:System.Threading.WaitHandle"/>.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.Result`1.CompletedSynchronously">
+            <summary>
+            Determines if the result completed synchronously.
+            </summary>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.Result`1.IsCompleted">
+            <summary>
+            Determines if the result is available.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.SynchronizeAttribute">
+            <summary>
+            Used to declare that a component wants synchronization.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeAttribute.#ctor">
+            <summary>
+            Constructs an empty SynchronizeAttribute.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeAttribute.#ctor(System.String)">
+            <summary>
+            Constructs the SynchronizeAttribute pointing to a key.
+            </summary>
+            <param name="componentKey">The component key.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeAttribute.#ctor(System.Type)">
+            <summary>
+            Constructs the SynchronizeAttribute pointing to a service.
+            </summary>
+            <param name="interceptorType">The service type.</param>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.SynchronizeAttribute.SynchronizeContext">
+            <summary>
+            Gets the synchronization context reference.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.SynchronizeComponentInspector">
+            <summary>
+            Obtain synchronization configuration based on the
+            component configuration check for the attributes if
+            not available.
+            </summary>
+            <example>
+            	<component id="component1"
+            		 synchronized="true"
+            	     service="SyncTest.IService, SyncTest" 
+            	     type="SyncTest.IService, SyncTest">
+            	  <synchronize contextRef="DefaultContextKey">
+            	    <method name="Method1" contextRef="MyContextKey"></method>
+            	    <method name="Method2" contextType="SynchornizationContext"></method>
+            	  </synchronize>
+            	</component>
+            </example>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeComponentInspector.#ctor(Castle.MicroKernel.IKernel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Synchronize.SynchronizeComponentInspector"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeComponentInspector.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+            <summary>
+            Checks for synchronization configuration information or
+            attributes and applies them if valid.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeComponentInspector.ObtainNodeName">
+            <summary>
+            Obtains the name of the node.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeComponentInspector.CheckFromConfiguration(Castle.Core.ComponentModel)">
+            <summary>
+            Obtains synchronization information from the configuration.
+            </summary>
+            <param name="model">The model.</param>
+            <returns>
+            	<c>true</c> if available from configuration; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeComponentInspector.ProcessMeta(Castle.Core.ComponentModel,System.Reflection.MethodInfo[],Castle.Core.MethodMetaModel)">
+            <summary>
+            Processes the meta information available on the component
+            configuration.
+            </summary>
+            <param name="model">The model.</param>
+            <param name="methods">The methods.</param>
+            <param name="metaModel">The meta model.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeComponentInspector.CheckFromAttributes(Castle.Core.ComponentModel)">
+            <summary>
+            Obtains synchronization information from the attributes.
+            </summary>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeComponentInspector.HasImplicitSynchronization(Castle.Core.ComponentModel)">
+            <summary>
+            Determines whether the model has implicit synchronization.
+            </summary>
+            <param name="model">The model.</param>
+            <returns>
+            	<c>true</c> if has implicit synchronization; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeComponentInspector.ApplySynchronization(Castle.Core.ComponentModel)">
+            <summary>
+            Applies the synchronization support to the model.
+            </summary>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeComponentInspector.ValidateSynchronization(Castle.Core.ComponentModel)">
+            <summary>
+            Validates the synchronization to be applied.
+            </summary>
+            <param name="model">The model.</param>
+            <returns>
+            	<c>true</c> if valid synchronization; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.SynchronizeContextReferenceType">
+            <summary>
+            Identifies the type of synchornization context reference. 
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.Synchronize.SynchronizeContextReferenceType.Interface">
+            <summary>
+            Service interface reference.
+            </summary>
+        </member>
+        <member name="F:Castle.Facilities.Synchronize.SynchronizeContextReferenceType.Key">
+            <summary>
+            Component key reference.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.SynchronizeContextReference">
+            <summary>
+            Represents a reference to a SynchronizeContext component.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeContextReference.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Synchronize.SynchronizeContextReference"/> class.
+            </summary>
+            <param name="componentKey">The component key.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeContextReference.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Synchronize.SynchronizeContextReference"/> class.
+            </summary>
+            <param name="serviceType">Type of the service.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeContextReference.Equals(System.Object)">
+            <summary>
+            Determines if the other reference is equal.
+            </summary>
+            <param name="obj">The other reference.</param>
+            <returns>true if equal, false otherwise.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeContextReference.GetHashCode">
+            <summary>
+            Gets the hash code.
+            </summary>
+            <returns>The hash code.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeContextReference.ToString">
+            <summary>
+            Gets the string representation of the reference.
+            </summary>
+            <returns>The string representation of the reference.</returns>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.SynchronizeContextReference.ServiceType">
+            <summary>
+            Gets the type of the synchronization service.
+            </summary>
+            <value>The type of the synchronization service.</value>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.SynchronizeContextReference.ComponentKey">
+            <summary>
+            Gets the synchronization context component key.
+            </summary>
+            <value>The synchronization component key.</value>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.SynchronizeContextReference.ReferenceType">
+            <summary>
+            Gets the type of the reference.
+            </summary>
+            <value>The type of the reference.</value>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.SynchronizeFacility">
+            <summary>
+            Augments the kernel to handle synchronized components.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeFacility.Init">
+            <summary>
+            Registers all components needed by the facility.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeFacility.RegisterSynchronizationComponents">
+            <summary>
+            Registers the synchronization components.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeFacility.RegisterSynchronizationInspectors">
+            <summary>
+            Registers the synchronization inspectors.
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.SynchronizeInterceptor">
+            <summary>
+            Intercepts calls to synchronized components and ensures
+            that they execute in the proper synchronization context.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.#ctor(Castle.MicroKernel.IKernel,Castle.Facilities.Synchronize.SynchronizeMetaInfoStore)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Synchronize.SynchronizeInterceptor"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="metaStore">The meta store.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.SetInterceptedComponentModel(Castle.Core.ComponentModel)">
+            <summary>
+            Sets the intercepted ComponentModel.
+            </summary>
+            <param name="target">The targets ComponentModel.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.Intercept(Castle.Core.Interceptor.IInvocation)">
+            <summary>
+            Intercepts the invocation and applies any necessary
+            synchronization.
+            </summary>
+            <param name="invocation">The invocation.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.InvokeInSynchronizationContext(Castle.Core.Interceptor.IInvocation)">
+            <summary>
+            Continues the invocation in a synchronization context
+            if necessary.
+            </summary>
+            <param name="invocation">The invocation.</param>
+            <returns>
+            	<c>true</c> if continued; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.InvokeUsingSynchronizationTarget(Castle.Core.Interceptor.IInvocation)">
+            <summary>
+            Continues the invocation using the targets implicit
+            synchronization if necessary.
+            </summary>
+            <param name="invocation">The invocation.</param>
+            <returns>
+            	<c>true</c> if continued; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.InvokeSynchronously(Castle.Core.Interceptor.IInvocation)">
+            <summary>
+            Continues the invocation synchronously.
+            </summary>
+            <param name="invocation">The invocation.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.InvokeSynchronously(Castle.Core.Interceptor.IInvocation,Castle.Facilities.Synchronize.Result)">
+            <summary>
+            Continues the invocation synchronously.
+            </summary>
+            <param name="invocation">The invocation.</param>
+            <param name="result">The result holder.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.InvokeSafely(Castle.Core.Interceptor.IInvocation,Castle.Facilities.Synchronize.Result)">
+            <summary>
+            Used by the safe synchronization delegate.
+            </summary>
+            <param name="invocation">The invocation.</param>
+            <param name="result">The result holder.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.CreateResult(Castle.Core.Interceptor.IInvocation)">
+            <summary>
+            Creates the result of the invocation.
+            </summary>
+            <param name="invocation">The invocation.</param>
+            <returns>Holds the invocation result.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeInterceptor.GetDefault(System.Type)">
+            <summary>
+            Gets the default value for a type.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The default value for the type.</returns>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.SynchronizeMetaInfo">
+            <summary>
+            Maintains the synchronization meta-info for a component.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfo.#ctor(Castle.Facilities.Synchronize.SynchronizeAttribute)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Synchronize.SynchronizeMetaInfo"/> class.
+            </summary>
+            <param name="defaultSyncAttrib">The default synchronization.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfo.Add(System.Reflection.MethodInfo,Castle.Facilities.Synchronize.SynchronizeAttribute)">
+            <summary>
+            Adds the synchronizaed method to the store.
+            </summary>
+            <param name="method">The method.</param>
+            <param name="syncAttrib">The method synchronization.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfo.GetSynchronizedContextFor(System.Reflection.MethodInfo)">
+            <summary>
+            Gets the reference to the synchronized context
+            requested by the method.
+            </summary>
+            <param name="methodInfo">The method.</param>
+            <returns>The synchroniztion context reference or null.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfo.GetUniqueSynchContextReferences">
+            <summary>
+            Gets the list of unique synchronization context references.
+            </summary>
+            <returns>The list of unique synchronization context references.</returns>
+        </member>
+        <member name="P:Castle.Facilities.Synchronize.SynchronizeMetaInfo.Methods">
+            <summary>
+            Gets the list of synchronized methods.
+            </summary>
+            <value>The list of synchronized methods.</value>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore">
+            <summary>
+            Maintains the synchronization meta-info for all components.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore.#ctor(Castle.MicroKernel.IKernel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore.CreateMetaFromType(System.Type)">
+            <summary>
+            Creates the meta-info from the specified type.
+            </summary>
+            <param name="implementation">The implementation type.</param>
+            <returns>The corresponding meta-info.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore.PopulateMetaInfoFromType(Castle.Facilities.Synchronize.SynchronizeMetaInfo,System.Type)">
+            <summary>
+            Populates the meta-info from the attributes.
+            </summary>
+            <param name="metaInfo">The meta info.</param>
+            <param name="implementation">The implementation type.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore.CreateMetaInfoFromConfig(System.Type,Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Creates the meta-info from the configuration.
+            </summary>
+            <param name="implementation">The implementation type.</param>
+            <param name="config">The configuration.</param>
+            <returns>The corresponding meta-info.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore.PopulateMetaFromConfig(System.Type,System.Reflection.MethodInfo[],Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Populates the meta-info from the configuration.
+            </summary>
+            <param name="implementation">The implementation.</param>
+            <param name="methods">The methods.</param>
+            <param name="config">The config.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore.GetMetaFor(System.Type)">
+            <summary>
+            Gets the meta-info for the specified implementation type.
+            </summary>
+            <param name="implementation">The implementation type.</param>
+            <returns>The corresponding meta-info.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore.Register(System.Type,Castle.Facilities.Synchronize.SynchronizeMetaInfo)">
+            <summary>
+            Registers the meta-info for the specified implementation type.
+            </summary>
+            <param name="implementation">The implementation type.</param>
+            <param name="metaInfo">The meta-info.</param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore.CreateAttributeFromConfig(Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Creates the synchronization attribute from configuration.
+            </summary>
+            <param name="config">The configuration.</param>
+            <returns>The corresponding synchronization attribute.</returns>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronizeMetaInfoStore.ObtainConversionManager(Castle.MicroKernel.IKernel)">
+            <summary>
+            Obtains the <see cref="T:Castle.MicroKernel.SubSystems.Conversion.IConversionManager"/>.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <returns>The <see cref="T:Castle.MicroKernel.SubSystems.Conversion.IConversionManager"/>.</returns>
+        </member>
+        <member name="T:Castle.Facilities.Synchronize.SynchronousResult">
+            <summary>
+            Represents a synchronous result.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronousResult.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronousResult.#ctor(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="result"></param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronousResult.#ctor(System.Exception)">
+            <summary>
+            
+            </summary>
+            <param name="exception"></param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronousResult.#ctor(System.AsyncCallback,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="callback"></param>
+            <param name="state"></param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronousResult.#ctor(System.Object,System.AsyncCallback,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="result"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+        </member>
+        <member name="M:Castle.Facilities.Synchronize.SynchronousResult.#ctor(System.Exception,System.AsyncCallback,System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="exception"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+        </member>
+    </members>
+</doc>

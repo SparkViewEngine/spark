@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Components.Common.TemplateEngine</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Components.Common.TemplateEngine.ITemplateEngine">
+            <summary>
+            Abstracts the underlying template engine being
+            used.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.ITemplateEngine.Process(System.Collections.IDictionary,System.String,System.IO.TextWriter)">
+            <summary>
+            Implementors should process the template with
+            data from the context.
+            </summary>
+            <param name="context"></param>
+            <param name="templateName"></param>
+            <param name="output"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.ITemplateEngine.Process(System.Collections.IDictionary,System.String,System.IO.TextWriter,System.String)">
+            <summary>
+            Implementors should process the input template with
+            data from the context.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="templateName">Name of the template.  Used only for information during logging</param>
+            <param name="output">The output.</param>
+            <param name="inputTemplate">The input template.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.ITemplateEngine.Process(System.Collections.IDictionary,System.String,System.IO.TextWriter,System.IO.TextReader)">
+            <summary>
+            Implementors should process the input template with
+            data from the context.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="templateName">Name of the template.  Used only for information during logging</param>
+            <param name="output">The output.</param>
+            <param name="inputTemplate">The input template.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Common.TemplateEngine.ITemplateEngine.HasTemplate(System.String)">
+            <summary>
+            Implementors should return <c>true</c> only if the 
+            specified template exists and can be used
+            </summary>
+            <param name="templateName"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

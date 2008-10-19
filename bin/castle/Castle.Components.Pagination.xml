@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Components.Pagination</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Components.Pagination.AbstractPage">
+            <summary>
+            Abstract implementation of <see cref="T:Castle.Components.Pagination.IPaginatedPage"/>
+            which performs the standard calculations on 
+            <see cref="M:Castle.Components.Pagination.AbstractPage.CalculatePaginationInfo(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)"/>
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Pagination.IPaginatedPage">
+            <summary>
+            Represents a page of a bigger set
+            </summary>
+            <remarks>
+            all indexes are one based
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Pagination.IPaginatedPage.HasPage(System.Int32)">
+            <summary>
+            Checks whether the specified page exists.
+            Useful for Google-like pagination.
+            
+            </summary>
+            <returns>true if pageNumber is >= FirstPageIndex</returns>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.CurrentPageIndex">
+            <summary>
+            The index this page represents
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.NextPageIndex">
+            <summary>
+            The next page index (from this page)
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.PreviousPageIndex">
+            <summary>
+            The previous index (from this page)
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.FirstItemIndex">
+            <summary>
+            The first item index on current page
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.LastItemIndex">
+            <summary>
+            The last item index on current page
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.FirstItem">
+            <summary>
+            Retrieve the first item on current page
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.LastItem">
+            <summary>
+            Retrieve the last item on current page
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.HasPreviousPage">
+            <summary>
+            Returns true if current page is not first page
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.HasNextPage">
+            <summary>
+            Returns true if current page is not last page
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.TotalItems">
+            <summary>
+            The count of all elements on the set
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.TotalPages">
+            <summary>
+            Total page count
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.PageSize">
+            <summary>
+            Get the requested size of pages
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage.CurrentPageSize">
+            <summary>
+            Get the size of current page
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Pagination.AbstractPage.CalculatePaginationInfo(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Calculate the values of all properties
+            based on the specified parameters
+            </summary>
+            <param name="startIndex">Start index</param>
+            <param name="endIndex">Last index</param>
+            <param name="count">Total of elements</param>
+            <param name="pageSize">Page size</param>
+            <param name="currentPage">This page index</param>
+        </member>
+        <member name="M:Castle.Components.Pagination.AbstractPage.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns a enumerator for the contents
+            of this page only (not the whole set)
+            </summary>
+            <returns>Enumerator instance</returns>
+        </member>
+        <member name="M:Castle.Components.Pagination.AbstractPage.GetItemAtIndex(System.Int32)">
+            <summary>
+            should be overrided
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Pagination.AbstractPage.GetEnumeratorImplementation">
+            <summary>
+            should be overrided
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.Components.Pagination.AbstractPage`1">
+            <summary>
+            Generic specialization of <see cref="T:Castle.Components.Pagination.AbstractPage"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Castle.Components.Pagination.IPaginatedPage`1">
+            <summary>
+            Generic specialization of <see cref="T:Castle.Components.Pagination.IPaginatedPage"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage`1.FirstItem">
+            <summary>
+            Retrieve the first item on current page
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Pagination.IPaginatedPage`1.LastItem">
+            <summary>
+            Retrieve the last item on current page
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Pagination.AbstractPage`1.GetGenericEnumeratorImplementation">
+            <summary>
+            return enumerator over the current set (not the whole set)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Pagination.AbstractPage`1.GetGenericItemAtIndex(System.Int32)">
+            <summary>
+            return element at index
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.Components.Pagination.GenericCustomPage`1">
+            <summary>
+            Represents the sliced data and offers
+            a few read only properties to create a pagination bar.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Pagination.GenericCustomPage`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Pagination.GenericCustomPage`1"/> class.
+            </summary>
+            <param name="list">The list.</param>
+            <param name="curPage">The cur page.</param>
+            <param name="pageSize">Size of the page.</param>
+            <param name="total">The total.</param>
+        </member>
+        <member name="M:Castle.Components.Pagination.GenericCustomPage`1.GetGenericEnumeratorImplementation">
+            <summary>
+            Returns a enumerator for the contents
+            of this page only (not the whole set)
+            </summary>
+            <returns>Enumerator instance</returns>
+        </member>
+        <member name="M:Castle.Components.Pagination.GenericCustomPage`1.System#Collections#Generic#IEnumerable{T}#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="T:Castle.Components.Pagination.GenericPage`1">
+            <summary>
+            Represents the sliced data and offers
+            a few read only properties to create a pagination bar.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Pagination.GenericPage`1.#ctor(System.Collections.Generic.ICollection{`0},System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Pagination.GenericPage`1"/> class.
+            </summary>
+            <param name="list">The list.</param>
+            <param name="curPage">The cur page.</param>
+            <param name="pageSize">Size of the page.</param>
+        </member>
+        <member name="M:Castle.Components.Pagination.GenericPage`1.GetGenericEnumeratorImplementation">
+            <summary>
+            Returns a enumerator for the contents
+            of this page only (not the whole set)
+            </summary>
+            <returns>Enumerator instance</returns>
+        </member>
+        <member name="T:Castle.Components.Pagination.Page">
+            <summary>
+            Represents the sliced data and offers
+            a few read only properties to create a pagination bar.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Pagination.Page.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Pagination.Page"/> class.
+            </summary>
+            <param name="currentPageIndex">The desired page index</param>
+            <param name="pageSize">The desired page size</param>
+            <param name="total">The total of items in the data source.</param>
+        </member>
+        <member name="M:Castle.Components.Pagination.Page.#ctor(System.Collections.IList,System.Int32,System.Int32)">
+            <summary>
+            Constructs a Page using the specified parameters
+            </summary>
+            <param name="list">The whole set</param>
+            <param name="currentPageIndex">The desired page index</param>
+            <param name="pageSize">The desired page size</param>
+        </member>
+        <member name="M:Castle.Components.Pagination.Page.#ctor(System.Collections.IList,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Pagination.Page"/> class.
+            </summary>
+            <param name="slice">The sliced list.</param>
+            <param name="currentPageIndex">The desired page index</param>
+            <param name="pageSize">The desired page size</param>
+            <param name="total">The total of items (not in the list, but on the original source).</param>
+        </member>
+        <member name="M:Castle.Components.Pagination.Page.CreateSlicedCollection(System.Int32,System.Int32,System.Collections.IList)">
+            <summary>
+            Populates the sliced view of the whole set
+            </summary>
+            <param name="startIndex">Index to start to</param>
+            <param name="endIndex">Last index</param>
+            <param name="list">Source set</param>
+        </member>
+        <member name="M:Castle.Components.Pagination.Page.GetEnumeratorImplementation">
+            <summary>
+            Creates an enumerator for the 
+            sliced set
+            </summary>
+            <returns>An enumerator instance</returns>
+        </member>
+        <member name="T:Castle.Components.Pagination.PaginationSupport">
+            <summary>
+            Common pagination support methods
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Pagination.PaginationSupport.GetItemAtIndex(System.Collections.IEnumerable,System.Int32)">
+            <summary>
+            Subsititute for System.Linq.Enumerable.ElementAt
+            </summary>
+            <param name="enumerable"></param>
+            <param name="itemIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Components.Pagination.PaginationSupport.GetItemAtIndex``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Subsititute for System.Linq.Enumerable.ElementAt
+            </summary>
+            <param name="enumerable"></param>
+            <param name="itemIndex"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

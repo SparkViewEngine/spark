@@ -1,0 +1,578 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.MonoRail.Views.AspView</name>
+    </assembly>
+    <members>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.Adapters.DefaultCodeProviderAdapter.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.IPreCompilationStep">
+            <summary>
+            A unit that processes an AspView SourceFile, to make it ready for compilation
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.IPreCompilationStep.Process(Castle.MonoRail.Views.AspView.Compiler.SourceFile)">
+            <summary>
+            Acts upon a source file
+            </summary>
+            <param name="file">The source file to process</param>
+        </member>
+        <member name="T:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.DefaultPreCompilationStepsProvider">
+            <summary>
+            Providing the default ordered list of compilation steps for the AspView precompiler
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.IPreCompilationStepsProvider">
+            <summary>
+            Providing ordered list of compilation steps for the AspView precompiler
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.IPreCompilationStepsProvider.GetSteps">
+            <summary>
+            Get the precompilation steps
+            </summary>
+            <returns>Array of pre-compilation steps</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.DefaultPreCompilationStepsProvider.GetSteps">
+            <summary>
+            Get the precompilation steps
+            </summary>
+            <returns>Array of pre-compilation steps</returns>
+        </member>
+        <member name="T:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.EmbededServerScriptStep">
+            <summary>
+            This step process &lt;script runat="server"&gt; tags, used to embed
+            private methods right into the generated class.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.EmbededServerScriptStep.Castle#MonoRail#Views#AspView#Compiler#PreCompilationSteps#IPreCompilationStep#Process(Castle.MonoRail.Views.AspView.Compiler.SourceFile)">
+            <summary>
+            Would remove &lt;script runat="server"&gt; tags from the file's body,
+            and add them to a list, later to be added to the generated class.
+            </summary>
+            <param name="file">The source file object to act upon.</param>
+        </member>
+        <member name="F:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.ScriptToCodeTransformer.statementProcessors">
+            <summary>
+            Code Generators - would transform &lt;% %&gt; blocks to actual code.
+            <remarks>
+            The order is important
+            </remarks>
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.ServerSideCommentStripperStep">
+            <summary>
+            Strips any server side comment (&lt;%-- --%&gt;) found in the view template
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.PreCompilationSteps.ServerSideCommentStripperStep.Castle#MonoRail#Views#AspView#Compiler#PreCompilationSteps#IPreCompilationStep#Process(Castle.MonoRail.Views.AspView.Compiler.SourceFile)">
+            <summary>
+            Performs server side comment stripping
+            </summary>
+            <param name="file">The source file object to act upon.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.AbstractCompiler.AfterPreCompilation(System.Collections.Generic.List{Castle.MonoRail.Views.AspView.Compiler.SourceFile})">
+            <summary>
+            Entry point for logic to apply after the pre-compilation, and before the 
+            actual compilation
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.AbstractCompiler.InternalExecute">
+            <summary>
+            Execute the compilation process using the precompilation steps and code provider
+            </summary>
+            <returns>CompilerResults with the compilation results</returns>
+            <exception cref="T:System.Exception">Should compilation errors occur</exception>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.AbstractCompiler.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.Debug">
+            <summary>
+            True to emit debug symbols
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.KeepTemporarySourceFiles">
+            <summary>
+            True if the generated concrete classes should be kept on disk
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.AutoRecompilation">
+            <summary>
+            if true, the engine will recompile the view if the view sources are changed
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.AllowPartiallyTrustedCallers">
+            <summary>
+            if true, the engine will compile the views with AllowPartiallyTrustedCallers
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.TemporarySourceFilesDirectory">
+            <summary>
+            Location of the generated concrete classes, if saved.
+            Note that the user who runs the application must have Modify permissions on this path.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.References">
+            <summary>
+            Gets list of assemblies that'll be referenced during the compile process by CompiledViews.dll
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.CustomProviders">
+            <summary>
+            Gets list of assemblies that'll be referenced during the compile process by CompiledViews.dll
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.Compiler.SourceFile.EmbededScriptBlocks">
+            <summary>
+            contains the list of embeded scripts blocks (&lt;script runat="server"/&gt; elements contents) 
+            that will be rendered as raw class content
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Compiler.WebCompilationContext.#ctor(System.String,System.IO.DirectoryInfo,System.IO.DirectoryInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Views.AspView.Compiler.WebCompilationContext"/> class.
+            </summary>
+            <param name="viewPathRoot">The view path root.</param>
+            <param name="siteRoot">The site root.</param>
+            <param name="temporarySourceFilesDirectory">The temporary source files directory.</param>
+        </member>
+        <member name="T:Castle.MonoRail.Views.AspView.Internal.ParametersDictionary">
+            <summary>
+            A hybrid dictionary that stores keys as case insensitive strings
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Internal.ParametersDictionary.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Views.AspView.Internal.ParametersDictionary"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Internal.ParametersDictionary.N(System.String)">
+            <summary>
+            Adds the given <paramref name="key"/> to the dictionary
+            and assigns a value of <c>null</c> to it.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>A reference to this instance to allow method chaining</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Internal.ParametersDictionary.N(System.String,System.Object)">
+            <summary>
+            Adds the given <paramref name="key"/> to the dictionary
+            and assigns the <paramref name="value"/> to it.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+            <returns>
+            A reference to this instance to allow method chaining
+            </returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.IViewBase.Process">
+            <summary>
+            Processes the view.
+            Will first render a ContentView if present (on layouts), to the ViewContents property.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.IViewBase.Initialize(Castle.MonoRail.Views.AspView.AspViewEngine,System.IO.TextWriter,Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Would initialize a view instance, prepearing it to be processed.
+            </summary>
+            <param name="viewEngine">The view engine.</param>
+            <param name="output">The writer to which the view would be rendered.</param>
+            <param name="context">The rails engine content.</param>
+            <param name="controller">The controller which have asked for this view to be rendered.</param>
+            <param name="controllerContext">The controller's context.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.IViewBase.Render">
+            <summary>
+            When overriden in a concrete view class, renders the view content to the output writer.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IViewBase.OutputWriter">
+            <summary>
+            Gets the output writer to which the view is rendered.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IViewBase.ViewContents">
+            <summary>
+            (For layouts) - gets the ContentView's contents.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IViewBase.Properties">
+            <summary>
+            Gets the properties container. Based on current property containers that was sent from the controller, such us PropertyBag, Flash, etc.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IViewBase.Context">
+            <summary>
+            Gets the current Rails context.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IViewBase.Controller">
+            <summary>
+            Gets the controller which have asked for this view to be rendered.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IViewBase.ParentView">
+            <summary>
+            (For subviews) - gets a reference to the view's parent view.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.AspView.AspViewBase.outputWriters">
+            <summary>
+            Stack of writers, used as buffers for viewfilters
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.AspView.AspViewBase.viewFilters">
+            <summary>
+            Maintains the currently active view filters
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.EndFiltering">
+            <summary>
+            Signals the current view to apply the last view filter that was started on the buffered output
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.GatherBubblingPropertiesFrom(Castle.MonoRail.Views.AspView.IViewBase)">
+            <summary>
+            Gathers properties marked with ".@bubbleUp" from an other view
+            Should be used with CaptureFor components and the likes
+            </summary>
+            <param name="otherView">The view to gather the bubbling properties from</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.GetParameter(System.String)">
+            <summary>
+            Gets a parameter's value from the view's propery containers.
+            will throw exception if the parameter is not found
+            </summary>
+            <param name="parameterName">Parameter's name to look for</param>
+            <returns>The parametr's value</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.GetParameter(System.String,System.Object)">
+            <summary>
+            Gets a parameter's value from the view's propery containers.
+            will return a default value if the parameter is not found
+            </summary>
+            <param name="parameterName">Parameter's name to look for</param>
+            <param name="defaultValue">The value to use if the parameter will not be found</param>
+            <returns>The parametr's value</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.InvokeViewComponent(System.String)">
+            <summary>
+            Invokes a parameterless, bodyless, sectionless view component
+            </summary>
+            <param name="componentName">The view component name</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.InvokeViewComponent(System.String,System.Collections.IDictionary)">
+            <summary>
+            Invokes a bodyless, sectionless view component
+            </summary>
+            <param name="componentName">The view component name</param>
+            <param name="parameters">The parameters to be passed to the component</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.InvokeViewComponent(System.String,Castle.MonoRail.Views.AspView.ViewComponentSectionRendereDelegate,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,Castle.MonoRail.Views.AspView.ViewComponentSectionRendereDelegate}})">
+            <summary>
+            Invokes a parameterless view component, and registeres section handlers
+            </summary>
+            <param name="componentName">The view component name</param>
+            <param name="bodyHandler">Delegate to render the component's body. null if the component does not have a body</param>
+            <param name="sectionHandlers">Delegates to render the component's sections, by the delegate names</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.InvokeViewComponent(System.String,System.Collections.IDictionary,Castle.MonoRail.Views.AspView.ViewComponentSectionRendereDelegate,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,Castle.MonoRail.Views.AspView.ViewComponentSectionRendereDelegate}})">
+            <summary>
+            Invokes a view component, and registeres section handlers
+            </summary>
+            <param name="componentName">The view component name</param>
+            <param name="parameters">The parameters to be passed to the component</param>
+            <param name="bodyHandler">Delegate to render the component's body. null if the component does not have a body</param>
+            <param name="sectionHandlers">Delegates to render the component's sections, by the delegate names</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.Output(System.String)">
+            <summary>
+            Output a string to the current output writer, Html Encoded
+            </summary>
+            <remarks>
+            This method is supposed to be used internally. One should be aware
+            that this method does not html-encode the string, ans use it wisely
+            </remarks>
+            <param name="markup">Message to output</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.Output(System.Object)">
+            <summary>
+            Output an object's 'ToString()' to the current output writer, Html Encoded
+            </summary>
+            <remarks>
+            This method is supposed to be used internally. One should be aware
+            that this method does not html-encode the string, ans use it wisely
+            </remarks>
+            <param name="markup">object to output</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.OutputEncoded(System.String)">
+            <summary>
+            Output a fragment to the current output writer, Html Encoded
+            </summary>
+            <param name="fragment">string to output</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.OutputEncoded(System.Object)">
+            <summary>
+            Output an object's ToString() to the current output writer, Html Encoded
+            </summary>
+            <param name="fragment">object to output</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.N(System.String,System.Object)">
+            <summary>
+            Creates a MonoRailDictionary with a single entry
+            </summary>
+            <param name="name">The entry's name</param>
+            <param name="value">The entry's value</param>
+            <returns>The new dictionary</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.OutputSubView(System.String)">
+            <summary>
+            Renders another view in place
+            </summary>
+            <param name="subViewName">The sub view's name</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.OutputSubView(System.String,System.Collections.IDictionary)">
+            <summary>
+            Renders another view in place
+            </summary>
+            <param name="subViewName">The sub view's name</param>
+            <param name="parameters">Parameters that can be sent to the sub view's Properties container</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.OutputSubView(System.String,System.IO.TextWriter,System.Collections.IDictionary)">
+            <summary>
+            Renders another view in place
+            </summary>
+            <param name="subViewName">The sub view's name</param>
+            <param name="parameters">Parameters that can be sent to the sub view's Properties container</param>
+            <param name="writer">The writer that will be used for the sub view's output</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.StartFiltering(System.String)">
+            <summary>
+            Signaling the current view to start bufferring the following writes, filtering it later
+            </summary>
+            <param name="filterName">The filter's type name to apply</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.StartFiltering(Castle.MonoRail.Views.AspView.IViewFilter)">
+            <summary>
+            Signaling the current view to start bufferring the following writes, filtering it later
+            </summary>
+            <param name="filter">The filter to apply</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.TryGetParameter(System.String,System.Object@,System.Object)">
+            <summary>
+            Actually looking in the property containers for a parameter's value given it's name
+            </summary>
+            <param name="parameterName">The parameter's name</param>
+            <param name="parameter">The parameter's value</param>
+            <param name="defaultValue">The value to use if <paramref name="parameterName"/> wasn't found in the controller's properties</param>
+            <returns>True if the property is found, False elsewhere</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.SetParent(Castle.MonoRail.Views.AspView.AspViewBase)">
+            <summary>
+            Sets a view's parent view. Used in layouts
+            </summary>
+            <param name="view">The view's parent</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.GetRootedSubViewTemplate(System.String)">
+            <summary>
+            Gets a qualified template name
+            </summary>
+            <param name="subViewName">The sub view's name</param>
+            <returns>Relative or absolute path and filename to the sub view</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.Render">
+            <summary>
+            When overriden in a concrete view class, renders the view content to the output writer
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.Castle#MonoRail#Views#AspView#IViewBaseInternal#SetDisposeableOutputWriter(System.IO.TextWriter)">
+            <summary>
+            This is required because we may want to replace the output stream and get the correct
+            behavior from components call RenderText() or RenderSection()
+            </summary>	
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.Castle#MonoRail#Views#AspView#IViewBaseInternal#OutputSubView(System.String)">
+            <summary>
+            Renders another view in place
+            </summary>
+            <param name="subViewName">The sub view's name</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewBase.GetFilterType(System.String)">
+            <summary>
+            Searching a view filter given it's type's name
+            </summary>
+            <param name="filterName">the filter's typeName</param>
+            <returns>System.Type of the filter</returns>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.fullSiteRoot">
+            <summary>
+            Gets the Application's full virtual root, including protocol, host and port
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.Helpers">
+            <summary>
+            Gets the builtin helpers
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.siteRoot">
+            <summary>
+            Gets the Application's virtual root
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.OutputWriter">
+            <summary>
+            Gets the output writer for the current view rendering
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.ViewContents">
+            <summary>
+            Used only in layouts. Gets the view contents
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.Properties">
+            <summary>
+            Gets the properties container. Based on current property containers that was sent from the controller, such us PropertyBag, Flash, etc.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.Context">
+            <summary>
+            Gets the current Rails context
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.Controller">
+            <summary>
+            Gets the calling controller
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.ViewEngine">
+            <summary>
+            Gets the view engine instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewBase.ParentView">
+            <summary>
+            Gets a reference to the view's parent view
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewEngine.CreateJSGenerator(Castle.MonoRail.Framework.JSCodeGeneratorInfo,Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+             Implementors should return a generator instance if
+             the view engine supports JS generation.
+            </summary>
+            
+            <param name="generatorInfo">The generator info.</param>
+            <param name="context">The request context.</param>
+            <param name="controller">The controller.</param>
+            <param name="controllerContext">The controller context.</param>
+            <returns>
+            A JS generator instance
+            </returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewEngine.GenerateJS(System.String,System.IO.TextWriter,Castle.MonoRail.Framework.JSCodeGeneratorInfo,Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+             Processes the js generation view template - using the templateName
+             to obtain the correct template, and using the specified <see cref="T:System.IO.TextWriter" />
+             to output the result.
+            </summary>
+            
+            <param name="templateName">Name of the template.</param>
+            <param name="output">The output.</param>
+            <param name="generatorInfo">The generator info.</param>
+            <param name="context">The request context.</param>
+            <param name="controller">The controller.</param>
+            <param name="controllerContext">The controller context.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.AspViewEngine.RenderStaticWithinLayout(System.String,Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+             Wraps the specified content in the layout using the 
+             context to output the result.
+            </summary>
+            
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.AspViewEngineOptions.CompilerOptions">
+            <summary>
+            The compiler's options object
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Ajax">
+            <summary>
+            Gets the AjaxHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Behaviour">
+            <summary>
+            Gets the BehaviourHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.DateFormat">
+            <summary>
+            Gets the DateFormatHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Dict">
+            <summary>
+            Gets the DictHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.EffectsFat">
+            <summary>
+            Gets the EffectsFatHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Form">
+            <summary>
+            Gets the FormHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Html">
+            <summary>
+            Gets the HtmlHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Pagination">
+            <summary>
+            Gets the PaginationHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Scriptaculous">
+            <summary>
+            Gets the ScriptaculousHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Url">
+            <summary>
+            Gets the UrlHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Validation">
+            <summary>
+            Gets the ValidationHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Wizard">
+            <summary>
+            Gets the WizardHelper instance
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Zebda">
+            <summary>
+            Gets the ZebdaHelper instance
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.ViewComponentContext.#ctor(Castle.MonoRail.Views.AspView.IViewBaseInternal,Castle.MonoRail.Views.AspView.ViewComponentSectionRendereDelegate,System.String,System.Collections.IDictionary)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Views.AspView.ViewComponentContext"/> class.
+            </summary>
+            <param name="callingView">The calling view.</param>
+            <param name="body">The body.</param>
+            <param name="name">The name.</param>
+            <param name="parameters">The parameters.</param>
+        </member>
+    </members>
+</doc>

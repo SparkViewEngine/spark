@@ -589,6 +589,12 @@
             </summary>
             <value>The file path.</value>
         </member>
+        <member name="P:Castle.MonoRail.Framework.IRequest.UserAgent">
+            <summary>
+            Gets the user agent string of the client browser.
+            </summary>
+            <value>The agent string of the client browser.</value>
+        </member>
         <member name="P:Castle.MonoRail.Framework.IRequest.UserLanguages">
             <summary>
             Gets the user languages.
@@ -801,6 +807,12 @@
             Gets the <see cref="T:System.Web.HttpPostedFile"/> per key.
             </summary>
             <value></value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Adapters.RequestAdapter.UserAgent">
+            <summary>
+            Gets the user agent string of the client browser.
+            </summary>
+            <value>The agent string of the client browser.</value>
         </member>
         <member name="P:Castle.MonoRail.Framework.Adapters.RequestAdapter.UserLanguages">
             <summary>
@@ -4329,7 +4341,7 @@
             </summary>
             <value>The action selector.</value>
         </member>
-        <member name="P:Castle.MonoRail.Framework.IMonoRailServices.ScaffoldSupport">
+        <member name="P:Castle.MonoRail.Framework.IMonoRailServices.ScaffoldingSupport">
             <summary>
             Gets or sets the scaffold support.
             </summary>
@@ -4394,6 +4406,12 @@
             Gets or sets the dynamic action provider factory.
             </summary>
             <value>The dynamic action provider factory.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.IMonoRailServices.AjaxProxyGenerator">
+            <summary>
+            Gets or sets the ajax proxy generator.
+            </summary>
+            <value>The ajax proxy generator.</value>
         </member>
         <member name="M:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.#ctor(System.IServiceProvider)">
             <summary>
@@ -4517,7 +4535,7 @@
             </summary>
             <value>The action selector.</value>
         </member>
-        <member name="P:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.ScaffoldSupport">
+        <member name="P:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.ScaffoldingSupport">
             <summary>
             Gets or sets the scaffold support.
             </summary>
@@ -4546,12 +4564,6 @@
             Gets or sets the email sender.
             </summary>
             <value>The email sender.</value>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.ExtensionManager">
-            <summary>
-            Gets or sets the extension manager.
-            </summary>
-            <value>The extension manager.</value>
         </member>
         <member name="P:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.ResourceFactory">
             <summary>
@@ -4582,6 +4594,18 @@
             Gets or sets the dynamic action provider factory.
             </summary>
             <value>The dynamic action provider factory.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.AjaxProxyGenerator">
+            <summary>
+            Gets or sets the ajax proxy generator.
+            </summary>
+            <value>The ajax proxy generator.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.ExtensionManager">
+            <summary>
+            Gets or sets the extension manager.
+            </summary>
+            <value>The extension manager.</value>
         </member>
         <member name="T:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.ServiceIdentification">
             <summary>
@@ -6088,7 +6112,7 @@
             <param name="violationMessage">The violation message.</param>
             <remarks>Not implemented by the JQuery validate plugin. Done via a custom rule.</remarks>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.FValidateWebValidator.FValidateGenerator.SetAsLesserThan(System.String,System.String,Castle.Components.Validator.IsGreaterValidationType,System.String)">
+        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.FValidateWebValidator.FValidateGenerator.SetAsLesserThan(System.String,System.String,Castle.Components.Validator.IsLesserValidationType,System.String)">
             <summary>
             Sets that a field's value must be lesser than another field's value.
             </summary>
@@ -6262,13 +6286,11 @@
             The <see cref="T:Castle.Components.Validator.IBrowserValidationGenerator"/> implementation for the JQuery validate plugin.
             </summary>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.JQueryValidator.JQueryValidationGenerator.#ctor(Castle.MonoRail.Framework.Helpers.ValidationStrategy.JQueryValidator.JQueryConfiguration,Castle.Components.Validator.InputElementType,System.Collections.IDictionary)">
+        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.JQueryValidator.JQueryValidationGenerator.#ctor(Castle.MonoRail.Framework.Helpers.ValidationStrategy.JQueryValidator.JQueryConfiguration)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Helpers.ValidationStrategy.JQueryValidator.JQueryValidationGenerator"/> class.
             </summary>
             <param name="configuration">The configuration.</param>
-            <param name="inputElementType">Type of the input element.</param>
-            <param name="attributes">The attributes.</param>
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.JQueryValidator.JQueryValidationGenerator.SetDigitsOnly(System.String,System.String)">
             <summary>
@@ -6443,7 +6465,7 @@
             <param name="violationMessage">The violation message.</param>
             <remarks>Not implemented by the JQuery validate plugin. Done via a custom rule.</remarks>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.JQueryValidator.JQueryValidationGenerator.SetAsLesserThan(System.String,System.String,Castle.Components.Validator.IsGreaterValidationType,System.String)">
+        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.JQueryValidator.JQueryValidationGenerator.SetAsLesserThan(System.String,System.String,Castle.Components.Validator.IsLesserValidationType,System.String)">
             <summary>
             Sets that a field's value must be lesser than another field's value.
             </summary>
@@ -6695,7 +6717,7 @@
             <param name="violationMessage">The violation message.</param>
             <remarks>Not implemented by the JQuery validate plugin. Done via a custom rule.</remarks>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.PrototypeWebValidator.PrototypeValidationGenerator.SetAsLesserThan(System.String,System.String,Castle.Components.Validator.IsGreaterValidationType,System.String)">
+        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.PrototypeWebValidator.PrototypeValidationGenerator.SetAsLesserThan(System.String,System.String,Castle.Components.Validator.IsLesserValidationType,System.String)">
             <summary>
             Sets that a field's value must be lesser than another field's value.
             </summary>
@@ -6928,7 +6950,7 @@
             <param name="violationMessage">The violation message.</param>
             <remarks>Not implemented by the JQuery validate plugin. Done via a custom rule.</remarks>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.ZebdaWebValidationGenerator.SetAsLesserThan(System.String,System.String,Castle.Components.Validator.IsGreaterValidationType,System.String)">
+        <member name="M:Castle.MonoRail.Framework.Helpers.ValidationStrategy.ZebdaWebValidationGenerator.SetAsLesserThan(System.String,System.String,Castle.Components.Validator.IsLesserValidationType,System.String)">
             <summary>
             Sets that a field's value must be lesser than another field's value.
             </summary>
@@ -7193,6 +7215,16 @@
             <param name="content">The text to URL encode and escape JavaScript within.</param>
             <returns>The URL encoded and JavaScript escaped text.</returns>
         </member>
+        <member name="M:Castle.MonoRail.Framework.Helpers.AbstractHelper.JavascriptOptions(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Builds a JS associative array based on the specified dictionary instance.
+            <para>
+            For example: <c>{name: value, other: 'another'}</c>
+            </para>
+            </summary>
+            <param name="jsOptions">The js options.</param>
+            <returns>An associative array in javascript</returns>
+        </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.AbstractHelper.JavascriptOptions(System.Collections.IDictionary)">
             <summary>
             Builds a JS associative array based on the specified dictionary instance.
@@ -7207,9 +7239,9 @@
             <summary>
             Generates script block.
             <code>
-            &lt;script type=\"text/javascript\"&gt;
+            &lt;script type=\"text/javascript\"&gt;/*&lt;![CDATA[*/
             scriptContents
-            &lt;/script&gt;
+            /*]]&gt;*/&lt;/script&gt;
             </code>
             </summary>
             <param name="scriptContents">The script contents.</param>
@@ -8209,7 +8241,7 @@
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.AjaxHelper.InputTextWithAutoCompletion(System.Collections.IDictionary,System.Collections.IDictionary)">
             <summary>
-            Rendes a input field with Google style autocomplete enabled.
+            Renders an input field with Google style autocomplete enabled.
             The specified <c>url</c> is used to gather the contents 
             for the auto complete panel, so 
             and your action should return filtered and sorted results.
@@ -9907,6 +9939,17 @@
             <param name="attributes">Attributes for the FormHelper method and for the html element it generates</param>
             <returns>The generated form element</returns>
         </member>
+        <member name="M:Castle.MonoRail.Framework.Helpers.FormHelper.HiddenFieldItem(System.Int32,System.String,System.String,Castle.MonoRail.Framework.Helpers.SetItem,System.Collections.IDictionary)">
+            <summary>
+            Outputs a hidden element with an index (for internal use)
+            </summary>
+            <param name="index"></param>
+            <param name="target">The object to get the value from and to be based on to create the element name.</param>
+            <param name="suffix"></param>
+            <param name="item"></param>
+            <param name="attributes">Attributes for the FormHelper method and for the html element it generates</param>
+            <returns>The generated form element</returns>
+        </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.FormHelper.CheckboxLabel(System.Int32,System.String,System.String,System.String,System.Collections.IDictionary)">
             <summary>
             Creates a label for an item of the checkbox list (internal use). The method mirrors
@@ -10223,6 +10266,21 @@
             <summary>
             Outputs the Checkbox in the correct state (checked/unchecked) based
             on the Set. 
+            <seealso cref="M:Castle.MonoRail.Framework.Helpers.FormHelper.CreateCheckboxList(System.String,System.Collections.IEnumerable,System.Collections.IDictionary)"/>
+            </summary>
+            <param name="id">The element id</param>
+            <returns>The generated input element</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Helpers.FormHelper.CheckboxList.ItemAsHiddenField">
+            <summary>
+            Outputs the Hidden field for list databinding based on the Set. 
+            <seealso cref="M:Castle.MonoRail.Framework.Helpers.FormHelper.CreateCheckboxList(System.String,System.Collections.IEnumerable,System.Collections.IDictionary)"/>
+            </summary>
+            <returns>The generated input element</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Helpers.FormHelper.CheckboxList.ItemAsHiddenField(System.String)">
+            <summary>
+            Outputs the Hidden field for list databinding based on the Set. 
             <seealso cref="M:Castle.MonoRail.Framework.Helpers.FormHelper.CreateCheckboxList(System.String,System.Collections.IEnumerable,System.Collections.IDictionary)"/>
             </summary>
             <param name="id">The element id</param>
@@ -11954,90 +12012,6 @@
             </code>
             </example>
         </member>
-        <member name="T:Castle.MonoRail.Framework.Helpers.IPaginatedPage">
-            <summary>
-            Represents a page of a bigger set
-            </summary>
-            <remarks>
-            Indexes are zero based.
-            </remarks>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.IPaginatedPage.HasPage(System.Int32)">
-            <summary>
-            Checks whether the specified page exists.
-            Useful for Google-like pagination.
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.CurrentIndex">
-            <summary>
-            The index this page represents
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.LastIndex">
-            <summary>
-            The last index available on the set
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.NextIndex">
-            <summary>
-            The next index (from this page)
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.PreviousIndex">
-            <summary>
-            The previous index (from this page)
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.FirstIndex">
-            <summary>
-            The first index
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.FirstItem">
-            <summary>
-            The first element (index + 1)
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.LastItem">
-            <summary>
-            The last element in the page (count)
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.TotalItems">
-            <summary>
-            The count of all elements on the set
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.PageSize">
-            <summary>
-            Gets the size of the page.
-            </summary>
-            <value>The size of the page.</value>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.HasPrevious">
-            <summary>
-            Returns true if a previous page 
-            is accessible from this page
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.HasNext">
-            <summary>
-            Returns true if a next page is
-            accessible from this page
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.HasFirst">
-            <summary>
-            Returns true if a first page 
-            exists
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.IPaginatedPage.HasLast">
-            <summary>
-            Returns true if a last page 
-            exists
-            </summary>
-        </member>
         <member name="T:Castle.MonoRail.Framework.Helpers.JSONHelper">
             <summary>
             Provides utilities methods to work with JSON.
@@ -12093,7 +12067,7 @@
             </summary>
             
             <remarks>
-            With the pagination you expose a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> instance to your view, 
+            With the pagination you expose a <see cref="T:Castle.Components.Pagination.Page"/> instance to your view, 
             that can be used to created a very detailed page navigator.
             
             <para>
@@ -12103,11 +12077,11 @@
             <list type="bullet">
             <item>
             	<term>CreatePagination</term>
-            	<description>Uses a whole data set and creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> with a slice of it. </description>
+            	<description>Uses a whole data set and creates a <see cref="T:Castle.Components.Pagination.Page"/> with a slice of it. </description>
             </item>
             <item>
             	<term>CreateCachedPagination</term>
-            	<description>Caches the dataset and creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> with a slice. 
+            	<description>Caches the dataset and creates a <see cref="T:Castle.Components.Pagination.Page"/> with a slice. 
             	As the cache is shared, you must be very careful on creating a cache key that uniquely represents the 
             	cached dataset.
             </description>
@@ -12115,7 +12089,7 @@
             <item>
             	<term>CreateCustomPage</term>
             	<description>
-            	In this case, you are handling the slicing. The <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> is created with your 
+            	In this case, you are handling the slicing. The <see cref="T:Castle.Components.Pagination.Page"/> is created with your 
             	actual dataset and information about total. It calculates the other information based on that.
             	</description>
             </item>
@@ -12181,47 +12155,47 @@
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.PaginationHelper.CreatePagination(Castle.MonoRail.Framework.IEngineContext,System.Collections.IList,System.Int32)">
             <summary>
-            Creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> which is a sliced view of
+            Creates a <see cref="T:Castle.Components.Pagination.Page"/> which is a sliced view of
             the data source
             </summary>
             <param name="engineContext">The engine context.</param>
             <param name="datasource">Data source to be used as target of the pagination</param>
             <param name="pageSize">Page size</param>
-            <returns>A <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> instance</returns>
+            <returns>A <see cref="T:Castle.Components.Pagination.Page"/> instance</returns>
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.PaginationHelper.CreatePagination(System.Collections.IList,System.Int32,System.Int32)">
             <summary>
-            Creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> which is a sliced view of
+            Creates a <see cref="T:Castle.Components.Pagination.Page"/> which is a sliced view of
             the data source
             </summary>
             <param name="datasource">Data source to be used as target of the pagination</param>
             <param name="pageSize">Page size</param>
             <param name="currentPage">current page index (1 based)</param>
-            <returns>A <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> instance</returns>
+            <returns>A <see cref="T:Castle.Components.Pagination.Page"/> instance</returns>
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.PaginationHelper.CreatePagination``1(Castle.MonoRail.Framework.IEngineContext,System.Collections.Generic.ICollection{``0},System.Int32)">
             <summary>
-            Creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> which is a sliced view of
+            Creates a <see cref="T:Castle.Components.Pagination.Page"/> which is a sliced view of
             the data source
             </summary>
             <param name="engineContext">The engine context.</param>
             <param name="datasource">Data source to be used as target of the pagination</param>
             <param name="pageSize">Page size</param>
-            <returns>A <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> instance</returns>
+            <returns>A <see cref="T:Castle.Components.Pagination.Page"/> instance</returns>
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.PaginationHelper.CreatePagination``1(System.Collections.Generic.ICollection{``0},System.Int32,System.Int32)">
             <summary>
-            Creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> which is a sliced view of
+            Creates a <see cref="T:Castle.Components.Pagination.Page"/> which is a sliced view of
             the data source
             </summary>
             <param name="datasource">Data source to be used as target of the pagination</param>
             <param name="pageSize">Page size</param>
             <param name="currentPage">current page index (1 based)</param>
-            <returns>A <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> instance</returns>
+            <returns>A <see cref="T:Castle.Components.Pagination.Page"/> instance</returns>
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.PaginationHelper.CreateCachedPagination(Castle.MonoRail.Framework.IEngineContext,System.String,System.Int32,Castle.MonoRail.Framework.Helpers.DataObtentionDelegate)">
             <summary>
-            Creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> which is a sliced view of
+            Creates a <see cref="T:Castle.Components.Pagination.Page"/> which is a sliced view of
             the data source. This method first looks for the datasource
             in the <see cref="T:System.Web.Caching.Cache"/> and if not found,
             it invokes the <c>dataObtentionCallback</c> and caches the result
@@ -12231,7 +12205,7 @@
             <param name="cacheKey">Cache key used to query/store the datasource</param>
             <param name="pageSize">Page size</param>
             <param name="dataObtentionCallback">Callback to be used to populate the cache</param>
-            <returns>A <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> instance</returns>
+            <returns>A <see cref="T:Castle.Components.Pagination.Page"/> instance</returns>
             <remarks>
             CreateCachedPagination is quite dangerous exactly because the cache is
             shared. If the results vary per logged user, then the programmer must
@@ -12241,7 +12215,7 @@
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.PaginationHelper.CreateCustomPage(Castle.MonoRail.Framework.IEngineContext,System.Collections.IList,System.Int32,System.Int32)">
             <summary>
-            Creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> which is a sliced view of
+            Creates a <see cref="T:Castle.Components.Pagination.Page"/> which is a sliced view of
             the data source
             <para>
             Assumes that the slicing is managed by the caller.
@@ -12251,11 +12225,11 @@
             <param name="datasource">Data source to be used as target of the pagination</param>
             <param name="pageSize">Page size</param>
             <param name="total">The total of items in the datasource</param>
-            <returns>A <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> instance</returns>
+            <returns>A <see cref="T:Castle.Components.Pagination.Page"/> instance</returns>
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.PaginationHelper.CreateCustomPage(System.Collections.IList,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> which is a sliced view of
+            Creates a <see cref="T:Castle.Components.Pagination.Page"/> which is a sliced view of
             the data source
             <para>
             Assumes that the slicing is managed by the caller.
@@ -12269,7 +12243,7 @@
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.PaginationHelper.CreateCustomPage``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32,System.Int32)">
             <summary>
-            Creates a <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> which is a sliced view of
+            Creates a <see cref="T:Castle.Components.Pagination.Page"/> which is a sliced view of
             the data source
             <para>
             Assumes that the slicing is managed by the caller.
@@ -12280,205 +12254,6 @@
             <param name="total">The total of items in the datasource</param>
             <param name="currentPage">The current page index (1 based).</param>
             <returns></returns>
-        </member>
-        <member name="T:Castle.MonoRail.Framework.Helpers.Page">
-            <summary>
-            Represents the sliced data and offers
-            a few read only properties to create a pagination bar.
-            </summary>
-        </member>
-        <member name="T:Castle.MonoRail.Framework.Helpers.AbstractPage">
-            <summary>
-            Abstract implementation of <see cref="T:Castle.MonoRail.Framework.Helpers.IPaginatedPage"/>
-            which performs the standard calculations on 
-            <see cref="M:Castle.MonoRail.Framework.Helpers.AbstractPage.CalculatePaginationInfo(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)"/>
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.AbstractPage.CalculatePaginationInfo(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Calculate the values of all properties
-            based on the specified parameters
-            </summary>
-            <param name="startIndex">Start index</param>
-            <param name="endIndex">Last index</param>
-            <param name="count">Total of elements</param>
-            <param name="pageSize">Page size</param>
-            <param name="curPage">This page index</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.AbstractPage.HasPage(System.Int32)">
-            <summary>
-            Checks whether the specified page exists.
-            Useful for Google-like pagination.
-            </summary>
-            <param name="pageNumber">The page number</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.AbstractPage.GetEnumerator">
-            <summary>
-            Returns a enumerator for the contents
-            of this page only (not the whole set)
-            </summary>
-            <returns>Enumerator instance</returns>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.FirstIndex">
-            <summary>
-            The first index
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.CurrentIndex">
-            <summary>
-            The index this page represents
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.LastIndex">
-            <summary>
-            The last index available on the set
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.PreviousIndex">
-            <summary>
-            The previous index (from this page)
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.NextIndex">
-            <summary>
-            The next index (from this page)
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.FirstItem">
-            <summary>
-            The first element (index + 1)
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.LastItem">
-            <summary>
-            The last element in the page (count)
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.TotalItems">
-            <summary>
-            The count of all elements on the set
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.PageSize">
-            <summary>
-            Gets the size of the page.
-            </summary>
-            <value>The size of the page.</value>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.HasPrevious">
-            <summary>
-            Returns true if a previous page 
-            is accessible from this page
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.HasNext">
-            <summary>
-            Returns true if a next page is
-            accessible from this page
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.HasFirst">
-            <summary>
-            Returns true if a first page 
-            exists
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.AbstractPage.HasLast">
-            <summary>
-            Returns true if a last page 
-            exists
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.Page.#ctor(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> class.
-            </summary>
-            <param name="curPage">The desired page index</param>
-            <param name="pageSize">The desired page size</param>
-            <param name="total">The total of items in the data source.</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.Page.#ctor(System.Collections.IList,System.Int32,System.Int32)">
-            <summary>
-            Constructs a Page using the specified parameters
-            </summary>
-            <param name="list">The whole set</param>
-            <param name="curPage">The desired page index</param>
-            <param name="pageSize">The desired page size</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.Page.#ctor(System.Collections.IList,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Helpers.Page"/> class.
-            </summary>
-            <param name="slice">The sliced list.</param>
-            <param name="curPage">The desired page index</param>
-            <param name="pageSize">The desired page size</param>
-            <param name="total">The total of items (not in the list, but on the original source).</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.Page.CreateSlicedCollection(System.Int32,System.Int32,System.Collections.IList)">
-            <summary>
-            Populates the sliced view of the whole set
-            </summary>
-            <param name="startIndex">Index to start to</param>
-            <param name="endIndex">Last index</param>
-            <param name="list">Source set</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.Page.GetEnumerator">
-            <summary>
-            Creates an enumerator for the 
-            sliced set
-            </summary>
-            <returns>An enumerator instance</returns>
-        </member>
-        <member name="T:Castle.MonoRail.Framework.Helpers.GenericPage`1">
-            <summary>
-            Represents the sliced data and offers
-            a few read only properties to create a pagination bar.
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.GenericPage`1.#ctor(System.Collections.Generic.ICollection{`0},System.Int32,System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Helpers.GenericPage`1"/> class.
-            </summary>
-            <param name="list">The list.</param>
-            <param name="curPage">The cur page.</param>
-            <param name="pageSize">Size of the page.</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.GenericPage`1.GetEnumerator">
-            <summary>
-            Returns a enumerator for the contents
-            of this page only (not the whole set)
-            </summary>
-            <returns>Enumerator instance</returns>
-        </member>
-        <member name="T:Castle.MonoRail.Framework.Helpers.GenericCustomPage`1">
-            <summary>
-            Represents the sliced data and offers
-            a few read only properties to create a pagination bar.
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.GenericCustomPage`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Helpers.GenericCustomPage`1"/> class.
-            </summary>
-            <param name="list">The list.</param>
-            <param name="curPage">The cur page.</param>
-            <param name="pageSize">Size of the page.</param>
-            <param name="total">The total.</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.GenericCustomPage`1.GetEnumerator">
-            <summary>
-            Returns a enumerator for the contents
-            of this page only (not the whole set)
-            </summary>
-            <returns>Enumerator instance</returns>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.GenericCustomPage`1.System#Collections#Generic#IEnumerable{T}#GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through the collection.
-            </summary>
-            <returns>
-            A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
-            </returns>
         </member>
         <member name="T:Castle.MonoRail.Framework.Helpers.SetOperation">
             <summary>
@@ -14186,28 +13961,9 @@
             </summary>
             <value>The code gen.</value>
         </member>
-        <member name="T:Castle.MonoRail.Framework.JSGeneration.Prototype.BehaviourExtension">
+        <member name="T:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryElementGenerator">
             <summary>
-            Pendent
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.BehaviourExtension.#ctor(Castle.MonoRail.Framework.JSGeneration.IJSCodeGenerator)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.JSGeneration.Prototype.ScriptaculousExtension"/> class.
-            </summary>
-            <param name="jsCodeGenerator">The js code generator.</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.BehaviourExtension.ReApply">
-            <summary>
-            Re-apply Behaviour css' rules.
-            </summary>
-            <remarks>
-            Only makes sense if you are using the Behaviour javascript library.
-            </remarks>
-        </member>
-        <member name="T:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator">
-            <summary>
-            Implementation for the <see cref="T:Castle.MonoRail.Framework.JSGeneration.IJSElementGenerator"/>
+            Element generator for JQuery
             </summary>
         </member>
         <member name="T:Castle.MonoRail.Framework.JSGeneration.IJSElementGenerator">
@@ -14262,14 +14018,14 @@
             </summary>
             <value>The parent generator.</value>
         </member>
-        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator.#ctor(Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeGenerator,System.String)">
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryElementGenerator.#ctor(Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator"/> class.
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryElementGenerator"/> class.
             </summary>
-            <param name="generator">The generator.</param>
+            <param name="parent">The parent.</param>
             <param name="root">The root.</param>
         </member>
-        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator.ReplaceHtml(System.Object)">
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryElementGenerator.ReplaceHtml(System.Object)">
             <summary>
             Replaces the content of the element.
             </summary>
@@ -14281,7 +14037,7 @@
             </code>
             </example>
         </member>
-        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator.Replace(System.Object)">
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryElementGenerator.Replace(System.Object)">
             <summary>
             Replaces the entire element's content -- and not only its innerHTML --
             by the content evaluated.
@@ -14294,15 +14050,15 @@
             </code>
             </example>
         </member>
-        <member name="P:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator.ParentGenerator">
+        <member name="P:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryElementGenerator.ParentGenerator">
             <summary>
             Gets the parent generator.
             </summary>
             <value>The parent generator.</value>
         </member>
-        <member name="T:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeGenerator">
+        <member name="T:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator">
             <summary>
-            Pendent
+            JQuery Generator implementation
             </summary>
         </member>
         <member name="T:Castle.MonoRail.Framework.JSGeneration.AbstractJSGenerator">
@@ -14630,6 +14386,203 @@
             Gets the code generator instance.
             </summary>
             <value>The code generator.</value>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.#ctor(Castle.MonoRail.Framework.JSGeneration.IJSCodeGenerator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator"/> class.
+            </summary>
+            <param name="codeGenerator">The code generator.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.SelectRelevantElements(System.String[])">
+            <summary>
+            Selects the relevant elements.
+            </summary>
+            <param name="ids">The ids.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.WriteNewLine">
+            <summary>
+            Write a new line
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.InsertHtml(System.String,System.String,System.Object)">
+            <summary>
+            Pendent
+            </summary>
+            <param name="position"></param>
+            <param name="id"></param>
+            <param name="renderOptions"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.ReplaceHtml(System.String,System.Object)">
+            <summary>
+            Pendent
+            </summary>
+            <param name="id"></param>
+            <param name="renderOptions"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Replace(System.String,System.Object)">
+            <summary>
+            Pendent
+            </summary>
+            <param name="id"></param>
+            <param name="renderOptions"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Show(System.String[])">
+            <summary>
+            Pendent
+            </summary>
+            <param name="ids"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Hide(System.String[])">
+            <summary>
+            Pendent
+            </summary>
+            <param name="ids"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Toggle(System.String[])">
+            <summary>
+            Pendent
+            </summary>
+            <param name="ids"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Remove(System.String[])">
+            <summary>
+            Pendent
+            </summary>
+            <param name="ids"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.CreateElementGenerator(System.String)">
+            <summary>
+            Creates a generator for an element.
+            </summary>
+            <param name="root">The root expression.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.append">
+            <summary>
+            Append content to the inside of every matched element.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.appendTo">
+            <summary>
+            Append all of the matched elements to another, specified, set of elements.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.prepend">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.prependTo">
+            <summary>
+            Prepend content to the inside of every matched element.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.after">
+            <summary>
+            Insert content after each of the matched elements.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.before">
+            <summary>
+            Insert content before each of the matched elements.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.insertAfter">
+            <summary>
+            Insert all of the matched elements after another, specified, set of elements.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.insertBefore">
+            <summary>
+            Insert all of the matched elements before another, specified, set of elements.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.wrap">
+            <summary>
+            Wrap each matched element with the specified HTML content.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.wrapInner">
+            <summary>
+            Wrap all the elements in the matched set into a single wrapper element.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Framework.JSGeneration.jQuery.JQueryGenerator.Position.wrapAll">
+            <summary>
+            Wrap all the elements in the matched set into a single wrapper element.
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.JSGeneration.Prototype.BehaviourExtension">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.BehaviourExtension.#ctor(Castle.MonoRail.Framework.JSGeneration.IJSCodeGenerator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.JSGeneration.Prototype.ScriptaculousExtension"/> class.
+            </summary>
+            <param name="jsCodeGenerator">The js code generator.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.BehaviourExtension.ReApply">
+            <summary>
+            Re-apply Behaviour css' rules.
+            </summary>
+            <remarks>
+            Only makes sense if you are using the Behaviour javascript library.
+            </remarks>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator">
+            <summary>
+            Implementation for the <see cref="T:Castle.MonoRail.Framework.JSGeneration.IJSElementGenerator"/>
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator.#ctor(Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeGenerator,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator"/> class.
+            </summary>
+            <param name="generator">The generator.</param>
+            <param name="root">The root.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator.ReplaceHtml(System.Object)">
+            <summary>
+            Replaces the content of the element.
+            </summary>
+            <param name="renderOptions">Defines what to render</param>
+            <example>
+            The following example uses nvelocity syntax:
+            <code>
+            $page.el('elementid').ReplaceHtml("%{partial='shared/newmessage.vm'}")
+            </code>
+            </example>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator.Replace(System.Object)">
+            <summary>
+            Replaces the entire element's content -- and not only its innerHTML --
+            by the content evaluated.
+            </summary>
+            <param name="renderOptions">Defines what to render</param>
+            <example>
+            The following example uses nvelocity syntax:
+            <code>
+            $page.el('messagediv').Replace("%{partial='shared/newmessage.vm'}")
+            </code>
+            </example>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeElementGenerator.ParentGenerator">
+            <summary>
+            Gets the parent generator.
+            </summary>
+            <value>The parent generator.</value>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeGenerator">
+            <summary>
+            Pendent
+            </summary>
         </member>
         <member name="M:Castle.MonoRail.Framework.JSGeneration.Prototype.PrototypeGenerator.#ctor(Castle.MonoRail.Framework.JSGeneration.IJSCodeGenerator)">
             <summary>
@@ -16403,6 +16356,13 @@
             <param name="match">The match.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MonoRail.Framework.Routing.PatternRoute.GetUrlParts(System.String)">
+            <summary>
+            Return url parts for given url
+            </summary>
+            <param name="url">url to get parts from</param>
+            <returns>url parts array</returns>
+        </member>
         <member name="M:Castle.MonoRail.Framework.Routing.PatternRoute.AddDefault(System.String,System.String)">
             <summary>
             Adds a default entry.
@@ -16695,6 +16655,11 @@
             </summary>
             <value>The engine.</value>
         </member>
+        <member name="T:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.IAjaxProxyGenerator">
             <summary>
             Provides a service which generates a <em>JavaScript</em> block, that
@@ -16709,27 +16674,9 @@
             <param name="proxyName">Name of the javascript proxy object</param>
             <param name="controller">Controller which will be target of the proxy</param>
             <param name="area">area which the controller belongs to</param>
+            <remarks>This function also includes the script tags</remarks>
         </member>
-        <member name="T:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator">
-            <summary>
-            Provides a service which generates a <em>JavaScript</em> block, that
-            can be used to call Ajax actions on the controller. This JavaScript will
-            use the <em>Prototype</em> syntax.
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator"/> class.
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.Service(Castle.MonoRail.Framework.IMonoRailServices)">
-            <summary>
-            Invoked by the framework in order to give a chance to
-            obtain other services
-            </summary>
-            <param name="provider">The service proviver</param>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.GenerateJSProxy(Castle.MonoRail.Framework.IEngineContext,System.String,System.String,System.String)">
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GenerateJSProxy(Castle.MonoRail.Framework.IEngineContext,System.String,System.String,System.String)">
             <summary>
             Generates an AJAX JavaScript proxy for a given controller.
             </summary>
@@ -16738,22 +16685,38 @@
             <param name="controller">Controller which will be target of the proxy</param>
             <param name="area">area which the controller belongs to</param>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.GetParameterName(System.Reflection.ParameterInfo)">
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GetScriptFunctionParameters(System.Collections.Generic.IEnumerable{System.Reflection.ParameterInfo})">
             <summary>
-            Gets the name of the parameter.
+            Gets the script function parameters.
             </summary>
-            <param name="paramInfo">The parameterInfo.</param>
+            <param name="parameters">The parameters.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.GetPropertyValue(System.Object,System.String)">
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GenerateJavascriptFunction(System.String,System.String,System.String,Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ScriptFunctionParameter[])">
             <summary>
-            Gets the property value.
+            Generates the javascript proxy function.
             </summary>
-            <param name="obj">The obj.</param>
-            <param name="propName">Name of the prop.</param>
+            <param name="url">The URL.</param>
+            <param name="functionName">Name of the function.</param>
+            <param name="httpRequestMethod">The HTTP request method.</param>
+            <param name="scriptFunctionParameters">The script function parameters.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.GetSingleAttribute``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GetURLExtension(Castle.MonoRail.Framework.IEngineContext)">
+            <summary>
+            Gets the URL extension.
+            </summary>
+            <param name="context">The context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GetHTTPRequestMethod(System.Reflection.ICustomAttributeProvider)">
+            <summary>
+            Gets the HTTP request method.
+            </summary>
+            <param name="ajaxActionMethod">The ajax action method.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GetSingleAttribute``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
             <summary>
             Gets the single attribute.
             </summary>
@@ -16761,7 +16724,7 @@
             <param name="inherit">if set to <c>true</c> [inherit].</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.GetSingleAttribute(System.Reflection.ICustomAttributeProvider,System.Type,System.Boolean)">
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GetSingleAttribute(System.Reflection.ICustomAttributeProvider,System.Type,System.Boolean)">
             <summary>
             Gets the single attribute.
             </summary>
@@ -16770,24 +16733,130 @@
             <param name="inherit">if set to <c>true</c> [inherit].</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.ToCamelCase(System.String)">
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ToCamelCase(System.String)">
             <summary>
             Toes the camel case.
             </summary>
             <param name="value">The value.</param>
             <returns></returns>
         </member>
-        <member name="P:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.ControllerDescriptorBuilder">
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GetBaseUrl(System.String,System.String,Castle.MonoRail.Framework.IEngineContext)">
+            <summary>
+            Gets the base URL.
+            </summary>
+            <param name="area">The area.</param>
+            <param name="controller">The controller.</param>
+            <param name="context">The context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GetPropertyValue(System.Object,System.String)">
+            <summary>
+            Gets the property value.
+            </summary>
+            <param name="obj">The obj.</param>
+            <param name="propName">Name of the prop.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.GetParameterName(System.Reflection.ParameterInfo)">
+            <summary>
+            Gets the name of the parameter.
+            </summary>
+            <param name="paramInfo">The parameterInfo.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.Service(Castle.MonoRail.Framework.IMonoRailServices)">
+            <summary>
+            Invoked by the framework in order to give a chance to
+            obtain other services
+            </summary>
+            <param name="provider">The service proviver</param>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ControllerDescriptorBuilder">
             <summary>
             Gets or sets the controller descriptor builder.
             </summary>
             <value>The controller descriptor builder.</value>
         </member>
-        <member name="P:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.ControllerTree">
+        <member name="P:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ControllerTree">
             <summary>
             Gets or sets the controller tree.
             </summary>
             <value>The controller tree.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.WrapProxyInScriptBlock">
+            <summary>
+            Deterains if the proxy generated by this instance will
+            be wrapped in a &lt;script&gt; block or not.
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ScriptFunctionParameter">
+            <summary>
+            Script parameters
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ScriptFunctionParameter.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ScriptFunctionParameter"/> class.
+            </summary>
+            <param name="clientSideName">Name of the client side.</param>
+            <param name="serverSideName">Name of the server side.</param>
+            <param name="needsJSONEncoding">if set to <c>true</c> [needs JSON encoding].</param>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ScriptFunctionParameter.ServerSideParameterName">
+            <summary>
+            Gets the name of the server side parameter.
+            </summary>
+            <value>The name of the server side parameter.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ScriptFunctionParameter.ClientSideParameterName">
+            <summary>
+            Gets the name of the client side parameter.
+            </summary>
+            <value>The name of the client side parameter.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ScriptFunctionParameter.NeedsJSONEncoding">
+            <summary>
+            Gets a value indicating whether the parameter needs JSON encoding.
+            </summary>
+            <value><c>true</c> if [needs JSON encoding]; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.JQueryAjaxProxyGenerator">
+            <summary>
+            Provides a service which generates a <em>JavaScript</em> block, that
+            can be used to call Ajax actions on the controller. This JavaScript will
+            use the <em>JQuery</em> syntax.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.JQueryAjaxProxyGenerator.GenerateJavascriptFunction(System.String,System.String,System.String,Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ScriptFunctionParameter[])">
+            <summary>
+            Generates the javascript proxy function.
+            </summary>
+            <param name="url">The URL.</param>
+            <param name="functionName">Name of the function.</param>
+            <param name="httpRequestMethod">The HTTP request method.</param>
+            <param name="scriptFunctionParameters">The script function parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator">
+            <summary>
+            Provides a service which generates a <em>JavaScript</em> block, that
+            can be used to call Ajax actions on the controller. This JavaScript will
+            use the <em>Prototype</em> syntax.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Services.AjaxProxyGenerator.PrototypeAjaxProxyGenerator.GenerateJavascriptFunction(System.String,System.String,System.String,Castle.MonoRail.Framework.Services.AjaxProxyGenerator.AbstractAjaxProxyGenerator.ScriptFunctionParameter[])">
+            <summary>
+            Generates the javascript proxy function.
+            </summary>
+            <param name="url">The URL.</param>
+            <param name="functionName">Name of the function.</param>
+            <param name="httpRequestMethod">The HTTP request method.</param>
+            <param name="scriptFunctionParameters">The script function parameters.</param>
+            <returns></returns>
+            <remarks>
+            if we have a [JSONBinder] mark on the parameter, we can serialize the parameter using prototype's Object.toJSON().
+            This requires Prototype 1.5.1. Users of [JSONBinder] should be aware of that.
+            </remarks>
         </member>
         <member name="T:Castle.MonoRail.Framework.Services.Utils.ControllerInspectionUtil">
             <summary>
@@ -18319,6 +18388,13 @@
             <param name="name">The name.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MonoRail.Framework.IViewComponentRegistry.HasViewComponent(System.String)">
+            <summary>
+            Checks if the view component is registered.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>True if registered or false if GetViewComponent would throw an exception.</returns>
+        </member>
         <member name="M:Castle.MonoRail.Framework.Services.DefaultViewComponentRegistry.AddViewComponent(System.String,System.Type)">
             <summary>
             Adds the view component.
@@ -18332,6 +18408,13 @@
             </summary>
             <param name="name">The name.</param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Services.DefaultViewComponentRegistry.HasViewComponent(System.String)">
+            <summary>
+            Checks if the view component is registered.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>True if registered or false if GetViewComponent would throw an exception.</returns>
         </member>
         <member name="M:Castle.MonoRail.Framework.Services.DefaultViewComponentRegistry.GetDetails(System.Type)">
             <summary>
@@ -19358,6 +19441,12 @@
             </summary>
             <value>The file path.</value>
         </member>
+        <member name="P:Castle.MonoRail.Framework.Test.IMockRequest.UserAgent">
+            <summary>
+            Sets the user agent string.
+            </summary>
+            <value>The user agent string.</value>
+        </member>
         <member name="P:Castle.MonoRail.Framework.Test.IMockRequest.UserLanguages">
             <summary>
             Sets the user languages.
@@ -19889,6 +19978,12 @@
             </summary>
             <value>The dynamic action provider factory.</value>
         </member>
+        <member name="P:Castle.MonoRail.Framework.Test.StubMonoRailServices.AjaxProxyGenerator">
+            <summary>
+            Gets or sets the ajax proxy generator.
+            </summary>
+            <value>The ajax proxy generator.</value>
+        </member>
         <member name="P:Castle.MonoRail.Framework.Test.StubMonoRailServices.ControllerDescriptorProvider">
             <summary>
             Gets or sets the controller descriptor provider.
@@ -19913,7 +20008,7 @@
             </summary>
             <value>The action selector.</value>
         </member>
-        <member name="P:Castle.MonoRail.Framework.Test.StubMonoRailServices.ScaffoldSupport">
+        <member name="P:Castle.MonoRail.Framework.Test.StubMonoRailServices.ScaffoldingSupport">
             <summary>
             Gets or sets the scaffold support.
             </summary>
@@ -20044,6 +20139,12 @@
             Gets the referring URL.
             </summary>
             <value></value>
+        </member>
+        <member name="P:Castle.MonoRail.Framework.Test.StubRequest.UserAgent">
+            <summary>
+            Gets the user agent string of the client browser.
+            </summary>
+            <value>The agent string of the client browser.</value>
         </member>
         <member name="P:Castle.MonoRail.Framework.Test.StubRequest.Headers">
             <summary>
@@ -21981,7 +22082,7 @@
             <para>
             Parameters: <br/>
             <c>adjacents</c>: number of links to show around the current page <br/>
-            <c>page</c> (required): <see cref="T:Castle.MonoRail.Framework.Helpers.IPaginatedPage"/> instance (<see cref="T:Castle.MonoRail.Framework.Helpers.PaginationHelper"/>) <br/>
+            <c>page</c> (required): <see cref="T:Castle.Components.Pagination.IPaginatedPage"/> instance (<see cref="T:Castle.MonoRail.Framework.Helpers.PaginationHelper"/>) <br/>
             <c>url</c>: url to link to<br/>
             <c>useInlineStyle</c>: defines if the outputted content will use inline style or css classnames (defaults to true)<br/>
             <c>renderIfOnlyOnePage</c>: should the pagination render if there's only one page (defaults to true)<br/>

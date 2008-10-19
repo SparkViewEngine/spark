@@ -14,6 +14,7 @@
 // 
 using System.Collections.Generic;
 using AdvancedPartials.Models;
+using Castle.Components.Pagination;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Helpers;
 

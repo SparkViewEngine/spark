@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Facilities.AutomaticTransactionManagement</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Facilities.AutomaticTransactionManagement.TransactionComponentInspector">
+            <summary>
+            Tries to obtain transaction configuration based on 
+            the component configuration or (if not available) check
+            for the attributes.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionComponentInspector.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+            <summary>
+            Tries to obtain transaction configuration based on 
+            the component configuration or (if not available) check
+            for the attributes.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionComponentInspector.ConfigureBasedOnAttributes(Castle.Core.ComponentModel)">
+            <summary>
+            Tries to configure the ComponentModel based on attributes.
+            </summary>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionComponentInspector.ObtainNodeName">
+            <summary>
+            Obtains the name of the 
+            node (overrides MethodMetaInspector.ObtainNodeName)
+            </summary>
+            <returns>the node name on the configuration</returns>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionComponentInspector.ProcessMeta(Castle.Core.ComponentModel,System.Reflection.MethodInfo[],Castle.Core.MethodMetaModel)">
+            <summary>
+            Processes the meta information available on
+            the component configuration. (overrides MethodMetaInspector.ProcessMeta)
+            </summary>
+            <param name="model">The model.</param>
+            <param name="methods">The methods.</param>
+            <param name="metaModel">The meta model.</param>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionComponentInspector.Validate(Castle.Core.ComponentModel,Castle.Facilities.AutomaticTransactionManagement.TransactionMetaInfoStore)">
+            <summary>
+            Validates the type is OK to generate a proxy.
+            </summary>
+            <param name="model">The model.</param>
+            <param name="store">The store.</param>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionComponentInspector.IsMarkedWithTransactional(Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Determines whether the configuration has <c>istransaction="true"</c> attribute.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <returns>
+            <c>true</c> if yes; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionComponentInspector.AssertThereNoTransactionOnConfig(Castle.Core.ComponentModel)">
+            <summary>
+            Asserts that if there are transaction behavior
+            configured for methods, the component node has <c>istransaction="true"</c> attribute
+            </summary>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionComponentInspector.AddTransactionInterceptorIfIsTransactional(Castle.Core.ComponentModel,Castle.Facilities.AutomaticTransactionManagement.TransactionMetaInfoStore)">
+            <summary>
+            Associates the transaction interceptor with the ComponentModel.
+            </summary>
+            <param name="model">The model.</param>
+            <param name="store">The meta information store.</param>
+        </member>
+        <member name="T:Castle.Facilities.AutomaticTransactionManagement.TransactionFacility">
+            <summary>
+            Augments the kernel to handle transactional components
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionFacility.Init">
+            <summary>
+            Registers the interceptor component, the metainfo store and
+            adds a contributor to the ModelBuilder
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.AutomaticTransactionManagement.TransactionInterceptor">
+            <summary>
+            Intercepts call for transactional components, coordinating
+            the transaction creation, commit/rollback accordingly to the 
+            method execution. Rollback is invoked if an exception is threw.
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionInterceptor.#ctor(Castle.MicroKernel.IKernel,Castle.Facilities.AutomaticTransactionManagement.TransactionMetaInfoStore)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.AutomaticTransactionManagement.TransactionInterceptor"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="infoStore">The info store.</param>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionInterceptor.SetInterceptedComponentModel(Castle.Core.ComponentModel)">
+            <summary>
+            Sets the intercepted component's ComponentModel.
+            </summary>
+            <param name="target">The target's ComponentModel</param>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionInterceptor.Intercept(Castle.Core.Interceptor.IInvocation)">
+            <summary>
+            Intercepts the specified invocation and creates a transaction
+            if necessary.
+            </summary>
+            <param name="invocation">The invocation.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.Facilities.AutomaticTransactionManagement.TransactionInterceptor.Logger">
+            <summary>
+            Gets or sets the logger.
+            </summary>
+            <value>The logger.</value>
+        </member>
+        <member name="T:Castle.Facilities.AutomaticTransactionManagement.TransactionMetaInfoStore">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionMetaInfo.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.AutomaticTransactionManagement.TransactionMetaInfo"/> class.
+            </summary>
+        </member>
+    </members>
+</doc>

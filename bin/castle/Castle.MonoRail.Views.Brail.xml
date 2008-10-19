@@ -1,0 +1,415 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.MonoRail.Views.Brail</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.MonoRail.Views.Brail.Macros.ComponentNaming">
+            <summary>
+            we need to have a unique name, because of MR 371, nested components should not use the same name.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.Brail.BooViewEngine.compilations">
+            <summary>
+            This field holds all the cache of all the 
+            compiled types (not instances) of all the views that Brail nows of.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.Brail.BooViewEngine.constructors">
+            <summary>
+            used to hold the constructors of types, so we can avoid using
+            Activator (which takes a long time
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.Brail.BooViewEngine.typeToFileName">
+            <summary>
+            Used to map between type and file name, this is useful when we
+            want to remove a script by its type.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.Brail.BooViewEngine.common">
+            <summary>
+            This is used to add a reference to the common scripts for each compiled scripts
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BooViewEngine.RenderStaticWithinLayout(System.String,Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Wraps the specified content in the layout using the
+            context to output the result.
+            </summary>
+            <param name="contents"></param>
+            <param name="context"></param>
+            <param name="controller"></param>
+            <param name="controllerContext"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BooViewEngine.GetCompiledScriptInstance(System.String,System.IO.TextWriter,Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            This takes a filename and return an instance of the view ready to be used.
+            If the file does not exist, an exception is raised
+            The cache is checked to see if the file has already been compiled, and it had been
+            a check is made to see that the compiled instance is newer then the file's modification date.
+            If the file has not been compiled, or the version on disk is newer than the one in memory, a new
+            version is compiled.
+            Finally, an instance is created and returned	
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BooViewEngine.DoCompile(System.Collections.Generic.IEnumerable{Boo.Lang.Compiler.ICompilerInput},System.String)">
+            <summary>
+            Perform the actual compilation of the scripts
+            Things to note here:
+            * The generated assembly reference the Castle.MonoRail.MonoRailBrail and Castle.MonoRail.Framework assemblies
+            * If a common scripts assembly exist, it is also referenced
+            * The AddBrailBaseClassStep compiler step is added - to create a class from the view's code
+            * The ProcessMethodBodiesWithDuckTyping is replaced with ReplaceUknownWithParameters
+              this allows to use naked parameters such as (output context.IsLocal) without using 
+              any special syntax
+            * The FixTryGetParameterConditionalChecks is run afterward, to transform "if ?Error" to "if not ?Error isa IgnoreNull"
+            * The ExpandDuckTypedExpressions is replace with a derived step that allows the use of Dynamic Proxy assemblies
+            * The IntroduceGlobalNamespaces step is removed, to allow to use common variables such as 
+              date and list without accidently using the Boo.Lang.BuiltIn versions
+            </summary>
+            <param name="files"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.MonoRail.Views.Brail.BrailBase">
+             <summary>
+            Base class for all the view scripts, this is the class that is responsible for
+             support all the behind the scenes magic such as variable to PropertyBag trasnlation, 
+             resources usage, etc. 
+             </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.Brail.BrailBase._dsl">
+            <summary>
+            Reference to the DSL service
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.Brail.BrailBase.childOutput">
+            <summary>
+            This is used by layout scripts only, for outputing the child's content
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.Brail.BrailBase.parent">
+            <summary>
+            usually used by the layout to refer to its view, or a subview to its parent
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.Views.Brail.BrailBase.viewComponentsParameters">
+            <summary>
+            used to hold the ComponentParams from the view, so their views/sections could access them
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.#ctor(Castle.MonoRail.Views.Brail.BooViewEngine,System.IO.TextWriter,Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Views.Brail.BrailBase"/> class.
+            </summary>
+            <param name="viewEngine">The view engine.</param>
+            <param name="output">The output.</param>
+            <param name="context">The context.</param>
+            <param name="__controller">The controller.</param>
+            <param name="__controllerContext">The __controller context.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.Run">
+            <summary>
+            Runs this instance, this is generated by the script
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.OutputSubView(System.String)">
+            <summary>
+            Output the subview to the client, this is either a relative path "SubView" which
+            is relative to the current /script/ or an "absolute" path "/home/menu" which is
+            actually relative to ViewDirRoot
+            </summary>
+            <param name="subviewName"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.OutputSubView(System.String,System.Collections.IDictionary)">
+            <summary>
+            Similiar to the OutputSubView(string) function, but with a bunch of parameters that are used
+            just for this subview. This parameters are /not/ inheritable.
+            </summary>
+            <returns>An empty string, just to make it possible to use inline ${OutputSubView("foo")}</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.OutputSubView(System.String,System.IO.TextWriter,System.Collections.IDictionary)">
+            <summary>
+            Outputs the sub view to the writer
+            </summary>
+            <param name="subviewName">Name of the subview.</param>
+            <param name="writer">The writer.</param>
+            <param name="parameters">The parameters.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.GetSubViewFilename(System.String)">
+            <summary>
+            Get the sub view file name, if the subview starts with a '/' 
+            then the filename is considered relative to ViewDirRoot
+            otherwise, it's relative to the current script directory
+            </summary>
+            <param name="subviewName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.GetParameter(System.String)">
+            <summary>
+            this is called by ReplaceUnknownWithParameters step to create a more dynamic experiance
+            any uknown identifier will be translate into a call for GetParameter('identifier name').
+            This mean that when an uknonwn identifier is in the script, it will only be found on runtime.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.TryGetParameter(System.String)">
+            <summary>
+            this is called by ReplaceUnknownWithParameters step to create a more dynamic experiance
+            any uknown identifier with the prefix of ? will be translated into a call for 
+            TryGetParameter('identifier name without the ? prefix').
+            This method will return null if the value it not found.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.WrapPossilbeNullValue(System.Object)">
+            <summary>
+            Wraps the possilbe null value in an ignore value object
+            </summary>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.GetParameterInternal(System.String)">
+            <summary>
+            Gets the parameter - implements the logic for searching parameters.
+            </summary>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.SetParent(Castle.MonoRail.Views.Brail.BrailBase)">
+            <summary>
+            Sets the parent.
+            </summary>
+            <param name="myParent">My parent.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.IsDefined(System.String)">
+            <summary>
+            Allows to check that a parameter was defined
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.SetOutputStream(System.IO.TextWriter)">
+            <summary>
+            This is required because we may want to replace the output stream and get the correct
+            behavior from components call RenderText() or RenderSection()
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.OutputEscaped(System.Object)">
+            <summary>
+            Will output the given value as escaped HTML
+            </summary>
+            <param name="toOutput"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.AddProperty(System.String,System.Object)">
+            <summary>
+            Note that this will overwrite any existing property.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.AddViewComponentProperties(System.Collections.IDictionary)">
+            <summary>
+            Adds the view component newProperties.
+            This will be included in the parameters searching, note that this override
+            the current parameters if there are clashing.
+            The search order is LIFO
+            </summary>
+            <param name="newProperties">The newProperties.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.RemoveViewComponentProperties(System.Collections.IDictionary)">
+            <summary>
+            Removes the view component properties, so they will no longer be visible to the views.
+            </summary>
+            <param name="propertiesToRemove">The properties to remove.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailBase.InitProperties(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Initialize all the properties that a script may need
+            One thing to note here is that resources are wrapped in ResourceToDuck wrapper
+            to enable easy use by the script
+            </summary>
+            <param name="myContext">My context.</param>
+            <param name="myController">My controller.</param>
+            <param name="controllerContext">The controller context.</param>
+        </member>
+        <member name="P:Castle.MonoRail.Views.Brail.BrailBase.ScriptDirectory">
+             <summary>
+            The path of the script, this is filled by AddBrailBaseClassStep
+             and is used for sub views 
+             </summary>
+        </member>
+        <member name="P:Castle.MonoRail.Views.Brail.BrailBase.ViewEngine">
+            <summary>
+            Gets the view engine.
+            </summary>
+            <value>The view engine.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Views.Brail.BrailBase.Dsl">
+            <summary>
+            Gets the DSL provider
+            </summary>
+            <value>Reference to the current DSL Provider</value>
+        </member>
+        <member name="P:Castle.MonoRail.Views.Brail.BrailBase.Flash">
+            <summary>
+            Gets the flash.
+            </summary>
+            <value>The flash.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Views.Brail.BrailBase.OutputStream">
+            <summary>
+            Gets the output stream.
+            </summary>
+            <value>The output stream.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Views.Brail.BrailBase.ChildOutput">
+            <summary>
+            Gets or sets the child output.
+            </summary>
+            <value>The child output.</value>
+        </member>
+        <member name="P:Castle.MonoRail.Views.Brail.BrailBase.Properties">
+            <summary>
+            Gets the properties.
+            </summary>
+            <value>The properties.</value>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailJSElementGenerator.#ctor(Castle.MonoRail.Framework.JSGeneration.IJSCodeGenerator,Castle.MonoRail.Framework.JSGeneration.IJSElementGenerator,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Views.Brail.BrailJSElementGenerator"/> class.
+            </summary>
+            <param name="codeGen">The code gen.</param>
+            <param name="elementGenerator">The element generator.</param>
+            <param name="extensions">The extensions.</param>
+        </member>
+        <member name="T:Castle.MonoRail.Views.Brail.BrailJSGenerator">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailJSGenerator.#ctor(Castle.MonoRail.Framework.JSGeneration.IJSCodeGenerator,Castle.MonoRail.Framework.JSGeneration.IJSGenerator,System.Object[],System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Views.Brail.BrailJSGenerator"/> class.
+            </summary>
+            <param name="codeGen">The code gen.</param>
+            <param name="generator">The generator.</param>
+            <param name="extensions">The extensions.</param>
+            <param name="elementExtensions">The element extensions.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailJSGenerator.QuackGet(System.String,System.Object[])">
+            <summary>
+            Defines the behavior when a property is read
+            </summary>
+            <param name="propName">Property name.</param>
+            <param name="parameters">Parameters for indexers</param>
+            <returns>value back to the template</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailJSGenerator.QuackSet(System.String,System.Object[],System.Object)">
+            <summary>
+            Defines the behavior when a property is written
+            </summary>
+            <param name="propName">Property name.</param>
+            <param name="parameters">Parameters for indexers</param>
+            <param name="value">The value to assign.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailJSGenerator.QuackInvoke(System.String,System.Object[])">
+            <summary>
+            Invokes the specified method.
+            </summary>
+            <param name="method">The method name.</param>
+            <param name="args">The method arguments.</param>
+            <returns>value back to the template</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailPreProcessor.GetExpressionsPositions(System.String)">
+            <summary>
+            Will find all the (outer most ${} expressions in the code, and return their positions).
+            Smart enough to figure out $${} escaping, but not much more
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailViewComponentContext.#ctor(Castle.MonoRail.Views.Brail.BrailBase,Boo.Lang.ICallable,System.String,System.IO.TextWriter,System.Collections.IDictionary)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.Views.Brail.BrailViewComponentContext"/> class.
+            </summary>
+            <param name="parent">The parent.</param>
+            <param name="body">The body.</param>
+            <param name="name">The name.</param>
+            <param name="text">The text.</param>
+            <param name="parameters">The parameters.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailViewComponentContext.RenderView(System.String,System.IO.TextWriter)">
+            <summary>
+            Pendent
+            </summary>
+            <param name="name"></param>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailViewComponentContext.RenderSection(System.String,System.IO.TextWriter)">
+            <summary>
+            Renders the the specified section
+            </summary>
+            <param name="sectionName">Name of the section.</param>
+            <param name="writer">The writer.</param>
+        </member>
+        <member name="T:Castle.MonoRail.Views.Brail.ExpandDuckTypedExpressions_WorkaroundForDuplicateVirtualMethods">
+            <summary>
+            This is here because we need to overcome a tendecy of Dynamic Proxy to generate virtual override that
+            do not match exactly what the compiler does.
+            This means that when you do GetMethod("Foo") and DP has proxied it, you would get an exception because it would
+            recognize two methods with this name.
+            We recognize when we are trying to invoke something that DP has build and act accordingly.
+            
+            The code is mostly taken fro Boo.Lang.Runtime.RuntimeServices, and modified to understand that when the type is from DP, is should
+            use DeclareOnly
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.Views.Brail.FixTryGetParameterConditionalChecks">
+            <summary>
+            We need to handle the following code:
+            if ?Error:
+            end
+            
+            However, because ?Op will return an IgnoreNull object, we can't just
+            use the default boo behavior, but need to fix it up
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.IgnoreNull.ExtractTarget(Castle.MonoRail.Views.Brail.IgnoreNull)">
+            <summary>
+            Gets the underlying target object of the IgnorNull
+            </summary>
+            <param name="ignored"></param>
+            <returns>target</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.IgnoreNull.ReplaceIgnoreNullsWithTargets(System.Object[])">
+            <summary>
+            Returns a new array copied from args that has replaced IgnoreNull instances
+            with the underlying target object.
+            </summary>
+            <param name="args">source array</param>
+            <returns>new array</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.IgnoreNull.ReplaceIgnoreNullsWithTargets(System.Collections.IDictionary)">
+            <summary>
+            Replace all the values in the Hashtable that are marked as 
+            replaced values of IgnoreNull with the underlying target object.
+            </summary>
+            <param name="dict"></param>
+            <returns>The original hashtable, with all the IgnoreNull values stripped to their targets</returns>
+        </member>
+        <member name="T:Castle.MonoRail.Views.Brail.ReplaceUknownWithParameters">
+            <summary>
+             Replace any uknown identifier with a call to GetParameter('unknown')
+             this mean that unknonwn identifier in scripts will only fail in run time if they
+             were not defined by the controller.
+             </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.ReplaceUknownWithParameters.OnMethodInvocationExpression(Boo.Lang.Compiler.Ast.MethodInvocationExpression)">
+            <summary>
+            This turn a call to TryGetParemeter('item') where item is a local variable
+            into a WrapIfNull(item) method call.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+    </members>
+</doc>

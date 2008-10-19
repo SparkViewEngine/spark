@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Components.Scheduler.WindsorExtension</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Components.Scheduler.WindsorExtension.WindsorJobFactory">
+            <summary>
+            The Windsor job factory constructs instances of <see cref="T:Castle.Components.Scheduler.IJob"/> by
+            asking the Castle MicroKernel to resolve a component that implements the 
+            <see cref="T:Castle.Components.Scheduler.IJob"/> service and whose component key equals the requested job key.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.WindsorExtension.WindsorJobFactory.#ctor(Castle.MicroKernel.IKernel)">
+            <summary>
+            Creates a component job factory based on the specified IoC kernel.
+            </summary>
+            <param name="kernel">The IoC kernel to use for component resolution</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.WindsorExtension.WindsorJobFactory.GetJob(System.String)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

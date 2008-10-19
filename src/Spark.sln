@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark", "Spark\Spark.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Tests", "Spark.Tests\Spark.Tests.csproj", "{64CC97B3-6B9B-4D12-8A45-5CD3621E6471}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkCastleDemo", "DemoCastleSite\SparkCastleDemo.csproj", "{3781E548-C91B-45C1-9586-8C008CE4B604}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Web.Mvc", "Spark.Web.Mvc\Spark.Web.Mvc.csproj", "{286050D6-95A1-4381-93D8-93381D8AB8E2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{27EA43BF-7B12-4048-B2B8-3FC8E335FB07}"
@@ -45,10 +43,6 @@ Global
 		{64CC97B3-6B9B-4D12-8A45-5CD3621E6471}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64CC97B3-6B9B-4D12-8A45-5CD3621E6471}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64CC97B3-6B9B-4D12-8A45-5CD3621E6471}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3781E548-C91B-45C1-9586-8C008CE4B604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3781E548-C91B-45C1-9586-8C008CE4B604}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3781E548-C91B-45C1-9586-8C008CE4B604}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3781E548-C91B-45C1-9586-8C008CE4B604}.Release|Any CPU.Build.0 = Release|Any CPU
 		{286050D6-95A1-4381-93D8-93381D8AB8E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{286050D6-95A1-4381-93D8-93381D8AB8E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{286050D6-95A1-4381-93D8-93381D8AB8E2}.Release|Any CPU.ActiveCfg = Release|Any CPU

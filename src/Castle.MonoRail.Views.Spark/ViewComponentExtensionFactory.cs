@@ -24,7 +24,7 @@ namespace Castle.MonoRail.Views.Spark
     public class ViewComponentExtensionFactory : ISparkExtensionFactory
     {
         readonly Dictionary<string, ViewComponentInfo> _cachedViewComponent = new Dictionary<string, ViewComponentInfo>();
-        private IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public ViewComponentExtensionFactory(IServiceProvider serviceProvider)
         {
@@ -34,19 +34,20 @@ namespace Castle.MonoRail.Views.Spark
         public ISparkExtension CreateExtension(ElementNode node)
         {
             var componentFactory = (IViewComponentFactory)_serviceProvider.GetService(typeof(IViewComponentFactory));
+            if (componentFactory == null || componentFactory.Registry == null)
+                return null;
 
             ViewComponentInfo viewComponentInfo;
             lock (_cachedViewComponent)
             {
-
                 if (!_cachedViewComponent.TryGetValue(node.Name, out viewComponentInfo))
                 {
-                    try
+                    if (componentFactory.Registry.HasViewComponent(node.Name))
                     {
                         viewComponentInfo = new ViewComponentInfo(componentFactory.Registry.GetViewComponent(node.Name));
                         _cachedViewComponent.Add(node.Name, viewComponentInfo);
                     }
-                    catch
+                    else
                     {
                         _cachedViewComponent.Add(node.Name, null);
                     }

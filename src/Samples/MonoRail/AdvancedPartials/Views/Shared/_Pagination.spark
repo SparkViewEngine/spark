@@ -8,8 +8,8 @@
 
 <div class="tnt_pagination">
 
-  <test if="page.HasPrevious">
-    <a href="${Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=page.PreviousIndex} })}">
+  <test if="page.HasPreviousPage">
+    <a href="${Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=page.PreviousPageIndex} })}">
       <render:prev>« Previous</render:prev>
     </a>
     <else/>
@@ -18,8 +18,8 @@
     </span>
   </test>
 
-  #for(int pageIndex = page.FirstIndex; pageIndex [[= page.LastIndex; ++pageIndex) {
-  <test if="page.CurrentIndex == pageIndex">
+  #for(int pageIndex = 1; pageIndex [[= page.TotalPages; ++pageIndex) {
+  <test if="page.CurrentPageIndex == pageIndex">
     <span class="active_tnt_link">
       <render:item>${pageIndex}</render:item>
     </span>
@@ -30,8 +30,8 @@
   </test>
   #}
 
-  <test if="page.HasNext">
-    <a href="${Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=page.NextIndex} })}">
+  <test if="page.HasNextPage">
+    <a href="${Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=page.NextPageIndex} })}">
       <render:next>Next »</render:next>
     </a>
     <else/>

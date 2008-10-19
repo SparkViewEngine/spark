@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Components.Scheduler.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Components.Scheduler.Tests.UnitTests.JobStores.BaseJobStoreTest">
+            <summary>
+            Base tests for a job store.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.Tests.UnitTests.BaseUnitTest">
+            <summary>
+            Base unit test.
+            All unit tests that require certain common facilities like Mock Objects
+            inherit from this class.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.Tests.UnitTests.BaseUnitTest.Mocks">
+            <summary>
+            Gets the mock object repository.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.UnitTests.JobStores.BaseJobStoreTest.CreateJobStore">
+            <summary>
+            Creates the job store to be tested.
+            </summary>
+            <returns>The job store</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.UnitTests.JobStores.BaseJobStoreTest.RegisterScheduler_DoesNotCrashWhenCalledRedundantly">
+            <summary>
+            There are no strong contracts to be checked regarding scheduler registration
+            with a job store, it is just supposed to happen.  So there isn't much that
+            we can check generically across all job store implementations.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.Tests.UnitTests.JobStores.BaseJobStoreTest.JobStore">
+            <summary>
+            Gets the job store to be tested.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.UnitTests.JobStores.PersistentJobStoreTest.SetBrokenConnectionMocking(Castle.Components.Scheduler.JobStores.PersistentJobStore,System.Boolean)">
+            <summary>
+            Sets whether subsequent Db connection requests for the specified job store
+            should be caused to fail.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.SchedulerExecutesJobsAndToleratesExceptionDuringFinalSave">
+            <summary>
+            This case is a bit hard to verify automatically because everything is asynchronous.
+            TODO: Look for the message that was logged by the exception.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.PrepareJobForExecution(Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.BeingExecuteDelegate,Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.EndExecuteDelegate)">
+            <summary>
+            Schedules a job that is guaranteed to be executed.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.PrepareMockJobWatcher(Castle.Components.Scheduler.JobDetails)">
+            <summary>
+            Sets the mock job store to provide a watcher that yields the specified job details
+            on its first access then waits to be disposed.
+            </summary>
+            <param name="jobDetails">The job details to yield</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.RunSchedulerUntilWake">
+            <summary>
+            Runs the scheduler until <see cref="M:Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.Wake"/> is called then Stops it.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.WaitUntilWake">
+            <summary>
+            Waits for <see cref="M:Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.Wake"/> to be called.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.Wake">
+            <summary>
+            Wakes the threads blocked in <see cref="M:Castle.Components.Scheduler.Tests.UnitTests.DefaultSchedulerTest.WaitUntilWake"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.Tests.Utilities.DateTimeAssert">
+            <summary>
+            Assertions for dates and times.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.Utilities.DateTimeAssert.AreEqualIncludingKind(System.DateTime,System.DateTime)">
+            <summary>
+            Asserts that two dates are equal, including their <see cref="P:System.DateTime.Kind"/> properties.
+            </summary>
+            <param name="expected"></param>
+            <param name="actual"></param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.Utilities.DateTimeAssert.AreEqualIncludingKind(System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            Asserts that two nullable dates are equal, including their <see cref="P:System.DateTime.Kind"/> properties.
+            </summary>
+            <param name="expected"></param>
+            <param name="actual"></param>
+        </member>
+        <member name="T:Castle.Components.Scheduler.Tests.Utilities.JobAssert">
+            <summary>
+            Assertions for job objects.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Tests.Utilities.JobAssert.AreEqualUpToErrorLimit(System.DateTime,System.DateTime)">
+            <summary>
+            Determines if two dates are equal while compensating for inaccuracies in date representation.
+            </summary>
+            <param name="expected"></param>
+            <param name="actual"></param>
+        </member>
+    </members>
+</doc>

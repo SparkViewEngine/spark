@@ -1,0 +1,1826 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Components.Scheduler</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao">
+            <summary>
+            Abstract base class for an ADO.Net based job store Data Access Object using
+            stored procedures.
+            </summary>
+            <remarks>
+            <para>
+            The database schema and stored procedures must be deployed to the database
+            manually or by some other means before the job store is used.
+            For enhanced security, the database user specified in the connection
+            string should only be a member of the SchedulerRole (thus having EXECUTE
+            permission to the stored procedures but no direct access to the tables.)
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.IJobStoreDao">
+            <summary>
+            A job store Data Access Object provides data access for <see cref="T:Castle.Components.Scheduler.JobStores.PersistentJobStore"/>
+            implementations.  The DAO may assume that all of its inputs have been pre-validated
+            by the calling code.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStoreDao.RegisterScheduler(System.String,System.Guid,System.String,System.DateTime)">
+            <summary>
+            Registers a scheduler.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="schedulerGuid">The scheduler GUID</param>
+            <param name="schedulerName">The scheduler name, never null</param>
+            <param name="lastSeenUtc">The time the scheduler was last seen</param>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStoreDao.UnregisterScheduler(System.String,System.Guid)">
+            <summary>
+            Unregisters a scheduler and orphans all of its jobs.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="schedulerGuid">The scheduler GUID</param>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStoreDao.CreateJob(System.String,Castle.Components.Scheduler.JobSpec,System.DateTime,Castle.Components.Scheduler.CreateJobConflictAction)">
+            <summary>
+            Creates a job in the database.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="jobSpec">The job specification, never null</param>
+            <param name="creationTimeUtc">The job creation time</param>
+            <param name="conflictAction">The action to take if a conflict occurs</param>
+            <returns>True if the job was created or updated, false if a conflict occurred
+            and no changes were made</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStoreDao.UpdateJob(System.String,System.String,Castle.Components.Scheduler.JobSpec)">
+            <summary>
+            Updates an existing job.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="existingJobName">The name of the existing job to update</param>
+            <param name="updatedJobSpec">The updated job specification</param>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs or if the job does not exist</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStoreDao.DeleteJob(System.String,System.String)">
+            <summary>
+            Deletes the job with the specified name.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="jobName">The job name, never null</param>
+            <returns>True if a job was actually deleted</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStoreDao.GetJobDetails(System.String,System.String)">
+            <summary>
+            Gets details for the named job.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="jobName">The job name, never null</param>
+            <returns>The job details, or null if none was found</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStoreDao.SaveJobDetails(System.String,Castle.Components.Scheduler.VersionedJobDetails)">
+            <summary>
+            Saves details for the job.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="jobDetails">The job details, never null</param>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStoreDao.GetNextJobToProcess(System.String,System.Guid,System.DateTime,System.Int32,System.Nullable{System.DateTime}@)">
+            <summary>
+            Gets the next job to process for the specified scheduler.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="schedulerGuid">The scheduler GUID</param>
+            <param name="timeBasisUtc">The UTC time to consider as "now"</param>
+            <param name="nextTriggerFireTimeUtc">Set to the UTC next trigger fire time, or null if there are
+            no triggers currently scheduled to fire</param>
+            <param name="schedulerExpirationTimeInSeconds">The scheduler expiration time in seconds, always greater than zero</param>
+            <returns>The details of job to process or null if none</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStoreDao.ListJobNames(System.String)">
+            <summary>
+            Gets the names of all jobs.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <returns>The names of all jobs</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.#ctor(System.String,System.String)">
+            <summary>
+            Creates an ADO.Net based job store DAO.
+            </summary>
+            <param name="connectionString">The connection string</param>
+            <param name="parameterPrefix">The stored procedure parameter prefix, if any</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="connectionString"/> or <paramref name="parameterPrefix"/> is null</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.RegisterScheduler(System.String,System.Guid,System.String,System.DateTime)">
+            <summary>
+            Registers a scheduler.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="schedulerGuid">The scheduler GUID</param>
+            <param name="schedulerName">The scheduler name, never null</param>
+            <param name="lastSeenUtc">The time the scheduler was last seen</param>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.UnregisterScheduler(System.String,System.Guid)">
+            <summary>
+            Unregisters a scheduler and orphans all of its jobs.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="schedulerGuid">The scheduler GUID</param>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.CreateJob(System.String,Castle.Components.Scheduler.JobSpec,System.DateTime,Castle.Components.Scheduler.CreateJobConflictAction)">
+            <summary>
+            Creates a job in the database.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="jobSpec">The job specification, never null</param>
+            <param name="creationTimeUtc">The job creation time</param>
+            <param name="conflictAction">The action to take if a conflict occurs</param>
+            <returns>True if the job was created or updated, false if a conflict occurred
+            and no changes were made</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.UpdateJob(System.String,System.String,Castle.Components.Scheduler.JobSpec)">
+            <summary>
+            Updates an existing job.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="existingJobName">The name of the existing job to update</param>
+            <param name="updatedJobSpec">The updated job specification</param>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs or if the job does not exist</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.DeleteJob(System.String,System.String)">
+            <summary>
+            Deletes the job with the specified name.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="jobName">The job name, never null</param>
+            <returns>True if a job was actually deleted</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.GetJobDetails(System.String,System.String)">
+            <summary>
+            Gets details for the named job.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="jobName">The job name, never null</param>
+            <returns>The job details, or null if none was found</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.SaveJobDetails(System.String,Castle.Components.Scheduler.VersionedJobDetails)">
+            <summary>
+            Saves details for the job.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="jobDetails">The job details, never null</param>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.GetNextJobToProcess(System.String,System.Guid,System.DateTime,System.Int32,System.Nullable{System.DateTime}@)">
+            <summary>
+            Gets the next job to process for the specified scheduler.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <param name="schedulerGuid">The scheduler GUID</param>
+            <param name="timeBasisUtc">The UTC time to consider as "now"</param>
+            <param name="nextTriggerFireTimeUtc">Set to the UTC next trigger fire time, or null if there are
+            no triggers currently scheduled to fire</param>
+            <param name="schedulerExpirationTimeInSeconds">The scheduler expiration time in seconds, always greater than zero</param>
+            <returns>The details of job to process or null if none</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.ListJobNames(System.String)">
+            <summary>
+            Gets the names of all jobs.
+            </summary>
+            <param name="clusterName">The cluster name, never null</param>
+            <returns>The names of all jobs</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.BuildJobDetailsFromResultSet(System.Data.IDataReader)">
+            <summary>
+            Builds a job details object from the result set returned by the spSCHED_GetJobDetails
+            and spSCHED_GetNextJob stored procedures.
+            </summary>
+            <param name="reader">The reader for the result set</param>
+            <returns>The job details object</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.CreateConnection">
+            <summary>
+            Creates a database connection.
+            </summary>
+            <returns>The database connection</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.CreateStoredProcedureCommand(System.Data.IDbConnection,System.String)">
+            <summary>
+            Creates a command to invoke the specified stored procedure.
+            </summary>
+            <param name="connection">The Db connection</param>
+            <param name="spName">The stored procedure name</param>
+            <returns>The Db command</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.AddParameter(System.Data.IDbCommand,System.String,System.Data.DbType)">
+            <summary>
+            Creates a generic parameter and adds it to a command.
+            </summary>
+            <param name="command">The command</param>
+            <param name="name">The parameter name</param>
+            <param name="type">The parameter value type</param>
+            <returns>The parameter</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.AddInputParameter(System.Data.IDbCommand,System.String,System.Data.DbType,System.Object)">
+            <summary>
+            Creates an input parameter and adds it to a command.
+            </summary>
+            <param name="command">The command</param>
+            <param name="name">The parameter name</param>
+            <param name="type">The parameter value type</param>
+            <param name="value">The value of the parameter</param>
+            <returns>The parameter</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.AddOutputParameter(System.Data.IDbCommand,System.String,System.Data.DbType)">
+            <summary>
+            Creates an output parameter and adds it to a command.
+            </summary>
+            <param name="command">The command</param>
+            <param name="name">The parameter name</param>
+            <param name="type">The parameter value type</param>
+            <returns>The parameter</returns>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobStores.AdoNetJobStoreDao.ConnectionString">
+            <summary>
+            Gets the connection string.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.BaseJobStore">
+            <summary>
+            Abstract base implementation of a <see cref="T:Castle.Components.Scheduler.JobStores.IJobStore"/>.
+            Provides a common framework for implementing simple job stores.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.IJobStore">
+            <summary>
+            A job store provides a persistence mechanism for jobs.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStore.RegisterScheduler(System.Guid,System.String)">
+            <summary>
+            Registers a scheduler instance with the job store.
+            </summary>
+            <remarks>
+            <para>
+            The scheduler instance must register itself with the job store before it ever
+            attempts to run jobs.
+            </para>
+            <para>
+            The scheduler instance may register itself with the job store multiple times
+            and is not considered an error.  It may even re-register itself after a call
+            to <see cref="M:Castle.Components.Scheduler.JobStores.IJobStore.UnregisterScheduler(System.Guid)"/>.
+            </para>
+            </remarks>
+            <param name="schedulerGuid">The scheduler's GUID</param>
+            <param name="schedulerName">The scheduler's name</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="schedulerName"/> is null</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the job store has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStore.UnregisterScheduler(System.Guid)">
+            <summary>
+            Unregisters a scheduler instance from the job store.
+            </summary>
+            <remarks>
+            The scheduler instance should unregister itself from the job store just before
+            it shuts down to ensure that any resources it owns are reclaimed.  All jobs currently
+            being executed by the scheduler instance are orphaned.  The job store may also
+            automatically unregister a scheduler instance if it discovers that it no longer exists
+            (in some implementation defined manner).
+            </remarks>
+            <param name="schedulerGuid">The scheduler's GUID</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStore.CreateJobWatcher(System.Guid)">
+            <summary>
+            Gets a job watcher for the job store.
+            </summary>
+            <returns>The job watcher</returns>
+            <param name="schedulerGuid">The GUID of the scheduler that is watching the job store</param>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the job store has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStore.GetJobDetails(System.String)">
+            <summary>
+            Gets the details of the job with the specified name.
+            </summary>
+            <param name="jobName">The name of the job</param>
+            <returns>The job details, or null if not found</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobName"/> is null</exception>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the job store has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStore.SaveJobDetails(Castle.Components.Scheduler.JobDetails)">
+            <summary>
+            Saves the job details details of the job.
+            </summary>
+            <param name="jobDetails">The job details to save</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobDetails"/> is null</exception>
+            <exception cref="T:Castle.Components.Scheduler.JobStores.ConcurrentModificationException">Thrown if another thread or scheduler instance
+            has concurrently modified the job in such fashion that the
+            job details could not be saved (an implementation may track this information by
+            augmenting its job details with a Version token)</exception>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the job store has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStore.CreateJob(Castle.Components.Scheduler.JobSpec,System.DateTime,Castle.Components.Scheduler.CreateJobConflictAction)">
+            <summary>
+            Creates a job.
+            If the job already exists, takes the specified alternative conflict action.
+            </summary>
+            <param name="jobSpec">The job specification</param>
+            <param name="creationTimeUtc">The UTC creation time to record.</param>
+            <param name="conflictAction">The action to take if a job with the
+            same name already exists</param>
+            <returns>True if the job was created or updated, false if a conflict occurred
+            and no changes were made</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobSpec"/> is null</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="conflictAction"/> is not a defined value</exception>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the job store has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStore.UpdateJob(System.String,Castle.Components.Scheduler.JobSpec)">
+            <summary>
+            Updates an existing job.
+            If the job's status is <see cref="F:Castle.Components.Scheduler.JobState.Scheduled"/> (but not any other state) it
+            is reset to <see cref="F:Castle.Components.Scheduler.JobState.Pending"/> so that the trigger can be re-evaluated in case
+            it was changed by the update.
+            </summary>
+            <param name="existingJobName">The name of the existing job to update</param>
+            <param name="updatedJobSpec">The updated job specification</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="existingJobName"/> or
+            <paramref name="updatedJobSpec"/> is null</exception>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="existingJobName"/> is an empty string</exception>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs or if the job does not exist</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the scheduler has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStore.DeleteJob(System.String)">
+            <summary>
+            Deletes the job with the specified name.
+            </summary>
+            <param name="jobName">The name of the job to delete</param>
+            <returns>True if a job was actually deleted, false if no such job was found</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobName"/> is null</exception>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the job store has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobStore.ListJobNames">
+            <summary>
+            Gets the names of all jobs.
+            </summary>
+            <returns>The names of all jobs</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the scheduler has been disposed</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobStores.IJobStore.IsDisposed">
+            <summary>
+            Returns true if the job store has been disposed.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.#ctor">
+            <summary>
+            Creates a job store with a null logger.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.RegisterScheduler(System.Guid,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.UnregisterScheduler(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.CreateJobWatcher(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.GetJobDetails(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.SaveJobDetails(Castle.Components.Scheduler.JobDetails)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.CreateJob(Castle.Components.Scheduler.JobSpec,System.DateTime,Castle.Components.Scheduler.CreateJobConflictAction)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.UpdateJob(System.String,Castle.Components.Scheduler.JobSpec)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.DeleteJob(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.ListJobNames">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.SignalBlockedThreads">
+            <summary>
+            Signals all threads blocked on <see cref="M:Castle.Components.Scheduler.JobStores.BaseJobStore.GetNextJobToProcessOrWaitUntilSignaled(System.Guid)"/>.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.GetNextJobToProcessOrWaitUntilSignaled(System.Guid)">
+            <summary>
+            Gets the next job to process.
+            If none are available, waits until signaled by <see cref="M:Castle.Components.Scheduler.JobStores.BaseJobStore.SignalBlockedThreads"/>.
+            </summary>
+            <param name="schedulerGuid">The GUID of the scheduler that is polling</param>
+            <returns>The next job to process or null if there were none</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.ThrowIfDisposed">
+            <summary>
+            Throws <see cref="T:System.ObjectDisposedException"/> if the job store has been disposed.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobStores.BaseJobStore.IsDisposed">
+            <summary>
+            Gets or sets whether the job store has been disposed.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobStores.BaseJobStore.Logger">
+            <summary>
+            Gets or sets the logger used by the scheduler.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.BaseJobStore.JobWatcher">
+            <summary>
+            A job watcher based on <see cref="M:Castle.Components.Scheduler.JobStores.BaseJobStore.GetNextJobToProcessOrWaitUntilSignaled(System.Guid)"/>
+            and <see cref="M:Castle.Components.Scheduler.JobStores.BaseJobStore.SignalBlockedThreads"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.IJobWatcher">
+            <summary>
+            A job watcher monitors the status of jobs so that the scheduler
+            can process them when the trigger elapses.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.IJobWatcher.GetNextJobToProcess">
+            <summary>
+            <para>
+            Gets details for any job whose state is <see cref="F:Castle.Components.Scheduler.JobState.Pending"/>,
+            <see cref="F:Castle.Components.Scheduler.JobState.Triggered"/>, <see cref="F:Castle.Components.Scheduler.JobState.Completed"/>
+            or <see cref="F:Castle.Components.Scheduler.JobState.Orphaned"/>.
+            </para>
+            <para>
+            The watcher also identifies jobs in the <see cref="F:Castle.Components.Scheduler.JobState.Scheduled"/> state whose
+            <see cref="P:Castle.Components.Scheduler.JobDetails.NextTriggerFireTimeUtc"/> is null or has elapsed, automatically moves
+            them to the <see cref="F:Castle.Components.Scheduler.JobState.Triggered"/> state, and eventually returns them.
+            </para>
+            </summary>
+            <remarks>
+            <para>
+            The same job may be returned repeatedly until it is deleted,
+            its status is updated or a new trigger schedule time is set.
+            </para>
+            <para>
+            This method blocks until a job is available or the watcher
+            is disposed, whichever comes first.
+            </para>
+            <para>
+            In a clustered environment, a job watcher might chooses to return jobs
+            evenly or randomly to different scheduler instances so as to improve load balancing.
+            </para>
+            </remarks>
+            <returns>The next job to process, or null if the watcher was disposed</returns>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the job store has been disposed (but not the watcher)</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.JobWatcher.#ctor(Castle.Components.Scheduler.JobStores.BaseJobStore,System.Guid)">
+            <summary>
+            Creates a job watcher for the specified job store and scheduler.
+            </summary>
+            <param name="jobStore">The job store to which to delegate the watching operations</param>
+            <param name="schedulerGuid">The scheduler GUID</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.JobWatcher.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.BaseJobStore.JobWatcher.GetNextJobToProcess">
+            <inheritdoc />
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.ConcurrentModificationException">
+            <summary>
+            The type of exception used by a job store to report that another
+            scheduler instance has concurrently modified the state of a system
+            thereby causing the request to fail.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.SchedulerException">
+            <summary>
+            The type of exception used by the scheduler to report problems.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.SchedulerException.#ctor(System.String)">
+            <summary>
+            Creates a scheduler exception.
+            </summary>
+            <param name="message">The exception message</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.SchedulerException.#ctor(System.String,System.Exception)">
+            <summary>
+            Creates a scheduler exception.
+            </summary>
+            <param name="message">The exception message</param>
+            <param name="innerException">The inner exception</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.SchedulerException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Creates a scheduler exception from its serialized form.
+            </summary>
+            <param name="info">The serialization info</param>
+            <param name="context">The streaming context</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.ConcurrentModificationException.#ctor(System.String)">
+            <summary>
+            Creates a concurrent modification exception.
+            </summary>
+            <param name="message">The exception message</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.ConcurrentModificationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Creates a concurrent modification exception.
+            </summary>
+            <param name="message">The exception message</param>
+            <param name="innerException">The inner exception</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.ConcurrentModificationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Creates a concurrent modification exception from its serialized form.
+            </summary>
+            <param name="info">The serialization info</param>
+            <param name="context">The streaming context</param>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.MemoryJobStore">
+            <summary>
+            The memory job store maintains all job state in-process in memory.
+            It does not support persistence or clustering.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.#ctor">
+            <summary>
+            Creates an in-process memory job store initially without any jobs.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.RegisterScheduler(System.Guid,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.UnregisterScheduler(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.CreateJobWatcher(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.GetJobDetails(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.SaveJobDetails(Castle.Components.Scheduler.JobDetails)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.CreateJob(Castle.Components.Scheduler.JobSpec,System.DateTime,Castle.Components.Scheduler.CreateJobConflictAction)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.UpdateJob(System.String,Castle.Components.Scheduler.JobSpec)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.DeleteJob(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.ListJobNames">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.SignalBlockedThreads">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.MemoryJobStore.GetNextJobToProcessOrWaitUntilSignaled(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.PersistentJobStore">
+            <summary>
+            Abstract base class for persistent job store that maintains all job state
+            in a database.  Jobs are persisted across processes and are shared among all
+            scheduler instances that belong to the same cluster.
+            </summary>
+            <remarks>
+            <para>
+            Each active scheduler instance is represented as an entity in the database.
+            When the scheduler instance shuts down (normally or abnormally), its
+            information expires.  If the scheduler instance had any running jobs
+            associated with it, they are transitioned into the Orphaned state and
+            reclaimed automatically.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.#ctor(Castle.Components.Scheduler.JobStores.IJobStoreDao)">
+            <summary>
+            Creates a persistent job store using the specified DAO.
+            </summary>
+            <param name="jobStoreDao">The job store DAO to use for persistence</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobStoreDao"/> is null</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.RegisterScheduler(System.Guid,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.UnregisterScheduler(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.CreateJobWatcher(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.GetJobDetails(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.SaveJobDetails(Castle.Components.Scheduler.JobDetails)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.CreateJob(Castle.Components.Scheduler.JobSpec,System.DateTime,Castle.Components.Scheduler.CreateJobConflictAction)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.UpdateJob(System.String,Castle.Components.Scheduler.JobSpec)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.DeleteJob(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.ListJobNames">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.SignalBlockedThreads">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.GetNextJobToProcessOrWaitUntilSignaled(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.StartRegistrationTimer">
+            <summary>
+            Starts a timer to refresh registrations at 1/3 of the scheduler expiration rate.
+            This ensures that the scheduler instances get 2 chances to be refreshed before
+            they expire.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.PersistentJobStore.StopRegistrationTimer">
+            <summary>
+            Stops the registration refresh timer.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobStores.PersistentJobStore.JobStoreDao">
+            <summary>
+            Gets the underlying job store Data Access Object implementation.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobStores.PersistentJobStore.ClusterName">
+            <summary>
+            Gets or sets the unique name of the cluster to which scheduler
+            instances using this job store should belong.
+            </summary>
+            <remarks>
+            The default value is "Default".
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobStores.PersistentJobStore.SchedulerExpirationTimeInSeconds">
+            <summary>
+            Gets or sets the number of seconds before a scheduler instance that has lost database
+            connectivity expires.  Any jobs that the scheduler instance was running will be orphaned when
+            the scheduler instance expires.
+            </summary>
+            <remarks>
+            <para>
+            The default value is 120 (2 minutes).
+            </para>
+            <para>
+            The same value must be used in each job store instance belonging to the same cluster
+            to ensure correct behavior.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="value"/> is less
+            than or equal to 0</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobStores.PersistentJobStore.PollIntervalInSeconds">
+            <summary>
+            Gets or sets the number of seconds to wait between database polls for new jobs to be processed.
+            </summary>
+            <remarks>
+            The default value is 15.
+            </remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="value"/> is less
+            than or equal to 0</exception>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.SqlServerJobStore">
+            <summary>
+            The SQL Server job store maintains all job state in a SQL Server database.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.SqlServerJobStore.#ctor(System.String)">
+            <summary>
+            Creates a SQL Server job store.
+            </summary>
+            <param name="connectionString">The database connection string</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="connectionString"/> is null</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.SqlServerJobStore.#ctor(Castle.Components.Scheduler.JobStores.SqlServerJobStoreDao)">
+            <summary>
+            Creates a SQL Server job store using the specified DAO.
+            </summary>
+            <param name="jobStoreDao"></param>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobStores.SqlServerJobStore.ConnectionString">
+            <summary>
+            Gets the connection string.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobStores.SqlServerJobStoreDao">
+            <summary>
+            A job store DAO for SQL Server databases.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.SqlServerJobStoreDao.#ctor(System.String)">
+            <summary>
+            Creates a SQL Server job store.
+            </summary>
+            <param name="connectionString">The database connection string</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="connectionString"/> is null</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobStores.SqlServerJobStoreDao.CreateConnection">
+            <inheritdoc />
+        </member>
+        <member name="T:Castle.Components.Scheduler.Utilities.DateTimeUtils">
+            <summary>
+            Provides utility functions for manipulating dates and times.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Utilities.DateTimeUtils.ToUniversalTime(System.Nullable{System.DateTime})">
+            <summary>
+            Converts a nullable date/time value to UTC.
+            </summary>
+            <param name="dateTime">The nullable date/time</param>
+            <returns>The nullable date/time in UTC</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Utilities.DateTimeUtils.AssumeUniversalTime(System.DateTime)">
+            <summary>
+            Returns a copy of a date/time value with its kind
+            set to <see cref="F:System.DateTimeKind.Utc"/> but does not perform
+            any time-zone adjustment.
+            </summary>
+            <remarks>
+            This method is useful when obtaining date/time values from sources
+            that might not correctly set the UTC flag.
+            </remarks>
+            <param name="dateTime">The date/time</param>
+            <returns>The same date/time with the UTC flag set</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Utilities.DateTimeUtils.AssumeUniversalTime(System.Nullable{System.DateTime})">
+            <summary>
+            Returns a copy of a nullable date/time value with its kind
+            set to <see cref="F:System.DateTimeKind.Utc"/> but does not perform
+            any time-zone adjustment.
+            </summary>
+            <remarks>
+            This method is useful when obtaining date/time values from sources
+            that might not correctly set the UTC flag.
+            </remarks>
+            <param name="dateTime">The nullable date/time</param>
+            <returns>The same nullable date/time with the UTC flag set</returns>
+        </member>
+        <member name="T:Castle.Components.Scheduler.Utilities.DbUtils">
+            <summary>
+            Provides utility functions for working with a database.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Utilities.DbUtils.MapDbValueToObject``1(System.Object)">
+            <summary>
+            Maps a Db value to an object.
+            <see cref="F:System.DBNull.Value"/> is mapped to null.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value">The value to map</param>
+            <returns>The mapped value</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Utilities.DbUtils.MapDbValueToNullable``1(System.Object)">
+            <summary>
+            Maps a Db value to a nullable structure.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value">The value to map</param>
+            <returns>The mapped value</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Utilities.DbUtils.MapNullableToDbValue``1(System.Nullable{``0})">
+            <summary>
+            Maps a nullable structure to a Db value.
+            Null is mapped to <see cref="F:System.DBNull.Value"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value">The value to map</param>
+            <returns>The mapped value</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Utilities.DbUtils.MapObjectToDbValue``1(``0)">
+            <summary>
+            Maps an object to a Db value.
+            Null is mapped to <see cref="F:System.DBNull.Value"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value">The value to map</param>
+            <returns>The mapped value</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Utilities.DbUtils.SerializeObject(System.Object)">
+            <summary>
+            Serializes an object to a byte array for storage in a BLOB.
+            </summary>
+            <param name="obj">The object to serialize, possibly null</param>
+            <returns>The byte array, possibly null</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Utilities.DbUtils.DeserializeObject(System.Byte[])">
+            <summary>
+            Deserializes an object from a byte array for retrieval from a BLOB.
+            </summary>
+            <param name="bytes">The byte array to deserialize, possibly null</param>
+            <returns>The object, possibly null</returns>
+        </member>
+        <member name="T:Castle.Components.Scheduler.CreateJobConflictAction">
+            <summary>
+            Specifies how to handle the case where a job with the same name
+            has already been created.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.CreateJobConflictAction.Throw">
+            <summary>
+            Throws an exception.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.CreateJobConflictAction.Update">
+            <summary>
+            Updates the existing job.
+            The job's history is preserved.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.CreateJobConflictAction.Replace">
+            <summary>
+            Replaces the existing job.
+            The job's history is discarded as if it had been deleted before being recreated.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.CreateJobConflictAction.Ignore">
+            <summary>
+            Ignores the conflict and does not change the existing job.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.DefaultJobRunner">
+            <summary>
+            The default implementation of the <see cref="T:Castle.Components.Scheduler.IJobRunner"/>
+            uses a <see cref="T:Castle.Components.Scheduler.IJobFactory"/> to create instances of
+            <see cref="T:Castle.Components.Scheduler.IJob"/> based on the job's key.  The job runs
+            asynchronously in the threadpool.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.IJobRunner">
+            <summary>
+            A job runner takes care of reliably running jobs and reporting
+            back when they complete.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IJobRunner.BeginExecute(Castle.Components.Scheduler.JobExecutionContext,System.AsyncCallback,System.Object)">
+            <summary>
+            Begins executing a job asynchronously.
+            </summary>
+            <param name="context">The job's execution context, never null</param>
+            <param name="asyncCallback">The callback to invoke when the job completes</param>
+            <param name="asyncState">The state information for the asynchronous result token</param>
+            <returns>The asynchronous result token, never null</returns>
+            <exception cref="T:System.Exception">Any exception thrown by the job runner is interpreted
+            as job failure by the scheduler.  Changes made to the job's state data
+            will be discarded when this occurs.  The job may be executed again later
+            if it is scheduled to do so.</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IJobRunner.EndExecute(System.IAsyncResult)">
+            <summary>
+            Gets the result of having executed a job.
+            </summary>
+            <param name="asyncResult">The asynchronous result token</param>
+            <returns>True if the job succeeded, false otherwise</returns>
+            <exception cref="T:System.Exception">Any exception thrown by the job runner is interpreted
+            as job failure by the scheduler.  Changes made to the job's state data
+            will be discarded when this occurs.  The job may be executed again later
+            if it is scheduled to do so.</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultJobRunner.#ctor(Castle.Components.Scheduler.IJobFactory)">
+            <summary>
+            Creates a job runner with the specified job factory
+            </summary>
+            <param name="jobFactory">The job factory</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobFactory"/> is null</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultJobRunner.BeginExecute(Castle.Components.Scheduler.JobExecutionContext,System.AsyncCallback,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultJobRunner.EndExecute(System.IAsyncResult)">
+            <inheritdoc />
+        </member>
+        <member name="T:Castle.Components.Scheduler.DefaultScheduler">
+            <summary>
+            A simple default job scheduler based on a <see cref="T:Castle.Components.Scheduler.JobStores.IJobStore"/>
+            and <see cref="T:Castle.Components.Scheduler.IJobRunner"/>.
+            The <see cref="T:Castle.Components.Scheduler.JobStores.IJobStore"/> provides persistence and sends 
+            notification of jobs that require processing.
+            The <see cref="T:Castle.Components.Scheduler.IJobRunner"/> executes jobs asynchronously.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.IScheduler">
+            <summary>
+            A job scheduler schedules jobs for execution.
+            It may optionally provide job persistence, clustering and other features.
+            </summary>
+            <remarks>
+            <para>
+            Each scheduler instance is uniquely identified by a GUID which is used
+            to track ownership of running jobs.  A running job associated with a
+            scheduler whose GUID is no longer valid is considered orphaned and is
+            assigned a failure result for that execution.  The orphaned job will
+            then be rescheduled according to its trigger.
+            </para>
+            </remarks>
+            <todo>
+            Optionally track job history.
+            Provide events for instrumentation.
+            Support job scheduling rules for mutually exclusive access to contended resources.
+            Support job behaviors (persistent listeners).
+            Support job queueing.
+            </todo>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IScheduler.Start">
+            <summary>
+            Starts scheduling jobs for execution.
+            </summary>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the scheduler has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IScheduler.Stop">
+            <summary>
+            Stops scheduling jobs for execution.
+            </summary>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the scheduler has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IScheduler.GetJobDetails(System.String)">
+            <summary>
+            Gets the details of the job with the specified name.
+            </summary>
+            <param name="jobName">The name of the job</param>
+            <returns>The job details, or null if not found</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobName"/> is null</exception>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the scheduler has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IScheduler.CreateJob(Castle.Components.Scheduler.JobSpec,Castle.Components.Scheduler.CreateJobConflictAction)">
+            <summary>
+            Creates a job.
+            If the job already exists, takes the specified alternative conflict action.
+            </summary>
+            <param name="jobSpec">The job specification</param>
+            <param name="conflictAction">The action to take if a job with the
+            same name already exists</param>
+            <returns>True if the job was created or updated, false if a conflict occurred
+            and no changes were made</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobSpec"/> is null</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="conflictAction"/> is not a defined value</exception>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the scheduler has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IScheduler.UpdateJob(System.String,Castle.Components.Scheduler.JobSpec)">
+            <summary>
+            Updates an existing job.
+            </summary>
+            <param name="existingJobName">The name of the existing job to update</param>
+            <param name="updatedJobSpec">The updated job specification</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="existingJobName"/> or
+            <paramref name="updatedJobSpec"/> is null</exception>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="existingJobName"/> is an empty string</exception>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs or if the job does not exist</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the scheduler has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IScheduler.DeleteJob(System.String)">
+            <summary>
+            Deletes the job with the specified name.
+            </summary>
+            <param name="jobName">The name of the job to delete</param>
+            <returns>True if a job was actually deleted, false if no such job was found</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobName"/> is null</exception>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the scheduler has been disposed</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IScheduler.ListJobNames">
+            <summary>
+            Gets the names of all jobs.
+            </summary>
+            <returns>The names of all jobs</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if an error occurs</exception>
+            <exception cref="T:System.ObjectDisposedException">Thrown if the scheduler has been disposed</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.IScheduler.IsDisposed">
+            <summary>
+            Returns true if the scheduler has been disposed.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.IScheduler.IsRunning">
+            <summary>
+            Returns true if the scheduler has been started and is running.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.IScheduler.Guid">
+            <summary>
+            Gets the globally unique ID of the scheduler instance.
+            </summary>
+            <remarks>
+            The GUID is used to track ownership of resources that
+            are transiently owned by a scheduler instance.  The system
+            ensures that when the GUID associated with a scheduler instance
+            is invalidated (say by failing to update its record in a persistent
+            store for a preset time) all of its associated resources should
+            be released.  In particular, if the scheduler instance terminated
+            abnormally while it had running jobs, these jobs will eventually
+            be considered orphaned and will be rescheduled by other scheduler
+            instances per the job's trigger.
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Scheduler.IScheduler.Name">
+            <summary>
+            Gets the name of the scheduler instance, never null.
+            The name might not be unique.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.DefaultScheduler.DefaultErrorRecoveryDelayInSeconds">
+            <summary>
+            Gets the default error recovery delay in seconds.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.#ctor(Castle.Components.Scheduler.JobStores.IJobStore,Castle.Components.Scheduler.IJobRunner)">
+            <summary>
+            Creates a scheduler with a default name.
+            </summary>
+            <param name="jobStore">The job store</param>
+            <param name="jobRunner">The job runner</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="jobStore"/> or
+            <paramref name="jobRunner"/> is null</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.Initialize">
+            <summary>
+            Initializes the scheduler instance and registers it with the <see cref="T:Castle.Components.Scheduler.JobStores.IJobStore"/>.
+            </summary>
+            <remarks>
+            This method must be called after the scheduler's properties have been set
+            and before the scheduler is used.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.Dispose">
+            <summary>
+            Disposes the scheduler instance and unregisters it from the <see cref="T:Castle.Components.Scheduler.JobStores.IJobStore"/>.
+            </summary>
+            <remarks>
+            Any jobs currently being run by the scheduler will be orphaned.
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.Start">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.Stop">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.GetJobDetails(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.CreateJob(Castle.Components.Scheduler.JobSpec,Castle.Components.Scheduler.CreateJobConflictAction)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.UpdateJob(System.String,Castle.Components.Scheduler.JobSpec)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.DeleteJob(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.DefaultScheduler.ListJobNames">
+            <inheritdoc />
+        </member>
+        <member name="P:Castle.Components.Scheduler.DefaultScheduler.Logger">
+            <summary>
+            Gets or sets the logger used by the scheduler.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.DefaultScheduler.IsDisposed">
+            <summary>
+            Returns true if the scheduler has been disposed.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.DefaultScheduler.IsRunning">
+            <summary>
+            Returns true if the scheduler has been started and is running.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.DefaultScheduler.Guid">
+            <summary>
+            Gets the globally unique ID of the scheduler instance.
+            </summary>
+            <remarks>
+            The GUID is used to track ownership of resources that
+            are transiently owned by a scheduler instance.  The system
+            ensures that when the GUID associated with a scheduler instance
+            is invalidated (say by failing to update its record in a persistent
+            store for a preset time) all of its associated resources should
+            be released.  In particular, if the scheduler instance terminated
+            abnormally while it had running jobs, these jobs will eventually
+            be considered orphaned and will be rescheduled by other scheduler
+            instances per the job's trigger.
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Scheduler.DefaultScheduler.Name">
+            <summary>
+            Gets or sets the name of the scheduler, never null.
+            The name might not be unique.
+            </summary>
+            <remarks>
+            If no name is set, a default name is used.
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.DefaultScheduler.ErrorRecoveryDelayInSeconds">
+            <summary>
+            Gets or sets the number of seconds to wait after an error occurs before
+            resuming normal operation.  This is intended to reduce the likelihood of
+            repeated errors from locking up the system.
+            </summary>
+            <value>
+            The default value is 30 seconds.
+            </value>
+            <todo>
+            Replace with an exponential backoff mechanism.
+            </todo>
+        </member>
+        <member name="T:Castle.Components.Scheduler.ICloneable`1">
+            <summary>
+            Generic variant of <see cref="T:System.ICloneable"/>.
+            </summary>
+            <typeparam name="T">The type of object that is cloned</typeparam>
+        </member>
+        <member name="M:Castle.Components.Scheduler.ICloneable`1.Clone">
+            <summary>
+            Clones the object.
+            </summary>
+            <returns>The cloned instance</returns>
+        </member>
+        <member name="T:Castle.Components.Scheduler.IJob">
+            <summary>
+            A job provides an entry point for a task to be performed.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IJob.Execute(Castle.Components.Scheduler.JobExecutionContext)">
+            <summary>
+            Executes the job.
+            </summary>
+            <param name="context">The job's execution context</param>
+            <returns>True if the job succeeded, false otherwise</returns>
+            <exception cref="T:System.Exception">Any exception thrown by the job is interpreted
+            as an error by the scheduler.  Changes made to the job's state data
+            will be discarded when this occurs.</exception>
+        </member>
+        <member name="T:Castle.Components.Scheduler.IJobFactory">
+            <summary>
+            A factory that creates <see cref="T:Castle.Components.Scheduler.IJob"/> instances associated
+            with a given job key prior to job execution.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.IJobFactory.GetJob(System.String)">
+            <summary>
+            Gets an instance of a job with the specified key.
+            </summary>
+            <param name="jobKey">A key which determines which implementation of
+            <see cref="T:Castle.Components.Scheduler.IJob"/> is used and perhaps how it is initialized</param>
+            <returns>The new job</returns>
+            <exception cref="T:Castle.Components.Scheduler.SchedulerException">Thrown if no such job key is known or if some other error
+            occurs while initializing the job</exception>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobData">
+            <summary>
+            Job data persists job parameters and state across job executions.
+            The contents of the job data must be serializable if they are to be
+            used with a persistent store.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobData.#ctor">
+            <summary>
+            Create an empty job data structure.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobData.#ctor(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Creates a job data structure with the specified initial state.
+            </summary>
+            <param name="state">The initial state</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="state"/> is null</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobData.Clone">
+            <summary>
+            Clones the job data including a shallow copy of the state dictionary.
+            </summary>
+            <returns>The cloned job data</returns>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobData.State">
+            <summary>
+            Gets a dictionary of state values.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobDetails">
+            <summary>
+            Provides details about a job including its current status.
+            </summary>
+            <remarks>
+            <para>
+            An implementation of <see cref="T:Castle.Components.Scheduler.IScheduler"/> may provide specialized
+            subclasses of <see cref="T:Castle.Components.Scheduler.JobDetails"/> to clients that can use additional
+            scheduler-specific job details.  However, clients should
+            be prepared to handle the <see cref="T:Castle.Components.Scheduler.JobDetails"/> base class as a least common
+            denominator albeit some of the scheduler's advanced capabilities may thus be unavailable.
+            </para>
+            <para>
+            The <see cref="T:Castle.Components.Scheduler.JobDetails"/> object returned to client code should
+            always be a clone of the master copy, if applicable.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobDetails.#ctor(Castle.Components.Scheduler.JobSpec,System.DateTime)">
+            <summary>
+            Creates job details for a newly created job.
+            </summary>
+            <param name="jobSpec">The job's specification</param>
+            <param name="creationTimeUtc">The UTC time when the job was created</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="jobSpec"/> is null</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobDetails.Clone">
+            <summary>
+            Clones the job details including a deep copy of all properties.
+            </summary>
+            <returns>The cloned job details</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobDetails.CopyTo(Castle.Components.Scheduler.JobDetails)">
+            <summary>
+            Copies the properties of the job details to the specified target object.
+            </summary>
+            <remarks>
+            This method may be used to simplify implementing <see cref="M:Castle.Components.Scheduler.JobDetails.Clone"/> in subclasses.
+            </remarks>
+            <param name="target">The target</param>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobDetails.JobSpec">
+            <summary>
+            Gets or sets the job's specification.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobDetails.CreationTimeUtc">
+            <summary>
+            Gets or sets the UTC time when the job was created.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobDetails.JobState">
+            <summary>
+            Gets or sets the current state of the job.
+            </summary>
+            <remarks>
+            Initially <see cref="F:Castle.Components.Scheduler.JobState.Pending"/>.
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobDetails.NextTriggerFireTimeUtc">
+            <summary>
+            Gets or sets the UTC time when the trigger is next scheduled to fire or null if the
+            trigger is not scheduled to fire again based on a time signal.
+            </summary>
+            <remarks>
+            Initially null.
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobDetails.NextTriggerMisfireThreshold">
+            <summary>
+            Gets or sets the amount of time by which the trigger is permitted to miss the next
+            scheduled time before a misfire occurs or null to consider the schedule on
+            time no matter how late it fires.
+            </summary>
+            <remarks>
+            Initially null.
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobDetails.LastJobExecutionDetails">
+            <summary>
+            Gets or sets the execution details for the most recent (possibly in-progress)
+            job execution or null if the job has never been executed.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobExecutionContext">
+            <summary>
+            The job execution context informs a job about its environment and provides
+            it with its job data for state management.
+            </summary>
+            <remarks>
+            <para>
+            An implementation of <see cref="T:Castle.Components.Scheduler.IScheduler"/> may provide specialized
+            subclasses of <see cref="T:Castle.Components.Scheduler.JobExecutionContext"/> to clients that can use additional
+            scheduler-specific job execution context information.  However, clients should
+            be prepared to handle the <see cref="T:Castle.Components.Scheduler.JobExecutionContext"/> base class as a least common
+            denominator albeit some of the scheduler's advanced capabilities may thus be unavailable.
+            </para>
+            <para>
+            Changes to the <see cref="T:Castle.Components.Scheduler.JobExecutionContext"/> may be persisted across
+            job executions; particularly <see cref="P:Castle.Components.Scheduler.JobExecutionContext.JobData"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobExecutionContext.#ctor(Castle.Components.Scheduler.IScheduler,Castle.Core.Logging.ILogger,Castle.Components.Scheduler.JobSpec,Castle.Components.Scheduler.JobData)">
+            <summary>
+            Creates a job execution context.
+            </summary>
+            <param name="scheduler">The scheduler that is managing the job</param>
+            <param name="logger">The logger to use for logging job progress</param>
+            <param name="jobSpec">The job's specification</param>
+            <param name="jobData">The job state data, or null if none</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="scheduler"/>,
+            <paramref name="logger"/> or <paramref name="jobSpec"/> is null</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobExecutionContext.Scheduler">
+            <summary>
+            Gets the scheduler that is managing the job.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobExecutionContext.Logger">
+            <summary>
+            Gets the logger for logging job progress.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobExecutionContext.JobSpec">
+            <summary>
+            Gets the job specification.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobExecutionContext.JobData">
+            <summary>
+            Gets or sets the job state data, or null if none.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobExecutionDetails">
+            <summary>
+            Provides details about the execution of a job including its current status.
+            </summary>
+            <remarks>
+            <para>
+            An implementation of <see cref="T:Castle.Components.Scheduler.IScheduler"/> may provide specialized
+            subclasses of <see cref="T:Castle.Components.Scheduler.JobExecutionDetails"/> to clients that can use additional
+            scheduler-specific job execution details.  However, clients should
+            be prepared to handle the <see cref="T:Castle.Components.Scheduler.JobExecutionDetails"/> base class as a least common
+            denominator albeit some of the scheduler's advanced capabilities may thus be unavailable.
+            </para>
+            <para>
+            The <see cref="T:Castle.Components.Scheduler.JobExecutionDetails"/> object returned to client code should
+            always be a clone of the master copy, if applicable.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobExecutionDetails.#ctor(System.Guid,System.DateTime)">
+            <summary>
+            Creates job execution details.
+            </summary>
+            <param name="schedulerGuid">The Guid of the scheduler that is running the job</param>
+            <param name="startTimeUtc">The UTC start time</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobExecutionDetails.Clone">
+            <summary>
+            Clones the job execution details including a deep copy of all properties.
+            </summary>
+            <returns>The cloned job execution details</returns>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobExecutionDetails.SchedulerGuid">
+            <summary>
+            Gets the GUID of the scheduler that is running the job, never null.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobExecutionDetails.StartTimeUtc">
+            <summary>
+            Gets the UTC time when the job started.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobExecutionDetails.EndTimeUtc">
+            <summary>
+            Gets or sets the UTC time when the job ended or null if it is still running.
+            </summary>
+            <remarks>
+            The default value is null.
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobExecutionDetails.Succeeded">
+            <summary>
+            Gets or sets whether the job succeeded.
+            </summary>
+            <remarks>
+            The default value is false.
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobExecutionDetails.StatusMessage">
+            <summary>
+            Gets or sets the job's status message, never null.
+            When the job fails, this property will contain error information.
+            </summary>
+            <remarks>
+            The default value is "Unknown".
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobSpec">
+            <summary>
+            A <see cref="T:Castle.Components.Scheduler.JobSpec"/> is a specification of the properties of a
+            scheduled job.  It provides the name of the scheduled job instance
+            and a job key used to create suitable <see cref="T:Castle.Components.Scheduler.IJob"/> instances for
+            execution.
+            </summary>
+            <remarks>
+            <para>
+            An implementation of <see cref="T:Castle.Components.Scheduler.IScheduler"/> may accept specialized
+            subclasses of <see cref="T:Castle.Components.Scheduler.JobSpec"/> from clients that can provide additional
+            scheduler-specific job specification information.  However, the scheduler should
+            be prepared to handle the <see cref="T:Castle.Components.Scheduler.JobSpec"/> base class as a least common
+            denominator albeit some of its advanced capabilities may thus be unavailable.
+            </para>
+            <para>
+            A <see cref="T:Castle.Components.Scheduler.JobSpec"/> is always immutable once created.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobSpec.#ctor(System.String,System.String,System.String,Castle.Components.Scheduler.Trigger)">
+            <summary>
+            Creates a job specification.
+            </summary>
+            <param name="name">The unique name of the job</param>
+            <param name="description">The description of the job</param>
+            <param name="jobKey">The key that is used by a <see cref="T:Castle.Components.Scheduler.IJobFactory"/>
+            to construct an <see cref="T:Castle.Components.Scheduler.IJob"/> instance when the job is to be executed</param>
+            <param name="trigger">The trigger that determines when the job is scheduled to run</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="name"/>, <paramref name="description"/>,
+            <paramref name="jobKey"/> or <paramref name="trigger"/> is null</exception>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="name"/> is an empty string</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.JobSpec.Clone">
+            <summary>
+            Clones the job specification including a deep copy of the all properties.
+            </summary>
+            <returns>The cloned job specification</returns>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobSpec.Name">
+            <summary>
+            Gets or sets the unique name of this scheduled job.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="value"/> is an empty string</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobSpec.Description">
+            <summary>
+            Gets or sets the description of the scheduled job.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobSpec.JobKey">
+            <summary>
+            Gets or sets the key that is used by a <see cref="T:Castle.Components.Scheduler.IJobFactory"/>
+            to construct an <see cref="T:Castle.Components.Scheduler.IJob"/> instance when the job is to be executed.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobSpec.Trigger">
+            <summary>
+            Gets or sets the trigger that determines when the job is scheduled to run.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.JobSpec.JobData">
+            <summary>
+            Gets or sets a serializable data structure that passes parameters to
+            a job and persists its state across executions.  May be null if the
+            data is not persistent.
+            </summary>
+            <remarks>
+            Initially null.
+            </remarks>
+        </member>
+        <member name="T:Castle.Components.Scheduler.JobState">
+            <summary>
+            Describes the state of a job.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.JobState.Pending">
+            <summary>
+            The job has just been created or updated and is waiting to be scheduled.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.JobState.Scheduled">
+            <summary>
+            The job has been scheduled and is waiting for its trigger to fire.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.JobState.Triggered">
+            <summary>
+            The job's trigger has fired.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.JobState.Running">
+            <summary>
+            The job is running.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.JobState.Completed">
+            <summary>
+            The job completed.  Whether it suceeded or failed can be determined by examining
+            the last job execution details.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.JobState.Orphaned">
+            <summary>
+            The job was previously running but has been orphaned because the scheduler instance
+            that was previously managing its execution no longer exists.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.JobState.Stopped">
+            <summary>
+            The job has been stopped.  Its trigger will not fire again.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.PeriodicTrigger">
+            <summary>
+            Encapsulates an algorithm for generating regular periodic triggers
+            relative to some fixed start time.  The trigger will fire repeatedly
+            every recurrence period until either the remainind number of recurrences
+            drops to zero, the end time is reached, or the associated job is deleted.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.Trigger">
+            <summary>
+            A trigger encapsulates an algorithm for determining when an event should occur.
+            A trigger must be serializable if it is to be used with a persistent store.
+            </summary>
+            <remarks>
+            <para>
+            An implementation of <see cref="T:Castle.Components.Scheduler.IScheduler"/> may recognize and provide special
+            support for certain subclasses of <see cref="T:Castle.Components.Scheduler.Trigger"/>.  However, the scheduler should
+            be prepared to handle the <see cref="T:Castle.Components.Scheduler.Trigger"/> base class as a least common
+            denominator albeit some of its advanced capabilities may thus be unavailable.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Trigger.Schedule(Castle.Components.Scheduler.TriggerScheduleCondition,System.DateTime,Castle.Components.Scheduler.JobExecutionDetails)">
+            <summary>
+            Updates the trigger's scheduling state machine in response to a condition
+            and informs the scheduler as to what action should be taken.
+            </summary>
+            <remarks>
+            The implementation should use the value of the <paramref name="timeBasisUtc"/>
+            parameter to evaluate its scheduling rules rather than calling <see cref="P:System.DateTime.UtcNow"/>.
+            </remarks>
+            <param name="condition">The reason the trigger is being scheduled</param>
+            <param name="timeBasisUtc">The UTC time to use as a basis for evaluating scheduling rules and
+            that should be considered as referring to "Now."</param>
+            <param name="lastJobExecutionDetails">The results of the most recent job execution which may be
+            used to provide different trigger responses based on whether a job succeeded or failed.
+            The value is null if the job has never executed.</param>
+            <returns>The action that the scheduler should perform in response</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.Trigger.Clone">
+            <summary>
+            Clones the trigger including a deep copy of all properties.
+            </summary>
+            <returns>The cloned trigger</returns>
+        </member>
+        <member name="P:Castle.Components.Scheduler.Trigger.IsActive">
+            <summary>
+            Returns true if the trigger is active and may fire again sometime.
+            If this method returns false, the scheduler may choose to remove the trigger
+            or delete the job.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.Trigger.NextFireTimeUtc">
+            <summary>
+            Gets the UTC time when the trigger is next scheduled to fire or null if the
+            trigger is not scheduled to fire again based on a time signal.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.Trigger.NextMisfireThreshold">
+            <summary>
+            Gets the amount of time by which the trigger is permitted to miss the next
+            scheduled time before a misfire occurs or null to consider the schedule on
+            time no matter how late it fires.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.PeriodicTrigger.DefaultMisfireAction">
+            <summary>
+            The default misfire action.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.PeriodicTrigger.#ctor(System.DateTime,System.Nullable{System.DateTime},System.Nullable{System.TimeSpan},System.Nullable{System.Int32})">
+            <summary>
+            Creates a periodic trigger.
+            </summary>
+            <param name="startTimeUtc">The UTC date and time when the trigger will first fire</param>
+            <param name="endTimeUtc">The UTC date and time when the trigger must stop firing.
+            If the time is set to null, the trigger may continue firing indefinitely.</param>
+            <param name="period">The recurrence period of the trigger.
+            If the period is set to null, the trigger will fire exactly once
+            and never recur.</param>
+            <param name="jobExecutionCount">The number of job executions remaining before the trigger
+            stops firing.  This number is decremented each time the job executes
+            until it reaches zero.  If the count is set to null, the number of times the job
+            may execute is unlimited.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="period"/> is negative or zero</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="jobExecutionCount"/> is negative</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.PeriodicTrigger.CreateOneShotTrigger(System.DateTime)">
+            <summary>
+            Creates a trigger that fires exactly once at the specified time.
+            </summary>
+            <param name="fireTimeUtc">The UTC time at which the trigger should fire</param>
+            <returns>The one-shot trigger</returns>
+        </member>
+        <member name="M:Castle.Components.Scheduler.PeriodicTrigger.CreateDailyTrigger(System.DateTime)">
+            <summary>
+            Creates a trigger that fires every 24 hours beginning at the specified start time.
+            </summary>
+            <remarks>
+            This method does not take into account local time variations such as Daylight
+            Saving Time.  Use a more sophisticated calendar-based trigger for that purpose.
+            </remarks>
+            <param name="startTimeUtc">The UTC date and time when the trigger will first fire</param>
+        </member>
+        <member name="M:Castle.Components.Scheduler.PeriodicTrigger.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:Castle.Components.Scheduler.PeriodicTrigger.Schedule(Castle.Components.Scheduler.TriggerScheduleCondition,System.DateTime,Castle.Components.Scheduler.JobExecutionDetails)">
+            <inheritdoc />
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.StartTimeUtc">
+            <summary>
+            Gets or sets the UTC date and time when the trigger will first fire.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.EndTimeUtc">
+            <summary>
+            Gets or sets the UTC date and time when the trigger must stop firing.
+            If the time is set to null, the trigger may continue firing indefinitely.
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.Period">
+            <summary>
+            Gets or sets the recurrence period of the trigger.
+            If the period is set to null, the trigger will fire exactly once
+            and never recur.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="value"/> is negative or zero</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.JobExecutionCountRemaining">
+            <summary>
+            Gets or sets the number of job executions remaining before the trigger
+            stops firing.  This number is decremented each time the job executes
+            until it reaches zero.  If the count is set to null, the number of times
+            the job may execute is unlimited.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="value"/> is negative</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.MisfireThreshold">
+            <summary>
+            Gets or sets the amount of time by which the scheduler is permitted to miss
+            the next scheduled time before a misfire occurs or null if the trigger never misfires.
+            </summary>
+            <remarks>
+            The default is null.
+            </remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="value"/> is negative</exception>
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.MisfireAction">
+            <summary>
+            Gets or sets the action to perform when the trigger misses a scheduled recurrence.
+            </summary>
+            <remarks>
+            The default is <see cref="F:Castle.Components.Scheduler.TriggerScheduleAction.Skip"/>.
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.IsFirstTime">
+            <summary>
+            Gets or sets whether the next trigger firing should occur at <see cref="P:Castle.Components.Scheduler.PeriodicTrigger.StartTimeUtc"/>
+            or at the next recurrence period according to <see cref="P:Castle.Components.Scheduler.PeriodicTrigger.Period"/>.
+            </summary>
+            <remarks>
+            <para>
+            This property is initially set to true when the trigger is created so that missing
+            the time specified by <see cref="P:Castle.Components.Scheduler.PeriodicTrigger.StartTimeUtc"/> is considered a misfire.
+            Once the first time is processed, the property is set to false and the trigger will
+            skip over as many recurrence periods as needed to catch up with real time.
+            </para>
+            <para>
+            It may be useful to initialize this property to false after creating the trigger
+            if you do not care whether the trigger fires at the designated start time and
+            simply wish to ensure that it followed the expected recurrence pattern.  However,
+            if the <see cref="P:Castle.Components.Scheduler.PeriodicTrigger.Period"/> is null, then the trigger will not fire if the time
+            indicated by <see cref="P:Castle.Components.Scheduler.PeriodicTrigger.StartTimeUtc"/> has already passed and will immediately
+            become inactive.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.NextFireTimeUtc">
+            <inheritdoc />
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.NextMisfireThreshold">
+            <inheritdoc />
+        </member>
+        <member name="P:Castle.Components.Scheduler.PeriodicTrigger.IsActive">
+            <inheritdoc />
+        </member>
+        <member name="T:Castle.Components.Scheduler.TriggerScheduleAction">
+            <summary>
+            Specifies the action that the scheduler should perform when the trigger fires.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.TriggerScheduleAction.Skip">
+            <summary>
+            The scheduler should do nothing at this time.
+            The trigger will remain active and may provide a different action when it next fires.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.TriggerScheduleAction.Stop">
+            <summary>
+            The scheduler should do nothing at this time.
+            The trigger has become inactive and will not fire again.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.TriggerScheduleAction.ExecuteJob">
+            <summary>
+            The scheduler should execute the associated job.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.TriggerScheduleAction.DeleteJob">
+            <summary>
+            The scheduler should delete the job.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.TriggerScheduleCondition">
+            <summary>
+            The trigger condition specifies the reason that the trigger's scheduling method
+            is being invoked.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.TriggerScheduleCondition.Latch">
+            <summary>
+            The scheduler is asking the trigger when it will fire next because
+            the job has just been created, been updated or completed execution.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.TriggerScheduleCondition.Fire">
+            <summary>
+            The time last specified as the trigger's schedule time has arrived within
+            the tolerance established by the trigger's misfire threshold.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Scheduler.TriggerScheduleCondition.Misfire">
+            <summary>
+            The time last specified as the trigger's schedule time was missed by a duration
+            in excess of the tolerance established by the trigger's misfire threshold.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Scheduler.VersionedJobDetails">
+            <summary>
+            The versioned job details subclass maintains a version token
+            along with job details information for use in determining whether
+            the job details have been concurrently modified.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Scheduler.VersionedJobDetails.#ctor(Castle.Components.Scheduler.JobSpec,System.DateTime,System.Int32)">
+            <summary>
+            Creates job details for a newly created job.
+            </summary>
+            <param name="jobSpec">The job's specification</param>
+            <param name="creationTime">The time when the job was created</param>
+            <param name="version">The version number</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="jobSpec"/> is null</exception>
+        </member>
+        <member name="M:Castle.Components.Scheduler.VersionedJobDetails.Clone">
+            <inheritdoc />
+        </member>
+        <member name="P:Castle.Components.Scheduler.VersionedJobDetails.Version">
+            <summary>
+            Gets or sets the version number.
+            </summary>
+        </member>
+    </members>
+</doc>

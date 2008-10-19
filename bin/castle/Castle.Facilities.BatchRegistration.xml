@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Facilities.BatchRegistration</name>
+    </assembly>
+    <members>
+        <member name="M:Castle.Facilities.BatchRegistration.ComponentScanner.InferType(System.Reflection.Assembly,System.String)">
+            <summary>
+            This method always tries to obtain the type
+            from the specified assembly.
+            </summary>
+            <param name="typeName"></param>
+            <param name="assembly"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.BatchRegistration.ComponentScanner.ObtainType(System.Reflection.Assembly,System.String)">
+            <summary>
+            Obtains the <c>Type</c> by checking if the 
+            <c>typeName</c> is possible a full type name, or 
+            just an namespace.typename and for the later case, 
+            it tries to load the type from the specified assembly
+            </summary>
+            <param name="assembly"></param>
+            <param name="typeName"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

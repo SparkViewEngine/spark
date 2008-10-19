@@ -1,0 +1,444 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Services.Transaction</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Services.Transaction.AbstractTransaction">
+            <summary>
+            Helper abstract class for <see cref="T:Castle.Services.Transaction.ITransaction"/> implementors. 
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.ITransaction">
+            <summary>
+            Represents the contract for a transaction.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.ITransaction.Begin">
+            <summary>
+            Starts the transaction. Implementors
+            should activate the apropriate resources
+            in order to start the underlying transaction
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.ITransaction.Commit">
+            <summary>
+            Succeed the transaction, persisting the
+            modifications
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.ITransaction.Rollback">
+            <summary>
+            Cancels the transaction, rolling back the 
+            modifications
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.ITransaction.SetRollbackOnly">
+            <summary>
+            Signals that this transaction can only be rolledback. 
+            This is used when the transaction is not being managed by
+            the callee.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.ITransaction.Enlist(Castle.Services.Transaction.IResource)">
+            <summary>
+            Register a participant on the transaction.
+            </summary>
+            <param name="resource"></param>
+        </member>
+        <member name="M:Castle.Services.Transaction.ITransaction.RegisterSynchronization(Castle.Services.Transaction.ISynchronization)">
+            <summary>
+            Registers a synchronization object that will be 
+            invoked prior and after the transaction completion
+            (commit or rollback)
+            </summary>
+            <param name="synchronization"></param>
+        </member>
+        <member name="P:Castle.Services.Transaction.ITransaction.Status">
+            <summary>
+            Returns the current transaction status.
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Transaction.ITransaction.Context">
+            <summary>
+            Transaction context. Can be used by applications.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.Activity.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Services.Transaction.Activity"/> class.
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.TransactionMode">
+            <summary>
+            The supported transaction mode for the components.
+            </summary>
+        </member>
+        <member name="F:Castle.Services.Transaction.TransactionMode.Unspecified">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Castle.Services.Transaction.TransactionMode.NotSupported">
+            <summary>
+            transaction context will be created 
+            managing internally a connection, no 
+            transaction is opened though
+            </summary>
+        </member>
+        <member name="F:Castle.Services.Transaction.TransactionMode.Requires">
+            <summary>
+            transaction context will be created if not present 
+            </summary>
+        </member>
+        <member name="F:Castle.Services.Transaction.TransactionMode.RequiresNew">
+            <summary>
+            a new transaction context will be created 
+            </summary>
+        </member>
+        <member name="F:Castle.Services.Transaction.TransactionMode.Supported">
+            <summary>
+            an existing appropriate transaction context 
+            will be joined if present
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.IsolationMode">
+            <summary>
+            The supported isolation modes.
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.TransactionalAttribute">
+            <summary>
+            Indicates that the target class wants to use
+            the transactional services.
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.TransactionAttribute">
+            <summary>
+            Indicates the transaction support for a method.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionAttribute.#ctor">
+            <summary>
+            Declares unspecified values for transaction and isolation, which
+            means that the transaction manager will use the default values
+            for them
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionAttribute.#ctor(Castle.Services.Transaction.TransactionMode)">
+            <summary>
+            Declares the transaction mode, but omits the isolation, 
+            which means that the transaction manager should use the
+            default value for it.
+            </summary>
+            <param name="transactionMode"></param>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionAttribute.#ctor(Castle.Services.Transaction.TransactionMode,Castle.Services.Transaction.IsolationMode)">
+            <summary>
+            Declares both the transaction mode and isolation 
+            desired for this method. The transaction manager should
+            obey the declaration.
+            </summary>
+            <param name="transactionMode"></param>
+            <param name="isolationMode"></param>
+        </member>
+        <member name="P:Castle.Services.Transaction.TransactionAttribute.TransactionMode">
+            <summary>
+            Returns the <see cref="P:Castle.Services.Transaction.TransactionAttribute.TransactionMode"/>
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Transaction.TransactionAttribute.IsolationMode">
+            <summary>
+            Returns the <see cref="P:Castle.Services.Transaction.TransactionAttribute.IsolationMode"/>
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Transaction.TransactionAttribute.Distributed">
+            <summary>
+            Gets or sets a value indicating whether the transaction should be distributed.
+            </summary>
+            <value>
+            <c>true</c> if a distributed transaction should be created; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:Castle.Services.Transaction.IActivityManager">
+            <summary>
+            Abstracts approaches to keep transaction activities
+            that may differ based on the environments.
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Transaction.IActivityManager.CurrentActivity">
+            <summary>
+            Gets the current activity.
+            </summary>
+            <value>The current activity.</value>
+        </member>
+        <member name="M:Castle.Services.Transaction.CallContextActivityManager.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Services.Transaction.CallContextActivityManager"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.CallContextActivityManager.InitializeLifetimeService">
+            <summary>
+            Obtains a lifetime service object to control the lifetime policy for this instance.
+            </summary>
+            
+            <returns>
+            An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"></see> used to control the lifetime policy for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new lifetime service object initialized to the value of the <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"></see> property.
+            </returns>
+            
+            <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission. </exception><filterpriority>2</filterpriority><PermissionSet><IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure" /></PermissionSet>
+        </member>
+        <member name="P:Castle.Services.Transaction.CallContextActivityManager.CurrentActivity">
+            <summary>
+            Gets the current activity.
+            </summary>
+            <value>The current activity.</value>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Services.Transaction.TransactionException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Services.Transaction.TransactionException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Services.Transaction.TransactionException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
+            <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
+        </member>
+        <member name="T:Castle.Services.Transaction.DefaultTransactionManager">
+            <summary>
+            TODO: Ensure this class is thread-safe
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.ITransactionManager">
+            <summary>
+            Manages the creation and disposal of <see cref="T:Castle.Services.Transaction.ITransaction"/> instances.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.ITransactionManager.CreateTransaction(Castle.Services.Transaction.TransactionMode,Castle.Services.Transaction.IsolationMode)">
+            <summary>
+            Creates a transaction.
+            </summary>
+            <param name="transactionMode">The transaction mode.</param>
+            <param name="isolationMode">The isolation mode.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Services.Transaction.ITransactionManager.CreateTransaction(Castle.Services.Transaction.TransactionMode,Castle.Services.Transaction.IsolationMode,System.Boolean)">
+            <summary>
+            Creates a transaction.
+            </summary>
+            <param name="transactionMode">The transaction mode.</param>
+            <param name="isolationMode">The isolation mode.</param>
+            <param name="distributedTransaction">if set to <c>true</c>, the TM will create a distributed transaction.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Services.Transaction.ITransactionManager.Dispose(Castle.Services.Transaction.ITransaction)">
+            <summary>
+            Should guarantee the correct disposal of transaction
+            resources.
+            </summary>
+            <param name="transaction"></param>
+        </member>
+        <member name="E:Castle.Services.Transaction.ITransactionManager.TransactionCreated">
+            <summary>
+            Raised when a top level transaction was created
+            </summary>
+        </member>
+        <member name="E:Castle.Services.Transaction.ITransactionManager.ChildTransactionCreated">
+            <summary>
+            Raised when a child transaction was created
+            </summary>
+        </member>
+        <member name="E:Castle.Services.Transaction.ITransactionManager.TransactionCommitted">
+            <summary>
+            Raised when the transaction was committed successfully
+            </summary>
+        </member>
+        <member name="E:Castle.Services.Transaction.ITransactionManager.TransactionRolledback">
+            <summary>
+            Raised when the transaction was rolledback successfully
+            </summary>
+        </member>
+        <member name="E:Castle.Services.Transaction.ITransactionManager.TransactionDisposed">
+            <summary>
+            Raised when the transaction was disposed
+            </summary>
+        </member>
+        <member name="E:Castle.Services.Transaction.ITransactionManager.TransactionFailed">
+            <summary>
+            Raised when the transaction has failed on commit/rollback
+            </summary>
+        </member>
+        <member name="P:Castle.Services.Transaction.ITransactionManager.CurrentTransaction">
+            <summary>
+            Returns the current <see cref="T:Castle.Services.Transaction.ITransaction"/>. 
+            The transaction manager will probably need to 
+            hold the created transaction in the thread or in 
+            some sort of context.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.DefaultTransactionManager.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Services.Transaction.DefaultTransactionManager"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.DefaultTransactionManager.#ctor(Castle.Services.Transaction.IActivityManager)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Services.Transaction.DefaultTransactionManager"/> class.
+            </summary>
+            <param name="activityManager">The activity manager.</param>
+        </member>
+        <member name="M:Castle.Services.Transaction.DefaultTransactionManager.CreateTransaction(Castle.Services.Transaction.TransactionMode,Castle.Services.Transaction.IsolationMode)">
+            <summary>
+            Creates a transaction.
+            </summary>
+            <param name="transactionMode">The transaction mode.</param>
+            <param name="isolationMode">The isolation mode.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Services.Transaction.DefaultTransactionManager.CreateTransaction(Castle.Services.Transaction.TransactionMode,Castle.Services.Transaction.IsolationMode,System.Boolean)">
+            <summary>
+            Creates a transaction.
+            </summary>
+            <param name="transactionMode">The transaction mode.</param>
+            <param name="isolationMode">The isolation mode.</param>
+            <param name="distributedTransaction">if set to <c>true</c>, the TM will create a distributed transaction.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Services.Transaction.DefaultTransactionManager.InstantiateTransaction(Castle.Services.Transaction.TransactionMode,Castle.Services.Transaction.IsolationMode,System.Boolean)">
+            <summary>
+            Factory method for creating a transaction.
+            </summary>
+            <param name="transactionMode">The transaction mode.</param>
+            <param name="isolationMode">The isolation mode.</param>
+            <param name="distributedTransaction">if set to <c>true</c>, the TM will create a distributed transaction.</param>
+            <returns>A transaction</returns>
+        </member>
+        <member name="P:Castle.Services.Transaction.DefaultTransactionManager.ActivityManager">
+            <summary>
+            Gets or sets the activity manager.
+            </summary>
+            <value>The activity manager.</value>
+        </member>
+        <member name="P:Castle.Services.Transaction.DefaultTransactionManager.Logger">
+            <summary>
+            Gets or sets the logger.
+            </summary>
+            <value>The logger.</value>
+        </member>
+        <member name="T:Castle.Services.Transaction.IResource">
+            <summary>
+            Represents a contract for a resource that 
+            can be enlisted within transactions.
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.IResource.Start">
+            <summary>
+            Implementors should start the
+            transaction on the underlying resource
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.IResource.Commit">
+            <summary>
+            Implementors should commit the
+            transaction on the underlying resource
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.IResource.Rollback">
+            <summary>
+            Implementors should rollback the
+            transaction on the underlying resource
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.ISynchronization">
+            <summary>
+            Depicts a synchronization contract.
+            <para>
+            Code can be executed before and after the 
+            transaction completes
+            </para>
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.ISynchronization.BeforeCompletion">
+            <summary>
+            Implementors may have code executing
+            just before the transaction completes
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.ISynchronization.AfterCompletion">
+            <summary>
+            Implementors may have code executing
+            just after the transaction completes
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.TransactionStatus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.StandardTransaction">
+            <summary>
+            Implements a transaction root.
+            </summary>
+        </member>
+        <member name="T:Castle.Services.Transaction.ChildTransaction">
+            <summary>
+            Emulates a standalone transaction but in fact it 
+            just propages a transaction. 
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.TLSActivityManager.InitializeLifetimeService">
+            <summary>
+            Obtains a lifetime service object to control the lifetime policy for this instance.
+            </summary>
+            
+            <returns>
+            An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"></see> used to control the lifetime policy for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new lifetime service object initialized to the value of the <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"></see> property.
+            </returns>
+            
+            <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission. </exception><filterpriority>2</filterpriority><PermissionSet><IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure" /></PermissionSet>
+        </member>
+        <member name="P:Castle.Services.Transaction.TLSActivityManager.CurrentActivity">
+            <summary>
+            Gets the current activity.
+            </summary>
+            <value>The current activity.</value>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionScopeResourceAdapter.#ctor(Castle.Services.Transaction.TransactionMode,Castle.Services.Transaction.IsolationMode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Services.Transaction.TransactionScopeResourceAdapter"/> class.
+            </summary>
+            <param name="mode">The mode.</param>
+            <param name="isolationMode">The isolation mode.</param>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionScopeResourceAdapter.Start">
+            <summary>
+            Implementors should start the
+            transaction on the underlying resource
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionScopeResourceAdapter.Commit">
+            <summary>
+            Implementors should commit the
+            transaction on the underlying resource
+            </summary>
+        </member>
+        <member name="M:Castle.Services.Transaction.TransactionScopeResourceAdapter.Rollback">
+            <summary>
+            Implementors should rollback the
+            transaction on the underlying resource
+            </summary>
+        </member>
+    </members>
+</doc>

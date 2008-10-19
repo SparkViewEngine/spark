@@ -1,0 +1,666 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.MonoRail.ActiveRecordSupport</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery">
+            <summary>
+            Base class for all paginable queries, including custom ones.
+            </summary>
+            <remarks>
+            Extenders should override the <see cref="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.BuildHQL"/>.
+            Optionally, the methods <see cref="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.SetQueryParameters(NHibernate.IQuery)"/>
+            and <see cref="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.ExecuteQuery(NHibernate.IQuery)"/> can also be overriden.
+            </remarks>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Pagination.IARPaginableDataSource">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.IARPaginableDataSource.ObtainCount">
+            <summary>
+            Implementors should execute a query
+            to return the record count
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.ObtainCount">
+            <summary>
+            Executes a query to return the record count
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.Paginate(System.Int32,System.Int32)">
+            <summary>
+            Returns the page items.
+            Actually, the implementation just sets the protected fields
+            <see cref="F:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.pageSize"/> and <see cref="F:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.currentPage"/>,
+            gets an <see cref="T:NHibernate.ISession"/> from <c>SessionFactoryHolder</c>
+            and calls <see cref="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.InternalExecute(NHibernate.ISession)"/> in order to execute
+            the custom query and fetch only the page items.
+            </summary>
+            <param name="pageSize">The page size</param>
+            <param name="currentPage">The current page</param>
+            <returns>The page items</returns>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.InternalExecute(NHibernate.ISession)">
+            <summary>
+            The implementation of the <see cref="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.InternalExecute(NHibernate.ISession)"/> method,
+            as required by <see cref="T:Castle.ActiveRecord.ActiveRecordBaseQuery"/>.
+            Should not be overriden.
+            </summary>
+            <param name="session">The NHibernate Session</param>
+            <returns>The query results.</returns>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.InternalEnumerate(NHibernate.ISession)">
+            <summary>
+            The implementation of the <see cref="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.InternalEnumerate(NHibernate.ISession)"/> method,
+            as required by <see cref="T:Castle.ActiveRecord.ActiveRecordBaseQuery"/>.
+            Should not be overriden.
+            </summary>
+            <param name="session">The NHibernate Session</param>
+            <returns>The query results.</returns>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.PrepareQueryForPagination(NHibernate.IQuery)">
+            <summary>
+            For internal use only.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.BuildHQL">
+            <summary>
+            Should be overriden to return the custom HQL to be ran.
+            </summary>
+            <returns>The custom HQL to be ran</returns>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.SetQueryParameters(NHibernate.IQuery)">
+            <summary>
+            May be overriden, in order to set custom query parameters.
+            </summary>
+            <param name="query">The query</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.AbstractPaginableQuery.ExecuteQuery(NHibernate.IQuery)">
+            <summary>
+            Override to provide a custom query execution.
+            The default behaviour is to just call <see cref="M:NHibernate.IQuery.List"/>.
+            </summary>
+            <param name="query">The query</param>
+            <returns>The query results.</returns>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginableCriteria">
+            <summary>
+            A paginable criteria.
+            Mimics the <see cref="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type)"/> interface.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginableCriteria.ObtainCount">
+            <summary>
+            Implementors should execute a query
+            to return the record count
+            </summary>
+            <remarks>
+            This needs a performance boost. Couldn't think of a better
+            way of get the count.
+            </remarks>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginableSimpleQuery">
+            <summary>
+            Performs a simple query and paginate the results.
+            </summary>
+            <remarks>
+            There's no need to supply a <c>returnType</c>, like in
+            <see cref="T:Castle.ActiveRecord.Queries.SimpleQuery"/>, as we do not perform the
+            conversion of the query results to an array.
+            </remarks>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginationHelper">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginationHelper.CreatePagination(System.Int32,System.Type,System.String,System.Object[])">
+            <summary>
+            Paginates using an <see cref="T:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginableSimpleQuery"/>
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginationHelper.CreatePagination(System.Int32,System.Type,NHibernate.Criterion.Order[])">
+            <summary>
+            Paginates using an <see cref="T:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginableCriteria"/>
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginationHelper.CreatePagination(System.Int32,System.Type,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Paginates using an <see cref="T:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginableCriteria"/>
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginationHelper.CreatePagination(System.Int32,System.Type,NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Paginates using an <see cref="T:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginableCriteria"/>
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPaginationHelper.CreatePagination(System.Int32,Castle.MonoRail.ActiveRecordSupport.Pagination.IARPaginableDataSource)">
+            <summary>
+            Paginates using the specified <see cref="T:Castle.MonoRail.ActiveRecordSupport.Pagination.IARPaginableDataSource"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Pagination.ARPager">
+            <summary>
+            Pendent
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction">
+            <summary>
+            Base abstract class for actions that relate to 
+            Scaffolding support. Provide the basic flow process
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.modelType">
+            <summary>Holds the AR type</summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.templateEngine">
+            <summary>Reference to the template engine instance</summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.prop2Validation">
+            <summary>A map of PropertyInfo to validation failures</summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.errors">
+            <summary>A list of errors that happened during this process</summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.builder">
+            <summary>Constructs the data source for the binder</summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.binder">
+            <summary>Binder that 'knows' ActiveRecord types</summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.model">
+            <summary>The model for the AR type we're dealing with</summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.useModelName">
+            <summary>Used to define if the model name should be present on the action name (urls)</summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.useDefaultLayout">
+            <summary>Indicates that the controller has no layout, so we use ours</summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.#ctor(System.Type,Castle.Components.Common.TemplateEngine.ITemplateEngine,System.Boolean,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction"/> class.
+            </summary>
+            <param name="modelType">Type of the model.</param>
+            <param name="templateEngine">The template engine.</param>
+            <param name="useModelName">Indicates that we should use the model name on urls</param>
+            <param name="useDefaultLayout">Whether we should use our layout.</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.Execute(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Executes the basic flow which is
+            <list type="number">
+            		<item><description>Resolve the <see cref="T:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel"/></description></item>
+            		<item><description>Resolve the layout (if not is associated with the controller, defaults to "scaffold")</description></item>
+            		<item><description>Invokes <see cref="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.PerformActionProcess(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)"/> which should perform the correct process for this action</description></item>
+            		<item><description>Resolves the template name that the developer might provide by using <see cref="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.ComputeTemplateName(Castle.MonoRail.Framework.IControllerContext)"/></description></item>
+            		<item><description>If the template exists, renders it. Otherwise invokes <see cref="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.RenderStandardHtml(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)"/></description></item>
+            	</list>
+            </summary>
+            <param name="engineContext">The engine context.</param>
+            <param name="controller">The controller.</param>
+            <param name="controllerContext">The controller context.</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.ComputeTemplateName(Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Implementors should return the template name
+            for the current action.
+            </summary>
+            <param name="controllerContext">The controller context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.RenderStandardHtml(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Only invoked if the programmer havent provided
+            a custom template for the current action. Implementors
+            should create a basic html to present.
+            </summary>
+            <param name="engineContext">The engine context.</param>
+            <param name="controller">The controller.</param>
+            <param name="controllerContext">The controller context.</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.PerformActionProcess(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Implementors should perform the action for the
+            scaffolding, like new or create.
+            </summary>
+            <param name="engineContext">The engine context.</param>
+            <param name="controller">The controller.</param>
+            <param name="controllerContext">The controller context.</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.ObtainPKProperty">
+            <summary>
+            Gets the property that represents the Primary key 
+            for the current <see cref="T:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.UseModelName">
+            <summary>
+            Gets a value indicating whether the name of the model should
+            be used on the url.
+            </summary>
+            <value><c>true</c> if yes, otherwise <c>false</c>.</value>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.Scaffold.AbstractScaffoldAction.Model">
+            <summary>
+            Gets the current <see cref="T:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel"/>
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.ConfirmRemoveAction">
+            <summary>
+            Displays a confirmation message before performing 
+            the removal of the instance
+            </summary>
+            <remarks>
+            Searchs for a template named <c>confirm{name}remove</c>
+            </remarks>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.CreateAction">
+            <summary>
+            Performs the inclusion
+            </summary>
+            <remarks>
+            Searchs for a template named <c>create{name}</c>
+            </remarks>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.CreateAction.RenderStandardHtml(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Only invoked if the programmer havent provided
+            a custom template for the current action. Implementors
+            should create a basic html to present.
+            </summary>
+            <param name="engineContext">The engine context.</param>
+            <param name="controller">The controller.</param>
+            <param name="controllerContext">The controller context.</param>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.EditAction">
+            <summary>
+            Renders an edit form
+            </summary>
+            <remarks>
+            Searchs for a template named <c>edit{name}</c>
+            </remarks>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.ListAction">
+            <summary>
+            Renders a list of entities
+            </summary>
+            <remarks>
+            Searchs for a template named <c>list{name}</c>
+            </remarks>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.ListAction.RenderStandardHtml(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Called when the template was not found
+            </summary>
+            <param name="engineContext">The engine context.</param>
+            <param name="controller">The controller.</param>
+            <param name="controllerContext">The controller context.</param>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.NewAction">
+            <summary>
+            Renders an inclusion form
+            </summary>
+            <remarks>
+            Searchs for a template named <c>new{name}</c>
+            </remarks>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.NewAction.#ctor(System.Type,Castle.Components.Common.TemplateEngine.ITemplateEngine,System.Boolean,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.NewAction"/> class.
+            </summary>
+            <param name="modelType">Type of the model.</param>
+            <param name="templateEngine">The template engine.</param>
+            <param name="useModelName">Indicates that we should use the model name on urls</param>
+            <param name="useDefaultLayout">Whether we should use our layout.</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.NewAction.ComputeTemplateName(Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Computes the name of the template.
+            </summary>
+            <param name="controller">The controller.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.Scaffold.NewAction.PerformActionProcess(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Implementors should perform the action for the
+            scaffolding, like new or create.
+            </summary>
+            <param name="engineContext">The engine context.</param>
+            <param name="controller">The controller.</param>
+            <param name="controllerContext">The controller context.</param>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.RemoveAction">
+            <summary>
+            Removes the ActiveRecord instance
+            </summary>
+            <remarks>
+            Searchs for a template named <c>{name}removed</c>
+            </remarks>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.ScaffoldingSupport">
+            <summary>
+            Uses the dynamic action infrastructure to 
+            add new actions to an existing controller.
+            </summary>
+            <remarks>
+            Provided that a controller uses <see cref="T:Castle.MonoRail.Framework.ScaffoldingAttribute"/>
+            like the following code:
+            <code>
+            [Scaffolding( typeof(Account) )]
+            public class AdminController : Controller
+            {
+            }
+            </code>
+            Then the following dynamic actions will be added:
+            <list type="bullet">
+            <item><term>newAccount</term>
+            <description>Presents a form to the user fill in order to create the item on the database</description>
+            </item>
+            <item><term>createAccount</term>
+            <description>Takes the information submited by the newAccount and creates the item</description>
+            </item>
+            <item><term>editAccount</term>
+            <description>Presents a form to the user fill in order to update the item on the database</description>
+            </item>
+            <item><term>updateAccount</term>
+            <description>Takes the information submited by the editAccount and changes the item</description>
+            </item>
+            <item><term>listAccount</term>
+            <description>Presents a paginated list of items saved</description>
+            </item>
+            <item><term>confirmAccount</term>
+            <description>Asks the user if he/she confirms the removal of the item</description>
+            </item>
+            <item><term>removeAccount</term>
+            <description>Attempt to remove the item and presents the results</description>
+            </item>
+            </list>
+            </remarks>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.Scaffold.UpdateAction">
+            <summary>
+            Performs the update
+            </summary>
+            <remarks>
+            Searchs for a template named <c>create{name}</c>
+            </remarks>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior">
+            <summary>
+            Defines the behavior of 
+            Autoload feature on <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARDataBinder"/>
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior.Never">
+            <summary>
+            Means that no autoload should be performed on the target
+            type or on nested types.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior.Always">
+            <summary>
+            Means that autoload should be used for the target type
+            and the nested types (if present). This demands that
+            the primary key be present on the http request
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior.OnlyNested">
+            <summary>
+            Does not load the root type, but loads nested types
+            if the primary key is present. If not present, sets null on nested type.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior.NewInstanceIfInvalidKey">
+            <summary>
+            Means that we should autoload, but if the key is 
+            invalid, like <c>null</c>, 0 or an empty string, then just
+            create a new instance of the target type.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior.NewRootInstanceIfInvalidKey">
+            <summary>
+            Means that we should autoload target and nested types when the key is valid.
+            If the key is invalid, like <c>null</c>, 0 or an empty string, and the
+            instance is the root instance, then create a new instance of the target type.
+            If the key is invalid, and it's a nested instance, then set null on the nested type.
+            </summary>
+        </member>
+        <member name="F:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior.NullIfInvalidKey">
+            <summary>
+            Means that we should autoload, but if the key is 
+            invalid, like <c>null</c>, 0 or an empty string, then just
+            return null
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.ARDataBindAttribute">
+            <summary>
+            Extends <see cref="T:Castle.MonoRail.Framework.DataBindAttribute"/> with 
+            ActiveRecord specific functionallity
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARDataBindAttribute.#ctor(System.String)">
+            <summary>
+            Defines a binder for the parameter
+            using the <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARDataBinder"/> and the 
+            specified <c>prefix</c>.
+            </summary>
+            <remarks>
+            This uses the default <see cref="T:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior"/>
+            whic is <see cref="F:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior.Never"/>
+            </remarks>
+            <param name="prefix">A name that prefixes the entries on the http request</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARDataBindAttribute.#ctor(System.String,Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior)">
+            <summary>
+            Defines a binder for the parameter
+            using the <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARDataBinder"/> and the 
+            specified <c>prefix</c>.
+            </summary>
+            <param name="prefix">A name that prefixes the entries on the http request</param>
+            <param name="autoLoadBehavior">The predefined behavior the autoload feature should use</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARDataBindAttribute.Bind(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext,System.Reflection.ParameterInfo)">
+            <summary>
+            Implementation of <see cref="M:Castle.MonoRail.Framework.IParameterBinder.Bind(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext,System.Reflection.ParameterInfo)"/>
+            and it is used to read the data available and construct the
+            parameter type accordingly.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="controller">The controller instance</param>
+            <param name="controllerContext">The controller context.</param>
+            <param name="parameterInfo">The parameter info</param>
+            <returns>The bound instance</returns>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARDataBindAttribute.AutoLoad">
+            <summary>
+            Defines the behavior the autoload feature 
+            should use
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARDataBindAttribute.Expect">
+            <summary>
+            Gets or sets the names of the collection that are expected to be binded.
+            If the binder does not find any value to an expected collection, it will clear to collection.
+            </summary>
+            <value>The expect collections names, in a csv fashion.</value>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.ARDataBinder">
+            <summary>
+            Extends <see cref="T:Castle.Components.Binder.DataBinder"/> class with some 
+            ActiveRecord specific functionality.
+            <seealso cref="T:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior"/>
+            <seealso cref="T:Castle.MonoRail.ActiveRecordSupport.ARDataBindAttribute"/>
+            </summary>
+            <remarks>
+            Autoload can be turned <i>on</i> on the parameter, see <see cref="T:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior"/>.
+            </remarks>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARDataBinder.FindPropertyInHasAndBelongsToMany(Castle.ActiveRecord.Framework.Internal.ActiveRecordModel,System.String,System.Type@,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel@)">
+            <summary>
+            for joined subclasses HasAndBelongsToMany properties doesn't include the ones of the parent class
+            so we need to check them recursively
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARDataBinder.FindPropertyInHasMany(Castle.ActiveRecord.Framework.Internal.ActiveRecordModel,System.String,System.Type@,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel@)">
+            <summary>
+            for joined subclasses HasMany properties doesn't include the ones of the parent class
+            so we need to check them recursively
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARDataBinder.IsBelongsToRef(Castle.ActiveRecord.Framework.Internal.ActiveRecordModel,System.String)">
+            <summary>
+            for joined subclasses BelongsTo properties doesn't include the ones of the parent class
+            so we need to check them recursively
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARDataBinder.PersistChanges">
+            <summary>
+            Gets or sets a value indicating if the changes should be persisted.
+            </summary>
+            <value><c>true</c> if the changes should be persisted; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARDataBinder.AutoLoad">
+            <summary>
+            Gets or sets the <see cref="T:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior"/>.
+            </summary>
+            <value>The auto load behavior.</value>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARDataBinder.CurrentARModel">
+            <summary>
+            Gets the current AR model.
+            </summary>
+            <value>The current AR model.</value>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute">
+            <summary>
+            Mark a parameter with this attribute to instruct the <see cref="T:Castle.MonoRail.Framework.SmartDispatcherController"/>
+            to load an <c>ActiveRecord</c> instance of the parameter type, using the request parameter
+            as the identifier.
+            </summary>
+            <remarks>
+            The <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute"/> only loads an instance
+            based on the primary key value obtained from <see cref="P:Castle.MonoRail.Framework.IRequest.Params"/>
+            <para>For example:</para>
+            <code>
+            public class CustomerController : ARSmartDispatcherController
+            {
+                public void UpdateCustomerLocation([ARFetch("customer.id")] Customer customer, [ARFetch("location.id")] Location location)
+                {
+                  customer.Location = location;
+                  customer.Save();
+                  
+                  RedirectToAction("index");
+                }
+            }
+            </code>
+            The code above assumes that you have the fields 
+            <c>customer.id</c> and <c>location.id</c> on the form being
+            submitted. 
+            </remarks>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.#ctor(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Constructs an <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute"/> 
+            specifying the parameter name and the create and require behavior
+            </summary>
+            <param name="requestParameterName">The parameter name to be read from the request</param>
+            <param name="create"><c>true</c> if you want an instance even when the record is not found</param>
+            <param name="required"><c>true</c> if you want an exception if the record is not found</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.#ctor">
+            <summary>
+            Constructs an <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute"/> using the
+            parameter name as the <see cref="P:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.RequestParameterName"/>
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.#ctor(System.String)">
+            <summary>
+            Constructs an <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute"/> specifing the
+            parameter name
+            <seealso cref="P:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.RequestParameterName"/>
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.#ctor(System.Boolean,System.Boolean)">
+            <summary>
+            Constructs an <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute"/> using the
+            parameter name as the <see cref="P:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.RequestParameterName"/>
+            and the create and require behavior
+            </summary>
+            <param name="create"><c>true</c> if you want an instance even when the record is not found</param>
+            <param name="require"><c>true</c> if you want an exception if the record is not found</param>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.CreateBinder">
+            <summary>
+            Creates the data binder implementation.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.RequestParameterName">
+            <summary>
+            The parameter name to be read from the request. The parameter value will 
+            be used as the primary key value to load the target object instance.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.Create">
+            <summary>
+            When set to <c>true</c> an instance of
+            the target type will be created if the record 
+            is not found. The default is <c>false</c>.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.Required">
+            <summary>
+            When set to <c>true</c>, an exception will be thrown
+            if the record specified is not found. The default is <c>false</c>.
+            </summary>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute.Eager">
+            <summary>
+            Comma-separated list of lazy associations to eager-fetch, when loading the ActiveRecord object.
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.ARFetcher">
+            <summary>
+            Class responsible on loading records for parameters marked with the <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARFetchAttribute"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.MonoRail.ActiveRecordSupport.ARSmartDispatcherController">
+            <summary>
+            Extends the <see cref="T:Castle.MonoRail.Framework.SmartDispatcherController"/> 
+            with ActiveRecord specific functionality
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARSmartDispatcherController.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MonoRail.ActiveRecordSupport.ARSmartDispatcherController"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARSmartDispatcherController.BindObject(Castle.MonoRail.Framework.ParamStore,System.Type,System.String,System.String,System.String,Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior)">
+            <summary>
+            Binds the object using the posted values.
+            </summary>
+            <param name="from">Defines where the parameters should be obtained from.</param>
+            <param name="targetType">Type of the target.</param>
+            <param name="prefix">The prefix.</param>
+            <param name="excludedProperties">The excluded properties.</param>
+            <param name="allowedProperties">The allowed properties.</param>
+            <param name="autoLoad">The auto load behavior.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MonoRail.ActiveRecordSupport.ARSmartDispatcherController.BindObject(Castle.MonoRail.Framework.ParamStore,System.Type,System.String,Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior)">
+            <summary>
+            Binds the object.
+            </summary>
+            <param name="from">Defines where the parameters should be obtained from.</param>
+            <param name="targetType">Type of the target.</param>
+            <param name="prefix">The prefix.</param>
+            <param name="autoLoad">The auto load behavior.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
