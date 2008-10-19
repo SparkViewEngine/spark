@@ -109,6 +109,22 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             Assert.IsFalse(content.Contains("fail"));
         }
 
+        [Test]
+        public void ComponentRenderViewUsesGlobalSpark()
+        {
+            viewComponentFactory.Registry.AddViewComponent("UsesGlobalSpark", typeof(UsesGlobalSpark));
+
+            mocks.ReplayAll();
+
+            var writer = new StringWriter();
+            factory.Process("Home\\ComponentRenderViewUsesGlobalSpark.spark", writer, engineContext, controller, controllerContext);
+
+            mocks.VerifyAll();
+
+            var content = writer.ToString();
+            Assert.That(content.Contains("<p>ok1</p>"));
+        }
+
         [ViewComponentDetails("WidgetComponent")]
         public class WidgetComponent : ViewComponent
         {
@@ -144,6 +160,16 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 
         [ViewComponentDetails("OnceWidget")]
         public class OnceWidget : ViewComponent
+        {
+            public override void Render()
+            {
+                RenderView("default");
+            }
+        }
+
+
+        [ViewComponentDetails("UsesGlobalSpark")]
+        public class UsesGlobalSpark : ViewComponent
         {
             public override void Render()
             {

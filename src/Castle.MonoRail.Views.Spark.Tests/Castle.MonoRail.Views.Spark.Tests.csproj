@@ -140,6 +140,9 @@
     <None Include="MonoRail.Tests.Views\Components\OnceWidget\default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="MonoRail.Tests.Views\Components\UsesGlobalSpark\default.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-AuthenticatedContent.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -209,6 +212,9 @@
     <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewSharesOnceFlags.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewUsesGlobalSpark.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MonoRail.Tests.Views\Home\NestedComponentInSection.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -227,6 +233,9 @@
     <None Include="MonoRail.Tests.Views\Shared\Alternate.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="MonoRail.Tests.Views\Shared\_global.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="MonoRail.Tests.Views\Stub\Index.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
