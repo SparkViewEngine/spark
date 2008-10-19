@@ -14,6 +14,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Spark.Parser.Markup;
 
@@ -72,10 +73,48 @@ namespace Spark.Parser.Code
             var multiLineComment = TkComm(Ch("/*").And(Rep(Ch(c=>true).Unless(Ch("*/")))).And(Ch("*/")))
                 .Build(hit=>"/*" + bs(hit.Left.Down) + "*/");
 
+            // A Unicode character of the class Pc 
+            var connectingCharacter = Ch(c => char.GetUnicodeCategory(c) == UnicodeCategory.ConnectorPunctuation);
+
+            // A Unicode character of classes Mn or Mc 
+            var combiningCharacter = Ch(c => char.GetUnicodeCategory(c) == UnicodeCategory.NonSpacingMark || char.GetUnicodeCategory(c) == UnicodeCategory.SpacingCombiningMark);
+
+            // A Unicode character of the class Cf 
+            var formattingCharacter = Ch(c=>char.GetUnicodeCategory(c) == UnicodeCategory.Format);
+
+            var identifierStartCharacter = Ch(char.IsLetter).Or(Ch('_'));
+            var identifierPartCharacter = Ch(char.IsLetterOrDigit).Or(connectingCharacter).Or(combiningCharacter).Or(formattingCharacter);
+            var identifierOrKeyword = identifierStartCharacter.And(Rep(identifierPartCharacter))
+                .Build(hit=>hit.Left + new string(hit.Down.ToArray()));
+
+            var keyword = TkKword(Ch("abstract").Or(Ch("as")).Or(Ch("base")).Or(Ch("bool")).Or(Ch("break"))
+                .Or(Ch("byte")).Or(Ch("case")).Or(Ch("catch")).Or(Ch("char")).Or(Ch("checked"))
+                .Or(Ch("class")).Or(Ch("const")).Or(Ch("continue")).Or(Ch("decimal")).Or(Ch("default"))
+                .Or(Ch("delegate")).Or(Ch("double")).Or(Ch("do")).Or(Ch("else")).Or(Ch("enum"))
+                .Or(Ch("event")).Or(Ch("explicit")).Or(Ch("extern")).Or(Ch("false")).Or(Ch("finally"))
+                .Or(Ch("fixed")).Or(Ch("float")).Or(Ch("foreach")).Or(Ch("for")).Or(Ch("goto"))
+                .Or(Ch("if")).Or(Ch("implicit")).Or(Ch("int")).Or(Ch("in")).Or(Ch("interface"))
+                .Or(Ch("internal")).Or(Ch("is")).Or(Ch("lock")).Or(Ch("long")).Or(Ch("namespace"))
+                .Or(Ch("new")).Or(Ch("null")).Or(Ch("object")).Or(Ch("operator")).Or(Ch("out"))
+                .Or(Ch("override")).Or(Ch("params")).Or(Ch("private")).Or(Ch("protected")).Or(Ch("public"))
+                .Or(Ch("readonly")).Or(Ch("ref")).Or(Ch("return")).Or(Ch("sbyte")).Or(Ch("sealed"))
+                .Or(Ch("short")).Or(Ch("sizeof")).Or(Ch("stackalloc")).Or(Ch("static")).Or(Ch("string"))
+                .Or(Ch("struct")).Or(Ch("switch")).Or(Ch("this")).Or(Ch("throw")).Or(Ch("true"))
+                .Or(Ch("try")).Or(Ch("typeof")).Or(Ch("uint")).Or(Ch("ulong")).Or(Ch("unchecked"))
+                .Or(Ch("unsafe")).Or(Ch("ushort")).Or(Ch("using")).Or(Ch("virtual")).Or(Ch("void"))
+                .Or(Ch("volatile")).Or(Ch("while"))).NotNext(identifierPartCharacter);
+
+            var availableIdentifier = identifierOrKeyword.Unless(keyword)
+                .Or(Ch("class").Build(hit => "@class"));
+
+            var identifier = TkCode(availableIdentifier
+                .Or(Ch('@').And(identifierOrKeyword).Build(hit=>"@"+hit.Down)));
+            
             var codeStretch = TkCode(Rep1(
                 Ch("[[").Build(ch => '<')
                 .Or(Ch("]]").Build(ch => '>'))
                 .Or(ChNot('\"', '\'', '{', '}'))
+                .Unless(identifier.Or(keyword))
                 .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")).Or(SpecialCharCast))))
                 .Build(bs);
 
@@ -88,6 +127,8 @@ namespace Spark.Parser.Code
                 stringLiteral
                 .Or(braced)
                 .Or(codeStretch)
+                .Or(identifier)
+                .Or(keyword)
                 .Or(SpecialCharCast)
                 .Or(oneLineComment)
                 .Or(multiLineComment));

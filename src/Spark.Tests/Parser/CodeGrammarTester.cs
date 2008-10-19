@@ -175,5 +175,30 @@ namespace Spark.Tests.Parser
             var result4 = _grammar.Statement2(Source(" /* this ' has \" quotes \r\n */ more %> after "));
             Assert.AreEqual(" /* this ' has \" quotes \r\n */ more ", result4.Value);
         }
+
+        [Test]
+        public void ClassKeywordUsedAsIdentifier()
+        {
+            var result = _grammar.Expression(Source("Form.FormTag(new {action='foo', class='bar'})"));
+            Assert.AreEqual(@"Form.FormTag(new {action=""foo"", @class=""bar""})", result.Value);
+
+            var result2 = _grammar.Expression(Source("Form.FormTag(new {action='foo', @class='bar'})"));
+            Assert.AreEqual(@"Form.FormTag(new {action=""foo"", @class=""bar""})", result2.Value);
+
+            var result3 = _grammar.Expression(Source("Form.FormTag(new {@action='foo', class='bar'})"));
+            Assert.AreEqual(@"Form.FormTag(new {@action=""foo"", @class=""bar""})", result3.Value);
+
+            var result4 = _grammar.Expression(Source("var classless=1;"));
+            Assert.AreEqual(@"var classless=1;", result4.Value);
+
+            var result5 = _grammar.Expression(Source("var yaddaclass=1;"));
+            Assert.AreEqual(@"var yaddaclass=1;", result5.Value);
+
+            var result6 = _grammar.Expression(Source("var declassified=1;"));
+            Assert.AreEqual(@"var declassified=1;", result6.Value);
+
+            var result7 = _grammar.Expression(Source("var class=1;"));
+            Assert.AreEqual(@"var @class=1;", result7.Value);
+        }
     }
 }
