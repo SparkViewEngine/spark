@@ -20,6 +20,7 @@ using System.IO;
 using System.Reflection;
 using System.Web.Hosting;
 using Spark.Compiler;
+using Spark.Compiler.CodeDom;
 using Spark.Compiler.CSharp;
 using Spark.Compiler.Javascript;
 using Spark.Parser;
@@ -232,6 +233,9 @@ namespace Spark
                     break;
                 case LanguageType.Javascript:
                     viewCompiler = new JavascriptViewCompiler();
+                    break;
+                case LanguageType.VisualBasic:
+                    viewCompiler = new CodeDomViewCompiler("vb");
                     break;
                 default:
                     throw new CompilerException(string.Format("Unknown language type {0}", descriptor.Language));

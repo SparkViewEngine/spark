@@ -31,7 +31,11 @@ namespace Spark.Compiler
         {
             var providerOptions = new Dictionary<string, string> { { "CompilerVersion", "v3.5" } };
 
-            var codeProvider = new CSharpCodeProvider(providerOptions);
+            return Compile(new CSharpCodeProvider(providerOptions), debug, sourceCode);
+        }
+
+        public Assembly Compile(CodeDomProvider codeProvider, bool debug, params string[] sourceCode)
+        {
 
             var compilerParameters = new CompilerParameters();
 

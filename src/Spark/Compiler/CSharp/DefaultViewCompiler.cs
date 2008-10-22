@@ -121,7 +121,7 @@ namespace Spark.Compiler.CSharp
                 ++renderLevel;
             }
 
-            // public void RenderView()
+            // public void RenderView(TextWriter writer)
             source.AppendLine();
             source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
             source.AppendLine("    {");
