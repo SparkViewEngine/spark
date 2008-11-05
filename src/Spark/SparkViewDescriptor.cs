@@ -19,8 +19,7 @@ namespace Spark
     public enum LanguageType
     {
         CSharp,
-        Javascript,
-        VisualBasic
+        Javascript
     }
 
     public class SparkViewDescriptor
