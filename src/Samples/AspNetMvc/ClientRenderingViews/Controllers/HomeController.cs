@@ -52,7 +52,7 @@ namespace ClientRenderingViews.Controllers
             return cart;
         }
 
-        public object Index(string ajax)
+        public ActionResult Index(string ajax)
         {
             ViewData["ajaxEnabled"] = (string) Session["ajax"] == "disabled" ? false : true;
             ViewData["products"] = ProductRepos.GetProducts();
@@ -60,29 +60,29 @@ namespace ClientRenderingViews.Controllers
             return View();
         }
 
-        public object EnableAjax()
+        public ActionResult EnableAjax()
         {
             Session["ajax"] = "enabled";
             return RedirectToAction("Index");
         }
 
-        public object DisableAjax()
+        public ActionResult DisableAjax()
         {
             Session["ajax"] = "disabled";
             return RedirectToAction("Index");
         }
 
-        public object ShowCart()
+        public ActionResult ShowCart()
         {
             return new JavascriptViewResult {ViewName = "_ShowCart"};
         }
 
-        public object RefreshCart()
+        public ActionResult RefreshCart()
         {
             return Json(GetCurrentCart());
         }
 
-        public object Reset()
+        public ActionResult Reset()
         {
             Session["cartId"] = null;
             Cart cart = GetCurrentCart();
@@ -93,7 +93,7 @@ namespace ClientRenderingViews.Controllers
             return RedirectToAction("index");
         }
 
-        public object Remove(int id)
+        public ActionResult Remove(int id)
         {
             Cart cart = GetCurrentCart();
             CartItem item = cart.Items.FirstOrDefault(i => i.Product.Id == id);
@@ -106,7 +106,7 @@ namespace ClientRenderingViews.Controllers
             return RedirectToAction("index");
         }
 
-        public object AddToCart(int id)
+        public ActionResult AddToCart(int id)
         {
             Cart cart = GetCurrentCart();
             CartItem item = cart.Items.FirstOrDefault(i => i.Product.Id == id);

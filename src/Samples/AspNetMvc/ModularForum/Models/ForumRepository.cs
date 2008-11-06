@@ -20,15 +20,23 @@ using System.Runtime.Serialization;
 
 namespace ModularForum.Models
 {
+    [DataContract]
     public class Forum
     {
+        [DataMember]
         public string Id { get; set; }
+        
+        [DataMember]
         public string Name { get; set; }
+        
+        [DataMember]
         public string Description { get; set; }
     }
 
+    [DataContract]
     public class ForumData
     {
+        [DataMember]
         public List<Forum> Forums { get; set; }
     }
 

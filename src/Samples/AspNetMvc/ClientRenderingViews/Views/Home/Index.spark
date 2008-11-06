@@ -1,34 +1,38 @@
 ﻿<h2>Client Rendering Views</h2>
 <p>
   Ajax <strong>${ajaxEnabled ? 'enabled' : 'disabled'}</strong>.
-  <a href="~/home/enableajax">enable</a> &bull; <a href="~/home/disableajax">disable</a>.
+  <a href="~/home/enableajax">enable</a>
+  &bull;
+  <a href="~/home/disableajax">disable</a>.
 </p>
 <p>
   This example shows how you can generate javascript code from a spark file. This js code can be
   used client-side to create html from data in much the same way cs code does server-side.
 </p>
 
-<viewdata products="IList[[Models.Product]]" ajaxEnabled="bool"/>
+<viewdata
+  products="IList[[Models.Product]]"
+  ajaxEnabled="bool"/>
 
-<test if="ajaxEnabled">
-  <content:head>
-    <script type="text/javascript" src="~/Content/jquery-1.2.6.js"></script>
-    <script type="text/javascript" src="~/Content/jquery.livequery.js"></script>
-    <script type="text/javascript" src="~/Home/ShowCart"></script>
-    <script type="text/javascript" src="~/Content/home-index.js"></script>
-  </content:head>
-</test>
+<content:head if="ajaxEnabled">
+  <script type="text/javascript" src="~/Content/jquery-1.2.6.js" once="js-jquery"></script>
+  <script type="text/javascript" src="~/Content/jquery.livequery.js" once="js-livequery"></script>
+  <script type="text/javascript" src="~/Home/ShowCart"></script>
+  <script type="text/javascript" src="~/Content/home-index.js"></script>
+</content:head>
 
 <ul>
   <li each="var product in products">
     ${product.Name}
     ${product.UnitPrice}
-    <a class="cartajax" href="~/home/addtocart/${product.Id}">Add to cart</a>
+    <a class="cartajax?{ajaxEnabled}" href="~/home/addtocart/${product.Id}">Add to cart</a>
   </li>
 </ul>
 
 <content:subcontent>
-  <a class="refresh" href="~/home/index">Refresh</a> &bull; <a class="cartajax" href="~/home/Reset">Reset cart</a>
+  <a class="refresh" href="~/home/index">Refresh</a>
+  &bull;
+  <a class="cartajax?{ajaxEnabled}" href="~/home/Reset">Reset cart</a>
   <div id="cart">
     <ShowCart/>
   </div>

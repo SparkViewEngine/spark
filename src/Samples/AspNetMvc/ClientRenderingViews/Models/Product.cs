@@ -12,12 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System.Runtime.Serialization;
+
 namespace ClientRenderingViews.Models
 {
+    [DataContract]
     public class Product
     {
+        [DataMember]
         public int Id { get; set; }
+        
+        [DataMember]
         public string Name { get; set; }
+        
+        [DataMember]
         public decimal UnitPrice { get; set; }
     }
 }
