@@ -179,6 +179,16 @@ namespace Castle.MonoRail.Views.Spark
                     controllerContext.PropertyBag[parameter.Key] = parameter.Value;
             }
 
+			if (engineContext != null)
+			{
+				var controller = engineContext.CurrentController as Controller;
+				if (controller != null)
+				{
+					foreach (string key in controller.Helpers.Keys)
+						controllerContext.Helpers.Add(key, controller.Helpers[key]);
+				}
+			}
+
             Process(templateName, output, engineContext, null, controllerContext);
         }
 

@@ -230,6 +230,17 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.That(output.ToString().Contains("<p>Hello</p>"));            
         }
 
+		[Test, Ignore("No way to mock HttpContext.Current")]
+		public void ControllerHelpersCanBeUsedWhenRenderingMailView()
+		{
+			controller = new Helpers.HomeController();
+			controllerContext.ControllerDescriptor = serviceProvider.ControllerDescriptorProvider.BuildDescriptor(controller);
+			controllerContext.Helpers.Add("bar", new Helpers.TestingHelper());
+			mocks.ReplayAll();
+			manager.Process("Home\\ControllerHelperAttributeCanBeUsed", null, output, null);
+			Assert.That(output.ToString().Contains("<p>Hello</p>"));
+		}
+
     }
 
 }
