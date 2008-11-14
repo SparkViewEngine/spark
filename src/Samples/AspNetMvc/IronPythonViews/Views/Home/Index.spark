@@ -27,6 +27,20 @@
   </li>
 </ul>
 
+<h3>Declaring a function</h3>
+<ul>
+  #import math
+  ## Calculate the n-dimensional hypotenuse
+  #def vectorlength(vector):
+  #  dt = 0
+  #  for d in vector:
+  #    dt = dt + d * d
+  #  return math.sqrt(dt)
+  <li>[3,4] : ${vectorlength([3,4])}</li>
+  <li>[12,13] : ${vectorlength([12,13])}</li>
+  <li>[0,5,3,2,0,6] : ${vectorlength([0,5,3,2,0,6])}</li>
+</ul>
+
 #import clr
 <h3>clr module methods</h3>
 <ul>
@@ -39,8 +53,9 @@
   <li each="x in dir(Url)" if="not x.startswith('__')">Url.${x}</li>
 </ul>
 
-
 <h3>Script source code</h3>
 <code>
   ${H(ScriptSource).replace("\r\n","<br/>").replace(" ", "&nbsp;")}
 </code>
+
+
