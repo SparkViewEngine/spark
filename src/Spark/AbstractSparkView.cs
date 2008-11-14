@@ -27,6 +27,12 @@ namespace Spark
         private readonly Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
         protected IDictionary<string, string> _once = new Dictionary<string, string>();
 
+        public virtual bool TryGetViewData(string name, out object value)
+        {
+            value = null;
+            return false;
+        }
+
         public Dictionary<string, TextWriter> Content { get { return _content; } }
         public TextWriter Output { get; private set; }        
 
@@ -51,20 +57,17 @@ namespace Spark
             return new OutputScopeImpl(this, new SpoolWriter());
         }
 
-        
-        public bool Once(string flag)
-        {
-            if (_once.ContainsKey(flag))
-                return false;
-
-            _once.Add(flag, null);
-            return true;
-        }
 
         public bool Once(object flag)
         {
-            return Once(Convert.ToString(flag));
+            var flagString = Convert.ToString(flag);
+            if (_once.ContainsKey(flagString))
+                return false;
+
+            _once.Add(flagString, null);
+            return true;
         }
+
 
         class OutputScopeImpl : IDisposable
         {

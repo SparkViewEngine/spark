@@ -41,7 +41,7 @@ namespace Spark.Web.Mvc.Tests
             RouteTable.Routes.Clear();
             RouteTable.Routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
                                       {
-                                          Defaults = new RouteValueDictionary(new {action = "Index", id = ""})
+                                          Defaults = new RouteValueDictionary(new { action = "Index", id = "" })
                                       });
 
             mocks = new MockRepository();
@@ -152,9 +152,9 @@ namespace Spark.Web.Mvc.Tests
         public void DeclaringViewDataAccessor()
         {
             mocks.ReplayAll();
-            var comments = new[] {new Comment {Text = "foo"}, new Comment {Text = "bar"}};
+            var comments = new[] { new Comment { Text = "foo" }, new Comment { Text = "bar" } };
 
-            FindViewAndRender("viewdata", new {Comments = comments, Caption = "Hello world"});
+            FindViewAndRender("viewdata", new { Comments = comments, Caption = "Hello world" });
 
             mocks.VerifyAll();
             var content = output.ToString();
@@ -211,7 +211,7 @@ namespace Spark.Web.Mvc.Tests
             mocks.ReplayAll();
 
             var viewContext = MakeViewContext("helpers");
-            var html = new HtmlHelper(viewContext, new ViewDataContainer {ViewData = viewContext.ViewData});
+            var html = new HtmlHelper(viewContext, new ViewDataContainer { ViewData = viewContext.ViewData });
             var link = html.ActionLink("hello", "world");
             response.Write(link);
 
@@ -343,7 +343,7 @@ namespace Spark.Web.Mvc.Tests
         public void RenderPlainView()
         {
             mocks.ReplayAll();
-                
+
             var viewContext = MakeViewContext("index");
             var viewEngineResult = factory.FindView(controllerContext, "index", null);
             viewEngineResult.View.Render(viewContext, output);
@@ -452,6 +452,23 @@ namespace Spark.Web.Mvc.Tests
             factory.ViewFolder = replacement;
             Assert.AreSame(replacement, factory.ViewFolder);
             Assert.AreNotSame(existing, factory.ViewFolder);
+        }
+
+        [Test]
+        public void CreatingViewEngineWithSimpleContainer()
+        {
+            var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html");
+            var container = new SparkServiceContainer(settings);
+            container.SetServiceBuilder<IViewEngine>(c => new SparkViewFactory(c.GetService<ISparkSettings>()));
+
+            var viewFactory = (SparkViewFactory)container.GetService<IViewEngine>();
+            var viewEngine = container.GetService<ISparkViewEngine>();
+            var viewFolder = container.GetService<IViewFolder>();
+            Assert.AreSame(settings, viewFactory.Settings);
+            Assert.AreSame(settings, viewEngine.Settings);
+            Assert.AreSame(viewEngine, viewFactory.Engine);
+            Assert.AreSame(viewFolder, viewEngine.ViewFolder);
+            Assert.AreSame(viewFolder, viewFactory.ViewFolder);
         }
     }
 }

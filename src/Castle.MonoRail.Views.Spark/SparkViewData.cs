@@ -12,56 +12,87 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System.Collections.Generic;
+
 namespace Castle.MonoRail.Views.Spark
 {
     using Castle.MonoRail.Framework.Resources;
+    using System.Linq;
 
     public class SparkViewData
     {
-        private readonly SparkView _view;
+        readonly SparkView _view;
+        private Dictionary<string, object> _params;
 
         public SparkViewData(SparkView view)
         {
             _view = view;
         }
 
+        public bool TryGetViewData(string key, out object value)
+        {
+            return
+                TryPropertyBag(key, out value) ||
+                TryFlash(key, out value) ||
+                TryHelpers(key, out value) ||
+                TryParams(key, out value) ||
+                TryResources(key, out value);
+        }
+
         public object Eval(string key)
         {
-            return PropertyBag(key) ??
-                    Flash(key) ??
-                    Helpers(key) ??
-                    Params(key) ??
-                    Resources(key);
+            object value;
+            return TryGetViewData(key, out value) ? value : null;
         }
 
         public object this[string key]
         {
             get
             {
-                return Eval(key);
+                object value;
+                return TryGetViewData(key, out value) ? value : null;
             }
         }
 
-        object PropertyBag(string key)
+        bool TryPropertyBag(string key, out object value)
         {
-            return _view.PropertyBag.Contains(key) ? _view.PropertyBag[key] : null;
+            var containsKey = _view.PropertyBag.Contains(key);
+            value = containsKey ? _view.PropertyBag[key] : null;
+            return containsKey;
         }
-        object Flash(string key)
+        bool TryFlash(string key, out object value)
         {
-            return _view.Flash.Contains(key) ? _view.Flash[key] : null;
+            var containsKey = _view.Flash.ContainsKey(key);
+            value = containsKey ? _view.Flash[key] : null;
+            return containsKey;
         }
-        object Helpers(string key)
+        bool TryHelpers(string key, out object value)
         {
-            return _view.ControllerContext.Helpers.Contains(key) ? _view.ControllerContext.Helpers[key] : null;
+            var containsKey = _view.ControllerContext.Helpers.Contains(key);
+            value = containsKey ? _view.ControllerContext.Helpers[key] : null;
+            return containsKey;
         }
-        object Params(string key)
+        bool TryParams(string key, out object value)
         {
-            return _view.Params[key];
+            if (_params == null)
+            {
+                _params = new Dictionary<string, object>();
+                foreach (var name in _view.Params.AllKeys)
+                    _params[name] = _view.Params[name];
+            }
+            return _params.TryGetValue(key, out value);
         }
-        object Resources(string key)
+        bool TryResources(string key, out object value)
         {
-            IResource value;
-            return _view.ControllerContext.Resources.TryGetValue(key, out value) ? value : null;
+            IResource resource;
+            if (_view.ControllerContext.Resources.TryGetValue(key, out resource))
+            {
+                value = resource;
+                return true;
+            }
+            value = null;
+            return false;
         }
+
     }
 }

@@ -101,11 +101,11 @@ namespace Spark.Compiler.ChunkVisitors
             }
             else if (chunk is CodeStatementChunk)
             {
-                Visit((CodeStatementChunk) chunk);
+                Visit((CodeStatementChunk)chunk);
             }
             else if (chunk is MacroChunk)
             {
-                Visit((MacroChunk) chunk);
+                Visit((MacroChunk)chunk);
             }
             else if (chunk is UseAssemblyChunk)
             {
@@ -113,7 +113,7 @@ namespace Spark.Compiler.ChunkVisitors
             }
             else if (chunk is UseImportChunk)
             {
-                Visit((UseImportChunk) chunk);
+                Visit((UseImportChunk)chunk);
             }
             else if (chunk is DefaultVariableChunk)
             {
@@ -126,21 +126,13 @@ namespace Spark.Compiler.ChunkVisitors
         }
 
         protected abstract void Visit(DefaultVariableChunk chunk);
-
         protected abstract void Visit(UseImportChunk chunk);
-
         protected abstract void Visit(ContentSetChunk chunk);
-
         protected abstract void Visit(RenderSectionChunk chunk);
-
         protected abstract void Visit(UseAssemblyChunk chunk);
-
         protected abstract void Visit(MacroChunk chunk);
-
         protected abstract void Visit(CodeStatementChunk chunk);
-
         protected abstract void Visit(ExtensionChunk chunk);
-
         protected abstract void Visit(ConditionalChunk chunk);
         protected abstract void Visit(ViewDataModelChunk chunk);
         protected abstract void Visit(ViewDataChunk chunk);

@@ -77,7 +77,7 @@ namespace Spark
 
                 hashCode ^= (Descriptor.TargetNamespace ?? "").GetHashCode();
 
-                foreach(var template in Descriptor.Templates)
+                foreach (var template in Descriptor.Templates)
                     hashCode ^= template.ToLowerInvariant().GetHashCode();
 
                 return hashCode;
@@ -92,7 +92,7 @@ namespace Spark
                     return false;
                 if (Descriptor.Templates.Count != that.Descriptor.Templates.Count)
                     return false;
-                for(int index= 0; index != Descriptor.Templates.Count; ++index)
+                for (int index = 0; index != Descriptor.Templates.Count; ++index)
                 {
                     if (!string.Equals(Descriptor.Templates[index], that.Descriptor.Templates[index], StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -109,6 +109,7 @@ namespace Spark
             public ViewLoader Loader { get; set; }
             public ViewCompiler Compiler { get; set; }
             public IViewActivator Activator { get; set; }
+            public ISparkLanguageFactory LanguageFactory { get; set; }
 
             public SparkViewDescriptor Descriptor
             {
@@ -122,12 +123,17 @@ namespace Spark
 
             public ISparkView CreateInstance()
             {
-                return Activator.Activate(Compiler.CompiledType);
+                var view = Activator.Activate(Compiler.CompiledType);
+                if (LanguageFactory != null)
+                    LanguageFactory.InstanceCreated(Compiler, view);
+                return view;
             }
 
             public void ReleaseInstance(ISparkView view)
             {
-                Activator.Release(Compiler.CompiledType ,view);
+                if (LanguageFactory != null)
+                    LanguageFactory.InstanceReleased(Compiler, view);
+                Activator.Release(Compiler.CompiledType, view);
             }
         }
     }

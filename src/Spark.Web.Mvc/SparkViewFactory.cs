@@ -26,7 +26,7 @@ using Spark.Web.Mvc.Wrappers;
 
 namespace Spark.Web.Mvc
 {
-    public class SparkViewFactory : IViewEngine, IViewFolderContainer
+    public class SparkViewFactory : IViewEngine, IViewFolderContainer, ISparkServiceInitialize
     {
         private ISparkViewEngine _engine;
 
@@ -39,6 +39,12 @@ namespace Spark.Web.Mvc
         public SparkViewFactory(ISparkSettings settings)
         {
             Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
+        }
+
+        public void Initialize(ISparkServiceContainer container)
+        {
+            Settings = container.GetService<ISparkSettings>();
+            Engine = container.GetService<ISparkViewEngine>();
         }
 
         public ISparkSettings Settings { get; set; }
@@ -63,7 +69,6 @@ namespace Spark.Web.Mvc
             _engine = engine;
             if (_engine != null)
             {
-                _engine.ViewFolder = new ViewFolderWrapper(this);
                 _engine.DefaultPageBaseType = typeof(SparkView).FullName;
             }
         }
@@ -74,32 +79,12 @@ namespace Spark.Web.Mvc
             set { Engine.ViewActivatorFactory = value; }
         }
 
-        private IViewFolder _viewFolder;
         public IViewFolder ViewFolder
         {
-            get
-            {
-                if (_viewFolder == null)
-                    _viewFolder = CreateDefaultViewFolder();
-
-                return _viewFolder;
-            }
-            set { _viewFolder = value; }
+            get { return Engine.ViewFolder;}
+            set { Engine.ViewFolder = value; }
         }
 
-        static IViewFolder CreateDefaultViewFolder()
-        {
-            string path;
-            if (HttpContext.Current != null)
-            {
-                path = HttpContext.Current.Server.MapPath("~/Views");
-            }
-            else
-            {
-                path = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "Views");
-            }
-            return new FileSystemViewFolder(path);
-        }
         #region IViewEngine Members
 
         public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)

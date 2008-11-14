@@ -18,8 +18,10 @@ namespace Spark
 {
     public enum LanguageType
     {
+        Default,
         CSharp,
-        Javascript
+        Javascript,
+        Python
     }
 
     public class SparkViewDescriptor
@@ -27,7 +29,7 @@ namespace Spark
         public SparkViewDescriptor()
         {
             //TODO: make language and accessors part of entry key
-            Language = LanguageType.CSharp;
+            Language = LanguageType.Default;
             Templates = new List<string>();
             Accessors = new List<Accessor>();
         }

@@ -1,0 +1,9 @@
+﻿<div class="box">
+  <content var="boxheader">
+    <render:header/>
+  </content>
+  <h3 if="boxheader.strip() != ''">${boxheader}</h3>
+  <render:body>
+    <render/>
+  </render:body>
+</div>

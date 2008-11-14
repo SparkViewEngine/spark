@@ -32,6 +32,11 @@ namespace Spark.Web.Mvc.Tests
                 get { throw new NotImplementedException(); }
             }
 
+            public override bool TryGetViewData(string name, out object value)
+            {
+                throw new System.NotImplementedException();
+            }
+
             public override void RenderView(TextWriter writer)
             {
                 throw new NotImplementedException();

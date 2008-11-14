@@ -280,8 +280,9 @@ namespace Spark.Compiler.NodeVisitors
                 var scope = new ScopeChunk();
                 scope.Body.Add(new LocalVariableChunk { Name = "__just__once__", Value = "0" });
 
-                _sendAttributeOnce = new ConditionalChunk { Type = ConditionalType.If, Condition = "__just__once__++ == 0" };
+                _sendAttributeOnce = new ConditionalChunk { Type = ConditionalType.If, Condition = "__just__once__ == 0" };
                 _sendAttributeOnce.Body.Add(new SendLiteralChunk { Text = " " + attributeNode.Name + "=\"" });
+                _sendAttributeIncrement = new AssignVariableChunk { Name = "__just__once__", Value = "__just__once__+1" };
 
 
                 Chunks.Add(scope);
@@ -292,6 +293,7 @@ namespace Spark.Compiler.NodeVisitors
                         Accept(node);
                 }
                 _sendAttributeOnce = null;
+                _sendAttributeIncrement = null;
 
                 var ifWasSent = new ConditionalChunk { Type = ConditionalType.If, Condition = "__just__once__ != 0" };
                 scope.Body.Add(ifWasSent);
@@ -332,7 +334,8 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
-        private ConditionalChunk _sendAttributeOnce;
+        private ConditionalChunk  _sendAttributeOnce;
+        private Chunk _sendAttributeIncrement;
 
         protected override void Visit(ConditionNode conditionNode)
         {
@@ -341,6 +344,8 @@ namespace Spark.Compiler.NodeVisitors
 
             if (_sendAttributeOnce != null)
                 conditionChunk.Body.Add(_sendAttributeOnce);
+            if (_sendAttributeIncrement != null)
+                conditionChunk.Body.Add(_sendAttributeIncrement);
 
             using (new Frame(this, conditionChunk.Body))
             {

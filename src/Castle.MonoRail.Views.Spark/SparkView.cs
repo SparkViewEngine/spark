@@ -75,6 +75,10 @@ namespace Castle.MonoRail.Views.Spark
         public ZebdaHelper Zebda { get { return Helper<ZebdaHelper>(); } }
 
         public SparkViewData ViewData { get; set; }
+        public override bool TryGetViewData(string name, out object value)
+        {
+            return ViewData.TryGetViewData(name, out value);
+        }
 
         public T Helper<T>() where T : class { return ControllerContext.Helpers[typeof(T).Name] as T; }
         public T Helper<T>(string name) where T : class { return ControllerContext.Helpers[name] as T; }

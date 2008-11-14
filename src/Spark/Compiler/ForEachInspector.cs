@@ -25,7 +25,7 @@ namespace Spark.Compiler
         {
             var terms = code.Split(' ', '\r', '\n', '\t').ToList();
             var inIndex = terms.IndexOf("in");
-            if (inIndex >= 2)
+            if (inIndex >= 1)
             {
                 Recognized = true;
                 VariableType = string.Join(" ", terms.ToArray(), 0, inIndex - 1);

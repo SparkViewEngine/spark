@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Web.Hosting;
 using Spark.Compiler;
 using Spark.Compiler.CSharp;
@@ -29,7 +30,8 @@ using Spark.Parser.Syntax;
 
 namespace Spark
 {
-    public class SparkViewEngine : ISparkViewEngine
+    
+    public class SparkViewEngine : ISparkViewEngine, ISparkServiceInitialize
     {
         public SparkViewEngine()
             : this(null)
@@ -43,19 +45,45 @@ namespace Spark
             ViewActivatorFactory = new DefaultViewActivator();
         }
 
+        public void Initialize(ISparkServiceContainer container)
+        {
+            _container = container;
+
+            Settings = container.GetService<ISparkSettings>();
+            SyntaxProvider = container.GetService<ISparkSyntaxProvider>();
+            ViewActivatorFactory = container.GetService<IViewActivatorFactory>();
+            LanguageFactory = container.GetService<ISparkLanguageFactory>();
+            ResourcePathManager = container.GetService<IResourcePathManager>();
+            SetViewFolder(container.GetService<IViewFolder>());
+        }
+
+        private ISparkServiceContainer _container;
+
         private IViewFolder _viewFolder;
         public IViewFolder ViewFolder
         {
             get
             {
                 if (_viewFolder == null)
-                    SetViewFolder(DefaultViewFolder());
+                    SetViewFolder(CreateDefaultViewFolder());
                 return _viewFolder;
             }
             set { SetViewFolder(value); }
         }
 
-        private static IViewFolder DefaultViewFolder()
+        private ISparkLanguageFactory _langaugeFactory;
+        public ISparkLanguageFactory LanguageFactory
+        {
+            get
+            {
+                if (_langaugeFactory == null)
+                    _langaugeFactory = new DefaultLanguageFactory();
+                return _langaugeFactory;
+            }
+            set { _langaugeFactory = value; }
+        }
+
+        private static IViewFolder CreateDefaultViewFolder()
         {
             if (HostingEnvironment.IsHosted && HostingEnvironment.VirtualPathProvider != null)
                 return new VirtualPathProviderViewFolder("~/Views");
@@ -66,7 +94,7 @@ namespace Spark
         private void SetViewFolder(IViewFolder value)
         {
             var aggregateViewFolder = value;
-            foreach(var viewFolderSettings in Settings.ViewFolders)
+            foreach (var viewFolderSettings in Settings.ViewFolders)
             {
                 IViewFolder viewFolder = ActivateViewFolder(viewFolderSettings);
                 if (!string.IsNullOrEmpty(viewFolderSettings.Subfolder))
@@ -80,16 +108,16 @@ namespace Spark
         private IViewFolder ActivateViewFolder(IViewFolderSettings viewFolderSettings)
         {
             Type type;
-            switch(viewFolderSettings.FolderType)
+            switch (viewFolderSettings.FolderType)
             {
                 case ViewFolderType.FileSystem:
-                    type = typeof (FileSystemViewFile);
+                    type = typeof(FileSystemViewFile);
                     break;
                 case ViewFolderType.EmbeddedResource:
                     type = typeof(EmbeddedViewFolder);
                     break;
                 case ViewFolderType.VirtualPathProvider:
-                    type = typeof (VirtualPathProviderViewFolder);
+                    type = typeof(VirtualPathProviderViewFolder);
                     break;
                 case ViewFolderType.Custom:
                     type = Type.GetType(viewFolderSettings.Type);
@@ -99,7 +127,7 @@ namespace Spark
             }
 
             ConstructorInfo bestConstructor = null;
-            foreach(var constructor in type.GetConstructors())
+            foreach (var constructor in type.GetConstructors())
             {
                 if (bestConstructor == null || bestConstructor.GetParameters().Length < constructor.GetParameters().Length)
                 {
@@ -113,7 +141,7 @@ namespace Spark
                 throw new MissingMethodException(string.Format("No suitable constructor for {0} located", type.FullName));
             var args = bestConstructor.GetParameters()
                 .Select(param => ChangeType(viewFolderSettings, param))
-                .ToArray(); 
+                .ToArray();
             return (IViewFolder)Activator.CreateInstance(type, args);
         }
 
@@ -191,7 +219,8 @@ namespace Spark
                             {
                                 Key = key,
                                 Loader = CreateViewLoader(),
-                                Compiler = CreateViewCompiler(key.Descriptor)
+                                Compiler = LanguageFactory.CreateViewCompiler(this, key.Descriptor),
+                                LanguageFactory = LanguageFactory
                             };
 
 
@@ -218,33 +247,6 @@ namespace Spark
                        };
         }
 
-        private ViewCompiler CreateViewCompiler(SparkViewDescriptor descriptor)
-        {
-            var pageBaseType = Settings.PageBaseType;
-            if (string.IsNullOrEmpty(pageBaseType))
-                pageBaseType = DefaultPageBaseType;
-
-            ViewCompiler viewCompiler;
-            switch (descriptor.Language)
-            {
-                case LanguageType.CSharp:
-                    viewCompiler = new DefaultViewCompiler();
-                    break;
-                case LanguageType.Javascript:
-                    viewCompiler = new JavascriptViewCompiler();
-                    break;
-                default:
-                    throw new CompilerException(string.Format("Unknown language type {0}", descriptor.Language));
-            }
-
-            viewCompiler.BaseClass = pageBaseType;
-            viewCompiler.Descriptor = descriptor;
-            viewCompiler.Debug = Settings.Debug;
-            viewCompiler.UseAssemblies = Settings.UseAssemblies;
-            viewCompiler.UseNamespaces = Settings.UseNamespaces;
-            return viewCompiler;
-        }
-
         public Assembly BatchCompilation(IList<SparkViewDescriptor> descriptors)
         {
             return BatchCompilation(null /*outputAssembly*/, descriptors);
@@ -261,7 +263,7 @@ namespace Spark
                 {
                     Key = CreateKey(descriptor),
                     Loader = CreateViewLoader(),
-                    Compiler = CreateViewCompiler(descriptor)
+                    Compiler = LanguageFactory.CreateViewCompiler(this, descriptor)
                 };
 
                 var templateChunks = new List<IList<Chunk>>();
@@ -274,7 +276,7 @@ namespace Spark
                 batch.Add(entry);
             }
 
-            var batchCompiler = new BatchCompiler{OutputAssembly = outputAssembly};
+            var batchCompiler = new BatchCompiler { OutputAssembly = outputAssembly };
 
             var assembly = batchCompiler.Compile(Settings.Debug, sourceCode.ToArray());
             foreach (var entry in batch)
@@ -315,5 +317,6 @@ namespace Spark
 
             return descriptors;
         }
+
     }
 }

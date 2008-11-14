@@ -35,5 +35,10 @@ namespace Spark.Tests.Precompiled
         {
             get { return new Guid("22222222123412341234123456123456"); }
         }
+
+        public bool TryGetViewData(string name, out object value)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

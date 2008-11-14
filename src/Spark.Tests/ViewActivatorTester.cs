@@ -37,6 +37,11 @@ namespace Spark.Tests
             {
                 get { throw new System.NotImplementedException(); }
             }
+
+            public bool TryGetViewData(string name, out object value)
+            {
+                throw new System.NotImplementedException();
+            }
         }
 
         class CustomFactory : IViewActivatorFactory, IViewActivator

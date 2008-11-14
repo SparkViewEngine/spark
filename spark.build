@@ -155,6 +155,7 @@
 		<copy todir="${package.dir}/Bin/Dependencies" flatten="true">
 			<fileset basedir="${bin.dir}">
 				<include name="aspnetmvc/*.*" />
+				<include name="ironpython/*.*" />
 				<include name="mvccontrib/*.*" />
 				<include name="castle/*.*" />
 				<include name="nunit/nunit.framework.dll" />

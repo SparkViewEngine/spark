@@ -143,7 +143,7 @@ namespace Spark.Parser
 
             var newEntry = BindEntry(viewPath);
 
-            VisitorContext context = new VisitorContext
+            var context = new VisitorContext
                                          {
                                              ViewFolder = ViewFolder,
                                              Prefix = Prefix,

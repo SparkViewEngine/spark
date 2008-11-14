@@ -51,6 +51,26 @@ namespace Spark.Web.Mvc
 
         public IResourcePathManager ResourcePathManager { get; set; }
 
+        public override bool TryGetViewData(string name, out object value)
+        {
+            if (ViewData.ContainsKey(name))
+            {
+                value = ViewData[name];
+                return true;
+            }
+            if (ViewData.Model != null)
+            {
+                var property = ViewData.Model.GetType().GetProperty(name);
+                if (property != null)
+                {
+                    value = property.GetValue(ViewData.Model, null);
+                    return true;
+                }
+            }
+            value = null;
+            return false;
+        }
+
         public string SiteRoot
         {
             get

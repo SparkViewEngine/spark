@@ -1,0 +1,11 @@
+﻿<test if="len([0 for item in source]) == 0">
+  <render:nodata/>
+  <else/>
+  <render:beforeall/>
+  <for each="item in source">
+    <render:before/>
+    <render:each/>
+    <render:after/>
+  </for>
+  <render:afterall/>
+</test>

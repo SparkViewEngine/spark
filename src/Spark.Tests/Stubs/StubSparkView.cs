@@ -32,6 +32,11 @@ namespace Spark.Tests.Stubs
         {
             return SiteRoot + path;
         }
+
+        public override bool TryGetViewData(string name, out object value)
+        {
+            return ViewData.TryGetValue(name, out value);
+        }
     }
 
     public abstract class StubSparkView<TModel> : StubSparkView
