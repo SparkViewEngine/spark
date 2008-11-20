@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Compiler;
-using Spark.Compiler.CSharp.ChunkVisitors;
+using Spark.Ruby.Compiler;
+using Spark.Ruby.Compiler.ChunkVisitors;
+using BaseClassVisitor = Spark.Compiler.CSharp.ChunkVisitors.BaseClassVisitor;
 
-namespace Spark.IronRuby.Compiler.Ruby
+namespace Spark.Ruby.Compiler
 {
     public class RubyViewCompiler:ViewCompiler
     {
@@ -31,11 +33,11 @@ namespace Spark.IronRuby.Compiler.Ruby
             script.WriteLine("class<<view");
             script.Indent++;
 
-            var globalMembersVisitor = new ChunkVisitors.GlobalMembersVisitor(script, globals);
+            var globalMembersVisitor = new GlobalMembersVisitor(script, globals);
             foreach (var resource in allResources)
                 globalMembersVisitor.Accept(resource);
 
-            var globalFunctionsVisitor = new ChunkVisitors.GlobalFunctionsVisitor(script, globals);
+            var globalFunctionsVisitor = new GlobalFunctionsVisitor(script, globals);
             foreach (var resource in allResources)
                 globalFunctionsVisitor.Accept(resource);
 
@@ -46,7 +48,7 @@ namespace Spark.IronRuby.Compiler.Ruby
                 script.Write("def render_view_level").WriteLine(templateIndex);
                 script.Indent++;
 
-                var generator = new ChunkVisitors.GeneratedCodeVisitor(script, globals);
+                var generator = new GeneratedCodeVisitor(script, globals);
                 generator.Accept(template);
                 
                 script.Indent--;
@@ -58,7 +60,7 @@ namespace Spark.IronRuby.Compiler.Ruby
             script.WriteLine("def render");
             script.Indent++;
 
-            var globalInitializeVisitor = new ChunkVisitors.GlobalInitializeVisitor(script);
+            var globalInitializeVisitor = new GlobalInitializeVisitor(script);
             foreach(var resource in allResources)
                 globalInitializeVisitor.Accept(resource);
 
