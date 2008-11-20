@@ -1,11 +1,27 @@
+// Copyright 2008 Louis DeJardin - http://whereslou.com
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Compiler;
 using Spark.Compiler.CSharp.ChunkVisitors;
-using GeneratedCodeVisitor=Spark.Scripting.Compiler.Python.ChunkVisitors.GeneratedCodeVisitor;
+using GeneratedCodeVisitor=Spark.Python.Compiler.ChunkVisitors.GeneratedCodeVisitor;
+using GlobalFunctionsVisitor=Spark.Python.Compiler.ChunkVisitors.GlobalFunctionsVisitor;
+using GlobalMembersVisitor=Spark.Python.Compiler.ChunkVisitors.GlobalMembersVisitor;
 
-namespace Spark.Scripting.Compiler.Python
+namespace Spark.Python.Compiler
 {
     public class PythonViewCompiler : ViewCompiler
     {
@@ -23,11 +39,11 @@ namespace Spark.Scripting.Compiler.Python
             var script = new SourceWriter();
             var globals = new Dictionary<string, object>();
 
-            var globalMembersVisitor = new ChunkVisitors.GlobalMembersVisitor(script, globals);
+            var globalMembersVisitor = new GlobalMembersVisitor(script, globals);
             foreach(var resource in allResources)
                 globalMembersVisitor.Accept(resource);
 
-            var globalFunctionsVisitor = new ChunkVisitors.GlobalFunctionsVisitor(script, globals);
+            var globalFunctionsVisitor = new GlobalFunctionsVisitor(script, globals);
             foreach (var resource in allResources)
                 globalFunctionsVisitor.Accept(resource);
 
@@ -94,7 +110,7 @@ namespace Spark.Scripting.Compiler.Python
                 source.AppendLine("    })]");
             }
 
-            source.Append("public class ").Append(viewClassName).Append(" : ").Append(BaseClass).AppendLine(", global::Spark.Scripting.IScriptingSparkView");
+            source.Append("public class ").Append(viewClassName).Append(" : ").Append(BaseClass).AppendLine(", global::Spark.Python.IScriptingSparkView");
             source.AppendLine("{");
             
             source.Append("static System.Guid _generatedViewId = new System.Guid(\"").Append(GeneratedViewId).AppendLine("\");");
@@ -129,7 +145,7 @@ namespace Spark.Scripting.Compiler.Python
             source.AppendLine("{");
             source.AppendLine("CompiledCode.Execute(");
             source.AppendLine("CompiledCode.Engine.CreateScope(");
-            source.AppendLine("new global::Spark.Scripting.ScriptingViewSymbolDictionary(this)");
+            source.AppendLine("new global::Spark.Python.ScriptingViewSymbolDictionary(this)");
             source.AppendLine("));");
             source.AppendLine("}");
             source.AppendLine("}");
@@ -144,6 +160,4 @@ namespace Spark.Scripting.Compiler.Python
             SourceCode = source.ToString();
         }
     }
-
-
 }

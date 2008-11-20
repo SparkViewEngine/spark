@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using Spark.Web.Mvc.Python;
 
-namespace Spark.Web.Mvc.Scripting
+namespace Spark.Web.Mvc.Python
 {
     public static class SparkPythonEngineStarter
     {

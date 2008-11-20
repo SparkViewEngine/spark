@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{92156FC5-8ECF-4A52-B4CA-AE060DCAAD18}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Spark.Web.Mvc.Scripting</RootNamespace>
-    <AssemblyName>Spark.Web.Mvc.Scripting</AssemblyName>
+    <RootNamespace>Spark.Web.Mvc.Python</RootNamespace>
+    <AssemblyName>Spark.Web.Mvc.Python</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -58,9 +58,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spark.Scripting\Spark.Scripting.csproj">
+    <ProjectReference Include="..\Spark.Scripting\Spark.Python.csproj">
       <Project>{0703F11D-FA13-4182-8577-170C9A5121FF}</Project>
-      <Name>Spark.Scripting</Name>
+      <Name>Spark.Python</Name>
     </ProjectReference>
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj">
       <Project>{286050D6-95A1-4381-93D8-93381D8AB8E2}</Project>

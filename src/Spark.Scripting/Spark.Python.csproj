@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{ED1B2C7B-862B-4B11-9BC3-55B1887877D9}</ProjectGuid>
+    <ProjectGuid>{0703F11D-FA13-4182-8577-170C9A5121FF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Spark.Scripting.Tests</RootNamespace>
-    <AssemblyName>Spark.Scripting.Tests</AssemblyName>
+    <RootNamespace>Spark.Python</RootNamespace>
+    <AssemblyName>Spark.Python</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\ironpython\IronPython.dll</HintPath>
     </Reference>
+    <Reference Include="IronPython.Modules, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\ironpython\IronPython.Modules.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Scripting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\ironpython\Microsoft.Scripting.dll</HintPath>
@@ -43,9 +47,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\ironpython\Microsoft.Scripting.Core.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Scripting.ExtensionAttribute, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
+      <HintPath>..\..\bin\ironpython\Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -61,20 +65,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PythonViewCompilerTests.cs" />
-    <Compile Include="ScriptingLanguageFactoryTests.cs" />
+    <Compile Include="Compiler\ChunkVisitors\GeneratedCodeVisitor.cs" />
+    <Compile Include="Compiler\ChunkVisitors\GlobalFunctionsVisitor.cs" />
+    <Compile Include="Compiler\ChunkVisitors\GlobalMembersVisitor.cs" />
+    <Compile Include="Compiler\ChunkVisitors\VariableTracker.cs" />
+    <Compile Include="Compiler\SourceWriter.cs" />
+    <Compile Include="IScriptingSparkView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScriptingViewSymbolDictionaryTests.cs" />
+    <Compile Include="Compiler\PythonViewCompiler.cs" />
+    <Compile Include="PythonEngineManager.cs" />
+    <Compile Include="ScriptingLanguageFactory.cs" />
+    <Compile Include="ScriptingViewSymbolDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spark.Scripting\Spark.Scripting.csproj">
-      <Project>{0703F11D-FA13-4182-8577-170C9A5121FF}</Project>
-      <Name>Spark.Scripting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Spark.Tests\Spark.Tests.csproj">
-      <Project>{64CC97B3-6B9B-4D12-8A45-5CD3621E6471}</Project>
-      <Name>Spark.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Spark\Spark.csproj">
       <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
       <Name>Spark</Name>

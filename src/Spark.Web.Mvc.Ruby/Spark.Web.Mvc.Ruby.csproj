@@ -64,7 +64,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Spark.Ruby\Spark.Ruby.csproj">
       <Project>{514D7846-A133-4CCF-82B7-12C13F35D55B}</Project>
-      <Name>Spark.IronRuby</Name>
+      <Name>Spark.Ruby</Name>
     </ProjectReference>
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj">
       <Project>{286050D6-95A1-4381-93D8-93381D8AB8E2}</Project>

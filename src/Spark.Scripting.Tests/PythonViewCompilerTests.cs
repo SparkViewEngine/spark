@@ -1,15 +1,28 @@
-﻿using System;
+﻿// Copyright 2008 Louis DeJardin - http://whereslou.com
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
+using System;
 using System.Collections.Generic;
 using System.IO;
-using IronPython.Hosting;
 using NUnit.Framework;
 using Spark.Compiler;
 using Spark.Parser;
-using Spark.Scripting.Compiler.Python;
+using Spark.Python.Compiler;
 using Spark.Tests.Models;
 using Spark.Tests.Stubs;
 
-namespace Spark.Scripting.Tests
+namespace Spark.Python.Tests
 {
     [TestFixture]
     public class PythonViewCompilerTests
@@ -22,13 +35,13 @@ namespace Spark.Scripting.Tests
         public void Init()
         {
             _compiler = new PythonViewCompiler
-            {
-                BaseClass = typeof(StubSparkView).FullName
-            };
+                        {
+                            BaseClass = typeof(StubSparkView).FullName
+                        };
             _languageFactory = new ScriptingLanguageFactory();
 
             // Load up assemblies
-            Python.CreateEngine();
+            IronPython.Hosting.Python.CreateEngine();
         }
 
         static IList<IList<Chunk>> Chunks(params Chunk[] chunks)
@@ -291,10 +304,10 @@ namespace Spark.Scripting.Tests
         public void MacroAddsFunction()
         {
             var macro = new MacroChunk
-            {
-                Name = "foo",
-                Parameters = new[] { new MacroParameter { Name = "x", Type = "string" } }
-            };
+                        {
+                            Name = "foo",
+                            Parameters = new[] { new MacroParameter { Name = "x", Type = "string" } }
+                        };
             macro.Body.Add(new SendExpressionChunk { Code = "x" });
             var chunks = Chunks(
                 new SendExpressionChunk { Code = "foo(\"hello\")" },
@@ -423,9 +436,9 @@ namespace Spark.Scripting.Tests
             var renderPartial = new RenderPartialChunk { FileContext = new FileContext { Contents = partial[0] } };
             renderPartial.Sections.Add("foo",
                                        new[]
-                                           {
-                                               (Chunk) new SendLiteralChunk {Text = "From inside caller"}
-                                           });
+                                       {
+                                           (Chunk) new SendLiteralChunk {Text = "From inside caller"}
+                                       });
 
             var chunks = Chunks(
                 new SendLiteralChunk { Text = "(" },
@@ -546,9 +559,9 @@ namespace Spark.Scripting.Tests
 
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView(new StubViewData
-                                           {
-                                               {"stuff", new[] {6, 2, 7, 4}}
-                                           });
+                                       {
+                                           {"stuff", new[] {6, 2, 7, 4}}
+                                       });
             Assert.AreEqual("04TrueFalse14FalseFalse24FalseFalse34FalseTrue", contents);
         }
 

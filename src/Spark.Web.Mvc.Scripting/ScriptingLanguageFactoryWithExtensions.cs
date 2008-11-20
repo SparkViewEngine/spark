@@ -1,7 +1,7 @@
 using System.Web.Mvc;
 using Microsoft.Scripting.Runtime;
 using Spark.Compiler;
-using Spark.Scripting;
+using Spark.Python;
 
 [assembly: ExtensionType(typeof(HtmlHelper), typeof(System.Web.Mvc.Html.FormExtensions))]
 [assembly: ExtensionType(typeof(HtmlHelper), typeof(System.Web.Mvc.Html.InputExtensions))]
@@ -13,9 +13,7 @@ using Spark.Scripting;
 [assembly: ExtensionType(typeof(HtmlHelper), typeof(System.Web.Mvc.Html.ValidationExtensions))]
 [assembly: ExtensionType(typeof(AjaxHelper), typeof(System.Web.Mvc.Ajax.AjaxExtensions))]
 
-
-
-namespace Spark.Web.Mvc.Scripting
+namespace Spark.Web.Mvc.Python
 {
     public class ScriptingLanguageFactoryWithExtensions : ScriptingLanguageFactory
     {

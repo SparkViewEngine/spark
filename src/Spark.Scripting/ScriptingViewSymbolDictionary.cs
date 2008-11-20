@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright 2008 Louis DeJardin - http://whereslou.com
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
+using System;
 using System.Linq;
-using System.Text;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Generation;
 using Microsoft.Scripting.Runtime;
+using Spark.Python;
 
-namespace Spark.Scripting
+namespace Spark.Python
 {
     public class ScriptingViewSymbolDictionary : CustomSymbolDictionary
     {
@@ -21,7 +34,7 @@ namespace Spark.Scripting
 
         public override SymbolId[] GetExtraKeys()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         protected override bool TrySetExtraValue(SymbolId key, object value)
