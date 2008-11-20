@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{88AE48D2-9D28-4008-8CBC-64AAC13F96D1}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -54,17 +54,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\build\package\Bin\Spark.dll</HintPath>
     </Reference>
-    <Reference Include="Spark.Scripting, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Spark.Python, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\build\package\Bin\Spark.Scripting.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Spark.Python.dll</HintPath>
     </Reference>
     <Reference Include="Spark.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\build\package\Bin\Spark.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="Spark.Web.Mvc.Scripting, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Spark.Web.Mvc.Python, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\build\package\Bin\Spark.Web.Mvc.Scripting.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Spark.Web.Mvc.Python.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -161,9 +161,6 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

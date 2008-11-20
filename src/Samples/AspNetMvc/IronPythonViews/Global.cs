@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Spark;
-using Spark.Web.Mvc;
-using Spark.Web.Mvc.Scripting;
+using Spark.Web.Mvc.Python;
 
 namespace IronPythonViews
 {
