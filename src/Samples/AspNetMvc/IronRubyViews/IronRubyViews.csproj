@@ -126,10 +126,17 @@
     <None Include="Views\Home\Index.spark" />
     <None Include="Views\Home\PagingAndRepeater.spark" />
     <None Include="Views\Home\Styleguide.spark" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Layouts\" />
-    <Folder Include="Views\Shared\" />
+    <None Include="Views\Home\_helpertests.spark" />
+    <None Include="Views\Layouts\Application.spark" />
+    <None Include="Views\Shared\_AllDemoPages.spark" />
+    <None Include="Views\Shared\_Box.spark" />
+    <None Include="Views\Shared\_Comment.spark" />
+    <None Include="Views\Shared\_DefaultRightrail.spark" />
+    <None Include="Views\Shared\_Jabberwocky.spark" />
+    <None Include="Views\Shared\_Pagination.spark" />
+    <None Include="Views\Shared\_RoundBox.spark" />
+    <None Include="Views\Shared\_Rows.spark" />
+    <None Include="Views\Shared\_SmallBox.spark" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

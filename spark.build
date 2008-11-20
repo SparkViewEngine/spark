@@ -156,6 +156,7 @@
 			<fileset basedir="${bin.dir}">
 				<include name="aspnetmvc/*.*" />
 				<include name="ironpython/*.*" />
+				<include name="ironruby/*.*" />
 				<include name="mvccontrib/*.*" />
 				<include name="castle/*.*" />
 				<include name="nunit/nunit.framework.dll" />
