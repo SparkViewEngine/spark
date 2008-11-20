@@ -8,8 +8,8 @@ using System.Linq;
 using IronRuby.Runtime;
 using Microsoft.Scripting.Runtime;
 using Spark.Compiler;
-using Spark.IronRuby;
-using Spark.IronRuby.Compiler.Ruby;
+using Spark.Ruby;
+using Spark.Ruby.Compiler;
 
 [assembly: ExtensionType(typeof(HtmlHelper), typeof(System.Web.Mvc.Html.FormExtensions))]
 [assembly: ExtensionType(typeof(HtmlHelper), typeof(System.Web.Mvc.Html.InputExtensions))]

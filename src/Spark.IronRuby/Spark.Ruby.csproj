@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E4A60CC3-41B3-495E-AA77-2574621C863B}</ProjectGuid>
+    <ProjectGuid>{514D7846-A133-4CCF-82B7-12C13F35D55B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Spark.IronRuby.Tests</RootNamespace>
-    <AssemblyName>Spark.IronRuby.Tests</AssemblyName>
+    <RootNamespace>Spark.Ruby</RootNamespace>
+    <AssemblyName>Spark.Ruby</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -35,23 +35,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\ironruby\IronRuby.dll</HintPath>
     </Reference>
-    <Reference Include="IronRuby.Libraries, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironruby\IronRuby.Libraries.dll</HintPath>
-    </Reference>
     <Reference Include="NonStandard.Microsoft.Scripting, Version=1.0.0.5000, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\ironruby\NonStandard.Microsoft.Scripting.dll</HintPath>
     </Reference>
-    <Reference Include="NonStandard.Microsoft.Scripting.Core, Version=1.0.0.5000, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironruby\NonStandard.Microsoft.Scripting.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -62,19 +53,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RubyEngineTests.cs" />
-    <Compile Include="RubyViewCompilerTests.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\GlobalInitializeVisitor.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\GeneratedCodeVisitor.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\GlobalFunctionsVisitor.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\GlobalMembersVisitor.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\VariableTracker.cs" />
+    <Compile Include="Compiler\Ruby\SourceWriter.cs" />
+    <Compile Include="IScriptingSparkView.cs" />
+    <Compile Include="RubyEngineManager.cs" />
+    <Compile Include="RubyLanguageFactory.cs" />
+    <Compile Include="Compiler\Ruby\RubyViewCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptingViewSymbolDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spark.IronRuby\Spark.IronRuby.csproj">
-      <Project>{514D7846-A133-4CCF-82B7-12C13F35D55B}</Project>
-      <Name>Spark.IronRuby</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Spark.Tests\Spark.Tests.csproj">
-      <Project>{64CC97B3-6B9B-4D12-8A45-5CD3621E6471}</Project>
-      <Name>Spark.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Spark\Spark.csproj">
       <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
       <Name>Spark</Name>

@@ -6,12 +6,13 @@ using System.Text;
 using IronRuby;
 using NUnit.Framework;
 using Spark.Compiler;
-using Spark.IronRuby.Compiler.Ruby;
 using Spark.Parser;
+using Spark.Ruby;
+using Spark.Ruby.Compiler;
 using Spark.Tests.Models;
 using Spark.Tests.Stubs;
 
-namespace Spark.IronRuby.Tests
+namespace Spark.Ruby.Tests
 {
     [TestFixture]
     public class RubyViewCompilerTests
@@ -24,13 +25,13 @@ namespace Spark.IronRuby.Tests
         public void Init()
         {
             _compiler = new RubyViewCompiler
-            {
-                BaseClass = typeof(StubSparkView).FullName,Debug = true
-            };
+                        {
+                            BaseClass = typeof(StubSparkView).FullName,Debug = true
+                        };
             _languageFactory = new RubyLanguageFactory();
 
             //load assemblies
-            Ruby.CreateEngine();
+            global::IronRuby.Ruby.CreateEngine();
         }
 
         static IList<IList<Chunk>> Chunks(params Chunk[] chunks)
@@ -291,10 +292,10 @@ namespace Spark.IronRuby.Tests
         public void MacroAddsFunction()
         {
             var macro = new MacroChunk
-            {
-                Name = "foo",
-                Parameters = new[] { new MacroParameter { Name = "x", Type = "string" } }
-            };
+                        {
+                            Name = "foo",
+                            Parameters = new[] { new MacroParameter { Name = "x", Type = "string" } }
+                        };
             macro.Body.Add(new SendExpressionChunk { Code = "x" });
             var chunks = Chunks(
                 new SendExpressionChunk { Code = "foo(\"hello\")" },
@@ -423,9 +424,9 @@ namespace Spark.IronRuby.Tests
             var renderPartial = new RenderPartialChunk { FileContext = new FileContext { Contents = partial[0] } };
             renderPartial.Sections.Add("foo",
                                        new[]
-                                           {
-                                               (Chunk) new SendLiteralChunk {Text = "From inside caller"}
-                                           });
+                                       {
+                                           (Chunk) new SendLiteralChunk {Text = "From inside caller"}
+                                       });
 
             var chunks = Chunks(
                 new SendLiteralChunk { Text = "(" },
@@ -546,9 +547,9 @@ namespace Spark.IronRuby.Tests
 
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView(new StubViewData
-                                           {
-                                               {"stuff", new[] {6, 2, 7, 4}}
-                                           });
+                                       {
+                                           {"stuff", new[] {6, 2, 7, 4}}
+                                       });
             Assert.AreEqual("04TrueFalse14FalseFalse24FalseFalse34FalseTrue", contents);
         }
 

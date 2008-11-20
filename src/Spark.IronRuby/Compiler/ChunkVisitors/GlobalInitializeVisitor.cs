@@ -12,13 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using Microsoft.Scripting.Hosting;
+using Spark.Compiler;
+using Spark.Compiler.ChunkVisitors;
 
-namespace Spark.Ruby
+namespace Spark.Ruby.Compiler.ChunkVisitors
 {
-    public interface IScriptingSparkView : ISparkView
+    public class GlobalInitializeVisitor : ChunkVisitor
     {
-        string ScriptSource { get; }
-        CompiledCode CompiledCode { get; set; }
+        private readonly SourceWriter _source;
+
+        public GlobalInitializeVisitor(SourceWriter sourceWriter)
+        {
+            _source = sourceWriter;
+        }
+
+        protected override void Visit(GlobalVariableChunk chunk)
+        {
+            _source.Write("@").Write(chunk.Name).Write("=").WriteLine(chunk.Value);
+        }
     }
 }
