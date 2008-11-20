@@ -58,7 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spark.Scripting\Spark.Python.csproj">
+    <ProjectReference Include="..\Spark.Python\Spark.Python.csproj">
       <Project>{0703F11D-FA13-4182-8577-170C9A5121FF}</Project>
       <Name>Spark.Python</Name>
     </ProjectReference>

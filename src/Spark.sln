@@ -19,9 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcContrib.SparkViewEngine.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.JsTests", "Spark.JsTests\Spark.JsTests.csproj", "{E3D6EDAD-3C8F-4C0D-AD96-740566A055F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Python", "Spark.Scripting\Spark.Python.csproj", "{0703F11D-FA13-4182-8577-170C9A5121FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Python", "Spark.Python\Spark.Python.csproj", "{0703F11D-FA13-4182-8577-170C9A5121FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Python.Tests", "Spark.Scripting.Tests\Spark.Python.Tests.csproj", "{ED1B2C7B-862B-4B11-9BC3-55B1887877D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Python.Tests", "Spark.Python.Tests\Spark.Python.Tests.csproj", "{ED1B2C7B-862B-4B11-9BC3-55B1887877D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Spark Core", "Spark Core", "{F606A062-1BD5-40E2-8E8A-BCC4F374BFBF}"
 EndProject
@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AspNet Mvc", "AspNet Mvc", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Castle MonoRail", "Castle MonoRail", "{CE293579-4889-4D6D-A1A0-BBBE8CBB9343}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Web.Mvc.Python", "Spark.Web.Mvc.Scripting\Spark.Web.Mvc.Python.csproj", "{92156FC5-8ECF-4A52-B4CA-AE060DCAAD18}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Web.Mvc.Python", "Spark.Web.Mvc.Python\Spark.Web.Mvc.Python.csproj", "{92156FC5-8ECF-4A52-B4CA-AE060DCAAD18}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Ruby", "Spark.Ruby\Spark.Ruby.csproj", "{514D7846-A133-4CCF-82B7-12C13F35D55B}"
 EndProject
