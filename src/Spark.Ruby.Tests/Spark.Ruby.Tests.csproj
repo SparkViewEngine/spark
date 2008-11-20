@@ -67,7 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spark.IronRuby\Spark.Ruby.csproj">
+    <ProjectReference Include="..\Spark.Ruby\Spark.Ruby.csproj">
       <Project>{514D7846-A133-4CCF-82B7-12C13F35D55B}</Project>
       <Name>Spark.Ruby</Name>
     </ProjectReference>

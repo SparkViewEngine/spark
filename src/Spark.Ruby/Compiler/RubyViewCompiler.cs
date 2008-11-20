@@ -120,7 +120,7 @@ namespace Spark.Ruby.Compiler
                 source.AppendLine("    })]");
             }
 
-            source.Append("public class ").Append(viewClassName).Append(" : ").Append(BaseClass).AppendLine(", global::Spark.IronRuby.IScriptingSparkView");
+            source.Append("public class ").Append(viewClassName).Append(" : ").Append(BaseClass).AppendLine(", global::Spark.Ruby.IScriptingSparkView");
             source.AppendLine("{");
 
             source.Append("static System.Guid _generatedViewId = new System.Guid(\"").Append(GeneratedViewId).AppendLine("\");");
@@ -154,7 +154,7 @@ namespace Spark.Ruby.Compiler
             source.AppendLine("{");
             source.AppendLine("CompiledCode.Execute(");
             source.AppendLine("CompiledCode.Engine.CreateScope(");
-            source.AppendLine("new global::Spark.IronRuby.ScriptingViewSymbolDictionary(this)");
+            source.AppendLine("new global::Spark.Ruby.ScriptingViewSymbolDictionary(this)");
             source.AppendLine("));");
             source.AppendLine("}");
             source.AppendLine("}");

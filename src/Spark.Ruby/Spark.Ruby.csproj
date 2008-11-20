@@ -53,16 +53,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compiler\Ruby\ChunkVisitors\GlobalInitializeVisitor.cs" />
-    <Compile Include="Compiler\Ruby\ChunkVisitors\GeneratedCodeVisitor.cs" />
-    <Compile Include="Compiler\Ruby\ChunkVisitors\GlobalFunctionsVisitor.cs" />
-    <Compile Include="Compiler\Ruby\ChunkVisitors\GlobalMembersVisitor.cs" />
-    <Compile Include="Compiler\Ruby\ChunkVisitors\VariableTracker.cs" />
-    <Compile Include="Compiler\Ruby\SourceWriter.cs" />
+    <Compile Include="Compiler\ChunkVisitors\GeneratedCodeVisitor.cs" />
+    <Compile Include="Compiler\ChunkVisitors\GlobalFunctionsVisitor.cs" />
+    <Compile Include="Compiler\ChunkVisitors\GlobalInitializeVisitor.cs" />
+    <Compile Include="Compiler\ChunkVisitors\GlobalMembersVisitor.cs" />
+    <Compile Include="Compiler\ChunkVisitors\VariableTracker.cs" />
+    <Compile Include="Compiler\RubyViewCompiler.cs" />
+    <Compile Include="Compiler\SourceWriter.cs" />
     <Compile Include="IScriptingSparkView.cs" />
     <Compile Include="RubyEngineManager.cs" />
     <Compile Include="RubyLanguageFactory.cs" />
-    <Compile Include="Compiler\Ruby\RubyViewCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptingViewSymbolDictionary.cs" />
   </ItemGroup>
