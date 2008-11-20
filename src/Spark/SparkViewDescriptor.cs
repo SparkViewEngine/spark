@@ -21,7 +21,8 @@ namespace Spark
         Default,
         CSharp,
         Javascript,
-        Python
+        Python,
+        Ruby
     }
 
     public class SparkViewDescriptor

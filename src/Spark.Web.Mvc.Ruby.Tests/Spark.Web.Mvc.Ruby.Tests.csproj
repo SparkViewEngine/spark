@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0703F11D-FA13-4182-8577-170C9A5121FF}</ProjectGuid>
+    <ProjectGuid>{AE1175DE-6388-472B-92EB-907A1C45E541}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Spark.Scripting</RootNamespace>
-    <AssemblyName>Spark.Scripting</AssemblyName>
+    <RootNamespace>Spark.Web.Mvc.Ruby.Tests</RootNamespace>
+    <AssemblyName>Spark.Web.Mvc.Ruby.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,29 +31,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IronPython, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="IronRuby.Libraries, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\IronPython.dll</HintPath>
+      <HintPath>..\..\bin\ironruby\IronRuby.Libraries.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython.Modules, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\IronPython.Modules.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\Microsoft.Scripting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\Microsoft.Scripting.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting.ExtensionAttribute, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
+      <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\aspnetmvc\System.Web.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\AspNetMvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\aspnetmvc\System.Web.Routing.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -65,19 +65,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compiler\Python\ChunkVisitors\GeneratedCodeVisitor.cs" />
-    <Compile Include="Compiler\Python\ChunkVisitors\GlobalFunctionsVisitor.cs" />
-    <Compile Include="Compiler\Python\ChunkVisitors\GlobalMembersVisitor.cs" />
-    <Compile Include="Compiler\Python\ChunkVisitors\VariableTracker.cs" />
-    <Compile Include="Compiler\Python\SourceWriter.cs" />
-    <Compile Include="IScriptingSparkView.cs" />
+    <Compile Include="HtmlHelperExtensionsTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Compiler\Python\PythonViewCompiler.cs" />
-    <Compile Include="PythonEngineManager.cs" />
-    <Compile Include="ScriptingLanguageFactory.cs" />
-    <Compile Include="ScriptingViewSymbolDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Spark.IronRuby\Spark.IronRuby.csproj">
+      <Project>{514D7846-A133-4CCF-82B7-12C13F35D55B}</Project>
+      <Name>Spark.IronRuby</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Spark.Web.Mvc.Ruby\Spark.Web.Mvc.Ruby.csproj">
+      <Project>{92D6EEC2-FFE5-48E5-BFE1-D5C6D2F48D90}</Project>
+      <Name>Spark.Web.Mvc.Ruby</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Spark\Spark.csproj">
       <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
       <Name>Spark</Name>

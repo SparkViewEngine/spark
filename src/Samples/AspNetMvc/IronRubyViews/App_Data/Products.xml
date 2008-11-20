@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ArrayOfProduct xmlns="http://schemas.datacontract.org/2004/07/IronRubyViews.Models">
+  <Product>
+    <Id>1</Id>
+    <Name>Tea Kettle</Name>
+    <UnitPrice>19.95</UnitPrice>
+  </Product>
+  <Product>
+    <Id>2</Id>
+    <Name>Reading Lamp</Name>
+    <UnitPrice>24.95</UnitPrice>
+  </Product>
+  <Product>
+    <Id>3</Id>
+    <Name>Curtains</Name>
+    <UnitPrice>52.00</UnitPrice>
+  </Product>
+  <Product>
+    <Id>4</Id>
+    <Name>Bookshelves</Name>
+    <UnitPrice>37.95</UnitPrice>
+  </Product>
+</ArrayOfProduct>

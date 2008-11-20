@@ -69,7 +69,7 @@ namespace Spark
         }
 
 
-        class OutputScopeImpl : IDisposable
+        public class OutputScopeImpl : IDisposable
         {
             private readonly AbstractSparkView view;
             private readonly TextWriter previous;

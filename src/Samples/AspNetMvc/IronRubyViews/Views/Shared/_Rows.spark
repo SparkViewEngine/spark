@@ -1,0 +1,11 @@
+﻿<test if="false">
+  <render:nodata/>
+  <else/>
+  <render:beforeall/>
+  <for each="item in source">
+    <render:before/>
+    <render:each/>
+    <render:after/>
+  </for>
+  <render:afterall/>
+</test>

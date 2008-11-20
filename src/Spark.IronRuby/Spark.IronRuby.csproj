@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0703F11D-FA13-4182-8577-170C9A5121FF}</ProjectGuid>
+    <ProjectGuid>{514D7846-A133-4CCF-82B7-12C13F35D55B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Spark.Scripting</RootNamespace>
-    <AssemblyName>Spark.Scripting</AssemblyName>
+    <RootNamespace>Spark.IronRuby</RootNamespace>
+    <AssemblyName>Spark.IronRuby</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,25 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IronPython, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="IronRuby, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\IronPython.dll</HintPath>
+      <HintPath>..\..\bin\ironruby\IronRuby.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython.Modules, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="NonStandard.Microsoft.Scripting, Version=1.0.0.5000, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\IronPython.Modules.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\Microsoft.Scripting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\Microsoft.Scripting.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting.ExtensionAttribute, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ironpython\Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
+      <HintPath>..\..\bin\ironruby\NonStandard.Microsoft.Scripting.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -65,16 +53,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compiler\Python\ChunkVisitors\GeneratedCodeVisitor.cs" />
-    <Compile Include="Compiler\Python\ChunkVisitors\GlobalFunctionsVisitor.cs" />
-    <Compile Include="Compiler\Python\ChunkVisitors\GlobalMembersVisitor.cs" />
-    <Compile Include="Compiler\Python\ChunkVisitors\VariableTracker.cs" />
-    <Compile Include="Compiler\Python\SourceWriter.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\GlobalInitializeVisitor.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\GeneratedCodeVisitor.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\GlobalFunctionsVisitor.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\GlobalMembersVisitor.cs" />
+    <Compile Include="Compiler\Ruby\ChunkVisitors\VariableTracker.cs" />
+    <Compile Include="Compiler\Ruby\SourceWriter.cs" />
     <Compile Include="IScriptingSparkView.cs" />
+    <Compile Include="RubyEngineManager.cs" />
+    <Compile Include="RubyLanguageFactory.cs" />
+    <Compile Include="Compiler\Ruby\RubyViewCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Compiler\Python\PythonViewCompiler.cs" />
-    <Compile Include="PythonEngineManager.cs" />
-    <Compile Include="ScriptingLanguageFactory.cs" />
     <Compile Include="ScriptingViewSymbolDictionary.cs" />
   </ItemGroup>
   <ItemGroup>

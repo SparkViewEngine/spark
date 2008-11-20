@@ -1,0 +1,52 @@
+﻿
+<content:head once="pagination-css">
+  ## style from http://www.thewebhelp.com/css/pagination_style_template/
+  <link type="text/css" rel="stylesheet" href="~/content/pagination.css"/>
+</content:head>
+
+<div class="tnt_pagination">
+  ## make a clr route dictionary for url.action
+  #require 'System.Web.Routing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+  #routeData = System::Web::Routing::RouteValueDictionary.new
+  
+  ## monkey patch an id setter equivalent to {routeData["id"] = value}
+  #def routeData.id=(value); set_Item('id',value); end
+
+  <default action="'pagingandrepeater'" controller="'home'"/>
+
+  <test if="page.HasPreviousPage">
+    #routeData.id = page.CurrentPage - 1
+    <a href="${url.action(action, controller, routeData)}">
+      <render:prev>« Previous</render:prev>
+    </a>
+    <else/>
+    <span class="disabled_tnt_pagination">
+      <render:prev>« Previous</render:prev>
+    </span>
+  </test>
+
+  <for each="pageIndex in 1..page.PageCount">
+    #routeData.id = pageIndex
+    <test if="page.CurrentPage == pageIndex">
+      <span class="active_tnt_link">
+        <render:item>${pageIndex}</render:item>
+      </span>
+      <else/>
+      <a href="${url.action(action, controller, routeData)}">
+        <render:item>${pageIndex}</render:item>
+      </a>
+    </test>
+  </for>
+    
+  <test if="page.HasNextPage">
+    #routeData.id = page.CurrentPage + 1
+    <a href="${url.Action(action, controller, routeData)}">
+      <render:next>Next »</render:next>
+    </a>
+    <else/>
+    <span class="disabled_tnt_pagination">
+      <render:next>Next »</render:next>
+    </span>
+  </test>
+
+</div>

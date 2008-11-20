@@ -1,0 +1,54 @@
+﻿
+<Pagination page="@birds"/>
+
+<content:head>
+  <style type="text/css">
+    .birdtable { border-spacing:0px; border-collapse:collapse; clear:both; margin-left:20px; }
+    .birdtable .top { background-color:#F5F5F5; border:1px solid #EBEBEB;}
+    .birdtable .alt { background-color:#F5F5F5; }
+    .birdtable .active { background-color:#d5e5ee; }
+
+    .birdtable td {padding:1px 4px 1px 4px;}
+    .birdtable .red {color: #FF1616;}
+    .birdtable .blue {color: #3EA2C7;}
+    .birdtable .mn {font-weight: bold;}
+  </style>
+</content:head>
+
+## This would be a lot easier with a simple {tr each=""}
+## but its for the sake of a demo. The partial is calling
+## back repeatedly with different values. item and itemIndex
+## are provided by _Rows.spark
+
+<Rows source="@birds.items">
+  <section:beforeall>
+    <table class="birdtable">
+      <tr class="top">
+        <th style="width:50px;"></th>
+        <th style="width:150px;">Bird</th>
+        <th style="width:150px;">State</th>
+      </tr>
+  </section:beforeall>
+  <section:each>
+    <tr class="alt?{itemIndex % 2 == 1} active?{item.state.equals 'Minnesota'}">
+      <td>${itemIndex + @birds.FirstItemIndex + 1}</td>
+      <td class="red?{item.name.equals 'Cardinal'} blue?{item.name.index_of('Blue') != -1}">${H(item.Name)}</td>
+      <td class="mn?{item.state.equals 'Minnesota'}">${H(item.State)}</td>
+    </tr>
+  </section:each>
+  <section:afterall>
+    </table>
+  </section:afterall>
+</Rows>
+
+<Pagination page="@birds" action="'pagingandrepeater'">
+  <section:prev>&laquo;</section:prev>
+  <section:next>&raquo;</section:next>
+  <section:item>
+    <test if="4>pageIndex">
+      ${["one","two","three"][pageIndex - 1]}
+      <else/>
+      ${pageIndex}
+    </test>
+  </section:item>
+</Pagination>
