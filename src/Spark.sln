@@ -31,9 +31,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Castle MonoRail", "Castle M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Web.Mvc.Scripting", "Spark.Web.Mvc.Scripting\Spark.Web.Mvc.Scripting.csproj", "{92156FC5-8ECF-4A52-B4CA-AE060DCAAD18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.IronRuby", "Spark.IronRuby\Spark.IronRuby.csproj", "{514D7846-A133-4CCF-82B7-12C13F35D55B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Ruby", "Spark.Ruby\Spark.Ruby.csproj", "{514D7846-A133-4CCF-82B7-12C13F35D55B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.IronRuby.Tests", "Spark.IronRuby.Tests\Spark.IronRuby.Tests.csproj", "{E4A60CC3-41B3-495E-AA77-2574621C863B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Ruby.Tests", "Spark.Ruby.Tests\Spark.Ruby.Tests.csproj", "{E4A60CC3-41B3-495E-AA77-2574621C863B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.Web.Mvc.Ruby", "Spark.Web.Mvc.Ruby\Spark.Web.Mvc.Ruby.csproj", "{92D6EEC2-FFE5-48E5-BFE1-D5C6D2F48D90}"
 EndProject
