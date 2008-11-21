@@ -153,6 +153,11 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             CodeDefault();
         }
 
+        protected override void Visit(UseMasterChunk chunk)
+        {
+            //no-op
+        }
+
         protected override void Visit(DefaultVariableChunk chunk)
         {
             if (IsVariableDeclared(chunk.Name))
@@ -468,4 +473,5 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
         }
 
     }
+
 }

@@ -934,6 +934,5 @@ namespace Spark.Tests
             Assert.IsFalse(content.Contains("bar1"));
             Assert.IsFalse(content.Contains("bar3"));
         }
-        
     }
 }

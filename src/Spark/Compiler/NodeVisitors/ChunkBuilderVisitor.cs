@@ -402,36 +402,21 @@ namespace Spark.Compiler.NodeVisitors
 
         private void VisitUse(SpecialNode specialNode, SpecialNodeInspector inspector)
         {
-            //TODO: change <use file=""> to <render partial="">, to avoid
-            // random attribute conflicts on parameterized cases
-
-            var content = inspector.TakeAttribute("content");
             var file = inspector.TakeAttribute("file");
-            var namespaceAttr = inspector.TakeAttribute("namespace");
-            var assemblyAttr = inspector.TakeAttribute("assembly");
-            var importAttr = inspector.TakeAttribute("import");
-
-            if (content != null)
+            if (file != null)
             {
-                var useContentChunk = new UseContentChunk { Name = content.Value, Position = Locate(inspector.OriginalNode) };
-                Chunks.Add(useContentChunk);
-                using (new Frame(this, useContentChunk.Default))
-                {
-                    Accept(specialNode.Body);
-                }
-            }
-            else if (file != null)
-            {
-                var scope = new ScopeChunk { Position = Locate(inspector.OriginalNode) };
+                var scope = new ScopeChunk {Position = Locate(inspector.OriginalNode)};
                 Chunks.Add(scope);
                 using (new Frame(this, scope.Body))
                 {
                     foreach (var attr in inspector.Attributes)
                     {
-                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+                        Chunks.Add(new LocalVariableChunk
+                                   {Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr)});
                     }
 
-                    var useFileChunk = new RenderPartialChunk { Name = file.Value, Position = Locate(inspector.OriginalNode) };
+                    var useFileChunk = new RenderPartialChunk
+                                       {Name = file.Value, Position = Locate(inspector.OriginalNode)};
                     Chunks.Add(useFileChunk);
                     using (new Frame(this, useFileChunk.Body, useFileChunk.Sections))
                     {
@@ -439,27 +424,51 @@ namespace Spark.Compiler.NodeVisitors
                     }
                 }
             }
-            else if (namespaceAttr != null || assemblyAttr != null)
-            {
-                if (namespaceAttr != null)
-                {
-                    var useNamespaceChunk = new UseNamespaceChunk { Namespace = namespaceAttr.Value };
-                    AddUnordered(useNamespaceChunk);
-                }
-                if (assemblyAttr != null)
-                {
-                    var useAssemblyChunk = new UseAssemblyChunk { Assembly = assemblyAttr.Value };
-                    AddUnordered(useAssemblyChunk);
-                }
-            }
-            else if (importAttr != null)
-            {
-                var useImportChunk = new UseImportChunk { Name = importAttr.Value };
-                AddUnordered(useImportChunk);
-            }
             else
             {
-                throw new CompilerException("Special node use had no understandable attributes");
+                var contentAttr = inspector.TakeAttribute("content");
+                var namespaceAttr = inspector.TakeAttribute("namespace");
+                var assemblyAttr = inspector.TakeAttribute("assembly");
+                var importAttr = inspector.TakeAttribute("import");
+                var masterAttr = inspector.TakeAttribute("master");
+
+                if (contentAttr != null)
+                {
+                    var useContentChunk = new UseContentChunk
+                                          {Name = contentAttr.Value, Position = Locate(inspector.OriginalNode)};
+                    Chunks.Add(useContentChunk);
+                    using (new Frame(this, useContentChunk.Default))
+                    {
+                        Accept(specialNode.Body);
+                    }
+                }
+                else if (namespaceAttr != null || assemblyAttr != null)
+                {
+                    if (namespaceAttr != null)
+                    {
+                        var useNamespaceChunk = new UseNamespaceChunk {Namespace = namespaceAttr.Value};
+                        AddUnordered(useNamespaceChunk);
+                    }
+                    if (assemblyAttr != null)
+                    {
+                        var useAssemblyChunk = new UseAssemblyChunk {Assembly = assemblyAttr.Value};
+                        AddUnordered(useAssemblyChunk);
+                    }
+                }
+                else if (importAttr != null)
+                {
+                    var useImportChunk = new UseImportChunk {Name = importAttr.Value};
+                    AddUnordered(useImportChunk);
+                }
+                else if (masterAttr != null)
+                {
+                    var useMasterChunk = new UseMasterChunk { Name = masterAttr.Value };
+                    AddUnordered(useMasterChunk);
+                }
+                else
+                {
+                    throw new CompilerException("Special node use had no understandable attributes");
+                }
             }
         }
 

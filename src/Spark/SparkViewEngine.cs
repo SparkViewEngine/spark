@@ -21,6 +21,7 @@ using System.Reflection;
 using System.Threading;
 using System.Web.Hosting;
 using Spark.Compiler;
+using Spark.Compiler.ChunkVisitors;
 using Spark.Compiler.CSharp;
 using Spark.Compiler.Javascript;
 using Spark.Parser;
@@ -30,7 +31,7 @@ using Spark.Parser.Syntax;
 
 namespace Spark
 {
-    
+
     public class SparkViewEngine : ISparkViewEngine, ISparkServiceInitialize
     {
         public SparkViewEngine()
@@ -54,6 +55,7 @@ namespace Spark
             ViewActivatorFactory = container.GetService<IViewActivatorFactory>();
             LanguageFactory = container.GetService<ISparkLanguageFactory>();
             ResourcePathManager = container.GetService<IResourcePathManager>();
+            TemplateLocator = container.GetService<ITemplateLocator>();
             SetViewFolder(container.GetService<IViewFolder>());
         }
 
@@ -168,6 +170,18 @@ namespace Spark
         public ISparkExtensionFactory ExtensionFactory { get; set; }
         public IViewActivatorFactory ViewActivatorFactory { get; set; }
 
+        private ITemplateLocator _templateLocator;
+        public ITemplateLocator TemplateLocator
+        {
+            get
+            {
+                if (_templateLocator == null)
+                    _templateLocator = new DefaultTemplateLocator();
+                return _templateLocator;
+            }
+            set { _templateLocator = value; }
+        }
+
         public ISparkSyntaxProvider SyntaxProvider { get; set; }
 
         public ISparkSettings Settings { get; set; }
@@ -224,16 +238,68 @@ namespace Spark
                             };
 
 
-            var chunks = new List<IList<Chunk>>();
+            var chunksLoaded = new List<IList<Chunk>>();
+            var templatesLoaded = new List<string>();
+            LoadTemplates(entry.Loader, key.Descriptor.Templates, chunksLoaded, templatesLoaded);
 
-            foreach (var template in key.Descriptor.Templates)
-                chunks.Add(entry.Loader.Load(template));
-
-            entry.Compiler.CompileView(chunks, entry.Loader.GetEverythingLoaded());
+            entry.Compiler.CompileView(chunksLoaded, entry.Loader.GetEverythingLoaded());
 
             entry.Activator = ViewActivatorFactory.Register(entry.Compiler.CompiledType);
 
             return entry;
+        }
+
+        void LoadTemplates(ViewLoader loader, IList<string> templates, IList<IList<Chunk>> chunksLoaded, IList<string> templatesLoaded)
+        {
+            foreach (var template in templates)
+            {
+                if (templatesLoaded.Contains(template))
+                {
+                    throw new CompilerException(string.Format(
+                        "Unable to include template '{0}' recusively",
+                        templates));
+                }
+
+                var chunks = loader.Load(template);
+                chunksLoaded.Add(chunks);
+                templatesLoaded.Add(template);
+
+                var useMaster = new UseMasterVisitor();
+                useMaster.Accept(chunks);
+                if (useMaster.Chunk == null)
+                {
+                    // process next template normally
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(useMaster.Chunk.Name))
+                {
+                    // <use master=""/> will explicitly ignore any default master layouts
+                    return;
+                }
+
+                var result = TemplateLocator.LocateMasterFile(ViewFolder, useMaster.Chunk.Name);
+                if (string.IsNullOrEmpty(result.Path))
+                {
+                    throw new CompilerException(string.Format(
+                                                    "Unable to find master layout file for '{0}'", useMaster.Chunk.Name));
+                }
+                LoadTemplates(loader, new[] {result.Path}, chunksLoaded, templatesLoaded);
+
+                // Explicit master templates loaded recursively. This loop is abandoned.
+                return;
+            }
+        }
+
+        class UseMasterVisitor : ChunkVisitor
+        {
+            public UseMasterChunk Chunk { get; set; }
+
+            protected override void Visit(UseMasterChunk chunk)
+            {
+                if (Chunk == null)
+                    Chunk = chunk;
+            }
         }
 
         private ViewLoader CreateViewLoader()
@@ -266,11 +332,11 @@ namespace Spark
                     Compiler = LanguageFactory.CreateViewCompiler(this, descriptor)
                 };
 
-                var templateChunks = new List<IList<Chunk>>();
-                foreach (var template in descriptor.Templates)
-                    templateChunks.Add(entry.Loader.Load(template));
+                var chunksLoaded = new List<IList<Chunk>>();
+                var templatesLoaded = new List<string>();
+                LoadTemplates(entry.Loader, descriptor.Templates, chunksLoaded, templatesLoaded);
 
-                entry.Compiler.GenerateSourceCode(templateChunks, entry.Loader.GetEverythingLoaded());
+                entry.Compiler.GenerateSourceCode(chunksLoaded, entry.Loader.GetEverythingLoaded());
                 sourceCode.Add(entry.Compiler.SourceCode);
 
                 batch.Add(entry);

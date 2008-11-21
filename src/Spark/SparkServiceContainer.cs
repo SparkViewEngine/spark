@@ -34,6 +34,7 @@ namespace Spark
                     {typeof (ISparkSyntaxProvider), c => new DefaultSyntaxProvider()},
                     {typeof (IViewActivatorFactory), c => new DefaultViewActivator()},
                     {typeof (IResourcePathManager), c => new DefaultResourcePathManager(c.GetService<ISparkSettings>())},
+                    {typeof (ITemplateLocator), c => new DefaultTemplateLocator()},
                     {typeof (IViewFolder), CreateDefaultViewFolder}
                 };
 

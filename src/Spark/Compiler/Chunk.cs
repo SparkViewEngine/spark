@@ -126,6 +126,11 @@ namespace Spark.Compiler
         public string Name { get; set; }
     }
 
+    public class UseMasterChunk : Chunk
+    {
+        public string Name { get; set; }
+    }
+
     public class RenderSectionChunk : Chunk
     {
         public RenderSectionChunk()
