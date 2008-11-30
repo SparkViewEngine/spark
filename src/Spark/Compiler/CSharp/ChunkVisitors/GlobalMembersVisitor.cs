@@ -23,14 +23,16 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
     {
         private readonly StringBuilder _source;
         private readonly Dictionary<string, object> _globalSymbols;
-        readonly Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
+    	private readonly NullBehaviour _nullBehaviour;
+    	readonly Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
         readonly Dictionary<string, GlobalVariableChunk> _globalAdded = new Dictionary<string, GlobalVariableChunk>();
         private int _indent = 4;
 
-        public GlobalMembersVisitor(StringBuilder output, Dictionary<string, object> globalSymbols)
+		public GlobalMembersVisitor(StringBuilder output, Dictionary<string, object> globalSymbols, NullBehaviour nullBehaviour)
         {
             _source = output;
             _globalSymbols = globalSymbols;
+			_nullBehaviour = nullBehaviour;
         }
 
         private int Indent
@@ -170,7 +172,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             _source.AppendLine("        {");
 
             CodeDefault();
-            var generator = new GeneratedCodeVisitor(_source, null) { Indent = 12 };
+            var generator = new GeneratedCodeVisitor(_source, null, _nullBehaviour) { Indent = 12 };
             generator.Accept(chunk.Body);
 
             CodeHidden();

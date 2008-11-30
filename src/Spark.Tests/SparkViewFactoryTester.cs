@@ -640,7 +640,7 @@ namespace Spark.Tests
         }
 
         [Test]
-        public void     DynamicAttributes()
+        public void DynamicAttributes()
         {
             mocks.ReplayAll();
             var viewContext = MakeViewContext("dynamic-attributes", null);

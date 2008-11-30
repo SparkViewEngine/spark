@@ -38,6 +38,7 @@ namespace Spark.Tests
         {
             var config = (SparkSectionHandler)ConfigurationManager.GetSection("spark");
             Assert.IsTrue(config.Compilation.Debug);
+        	Assert.AreEqual(NullBehaviour.Strict, config.Compilation.NullBehaviour);
             Assert.AreEqual(1, config.Compilation.Assemblies.Count);
             Assert.AreEqual(typeof(StubSparkView).FullName, config.Pages.PageBaseType);
             Assert.AreEqual(1, config.Pages.Namespaces.Count);
@@ -64,6 +65,7 @@ namespace Spark.Tests
         {
             var settings = new SparkSettings()
                 .SetDebug(true)
+				.SetNullBehaviour(NullBehaviour.Lenient)
                 .AddNamespace("System")
                 .AddNamespace("System.Collections.Generic")
                 .AddNamespace("System.Linq")
@@ -71,6 +73,7 @@ namespace Spark.Tests
                 .AddAssembly("Spark.Tests");
 
             Assert.IsTrue(settings.Debug);
+        	Assert.AreEqual(NullBehaviour.Lenient, settings.NullBehaviour);
             Assert.AreEqual(3, settings.UseNamespaces.Count());
             Assert.AreEqual(2, settings.UseAssemblies.Count());
         }

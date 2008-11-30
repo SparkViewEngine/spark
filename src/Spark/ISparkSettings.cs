@@ -18,11 +18,22 @@ using Spark.FileSystem;
 
 namespace Spark
 {
+	public enum NullBehaviour
+	{
+		/// <summary>Catch NullReferenceExceptions, and either render the literal expression, or render nothing, respectively, when ${expression} or $!{expression} syntax is used</summary>
+		/// <remarks><c>Lenient</c> is the default setting.</remarks>
+		Lenient,
+		/// <summary>Do not wrap expressions in try/catch blocks.  Intended for fail-fast in development environment.</summary>
+		Strict
+	}
+
     public interface ISparkSettings
     {
         bool Debug { get; }
+		NullBehaviour NullBehaviour { get; }
         string Prefix { get; }
         string PageBaseType { get; set; }
+
         IEnumerable<string> UseNamespaces { get; }
         IEnumerable<string> UseAssemblies { get; }
         IEnumerable<ResourceMapping> ResourceMappings { get; }

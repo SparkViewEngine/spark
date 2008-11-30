@@ -37,7 +37,8 @@ namespace Spark.Compiler
         public Guid GeneratedViewId { get; set; }
 
         public bool Debug { get; set; }
-        public IEnumerable<string> UseNamespaces { get; set; }
+		public NullBehaviour NullBehaviour { get; set; }
+    	public IEnumerable<string> UseNamespaces { get; set; }
         public IEnumerable<string> UseAssemblies { get; set; }
 
         public string TargetNamespace

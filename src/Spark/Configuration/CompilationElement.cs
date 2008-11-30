@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
 using System.Configuration;
 
 namespace Spark.Configuration
@@ -23,6 +24,13 @@ namespace Spark.Configuration
         {
             get { return (bool)this["debug"]; }
             set { this["debug"] = value; }
+        }
+
+        [ConfigurationProperty("nullBehaviour", DefaultValue = NullBehaviour.Lenient)]
+        public NullBehaviour NullBehaviour
+        {
+            get { return (NullBehaviour)this["nullBehaviour"]; }
+            set { this["nullBehaviour"] = value; }
         }
 
         [ConfigurationProperty("assemblies")]

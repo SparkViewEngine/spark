@@ -1,0 +1,6 @@
+<use namespace="Castle.MonoRail.Views.Spark.Tests.Models" />
+<var user="null" type="UserInfo" />
+<p>name kaboom *${user.Name}*</p>
+<p>name silently *$!{user.Name}*</p>
+<set user="new UserInfo{Name='fred'}"/>
+<p>name fixed *${user.Name}*</p>

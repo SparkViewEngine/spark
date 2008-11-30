@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Configuration.Install;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using Castle.MonoRail.Views.Spark.Install;
-using Castle.MonoRail.Views.Spark.Tests.Stubs;
-using NUnit.Framework;
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
+    using System;
+    using System.Collections;
+    using System.Configuration.Install;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using Castle.MonoRail.Views.Spark.Install;
+    using Castle.MonoRail.Views.Spark.Tests.Stubs;
+    using NUnit.Framework;
+
     [TestFixture]
     public class PrecompileInstallerTests
     {

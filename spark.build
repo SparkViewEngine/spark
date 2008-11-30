@@ -123,6 +123,21 @@
 					<exclude name="Integration" />
 				</categories>
 			</test>
+			<test assemblyname="${build.dir}/Spark.Ruby.Tests.dll">
+				<categories>
+					<exclude name="Integration" />
+				</categories>
+			</test>
+			<test assemblyname="${build.dir}/Spark.Python.Tests.dll">
+				<categories>
+					<exclude name="Integration" />
+				</categories>
+			</test>
+			<test assemblyname="${build.dir}/Spark.Web.Mvc.Ruby.Tests.dll">
+				<categories>
+					<exclude name="Integration" />
+				</categories>
+			</test>
 		</nunit2>
 	</target>
 

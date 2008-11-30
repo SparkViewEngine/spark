@@ -14,9 +14,7 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Spark.FileSystem;
 
 namespace Spark
@@ -29,10 +27,12 @@ namespace Spark
             _useAssemblies = new List<string>();
             _resourceMappings = new List<ResourceMapping>();
             _viewFolders = new List<IViewFolderSettings>();
+ 			NullBehaviour = NullBehaviour.Lenient;
         }
 
         public bool Debug { get; set; }
-        public string Prefix { get; set; }
+		public NullBehaviour NullBehaviour { get; set; }
+    	public string Prefix { get; set; }
         public string PageBaseType { get; set; }
 
         private readonly IList<string> _useNamespaces;
@@ -64,6 +64,12 @@ namespace Spark
             Debug = debug;
             return this;
         }
+
+		public SparkSettings SetNullBehaviour(NullBehaviour nullBehaviour)
+		{
+            NullBehaviour = nullBehaviour;
+			return this;
+		}
 
         public SparkSettings SetPageBaseType(string typeName)
         {

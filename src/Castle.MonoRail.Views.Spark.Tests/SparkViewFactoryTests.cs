@@ -12,114 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using Castle.MonoRail.Framework.Providers;
-
 namespace Castle.MonoRail.Views.Spark.Tests
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.IO;
 
-    using Castle.Core.Logging;
+
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Helpers;
-    using Castle.MonoRail.Framework.Routing;
     using Castle.MonoRail.Framework.Services;
-    using Castle.MonoRail.Framework.Test;
-
     using NUnit.Framework;
-    using Rhino.Mocks;
     using global::Spark;
 
+
     [TestFixture]
-    public class SparkViewFactoryTests
-    {
-        private MockRepository mocks;
-        private IEngineContext engineContext;
-        private IResponse response;
-        private IServerUtility server;
+    public class SparkViewFactoryTests : SparkViewFactoryTestsBase
+	{
+		protected override void Configure()
+		{
+			factory = new SparkViewFactory();
+			factory.Service(serviceProvider);
 
-        private IController controller;
-        private IControllerContext controllerContext;
+			manager = new DefaultViewEngineManager();
+			manager.Service(serviceProvider);
+			serviceProvider.ViewEngineManager = manager;
+			serviceProvider.AddService(typeof(IViewEngineManager), manager);
 
-        private IDictionary propertyBag;
+			manager.RegisterEngineForExtesionLookup(factory);
+			manager.RegisterEngineForView(factory);
+		}
 
-        private StringWriter output;
-        private DefaultViewEngineManager manager;
-        private IRoutingEngine routingEngine;
-        private SparkViewFactory factory;
-        private StubMonoRailServices serviceProvider;
-
-        [SetUp]
-        public void Init()
-        {
-            mocks = new MockRepository();
-            serviceProvider = new StubMonoRailServices();
-
-            var viewSourceLoader = new FileAssemblyViewSourceLoader("MonoRail.Tests.Views");
-            viewSourceLoader.Service(this.serviceProvider);
-            serviceProvider.ViewSourceLoader = viewSourceLoader;
-            serviceProvider.AddService(typeof(IViewSourceLoader), viewSourceLoader);
-            
-            factory = new SparkViewFactory();
-            factory.Service(serviceProvider);
-
-            manager = new DefaultViewEngineManager();
-            manager.Service(serviceProvider);
-            serviceProvider.ViewEngineManager = manager;
-            serviceProvider.AddService(typeof(IViewEngineManager), manager);
-
-            manager.RegisterEngineForExtesionLookup(factory);
-            manager.RegisterEngineForView(factory);
-
-
-            controllerContext = new ControllerContext();
-            propertyBag = controllerContext.PropertyBag;
-            
-            controllerContext.LayoutNames = new []{"default"};
-            output = new StringWriter();
-
-            server = new StubServerUtility();
-            routingEngine = mocks.CreateMock<IRoutingEngine>();
-            var urlBuilder = new DefaultUrlBuilder(server, routingEngine);
-            serviceProvider.UrlBuilder = urlBuilder;
-            serviceProvider.AddService(typeof(IUrlBuilder), urlBuilder);
-
-            InitUrlInfo("", "home", "index");
-
-            response = engineContext.Response;
-        }
-
-
-        void InitUrlInfo(string areaName, string controllerName, string actionName)
-        {
-            var urlInfo = new UrlInfo(areaName, controllerName, actionName, "/", "castle");
-
-            engineContext = new StubEngineContext();
-            engineContext.AddService(typeof(IUrlBuilder), serviceProvider.UrlBuilder);
-            engineContext.CurrentController = controller;
-            engineContext.CurrentControllerContext = controllerContext;
-            engineContext.Services.ViewEngineManager = serviceProvider.ViewEngineManager;
-            output = (StringWriter) engineContext.Response.Output;
-
-            var routeMatch = new RouteMatch();
-            controllerContext.RouteMatch = routeMatch;
-        }
-
-        static void ContainsInOrder(string content, params string[] values)
-        {
-            int index = 0;
-            foreach (string value in values)
-            {
-                int nextIndex = content.IndexOf(value, index);
-                Assert.GreaterOrEqual(nextIndex, 0, string.Format("Looking for {0}", value));
-                index = nextIndex + value.Length;
-            }
-        }
-
-        [Test]
+		[Test]
         public void ExtensionIsSpark()
         {
             mocks.ReplayAll();
@@ -184,6 +106,20 @@ namespace Castle.MonoRail.Views.Spark.Tests
                             "<p>bar:7</p>",
                             "<p>bar+4:11</p>");
         }
+
+		[Test]
+		public void NullBehaviourConfiguredToLenient()
+		{
+			mocks.ReplayAll();
+            manager.Process("Home\\NullBehaviourConfiguredToLenient", output, engineContext, controller, controllerContext);
+			var content = output.ToString();
+			Assert.IsFalse(content.Contains("default"));
+
+			ContainsInOrder(content,
+				"<p>name kaboom *${user.Name}*</p>",
+				"<p>name silently **</p>",
+				"<p>name fixed *fred*</p>");
+		}
 
         [Test]
         public void TerseHtmlEncode()

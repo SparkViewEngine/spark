@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using Castle.MonoRail.Framework;
-using Castle.MonoRail.Framework.Helpers;
-using Castle.MonoRail.Framework.Test;
-using Castle.MonoRail.Views.Spark;
-using Castle.MonoRail.Views.Spark.Tests.Stubs;
-using NUnit.Framework;
-using Spark;
-using System.Linq;
-using Spark.FileSystem;
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
+    using System.Linq;
+    using NUnit.Framework;
+
+    using Castle.MonoRail.Framework;
+    using Castle.MonoRail.Framework.Helpers;
+    using Castle.MonoRail.Framework.Test;
+    using Castle.MonoRail.Views.Spark.Tests.Stubs;
+
+    using global::Spark;
+    using global::Spark.FileSystem;
+
     [TestFixture]
     public class SparkBatchCompilerTester
     {

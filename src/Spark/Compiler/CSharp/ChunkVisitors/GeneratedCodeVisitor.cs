@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Spark.Compiler.ChunkVisitors;
@@ -24,12 +22,14 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
     public class GeneratedCodeVisitor : AbstractChunkVisitor
     {
         private readonly StringBuilder _source;
+        private readonly NullBehaviour _nullBehaviour;
 
-        public GeneratedCodeVisitor(StringBuilder output, Dictionary<string, object> globalSymbols)
+        public GeneratedCodeVisitor(StringBuilder output, Dictionary<string, object> globalSymbols, NullBehaviour nullBehaviour)
         {
+            _nullBehaviour = nullBehaviour;
             _source = output;
 
-            _scope = new Scope(new Scope(null) {Variables = globalSymbols});
+            _scope = new Scope(new Scope(null) { Variables = globalSymbols });
         }
 
         public int Indent { get; set; }
@@ -65,7 +65,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                 Variables = new Dictionary<string, object>();
                 Prior = prior;
             }
-            public Dictionary<string,object> Variables { get; set; }
+            public Dictionary<string, object> Variables { get; set; }
             public Scope Prior { get; set; }
         }
 
@@ -86,7 +86,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
         bool IsVariableDeclared(string name)
         {
             var scan = _scope;
-            while(scan != null)
+            while (scan != null)
             {
                 if (scan.Variables.ContainsKey(name))
                     return true;
@@ -113,14 +113,25 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             CodeIndent(chunk).Append("Output.Write(").Append(chunk.Code).AppendLine(");");
             CodeDefault();
             AppendIndent().AppendLine("}");
-            AppendIndent().AppendLine("catch(System.NullReferenceException)");
+            AppendIndent().AppendLine("catch(System.NullReferenceException ex)");
             AppendIndent().AppendLine("{");
-            if (!chunk.SilentNulls)
+            Indent += 4;
+            if (_nullBehaviour == NullBehaviour.Lenient)
             {
-                AppendIndent().Append("    Output.Write(\"${")
-                    .Append(EscapeStringContents(chunk.Code))
-                    .AppendLine("}\");");
+                if (!chunk.SilentNulls)
+                {
+                    AppendIndent().Append("Output.Write(\"${")
+                        .Append(EscapeStringContents(chunk.Code))
+                        .AppendLine("}\");");
+                }
             }
+            else
+            {
+                AppendIndent().Append("throw new System.ArgumentNullException(\"${")
+                    .Append(EscapeStringContents(chunk.Code))
+                    .AppendLine("}\", ex);");
+            }
+            Indent -= 4;
             AppendIndent().AppendLine("}");
         }
 
@@ -298,7 +309,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(UseImportChunk chunk)
         {
-            
+
         }
 
         protected override void Visit(ContentSetChunk chunk)

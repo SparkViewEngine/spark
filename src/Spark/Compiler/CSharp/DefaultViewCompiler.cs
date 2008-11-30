@@ -39,7 +39,7 @@ namespace Spark.Compiler.CSharp
             var source = new StringBuilder();
             var usingGenerator = new UsingNamespaceVisitor(source);
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
-            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols);
+            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, NullBehaviour);
             
 
 
@@ -115,7 +115,7 @@ namespace Spark.Compiler.CSharp
                 source.AppendLine();
                 source.AppendLine(string.Format("    public void RenderViewLevel{0}()", renderLevel));
                 source.AppendLine("    {");
-                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols) { Indent = 8 };
+                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols, NullBehaviour) { Indent = 8 };
                 viewGenerator.Accept(viewTemplate);
                 source.AppendLine("    }");
                 ++renderLevel;
