@@ -1,0 +1,24 @@
+﻿<h1>Hello world</h1>
+
+<p>This is a theme/skin sample.</p>
+
+<p>
+  It works by creating a distinct view engine for each theme. The IViewFolder for
+  the theme will look in the ~/Themes/{name}/* folder for spark files <i>before</i> looking in the
+  ~/Views/* folder. This way any of the Layouts, Shared, or leading-underscore partial files can be
+  replaced by putting a file of the same name and path in the theme's directory.
+</p>
+
+<p>
+  Although this technique is valid but there's a design flaw in Spark at the moment that makes
+  this unsafe. It's not really a big change - it's just that the class which holds compiled views is
+  shared by all instances of the engine. Because the themes all have the same logical paths 
+  internally their descriptors collide with each other in the cache's key.
+</p>
+
+<p>
+  I would suggesting waiting for that issue to be resolved before going to
+  production based on this sample.
+</p>
+
+

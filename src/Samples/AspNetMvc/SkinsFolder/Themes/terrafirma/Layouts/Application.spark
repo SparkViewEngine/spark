@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+
+	terrafirma1.0 by nodethirtythree design
+	http://www.nodethirtythree.com
+
+-->
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <title>${Title}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" type="text/css" href="~/Content/terrafirma/default.css" />
+    <use:head/>
+  </head>
+  <body>
+
+    <div id="outer">
+
+      <div id="upbg"></div>
+
+      <div id="inner">
+
+        <div id="header">
+          <h1>
+            ${Title}
+          </h1>
+          <h2>by nodethirtythree</h2>
+        </div>
+
+        <div id="splash"></div>
+
+        <div id="menu">
+          <ul>
+            <li class="first">
+              <a href="#">Home</a>
+            </li>
+            <li>
+              <a href="#">Archives</a>
+            </li>
+            <li>
+              <a href="#">Links</a>
+            </li>
+            <li>
+              <a href="#">Resources</a>
+            </li>
+            <li>
+              <a href="#">Contact</a>
+            </li>
+          </ul>
+
+          <div id="date">August 1, 2006</div>
+        </div>
+
+
+        <div id="primarycontent">
+
+          <!-- primary content start -->
+          <use:view/>
+          <!-- primary content end -->
+
+        </div>
+
+        <div id="secondarycontent">
+
+          <!-- secondary content start -->
+          <use:subcontent/>
+          <!-- secondary content end -->
+          ${ListThemes()}
+        </div>
+
+        <div id="footer">
+
+          &copy; My Website. All rights reserved. Design by <a href="http://www.nodethirtythree.com/">NodeThirtyThree</a>.
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </body>
+</html>

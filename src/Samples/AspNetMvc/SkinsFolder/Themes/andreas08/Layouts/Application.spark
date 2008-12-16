@@ -1,0 +1,30 @@
+﻿<html>
+  <head>
+    <title>${Title}</title>
+    <link type="text/css" rel="stylesheet" href="~/content/andreas08/andreas08.css"/>
+    <use:head/>
+  </head>
+  <body>
+
+    <div id="container">
+      <div id="header">
+        <h1>${H(Title)}</h1>
+        <h2>space reserved for your website slogan!</h2>
+      </div>
+
+      <div id="content">
+        <use:view/>
+      </div>
+      <div id="subcontent">
+        <use:subcontent/>
+        ${ListThemes()}
+      </div>
+      
+      <div id="footer">
+        <p>
+          &copy; 2005-2006 <a href="#">Your Name</a> | Design by <a href="http://andreasviklund.com">Andreas Viklund</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

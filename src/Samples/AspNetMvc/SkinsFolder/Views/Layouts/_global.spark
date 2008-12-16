@@ -1,0 +1,15 @@
+﻿
+<use namespace="System.Web.Mvc.Html"/>
+
+<global Title="'Skins Folder Sample'"/>
+
+<macro name="ListThemes">
+  <ul>
+    <li each="var name in new[]{'andreas08', 'terrafirma'}">
+      <a href="~/home/settheme?name=${name}">${H(name)}</a>
+    </li>
+    <li>
+      <a href="~/home/settheme">none</a>
+    </li>
+  </ul>
+</macro>
