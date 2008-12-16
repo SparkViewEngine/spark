@@ -2,9 +2,9 @@ REGEDIT4
 
 [HKEY_LOCAL_MACHINE\Software\Microsoft\VisualStudio\9.0\Packages\{9c109d61-07b1-4d23-a236-a46c699c387e}]
 @="SparkVsPackage.SparkPackage, SparkVsPackage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7f8549eed921a12c"
-"InprocServer32"="E:\\WINDOWS\\system32\\mscoree.dll"
+"InprocServer32"="C:\\Windows\\SYSTEM32\\MSCOREE.DLL"
 "Class"="SparkVsPackage.SparkPackage"
-"CodeBase"="E:\\Projects\\spark\\src\\Tools\\SparkVsPackage\\bin\\Debug\\SparkVsPackage.dll"
+"CodeBase"="C:\\Projects\\spark\\src\\Tools\\SparkVsPackage\\bin\\Debug\\SparkVsPackage.dll"
 [HKEY_LOCAL_MACHINE\Software\Microsoft\VisualStudio\9.0\Languages\File Extensions\.spark]
 @="{1085ff60-19e5-4af2-b454-f10ba0db39e9}"
 [HKEY_LOCAL_MACHINE\Software\Microsoft\VisualStudio\9.0\Languages\Language Services\Spark]

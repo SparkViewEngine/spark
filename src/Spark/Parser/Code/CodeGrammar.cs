@@ -27,6 +27,7 @@ namespace Spark.Parser.Code
             Func<IList<char>, string> bs = hit => new string(hit.ToArray());
             Func<IList<string>, string> js = hit => string.Concat(hit.ToArray());
 
+
             var escapeSequence = Ch('\\').And(Ch(c => true)).Build(hit => "\\" + hit.Down);
 
 
@@ -34,44 +35,40 @@ namespace Spark.Parser.Code
                 Rep1(ChNot('\"', '\\')).Build(bs)
                 .Or(escapeSequence);
 
-            var quotStringLiteral = Ch('\"').And(Rep(quotHunks)).And(Ch('\"'))
-                .Build(hit => "\"" + js(hit.Left.Down) + "\"");
+            var quotStringLiteral = Snip(Ch('\"').And(Rep(quotHunks)).And(Ch('\"')), hit => "\"" + js(hit.Left.Down) + "\"");
 
 
             var quotVerbatimPiece =
                 Ch("\"\"").Or(ChNot('\"').Build(ch => new string(ch, 1)));
 
-            var quotVerbatimLiteral = Ch("@\"").And(Rep(quotVerbatimPiece)).And(Ch('"'))
-                .Build(hit => "@\"" + js(hit.Left.Down) + "\"");
-
+            var quotVerbatimLiteral = Snip(Ch("@\"").And(Rep(quotVerbatimPiece)).And(Ch('"')), hit => "@\"" + js(hit.Left.Down) + "\"");
 
             var aposHunks =
-                Rep1(ChNot('\'', '\\', '\"')).Build(bs)
-                .Or(escapeSequence)
-                .Or(Ch('\"').Build(hit => "\\\""));
+                Snip(Rep1(ChNot('\'', '\\', '\"')))
+                .Or(Snip(escapeSequence))
+                .Or(Swap(Ch('\"'), "\\\""));
 
-            var aposStringLiteral = Ch('\'').And(Rep(aposHunks)).And(Ch('\''))
-                .Build(hit => "\"" + js(hit.Left.Down) + "\"");
+            var aposStringLiteral = Snip(Swap(Ch('\''), "\"").And(Snip(Rep(aposHunks))).And(Swap(Ch('\''), "\"")));
 
             // @' " '' ' becomes @" "" ' "
             var aposVerbatimPiece =
-                Ch("''").Build(ch => "'")
-                .Or(Ch("\"").Build(ch => "\"\""))
-                .Or(ChNot('\'').Build(ch => new string(ch, 1)));
+                Swap(Ch("''"), "'")
+                .Or(Swap(Ch("\""), "\"\""))
+                .Or(Snip(ChNot('\'')));
 
-            var aposVerbatimLiteral = Ch("@'").And(Rep(aposVerbatimPiece)).And(Ch('\''))
-                .Build(hit => "@\"" + js(hit.Left.Down) + "\"");
+            var aposVerbatimLiteral = Snip(Swap(Ch("@'"), "@\"").And(Snip(Rep(aposVerbatimPiece))).And(Swap(Ch('\''), "\"")));
 
             var stringLiteral = TkStr(quotStringLiteral.Or(quotVerbatimLiteral).Or(aposStringLiteral).Or(aposVerbatimLiteral));
 
-            var SpecialCharCast = Ch("(char)'").And(ChNot('\'', '\\').Build(ch => ch.ToString()).Or(escapeSequence)).And(Ch('\''))
-                .Build(hit => "(char)'" + hit.Left.Down + "'");
+            _stringLiteral = stringLiteral;
 
-            var oneLineComment = TkComm(Ch("//").And(Rep(ChNot('\r', '\n'))))
-                .Build(hit=>"//" + bs(hit.Down));
+            var SpecialCharCast = Snip(Ch("(char)'").And(ChNot('\'', '\\').Build(ch => ch.ToString()).Or(escapeSequence)).And(Ch('\'')),
+                hit => "(char)'" + hit.Left.Down + "'");
 
-            var multiLineComment = TkComm(Ch("/*").And(Rep(Ch(c=>true).Unless(Ch("*/")))).And(Ch("*/")))
-                .Build(hit=>"/*" + bs(hit.Left.Down) + "*/");
+            var oneLineComment = Snip(Ch("//").And(Rep(ChNot('\r', '\n'))), hit => "//" + bs(hit.Down));
+
+            var multiLineComment = Snip(Ch("/*").And(Rep(Ch(c => true).Unless(Ch("*/")))).And(Ch("*/")),
+                hit => "/*" + bs(hit.Left.Down) + "*/");
 
             // A Unicode character of the class Pc 
             var connectingCharacter = Ch(c => char.GetUnicodeCategory(c) == UnicodeCategory.ConnectorPunctuation);
@@ -80,14 +77,14 @@ namespace Spark.Parser.Code
             var combiningCharacter = Ch(c => char.GetUnicodeCategory(c) == UnicodeCategory.NonSpacingMark || char.GetUnicodeCategory(c) == UnicodeCategory.SpacingCombiningMark);
 
             // A Unicode character of the class Cf 
-            var formattingCharacter = Ch(c=>char.GetUnicodeCategory(c) == UnicodeCategory.Format);
+            var formattingCharacter = Ch(c => char.GetUnicodeCategory(c) == UnicodeCategory.Format);
 
             var identifierStartCharacter = Ch(char.IsLetter).Or(Ch('_'));
             var identifierPartCharacter = Ch(char.IsLetterOrDigit).Or(connectingCharacter).Or(combiningCharacter).Or(formattingCharacter);
             var identifierOrKeyword = identifierStartCharacter.And(Rep(identifierPartCharacter))
-                .Build(hit=>hit.Left + new string(hit.Down.ToArray()));
+                .Build(hit => hit.Left + new string(hit.Down.ToArray()));
 
-            var keyword = TkKword(Ch("abstract").Or(Ch("as")).Or(Ch("base")).Or(Ch("bool")).Or(Ch("break"))
+            var keyword = Snip(Ch("abstract").Or(Ch("as")).Or(Ch("base")).Or(Ch("bool")).Or(Ch("break"))
                 .Or(Ch("byte")).Or(Ch("case")).Or(Ch("catch")).Or(Ch("char")).Or(Ch("checked"))
                 .Or(Ch("class")).Or(Ch("const")).Or(Ch("continue")).Or(Ch("decimal")).Or(Ch("default"))
                 .Or(Ch("delegate")).Or(Ch("double")).Or(Ch("do")).Or(Ch("else")).Or(Ch("enum"))
@@ -104,26 +101,34 @@ namespace Spark.Parser.Code
                 .Or(Ch("unsafe")).Or(Ch("ushort")).Or(Ch("using")).Or(Ch("virtual")).Or(Ch("void"))
                 .Or(Ch("volatile")).Or(Ch("while"))).NotNext(identifierPartCharacter);
 
-            var availableIdentifier = identifierOrKeyword.Unless(keyword)
-                .Or(Ch("class").Build(hit => "@class"));
+            var availableIdentifier = Snip(identifierOrKeyword.Unless(keyword))
+                .Or(Swap(Ch("class"), "@class"));
 
-            var identifier = TkCode(availableIdentifier
-                .Or(Ch('@').And(identifierOrKeyword).Build(hit=>"@"+hit.Down)));
-            
-            var codeStretch = TkCode(Rep1(
-                Ch("[[").Build(ch => '<')
-                .Or(Ch("]]").Build(ch => '>'))
-                .Or(ChNot('\"', '\'', '{', '}'))
-                .Unless(identifier.Or(keyword))
-                .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")).Or(SpecialCharCast))))
-                .Build(bs);
+            var identifier = availableIdentifier
+                .Or(Snip(Ch('@').And(identifierOrKeyword), hit => "@" + hit.Down));
+
+            var codeStretch = Snip(Rep1(
+                Swap(Ch("[["), "<")
+                .Or(Swap(Ch("]]"), ">"))
+                .Or(Snip(ChNot('\"', '\'', '{', '}')))
+                .Unless(identifier.Or(keyword).Or(SpecialCharCast))
+                .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")))));
+
 
             // braced ::= '{' + terms + '}'
-            var braced = TkDelim(Ch('{')).And((ParseAction<IList<string>>)FnTerms).And(TkDelim(Ch('}')))
-                .Build(hit => "{" + js(hit.Left.Down) + "}");
+            var braced = Snip(Snip(Ch('{')).And((ParseAction<IList<Snippet>>)FnTerms).And(Snip(Ch('}'))));
 
             // ExpressionTerms ::= (dquot | aquot | braced | codeStretch | specialCharCast)*
-            ExpressionTerms = Rep(
+            //ExpressionTerms = Rep(
+            //    stringLiteral
+            //    .Or(braced)
+            //    .Or(codeStretch)
+            //    .Or(identifier)
+            //    .Or(keyword)
+            //    .Or(SpecialCharCast)
+            //    .Or(oneLineComment)
+            //    .Or(multiLineComment));
+            ExpressionTerms = Snip(Rep(
                 stringLiteral
                 .Or(braced)
                 .Or(codeStretch)
@@ -131,50 +136,144 @@ namespace Spark.Parser.Code
                 .Or(keyword)
                 .Or(SpecialCharCast)
                 .Or(oneLineComment)
-                .Or(multiLineComment));
+                .Or(multiLineComment)
+                ));
 
-            Expression = ExpressionTerms.Build(hit => string.Concat(hit.ToArray()));
+
+            Expression = ExpressionTerms.Build(hit=>new SnippetCollection(hit));
 
 
             var statementPiece =
-                Ch("[[").Build(ch => '<')
-                .Or(Ch("]]").Build(ch => '>'))
-                .Or(ChNot('\"', '\''))
-                .Unless(SpecialCharCast.Or(Ch("@\"")).Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")));
+                Swap(Ch("[["), "<")
+                .Or(Swap(Ch("]]"), ">"))
+                .Or(Snip(ChNot('\"', '\'')))
+                .Unless(SpecialCharCast)
+                .Unless(Ch("@\"").Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")));
 
-            var statement1Stretch = TkCode(Rep1(statementPiece.Unless(Ch('\r', '\n'))))
-                .Build(bs);
+            var statement1Stretch = Snip(Rep1(statementPiece.Unless(Ch('\r', '\n'))));
 
-            var statement2Stretch = TkCode(Rep1(statementPiece.Unless(Ch("%>"))))
-                .Build(bs);
+            var statement2Stretch = Snip(Rep1(statementPiece.Unless(Ch("%>"))));
 
             // Statement1 ::= (dquot | aquot | statement1Stretch | specialCharCast)*
-            Statement1 = Rep(
+            Statement1 = Snip(Rep(
                 stringLiteral
                 .Or(statement1Stretch)
                 .Or(SpecialCharCast)
                 .Or(oneLineComment)
-                .Or(multiLineComment))
-                .Build(hit => string.Concat(hit.ToArray()));
+                .Or(multiLineComment)));
+
 
             // Statement2 ::= (dquot | aquot | statement2Stretch | specialCharCast)*
-            Statement2 = Rep(
+            Statement2 = Snip(Rep(
                 stringLiteral
                 .Or(statement2Stretch)
                 .Or(SpecialCharCast)
                 .Or(oneLineComment)
-                .Or(multiLineComment))
-                .Build(hit => string.Concat(hit.ToArray()));
-
+                .Or(multiLineComment)));
         }
 
-        public ParseAction<IList<string>> ExpressionTerms;
-        public ParseAction<string> Expression;
 
-        public ParseAction<string> Statement1;
-        public ParseAction<string> Statement2;
+        static ParseAction<IList<Snippet>> Snip(ParseAction<Chain<Chain<IList<Snippet>, IList<Snippet>>, IList<Snippet>>> parser)
+        {
+            return Snip(parser, hit => new[] { hit.Left.Left, hit.Left.Down, hit.Down });
+        }
 
-        ParseResult<IList<string>> FnTerms(Position position)
+        static ParseAction<IList<Snippet>> Snip<TValue>(ParseAction<TValue> parser, Func<TValue, IList<IList<Snippet>>> combiner)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                return new ParseResult<IList<Snippet>>(result.Rest, combiner(result.Value).SelectMany(s => s).ToArray());
+            };
+        }
+
+        static ParseAction<IList<Snippet>> Snip<TValue>(ParseAction<TValue> parser, Func<TValue, string> builder)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                var snippet = new Snippet { Value = builder(result.Value), Begin = position, End = result.Rest };
+                return new ParseResult<IList<Snippet>>(result.Rest, new[] { snippet });
+            };
+        }
+
+        static ParseAction<IList<Snippet>> Snip(ParseAction<char> parser)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                var snippet = new Snippet { Value = new string(result.Value, 1), Begin = position, End = result.Rest };
+                return new ParseResult<IList<Snippet>>(result.Rest, new[] { snippet });
+            };
+        }
+
+        static ParseAction<IList<Snippet>> Snip(ParseAction<IList<char>> parser)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                var snippet = new Snippet { Value = new string(result.Value.ToArray()), Begin = position, End = result.Rest };
+                return new ParseResult<IList<Snippet>>(result.Rest, new[] { snippet });
+            };
+        }
+
+        static ParseAction<IList<Snippet>> Snip(ParseAction<string> parser)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                var snippet = new Snippet { Value = new string(result.Value.ToArray()), Begin = position, End = result.Rest };
+                return new ParseResult<IList<Snippet>>(result.Rest, new[] { snippet });
+            };
+        }
+        static ParseAction<IList<Snippet>> Snip(ParseAction<IList<string>> parser)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                var snippet = new Snippet { Value = string.Concat(result.Value.ToArray()), Begin = position, End = result.Rest };
+                return new ParseResult<IList<Snippet>>(result.Rest, new[] { snippet });
+            };
+        }
+        static ParseAction<IList<Snippet>> Snip(ParseAction<IList<Snippet>> parser)
+        {
+            return parser;
+        }
+        static ParseAction<IList<Snippet>> Snip(ParseAction<IList<IList<Snippet>>> parser)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                return new ParseResult<IList<Snippet>>(result.Rest, result.Value.SelectMany(s => s).ToArray());
+            };
+        }
+        static ParseAction<IList<Snippet>> Swap<TValue>(ParseAction<TValue> parser, string replacement)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                var snippet = new Snippet { Value = replacement };
+                return new ParseResult<IList<Snippet>>(result.Rest, new[] { snippet });
+            };
+        }
+
+        public ParseAction<IList<Snippet>> ExpressionTerms;
+        public ParseAction<SnippetCollection> Expression;
+
+        public ParseAction<IList<Snippet>> Statement1;
+        public ParseAction<IList<Snippet>> Statement2;
+
+        public ParseAction<IList<Snippet>> _stringLiteral;
+
+        ParseResult<IList<Snippet>> FnTerms(Position position)
         {
             return ExpressionTerms(position);
         }

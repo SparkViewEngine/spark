@@ -1,0 +1,10 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectView>ShowAllFiles</ProjectView>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartArguments>/ranu /rootsuffix Exp "C:\Users\Louis DeJardin\Documents\Visual Studio 2008\Projects\LanguageHarnessSubject\LanguageHarnessSubject.sln"</StartArguments>
+  </PropertyGroup>
+</Project>

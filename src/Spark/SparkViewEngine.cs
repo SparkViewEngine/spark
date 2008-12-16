@@ -229,22 +229,34 @@ namespace Spark
 
         public CompiledViewHolder.Entry CreateEntry(CompiledViewHolder.Key key)
         {
+            return CreateEntry(key, true);
+        }
+        
+        public CompiledViewHolder.Entry CreateEntry(CompiledViewHolder.Key key, bool compile)
+        {
             var entry = new CompiledViewHolder.Entry
-                            {
-                                Key = key,
-                                Loader = CreateViewLoader(),
-                                Compiler = LanguageFactory.CreateViewCompiler(this, key.Descriptor),
-                                LanguageFactory = LanguageFactory
-                            };
+            {
+                Key = key,
+                Loader = CreateViewLoader(),
+                Compiler = LanguageFactory.CreateViewCompiler(this, key.Descriptor),
+                LanguageFactory = LanguageFactory
+            };
 
 
             var chunksLoaded = new List<IList<Chunk>>();
             var templatesLoaded = new List<string>();
             LoadTemplates(entry.Loader, key.Descriptor.Templates, chunksLoaded, templatesLoaded);
 
-            entry.Compiler.CompileView(chunksLoaded, entry.Loader.GetEverythingLoaded());
+            if (compile)
+            {
+                entry.Compiler.CompileView(chunksLoaded, entry.Loader.GetEverythingLoaded());
 
-            entry.Activator = ViewActivatorFactory.Register(entry.Compiler.CompiledType);
+                entry.Activator = ViewActivatorFactory.Register(entry.Compiler.CompiledType);
+            }
+            else 
+            {
+                entry.Compiler.GenerateSourceCode(chunksLoaded, entry.Loader.GetEverythingLoaded());
+            }
 
             return entry;
         }

@@ -192,9 +192,9 @@ namespace Spark.Compiler.NodeVisitors
             Add(textNode);
         }
 
-        protected override void Visit(ExpressionNode expressionNode)
+        protected override void Visit(ExpressionNode node)
         {
-            Add(expressionNode);
+            Add(node);
         }
 
         protected override void Visit(EntityNode entityNode)

@@ -1,0 +1,80 @@
+HKCR
+{
+  // None of this is meaningful - the package is obtained with the registry info below
+  
+	SparkLanguage.Package.1 = s 'Package Class'
+	{
+		CLSID = s '{673FC80C-FEFF-4700-836E-783E376F4C41}'
+	}
+	SparkLanguage.Package = s 'Package Class'
+	{
+		CLSID = s '{673FC80C-FEFF-4700-836E-783E376F4C41}'
+		CurVer = s 'SparkLanguage.Package.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {673FC80C-FEFF-4700-836E-783E376F4C41} = s 'Package Class'
+		{
+			ProgID = s 'SparkLanguage.Package.1'
+			VersionIndependentProgID = s 'SparkLanguage.Package'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Both'
+			}
+			'TypeLib' = s '{DDF05202-45FA-4FEC-A2FB-7589D9E2B6AC}'
+		}
+	}
+}
+
+HKCU
+{
+  NoRemove Software
+  {
+    NoRemove Microsoft
+    {
+      NoRemove VisualStudio
+      {
+        // DEBUG registry for compile-and-run development
+        NoRemove 9.0Exp
+        {
+          NoRemove Configuration
+          {
+            NoRemove Packages
+            {
+              ForceRemove '{673FC80C-FEFF-4700-836E-783E376F4C41}' = s 'Spark Langauge Package'
+              {
+                val InprocServer32 =  s '%MODULE%'
+                val CompanyName = s 'Louis DeJardin'
+                val ProductName = s 'Spark View Engine'
+                val ProductVersion = s '1.0'
+                val MinEdition = s 'Standard'
+                val ID = d 1000
+              }
+            }
+            NoRemove Services
+            {
+              ForceRemove '{45a17860-9503-4eb6-ba88-836c9958739e}' = s '{673FC80C-FEFF-4700-836E-783E376F4C41}'
+              {
+                val Name = s 'Spark Langauge Service'
+              }
+            }
+            NoRemove Languages
+            {
+              NoRemove 'Language Services'
+              {
+                ForceRemove Spark = s '{45a17860-9503-4eb6-ba88-836c9958739e}'
+                {
+                  val Package = s '{673FC80C-FEFF-4700-836E-783E376F4C41}'
+                }
+              }
+              NoRemove 'File Extensions'
+              {
+                ForceRemove '.spark' = s '{45a17860-9503-4eb6-ba88-836c9958739e}'
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

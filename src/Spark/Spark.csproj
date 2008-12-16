@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -58,6 +58,8 @@
     <Compile Include="Compiler\BatchCompiler.cs" />
     <Compile Include="Compiler\Chunk.cs" />
     <Compile Include="Compiler\ChunkVisitors\AbstractChunkVisitor.cs" />
+    <Compile Include="Compiler\SourceBuilder.cs" />
+    <Compile Include="Compiler\SourceMapping.cs" />
     <Compile Include="DefaultLanguageFactory.cs" />
     <Compile Include="Compiler\ExpressionBuilder.cs" />
     <Compile Include="Compiler\CSharp\ChunkVisitors\BaseClassVisitor.cs" />
@@ -107,6 +109,8 @@
     <Compile Include="Configuration\ViewFolderElementCollection.cs" />
     <Compile Include="ISparkServiceInitialize.cs" />
     <Compile Include="FileSystem\ISparkTemplateLocator.cs" />
+    <Compile Include="Parser\Code\CodeSnipGrammar.cs" />
+    <Compile Include="Parser\Code\Snippet.cs" />
     <Compile Include="SparkServiceContainer.cs" />
     <Compile Include="FileSystem\ViewFolderType.cs" />
     <Compile Include="Constants.cs" />

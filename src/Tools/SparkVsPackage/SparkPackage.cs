@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace SparkVsPackage
 {
@@ -28,7 +29,9 @@ namespace SparkVsPackage
         protected override void Initialize()
         {
             base.Initialize();
+            IVsHierarchy h;
 
+            __VSHPROPID
             var language = new SparkLanguageService();
             language.SetSite(this);
 

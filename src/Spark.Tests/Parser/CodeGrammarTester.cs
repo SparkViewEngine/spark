@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System.Collections.Generic;
 using NUnit.Framework;
 using Spark.Parser;
 using Spark.Parser.Code;
+using System.Linq;
 
 namespace Spark.Tests.Parser
 {
@@ -29,16 +31,21 @@ namespace Spark.Tests.Parser
             _grammar = new CodeGrammar();
         }
 
-        Position Source(string text)
+        static Position Source(string text)
         {
             return new Position(new SourceContext(text));
+        }
+
+        static string Combine(IList<Snippet> snippets)
+        {
+            return string.Concat(snippets.Select(s => s.Value).ToArray());
         }
 
         [Test]
         public void SimpleStatement()
         {
             var result = _grammar.Expression(Source("hello world"));
-            Assert.AreEqual("hello world", result.Value);
+            Assert.AreEqual("hello world", Combine(result.Value));
         }
 
 
@@ -46,37 +53,37 @@ namespace Spark.Tests.Parser
         public void StringConstants()
         {
             var result = _grammar.Expression(Source("double\"quote\"strings"));
-            Assert.AreEqual("double\"quote\"strings", result.Value);
+            Assert.AreEqual("double\"quote\"strings", Combine(result.Value));
 
             var result2 = _grammar.Expression(Source("single\'quote\'strings"));
-            Assert.AreEqual("single\"quote\"strings", result2.Value);
+            Assert.AreEqual("single\"quote\"strings", Combine(result2.Value));
         }
 
         [Test]
         public void EnclosedEscapes()
         {
             var result = _grammar.Expression(Source("double\"quote-'-\\\'-\\\"-\"strings"));
-            Assert.AreEqual("double\"quote-'-\\\'-\\\"-\"strings", result.Value);
+            Assert.AreEqual("double\"quote-'-\\\'-\\\"-\"strings", Combine(result.Value));
 
             var result2 = _grammar.Expression(Source("single\'quote-\"-\\\'-\\\"-\'strings"));
-            Assert.AreEqual("single\"quote-\\\"-\\\'-\\\"-\"strings", result2.Value);
+            Assert.AreEqual("single\"quote-\\\"-\\\'-\\\"-\"strings", Combine(result2.Value));
         }
 
         [Test]
         public void BraceMatching()
         {
             var result = _grammar.Expression(Source("Html.Link(new {x='ten', y=20}) a}b "));
-            Assert.AreEqual("Html.Link(new {x=\"ten\", y=20}) a", result.Value);
+            Assert.AreEqual("Html.Link(new {x=\"ten\", y=20}) a", Combine(result.Value));
         }
 
         [Test]
         public void StopAtExpressionTerminators()
         {
             var result = _grammar.Expression(Source("ab{cde{fgh}ijk}lm\"n}o\"p'}}%>'qrs}tuv"));
-            Assert.AreEqual("ab{cde{fgh}ijk}lm\"n}o\"p\"}}%>\"qrs", result.Value);
+            Assert.AreEqual("ab{cde{fgh}ijk}lm\"n}o\"p\"}}%>\"qrs", Combine(result.Value));
 
             var result2 = _grammar.Expression(Source("ab{cde{fgh}ijk}lm\"n}o\"p'}}%>'qrs%>tuv"));
-            Assert.AreEqual("ab{cde{fgh}ijk}lm\"n}o\"p\"}}%>\"qrs", result2.Value);
+            Assert.AreEqual("ab{cde{fgh}ijk}lm\"n}o\"p\"}}%>\"qrs", Combine(result2.Value));
             
         }
 
@@ -84,7 +91,7 @@ namespace Spark.Tests.Parser
         public void SpecialCastAllowsCharConstant()
         {
             var result = _grammar.Expression(Source("..(char)'u'..'u'.."));
-            Assert.AreEqual("..(char)'u'..\"u\"..", result.Value);
+            Assert.AreEqual("..(char)'u'..\"u\"..", Combine(result.Value));
             
         }
 
@@ -93,7 +100,7 @@ namespace Spark.Tests.Parser
         public void ChangeDoubleBraceAliases()
         {
             var result = _grammar.Expression(Source("one < two > three [[ four '[[fi\"ve]]' ]] six \"[[']]\" seven"));
-            Assert.AreEqual("one < two > three < four \"[[fi\\\"ve]]\" > six \"[[']]\" seven", result.Value);
+            Assert.AreEqual("one < two > three < four \"[[fi\\\"ve]]\" > six \"[[']]\" seven", Combine(result.Value));
 
         }
 
@@ -101,14 +108,14 @@ namespace Spark.Tests.Parser
         public void Statement1StopsWithEndOfLine()
         {
             var result = _grammar.Statement1(Source("before%>and\r\nafter"));
-            Assert.AreEqual("before%>and", result.Value);
+            Assert.AreEqual("before%>and", Combine(result.Value));
         }
 
         [Test]
         public void Statement2StopsWithPercentAngle()
         {
             var result = _grammar.Statement2(Source("before\r\nand%>after"));
-            Assert.AreEqual("before\r\nand", result.Value);
+            Assert.AreEqual("before\r\nand", Combine(result.Value));
         }
 
 
@@ -116,32 +123,32 @@ namespace Spark.Tests.Parser
         public void StringsMayHavePercentAngle()
         {
             var result = _grammar.Statement1(Source("before\"%>\"and'%>'after\r\nagain"));
-            Assert.AreEqual("before\"%>\"and\"%>\"after", result.Value);
+            Assert.AreEqual("before\"%>\"and\"%>\"after", Combine(result.Value));
             var result2 = _grammar.Statement2(Source("before\"%>\"and'%>'after%>again"));
-            Assert.AreEqual("before\"%>\"and\"%>\"after", result2.Value);
+            Assert.AreEqual("before\"%>\"and\"%>\"after", Combine(result2.Value));
         }
 
         [Test]
         public void StatementMayContainUnmatchedBraces()
         {
             var result = _grammar.Statement1(Source("this{that"));
-            Assert.AreEqual("this{that", result.Value);
+            Assert.AreEqual("this{that", Combine(result.Value));
             var result2 = _grammar.Statement1(Source("this}that"));
-            Assert.AreEqual("this}that", result2.Value);
+            Assert.AreEqual("this}that", Combine(result2.Value));
             var result3 = _grammar.Statement2(Source("this{that"));
-            Assert.AreEqual("this{that", result3.Value);
+            Assert.AreEqual("this{that", Combine(result3.Value));
             var result4 = _grammar.Statement2(Source("this}that"));
-            Assert.AreEqual("this}that", result4.Value);
+            Assert.AreEqual("this}that", Combine(result4.Value));
         }
 
         [Test]
         public void VerbatimDoubleQuotes()
         {
             var result = _grammar.Expression(Source("a@\" \\\"\" \"b"));
-            Assert.AreEqual("a@\" \\\"\" \"b", result.Value);
+            Assert.AreEqual("a@\" \\\"\" \"b", Combine(result.Value));
 
             var result2 = _grammar.Expression(Source("a@\" \\\"\"} \"b"));
-            Assert.AreEqual("a@\" \\\"\"} \"b", result2.Value);
+            Assert.AreEqual("a@\" \\\"\"} \"b", Combine(result2.Value));
         }
 
         [Test]
@@ -149,56 +156,57 @@ namespace Spark.Tests.Parser
         {
             //@' \'' ' becomes @" \' "
             var result = _grammar.Expression(Source("a@' \\'' 'b"));
-            Assert.AreEqual("a@\" \\' \"b", result.Value);
+            Assert.AreEqual("a@\" \\' \"b", Combine(result.Value));
 
             //@' \''} ' becomes @" \'} "
             var result2 = _grammar.Expression(Source("a@' \\''} 'b"));
-            Assert.AreEqual("a@\" \\'} \"b", result2.Value);
+            Assert.AreEqual("a@\" \\'} \"b", Combine(result2.Value));
 
             //@' " '' ' becomes @" "" ' "
             var result3 = _grammar.Expression(Source("a@' \" '' 'b"));
-            Assert.AreEqual("a@\" \"\" ' \"b", result3.Value);
+            Assert.AreEqual("a@\" \"\" ' \"b", Combine(result3.Value));
         }
 
         [Test]
         public void CommentHasQuotes()
         {
             var result = _grammar.Statement1(Source(" // this ' has \" quotes \r\n after "));
-            Assert.AreEqual(" // this ' has \" quotes ", result.Value);
+            Assert.AreEqual(" // this ' has \" quotes ", Combine(result.Value));
 
             var result2 = _grammar.Statement1(Source(" /* this ' has \" quotes \r\n */ more \r\n after "));
-            Assert.AreEqual(" /* this ' has \" quotes \r\n */ more ", result2.Value);
+            Assert.AreEqual(" /* this ' has \" quotes \r\n */ more ", Combine(result2.Value));
 
             var result3 = _grammar.Statement2(Source(" // this ' has \" quotes \r\n more %> after "));
-            Assert.AreEqual(" // this ' has \" quotes \r\n more ", result3.Value);
+            Assert.AreEqual(" // this ' has \" quotes \r\n more ", Combine(result3.Value));
 
             var result4 = _grammar.Statement2(Source(" /* this ' has \" quotes \r\n */ more %> after "));
-            Assert.AreEqual(" /* this ' has \" quotes \r\n */ more ", result4.Value);
+            Assert.AreEqual(" /* this ' has \" quotes \r\n */ more ", Combine(result4.Value));
         }
 
         [Test]
         public void ClassKeywordUsedAsIdentifier()
         {
             var result = _grammar.Expression(Source("Form.FormTag(new {action='foo', class='bar'})"));
-            Assert.AreEqual(@"Form.FormTag(new {action=""foo"", @class=""bar""})", result.Value);
+            Assert.AreEqual(@"Form.FormTag(new {action=""foo"", @class=""bar""})", Combine(result.Value));
 
             var result2 = _grammar.Expression(Source("Form.FormTag(new {action='foo', @class='bar'})"));
-            Assert.AreEqual(@"Form.FormTag(new {action=""foo"", @class=""bar""})", result2.Value);
+            Assert.AreEqual(@"Form.FormTag(new {action=""foo"", @class=""bar""})", Combine(result2.Value));
 
             var result3 = _grammar.Expression(Source("Form.FormTag(new {@action='foo', class='bar'})"));
-            Assert.AreEqual(@"Form.FormTag(new {@action=""foo"", @class=""bar""})", result3.Value);
+            Assert.AreEqual(@"Form.FormTag(new {@action=""foo"", @class=""bar""})", Combine(result3.Value));
 
             var result4 = _grammar.Expression(Source("var classless=1;"));
-            Assert.AreEqual(@"var classless=1;", result4.Value);
+            Assert.AreEqual(@"var classless=1;", Combine(result4.Value));
 
             var result5 = _grammar.Expression(Source("var yaddaclass=1;"));
-            Assert.AreEqual(@"var yaddaclass=1;", result5.Value);
+            Assert.AreEqual(@"var yaddaclass=1;", Combine(result5.Value));
 
             var result6 = _grammar.Expression(Source("var declassified=1;"));
-            Assert.AreEqual(@"var declassified=1;", result6.Value);
+            Assert.AreEqual(@"var declassified=1;", Combine(result6.Value));
 
             var result7 = _grammar.Expression(Source("var class=1;"));
-            Assert.AreEqual(@"var @class=1;", result7.Value);
+            Assert.AreEqual(@"var @class=1;", Combine(result7.Value));
         }
+
     }
 }

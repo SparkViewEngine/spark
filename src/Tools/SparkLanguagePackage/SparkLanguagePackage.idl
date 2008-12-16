@@ -1,0 +1,186 @@
+// SparkLanguagePackage.idl : IDL source for SparkLanguagePackage
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (SparkLanguagePackage.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+// from visual studio sdk 
+// must make sure the interfaces/classes aren't registered to this type lib
+#define VS_PACKAGE_INCLUDE 1
+import "singlefileeditor.idl";
+import "containedlanguage.idl";
+
+interface ISparkPackage;
+interface ISparkLanguage;
+interface ISparkSource;
+
+interface ILanguageSupervisor;
+interface ISourceSupervisor;
+interface ISourceSupervisorEvents;
+
+typedef struct _SOURCEMAPPING
+{
+    long start1;
+    long end1;
+    long start2;
+    long end2;
+} SourceMapping;
+
+
+typedef enum _SPARKPAINT
+{
+    SPARKPAINT_Default,
+    SPARKPAINT_AttributeName,
+    SPARKPAINT_AttributeQuotes,
+    SPARKPAINT_AttributeValue,
+    SPARKPAINT_CDATASection,
+    SPARKPAINT_Comment,
+    SPARKPAINT_Delimiter,
+    SPARKPAINT_Keyword,
+    SPARKPAINT_Code,
+    SPARKPAINT_ElementName,
+    SPARKPAINT_Text,
+    SPARKPAINT_ProcessingInstruction,
+    SPARKPAINT_String
+}SPARKPAINT;
+
+typedef struct _SOURCEPAINTING
+{
+    long start;
+    long end;
+	SPARKPAINT color;
+} SourcePainting;
+
+
+[
+	object,
+	uuid(C2F8D0E6-1952-45CA-B2AE-503F458CB20E),
+	helpstring("ISparkPackage Interface"),
+	pointer_default(unique)
+]
+interface ISparkPackage : IUnknown
+{
+};
+
+[
+	object,
+	uuid(034622a2-779f-46d7-8b86-db76432efc77),
+	helpstring("ISparkLanguage Interface"),
+	pointer_default(unique)
+]
+interface ISparkLanguage : IUnknown
+{
+	HRESULT SetSupervisor([in] ILanguageSupervisor* pSupervisor);
+	HRESULT GetSupervisor([out, retval] ILanguageSupervisor** ppSupervisor);
+
+	HRESULT GetSource([in] IVsTextBuffer* pBuffer, [out] ISparkSource** ppSource);
+};
+
+// language service id - (consider - use ISparkLanguage for service id symbol?)
+[uuid(45a17860-9503-4eb6-ba88-836c9958739e)]
+interface SparkLanguageService : IUnknown {};
+
+
+[
+	object,
+	uuid(8f038c00-8d5e-46df-99fc-a8ee29d40880),
+	helpstring("ISparkSource Interface"),
+	pointer_default(unique)
+]
+interface ISparkSource : IUnknown
+{	
+	// association with managed supervisor
+	HRESULT SetSupervisor([in] ISourceSupervisor* pSupervisor);
+	HRESULT GetSupervisor([out, retval] ISourceSupervisor** ppSupervisor);
+
+	// access various objects related to the source
+	HRESULT GetIntellisenseProjectManager([out, retval] IVsIntellisenseProjectManager** ppProjectManager);
+	HRESULT GetContainedLanguage([out, retval] IVsContainedLanguage** ppContainedLanguage);
+	HRESULT GetTextBufferCoordinator([out, retval] IVsTextBufferCoordinator** ppCoordinator);
+	HRESULT GetDocument([out] IVsHierarchy** ppHierarchy, [out] VSITEMID* pItemId, [out] IVsTextLines** pBuffer);
+	
+	// called to get text of the primary buffer
+	HRESULT GetPrimaryText([out, retval] BSTR* pText);
+
+	// called when compiling to return any document's full text (for shared, partials, etc.)
+	HRESULT GetRunningDocumentText([in] BSTR CanonicalName, [out, retval] BSTR* pText);
+
+	// called by colorizer to pick up most recent paint that was cached
+	HRESULT GetPaint([out] long* cPaint, [out, size_is(,*cPaint)] SourcePainting** prgPaint);
+
+};
+
+
+[
+	object,
+	uuid(1fbc4668-7a64-4e68-83b3-43eba6b35f43),
+	helpstring("ILanguageSupervisor Interface"),
+	pointer_default(unique)
+]
+interface ILanguageSupervisor : IUnknown
+{
+	HRESULT OnSourceAssociated([in] ISparkSource* pSource);
+};
+
+
+
+
+[
+	object,
+	uuid(b25cb843-ff93-4855-adae-8f9cbb69e643),
+	helpstring("ISourceSupervisor Interface"),
+	pointer_default(unique)
+]
+interface ISourceSupervisor : IUnknown
+{
+	HRESULT Advise([in] ISourceSupervisorEvents* pEvents, [out] DWORD* pdwCookie);
+	HRESULT Unadvise([in] DWORD pdwCookie);
+
+	HRESULT PrimaryTextChanged([in] BOOL processImmediately);
+};
+
+[
+	object,
+	uuid(c4f5d0df-597e-4161-997c-ecc7106e59eb),
+	helpstring("ISourceSupervisor Interface"),
+	pointer_default(unique)
+]
+interface ISourceSupervisorEvents : IUnknown
+{
+	HRESULT OnGenerated(
+		[in] BSTR primaryText, 
+		[in] BSTR secondaryText, 
+		[in] long cMappings, 
+		[in, size_is(cMappings)] SourceMapping *rgSpans,
+		[in] long cPaints, 
+		[in, size_is(cPaints)] SourcePainting *rgPaints);
+};
+
+
+
+[
+	uuid(DDF05202-45FA-4FEC-A2FB-7589D9E2B6AC),
+	version(1.0),
+	helpstring("SparkLanguagePackage 1.0 Type Library")
+]
+library SparkLanguagePackageLib
+{
+	interface IVsLanguageInfo;
+
+	interface ILanguageSupervisor;
+	interface ISourceSupervisor;
+
+	importlib("stdole2.tlb");
+	[
+		uuid(673FC80C-FEFF-4700-836E-783E376F4C41),
+		helpstring("SparkLanguage Package")
+	]
+	coclass Package
+	{
+		[default] interface ISparkPackage;
+	};
+
+};

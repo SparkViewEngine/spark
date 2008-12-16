@@ -21,14 +21,14 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 {
     public class GlobalMembersVisitor : ChunkVisitor
     {
-        private readonly StringBuilder _source;
+        private readonly SourceBuilder _source;
         private readonly Dictionary<string, object> _globalSymbols;
     	private readonly NullBehaviour _nullBehaviour;
     	readonly Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
         readonly Dictionary<string, GlobalVariableChunk> _globalAdded = new Dictionary<string, GlobalVariableChunk>();
         private int _indent = 4;
 
-		public GlobalMembersVisitor(StringBuilder output, Dictionary<string, object> globalSymbols, NullBehaviour nullBehaviour)
+        public GlobalMembersVisitor(SourceBuilder output, Dictionary<string, object> globalSymbols, NullBehaviour nullBehaviour)
         {
             _source = output;
             _globalSymbols = globalSymbols;
@@ -40,12 +40,12 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             get { return _indent; }
         }
 
-        private StringBuilder AppendIndent()
+        private SourceBuilder AppendIndent()
         {
             return _source.Append(' ', Indent);
         }
 
-        private StringBuilder CodeIndent(Chunk chunk)
+        private SourceBuilder CodeIndent(Chunk chunk)
         {
             if (chunk != null && chunk.Position != null)
                 return _source.AppendFormat("#line {0} \"{1}\"", chunk.Position.Line, chunk.Position.SourceContext.FileName).AppendLine().Append(' ', chunk.Position.Column - 1);
@@ -153,7 +153,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(ExtensionChunk chunk)
         {
-            chunk.Extension.VisitChunk(this, OutputLocation.ClassMembers, chunk.Body, _source);
+            chunk.Extension.VisitChunk(this, OutputLocation.ClassMembers, chunk.Body, _source.Source);
         }
 
         protected override void Visit(MacroChunk chunk)

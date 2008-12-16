@@ -71,7 +71,7 @@ namespace Spark.Compiler.NodeVisitors
 
 
         protected abstract void Visit(StatementNode node);
-        protected abstract void Visit(ExpressionNode expressionNode);
+        protected abstract void Visit(ExpressionNode node);
         protected abstract void Visit(EntityNode entityNode);
         protected abstract void Visit(DoctypeNode docTypeNode);
         protected abstract void Visit(TextNode textNode);

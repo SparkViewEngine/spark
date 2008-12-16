@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{64CC97B3-6B9B-4D12-8A45-5CD3621E6471}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -64,6 +64,7 @@
     <Compile Include="ClientsideCompilerTester.cs" />
     <Compile Include="Precompiled\ComplexPrecompileController.cs" />
     <Compile Include="Precompiled\SimplePrecompileController.cs" />
+    <Compile Include="Compiler\SourceMappingTester.cs" />
     <Compile Include="SparkBatchDescriptorTester.cs" />
     <Compile Include="SparkServiceContainerTester.cs" />
     <Compile Include="Spool\SpoolPageTester.cs" />

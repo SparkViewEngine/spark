@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System.Collections.Generic;
+using Spark.Compiler;
+
 namespace Spark
 {
     public interface ISparkViewEntry
     {
         SparkViewDescriptor Descriptor { get; }
-        string SourceCode { get; }
         ISparkView CreateInstance();
         void ReleaseInstance(ISparkView view);
+
+        string SourceCode { get; }
+        IList<SourceMapping> SourceMappings { get; }
     }
 }

@@ -71,9 +71,6 @@ namespace Spark.Parser.Markup
 
 
 
-            //todo: understand csharp_expression
-            // simply looking for an excluded char is ultimately insufficient because 
-            // any ; or } could appear, for example, in a string contant
 
             var paintedExpression = Expression.Build(hit => new ExpressionNode(hit));
 

@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Spark.Compiler;
 using Spark.Parser.Markup;
 
@@ -23,13 +20,28 @@ namespace Spark.Parser.Code
 {
     public static class AttributeNodeExtensions
     {
-        static CodeGrammar _grammar = new CodeGrammar();
+        static readonly CodeGrammar _grammar = new CodeGrammar();
 
-        public static string AsCode(this AttributeNode attr)
+        public static SnippetCollection AsCode(this AttributeNode attr)
         {
+            //TODO: recapture original position to get correct files/offsets in the result
             var position = new Position(new SourceContext(attr.Value));
             var result = _grammar.Expression(position);
-            return result.Value + result.Rest.Peek(result.Rest.PotentialLength());
+
+            var unparsedLength = result.Rest.PotentialLength();
+            if (unparsedLength == 0)
+                return result.Value;
+
+            var snippets = new SnippetCollection(result.Value);
+
+            snippets.Add(new Snippet
+                             {
+                                 Value = result.Rest.Peek(unparsedLength),
+                                 Begin = result.Rest,
+                                 End = result.Rest.Advance(unparsedLength)
+                             });
+
+            return snippets;
         }
 
         public static string AsCodeInverted(this AttributeNode attr)

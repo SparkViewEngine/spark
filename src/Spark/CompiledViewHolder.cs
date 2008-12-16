@@ -121,6 +121,11 @@ namespace Spark
                 get { return Compiler.SourceCode; }
             }
 
+            public IList<SourceMapping> SourceMappings
+            {
+                get { return Compiler.SourceMappings; }
+            }
+
             public ISparkView CreateInstance()
             {
                 var view = Activator.Activate(Compiler.CompiledType);

@@ -129,6 +129,11 @@ namespace Spark.Parser
                 if (result == null) return null;
                 return new ParseResult<TValue>(result.Rest.Paint(position, result.Value), result.Value);
             };
+
+            // ${hello[[world]]}
+            //        <
+            //               >
+            //  "hello<world>"
         }
 
         public static ParseAction<TValue> Paint<TValue, TPaintValue>(ParseAction<TValue> parser) where TValue : TPaintValue

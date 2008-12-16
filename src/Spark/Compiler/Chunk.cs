@@ -14,6 +14,7 @@
 // 
 using System.Collections.Generic;
 using Spark.Parser;
+using Spark.Parser.Code;
 using Spark.Parser.Markup;
 
 namespace Spark.Compiler
@@ -31,6 +32,7 @@ namespace Spark.Compiler
     public class SendExpressionChunk : Chunk
     {
         public string Code { get; set; }
+        public IList<Snippet> Snippets { get; set; }
 
         public bool SilentNulls { get; set; }
     }
@@ -38,6 +40,7 @@ namespace Spark.Compiler
     public class CodeStatementChunk : Chunk
     {
         public string Code { get; set; }
+        public IList<Snippet> Snippets { get; set; }
     }
 
     public class GlobalVariableChunk : Chunk

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Spark.Parser.Code;
 
 namespace Spark.Parser.Markup
 {
@@ -114,8 +115,19 @@ namespace Spark.Parser.Markup
             Code = new String(code.ToArray());
             Nodes = new List<Node>();
         }
+        public ConditionNode(IList<Snippet> snippets)
+        {
+            Snippets = snippets;
+            Code = string.Concat(snippets.Select(s => s.Value).ToArray());
+            Nodes = new List<Node>();
+        }
+        public ConditionNode(SnippetCollection snippets)
+            : this((IList<Snippet>)snippets)
+        {
+        }
 
         public string Code { get; set; }
+        public IList<Snippet> Snippets { get; set; }
         public IList<Node> Nodes { get; set; }
     }
 
@@ -129,8 +141,18 @@ namespace Spark.Parser.Markup
         {
             Code = new String(code.ToArray());
         }
+        public ExpressionNode(IList<Snippet> snippets)
+        {
+            Snippets = snippets;
+            Code = string.Concat(snippets.Select(s => s.Value).ToArray());
+        }
+        public ExpressionNode(SnippetCollection snippets)
+            : this((IList<Snippet>)snippets)
+        {
+        }
 
         public string Code { get; set; }
+        public IList<Snippet> Snippets { get; set; }
         public bool SilentNulls { get; set; }
     }
 
@@ -144,8 +166,19 @@ namespace Spark.Parser.Markup
         {
             Code = new String(code.ToArray());
         }
+        public StatementNode(IList<Snippet> snippets)
+        {
+            Snippets = snippets;
+            Code = string.Concat(snippets.Select(s => s.Value).ToArray());
+        }
+        public StatementNode(SnippetCollection snippets)
+            : this((IList<Snippet>)snippets)
+        {
+        }
+
 
         public string Code { get; set; }
+        public IList<Snippet> Snippets { get; set; }
     }
 
     public class ExternalIdInfo

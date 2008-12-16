@@ -158,16 +158,16 @@ namespace Spark.Compiler.NodeVisitors
             AddLiteral("&" + entityNode.Name + ";");
         }
 
-        protected override void Visit(ExpressionNode expressionNode)
+        protected override void Visit(ExpressionNode node)
         {
-            Chunks.Add(new SendExpressionChunk { Code = expressionNode.Code, Position = Locate(expressionNode), SilentNulls = expressionNode.SilentNulls });
+            Chunks.Add(new SendExpressionChunk { Code = node.Code, Position = Locate(node), SilentNulls = node.SilentNulls, Snippets = node.Snippets });
         }
 
 
 
         protected override void Visit(StatementNode node)
         {
-            AddKillingWhitespace(new CodeStatementChunk { Code = UnarmorCode(node.Code), Position = Locate(node) });
+            AddKillingWhitespace(new CodeStatementChunk { Code = UnarmorCode(node.Code), Position = Locate(node), Snippets = node.Snippets });
         }
 
 

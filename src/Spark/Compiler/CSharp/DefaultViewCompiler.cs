@@ -37,9 +37,10 @@ namespace Spark.Compiler.CSharp
             var globalSymbols = new Dictionary<string, object>();
 
             var source = new StringBuilder();
+            var builder = new SourceBuilder(source);
             var usingGenerator = new UsingNamespaceVisitor(source);
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
-            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, NullBehaviour);
+            var globalsGenerator = new GlobalMembersVisitor(builder, globalSymbols, NullBehaviour);
             
 
 
@@ -115,7 +116,7 @@ namespace Spark.Compiler.CSharp
                 source.AppendLine();
                 source.AppendLine(string.Format("    public void RenderViewLevel{0}()", renderLevel));
                 source.AppendLine("    {");
-                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols, NullBehaviour) { Indent = 8 };
+                var viewGenerator = new GeneratedCodeVisitor(builder, globalSymbols, NullBehaviour) { Indent = 8 };
                 viewGenerator.Accept(viewTemplate);
                 source.AppendLine("    }");
                 ++renderLevel;
@@ -146,6 +147,8 @@ namespace Spark.Compiler.CSharp
             }
 
             SourceCode = source.ToString();
+            SourceMappings = builder.Mappings;
         }
+
     }
 }

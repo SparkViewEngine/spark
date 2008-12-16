@@ -33,6 +33,7 @@ namespace Spark.Compiler
         public string ViewClassFullName { get; set; }
 
         public string SourceCode { get; set; }
+        public IList<SourceMapping> SourceMappings { get; set; }
         public Type CompiledType { get; set; }
         public Guid GeneratedViewId { get; set; }
 

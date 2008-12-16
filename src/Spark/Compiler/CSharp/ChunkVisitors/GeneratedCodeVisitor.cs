@@ -21,10 +21,10 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 {
     public class GeneratedCodeVisitor : AbstractChunkVisitor
     {
-        private readonly StringBuilder _source;
+        private readonly SourceBuilder _source;
         private readonly NullBehaviour _nullBehaviour;
 
-        public GeneratedCodeVisitor(StringBuilder output, Dictionary<string, object> globalSymbols, NullBehaviour nullBehaviour)
+        public GeneratedCodeVisitor(SourceBuilder output, Dictionary<string, object> globalSymbols, NullBehaviour nullBehaviour)
         {
             _nullBehaviour = nullBehaviour;
             _source = output;
@@ -34,27 +34,39 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         public int Indent { get; set; }
 
-        private StringBuilder AppendIndent()
+        private SourceBuilder AppendIndent()
         {
             return _source.Append(' ', Indent);
         }
 
-        private StringBuilder CodeIndent(Chunk chunk)
+        private SourceBuilder CodeIndent(Chunk chunk)
         {
-            if (chunk != null && chunk.Position != null)
-                return _source.AppendFormat("#line {0} \"{1}\"", chunk.Position.Line, chunk.Position.SourceContext.FileName).AppendLine().Append(' ', chunk.Position.Column - 1);
+            if (_source.AdjustDebugSymbols)
+            {
+                if (chunk != null && chunk.Position != null)
+                {
+                    return _source
+                        .AppendFormat("#line {0} \"{1}\"", chunk.Position.Line, chunk.Position.SourceContext.FileName)
+                        .AppendLine()
+                        .Append(' ', chunk.Position.Column - 1);
+                }
 
-            return _source.AppendLine("#line default").Append(' ', Indent);
+                return _source.AppendLine("#line default").Append(' ', Indent);
+            }
+
+            return _source.Append(' ', Indent);
         }
 
         private void CodeHidden()
         {
-            _source.AppendLine("#line hidden");
+            if (_source.AdjustDebugSymbols)
+                _source.AppendLine("#line hidden");
         }
 
         private void CodeDefault()
         {
-            _source.AppendLine("#line default");
+            if (_source.AdjustDebugSymbols)
+                _source.AppendLine("#line default");
         }
 
 
@@ -110,7 +122,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
         {
             AppendIndent().AppendLine("try");
             AppendIndent().AppendLine("{");
-            CodeIndent(chunk).Append("Output.Write(").Append(chunk.Code).AppendLine(");");
+            CodeIndent(chunk).Append("Output.Write(").AppendCode(chunk.Code, chunk.Snippets).AppendLine(");");
             CodeDefault();
             AppendIndent().AppendLine("}");
             AppendIndent().AppendLine("catch(System.NullReferenceException ex)");
@@ -147,7 +159,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(CodeStatementChunk chunk)
         {
-            CodeIndent(chunk).AppendLine(chunk.Code.Replace("\r", "").Replace("\n", "\r\n"));
+            CodeIndent(chunk).AppendCode(chunk.Code, chunk.Snippets).AppendLine();
             CodeDefault();
         }
 
@@ -412,7 +424,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(ExtensionChunk chunk)
         {
-            chunk.Extension.VisitChunk(this, OutputLocation.RenderMethod, chunk.Body, _source);
+            chunk.Extension.VisitChunk(this, OutputLocation.RenderMethod, chunk.Body, _source.Source);
         }
 
         protected override void Visit(ConditionalChunk chunk)
