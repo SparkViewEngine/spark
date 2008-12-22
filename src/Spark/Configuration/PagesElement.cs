@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using Spark.Parser;
 
 namespace Spark.Configuration
 {
@@ -34,6 +35,13 @@ namespace Spark.Configuration
         {
             get { return (string)this["prefix"]; }
             set { this["prefix"] = value; }
+        }
+
+        [ConfigurationProperty("automaticEncoding", DefaultValue = ParserSettings.DefaultAutomaticEncoding)]
+        public bool AutomaticEncoding
+        {
+            get { return (bool)this["automaticEncoding"]; }
+            set { this["automaticEncoding"] = value; }
         }
 
         [ConfigurationProperty("namespaces")]

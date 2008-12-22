@@ -39,10 +39,6 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\AspNetMvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -111,6 +107,7 @@
     <Compile Include="FileSystem\ISparkTemplateLocator.cs" />
     <Compile Include="Parser\Code\CodeSnipGrammar.cs" />
     <Compile Include="Parser\Code\Snippet.cs" />
+    <Compile Include="Parser\ParserSettings.cs" />
     <Compile Include="SparkServiceContainer.cs" />
     <Compile Include="FileSystem\ViewFolderType.cs" />
     <Compile Include="Constants.cs" />

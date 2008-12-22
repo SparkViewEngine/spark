@@ -59,7 +59,7 @@ namespace Spark.Tests.Visitors
                                      {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts/></for>"},
                                      {"home\\_Guts.spark", "<p>${xIndex}</p>"}
                                  };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(), ViewFolder = viewFolder };
+            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
             var chunks = loader.Load("home\\index.spark");
 
@@ -81,7 +81,7 @@ namespace Spark.Tests.Visitors
                                      {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts>${xIndex}</Guts></for>"},
                                      {"home\\_Guts.spark", "<p><render/></p>"}
                                  };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(), ViewFolder = viewFolder };
+            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
             var chunks = loader.Load("home\\index.spark");
 
@@ -102,7 +102,7 @@ namespace Spark.Tests.Visitors
                                      {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts><section:foo>${xIndex}</section:foo></Guts></for>"},
                                      {"home\\_Guts.spark", "<p><render:foo/></p>"}
                                  };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(), ViewFolder = viewFolder };
+            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
             var chunks = loader.Load("home\\index.spark");
 
@@ -123,7 +123,7 @@ namespace Spark.Tests.Visitors
                                      {"home\\index.spark", "<Guts items='new[]{1,2,3}'><section:each>${xIndex}</section:each></Guts>"},
                                      {"home\\_Guts.spark", "<for each='var x in items'><render:each/></for>"}
                                  };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(), ViewFolder = viewFolder };
+            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
             var chunks = loader.Load("home\\index.spark");
 

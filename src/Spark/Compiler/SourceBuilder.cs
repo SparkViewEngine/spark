@@ -12,6 +12,7 @@ namespace Spark.Compiler
         {
             Source = source;
             Mappings = new List<SourceMapping>();
+            AdjustDebugSymbols = true;
         }
 
         public bool AdjustDebugSymbols { get; set; }

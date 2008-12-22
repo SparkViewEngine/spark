@@ -12,9 +12,9 @@
 
   <div>
     <for each="var comment in comments">
-      ${ShowComment(username, comment)}
+      !{ShowComment(username, comment)}
     </for>
-    ${ShowRating(5)}
+    !{ShowRating(5)}
   </div>
 
   <macro name="ShowRating" score="double">

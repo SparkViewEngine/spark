@@ -20,8 +20,12 @@ namespace Spark.Parser.Markup
 {
     public class MarkupGrammar : CodeGrammar
     {
-
         public MarkupGrammar()
+            : this(ParserSettings.DefaultBehavior)
+        {
+        }
+
+        public MarkupGrammar(IParserSettings settings)
         {
             var Apos = Ch('\'');
             var Quot = Ch('\"');
@@ -70,17 +74,9 @@ namespace Spark.Parser.Markup
 
 
 
-
-
-            var paintedExpression = Expression.Build(hit => new ExpressionNode(hit));
-
             // Syntax 1: ${csharp_expression}
             var Code1 = TkDelim(Ch("${")).And(Expression).And(TkDelim(Ch('}')))
-                .Build(hit => new ExpressionNode(hit.Left.Down));
-
-            // Syntax 2: $csharp_expression;
-            //var Code2 = Ch('$').And(Expression).And(Ch(';'))
-            //    .Build(hit => new ExpressionNode(hit.Left.Down));
+                .Build(hit => new ExpressionNode(hit.Left.Down) { AutomaticEncoding = settings.AutomaticEncoding });
 
             // Syntax 3: <%=csharp_expression%>;
             var Code3 = TkDelim(Ch("<%=")).And(Expression).And(TkDelim(Ch("%>")))
@@ -88,9 +84,13 @@ namespace Spark.Parser.Markup
 
             // Syntax 4: $!{csharp_expression}
             var Code4 = TkDelim(Ch("$!{")).And(Expression).And(TkDelim(Ch('}')))
-                .Build(hit => new ExpressionNode(hit.Left.Down) { SilentNulls = true });
+                .Build(hit => new ExpressionNode(hit.Left.Down) { SilentNulls = true, AutomaticEncoding = settings.AutomaticEncoding });
 
-            Code = Code1/*.Or(Code2)*/.Or(Code3).Or(Code4);
+            // Syntax 5: !{sharp_expression}
+            var Code5 = TkDelim(Ch("!{")).And(Expression).And(TkDelim(Ch('}')))
+                .Build(hit => new ExpressionNode(hit.Left.Down));
+
+            Code = Code1.Or(Code3).Or(Code4).Or(Code5);
 
             var Condition = TkDelim(Ch("?{")).And(Expression).And(TkDelim(Ch('}')))
                 .Build(hit => new ConditionNode(hit.Left.Down));

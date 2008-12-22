@@ -120,9 +120,18 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(SendExpressionChunk chunk)
         {
+            var automaticallyEncode = chunk.AutomaticallyEncode;
+            if (chunk.Code.StartsWith("H("))
+                automaticallyEncode = false;
+
             AppendIndent().AppendLine("try");
             AppendIndent().AppendLine("{");
-            CodeIndent(chunk).Append("Output.Write(").AppendCode(chunk.Code, chunk.Snippets).AppendLine(");");
+            CodeIndent(chunk)
+                .Append("Output.Write(")
+                .Append(automaticallyEncode ? "H(" : "")
+                .AppendCode(chunk.Code, chunk.Snippets)
+                .Append(automaticallyEncode ? ")" : "")
+                .AppendLine(");");
             CodeDefault();
             AppendIndent().AppendLine("}");
             AppendIndent().AppendLine("catch(System.NullReferenceException ex)");

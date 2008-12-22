@@ -160,7 +160,14 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ExpressionNode node)
         {
-            Chunks.Add(new SendExpressionChunk { Code = node.Code, Position = Locate(node), SilentNulls = node.SilentNulls, Snippets = node.Snippets });
+            Chunks.Add(new SendExpressionChunk
+            {
+                Code = node.Code,
+                Position = Locate(node),
+                SilentNulls = node.SilentNulls,
+                Snippets = node.Snippets,
+                AutomaticallyEncode = node.AutomaticEncoding
+            });
         }
 
 
@@ -334,7 +341,7 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
-        private ConditionalChunk  _sendAttributeOnce;
+        private ConditionalChunk _sendAttributeOnce;
         private Chunk _sendAttributeIncrement;
 
         protected override void Visit(ConditionNode conditionNode)
@@ -405,18 +412,16 @@ namespace Spark.Compiler.NodeVisitors
             var file = inspector.TakeAttribute("file");
             if (file != null)
             {
-                var scope = new ScopeChunk {Position = Locate(inspector.OriginalNode)};
+                var scope = new ScopeChunk { Position = Locate(inspector.OriginalNode) };
                 Chunks.Add(scope);
                 using (new Frame(this, scope.Body))
                 {
                     foreach (var attr in inspector.Attributes)
                     {
-                        Chunks.Add(new LocalVariableChunk
-                                   {Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr)});
+                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
                     }
 
-                    var useFileChunk = new RenderPartialChunk
-                                       {Name = file.Value, Position = Locate(inspector.OriginalNode)};
+                    var useFileChunk = new RenderPartialChunk { Name = file.Value, Position = Locate(inspector.OriginalNode) };
                     Chunks.Add(useFileChunk);
                     using (new Frame(this, useFileChunk.Body, useFileChunk.Sections))
                     {
@@ -434,8 +439,7 @@ namespace Spark.Compiler.NodeVisitors
 
                 if (contentAttr != null)
                 {
-                    var useContentChunk = new UseContentChunk
-                                          {Name = contentAttr.Value, Position = Locate(inspector.OriginalNode)};
+                    var useContentChunk = new UseContentChunk { Name = contentAttr.Value, Position = Locate(inspector.OriginalNode) };
                     Chunks.Add(useContentChunk);
                     using (new Frame(this, useContentChunk.Default))
                     {
@@ -446,18 +450,18 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     if (namespaceAttr != null)
                     {
-                        var useNamespaceChunk = new UseNamespaceChunk {Namespace = namespaceAttr.Value};
+                        var useNamespaceChunk = new UseNamespaceChunk { Namespace = namespaceAttr.Value };
                         AddUnordered(useNamespaceChunk);
                     }
                     if (assemblyAttr != null)
                     {
-                        var useAssemblyChunk = new UseAssemblyChunk {Assembly = assemblyAttr.Value};
+                        var useAssemblyChunk = new UseAssemblyChunk { Assembly = assemblyAttr.Value };
                         AddUnordered(useAssemblyChunk);
                     }
                 }
                 else if (importAttr != null)
                 {
-                    var useImportChunk = new UseImportChunk {Name = importAttr.Value};
+                    var useImportChunk = new UseImportChunk { Name = importAttr.Value };
                     AddUnordered(useImportChunk);
                 }
                 else if (masterAttr != null)

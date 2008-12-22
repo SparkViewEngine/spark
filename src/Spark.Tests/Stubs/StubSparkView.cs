@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
+using System.Web;
+
 namespace Spark.Tests.Stubs
 {
     public abstract class StubSparkView : AbstractSparkView
@@ -36,6 +39,11 @@ namespace Spark.Tests.Stubs
         public override bool TryGetViewData(string name, out object value)
         {
             return ViewData.TryGetValue(name, out value);
+        }
+
+        public string H(object content)
+        {
+            return HttpUtility.HtmlEncode(Convert.ToString(content));
         }
     }
 

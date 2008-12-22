@@ -27,7 +27,12 @@ namespace Spark.Parser.Syntax
 {
     public class DefaultSyntaxProvider : AbstractSyntaxProvider
     {
-        static readonly MarkupGrammar _grammar = new MarkupGrammar();
+        private readonly MarkupGrammar _grammar;
+
+        public DefaultSyntaxProvider(IParserSettings settings)
+        {
+            _grammar = new MarkupGrammar(settings);
+        }
 
         public override IList<Chunk> GetChunks(VisitorContext context, string path)
         {

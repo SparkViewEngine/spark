@@ -35,6 +35,7 @@ namespace Spark.Compiler
         public IList<Snippet> Snippets { get; set; }
 
         public bool SilentNulls { get; set; }
+        public bool AutomaticallyEncode { get; set; }
     }
 
     public class CodeStatementChunk : Chunk

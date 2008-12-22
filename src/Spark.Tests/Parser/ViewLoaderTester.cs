@@ -164,7 +164,7 @@ namespace Spark.Tests.Parser
                                      {"home\\_Guts.spark", "<div><render:foo/></div>"},
                                      {"home\\_Another.spark", "<p>hello world</p>"}
                                  };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(), ViewFolder = viewFolder };
+            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
             var chunks = loader.Load("home\\index.spark");
             var everything = loader.GetEverythingLoaded();
             Assert.AreEqual(3, everything.Count());

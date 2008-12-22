@@ -154,6 +154,7 @@ namespace Spark.Parser.Markup
         public string Code { get; set; }
         public IList<Snippet> Snippets { get; set; }
         public bool SilentNulls { get; set; }
+        public bool AutomaticEncoding { get; set; }
     }
 
     public class StatementNode : Node

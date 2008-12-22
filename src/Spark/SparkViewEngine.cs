@@ -42,7 +42,7 @@ namespace Spark
         public SparkViewEngine(ISparkSettings settings)
         {
             Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
-            SyntaxProvider = new DefaultSyntaxProvider();
+            SyntaxProvider = new DefaultSyntaxProvider(Settings);
             ViewActivatorFactory = new DefaultViewActivator();
         }
 

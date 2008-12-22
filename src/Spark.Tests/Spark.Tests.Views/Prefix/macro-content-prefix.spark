@@ -9,7 +9,7 @@
 
   <c:middle>
     <p>two</p>
-    ${HelloWorld('world')}
+    !{HelloWorld('world')}
     <p>three</p>
   </c:middle>
 

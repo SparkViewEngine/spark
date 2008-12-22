@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using Spark.FileSystem;
+using Spark.Parser;
 
 namespace Spark
 {
@@ -27,7 +28,7 @@ namespace Spark
 		Strict
 	}
 
-    public interface ISparkSettings
+    public interface ISparkSettings : IParserSettings
     {
         bool Debug { get; }
 		NullBehaviour NullBehaviour { get; }

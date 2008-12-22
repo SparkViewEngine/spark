@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Spark.FileSystem;
+using Spark.Parser;
 
 namespace Spark
 {
@@ -28,10 +29,13 @@ namespace Spark
             _resourceMappings = new List<ResourceMapping>();
             _viewFolders = new List<IViewFolderSettings>();
  			NullBehaviour = NullBehaviour.Lenient;
+
+            AutomaticEncoding = ParserSettings.DefaultAutomaticEncoding;
         }
 
         public bool Debug { get; set; }
 		public NullBehaviour NullBehaviour { get; set; }
+        public bool AutomaticEncoding { get; set; }
     	public string Prefix { get; set; }
         public string PageBaseType { get; set; }
 
@@ -62,6 +66,12 @@ namespace Spark
         public SparkSettings SetDebug(bool debug)
         {
             Debug = debug;
+            return this;
+        }
+
+        public SparkSettings SetAutomaticEncoding(bool automaticEncoding)
+        {
+            AutomaticEncoding = automaticEncoding;
             return this;
         }
 

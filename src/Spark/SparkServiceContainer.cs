@@ -31,7 +31,7 @@ namespace Spark
                     {typeof (ISparkSettings), c => ConfigurationManager.GetSection("spark") ?? new SparkSettings()},
                     {typeof (ISparkViewEngine), c => new SparkViewEngine(c.GetService<ISparkSettings>())},
                     {typeof (ISparkLanguageFactory), c => new DefaultLanguageFactory()},
-                    {typeof (ISparkSyntaxProvider), c => new DefaultSyntaxProvider()},
+                    {typeof (ISparkSyntaxProvider), c => new DefaultSyntaxProvider(c.GetService<ISparkSettings>())},
                     {typeof (IViewActivatorFactory), c => new DefaultViewActivator()},
                     {typeof (IResourcePathManager), c => new DefaultResourcePathManager(c.GetService<ISparkSettings>())},
                     {typeof (ITemplateLocator), c => new DefaultTemplateLocator()},

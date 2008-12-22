@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Reflection;
+using Spark.Parser;
 
 namespace Spark.Configuration
 {
@@ -81,6 +82,11 @@ namespace Spark.Configuration
         bool ISparkSettings.Debug
         {
             get { return Compilation.Debug; }
+        }
+        
+        bool IParserSettings.AutomaticEncoding
+        {
+            get { return Pages.AutomaticEncoding; }
         }
 
     	NullBehaviour ISparkSettings.NullBehaviour

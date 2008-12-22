@@ -44,6 +44,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -62,6 +63,7 @@
     <Compile Include="FileSystem\ViewFolderSettingsTester.cs" />
     <Compile Include="ImportAndIncludeTester.cs" />
     <Compile Include="ClientsideCompilerTester.cs" />
+    <Compile Include="Parser\AutomaticEncodingTester.cs" />
     <Compile Include="Precompiled\ComplexPrecompileController.cs" />
     <Compile Include="Precompiled\SimplePrecompileController.cs" />
     <Compile Include="Compiler\SourceMappingTester.cs" />

@@ -27,7 +27,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         [Test]
         public void CorrectSectionsCreated()
         {
-            var grammar = new MarkupGrammar();
+            var grammar = new MarkupGrammar(ParserSettings.DefaultBehavior);
             var nodes = grammar.Nodes(new Position(new SourceContext(
                                                        "<foo>1<tr>2<td>3</foo> <bar>4</td>5</tr>6</bar> stuff <baaz>yadda<baaz></baaz><quux><quux/></baaz>")));
             var details = new ViewComponentDetailsAttribute("Testing") { Sections = "foo,baaz,bar,quux" };

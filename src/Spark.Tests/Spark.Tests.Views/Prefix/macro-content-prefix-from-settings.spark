@@ -8,7 +8,7 @@
   
   <content:middle>
     <p>two</p>
-    ${HelloWorld(nameVar)}
+    !{HelloWorld(nameVar)}
     <p>three</p>
   </content:middle>
 
