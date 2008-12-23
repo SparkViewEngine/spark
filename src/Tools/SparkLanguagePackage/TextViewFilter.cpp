@@ -34,14 +34,11 @@ HRESULT TextViewFilter::FinalConstruct()
 	// Hold onto the targets that are chained after the ones we've added
 	_chainCommandTarget = _nextCommandTarget;
 	_chainTextViewFilter = _nextCommandTarget;
-
-
+	
 	CComPtr<IVsIntellisenseProjectManager> projectManager;
 	_HR(_source->GetIntellisenseProjectManager(&projectManager));
 	_HR(projectManager->OnEditorReady());
-	_HR(projectManager->CompleteIntellisenseProjectLoad());
-
-
+	_HR(projectManager->CompleteIntellisenseProjectLoad());	
 	return hr;
 }
 
@@ -57,6 +54,9 @@ STDMETHODIMP TextViewFilter::QueryStatus(
 	return _chainCommandTarget->QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);
 }
 
+
+class __declspec(uuid("1496A755-94DE-11D0-8C3F-00C04FC2AAE2")) StandardCommandSet2K;
+
 STDMETHODIMP TextViewFilter::Exec( 
     /* [unique][in] */ __RPC__in_opt const GUID *pguidCmdGroup,
     /* [in] */ DWORD nCmdID,
@@ -67,5 +67,25 @@ STDMETHODIMP TextViewFilter::Exec(
 	if (_chainCommandTarget == NULL)
 		return S_OK;
 
-	return _chainCommandTarget->Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+	HRESULT hr = S_OK;
+
+	if (*pguidCmdGroup == __uuidof(StandardCommandSet2K))
+	{
+		switch(nCmdID)
+		{
+		case ECMD_TYPECHAR:
+			{				
+				CComVariant varIn;
+				_HR(varIn.ChangeType(VT_UI2, pvaIn));
+				CComPtr<ISourceSupervisor> supervisor;
+				_HR(_source->GetSupervisor(&supervisor));
+				CComBSTR key(1, (LPCOLESTR)&V_UI2(&varIn));
+				_HR(supervisor->OnTypeChar(_textView, key));
+			}
+			break;
+		}
+
+	}
+	_HR(_chainCommandTarget->Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut));
+	return hr;
 }

@@ -118,17 +118,8 @@ namespace Spark.Parser.Code
             // braced ::= '{' + terms + '}'
             var braced = Snip(Snip(Ch('{')).And((ParseAction<IList<Snippet>>)FnTerms).And(Snip(Ch('}'))));
 
-            // ExpressionTerms ::= (dquot | aquot | braced | codeStretch | specialCharCast)*
-            //ExpressionTerms = Rep(
-            //    stringLiteral
-            //    .Or(braced)
-            //    .Or(codeStretch)
-            //    .Or(identifier)
-            //    .Or(keyword)
-            //    .Or(SpecialCharCast)
-            //    .Or(oneLineComment)
-            //    .Or(multiLineComment));
-            ExpressionTerms = Snip(Rep(
+            // ExpressionTerms ::= (dquot | aquot | braced | codeStretch | specialCharCast)*            
+            ExpressionTerms = Snip(Rep1(
                 stringLiteral
                 .Or(braced)
                 .Or(codeStretch)
@@ -137,10 +128,10 @@ namespace Spark.Parser.Code
                 .Or(SpecialCharCast)
                 .Or(oneLineComment)
                 .Or(multiLineComment)
-                ));
+                )).Or(EmptySnip());
 
 
-            Expression = ExpressionTerms.Build(hit=>new SnippetCollection(hit));
+            Expression = ExpressionTerms.Build(hit => new SnippetCollection(hit));
 
 
             var statementPiece =
@@ -171,6 +162,7 @@ namespace Spark.Parser.Code
                 .Or(oneLineComment)
                 .Or(multiLineComment)));
         }
+
 
 
         static ParseAction<IList<Snippet>> Snip(ParseAction<Chain<Chain<IList<Snippet>, IList<Snippet>>, IList<Snippet>>> parser)
@@ -254,6 +246,11 @@ namespace Spark.Parser.Code
                 return new ParseResult<IList<Snippet>>(result.Rest, result.Value.SelectMany(s => s).ToArray());
             };
         }
+        static ParseAction<IList<Snippet>> EmptySnip()
+        {
+            return position => new ParseResult<IList<Snippet>>(position, new[] { new Snippet { Value = "", Begin = position, End = position } });
+        }
+
         static ParseAction<IList<Snippet>> Swap<TValue>(ParseAction<TValue> parser, string replacement)
         {
             return position =>

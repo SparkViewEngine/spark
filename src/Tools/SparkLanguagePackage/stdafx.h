@@ -15,6 +15,10 @@
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 
+
+#define _ATL_DEBUG_INTERFACES
+#define _ATL_DEBUG_QI
+
 #include "resource.h"
 #include <atlbase.h>
 #include <atlcom.h>
@@ -27,6 +31,7 @@ using namespace ATL;
 
 #define Project DTE_Project
 #define Language DTE_Language
+
 
 #include <vsshell.h>
 #include <vsshell90.h>

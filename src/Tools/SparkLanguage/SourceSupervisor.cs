@@ -109,7 +109,7 @@ namespace SparkLanguage
                                  {
                                      start = p.Begin.Offset,
                                      end = p.End.Offset,
-                                     color = (int) p.Value
+                                     color = (int)p.Value
                                  })
                 .ToArray();
 
@@ -132,5 +132,54 @@ namespace SparkLanguage
                     ref paints[0]);
             }
         }
+
+        public void OnTypeChar(IVsTextView pView, string ch)
+        {
+            if (ch == "{")
+            {
+                // add a closing "}" if it makes a complete expression or condition where one doesn't exist otherwise
+
+                _TextSpan selection;
+                pView.GetSelectionSpan(out selection);
+
+                IVsTextLines buffer;
+                pView.GetBuffer(out buffer);
+
+                string before;
+                buffer.GetLineText(0, 0, selection.iStartLine, selection.iStartIndex, out before);
+
+                int iLastLine, iLastColumn;
+                buffer.GetLastLineIndex(out iLastLine, out iLastColumn);
+
+                string after;
+                buffer.GetLineText(selection.iEndLine, selection.iEndIndex, iLastLine, iLastColumn, out after);
+
+                var existingResult = _grammar.Nodes(new Position(new SourceContext(before + ch + after)));
+                var expressionHits = existingResult.Rest.GetPaint()
+                    .OfType<Paint<Node>>()
+                    .Where(p => p.Begin.Offset <= before.Length && before.Length <= p.End.Offset && (p.Value is ExpressionNode || p.Value is ConditionNode));
+
+                // if a node exists normally, do nothing
+                if (expressionHits.Count() != 0)
+                    return;
+
+                var withCloseResult = _grammar.Nodes(new Position(new SourceContext(before + ch + "}" + after)));
+                var withCloseHits = withCloseResult.Rest.GetPaint()
+                    .OfType<Paint<Node>>()
+                    .Where(p => p.Begin.Offset <= before.Length && before.Length <= p.End.Offset && (p.Value is ExpressionNode || p.Value is ConditionNode));
+
+                // if a close brace doesn't cause a node to exist, do nothing
+                if (withCloseHits.Count() == 0)
+                    return;
+
+                // add a closing } after the selection, then set the selection back to what it was
+                int iAnchorLine, iAnchorCol, iEndLine, iEndCol;
+                pView.GetSelection(out iAnchorLine, out iAnchorCol, out iEndLine, out iEndCol);
+                _TextSpan inserted;
+                buffer.ReplaceLines(selection.iEndLine, selection.iEndIndex, selection.iEndLine, selection.iEndIndex, "}", 1, out inserted);
+                pView.SetSelection(iAnchorLine, iAnchorCol, iEndLine, iEndCol);
+            }
+        }
+
     }
 }
