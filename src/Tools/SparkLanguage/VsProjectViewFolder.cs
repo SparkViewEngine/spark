@@ -11,9 +11,9 @@ namespace SparkLanguage
 {
     public class VsProjectViewFolder : IViewFolder
     {
-        private ISparkSource _source;
-        IVsHierarchy _hierarchy;
-        HierarchyItem _views;
+        readonly ISparkSource _source;
+        readonly IVsHierarchy _hierarchy;
+        readonly HierarchyItem _views;
 
         public VsProjectViewFolder(ISparkSource source, IVsHierarchy hierarchy)
         {
@@ -77,10 +77,13 @@ namespace SparkLanguage
             var views = new List<string>();
 
             var item = _views.FindPath(path);
-            for (var child = item.FirstChild; child != null; child = child.NextSibling)
+            if (item != null)
             {
-                if (child.Name.EndsWith(".spark", StringComparison.InvariantCultureIgnoreCase))
-                    views.Add(child.Name);
+                for (var child = item.FirstChild; child != null; child = child.NextSibling)
+                {
+                    if (child.Name.EndsWith(".spark", StringComparison.InvariantCultureIgnoreCase))
+                        views.Add(child.Name);
+                }
             }
             return views;
         }

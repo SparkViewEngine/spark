@@ -82,7 +82,7 @@ STDMETHODIMP_(long) Colorizer::ColorizeLine(
 		{
 			// one last safety check - just because memory over-runs are so deadly
 			if (iIndex >= 0 && iIndex < iLength)
-				pAttributes[iIndex] = _paintArray[index].color + _containedLanguageColorCount;
+				pAttributes[iIndex] = _paintArray[index].color + _containedLanguageColorCount - 1;
 		}
 	}
 

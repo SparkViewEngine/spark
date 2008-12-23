@@ -32,6 +32,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Retail|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Retail\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -105,9 +113,9 @@
     <Compile Include="Configuration\ViewFolderElementCollection.cs" />
     <Compile Include="ISparkServiceInitialize.cs" />
     <Compile Include="FileSystem\ISparkTemplateLocator.cs" />
-    <Compile Include="Parser\Code\CodeSnipGrammar.cs" />
     <Compile Include="Parser\Code\Snippet.cs" />
     <Compile Include="Parser\ParserSettings.cs" />
+    <Compile Include="Parser\Markup\SparkTokenType.cs" />
     <Compile Include="SparkServiceContainer.cs" />
     <Compile Include="FileSystem\ViewFolderType.cs" />
     <Compile Include="Constants.cs" />

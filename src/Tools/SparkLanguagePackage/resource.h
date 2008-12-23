@@ -4,6 +4,7 @@
 //
 #define IDS_PROJNAME                    100
 #define IDR_SPARKLANGUAGEPACKAGE        101
+#define IDS_PLK                         101
 #define IDR_PACKAGE                     102
 
 // Next default values for new objects

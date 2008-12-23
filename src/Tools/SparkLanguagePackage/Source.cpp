@@ -30,10 +30,10 @@ STDMETHODIMP Source::GetRunningDocumentText(BSTR CanonicalName, BSTR *pText)
 	if (SUCCEEDED(hr))
 	{
 		CComPtr<IVsHierarchy> hierarchy;
-		VSITEMID itemid;
-		VSCOOKIE cookie;
+		VSITEMID itemid = 0;
+		VSCOOKIE cookie = 0;
 		HRESULT hrFind = runningDocumentTable->FindAndLockDocument(0, CanonicalName, &hierarchy, &itemid, &punkDocument, &cookie);
-		if (FAILED(hrFind))
+		if (FAILED(hrFind) || itemid == VSITEMID_NIL)
 		{
 			// return (string)null
 			*pText = NULL;

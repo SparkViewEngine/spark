@@ -149,7 +149,7 @@ namespace Spark.Web.Mvc
     public abstract class SparkView<TModel> : SparkView where TModel : class
     {
         private ViewDataDictionary<TModel> _viewData;
-
+        
         public new ViewDataDictionary<TModel> ViewData
         {
             get
@@ -159,6 +159,11 @@ namespace Spark.Web.Mvc
                 return _viewData;
             }
             set { SetViewData(value); }
+        }
+
+        public TModel Model
+        {
+            get { return ViewData.Model; }
         }
 
         protected override void SetViewData(ViewDataDictionary viewData)

@@ -278,30 +278,30 @@ namespace Spark.Parser.Code
             return ExpressionTerms(position);
         }
 
-        protected static ParseAction<TValue> TkAttNam<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.AttributeName, parser); }
-        protected static ParseAction<TValue> TkAttQuo<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.AttributeQuotes, parser); }
-        protected static ParseAction<TValue> TkAttVal<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.AttributeValue, parser); }
-        protected static ParseAction<TValue> TkCDATA<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.CDATASection, parser); }
-        protected static ParseAction<TValue> TkComm<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.Comment, parser); }
-        protected static ParseAction<TValue> TkDelim<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.Delimiter, parser); }
-        protected static ParseAction<TValue> TkKword<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.Keyword, parser); }
-        protected static ParseAction<TValue> TkCode<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.Code, parser); }
+        protected static ParseAction<TValue> TkTagDelim<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.HtmlTagDelimiter, parser); }
         protected static ParseAction<TValue> TkEleNam<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.ElementName, parser); }
-        protected static ParseAction<TValue> TkText<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.Text, parser); }
-        protected static ParseAction<TValue> TkPI<TValue>(ParseAction<TValue> parser)
-        { return Paint(SparkTokenType.ProcessingInstruction, parser); }
+        { return Paint(SparkTokenType.HtmlElementName, parser); }
+        protected static ParseAction<TValue> TkAttNam<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.HtmlAttributeName, parser); }
+        protected static ParseAction<TValue> TkAttDelim<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.HtmlOperator, parser); }
+        protected static ParseAction<TValue> TkAttQuo<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.HtmlAttributeValue, parser); }
+        protected static ParseAction<TValue> TkAttVal<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.HtmlAttributeValue, parser); }
+        protected static ParseAction<TValue> TkEntity<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.HtmlEntity, parser); }
+        protected static ParseAction<TValue> TkComm<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.HtmlComment, parser); }
+        protected static ParseAction<TValue> TkCDATA<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.PlainText, parser); }
+
+        protected static ParseAction<TValue> TkAspxCode<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.HtmlServerSideScript, parser); }
+        protected static ParseAction<TValue> TkCode<TValue>(ParseAction<TValue> parser)
+        { return Paint(SparkTokenType.SparkDelimiter, parser); }
         protected static ParseAction<TValue> TkStr<TValue>(ParseAction<TValue> parser)
         { return Paint(SparkTokenType.String, parser); }
-
     }
 }

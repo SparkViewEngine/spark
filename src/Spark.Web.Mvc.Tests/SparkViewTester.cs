@@ -89,5 +89,26 @@ namespace Spark.Web.Mvc.Tests
 
             mocks.VerifyAll();
         }
+
+        private class ModelViewTest : SparkView<string>
+        {
+            public override void RenderView(TextWriter writer)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public override Guid GeneratedViewId
+            {
+                get { throw new System.NotImplementedException(); }
+            }
+        }
+
+        [Test]
+        public void CanAccessModelViaModel()
+        {
+            var view = new ModelViewTest();
+            view.ViewData.Model = "asd";
+            Assert.AreEqual("asd", view.Model);
+        }
     }
 }

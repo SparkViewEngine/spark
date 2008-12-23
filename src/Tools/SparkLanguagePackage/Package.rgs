@@ -41,21 +41,21 @@ HKCU
           {
             NoRemove Packages
             {
-              ForceRemove '{673FC80C-FEFF-4700-836E-783E376F4C41}' = s 'Spark Langauge Package'
+              ForceRemove '{673FC80C-FEFF-4700-836E-783E376F4C41}' = s 'Spark Language Package'
               {
                 val InprocServer32 =  s '%MODULE%'
                 val CompanyName = s 'Louis DeJardin'
                 val ProductName = s 'Spark View Engine'
                 val ProductVersion = s '1.0'
                 val MinEdition = s 'Standard'
-                val ID = d 1000
+                val ID = d 101
               }
             }
             NoRemove Services
             {
               ForceRemove '{45a17860-9503-4eb6-ba88-836c9958739e}' = s '{673FC80C-FEFF-4700-836E-783E376F4C41}'
               {
-                val Name = s 'Spark Langauge Service'
+                val Name = s 'Spark Language Service'
               }
             }
             NoRemove Languages

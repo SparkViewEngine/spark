@@ -9,8 +9,8 @@ namespace SparkLanguage.VsAdapters
 {
     public class HierarchyItem : IEnumerable<HierarchyItem>
     {
-        IVsHierarchy _hierarchy;
-        uint _itemId;
+        readonly IVsHierarchy _hierarchy;
+        readonly uint _itemId;
 
         public HierarchyItem(IVsHierarchy hierarchy, uint itemId)
         {

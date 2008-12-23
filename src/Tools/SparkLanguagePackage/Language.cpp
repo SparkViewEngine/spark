@@ -30,7 +30,8 @@ STDMETHODIMP Language::GetSource(IVsTextBuffer* pBuffer, ISparkSource** ppSource
 
 		_HR(source->QueryInterface(ppSource));
 
-		_sources.Add(key.Detach(), source.Detach());
+		if (SUCCEEDED(hr))
+			_sources.Add(key.Detach(), source.Detach());
 	}
 	else
 	{
@@ -65,60 +66,29 @@ STDMETHODIMP Language::GetCodeWindowManager(
 	return hr;
 }
 
-ColorableItemInit g_colors[] = 
-{
-	{L"Spark Default", 
-		CI_YELLOW, CI_BLACK, FF_DEFAULT},
-	{L"Spark Attribute Name", 
-		CI_RED, CI_WHITE, FF_DEFAULT},
-	{L"Spark Attribute Quotes", 
-		CI_BLACK, CI_WHITE, FF_DEFAULT},
-	{L"Spark Attribute Value", 
-		CI_BLUE, CI_WHITE, FF_DEFAULT},
-	{L"Spark CDATA", 
-		CI_DARKGRAY, CI_WHITE, FF_DEFAULT},
-	{L"Spark Comment", 
-		CI_DARKGREEN, CI_WHITE, FF_DEFAULT},
-	{L"Spark Delimiter", 
-		CI_BLUE, CI_WHITE, FF_DEFAULT},
-	{L"Spark Keyword", 
-		CI_BLACK, CI_CYAN, FF_DEFAULT},
-	{L"Spark Code", 
-		CI_MAROON, CI_WHITE, FF_DEFAULT},
-	{L"Spark Element Name", 
-		CI_MAROON, CI_WHITE, FF_DEFAULT},
-	{L"Spark Text", 
-		CI_BLACK, CI_WHITE, FF_DEFAULT},
-	{L"Spark Processing Instruction", 
-		CI_BLACK, CI_CYAN, FF_DEFAULT},
-	{L"Spark String", 
-		CI_BLACK, CI_CYAN, FF_DEFAULT},
-};
-    //SPARKPAINT_Default,
-    //SPARKPAINT_AttributeName,
-    //SPARKPAINT_AttributeQuotes,
-    //SPARKPAINT_AttributeValue,
-    //SPARKPAINT_CDATASection,
-    //SPARKPAINT_Comment,
-    //SPARKPAINT_Delimiter,
-    //SPARKPAINT_Keyword,
-    //SPARKPAINT_Code,
-    //SPARKPAINT_ElementName,
-    //SPARKPAINT_Text,
-    //SPARKPAINT_ProcessingInstruction,
-    //SPARKPAINT_String
+CTraceCategory sparkLanguage(_T("Spark Language"), 1);
 
 STDMETHODIMP Language::GetItemCount( 
     /* [out] */ __RPC__out int *piCount)
 {
+#ifdef _DEBUG
+	sparkLanguage.SetStatus(ATLTRACESTATUS::ATLTRACESTATUS_ENABLED);
+#endif
+
 	HRESULT hr = S_OK;
 
 	CComPtr<IVsProvideColorableItems> csharpItems;
 	_HR(_site->QueryService(__uuidof(CSharp), &csharpItems));
 	int csharpItemCount;
 	_HR(csharpItems->GetItemCount(&csharpItemCount));
+
+	CComPtr<IVsProvideColorableItems> sparkItems;
+	_HR(_supervisor->QueryInterface(&sparkItems));
+	int sparkItemCount;
+	_HR(sparkItems->GetItemCount(&sparkItemCount));
 	
-	*piCount = csharpItemCount + ARRAYSIZE(g_colors);
+	*piCount = csharpItemCount + sparkItemCount;
+	ATLTRACE(sparkLanguage, 1, _T("GetItemCount %d\n"), *piCount);
 	return hr;
 }
 
@@ -126,15 +96,46 @@ STDMETHODIMP Language::GetColorableItem(
     /* [in] */ int iIndex,
     /* [out] */ __RPC__deref_out_opt IVsColorableItem **ppItem)
 {
+	ATLTRACE(sparkLanguage, 1, _T("GetColorableItem %d\n"), iIndex);
+
 	HRESULT hr = S_OK;
 
+	// return csharp color info for lower band
 	CComPtr<IVsProvideColorableItems> csharpItems;
 	_HR(_site->QueryService(__uuidof(CSharp), &csharpItems));
+
 	int csharpItemCount;
 	_HR(csharpItems->GetItemCount(&csharpItemCount));
 
-	if (iIndex <= csharpItemCount)
-		return csharpItems->GetColorableItem(iIndex, ppItem);
+	if (SUCCEEDED(hr) && iIndex <= csharpItemCount)
+	{
+		_HR(csharpItems->GetColorableItem(iIndex, ppItem));
+		
+		CComBSTR name;
+		_HR((*ppItem)->GetDisplayName(&name));
+		if (SUCCEEDED(hr))
+			ATLTRACE(sparkLanguage, 1, L"Color name %s\n", name);
 
-	return ColorableItem::CreateInstance(g_colors[iIndex - csharpItemCount - 1], ppItem);
+		return hr;
+	}
+
+	// return spark color info for upper band
+	CComPtr<IVsProvideColorableItems> sparkItems;
+	_HR(_supervisor->QueryInterface(&sparkItems));
+
+	int sparkItemCount;
+	_HR(sparkItems->GetItemCount(&sparkItemCount));
+
+	if (SUCCEEDED(hr) && iIndex <= csharpItemCount + sparkItemCount)
+	{
+		_HR(sparkItems->GetColorableItem(iIndex - csharpItemCount + 1, ppItem));
+
+		CComBSTR name;
+		_HR((*ppItem)->GetDisplayName(&name));
+		if (SUCCEEDED(hr))
+			ATLTRACE(sparkLanguage, 1, L"Color name %s\n", name);
+
+		return hr;
+	}
+	return E_INVALIDARG;
 }

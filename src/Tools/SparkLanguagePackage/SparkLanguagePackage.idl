@@ -30,28 +30,12 @@ typedef struct _SOURCEMAPPING
 } SourceMapping;
 
 
-typedef enum _SPARKPAINT
-{
-    SPARKPAINT_Default,
-    SPARKPAINT_AttributeName,
-    SPARKPAINT_AttributeQuotes,
-    SPARKPAINT_AttributeValue,
-    SPARKPAINT_CDATASection,
-    SPARKPAINT_Comment,
-    SPARKPAINT_Delimiter,
-    SPARKPAINT_Keyword,
-    SPARKPAINT_Code,
-    SPARKPAINT_ElementName,
-    SPARKPAINT_Text,
-    SPARKPAINT_ProcessingInstruction,
-    SPARKPAINT_String
-}SPARKPAINT;
 
 typedef struct _SOURCEPAINTING
 {
     long start;
     long end;
-	SPARKPAINT color;
+	int color;
 } SourcePainting;
 
 
@@ -169,6 +153,7 @@ interface ISourceSupervisorEvents : IUnknown
 library SparkLanguagePackageLib
 {
 	interface IVsLanguageInfo;
+	interface IVsProvideColorableItems;
 
 	interface ILanguageSupervisor;
 	interface ISourceSupervisor;

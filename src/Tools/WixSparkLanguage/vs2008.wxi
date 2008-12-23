@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <RegistryKey Root="HKLM" Key="Software\Microsoft\VisualStudio\9.0\Packages\{673FC80C-FEFF-4700-836E-783E376F4C41}">
+    <RegistryValue Value="Spark Language Package" Type="string"/>
+    <RegistryValue Name="InprocServer32" Value="[#SparkLanguagePackage.dll]" Type="string" />
+    <RegistryValue Name="CompanyName" Value="Louis DeJardin" Type="string" />
+    <RegistryValue Name="ProductName" Value="Spark View Engine" Type="string" />
+    <RegistryValue Name="ProductVersion" Value="1.0" Type="string" />
+    <RegistryValue Name="MinEdition" Value="standard" Type="string" />
+    <RegistryValue Name="ID" Value="101" Type="integer" />
+  </RegistryKey>
+  <RegistryKey Root="HKLM" Key="Software\Microsoft\VisualStudio\9.0\Services\{45a17860-9503-4eb6-ba88-836c9958739e}">
+    <RegistryValue Value="{673FC80C-FEFF-4700-836E-783E376F4C41}" Type="string"/>
+    <RegistryValue Name="Name" Value="Spark Language Service" Type="string" />
+  </RegistryKey>
+  <RegistryKey Root="HKLM" Key="Software\Microsoft\VisualStudio\9.0\Languages\Language Services\Spark">
+    <RegistryValue Value="{45a17860-9503-4eb6-ba88-836c9958739e}" Type="string"/>
+    <RegistryValue Name="Package" Value="{673FC80C-FEFF-4700-836E-783E376F4C41}" Type="string" />
+  </RegistryKey>
+  <RegistryKey Root="HKLM" Key="Software\Microsoft\VisualStudio\9.0\Languages\File Extensions\.spark">
+    <RegistryValue Value="{45a17860-9503-4eb6-ba88-836c9958739e}" Type="string"/>
+  </RegistryKey>
+</Include>
