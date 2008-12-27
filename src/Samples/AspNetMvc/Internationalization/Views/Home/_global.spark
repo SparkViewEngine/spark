@@ -1,3 +1,5 @@
-﻿<use namespace="Internationalization.Models"/>
-<use namespace="System.Web.Mvc"/>
+﻿<use namespace="System.Web.Mvc"/>
+<use namespace="System.Web.Mvc.Html"/>
 <use namespace="Microsoft.Web.Mvc"/>
+<use namespace="Internationalization"/>
+<use namespace="Internationalization.Controllers"/>

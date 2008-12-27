@@ -19,7 +19,8 @@ class ATL_NO_VTABLE Package :
 	public CComCoClass<Package, &CLSID_Package>,
 	public ISparkPackage,
 	public IVsPackage,
-	public IServiceProvider
+	public IServiceProvider,
+	public IVsInstalledProduct
 {
 	CComPtr<IServiceProvider> _site;
 	CComPtr<ISparkLanguage> _language;
@@ -40,6 +41,7 @@ BEGIN_COM_MAP(Package)
 	COM_INTERFACE_ENTRY(IVsPackage)
 	COM_INTERFACE_ENTRY(IServiceProvider)
 	COM_INTERFACE_ENTRY_AGGREGATE(IID_IMarshal, m_pUnkMarshaler.p)
+	COM_INTERFACE_ENTRY(IVsInstalledProduct)
 END_COM_MAP()
 
 
@@ -108,6 +110,44 @@ public:
         /* [in] */ REFGUID guidService,
         /* [in] */ REFIID riid,
         /* [out] */ void __RPC_FAR *__RPC_FAR *ppvObject);
+
+
+	/********** IVsInstalledProduct **********/
+
+    STDMETHODIMP get_IdBmpSplash( 
+        /* [retval][out] */ __RPC__out UINT *pIdBmp)
+	{
+		*pIdBmp = IDB_SPLASH;
+		return S_OK;
+	}
+    
+    STDMETHODIMP get_OfficialName( 
+        /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrName) 
+	{
+		*pbstrName = SysAllocString(L"Spark View Engine");
+		return S_OK;
+	}
+    
+    STDMETHODIMP get_ProductID( 
+        /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrPID)
+	{
+		*pbstrPID = SysAllocString(L"Tech Preview");
+		return S_OK;
+	}
+
+    STDMETHODIMP get_ProductDetails( 
+        /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrProductDetails)
+	{
+		*pbstrProductDetails = SysAllocString(L"Spark View Engine integration package for Visual Studio. For more information see http://sparkviewengine.com");
+		return S_OK;
+	}
+    
+    STDMETHODIMP get_IdIcoLogoForAboutbox( 
+        /* [retval][out] */ __RPC__out UINT *pIdIco)
+	{
+		*pIdIco = IDI_SPARK;
+		return S_OK;
+	}
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(Package), Package)

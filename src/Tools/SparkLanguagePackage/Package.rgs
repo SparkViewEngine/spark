@@ -39,6 +39,14 @@ HKCU
         {
           NoRemove Configuration
           {
+            NoRemove InstalledProducts
+            {
+              ForceRemove 'Spark View Engine'
+              {
+                val Package = s '{673FC80C-FEFF-4700-836E-783E376F4C41}'
+                val UseInterface = d 1
+              }
+            }
             NoRemove Packages
             {
               ForceRemove '{673FC80C-FEFF-4700-836E-783E376F4C41}' = s 'Spark Language Package'
@@ -49,6 +57,12 @@ HKCU
                 val ProductVersion = s '1.0'
                 val MinEdition = s 'Standard'
                 val ID = d 101
+                
+                ForceRemove 'SatelliteDll'
+                {
+                  val DllName = s 'SparkLanguagePackageUI.dll'
+                  val Path = s '%MODULE_PATH%'
+                }
               }
             }
             NoRemove Services

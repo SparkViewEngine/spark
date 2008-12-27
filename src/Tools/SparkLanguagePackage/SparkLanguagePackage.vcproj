@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="bin\$(ConfigurationName)"
+			IntermediateDirectory="obj\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfATL="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -112,8 +112,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="bin\$(ConfigurationName)"
+			IntermediateDirectory="obj\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfATL="2"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -203,8 +203,8 @@
 		</Configuration>
 		<Configuration
 			Name="Retail|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="bin\$(ConfigurationName)"
+			IntermediateDirectory="obj\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfATL="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -225,7 +225,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
+				PreprocessorDefinitions="_DEBUG;RETAIL"
 				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;;&quot;C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\IDL&quot;"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
@@ -460,6 +460,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\bitmap1.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\Package.rgs"
 				>
 			</File>
@@ -469,6 +473,10 @@
 			</File>
 			<File
 				RelativePath=".\Retail.reg"
+				>
+			</File>
+			<File
+				RelativePath=".\spark.ico"
 				>
 			</File>
 			<File
@@ -485,6 +493,10 @@
 			</File>
 			<File
 				RelativePath=".\SparkLanguagePackage.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\splash.bmp"
 				>
 			</File>
 		</Filter>

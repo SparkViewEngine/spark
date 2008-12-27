@@ -41,6 +41,7 @@ using namespace ATL;
 #include <textmgr2.h>
 #include <containedlanguage.h>
 #include <webapplicationctx.h>
+#include <vssplash.h>
 
 #undef Project
 #undef Language
