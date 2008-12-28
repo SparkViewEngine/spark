@@ -37,7 +37,7 @@ namespace SparkLanguage
 
             var settings = new VsProjectSparkSettings(hierarchy)
                                {
-                                   PageBaseType = "Spark.Web.Mvc.SparkView"
+                                   PageBaseType = source.GetDefaultPageBaseType()
                                };
 
             var viewFolder = new VsProjectViewFolder(_source, hierarchy);

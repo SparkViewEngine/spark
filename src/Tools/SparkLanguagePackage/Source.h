@@ -112,6 +112,8 @@ public:
         /* [out] */ long *cPaint,
         /* [size_is][size_is][out] */ SourcePainting **prgPaint);
 
+	STDMETHODIMP GetDefaultPageBaseType(BSTR* pPageBaseType);
+
 
 	/**** ISourceSupervisorEvents ****/
     STDMETHODIMP OnGenerated( 

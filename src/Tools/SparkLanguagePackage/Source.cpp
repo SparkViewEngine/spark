@@ -113,6 +113,66 @@ HRESULT Source::FinalConstruct()
 	return hr;
 }
 
+STDMETHODIMP Source::GetDefaultPageBaseType(BSTR* pPageBaseType)
+{
+	CComBSTR pageBaseType;
+
+	HRESULT hr;
+	CComVariant varProject;
+	_HR(_hierarchy->GetProperty(VSITEMID_ROOT, VSHPROPID_ExtObject, &varProject));
+	_HR(varProject.ChangeType(VT_UNKNOWN));
+	
+	CComPtr<DTE_Project> dteProject;
+	_HR(V_UNKNOWN(&varProject)->QueryInterface(&dteProject));
+
+	CComPtr<IDispatch> dispProject;
+	_HR(dteProject->get_Object(&dispProject));
+
+	CComPtr<VSProject> vsProject;
+	_HR(dispProject->QueryInterface(&vsProject));
+
+	CComPtr<References> references;
+	_HR(vsProject->get_References(&references));
+
+	CComPtr<IUnknown> punkEnum;
+	_HR(references->_NewEnum(&punkEnum));
+
+	CComPtr<IEnumVARIANT> pvarEnum;
+	_HR(punkEnum->QueryInterface(&pvarEnum));
+
+	while(SUCCEEDED(hr))
+	{
+		CComVariant varReference;
+		ULONG cFetched = 0;
+		HRESULT hrEnum = pvarEnum->Next(1, &varReference, &cFetched);
+		if (hrEnum != S_OK || cFetched == 0)
+			break;
+
+		_HR(varReference.ChangeType(VT_UNKNOWN));
+
+		CComPtr<Reference> reference;
+		_HR(V_UNKNOWN(&varReference)->QueryInterface(&reference));
+
+		CComBSTR name;
+		_HR(reference->get_Name(&name));
+
+		if (CompareStringW(LOCALE_INVARIANT, NORM_IGNORECASE, name, -1, L"Spark.Web.Mvc", -1) == CSTR_EQUAL)
+		{
+			pageBaseType = L"Spark.Web.Mvc.SparkView";
+			break;
+		}
+		else if (CompareStringW(LOCALE_INVARIANT, NORM_IGNORECASE, name, -1, L"Castle.MonoRail.Views.Spark", -1) == CSTR_EQUAL)
+		{
+			pageBaseType = L"Castle.MonoRail.Views.Spark.SparkView";
+			break;
+		}
+	}
+
+	*pPageBaseType = pageBaseType.Detach();
+	return hr;
+}
+
+
 STDMETHODIMP Source::EnsureSecondaryBufferReady()
 {
 	HRESULT hr = S_OK;

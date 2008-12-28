@@ -93,7 +93,9 @@ interface ISparkSource : IUnknown
 	HRESULT GetRunningDocumentText([in] BSTR CanonicalName, [out, retval] BSTR* pText);
 
 	// called by colorizer to pick up most recent paint that was cached
-	HRESULT GetPaint([out] long* cPaint, [out, size_is(,*cPaint)] SourcePainting** prgPaint);	
+	HRESULT GetPaint([out] long* cPaint, [out, size_is(,*cPaint)] SourcePainting** prgPaint);
+
+	HRESULT GetDefaultPageBaseType([out, retval] BSTR* pPageBaseType);
 };
 
 
