@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkVsPackage", "SparkVsPackage\SparkVsPackage.csproj", "{4B710A3F-4D82-403F-BC3A-9E3259BA0543}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark", "..\Spark\Spark.csproj", "{31929D34-1A68-4A6B-9D8A-B93037163A5A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SparkLanguagePackage", "SparkLanguagePackage\SparkLanguagePackage.vcproj", "{149B18AC-1D73-448F-9186-242DA1B0ED29}"
@@ -19,7 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkLanguage", "SparkLangu
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "WixSparkLanguage", "WixSparkLanguage\WixSparkLanguage.wixproj", "{55ECD767-B3FA-40CE-97DE-06910F91FD19}"
 	ProjectSection(ProjectDependencies) = postProject
+		{D447C104-0FCA-4676-9767-C243840C4D12} = {D447C104-0FCA-4676-9767-C243840C4D12}
 		{149B18AC-1D73-448F-9186-242DA1B0ED29} = {149B18AC-1D73-448F-9186-242DA1B0ED29}
+		{F10178E7-AFCD-45B6-B94A-0CC4ECF4E1AA} = {F10178E7-AFCD-45B6-B94A-0CC4ECF4E1AA}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SparkLanguagePackageUI", "SparkLanguagePackage\SparkLanguagePackageUI.vcproj", "{D447C104-0FCA-4676-9767-C243840C4D12}"
@@ -42,21 +42,6 @@ Global
 		Retail|x86 = Retail|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Release|Win32.ActiveCfg = Release|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Release|x86.ActiveCfg = Release|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Retail|Any CPU.ActiveCfg = Retail|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Retail|Mixed Platforms.ActiveCfg = Retail|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Retail|Win32.ActiveCfg = Retail|Any CPU
-		{4B710A3F-4D82-403F-BC3A-9E3259BA0543}.Retail|x86.ActiveCfg = Retail|Any CPU
 		{31929D34-1A68-4A6B-9D8A-B93037163A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{31929D34-1A68-4A6B-9D8A-B93037163A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31929D34-1A68-4A6B-9D8A-B93037163A5A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

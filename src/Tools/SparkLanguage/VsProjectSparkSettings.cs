@@ -27,15 +27,13 @@ namespace SparkLanguage
         {
             // check if the loaded sources have changed
             if (_dependencies.Any(kv=>File.GetLastWriteTimeUtc(kv.Key) != kv.Value))
-            {
                 _sparkSection = null;
-                _dependencies.Clear();
-            }
             
             // return loaded source if valid
             if (_sparkSection != null)
                 return _sparkSection;
 
+            _dependencies.Clear();
 
             // locate and load web.config
             var config = _root.FindPath("web.config");
@@ -51,6 +49,8 @@ namespace SparkLanguage
             var configSource = _sparkSection.SelectSingleNode("@configSource");
             if (configSource != null)
             {
+                _sparkSection = null;
+
                 // locate and load that source instead
                 config = _root.FindPath(configSource.Value);
                 if (config == null) return null;
