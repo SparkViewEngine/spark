@@ -43,9 +43,9 @@ namespace SparkLanguage
 
         public void GetColorableItem(int iIndex, out IVsColorableItem ppItem)
         {
-            if (!_colors.TryGetValue((SparkTokenType)iIndex - 1, out  ppItem))
+            if (!_colors.TryGetValue((SparkTokenType)iIndex, out  ppItem))
             {
-                throw new NotImplementedException();
+                throw new IndexOutOfRangeException();
             }
         }
     }

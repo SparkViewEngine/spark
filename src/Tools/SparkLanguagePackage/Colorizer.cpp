@@ -81,8 +81,10 @@ STDMETHODIMP_(long) Colorizer::ColorizeLine(
 		for(long iIndex = iColorStart - iLineStart; iIndex != iColorEnd - iLineStart; ++iIndex)
 		{
 			// one last safety check - just because memory over-runs are so deadly
-			if (iIndex >= 0 && iIndex < iLength)
-				pAttributes[iIndex] = _paintArray[index].color + _containedLanguageColorCount - 1;
+			if (iIndex >= 0 && iIndex < iLength && _paintArray[index].color != 0)
+			{
+				pAttributes[iIndex] = _paintArray[index].color + _containedLanguageColorCount;
+			}
 		}
 	}
 

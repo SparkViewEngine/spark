@@ -1,8 +1,9 @@
+using System;
 using SparkLanguagePackageLib;
 
 namespace SparkLanguage
 {
-    public class ColorableItem : IVsColorableItem
+    public class ColorableItem : MarshalByRefObject, IVsColorableItem
     {
         public ColorableItem(string displayName, _COLORINDEX foreground)
             : this(displayName, foreground, _COLORINDEX.CI_USERTEXT_BK)

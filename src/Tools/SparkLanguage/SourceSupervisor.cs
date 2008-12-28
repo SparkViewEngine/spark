@@ -13,14 +13,12 @@ namespace SparkLanguage
 {
     public class SourceSupervisor : ISourceSupervisor
     {
-        SparkViewEngine _engine;
-        ISparkSource _source;
-        IVsHierarchy _hierarchy;
-        private string _path;
-        string _generatedCode;
+        readonly SparkViewEngine _engine;
+        readonly ISparkSource _source;
+        private readonly string _path;
 
-        private uint _dwLastCookie;
-        private IDictionary<uint, ISourceSupervisorEvents> _events = new Dictionary<uint, ISourceSupervisorEvents>();
+        uint _dwLastCookie;
+        readonly IDictionary<uint, ISourceSupervisorEvents> _events = new Dictionary<uint, ISourceSupervisorEvents>();
 
         public SourceSupervisor(ISparkSource source)
         {
@@ -37,12 +35,17 @@ namespace SparkLanguage
             //Spark.Web.Mvc.SparkView
             //MyBaseView
 
-            var settings = new SparkSettings()
-                .SetPageBaseType("Spark.Web.Mvc.SparkView");
-            _engine = new SparkViewEngine(settings);
-            var host = (IVsContainedLanguageHost)source;
-            host.GetVSHierarchy(out _hierarchy);
-            _engine.ViewFolder = new VsProjectViewFolder(_source, _hierarchy);
+            var settings = new VsProjectSparkSettings(hierarchy)
+                               {
+                                   PageBaseType = "Spark.Web.Mvc.SparkView"
+                               };
+
+            var viewFolder = new VsProjectViewFolder(_source, hierarchy);
+
+            _engine = new SparkViewEngine(settings)
+                          {
+                              ViewFolder = viewFolder
+                          };
         }
 
         private static string GetDocumentPath(IVsHierarchy hierarchy, uint itemid)
@@ -86,7 +89,6 @@ namespace SparkLanguage
                 .AddTemplate(_path);
 
             var entry = _engine.CreateEntry(_engine.CreateKey(descriptor), false);
-            _generatedCode = entry.SourceCode;
 
 
             var mappings = entry.SourceMappings

@@ -152,11 +152,16 @@ interface ISourceSupervisorEvents : IUnknown
 ]
 library SparkLanguagePackageLib
 {
+	interface IVsPackage;
 	interface IVsLanguageInfo;
 	interface IVsProvideColorableItems;
 
+	interface IProfferService;
+
 	interface ILanguageSupervisor;
 	interface ISourceSupervisor;
+
+	interface SparkLanguageService;
 
 	importlib("stdole2.tlb");
 	[

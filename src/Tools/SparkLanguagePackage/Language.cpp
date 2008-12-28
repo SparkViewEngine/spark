@@ -51,7 +51,7 @@ STDMETHODIMP Language::GetColorizer(
 	int csharpItemCount;
 	_HR(csharpItems->GetItemCount(&csharpItemCount));
 
-	ColorizerInit init = {this, pBuffer, csharpItemCount + 1};
+	ColorizerInit init = {this, pBuffer, csharpItemCount};
 	_HR(Colorizer::CreateInstance(init, ppColorizer));
 	return hr;
 }
@@ -104,6 +104,10 @@ STDMETHODIMP Language::GetColorableItem(
 	CComPtr<IVsProvideColorableItems> csharpItems;
 	_HR(_site->QueryService(__uuidof(CSharp), &csharpItems));
 
+	// default@[0] : reserved
+	// csharpItemCount@[1..csharpItemCount] : contained language colors
+	// sparkItemCount@[csharpItemCount+1..csharpItemCount+sparkItemCount] : spark language colors
+
 	int csharpItemCount;
 	_HR(csharpItems->GetItemCount(&csharpItemCount));
 
@@ -128,7 +132,7 @@ STDMETHODIMP Language::GetColorableItem(
 
 	if (SUCCEEDED(hr) && iIndex <= csharpItemCount + sparkItemCount)
 	{
-		_HR(sparkItems->GetColorableItem(iIndex - csharpItemCount + 1, ppItem));
+		_HR(sparkItems->GetColorableItem(iIndex - csharpItemCount, ppItem));
 
 		CComBSTR name;
 		_HR((*ppItem)->GetDisplayName(&name));

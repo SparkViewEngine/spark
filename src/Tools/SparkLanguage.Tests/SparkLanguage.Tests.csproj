@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F10178E7-AFCD-45B6-B94A-0CC4ECF4E1AA}</ProjectGuid>
+    <ProjectGuid>{C328A04E-2A66-47EE-83F2-8323F6C47D16}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SparkLanguage</RootNamespace>
-    <AssemblyName>SparkLanguage</AssemblyName>
+    <RootNamespace>SparkLanguage.Tests</RootNamespace>
+    <AssemblyName>SparkLanguage.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\SparkLanguagePackage\bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,20 +25,19 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\SparkLanguagePackage\bin\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Retail|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\SparkLanguagePackage\bin\Retail\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.9.0, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\nunit\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -53,19 +52,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorableItem.cs" />
-    <Compile Include="Interfaces.cs" />
-    <Compile Include="LanguageSupervisor.cs" />
+    <Compile Include="ColorableTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SourceSupervisor.cs" />
-    <Compile Include="VsAdapters\HierarchyItem.cs" />
-    <Compile Include="VsProjectSparkSettings.cs" />
-    <Compile Include="VsProjectViewFolder.cs" />
+    <Compile Include="StubContainedColorableItem.cs" />
+    <Compile Include="StubContainedLanguageService.cs" />
+    <Compile Include="StubPackageSite.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Spark\Spark.csproj">
       <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
       <Name>Spark</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SparkLanguage\SparkLanguage.csproj">
+      <Project>{F10178E7-AFCD-45B6-B94A-0CC4ECF4E1AA}</Project>
+      <Name>SparkLanguage</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
