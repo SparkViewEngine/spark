@@ -65,8 +65,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 1,0,0,2
+ PRODUCTVERSION 1,0,0,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -83,12 +83,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Louis DeJardin"
             VALUE "FileDescription", "Spark View Engine"
-            VALUE "FileVersion", "1.0.0.1"
-            VALUE "LegalCopyright", "(c) 2008 Louis DeJardin.  All rights reserved."
+            VALUE "FileVersion", "1.0.0.2"
             VALUE "InternalName", "SparkLanguagePackage.dll"
+            VALUE "LegalCopyright", "(c) 2008 Louis DeJardin.  All rights reserved."
             VALUE "OriginalFilename", "SparkLanguagePackage.dll"
             VALUE "ProductName", "Spark View Engine"
-            VALUE "ProductVersion", "1.0.0.1"
+            VALUE "ProductVersion", "1.0.0.2"
         END
     END
     BLOCK "VarFileInfo"
@@ -114,6 +114,7 @@ IDR_PACKAGE             REGISTRY                "Package.rgs"
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_SPARK               ICON                    "spark.ico"
+IDI_ORBZ_LIGHTNING      ICON                    "orbz-lightning.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

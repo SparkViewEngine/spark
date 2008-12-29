@@ -116,9 +116,8 @@ public:
 
     STDMETHODIMP get_IdBmpSplash( 
         /* [retval][out] */ __RPC__out UINT *pIdBmp)
-	{
-		*pIdBmp = IDB_SPLASH;
-		return S_OK;
+	{		
+		ATLTRACENOTIMPL(_T("Package::get_IdBmpSplash"));
 	}
     
     STDMETHODIMP get_OfficialName( 
@@ -131,7 +130,7 @@ public:
     STDMETHODIMP get_ProductID( 
         /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrPID)
 	{
-		*pbstrPID = SysAllocString(L"Tech Preview");
+		*pbstrPID = SysAllocString(L"Preview 2");
 		return S_OK;
 	}
 
@@ -145,7 +144,7 @@ public:
     STDMETHODIMP get_IdIcoLogoForAboutbox( 
         /* [retval][out] */ __RPC__out UINT *pIdIco)
 	{
-		*pIdIco = IDI_SPARK;
+		*pIdIco = IDI_ORBZ_LIGHTNING;
 		return S_OK;
 	}
 };

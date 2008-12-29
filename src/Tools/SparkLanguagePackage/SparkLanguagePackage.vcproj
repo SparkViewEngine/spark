@@ -464,6 +464,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\orbz-lightning.ico"
+				>
+			</File>
+			<File
 				RelativePath=".\Package.rgs"
 				>
 			</File>

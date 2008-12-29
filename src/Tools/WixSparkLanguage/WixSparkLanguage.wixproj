@@ -20,7 +20,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Retail|x86' ">
     <DefineConstants>Debug</DefineConstants>
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Retail|AnyCPU' ">
@@ -36,6 +36,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="vs2008.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Spark\Spark.csproj">
+      <Name>Spark</Name>
+      <Project>{31929d34-1a68-4a6b-9d8a-b93037163a5a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\SparkLanguagePackage\SparkLanguagePackage.vcproj">
+      <Name>SparkLanguagePackage</Name>
+      <Project>{149b18ac-1d73-448f-9186-242da1b0ed29}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\SparkLanguage\SparkLanguage.csproj">
+      <Name>SparkLanguage</Name>
+      <Project>{f10178e7-afcd-45b6-b94a-0cc4ecf4e1aa}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

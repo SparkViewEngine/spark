@@ -26,9 +26,9 @@ namespace SparkLanguage
         XPathNavigator GetWebConfig()
         {
             // check if the loaded sources have changed
-            if (_dependencies.Any(kv=>File.GetLastWriteTimeUtc(kv.Key) != kv.Value))
+            if (_dependencies.Any(kv => File.GetLastWriteTimeUtc(kv.Key) != kv.Value))
                 _sparkSection = null;
-            
+
             // return loaded source if valid
             if (_sparkSection != null)
                 return _sparkSection;
@@ -110,7 +110,7 @@ namespace SparkLanguage
             get
             {
                 var spark = GetWebConfig();
-                if (spark== null)
+                if (spark == null)
                     return new string[0];
                 return spark.Select("pages/namespaces/add/@namespace")
                     .Cast<XPathNavigator>()

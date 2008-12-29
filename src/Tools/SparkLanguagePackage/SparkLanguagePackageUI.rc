@@ -66,6 +66,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_SPARK               ICON                    "spark.ico"
+IDI_ORBZ_LIGHTNING               ICON                    "orbz-lightning.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

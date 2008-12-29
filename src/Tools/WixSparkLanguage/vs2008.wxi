@@ -8,6 +8,10 @@
     <RegistryValue Name="ProductVersion" Value="1.0" Type="string" />
     <RegistryValue Name="MinEdition" Value="standard" Type="string" />
     <RegistryValue Name="ID" Value="101" Type="integer" />
+    <RegistryKey Key="SatelliteDll">
+      <RegistryValue Name="DllName" Value="SparkLanguagePackageUI.dll" Type="string" />
+      <RegistryValue Name="Path" Value="[INSTALLLOCATION]" Type="string" />
+    </RegistryKey>
   </RegistryKey>
   <RegistryKey Root="HKLM" Key="Software\Microsoft\VisualStudio\9.0\Services\{45a17860-9503-4eb6-ba88-836c9958739e}">
     <RegistryValue Value="{673FC80C-FEFF-4700-836E-783E376F4C41}" Type="string"/>
@@ -25,3 +29,4 @@
     <RegistryValue Name="UseInterface" Value="1" Type="integer" />
   </RegistryKey>
 </Include>
+
