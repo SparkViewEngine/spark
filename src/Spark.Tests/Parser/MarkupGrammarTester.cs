@@ -479,6 +479,39 @@ namespace Spark.Tests.Parser
             Assert.AreEqual("<", ((TextNode)elt.Attributes[0].Nodes[1]).Text);
         }
 
-        
+        [Test]
+        public void StatementAtStartOfFile()
+        {
+            var result1 = grammar.Nodes(
+                Source("#alpha\r\n"));
+            Assert.AreEqual(2, result1.Value.Count);
+            Assert.IsInstanceOfType(typeof(StatementNode), result1.Value[0]);
+            Assert.AreEqual("alpha", ((StatementNode)result1.Value[0]).Code);
+            Assert.IsInstanceOfType(typeof(TextNode), result1.Value[1]);
+            Assert.AreEqual("\r\n", ((TextNode)result1.Value[1]).Text);
+
+            var result2 = grammar.Nodes(
+                Source("#alpha\r\ntext\r\n#beta"));
+            Assert.AreEqual(3, result2.Value.Count);
+            Assert.IsInstanceOfType(typeof(StatementNode), result2.Value[0]);
+            Assert.AreEqual("alpha", ((StatementNode)result2.Value[0]).Code);
+            Assert.IsInstanceOfType(typeof(TextNode), result2.Value[1]);
+            Assert.AreEqual("\r\ntext", ((TextNode)result2.Value[1]).Text);
+            Assert.IsInstanceOfType(typeof(StatementNode), result2.Value[2]);
+            Assert.AreEqual("beta", ((StatementNode)result2.Value[2]).Code);
+
+            var result3 = grammar.Nodes(
+                Source("\r\n#alpha\r\ntext\r\n#beta\r\n"));
+            Assert.AreEqual(4, result3.Value.Count);
+            Assert.IsInstanceOfType(typeof(StatementNode), result3.Value[0]);
+            Assert.AreEqual("alpha", ((StatementNode)result3.Value[0]).Code);
+            Assert.IsInstanceOfType(typeof(TextNode), result3.Value[1]);
+            Assert.AreEqual("\r\ntext", ((TextNode)result3.Value[1]).Text);
+            Assert.IsInstanceOfType(typeof(StatementNode), result3.Value[2]);
+            Assert.AreEqual("beta", ((StatementNode)result3.Value[2]).Code);
+            Assert.IsInstanceOfType(typeof(TextNode), result3.Value[3]);
+            Assert.AreEqual("\r\n", ((TextNode)result3.Value[3]).Text);
+        }
     }
 }
+

@@ -66,5 +66,45 @@ namespace Spark.Parser
                            return new ParseResult<char>(input.Advance(1), input.Peek());
                        };
         }
+
+        public static ParseAction<char> ChControl()
+        {
+            return delegate(Position input)
+                       {
+                           // STX at start of file
+                           if (input.Offset == 0) 
+                               return new ParseResult<char>(input, '\u0002');
+
+                           // ETX at end of file
+                           if (input.PotentialLength() == 0)
+                               return new ParseResult<char>(input, '\u0003');
+
+                           return null;
+                       };
+        }
+
+        public static ParseAction<char> ChSTX()
+        {
+            var chControl = ChControl();
+            return delegate(Position input)
+                       {
+                           var result = chControl(input);
+                           if (result == null || result.Value != '\u0002')
+                               return null;
+                           return result;
+                       };
+        }
+
+        public static ParseAction<char> ChETX()
+        {
+            var chControl = ChControl();
+            return delegate(Position input)
+            {
+                var result = chControl(input);
+                if (result == null || result.Value != '\u0003')
+                    return null;
+                return result;
+            };
+        }
     }
 }

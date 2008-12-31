@@ -59,8 +59,8 @@ namespace Spark.Parser.Markup
 
             var paintedStatement1 = Statement1.Build(hit => new StatementNode(hit)).Paint<StatementNode, Node>();
 
-            // Syntax 1: '\r'? '\n' S? '#' (statement ^('\r' | '\n') )
-            var StatementNode1 = Opt(Ch('\r')).And(Ch('\n')).And(Rep(Ch(' ', '\t'))).And(TkCode(Ch('#'))).And(paintedStatement1).IfNext(Ch('\r', '\n'))
+            // Syntax 1: '\r'? ('\n' | '\u0002') S? '#' (statement ^('\r' | '\n' | '\u0003') )
+            var StatementNode1 = Opt(Ch('\r')).And(Ch('\n').Or(ChSTX())).And(Rep(Ch(' ', '\t'))).And(TkCode(Ch('#'))).And(paintedStatement1).IfNext(Ch('\r', '\n').Or(ChETX()))
                 .Build(hit => hit.Down);
 
 
