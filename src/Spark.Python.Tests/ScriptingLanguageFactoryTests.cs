@@ -28,7 +28,7 @@ namespace Spark.Python.Tests
         {
             _engine = new SparkViewEngine(new SparkSettings())
                       {
-                          LanguageFactory = new ScriptingLanguageFactory(),
+                          LanguageFactory = new PythonLanguageFactory(),
                           DefaultPageBaseType = typeof(StubSparkView).FullName
                       };
             IronPython.Hosting.Python.CreateEngine();

@@ -18,7 +18,7 @@ using Spark.Python.Compiler;
 
 namespace Spark.Python
 {
-    public class ScriptingLanguageFactory : DefaultLanguageFactory
+    public class PythonLanguageFactory : DefaultLanguageFactory
     {
         private PythonEngineManager _PythonEngineManager;
         public PythonEngineManager PythonEngineManager

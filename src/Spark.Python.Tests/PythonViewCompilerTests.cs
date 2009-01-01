@@ -28,7 +28,7 @@ namespace Spark.Python.Tests
     public class PythonViewCompilerTests
     {
         private PythonViewCompiler _compiler;
-        private ScriptingLanguageFactory _languageFactory;
+        private PythonLanguageFactory _languageFactory;
 
 
         [SetUp]
@@ -38,7 +38,7 @@ namespace Spark.Python.Tests
                         {
                             BaseClass = typeof(StubSparkView).FullName
                         };
-            _languageFactory = new ScriptingLanguageFactory();
+            _languageFactory = new PythonLanguageFactory();
 
             // Load up assemblies
             IronPython.Hosting.Python.CreateEngine();

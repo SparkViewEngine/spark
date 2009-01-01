@@ -15,7 +15,7 @@ using Spark.Python;
 
 namespace Spark.Web.Mvc.Python
 {
-    public class ScriptingLanguageFactoryWithExtensions : ScriptingLanguageFactory
+    public class ScriptingLanguageFactoryWithExtensions : PythonLanguageFactory
     {
         private bool _initialized;
 
