@@ -15,7 +15,7 @@ using Spark.Python;
 
 namespace Spark.Web.Mvc.Python
 {
-    public class ScriptingLanguageFactoryWithExtensions : PythonLanguageFactory
+    public class PythonLanguageFactoryWithExtensions : PythonLanguageFactory
     {
         private bool _initialized;
 
@@ -41,7 +41,7 @@ namespace Spark.Web.Mvc.Python
                 // before any scripts are created in order for the extension
                 // methods to be "seen" on the dynamic type.
                 PythonEngineManager.ScriptEngine.Runtime.LoadAssembly(
-                    typeof (ScriptingLanguageFactoryWithExtensions).Assembly);
+                    typeof (PythonLanguageFactoryWithExtensions).Assembly);
             }
         }
     }

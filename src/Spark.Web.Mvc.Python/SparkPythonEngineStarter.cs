@@ -14,7 +14,7 @@ namespace Spark.Web.Mvc.Python
         public static void ConfigureContainer(ISparkServiceContainer container)
         {
             container.SetServiceBuilder<IViewEngine>(c => new SparkViewFactory(c.GetService<ISparkSettings>()));
-            container.SetServiceBuilder<ISparkLanguageFactory>(c => new ScriptingLanguageFactoryWithExtensions());
+            container.SetServiceBuilder<ISparkLanguageFactory>(c => new PythonLanguageFactoryWithExtensions());
         }
 
         /// <summary>
