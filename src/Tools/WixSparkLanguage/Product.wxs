@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <?define ProductVersion = "1.0.2.2" ?>
+  
+  <?if "$(var.ProductVersion)" = "" ?>
+  <?undef ProductVersion ?>
+  <?define ProductVersion = "1.0.2.3" ?>
+  <?endif ?>
+  
   <?define VisualStudioRegistryRoot = "Software\Microsoft\VisualStudio\9.0" ?>
+
   <Product Id="*"
            Name="Spark View Engine"
            Language="1033"
@@ -30,38 +36,37 @@
     <Condition Message="An administrator must approve or install [ProductName]."> Privileged </Condition>
     <Condition Message="[ProductName] requires Visual Studio 2008."> DEVENV_EXE_PATH </Condition>
 
+    <?define SparkLanguagePackage.ProjectName = "SparkLanguagePackage" ?>
+    <?define SparkLanguagePackage.TargetDir = "$(var.SolutionDir)\$(var.SparkLanguagePackage.ProjectName)\bin\$(var.Configuration)\" ?>
+    <?define SparkLanguagePackage.TargetFileName = "$(var.SparkLanguagePackage.ProjectName).dll" ?>
+    <?define SparkLanguagePackage.TargetPath = "$(var.SparkLanguagePackage.TargetDir)$(var.SparkLanguagePackage.TargetFileName)" ?>
+
+    <?define SparkLanguagePackageUI.ProjectName = "SparkLanguagePackageUI" ?>
+    <?define SparkLanguagePackageUI.TargetDir = "$(var.SparkLanguagePackage.TargetDir)1033\" ?>
+    <?define SparkLanguagePackageUI.TargetFileName = "$(var.SparkLanguagePackageUI.ProjectName).dll" ?>
+    <?define SparkLanguagePackageUI.TargetPath = "$(var.SparkLanguagePackageUI.TargetDir)$(var.SparkLanguagePackageUI.TargetFileName)" ?>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
+
         <Directory Id="INSTALLLOCATION" Name="Spark">
-          <!--<Component Id="vs2008registry" Guid="ea461788-9f94-4d14-a903-bd5fdc7dff6c">
-          </Component>-->
           <Component Id="SparkLanguagePackage.dll" Guid="8ace6d30-38e4-4566-8652-02be3f266a0c">
-            <File Id="SparkLanguagePackage.dll" 
-                  Name="SparkLanguagePackage.dll" 
-                  Source="$(var.SparkLanguage.TargetDir)\SparkLanguagePackage.dll" Vital="yes" />
+            <File Id="SparkLanguagePackage.dll" Name="$(var.SparkLanguagePackage.TargetFileName)" Source="$(var.SparkLanguagePackage.TargetPath)" />
             <?include vs2008.wxi ?>
           </Component>
           <Component Id="SparkLanguage.dll" Guid="8ace6d31-38e4-4566-8652-02be3f266a0c">
-            <File Id="SparkLanguage.dll" 
-                  Name="$(var.SparkLanguage.TargetFileName)" 
-                  Source="$(var.SparkLanguage.TargetPath)" Vital="yes"/>
+            <File Id="SparkLanguage.dll" Name="$(var.SparkLanguage.TargetFileName)" Source="$(var.SparkLanguage.TargetPath)"/>
           </Component>
           <Component Id="Interop.SparkLanguagePackageLib.dll" Guid="8ace6d33-38e4-4566-8652-02be3f266a0c">
-            <File Id="Interop.SparkLanguagePackageLib.dll"
-                  Name="Interop.SparkLanguagePackageLib.dll"
-                  Source="$(var.SparkLanguage.TargetDir)\Interop.SparkLanguagePackageLib.dll" Vital="yes"/>
+            <File Id="Interop.SparkLanguagePackageLib.dll" Name="Interop.SparkLanguagePackageLib.dll"
+                  Source="$(var.SparkLanguage.TargetDir)\Interop.SparkLanguagePackageLib.dll"/>
           </Component>
           <Component Id="Spark.dll" Guid="8ace6d32-38e4-4566-8652-02be3f266a0c">
-            <File Id="Spark.dll" 
-                  Name="$(var.Spark.TargetFileName)" 
-                  Source="$(var.Spark.TargetPath)" Vital="yes"/>
+            <File Id="Spark.dll" Name="$(var.Spark.TargetFileName)" Source="$(var.Spark.TargetPath)"/>
           </Component>
           <Directory Id="Language1033" Name="1033">
             <Component Id="SparkLanguagePackageUI.dll" Guid="8ace6d34-38e4-4566-8652-02be3f266a0c">
-              <File Id="SparkLanguagePackageUI.dll" 
-                    Name="SparkLanguagePackageUI.dll" 
-                    Source="$(var.SparkLanguage.TargetDir)\1033\SparkLanguagePackageUI.dll" Vital="yes"/>
+              <File Id="SparkLanguagePackageUI.dll" Name="$(var.SparkLanguagePackageUI.TargetFileName)" Source="$(var.SparkLanguagePackageUI.TargetPath)"/>
             </Component>
           </Directory>
         </Directory>

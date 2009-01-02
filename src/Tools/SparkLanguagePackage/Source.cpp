@@ -117,7 +117,7 @@ STDMETHODIMP Source::GetDefaultPageBaseType(BSTR* pPageBaseType)
 {
 	CComBSTR pageBaseType;
 
-	HRESULT hr;
+	HRESULT hr = S_OK;
 	CComVariant varProject;
 	_HR(_hierarchy->GetProperty(VSITEMID_ROOT, VSHPROPID_ExtObject, &varProject));
 	_HR(varProject.ChangeType(VT_UNKNOWN));

@@ -5,23 +5,26 @@
     <ProductVersion>3.0</ProductVersion>
     <ProjectGuid>{55ecd767-b3fa-40ce-97de-06910f91fd19}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>WixSparkLanguage</OutputName>
+    <OutputName>SparkVsIntegration</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets</WixTargetsPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug</DefineConstants>
+    <DefineConstants>Debug;ProductVersion=$(ProjectFullVersion)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>ProductVersion=$(ProjectFullVersion)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Retail|x86' ">
-    <DefineConstants>Debug</DefineConstants>
+    <DefineConstants>Debug;ProductVersion=$(ProjectFullVersion)</DefineConstants>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+    <WixVariables>
+    </WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Retail|AnyCPU' ">
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
@@ -41,11 +44,6 @@
     <ProjectReference Include="..\..\Spark\Spark.csproj">
       <Name>Spark</Name>
       <Project>{31929d34-1a68-4a6b-9d8a-b93037163a5a}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\SparkLanguagePackage\SparkLanguagePackage.vcproj">
-      <Name>SparkLanguagePackage</Name>
-      <Project>{149b18ac-1d73-448f-9186-242da1b0ed29}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\SparkLanguage\SparkLanguage.csproj">

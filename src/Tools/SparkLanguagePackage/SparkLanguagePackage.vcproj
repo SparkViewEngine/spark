@@ -170,6 +170,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				RegisterOutput="true"
+				PerUserRedirection="true"
 				IgnoreImportLibrary="true"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\SparkLanguagePackage.def"
@@ -422,6 +423,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\CommonVersionInfo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\dllmain.h"
 				>
 			</File>
@@ -486,6 +491,14 @@
 			<File
 				RelativePath=".\SparkLanguagePackage.rc"
 				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions="NDEBUG;RETAIL"
+					/>
+				</FileConfiguration>
 				<FileConfiguration
 					Name="Retail|Win32"
 					>

@@ -46,56 +46,50 @@ BEGIN
     "#include ""packageloadkey.h""\r\n"
     "#endif\r\n"
     "#endif\r\n"
-    "#include ""winres.h""\r\n"
-    "\0"
+    "#include ""winres.h""\r\0"
 END
 
 3 TEXTINCLUDE 
 BEGIN
     "1 TYPELIB ""SparkLanguagePackage.tlb""\r\n"
-    "\0"
+    "\r\n"
+    "#include ""..\\..\\CommonVersionInfo.h""\r\n"
+    "\r\n"
+    "VS_VERSION_INFO VERSIONINFO\r\n"
+    " FILEVERSION VERSIONINFO_MAJOR,VERSIONINFO_MINOR,VERSIONINFO_BUILD,VERSIONINFO_REVISION\r\n"
+    " PRODUCTVERSION VERSIONINFO_MAJOR,VERSIONINFO_MINOR,VERSIONINFO_BUILD,VERSIONINFO_REVISION\r\n"
+    " FILEFLAGSMASK 0x3fL\r\n"
+    "#ifdef _DEBUG\r\n"
+    " FILEFLAGS 0x1L\r\n"
+    "#else\r\n"
+    " FILEFLAGS 0x0L\r\n"
+    "#endif\r\n"
+    " FILEOS 0x4L\r\n"
+    " FILETYPE 0x2L\r\n"
+    " FILESUBTYPE 0x0L\r\n"
+    "BEGIN\r\n"
+    "    BLOCK ""StringFileInfo""\r\n"
+    "    BEGIN\r\n"
+    "        BLOCK ""040904e4""\r\n"
+    "        BEGIN\r\n"
+    "            VALUE ""CompanyName"", VERSIONINFO_COMPANY\r\n"
+    "            VALUE ""FileDescription"", ""Spark View Engine""\r\n"
+    "            VALUE ""FileVersion"", VERSIONINFO_VERSIONSTRING\r\n"
+    "            VALUE ""InternalName"", ""SparkLanguagePackage.dll""\r\n"
+    "            VALUE ""LegalCopyright"", VERSIONINFO_COPYRIGHT\r\n"
+    "            VALUE ""OriginalFilename"", ""SparkLanguagePackage.dll""\r\n"
+    "            VALUE ""ProductName"", VERSIONINFO_PRODUCT\r\n"
+    "            VALUE ""ProductVersion"", VERSIONINFO_VERSIONSTRING\r\n"
+    "        END\r\n"
+    "    END\r\n"
+    "    BLOCK ""VarFileInfo""\r\n"
+    "    BEGIN\r\n"
+    "        VALUE ""Translation"", 0x409, 1252\r\n"
+    "    END\r\n"
+    "END\r\0"
 END
 
 #endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Version
-//
-
-VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,2
- PRODUCTVERSION 1,0,0,2
- FILEFLAGSMASK 0x3fL
-#ifdef _DEBUG
- FILEFLAGS 0x1L
-#else
- FILEFLAGS 0x0L
-#endif
- FILEOS 0x4L
- FILETYPE 0x2L
- FILESUBTYPE 0x0L
-BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "040904e4"
-        BEGIN
-            VALUE "CompanyName", "Louis DeJardin"
-            VALUE "FileDescription", "Spark View Engine"
-            VALUE "FileVersion", "1.0.0.2"
-            VALUE "InternalName", "SparkLanguagePackage.dll"
-            VALUE "LegalCopyright", "(c) 2008 Louis DeJardin.  All rights reserved."
-            VALUE "OriginalFilename", "SparkLanguagePackage.dll"
-            VALUE "ProductName", "Spark View Engine"
-            VALUE "ProductVersion", "1.0.0.2"
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x409, 1252
-    END
-END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -144,6 +138,41 @@ END
 // Generated from the TEXTINCLUDE 3 resource.
 //
 1 TYPELIB "SparkLanguagePackage.tlb"
+
+#include "..\..\CommonVersionInfo.h"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION VERSIONINFO_MAJOR,VERSIONINFO_MINOR,VERSIONINFO_BUILD,VERSIONINFO_REVISION
+ PRODUCTVERSION VERSIONINFO_MAJOR,VERSIONINFO_MINOR,VERSIONINFO_BUILD,VERSIONINFO_REVISION
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", VERSIONINFO_COMPANY
+            VALUE "FileDescription", "Spark View Engine"
+            VALUE "FileVersion", VERSIONINFO_VERSIONSTRING
+            VALUE "InternalName", "SparkLanguagePackage.dll"
+            VALUE "LegalCopyright", VERSIONINFO_COPYRIGHT
+            VALUE "OriginalFilename", "SparkLanguagePackage.dll"
+            VALUE "ProductName", VERSIONINFO_PRODUCT
+            VALUE "ProductVersion", VERSIONINFO_VERSIONSTRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
