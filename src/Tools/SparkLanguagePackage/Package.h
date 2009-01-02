@@ -121,25 +121,13 @@ public:
 	}
     
     STDMETHODIMP get_OfficialName( 
-        /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrName) 
-	{
-		*pbstrName = SysAllocString(L"Spark View Engine");
-		return S_OK;
-	}
+        /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrName);
     
     STDMETHODIMP get_ProductID( 
-        /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrPID)
-	{
-		*pbstrPID = SysAllocString(L"Preview 2");
-		return S_OK;
-	}
+        /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrPID);
 
     STDMETHODIMP get_ProductDetails( 
-        /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrProductDetails)
-	{
-		*pbstrProductDetails = SysAllocString(L"Spark View Engine integration package for Visual Studio. For more information see http://sparkviewengine.com");
-		return S_OK;
-	}
+        /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrProductDetails);
     
     STDMETHODIMP get_IdIcoLogoForAboutbox( 
         /* [retval][out] */ __RPC__out UINT *pIdIco)

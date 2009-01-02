@@ -4,6 +4,29 @@
 #include "Language.h"
 #include "dllmain.h"
 
+#include "..\..\CommonVersionInfo.h"
+
+STDMETHODIMP Package::get_OfficialName( 
+    /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrName) 
+{
+	*pbstrName = CComBSTR(VERSIONINFO_PRODUCT).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP Package::get_ProductID( 
+    /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrPID)
+{
+	*pbstrPID = CComBSTR("Build " VERSIONINFO_VERSIONSTRING).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP Package::get_ProductDetails( 
+    /* [retval][out] */ __RPC__deref_out_opt BSTR *pbstrProductDetails)
+{
+	*pbstrProductDetails = CComBSTR(VERSIONINFO_PRODUCT " integration package for Visual Studio 2008. For more information see http://sparkviewengine.com.\r\n" VERSIONINFO_COPYRIGHT).Detach();
+	return S_OK;
+}
+
 CComBSTR GetModulePath()
 {
 	WCHAR wszModule[MAX_PATH + 2];
