@@ -1,0 +1,3 @@
+﻿<p>I'm showing a grid</p>
+
+<p>!{Html.ActionLink("New Game", "Reset", new {controller="GridFlip", area="Games"})}</p>

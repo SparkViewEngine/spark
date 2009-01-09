@@ -1,0 +1,10 @@
+﻿
+<global type="string" Title="'Modular Site Example'"/>
+
+<use namespace="System.Web.Mvc.Html"/>
+<use namespace="Spark.Modules.Html"/>
+
+<macro:NavItem text="string" url="string">
+	<li class="selected?{url == Context.Request.RawUrl}"><a href="!{url}">${text}</a></li>
+</macro:NavItem>
+
