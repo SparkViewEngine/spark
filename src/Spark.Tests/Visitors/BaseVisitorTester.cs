@@ -25,16 +25,14 @@ namespace Spark.Tests.Visitors
     public class BaseVisitorTester
     {
         MarkupGrammar _grammar = new MarkupGrammar();
-
-        public IList<Node> ParseNodes(string content)
-        {
-            return _grammar.Nodes(new Position(new SourceContext(content))).Value;
-        }
-
+        protected IEnumerable<Paint> _paint;
+        
 
         public IList<Node> ParseNodes(string content, params AbstractNodeVisitor[] visitors)
         {
-            var nodes = _grammar.Nodes(new Position(new SourceContext(content))).Value;
+            var result = _grammar.Nodes(new Position(new SourceContext(content)));
+            _paint = result.Rest.GetPaint();
+            var nodes = result.Value;
             foreach(var visitor in visitors)
             {
                 visitor.Accept(nodes);

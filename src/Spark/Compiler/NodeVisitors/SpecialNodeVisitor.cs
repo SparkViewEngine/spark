@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
+using Spark.Parser;
 using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
@@ -57,12 +58,39 @@ namespace Spark.Compiler.NodeVisitors
 
         private void PopSpecial(string name)
         {
+            if (_stack.Count == 0)
+                throw new CompilerException(string.Format("Unexpected end element {0}", name));
+
             _nodes = _stack.Pop();
             SpecialNode special = Nodes.Last() as SpecialNode;
             if (special == null)
                 throw new CompilerException(string.Format("Unexpected end element {0}", name));
+
             if (special.Element.Name != name)
                 throw new CompilerException(string.Format("End element {0} did not match {1}", name, special.Element.Name));
+        }
+
+        private int _acceptNodesLevel;
+        protected override void BeforeAcceptNodes()
+        {
+            _acceptNodesLevel++;
+        }
+        protected override void AfterAcceptNodes()
+        {
+            _acceptNodesLevel--;
+            if (_acceptNodesLevel == 0)
+            {
+                if (_stack.Count != 0)
+                {
+                    var specialNode = (SpecialNode)_stack.Peek().Last();
+                    var paint = Context.Paint.OfType<Paint<Node>>()
+                        .FirstOrDefault(p => p.Value == specialNode.OriginalNode);
+                    var position = paint == null ? null : paint.Begin;
+                    throw new CompilerException(
+                        string.Format("Element {0} was never closed", specialNode.Element.Name), 
+                        position);
+                }
+            }
         }
 
         protected override void Visit(ElementNode node)

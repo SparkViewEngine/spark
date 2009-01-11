@@ -107,6 +107,7 @@
     <Compile Include="ViewActivatorTester.cs" />
     <Compile Include="DefaultViewCompilerTester.cs" />
     <Compile Include="Parser\ViewLoaderTester.cs" />
+    <Compile Include="Visitors\SpecialNodeVisitorTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj">

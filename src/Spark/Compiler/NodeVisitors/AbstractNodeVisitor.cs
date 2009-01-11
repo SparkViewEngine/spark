@@ -30,8 +30,18 @@ namespace Spark.Compiler.NodeVisitors
 
         public void Accept(IList<Node> nodes)
         {
+            BeforeAcceptNodes();
             foreach (var node in nodes)
                 Accept(node);
+            AfterAcceptNodes();
+        }
+
+        protected virtual void BeforeAcceptNodes()
+        {
+        }
+
+        protected virtual void AfterAcceptNodes()
+        {
         }
 
         public void Accept(Node node)
