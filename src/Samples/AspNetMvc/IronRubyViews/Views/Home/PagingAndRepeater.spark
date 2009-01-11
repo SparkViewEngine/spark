@@ -32,8 +32,8 @@
   <section:each>
     <tr class="alt?{itemIndex % 2 == 1} active?{item.state.equals 'Minnesota'}">
       <td>${itemIndex + @birds.FirstItemIndex + 1}</td>
-      <td class="red?{item.name.equals 'Cardinal'} blue?{item.name.index_of('Blue') != -1}">${H(item.Name)}</td>
-      <td class="mn?{item.state.equals 'Minnesota'}">${H(item.State)}</td>
+      <td class="red?{item.name.equals 'Cardinal'} blue?{item.name.index_of('Blue') != -1}">${item.Name}</td>
+      <td class="mn?{item.state.equals 'Minnesota'}">${item.State}</td>
     </tr>
   </section:each>
   <section:afterall>

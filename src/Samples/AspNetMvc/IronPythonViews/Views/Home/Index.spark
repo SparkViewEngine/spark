@@ -21,7 +21,7 @@
 <ul>
   <li each="prod in products" style="background:#def;?{prodIndex%2}">
     ${str(prodIndex+1)}
-    ${Html.ActionLink(prod.Name, "View", "Home")}
+    !{Html.ActionLink(prod.Name, "View", "Home")}
     ${q(prodIsFirst, 'First', '')}
     ${q(prodIsLast, 'Last', '')}
   </li>

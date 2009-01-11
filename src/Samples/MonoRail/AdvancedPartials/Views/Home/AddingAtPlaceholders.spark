@@ -41,8 +41,8 @@
 </Comment>
 
 <content:navextra>
-  ${NavItem("Extra Home Item", new {controller='home', action='index'})}
-  ${NavItem("Adding At Placeholders", new {controller='home', action='addingatplaceholders'})}
+  !{NavItem("Extra Home Item", new {controller='home', action='index'})}
+  !{NavItem("Adding At Placeholders", new {controller='home', action='addingatplaceholders'})}
 </content:navextra>
 
 <content:splitcontentleft>

@@ -67,7 +67,7 @@
           <!-- secondary content start -->
           <use:subcontent/>
           <!-- secondary content end -->
-          ${ListThemes()}
+          !{ListThemes()}
         </div>
 
         <div id="footer">

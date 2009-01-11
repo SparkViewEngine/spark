@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 
 namespace Spark.Modules
 {

@@ -41,8 +41,8 @@
 </Comment>
 
 <content:navextra>
-  ${NavItem("Extra Home Item", url.action("index", "home"))}
-  ${NavItem("Adding At Placeholders", url.action("addingatplaceholders", "home"))}
+  !{NavItem("Extra Home Item", url.action("index", "home"))}
+  !{NavItem("Adding At Placeholders", url.action("addingatplaceholders", "home"))}
 </content:navextra>
 
 <content:splitcontentleft>

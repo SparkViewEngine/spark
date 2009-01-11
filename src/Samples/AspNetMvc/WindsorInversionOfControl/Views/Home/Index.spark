@@ -7,5 +7,5 @@
   <li class="${new[]{'even','odd'}[productIndex%2]}">${H(product.Name)}</li>
 </ul>
 
-<p>${Yadda()}</p>
+<p>!{Yadda()}</p>
 <Menu name="'bottom-nav'"/>

@@ -6,7 +6,7 @@
   <p>A compiled view class for that of controller and and view is not currently in memory.</p>
 </div>
 <else>
-  <content def="source">${H(ViewData.Model.Compiler.SourceCode)}</content>
-  ${source.Replace("\r\n", "<br/>").Replace(" ", "&nbsp;")}
+  <content def="source">${ViewData.Model.Compiler.SourceCode}</content>
+  !{source.Replace("\r\n", "<br/>").Replace(" ", "&nbsp;")}
 </else>
 

@@ -14,7 +14,7 @@
 
   <test if="page.HasPreviousPage">
     #routeData["id"] = page.CurrentPage - 1
-    <a href="${Url.Action(action, controller, routeData)}">
+    <a href="!{Url.Action(action, controller, routeData)}">
       <render:prev>« Previous</render:prev>
     </a>
     <else/>
@@ -30,7 +30,7 @@
         <render:item>${pageIndex}</render:item>
       </span>
       <else/>
-      <a href="${Url.Action(action, controller, routeData)}">
+      <a href="!{Url.Action(action, controller, routeData)}">
         <render:item>${pageIndex}</render:item>
       </a>
     </test>
@@ -38,7 +38,7 @@
 
   <test if="page.HasNextPage">
     #routeData["id"] = page.CurrentPage + 1
-    <a href="${Url.Action(action, controller, routeData)}">
+    <a href="!{Url.Action(action, controller, routeData)}">
       <render:next>Next »</render:next>
     </a>
     <else/>

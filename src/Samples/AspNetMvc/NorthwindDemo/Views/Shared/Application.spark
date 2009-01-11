@@ -6,7 +6,7 @@
     <title>${Title}</title>
     <macro name="PageTitle" caption="string">
       <set Title='string.Format("{0} - {1}", caption, Title)'/>
-      <h2>${Html.Encode(caption)}</h2>
+      <h2>${caption}</h2>
     </macro>
     <macro name="Break">
       # if (System.Diagnostics.Debugger.IsAttached)

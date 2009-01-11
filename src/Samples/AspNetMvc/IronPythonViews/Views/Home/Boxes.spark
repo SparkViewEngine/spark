@@ -6,7 +6,7 @@
     <section:header>Another box</section:header>
     This one does
   </Box>
-  ${JabberBoxy()}
+  !{JabberBoxy()}
 </content:splitcontentleft>
 
 <macro:JabberBoxy>
@@ -21,7 +21,7 @@
 <content:splitcontentright>
   <Box>
     <section:header>Rounded Jabberwocky HTML</section:header>
-    ${H(JabberBoxy()).replace("\r\n", "<br/>")}
+    !{H(JabberBoxy()).replace("\r\n", "<br/>")}
   </Box>
 </content:splitcontentright>
 
@@ -111,6 +111,6 @@
 <content:splitcontentleft each="part in parts">
   <RoundBox>
     <section:header>The Lobster Quadrille ${partIndex + 1} of ${partCount}</section:header>
-    <section:body>${part}</section:body>
+    <section:body>!{part}</section:body>
   </RoundBox>
 </content:splitcontentleft>

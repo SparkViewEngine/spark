@@ -63,9 +63,9 @@ namespace SparkLanguage
                 path = docItem.Name + "\\" + path;
             }
 
-            if (docItem.Parent == rootItem)
+            if (Equals(docItem.Parent, rootItem))
                 path = "$\\" + path;
-            
+
             return path;
         }
 

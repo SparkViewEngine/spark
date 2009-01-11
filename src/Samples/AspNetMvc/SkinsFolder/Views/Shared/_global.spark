@@ -6,7 +6,7 @@
 <macro name="ListThemes">
   <ul>
     <li each="var name in new[]{'andreas08', 'terrafirma'}">
-      <a href="~/home/settheme?name=${name}">${H(name)}</a>
+      <a href="~/home/settheme?name=${name}">${name}</a>
     </li>
     <li>
       <a href="~/home/settheme">none</a>

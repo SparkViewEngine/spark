@@ -1,6 +1,6 @@
 ﻿<h3>Product ${product.Id} Details</h3>
 <p>Id: ${product.Id}</p>
-<p>Name: ${H(product.Name)}</p>
+<p>Name: ${product.Name}</p>
 
 <viewdata product="Product"/>
 

@@ -9,7 +9,7 @@
 <div class="tnt_pagination">
 
   <test if="page.HasPreviousPage">
-    <a href="${Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=page.PreviousPageIndex} })}">
+    <a href="!{Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=page.PreviousPageIndex} })}">
       <render:prev>« Previous</render:prev>
     </a>
     <else/>
@@ -24,14 +24,14 @@
       <render:item>${pageIndex}</render:item>
     </span>
     <else/>
-    <a href="${Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=pageIndex} })}">
+    <a href="!{Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=pageIndex} })}">
       <render:item>${pageIndex}</render:item>
     </a>
   </test>
   #}
 
   <test if="page.HasNextPage">
-    <a href="${Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=page.NextPageIndex} })}">
+    <a href="!{Url.For(new {controller='home', action='pagingandrepeater', @params=new{id=page.NextPageIndex} })}">
       <render:next>Next »</render:next>
     </a>
     <else/>

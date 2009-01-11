@@ -5,7 +5,7 @@
 
 <content:navigation>
   <ul>
-    ${NavItem("Escape!!", Url.Action("index", "home"))}
+    !{NavItem("Escape!!", Url.Action("index", "home"))}
     <li class="selected"><a href="#">First page</a></li>
     <li><a href="#">Second</a></li>
     <li><a href="#">Third</a></li>

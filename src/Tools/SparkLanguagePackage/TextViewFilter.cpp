@@ -80,6 +80,7 @@ STDMETHODIMP TextViewFilter::Exec(
 				CComPtr<ISourceSupervisor> supervisor;
 				_HR(_source->GetSupervisor(&supervisor));
 				CComBSTR key(1, (LPCOLESTR)&V_UI2(&varIn));
+//				ATLTRACE(TEXTVIEWFILTER_EXEC, 4, L"ECMD_TYPECHAR '%s'", key.m_str);
 				_HR(supervisor->OnTypeChar(_textView, key));
 			}
 			break;

@@ -36,8 +36,8 @@
   <section:each>
     <tr class="alt?{itemIndex % 2 == 1} active?{item.State=='Minnesota'}">
       <td>${itemIndex + items.FirstItemIndex}</td>
-      <td class="red?{item.Name=='Cardinal'} blue?{item.Name.Contains('Blue')}">${H(item.Name)}</td>
-      <td class="mn?{item.State=='Minnesota'}">${H(item.State)}</td>
+      <td class="red?{item.Name=='Cardinal'} blue?{item.Name.Contains('Blue')}">${item.Name}</td>
+      <td class="mn?{item.State=='Minnesota'}">${item.State}</td>
     </tr>
   </section:each>
   <section:afterall>

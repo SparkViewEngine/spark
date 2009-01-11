@@ -8,10 +8,11 @@
   -->
   <ul>
     <li each="var item in Nav.GetNav(Context, navId).Items" class="${IsSelectedClass(item)}">
-      <a href="${SiteRoot + item.Url}">${H(item.Caption)}</a>
+      <a href="!{SiteRoot + item.Url}">${item.Caption}</a>
     </li>
   </ul>
 </div>
 <macro name="IsSelectedClass" item="NavItem">
-  #if (SiteRoot + item.Url == Context.Request.RawUrl) return "selected";
+  #if (SiteRoot + item.Url == Context.UrlInfo.UrlRaw) return "selected";
 </macro>
+

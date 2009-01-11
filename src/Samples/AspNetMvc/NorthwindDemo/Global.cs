@@ -26,6 +26,7 @@ namespace NorthwindDemo
         public static void RegisterViewEngine(ViewEngineCollection engines)
         {
             var settings = new SparkSettings();
+            settings.SetAutomaticEncoding(true);
 
             settings
                 .AddNamespace("System")

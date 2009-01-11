@@ -25,14 +25,6 @@ namespace WindsorInversionOfControl.Views
     {
         public INavRepository Nav { get; set; }
 
-        /// <summary>
-        /// Throw in a for ViewData.Model
-        /// </summary>
-        public T Model
-        {
-            get { return ViewData.Model; }
-        }
-
         public string Yadda()
         {
             return "Adding a convenience function";

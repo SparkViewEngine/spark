@@ -7,10 +7,10 @@
 <p>${SR.PleaseSelectYourLanguageFormat(user.Culture)}</p>
 
 <ul>
-  <li>${Html.ActionLink[[HomeController]](c=>c.ChooseLanguage("en-US"), SR.English)}</li>
-  <li>${Html.ActionLink[[HomeController]](c=>c.ChooseLanguage("fr-FR"), SR.French)}</li>
-  <li>${Html.ActionLink[[HomeController]](c=>c.ChooseLanguage("es-ES"), SR.Spanish)}</li>
-  <li>${Html.ActionLink[[HomeController]](c=>c.ChooseLanguage("pt"), SR.Portuguese)}</li>
+  <li>!{Html.ActionLink[[HomeController]](c=>c.ChooseLanguage("en-US"), SR.English)}</li>
+  <li>!{Html.ActionLink[[HomeController]](c=>c.ChooseLanguage("fr-FR"), SR.French)}</li>
+  <li>!{Html.ActionLink[[HomeController]](c=>c.ChooseLanguage("es-ES"), SR.Spanish)}</li>
+  <li>!{Html.ActionLink[[HomeController]](c=>c.ChooseLanguage("pt"), SR.Portuguese)}</li>
 </ul>
 
 <p>

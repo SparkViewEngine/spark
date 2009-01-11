@@ -1,5 +1,5 @@
 ﻿<viewdata model="ProductsEditViewData"/>
-${PageTitle(ViewData.Model.Product.ProductName)}
+!{PageTitle(ViewData.Model.Product.ProductName)}
 <CategoryMenuItems category="ViewData.Model.Product.Category"/>
 <Rounded extraPadding="10">
   <form action="<%= Url.Action("update", new { ID=ViewData.Model.Product.ProductID }) %>" method="post">

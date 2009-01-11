@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.MicroKernel;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 using Spark.Modules;
 
 namespace Modular.Common

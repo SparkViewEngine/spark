@@ -19,13 +19,13 @@
 
 <h3>Html Source</h3>
 <content var="grabhtml"><helpertests/></content>
-<pre>${H(grabhtml)}</pre>
+<pre>${grabhtml}</pre>
 
 <h3>Collection autovariables</h3>
 <ul>
   <li each="prod in @products" style="background:#ddeeff;?{prodIndex%2==0}">
     ${prodIndex+1}
-    ${html.ActionLink(prod.name, 'index', 'home')}
+    !{html.ActionLink(prod.name, 'index', 'home')}
     ${prodIsFirst && 'First' || ''}
     ${prodIsLast && 'Last' || ''}
   </li>

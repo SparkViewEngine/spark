@@ -28,6 +28,7 @@ namespace ModularForum
         {
             SparkSettings settings = new SparkSettings()
                 .SetDebug(true)
+                .SetAutomaticEncoding(true)
                 .AddNamespace("System.Collections.Generic")
                 .AddNamespace("Microsoft.Web.Mvc")
                 .AddNamespace("ModularForum.Controllers")

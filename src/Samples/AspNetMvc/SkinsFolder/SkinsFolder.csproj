@@ -120,7 +120,7 @@
     <Content Include="Views\Home\ThemeSelected.spark" />
     <Content Include="Views\Layouts\Application.spark" />
     <Content Include="Themes\andreas08\Layouts\Application.spark" />
-    <Content Include="Views\Layouts\_global.spark" />
+    <Content Include="Views\Shared\_global.spark" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

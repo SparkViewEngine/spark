@@ -6,6 +6,6 @@
 
 <ul>
   <li each="var product in products">
-    <a href="~/product.ashx?id=${product.Id}">${H(product.Name)}</a>
+    <a href="~/product.ashx?id=${product.Id}">${product.Name}</a>
   </li>
 </ul>

@@ -4,7 +4,7 @@
   <li>${menu.Name}</li>
   <ul>
     <li each="var item in menu.Items">
-      <a href="${item.Url}">${H(item.Caption)}</a>
+      <a href="!{item.Url}">${item.Caption}</a>
     </li>
   </ul>
 </ul>

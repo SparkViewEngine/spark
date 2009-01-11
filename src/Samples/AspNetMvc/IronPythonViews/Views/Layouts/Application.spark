@@ -10,7 +10,7 @@
   <body>
     <div id="container" >
       <div id="header">
-        <h1>${H(Title)}</h1>
+        <h1>${Title}</h1>
         <h2>space reserved for your website slogan!</h2>
       </div>
       <div id="navigation">
@@ -20,11 +20,11 @@
         ## use {content:navigation} to replace the entire menu
         <use:navigation>
           <ul>
-            ${NavItem("Home", Url.Action("index", "home"))}
-            ${NavItem("About", Url.Action("about", "home"))}
+            !{NavItem("Home", Url.Action("index", "home"))}
+            !{NavItem("About", Url.Action("about", "home"))}
             ## use {content:navextra} to add menu items
             <use:navextra/>
-            ${NavItem("Style Guide", Url.Action("styleguide", "home"))}
+            !{NavItem("Style Guide", Url.Action("styleguide", "home"))}
           </ul>
         </use:navigation>
       </div>

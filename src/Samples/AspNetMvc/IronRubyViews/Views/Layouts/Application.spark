@@ -10,21 +10,21 @@
   <body>
     <div id="container" >
       <div id="header">
-        <h1>${H(title)}</h1>
+        <h1>${title}</h1>
         <h2>space reserved for your website slogan!</h2>
       </div>
       <div id="navigation">
         <macro:NavItem text="string" url="string">
-          <li class="selected?{url == context.request.raw_url}"><a href="${url}">${H(text)}</a></li>
+          <li class="selected?{url == context.request.raw_url}"><a href="!{url}">${text}</a></li>
         </macro:NavItem>
         ## use {content:navigation} to replace the entire menu
         <use:navigation>
           <ul>
-            ${NavItem("Home", url.action("index", "home"))}
-            ${NavItem("About", url.action("about", "home"))}
+            !{NavItem("Home", url.action("index", "home"))}
+            !{NavItem("About", url.action("about", "home"))}
             ## use {content:navextra} to add menu items
             <use:navextra/>
-            ${NavItem("Style Guide", url.action("styleguide", "home"))}
+            !{NavItem("Style Guide", url.action("styleguide", "home"))}
           </ul>
         </use:navigation>
       </div>

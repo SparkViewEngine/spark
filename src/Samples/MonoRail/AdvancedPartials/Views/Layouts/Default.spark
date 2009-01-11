@@ -11,22 +11,22 @@
     <div id="container" >
 
       <div id="header">
-        <h1>${H(Title)}</h1>
+        <h1>${Title}</h1>
         <h2>space reserved for your website slogan!</h2>
       </div>
 
       <div id="navigation">
         <macro:NavItem text="string" args="object">
-          <li class="selected?{Url.For(args) == Context.Request.RawUrl}">${Url.Link(text, args)}</li>
+          <li class="selected?{Url.For(args) == Context.Request.RawUrl}">!{Url.Link(text, args)}</li>
         </macro:NavItem>
         #// use {content:navigation} to replace the entire menu
         <use:navigation>
           <ul>
-            ${NavItem("Home", new {controller="home", action="index"})}
-            ${NavItem("About", new {controller="home", action="about"})}
+            !{NavItem("Home", new {controller="home", action="index"})}
+            !{NavItem("About", new {controller="home", action="about"})}
             #// use {content:navextra} to add menu items
             <use:navextra/>
-            ${NavItem("Style Guide", new {controller="home", action="styleguide"})}
+            !{NavItem("Style Guide", new {controller="home", action="styleguide"})}
           </ul>
         </use:navigation>
       </div>

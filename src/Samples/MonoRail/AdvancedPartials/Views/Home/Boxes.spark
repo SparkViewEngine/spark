@@ -6,7 +6,7 @@
     <section:header>Another box</section:header>
     This one does
   </Box>
-  ${JabberBoxy()}
+  !{JabberBoxy()}
 </content:splitcontentleft>
 
 <macro:JabberBoxy>
@@ -21,7 +21,7 @@
 <content:splitcontentright>
   <Box>
     <section:header>Rounded Jabberwocky HTML</section:header>
-    ${H(JabberBoxy()).Replace("\r\n", "<br/>")}
+    !{H(JabberBoxy()).Replace("\r\n", "<br/>")}
   </Box>
 </content:splitcontentright>
 

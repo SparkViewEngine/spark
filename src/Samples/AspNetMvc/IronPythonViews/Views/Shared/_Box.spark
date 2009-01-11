@@ -2,7 +2,7 @@
   <content var="boxheader">
     <render:header/>
   </content>
-  <h3 if="boxheader.strip() != ''">${boxheader}</h3>
+  <h3 if="boxheader.strip() != ''">!{boxheader}</h3>
   <render:body>
     <render/>
   </render:body>

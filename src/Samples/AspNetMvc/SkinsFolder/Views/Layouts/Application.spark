@@ -4,10 +4,10 @@
     <use:head/>
   </head>
   <body>
-    <h1>${H(Title)}</h1>
+    <h1>${Title}</h1>
     <use:view/>
     <use:subcontent/>
-    ${ListThemes()}
+    !{ListThemes()}
     <p>&copy; 2008 Spark View Engine</p>    
   </body>
 </html>

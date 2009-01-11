@@ -1,7 +1,7 @@
 ﻿<ol>
-  <li>${url.Action('View', 'Home')}</li>
-  <li>${html.ActionLink("hello", '1', '2')}</li>
-  <li>${html.ActionLink("world", '3')}</li>
-  <li>${html.TextBox("height", "a billion feet")}</li>
-  <li>${html.Password("width", "a hundred miles")}</li>
+  <li>!{url.Action('View', 'Home')}</li>
+  <li>!{html.ActionLink("hello", '1', '2')}</li>
+  <li>!{html.ActionLink("world", '3')}</li>
+  <li>!{html.TextBox("height", "a billion feet")}</li>
+  <li>!{html.Password("width", "a hundred miles")}</li>
 </ol>

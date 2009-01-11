@@ -1,7 +1,7 @@
 ﻿<viewdata forums="IList[[Models.Forum]]"/>
 
 <div each="var forum in forums">
-  <h2>${Html.ActionLink[[ForumController]](c=>c.Show(forum.Id), forum.Name)}</h2>
+  <h2>!{Html.ActionLink[[ForumController]](c=>c.Show(forum.Id), forum.Name)}</h2>
   <p>${forum.Description ?? 'No description'}</p>
 </div>
 
