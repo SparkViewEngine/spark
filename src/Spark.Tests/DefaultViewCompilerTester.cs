@@ -136,7 +136,7 @@ namespace Spark.Tests
             var compiler = new DefaultViewCompiler
                                {
                                    BaseClass = "Spark.AbstractSparkView",
-                                   Descriptor = new SparkViewDescriptor {TargetNamespace = "Testing.Target.Namespace"}
+                                   Descriptor = new SparkViewDescriptor { TargetNamespace = "Testing.Target.Namespace" }
                                };
             DoCompileView(compiler, new Chunk[] { new SendLiteralChunk { Text = "Hello" } });
             var instance = compiler.CreateInstance();
@@ -214,5 +214,57 @@ namespace Spark.Tests
             Assert.AreEqual("<p>wasfalse</p>", contents);
         }
 
+        [Test]
+        public void LenientSilentNullDoesNotCauseWarningCS0168()
+        {
+            var compiler = new DefaultViewCompiler()
+            {
+                BaseClass = "Spark.Tests.Stubs.StubSparkView",
+                NullBehaviour = NullBehaviour.Lenient
+            };
+            var chunks = new Chunk[]
+                             {
+                                 new ViewDataChunk { Name="comment", Type="Spark.Tests.Models.Comment"},
+                                 new SendExpressionChunk {Code = "comment.Text", SilentNulls = true}
+                             };
+            compiler.CompileView(new[] { chunks }, new[] { chunks });
+            Assert.That(compiler.SourceCode.Contains("catch(System.NullReferenceException)"));
+        }
+
+        [Test]
+        public void LenientOutputNullDoesNotCauseWarningCS0168()
+        {
+            var compiler = new DefaultViewCompiler()
+            {
+                BaseClass = "Spark.Tests.Stubs.StubSparkView",
+                NullBehaviour = NullBehaviour.Lenient
+            };
+            var chunks = new Chunk[]
+                             {
+                                 new ViewDataChunk { Name="comment", Type="Spark.Tests.Models.Comment"},
+                                 new SendExpressionChunk {Code = "comment.Text", SilentNulls = false}
+                             };
+            compiler.CompileView(new[] { chunks }, new[] { chunks });
+            Assert.That(compiler.SourceCode.Contains("catch(System.NullReferenceException)"));
+        }
+
+        [Test]
+        public void StrictNullUsesException()
+        {
+            var compiler = new DefaultViewCompiler()
+            {
+                BaseClass = "Spark.Tests.Stubs.StubSparkView",
+                NullBehaviour = NullBehaviour.Strict
+            };
+            var chunks = new Chunk[]
+                             {
+                                 new ViewDataChunk { Name="comment", Type="Spark.Tests.Models.Comment"},
+                                 new SendExpressionChunk {Code = "comment.Text", SilentNulls = false}
+                             };
+            compiler.CompileView(new[] { chunks }, new[] { chunks });
+            Assert.That(compiler.SourceCode.Contains("catch(System.NullReferenceException ex)"));
+            Assert.That(compiler.SourceCode.Contains("ArgumentNullException("));
+            Assert.That(compiler.SourceCode.Contains(", ex);"));            
+        }
     }
 }

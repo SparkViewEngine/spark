@@ -69,6 +69,16 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                 _source.AppendLine("#line default");
         }
 
+        private void AppendOpenBrace()
+        {
+            AppendIndent().AppendLine("{");
+            Indent += 4;
+        }
+        private void AppendCloseBrace()
+        {
+            Indent -= 4;
+            AppendIndent().AppendLine("}");
+        }
 
         class Scope
         {
@@ -134,26 +144,28 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                 .AppendLine(");");
             CodeDefault();
             AppendIndent().AppendLine("}");
-            AppendIndent().AppendLine("catch(System.NullReferenceException ex)");
-            AppendIndent().AppendLine("{");
-            Indent += 4;
+
             if (_nullBehaviour == NullBehaviour.Lenient)
             {
+                AppendIndent().AppendLine("catch(System.NullReferenceException)");
+                AppendOpenBrace();
                 if (!chunk.SilentNulls)
                 {
                     AppendIndent().Append("Output.Write(\"${")
                         .Append(EscapeStringContents(chunk.Code))
                         .AppendLine("}\");");
                 }
+                AppendCloseBrace();
             }
             else
             {
+                AppendIndent().AppendLine("catch(System.NullReferenceException ex)");
+                AppendOpenBrace();
                 AppendIndent().Append("throw new System.ArgumentNullException(\"${")
                     .Append(EscapeStringContents(chunk.Code))
                     .AppendLine("}\", ex);");
+                AppendCloseBrace();
             }
-            Indent -= 4;
-            AppendIndent().AppendLine("}");
         }
 
         static string EscapeStringContents(string text)
