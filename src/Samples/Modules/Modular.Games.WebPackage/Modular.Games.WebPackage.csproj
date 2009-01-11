@@ -55,6 +55,12 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\build\package\Bin\Dependencies\System.Web.Abstractions.dll</HintPath>
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\build\package\Bin\Dependencies\System.Web.Mvc.dll</HintPath>
@@ -74,11 +80,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Blocks\HighScoreBlock.cs" />
     <Compile Include="Controllers\GridFlipController.cs" />
+    <Compile Include="Controllers\HangmanController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="GamesWebPackage.cs" />
+    <Compile Include="Models\HangmanGame.cs" />
+    <Compile Include="Models\GridGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Modular.Common\Modular.Common.csproj">
+      <Project>{7E69A9D6-85A8-416A-9550-62C3C577626E}</Project>
+      <Name>Modular.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modular.Navigation.WebPackage\Modular.Navigation.WebPackage.csproj">
+      <Project>{54D1483F-ED4B-4872-B9FF-C0C39C39ED12}</Project>
+      <Name>Modular.Navigation.WebPackage</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Spark.Modules\Spark.Modules.csproj">
       <Project>{BCDA5D2B-AE77-49FE-85A8-4D53F39BD40A}</Project>
       <Name>Spark.Modules</Name>
@@ -86,6 +105,21 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\GridFlip\ShowGrid.spark" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\GridFlip.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Home\Index.spark" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Hangman.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Hangman\ShowGame.spark" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Home\Scores.spark" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

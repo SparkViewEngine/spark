@@ -1,0 +1,63 @@
+﻿
+.hangman
+{
+}
+
+.hangman td a
+{
+    display: block;
+    padding: 1em 0 1em 0;
+    width: 3em;
+    text-align: center;
+    vertical-align: baseline;
+    background-color: Maroon;
+    color: White;
+}
+
+.hangman td.Unused a
+{
+    background-color: #dddddd;
+    color: Black;
+    font-weight: bold;
+}
+
+.hangman td.Miss a
+{
+    background-color: #554444;
+    color: #888888;
+}
+
+.hangman td.Hit a
+{
+    background-color: #44ee44;
+    color: #005500;
+}
+
+.hangman .solution
+{
+    margin: 1em 0 1em 0;
+    font-size: 175%;
+}
+
+.hangman .solution span
+{
+    padding: .5em;
+    background-color: #ddddcc;
+}
+
+.hangman .solution span.Hit
+{
+    background-color: #cceecc;
+}
+
+.hangman .moves
+{
+    color: #000099;
+}
+
+.hangman .victory
+{
+    color: #00cc00;
+    font-size: 120%;
+    font-weight: bold;
+}

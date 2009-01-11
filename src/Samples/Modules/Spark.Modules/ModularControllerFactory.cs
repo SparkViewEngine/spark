@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.MicroKernel;
@@ -35,6 +36,21 @@ namespace Spark.Modules
         public void ReleaseController(IController controller)
         {
             _kernel.ReleaseComponent(controller);
+        }
+
+        public IBlock CreateBlock(ViewContext viewContext, string blockName)
+        {
+            var key = blockName.ToLowerInvariant() + "block";
+            var arguments = new Dictionary<string, object>
+                                {
+                                    {"Html", new HtmlHelper(viewContext, (IViewDataContainer)viewContext.View)}
+                                };
+            return _kernel.Resolve<IBlock>(key, arguments);
+        }
+
+        public void ReleaseBlock(IBlock block)
+        {
+            _kernel.ReleaseComponent(block);
         }
     }
 }

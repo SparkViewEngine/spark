@@ -1,3 +1,15 @@
 ﻿<h1>Modularity Demo</h1>
 
 <p>This site consists of a host which combines several modules.</p>
+
+<use namespace="Spark.Modules.Html"/>
+#Html.RenderBlock("fleetteaser");
+
+<content name="splitcontentleft">
+#Html.RenderBlock("DidYouKnow");
+#Html.RenderBlock("DidYouKnow");
+</content>
+<content name="splitcontentright">
+#Html.RenderBlock("DidYouKnow");
+#Html.RenderBlock("DidYouKnow");
+</content>

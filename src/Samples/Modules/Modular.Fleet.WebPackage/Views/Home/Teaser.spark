@@ -1,0 +1,8 @@
+﻿
+<viewdata Counter="int"/>
+<div class="badge">
+	<p>
+		Fleet! Nagging people at least ${Counter} times!<br/>
+		!{Html.ActionLink("Play now!", "Play", new {controller="home", area="fleet"})}
+	</p>
+</div>

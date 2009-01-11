@@ -1,0 +1,6 @@
+﻿
+<viewdata model="IEnumerable[[Modular.Common.Services.GameDescriptor]]"/>
+
+<ul>
+<li each="var game in Model">!{Html.ActionLink(game.Name, "Play", game.PlayLinkValues)}</li>
+</ul>

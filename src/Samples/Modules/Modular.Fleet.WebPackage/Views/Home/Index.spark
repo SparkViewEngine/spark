@@ -1,0 +1,6 @@
+﻿
+<h2>Fleet</h2>
+<p>A game created for the purpose of writing a tutorial.</p>
+<set Title="'Fleet Game - ' + Title"/>
+
+<p><img src="~/content/fleet/images/ships.jpg"/></p>

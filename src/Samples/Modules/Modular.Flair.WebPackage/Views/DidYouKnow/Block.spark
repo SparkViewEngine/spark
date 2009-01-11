@@ -1,0 +1,11 @@
+﻿<smallbox>
+	<viewdata model="Modular.Flair.WebPackage.Models.Trivia trivia"/>
+	<h3>Did you know?</h3>
+	<div>
+		${trivia.Teaser}
+		<test if="!string.IsNullOrEmpty(trivia.Details)">
+			<br/>
+			!{Html.ActionLink("Learn more", "More", new {controller="DidYouKnow", area="Flair", id=trivia.Id})}
+		</test>
+	</div>
+</smallbox>

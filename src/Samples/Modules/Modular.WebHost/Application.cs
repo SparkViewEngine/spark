@@ -28,13 +28,17 @@ namespace Modular.WebHost
                               .ImplementedBy<ModularControllerFactory>()
                               .LifeStyle.Singleton)
 
+                .Register(Component
+                              .For<IWebPackageManager>()
+                              .ImplementedBy<WebPackageManager>()
+                              .LifeStyle.Transient)
+
                 .Register(AllTypes
                               .Of<IController>()
                               .FromAssembly(typeof(Application).Assembly)
                               .Configure(component => component
                                                           .Named(component.ServiceType.Name.ToLowerInvariant())
                                                           .LifeStyle.Transient));
-
         }
 
         public void RegisterViewEngine(ICollection<IViewEngine> engines)
@@ -44,9 +48,10 @@ namespace Modular.WebHost
 
         public void RegisterPackages(IWindsorContainer container, ICollection<RouteBase> routes, ICollection<IViewEngine> engines)
         {
-            var manager = new WebPackageManager();
-            manager.LocateAssemblyPackages(container);
-            manager.RegisterPackages(container, routes, engines);
+            var manager = container.Resolve<IWebPackageManager>();
+            manager.LocatePackages();
+            manager.RegisterPackages(routes, engines);
+            container.Release(manager);
         }
 
         public void RegisterRoutes(ICollection<RouteBase> routes)

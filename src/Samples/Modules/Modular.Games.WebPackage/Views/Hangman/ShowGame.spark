@@ -1,0 +1,33 @@
+﻿
+<h2>Letter Guessing game</h2>
+
+<set Title="'Letter Guess -' + Title"/>
+<use namespace="Modular.Games.WebPackage.Models"/>
+<viewdata model="HangmanGame game"/>
+<content name="head">
+	<link type="text/css" rel="stylesheet" href="~/content/games/Hangman.css"/>
+</content>
+
+<div class="game hangman">
+	<test if="game.Victory">
+		<p class="victory">Finished with ${game.Moves} moves</p>
+		<else/>
+		<p class="moves">Moves: ${game.Moves}</p>
+	</test>
+
+	<table>
+		<tr each="var row in game.Rows">
+			<td each="var cell in row" class="${cell.State}">
+				!{Html.ActionLink(cell.Letter, "Guess", new {controller="Hangman", area="Games", letter=cell.Letter})}
+			</td>
+		</tr>
+	</table>
+	
+	<div class="solution">
+		<span each="var cell in game.Solution" class="letter ${cell.State}">
+			${cell == null || cell.State == HangmanGame.TileState.Unused ? "-" : cell.Letter}
+		</span>
+	</div>
+	
+	<p>!{Html.ActionLink("New Game", "Reset", new {controller="Hangman", area="Games"})}</p>
+</div>

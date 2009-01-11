@@ -16,11 +16,10 @@
         #// use {content:navigation} to replace the entire menu
         <use:navigation>
           <ul>
-            !{NavItem("Home", Url.Action("index", "home"))}
-            !{NavItem("About", Url.Action("about", "home"))}
+            !{NavItem("Home", Url.Action("index", new { area="", controller = "home" }))}
+            #Html.RenderBlock("Menu");
             #// use {content:navextra} to add menu items
             <use:navextra/>
-            !{NavItem("Style Guide", Url.Action("styleguide", "home"))}
           </ul>
         </use:navigation>
       </div>
@@ -41,9 +40,9 @@
 
 
       <div id="subcontent">
-        #// use {content:rightrail} to replace the right rail
+        #// if a view provides {content:rightrail} it can replace the block output
         <use:rightrail>
-          <DefaultRightrail/>
+          #Html.RenderBlock("Side");
         </use:rightrail>
       </div>
 

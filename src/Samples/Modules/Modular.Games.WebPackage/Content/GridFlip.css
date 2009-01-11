@@ -1,0 +1,34 @@
+﻿
+.gridflip
+{
+}
+
+.gridflip td a
+{
+    display:block;
+    padding: 1em 0 1em 0;
+    width: 3em;
+    text-align: center;
+    vertical-align:baseline;
+    background-color: Maroon;
+    color: White;
+}
+
+.gridflip td.lit a
+{
+    background-color: Red;
+    color: Black;
+    font-weight: bold;
+}
+
+.gridflip .moves
+{
+    color: #000099;
+}
+
+.gridflip .victory
+{
+    color: #00cc00;
+    font-size:120%;
+    font-weight:bold;    
+}

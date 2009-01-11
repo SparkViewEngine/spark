@@ -1,3 +1,26 @@
-﻿<p>I'm showing a grid</p>
+﻿
+<h2>Grid Flip game</h2>
 
-<p>!{Html.ActionLink("New Game", "Reset", new {controller="GridFlip", area="Games"})}</p>
+<set Title="'Grid Flip -' + Title"/>
+<viewdata model="Modular.Games.WebPackage.Models.GridGame game"/>
+<content name="head">
+	<link type="text/css" rel="stylesheet" href="~/content/games/GridFlip.css"/>
+</content>
+
+<div class="game gridflip">
+	<test if="game.Victory">
+		<p class="victory">Finished with ${game.Moves} moves</p>
+		<else/>
+		<p class="moves">Moves: ${game.Moves}</p>
+	</test>
+
+	<table>
+		<tr each="var row in new[] {new[] {0,1,2}, new[] {3,4,5}, new[] {6,7,8}}">
+			<td each="var cell in row" class="lit?{game.Cells[cell]}">
+				!{Html.ActionLink(cell.ToString(), "Toggle", new {controller="GridFlip", area="Games", cell})}
+			</td>
+		</tr>
+	</table>
+
+	<p>!{Html.ActionLink("New Game", "Reset", new {controller="GridFlip", area="Games"})}</p>
+</div>
