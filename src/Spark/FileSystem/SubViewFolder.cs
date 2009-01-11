@@ -37,12 +37,12 @@ namespace Spark.FileSystem
         public SubViewFolder(IViewFolder viewFolder, string subFolder)
         {
             _viewFolder = viewFolder;
-            _subFolder = subFolder;
+            _subFolder = subFolder.Replace('/', '\\');
         }
 
         private string Adjust(string path)
         {
-            if (!path.StartsWith(_subFolder, StringComparison.InvariantCultureIgnoreCase))
+            if (!path.Replace('/', '\\').StartsWith(_subFolder, StringComparison.InvariantCultureIgnoreCase))
                 return null;
 
             if (path.Length == _subFolder.Length)

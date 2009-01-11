@@ -113,7 +113,7 @@ namespace Spark
             switch (viewFolderSettings.FolderType)
             {
                 case ViewFolderType.FileSystem:
-                    type = typeof(FileSystemViewFile);
+                    type = typeof(FileSystemViewFolder);
                     break;
                 case ViewFolderType.EmbeddedResource:
                     type = typeof(EmbeddedViewFolder);

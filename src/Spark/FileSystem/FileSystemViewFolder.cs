@@ -27,6 +27,11 @@ namespace Spark.FileSystem
             _basePath = basePath;
         }
 
+        public string BasePath
+        {
+            get { return _basePath; }
+        }
+
 
         public IViewFile GetViewSource(string path)
         {

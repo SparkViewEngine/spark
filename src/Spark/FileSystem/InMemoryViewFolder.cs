@@ -22,10 +22,13 @@ namespace Spark.FileSystem
 {
     public class InMemoryViewFolder : Dictionary<string, byte[]>, IViewFolder
     {
+        private static readonly IEqualityComparer<string> _pathComparer = new PathComparer(StringComparer.InvariantCultureIgnoreCase);
+
         public InMemoryViewFolder()
-            : base(StringComparer.InvariantCultureIgnoreCase)
+            : base(_pathComparer)
         {
         }
+
 
         public void Add(string key, string value)
         {
@@ -75,6 +78,30 @@ namespace Spark.FileSystem
             public Stream OpenViewStream()
             {   
                 return new MemoryStream(parent[path], false);
+            }
+        }
+
+        private class PathComparer : IEqualityComparer<string>
+        {
+            private readonly StringComparer _baseComparer;
+
+            public PathComparer(StringComparer baseComparer)
+            {
+                _baseComparer = baseComparer;
+            }
+
+            static string Adjust(string obj)
+            {
+                return obj == null ? null : obj.Replace('/', '\\');
+            }
+            public bool Equals(string x, string y)
+            {
+                return _baseComparer.Equals(Adjust(x), Adjust(y));
+            }
+
+            public int GetHashCode(string obj)
+            {
+                return _baseComparer.GetHashCode(Adjust(obj));
             }
         }
     }

@@ -68,8 +68,25 @@ namespace Spark.Tests.FileSystem
             Assert.IsAssignableFrom(typeof(CombinedViewFolder), folder);
             var combined = (CombinedViewFolder)folder;
             Assert.IsAssignableFrom(typeof(EmbeddedViewFolder), combined.Second);
-            var customFolder = (EmbeddedViewFolder)combined.Second;
-            Assert.AreEqual(Assembly.Load("spark.tests"), customFolder.Assembly);
+            var embeddedViewFolder = (EmbeddedViewFolder)combined.Second;
+            Assert.AreEqual(Assembly.Load("spark.tests"), embeddedViewFolder.Assembly);
+        }
+
+        [Test]
+        public void TypeFileSystemCreatesFileSystemViewFolder()
+        {
+            var settings = new SparkSettings()
+                .AddViewFolder(ViewFolderType.FileSystem, new Dictionary<string, string>
+                                                              {
+                                                                  {"basePath", @"e:\no\such\path"}
+                                                              });
+            var engine = new SparkViewEngine(settings);
+            var folder = engine.ViewFolder;
+            Assert.IsAssignableFrom(typeof(CombinedViewFolder), folder);
+            var combined = (CombinedViewFolder)folder;
+            Assert.IsAssignableFrom(typeof(FileSystemViewFolder), combined.Second);
+            var fileSystemViewFolder = (FileSystemViewFolder)combined.Second;
+            Assert.AreEqual(@"e:\no\such\path", fileSystemViewFolder.BasePath);
         }
 
         public class MyViewFolder : IViewFolder
