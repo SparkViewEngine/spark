@@ -16,8 +16,8 @@
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 
 
-#define _ATL_DEBUG_INTERFACES
-#define _ATL_DEBUG_QI
+//#define _ATL_DEBUG_INTERFACES
+//#define _ATL_DEBUG_QI
 
 #include "resource.h"
 #include <atlbase.h>

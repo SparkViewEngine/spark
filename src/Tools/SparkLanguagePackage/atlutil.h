@@ -1,7 +1,18 @@
 
 #pragma once
 
-#define _HR(statement) if (SUCCEEDED(hr)) {hr = (statement);}
+#define _HR(statement) if (SUCCEEDED(hr)) {hr = _HRLOG(statement, #statement, __FILE__, __LINE__);}
+
+__declspec(selectany) CTraceCategory FAILED_HRESULT(_T("Failed HRESULT"), 1);
+
+inline HRESULT _HRLOG(HRESULT hr, LPCSTR statement, LPCSTR file, int line)
+{
+	if (FAILED(hr))
+	{
+		ATL::CTraceFileAndLineInfo(file, line)(FAILED_HRESULT, 1, "0x%08x %s\n", hr, statement);
+	}
+	return hr;
+}
 
 template<class T, class TInit>
 class CComCreatableObject : 

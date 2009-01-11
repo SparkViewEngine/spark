@@ -66,15 +66,10 @@ STDMETHODIMP Language::GetCodeWindowManager(
 	return hr;
 }
 
-CTraceCategory sparkLanguage(_T("Spark Language"), 1);
 
 STDMETHODIMP Language::GetItemCount( 
     /* [out] */ __RPC__out int *piCount)
 {
-#ifdef _DEBUG
-	sparkLanguage.SetStatus(ATLTRACESTATUS::ATLTRACESTATUS_ENABLED);
-#endif
-
 	HRESULT hr = S_OK;
 
 	CComPtr<IVsProvideColorableItems> csharpItems;
@@ -88,7 +83,6 @@ STDMETHODIMP Language::GetItemCount(
 	_HR(sparkItems->GetItemCount(&sparkItemCount));
 	
 	*piCount = csharpItemCount + sparkItemCount;
-	ATLTRACE(sparkLanguage, 1, _T("GetItemCount %d\n"), *piCount);
 	return hr;
 }
 
@@ -96,8 +90,6 @@ STDMETHODIMP Language::GetColorableItem(
     /* [in] */ int iIndex,
     /* [out] */ __RPC__deref_out_opt IVsColorableItem **ppItem)
 {
-	ATLTRACE(sparkLanguage, 1, _T("GetColorableItem %d\n"), iIndex);
-
 	HRESULT hr = S_OK;
 
 	// return csharp color info for lower band
@@ -117,8 +109,6 @@ STDMETHODIMP Language::GetColorableItem(
 		
 		CComBSTR name;
 		_HR((*ppItem)->GetDisplayName(&name));
-		if (SUCCEEDED(hr))
-			ATLTRACE(sparkLanguage, 1, L"Color name %s\n", name);
 
 		return hr;
 	}
@@ -136,8 +126,6 @@ STDMETHODIMP Language::GetColorableItem(
 
 		CComBSTR name;
 		_HR((*ppItem)->GetDisplayName(&name));
-		if (SUCCEEDED(hr))
-			ATLTRACE(sparkLanguage, 1, L"Color name %s\n", name);
 
 		return hr;
 	}
