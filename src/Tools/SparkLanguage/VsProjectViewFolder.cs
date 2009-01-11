@@ -14,15 +14,15 @@ namespace SparkLanguage
         readonly ISparkSource _source;
         readonly IVsHierarchy _hierarchy;
         readonly HierarchyItem _views;
+        readonly HierarchyItem _root;
 
         public VsProjectViewFolder(ISparkSource source, IVsHierarchy hierarchy)
         {
             _source = source;
             _hierarchy = hierarchy;
 
-            int root = -2;
-            var rootItem = new HierarchyItem(_hierarchy, (uint)root);
-            var child = rootItem.FirstChild;
+            _root = new HierarchyItem(_hierarchy, 0xfffffffe);
+            var child = _root.FirstChild;
             while (child != null)
             {
                 if (string.Equals(child.Name, "Views", StringComparison.InvariantCultureIgnoreCase))
@@ -34,11 +34,21 @@ namespace SparkLanguage
             }
         }
 
+        private HierarchyItem FindPath(string path)
+        {
+            if (path.StartsWith("$\\"))
+            {
+                return _root.FindPath(path.Substring(2));
+            }
+            return _views.FindPath(path);
+        }
+
+
         #region IViewFolder Members
 
         public IViewFile GetViewSource(string path)
         {
-            var item = _views.FindPath(path);
+            var item = FindPath(path);
             if (item == null)
                 return null;
 
@@ -50,6 +60,28 @@ namespace SparkLanguage
             }
 
             return new FileSystemViewFile(item.CanonicalName);
+        }
+
+        public IList<string> ListViews(string path)
+        {
+            var views = new List<string>();
+
+            var item = FindPath(path);
+            if (item != null)
+            {
+                for (var child = item.FirstChild; child != null; child = child.NextSibling)
+                {
+                    if (child.Name.EndsWith(".spark", StringComparison.InvariantCultureIgnoreCase))
+                        views.Add(child.Name);
+                }
+            }
+            return views;
+        }
+
+        public bool HasView(string path)
+        {
+            var item = FindPath(path);
+            return item != null;
         }
 
         public class OpenFile : IViewFile
@@ -71,29 +103,6 @@ namespace SparkLanguage
                 return new MemoryStream(Encoding.UTF8.GetBytes(_text));
             }
         }
-
-        public IList<string> ListViews(string path)
-        {
-            var views = new List<string>();
-
-            var item = _views.FindPath(path);
-            if (item != null)
-            {
-                for (var child = item.FirstChild; child != null; child = child.NextSibling)
-                {
-                    if (child.Name.EndsWith(".spark", StringComparison.InvariantCultureIgnoreCase))
-                        views.Add(child.Name);
-                }
-            }
-            return views;
-        }
-
-        public bool HasView(string path)
-        {
-            var item = _views.FindPath(path);
-            return item != null;
-        }
-
         #endregion
     }
 }
