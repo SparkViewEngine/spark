@@ -1,8 +1,9 @@
 
 #pragma once
 
-#define _HR(statement) if (SUCCEEDED(hr)) {hr = _HRLOG(statement, #statement, __FILE__, __LINE__);}
 
+#ifdef _DEBUG
+#define _HR(statement) if (SUCCEEDED(hr)) {hr = _HRLOG(statement, #statement, __FILE__, __LINE__);}
 __declspec(selectany) CTraceCategory FAILED_HRESULT(_T("Failed HRESULT"), 1);
 
 inline HRESULT _HRLOG(HRESULT hr, LPCSTR statement, LPCSTR file, int line)
@@ -13,6 +14,9 @@ inline HRESULT _HRLOG(HRESULT hr, LPCSTR statement, LPCSTR file, int line)
 	}
 	return hr;
 }
+#else
+#define _HR(statement) if (SUCCEEDED(hr)) {hr = (statement);}
+#endif
 
 template<class T, class TInit>
 class CComCreatableObject : 
