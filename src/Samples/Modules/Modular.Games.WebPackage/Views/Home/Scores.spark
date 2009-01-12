@@ -2,5 +2,5 @@
 <viewdata model="IEnumerable[[Modular.Common.Services.HighScoreEntry]] entries"/>
 
 <ul>
-<li each="var entry in entries">${entry.Score} ${Html.ActionLink(entry.Name, "Review", entry.ReviewLinkValues)}</li>
+<li each="var entry in entries">${entry.Score} !{Html.ActionLink(entry.Name, "Review", entry.ReviewLinkValues)}</li>
 </ul>
