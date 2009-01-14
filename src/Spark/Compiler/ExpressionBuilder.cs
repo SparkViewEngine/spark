@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Spark.Parser.Code;
 
 namespace Spark.Compiler
 {
@@ -44,7 +45,7 @@ namespace Spark.Compiler
             }
         }
 
-        public void AppendExpression(string code)
+        public void AppendExpression(Snippets code)
         {
             Flush();
             _parts.Add(code);

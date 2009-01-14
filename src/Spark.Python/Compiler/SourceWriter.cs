@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 using System.IO;
+using Spark.Parser.Code;
 
 namespace Spark.Python.Compiler
 {

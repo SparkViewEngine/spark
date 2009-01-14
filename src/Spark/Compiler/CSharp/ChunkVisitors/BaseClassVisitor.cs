@@ -13,30 +13,34 @@
 // limitations under the License.
 // 
 using Spark.Compiler.ChunkVisitors;
+using Spark.Parser.Code;
 
 namespace Spark.Compiler.CSharp.ChunkVisitors
 {
     public class BaseClassVisitor : ChunkVisitor
     {
         public string BaseClass { get; set; }
-        public string TModel { get; set; }
+        public Snippets TModel { get; set; }
 
-        public string BaseClassTypeName
+        public Snippets BaseClassTypeName
         {
             get
             {
-                if (string.IsNullOrEmpty(TModel))
+                if (Snippets.IsNullOrEmpty(TModel))
                     return BaseClass ?? "Spark.SparkViewBase";
 
-                return string.Format("{0}<{1}>",
-                                     BaseClass ?? "Spark.SparkViewBase",
-                                     TModel);
+                var s = new Snippets();
+                s.Add(new Snippet { Value = BaseClass ?? "Spark.SparkViewBase" });
+                s.Add(new Snippet { Value = "<" });
+                s.AddRange(TModel);
+                s.Add(new Snippet { Value = ">" });
+                return s;
             }
         }
 
         protected override void Visit(ViewDataModelChunk chunk)
         {
-            if (!string.IsNullOrEmpty(TModel) && TModel != chunk.TModel)
+            if (!Snippets.IsNullOrEmpty(TModel) && TModel != chunk.TModel)
             {
                 throw new CompilerException(string.Format("Only one viewdata model can be declared. {0} != {1}", TModel,
                                                           chunk.TModel));

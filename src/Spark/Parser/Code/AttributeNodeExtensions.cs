@@ -22,7 +22,7 @@ namespace Spark.Parser.Code
     {
         static readonly CodeGrammar _grammar = new CodeGrammar();
 
-        public static SnippetCollection AsCode(this AttributeNode attr)
+        public static Snippets AsCode(this AttributeNode attr)
         {
             //TODO: recapture original position to get correct files/offsets in the result
             var position = new Position(new SourceContext(attr.Value));
@@ -32,7 +32,7 @@ namespace Spark.Parser.Code
             if (unparsedLength == 0)
                 return result.Value;
 
-            var snippets = new SnippetCollection(result.Value);
+            var snippets = new Snippets(result.Value);
 
             snippets.Add(new Snippet
                              {
@@ -44,7 +44,7 @@ namespace Spark.Parser.Code
             return snippets;
         }
 
-        public static string AsCodeInverted(this AttributeNode attr)
+        public static Snippets AsCodeInverted(this AttributeNode attr)
         {
             var expression = new ExpressionBuilder();
             foreach (var node in attr.Nodes)
@@ -62,7 +62,7 @@ namespace Spark.Parser.Code
                     expression.AppendLiteral("&" + ((EntityNode)node).Name + ";");
                 }
             }
-            return expression.ToCode();
+            return new Snippets(expression.ToCode());
         }
 
     }

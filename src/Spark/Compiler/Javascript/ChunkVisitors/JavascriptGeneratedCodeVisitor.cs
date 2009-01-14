@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Compiler.ChunkVisitors;
+using Spark.Parser.Code;
 
 namespace Spark.Compiler.Javascript.ChunkVisitors
 {
@@ -57,7 +58,7 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
 
         protected override void Visit(LocalVariableChunk chunk)
         {
-            if (string.IsNullOrEmpty(chunk.Value))
+            if (Snippets.IsNullOrEmpty(chunk.Value))
             {
                 _source.Append("var ").Append(chunk.Name).AppendLine(" = null;");
             }

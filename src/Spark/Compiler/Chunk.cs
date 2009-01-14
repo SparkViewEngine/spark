@@ -31,8 +31,8 @@ namespace Spark.Compiler
 
     public class SendExpressionChunk : Chunk
     {
-        public string Code { get; set; }
-        public IList<Snippet> Snippets { get; set; }
+        public Snippets Code { get; set; }
+        //public IList<Snippet> Snippets { get; set; }
 
         public bool SilentNulls { get; set; }
         public bool AutomaticallyEncode { get; set; }
@@ -40,8 +40,8 @@ namespace Spark.Compiler
 
     public class CodeStatementChunk : Chunk
     {
-        public string Code { get; set; }
-        public IList<Snippet> Snippets { get; set; }
+        public Snippets Code { get; set; }
+        //public IList<Snippet> Snippets { get; set; }
     }
 
     public class GlobalVariableChunk : Chunk
@@ -50,9 +50,9 @@ namespace Spark.Compiler
         {
             Type = "object";
         }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public string Value { get; set; }
+        public Snippets Name { get; set; }
+        public Snippets Type { get; set; }
+        public Snippets Value { get; set; }
     }
 
     public class LocalVariableChunk : Chunk
@@ -61,9 +61,10 @@ namespace Spark.Compiler
         {
             Type = "var";
         }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public string Value { get; set; }
+
+        public Snippets Name { get; set; }
+        public Snippets Type { get; set; }
+        public Snippets Value { get; set; }
     }
 
     public class DefaultVariableChunk : Chunk
@@ -73,8 +74,8 @@ namespace Spark.Compiler
             Type = "var";
         }
         public string Name { get; set; }
-        public string Type { get; set; }
-        public string Value { get; set; }
+        public Snippets Type { get; set; }
+        public Snippets Value { get; set; }
     }
 
     public class ViewDataChunk : Chunk
@@ -83,22 +84,22 @@ namespace Spark.Compiler
         {
             Type = "object";
         }
-        public string Name { get; set; }
-        public string Type { get; set; }
+        public Snippets Name { get; set; }
+        public Snippets Type { get; set; }
         public string Key { get; set; }
-        public string Default { get; set; }
+        public Snippets Default { get; set; }
     }
 
     public class ViewDataModelChunk : Chunk
     {
-        public string TModel { get; set; }
-        public string TModelAlias { get; set; }
+        public Snippets TModel { get; set; }
+        public Snippets TModelAlias { get; set; }
     }
 
     public class AssignVariableChunk : Chunk
     {
         public string Name { get; set; }
-        public string Value { get; set; }
+        public Snippets Value { get; set; }
     }
 
     public class UseContentChunk : Chunk
@@ -148,7 +149,7 @@ namespace Spark.Compiler
 
     public class UseNamespaceChunk : Chunk
     {
-        public string Namespace { get; set; }
+        public Snippets Namespace { get; set; }
     }
 
     public class UseAssemblyChunk : Chunk
@@ -180,7 +181,7 @@ namespace Spark.Compiler
             Body = new List<Chunk>();
             AddType = ContentAddType.Replace;
         }
-        public string Variable { get; set; }
+        public Snippets Variable { get; set; }
         public IList<Chunk> Body { get; set; }
         public ContentAddType AddType { get; set; }
     }
@@ -191,7 +192,7 @@ namespace Spark.Compiler
         {
             Body = new List<Chunk>();
         }
-        public string Code { get; set; }
+        public Snippets Code { get; set; }
         public IList<Chunk> Body { get; set; }
     }
 
@@ -210,7 +211,7 @@ namespace Spark.Compiler
     public class MacroParameter
     {
         public string Name { get; set; }
-        public string Type { get; set; }
+        public Snippets Type { get; set; }
     }
 
     public class ScopeChunk : Chunk
@@ -230,8 +231,9 @@ namespace Spark.Compiler
         }
 
         public ConditionalType Type { get; set; }
-        public string Condition { get; set; }
+        public Snippets Condition { get; set; }
         public IList<Chunk> Body { get; set; }
+        //public IList<Snippet> Snippets { get; set; }
     }
 
     public enum ConditionalType

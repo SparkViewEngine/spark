@@ -62,7 +62,7 @@ namespace Spark.Tests.Parser
             var result = grammar.Nodes(Source("${'hello world'}"));
 
             Assert.AreEqual(1, result.Value.Count);
-            Assert.AreEqual("\"hello world\"", ((ExpressionNode)result.Value[0]).Code);
+            Assert.AreEqual("\"hello world\"", (string)((ExpressionNode)result.Value[0]).Code);
             Assert.IsFalse(((ExpressionNode)result.Value[0]).AutomaticEncoding);
         }
 
@@ -74,7 +74,7 @@ namespace Spark.Tests.Parser
             var result = grammar.Nodes(Source("!{'hello world'}"));
 
             Assert.AreEqual(1, result.Value.Count);
-            Assert.AreEqual("\"hello world\"", ((ExpressionNode)result.Value[0]).Code);
+            Assert.AreEqual("\"hello world\"", (string)((ExpressionNode)result.Value[0]).Code);
             Assert.IsFalse(((ExpressionNode)result.Value[0]).AutomaticEncoding);
         }
 
@@ -87,7 +87,7 @@ namespace Spark.Tests.Parser
             var result = grammar.Nodes(Source("${'hello world'}"));
 
             Assert.AreEqual(1, result.Value.Count);
-            Assert.AreEqual("\"hello world\"", ((ExpressionNode)result.Value[0]).Code);
+            Assert.AreEqual("\"hello world\"", (string)((ExpressionNode)result.Value[0]).Code);
             Assert.IsTrue(((ExpressionNode)result.Value[0]).AutomaticEncoding);
         }
 
@@ -100,7 +100,7 @@ namespace Spark.Tests.Parser
             var result = grammar.Nodes(Source("!{'hello world'}"));
 
             Assert.AreEqual(1, result.Value.Count);
-            Assert.AreEqual("\"hello world\"", ((ExpressionNode)result.Value[0]).Code);
+            Assert.AreEqual("\"hello world\"", (string)((ExpressionNode)result.Value[0]).Code);
             Assert.IsFalse(((ExpressionNode)result.Value[0]).AutomaticEncoding);
         }
 

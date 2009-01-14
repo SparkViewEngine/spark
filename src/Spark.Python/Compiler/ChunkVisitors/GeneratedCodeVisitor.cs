@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using Spark.Compiler;
 using Spark.Compiler.ChunkVisitors;
+using Spark.Parser.Code;
 
 namespace Spark.Python.Compiler.ChunkVisitors
 {
@@ -58,6 +59,7 @@ namespace Spark.Python.Compiler.ChunkVisitors
             _source.Indent--;
         }
 
+
         static string EscapeStringContents(string text)
         {
             return text.Replace("\\", "\\\\").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"");
@@ -68,7 +70,7 @@ namespace Spark.Python.Compiler.ChunkVisitors
             _variables.Declare(chunk.Name);
 
             var value = chunk.Value;
-            if (string.IsNullOrEmpty(value))
+            if (Snippets.IsNullOrEmpty(value))
                 value = "None";
             _source.Write(chunk.Name).Write("=").WriteLine(value);
         }
@@ -79,7 +81,7 @@ namespace Spark.Python.Compiler.ChunkVisitors
                 _variables.Declare(chunk.Name);
 
             var value = chunk.Value;
-            if (string.IsNullOrEmpty(value))
+            if (Snippets.IsNullOrEmpty(value))
                 value = "None";
             _source.Write(chunk.Name).Write("=").WriteLine(value);
         }
@@ -91,7 +93,7 @@ namespace Spark.Python.Compiler.ChunkVisitors
 
             _variables.Declare(chunk.Name);
             var value = chunk.Value;
-            if (string.IsNullOrEmpty(value))
+            if (Snippets.IsNullOrEmpty(value))
                 value = "None";
             _source.Write(chunk.Name).Write("=").WriteLine(value);
         }

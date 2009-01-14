@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Spark.Compiler;
 using Spark.Parser;
 using Spark.Parser.Markup;
 using Spark.Parser.Code;
@@ -105,6 +104,19 @@ namespace Spark.Compiler.NodeVisitors
             return null;
         }
 
+        private Position LocateEnd(Node expressionNode)
+        {
+            Paint<Node> paint;
+            Node scan = expressionNode;
+            while (scan != null)
+            {
+                if (_nodePaint.TryGetValue(scan, out paint))
+                    return paint.End;
+                scan = scan.OriginalNode;
+            }
+            return null;
+        }
+
         public override IList<Node> Nodes
         {
             get { throw new NotImplementedException(); }
@@ -165,7 +177,6 @@ namespace Spark.Compiler.NodeVisitors
                 Code = node.Code,
                 Position = Locate(node),
                 SilentNulls = node.SilentNulls,
-                Snippets = node.Snippets,
                 AutomaticallyEncode = node.AutomaticEncoding
             });
         }
@@ -174,7 +185,8 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(StatementNode node)
         {
-            AddKillingWhitespace(new CodeStatementChunk { Code = UnarmorCode(node.Code), Position = Locate(node), Snippets = node.Snippets });
+            //REFACTOR: what is UnarmorCode doing at this point?
+            AddKillingWhitespace(new CodeStatementChunk { Code = node.Code, Position = Locate(node) });
         }
 
 
@@ -285,9 +297,9 @@ namespace Spark.Compiler.NodeVisitors
             else
             {
                 var scope = new ScopeChunk();
-                scope.Body.Add(new LocalVariableChunk { Name = "__just__once__", Value = "0" });
+                scope.Body.Add(new LocalVariableChunk { Name = "__just__once__", Value = new Snippets("0") });
 
-                _sendAttributeOnce = new ConditionalChunk { Type = ConditionalType.If, Condition = "__just__once__ == 0" };
+                _sendAttributeOnce = new ConditionalChunk { Type = ConditionalType.If, Condition = new Snippets("__just__once__ == 0") };
                 _sendAttributeOnce.Body.Add(new SendLiteralChunk { Text = " " + attributeNode.Name + "=\"" });
                 _sendAttributeIncrement = new AssignVariableChunk { Name = "__just__once__", Value = "__just__once__+1" };
 
@@ -302,7 +314,7 @@ namespace Spark.Compiler.NodeVisitors
                 _sendAttributeOnce = null;
                 _sendAttributeIncrement = null;
 
-                var ifWasSent = new ConditionalChunk { Type = ConditionalType.If, Condition = "__just__once__ != 0" };
+                var ifWasSent = new ConditionalChunk { Type = ConditionalType.If, Condition = new Snippets("__just__once__ != 0") };
                 scope.Body.Add(ifWasSent);
                 ifWasSent.Body.Add(new SendLiteralChunk { Text = "\"" });
             }
@@ -346,7 +358,12 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ConditionNode conditionNode)
         {
-            var conditionChunk = new ConditionalChunk() { Condition = conditionNode.Code, Type = ConditionalType.If, Position = Locate(conditionNode) };
+            var conditionChunk = new ConditionalChunk
+                                     {
+                                         Condition = conditionNode.Code,
+                                         Type = ConditionalType.If,
+                                         Position = Locate(conditionNode)                                         
+                                     };
             Chunks.Add(conditionChunk);
 
             if (_sendAttributeOnce != null)
@@ -384,12 +401,16 @@ namespace Spark.Compiler.NodeVisitors
             action(specialNode, new SpecialNodeInspector(specialNode));
         }
 
-        private static string RemovePrefix(string name)
+        Snippets AsCode(AttributeNode attr)
         {
-            var colonIndex = name.IndexOf(':');
-            if (colonIndex < 0)
-                return name;
-            return name.Substring(colonIndex + 1);
+            var begin = Locate(attr.Nodes.FirstOrDefault());
+            var end = LocateEnd(attr.Nodes.LastOrDefault());
+            if (begin == null || end == null)
+            {
+                begin = new Position(new SourceContext(attr.ToString()));
+                end = begin.Advance(begin.PotentialLength());
+            }
+            return Context.SyntaxProvider.ParseFragment(begin, end);
         }
 
         private void VisitMacro(SpecialNodeInspector inspector)
@@ -398,7 +419,7 @@ namespace Spark.Compiler.NodeVisitors
             var macro = new MacroChunk { Name = name.Value, Position = Locate(inspector.OriginalNode) };
             foreach (var attr in inspector.Attributes)
             {
-                macro.Parameters.Add(new MacroParameter { Name = attr.Name, Type = attr.AsCode() });
+                macro.Parameters.Add(new MacroParameter { Name = attr.Name, Type = AsCode(attr) });
             }
             AddUnordered(macro);
             using (new Frame(this, macro.Body))
@@ -418,7 +439,7 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     foreach (var attr in inspector.Attributes)
                     {
-                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
                     }
 
                     var useFileChunk = new RenderPartialChunk { Name = file.Value, Position = Locate(inspector.OriginalNode) };
@@ -450,7 +471,7 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     if (namespaceAttr != null)
                     {
-                        var useNamespaceChunk = new UseNamespaceChunk { Namespace = namespaceAttr.Value };
+                        var useNamespaceChunk = new UseNamespaceChunk { Namespace = AsCode(namespaceAttr) };
                         AddUnordered(useNamespaceChunk);
                     }
                     if (assemblyAttr != null)
@@ -488,7 +509,7 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     foreach (var attr in inspector.Attributes)
                     {
-                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
                     }
 
                     var renderPartial = new RenderPartialChunk { Name = partial.Value, Position = Locate(inspector.OriginalNode) };
@@ -514,7 +535,7 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     foreach (var attr in inspector.Attributes)
                     {
-                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
                     }
                     var render = new RenderSectionChunk { Name = sectionName };
                     Chunks.Add(render);
@@ -548,7 +569,7 @@ namespace Spark.Compiler.NodeVisitors
             {
                 foreach (var attr in inspector.Attributes)
                 {
-                    Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+                    Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
                 }
 
                 Accept(inspector.Body);
@@ -571,7 +592,7 @@ namespace Spark.Compiler.NodeVisitors
             }
             else if (varAttr != null || defAttr != null)
             {
-                var variableChunk = new LocalVariableChunk { Name = (varAttr ?? defAttr).AsCode(), Type = "string" };
+                var variableChunk = new LocalVariableChunk { Name = AsCode(varAttr ?? defAttr), Type = "string" };
                 Chunks.Add(variableChunk);
 
                 var contentSetChunk = new ContentSetChunk { Variable = variableChunk.Name, Position = Locate(inspector.OriginalNode) };
@@ -583,7 +604,7 @@ namespace Spark.Compiler.NodeVisitors
             {
                 var addAttr = inspector.TakeAttribute("add");
 
-                var contentSetChunk = new ContentSetChunk { Variable = setAttr.AsCode(), Position = Locate(inspector.OriginalNode) };
+                var contentSetChunk = new ContentSetChunk { Variable = AsCode(setAttr), Position = Locate(inspector.OriginalNode) };
 
                 if (addAttr != null)
                 {
@@ -621,7 +642,7 @@ namespace Spark.Compiler.NodeVisitors
             Frame ifFrame = null;
             if (conditionAttr != null)
             {
-                var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = conditionAttr.AsCode(), Position = Locate(inspector.OriginalNode) };
+                var ifChunk = new ConditionalChunk { Type = ConditionalType.If, Condition = AsCode(conditionAttr), Position = Locate(inspector.OriginalNode) };
                 Chunks.Add(ifChunk);
                 ifFrame = new Frame(this, ifChunk.Body);
             }
@@ -659,7 +680,7 @@ namespace Spark.Compiler.NodeVisitors
             }
             else
             {
-                var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = ifAttr.AsCode(), Position = Locate(inspector.OriginalNode) };
+                var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = AsCode(ifAttr), Position = Locate(inspector.OriginalNode) };
                 Chunks.Add(elseIfChunk);
                 using (new Frame(this, elseIfChunk.Body))
                     Accept(inspector.Body);
@@ -672,7 +693,7 @@ namespace Spark.Compiler.NodeVisitors
                 throw new CompilerException("An 'elseif' may only follow an 'if' or 'elseif'.");
 
             var conditionAttr = inspector.TakeAttribute("condition");
-            var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = conditionAttr.AsCode(), Position = Locate(inspector.OriginalNode) };
+            var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = AsCode(conditionAttr), Position = Locate(inspector.OriginalNode) };
             Chunks.Add(elseIfChunk);
             using (new Frame(this, elseIfChunk.Body))
                 Accept(specialNode.Body);
@@ -682,13 +703,13 @@ namespace Spark.Compiler.NodeVisitors
         {
             var eachAttr = inspector.TakeAttribute("each");
 
-            var forEachChunk = new ForEachChunk { Code = eachAttr.AsCode(), Position = Locate(specialNode.Element) };
+            var forEachChunk = new ForEachChunk { Code = AsCode(eachAttr), Position = Locate(specialNode.Element) };
             Chunks.Add(forEachChunk);
             using (new Frame(this, forEachChunk.Body))
             {
                 foreach (var attr in inspector.Attributes)
                 {
-                    Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+                    Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
                 }
 
                 Accept(specialNode.Body);
@@ -699,27 +720,27 @@ namespace Spark.Compiler.NodeVisitors
         {
             foreach (var attr in inspector.Attributes)
             {
-                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
             }
         }
 
         private void VisitViewdata(SpecialNodeInspector inspector)
         {
             var defaultAttr = inspector.TakeAttribute("default");
-            string defaultValue = null;
+            Snippets defaultValue = null;
             if (defaultAttr != null)
-                defaultValue = defaultAttr.AsCode();
+                defaultValue = AsCode(defaultAttr);
 
             var modelAttr = inspector.TakeAttribute("model");
             if (modelAttr != null)
             {
-                var typeInspector = new TypeInspector(modelAttr.AsCode());
+                var typeInspector = new TypeInspector(AsCode(modelAttr));
                 AddUnordered(new ViewDataModelChunk { TModel = typeInspector.Type, TModelAlias = typeInspector.Name });
             }
 
             foreach (var attr in inspector.Attributes)
             {
-                var typeInspector = new TypeInspector(attr.AsCode());
+                var typeInspector = new TypeInspector(AsCode(attr));
                 AddUnordered(new ViewDataChunk
                                  {
                                      Type = typeInspector.Type,
@@ -734,11 +755,11 @@ namespace Spark.Compiler.NodeVisitors
         private void VisitGlobal(SpecialNode specialNode)
         {
             var typeAttr = specialNode.Element.Attributes.FirstOrDefault(attr => attr.Name == "type");
-            string type = typeAttr != null ? typeAttr.AsCode() : "object";
+            var type = typeAttr != null ? AsCode(typeAttr) : (Snippets)"object";
 
             foreach (var attr in specialNode.Element.Attributes.Where(a => a != typeAttr))
             {
-                AddUnordered(new GlobalVariableChunk { Type = type, Name = attr.Name, Value = attr.AsCode() });
+                AddUnordered(new GlobalVariableChunk { Type = type, Name = attr.Name, Value = AsCode(attr) });
             }
         }
 
@@ -753,11 +774,11 @@ namespace Spark.Compiler.NodeVisitors
             }
 
             var typeAttr = inspector.TakeAttribute("type");
-            string type = typeAttr != null ? typeAttr.AsCode() : "var";
+            var type = typeAttr != null ? AsCode(typeAttr) : (Snippets)"var";
 
             foreach (var attr in inspector.Attributes)
             {
-                Chunks.Add(new LocalVariableChunk { Type = type, Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+                Chunks.Add(new LocalVariableChunk { Type = type, Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
             }
 
             Accept(specialNode.Body);
@@ -777,11 +798,11 @@ namespace Spark.Compiler.NodeVisitors
             }
 
             var typeAttr = inspector.TakeAttribute("type");
-            string type = typeAttr != null ? typeAttr.AsCode() : "var";
+            var type = typeAttr != null ? AsCode(typeAttr) : (Snippets)"var";
 
             foreach (var attr in inspector.Attributes)
             {
-                Chunks.Add(new DefaultVariableChunk { Type = type, Name = attr.Name, Value = attr.AsCode(), Position = Locate(attr) });
+                Chunks.Add(new DefaultVariableChunk { Type = type, Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
             }
 
             Accept(specialNode.Body);

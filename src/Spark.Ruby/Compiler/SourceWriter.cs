@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Spark.Parser.Code;
 
 namespace Spark.Ruby.Compiler
 {
@@ -40,6 +41,7 @@ namespace Spark.Ruby.Compiler
                 StartOfLine = false;
             }
         }
+
         
         public SourceWriter Write(string value)
         {
@@ -52,6 +54,7 @@ namespace Spark.Ruby.Compiler
         {
             return Write(value.ToString());
         }
+
 
         public SourceWriter WriteLine()
         {
@@ -70,6 +73,7 @@ namespace Spark.Ruby.Compiler
         {
             return Write(value).WriteLine();
         }
+
 
         public void EscrowLine(string value)
         {

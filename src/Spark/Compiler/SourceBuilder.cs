@@ -10,6 +10,8 @@ namespace Spark.Compiler
     {
         public SourceBuilder(StringBuilder source)
         {
+            int x = 1;
+
             Source = source;
             Mappings = new List<SourceMapping>();
             AdjustDebugSymbols = true;
@@ -19,16 +21,10 @@ namespace Spark.Compiler
         public StringBuilder Source { get; set; }
         public IList<SourceMapping> Mappings { get; set; }
 
-        public SourceBuilder AppendCode(string code, IList<Snippet> snippets)
+        public SourceBuilder AppendCode(IEnumerable<Snippet> snippets)
         {
-            if (snippets == null)
-            {
-                Append(code);
-                return this;
-            }
-
             // compact snippets so vs language service doesn't have to
-            var compacted = new SnippetCollection(snippets.Count);
+            var compacted = new Snippets(snippets.Count());
             Snippet prior = null;
             foreach (var snippet in snippets)
             {
@@ -49,11 +45,14 @@ namespace Spark.Compiler
             if (prior != null)
                 compacted.Add(prior);
 
+            bool mappingAdded = false;
+
             // write them out and keep mapping-to-spark source information
             foreach (var snippet in compacted)
             {
                 if (snippet.Begin != null)
                 {
+                    mappingAdded = true;
                     Mappings.Add(new SourceMapping
                                      {
                                          Source = snippet,
@@ -62,6 +61,10 @@ namespace Spark.Compiler
                                      });
                 }
                 Source.Append(snippet.Value);
+            }
+            if (mappingAdded == false)
+            {
+                int x = 5;
             }
             return this;
         }
@@ -75,6 +78,11 @@ namespace Spark.Compiler
             if (first.End.Offset != second.Begin.Offset)
                 return false;
             return true;
+        }
+
+        public SourceBuilder Append(IEnumerable<Snippet> value)
+        {
+            return AppendCode(value);
         }
 
         public SourceBuilder Append(object value)

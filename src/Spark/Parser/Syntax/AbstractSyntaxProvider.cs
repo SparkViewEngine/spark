@@ -18,6 +18,7 @@ using System.IO;
 using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
+using Spark.Parser.Code;
 using Spark.Parser.Markup;
 
 namespace Spark.Parser.Syntax
@@ -26,6 +27,7 @@ namespace Spark.Parser.Syntax
     {
         public abstract IList<Chunk> GetChunks(VisitorContext context, string path);
         public abstract IList<Node> IncludeFile(VisitorContext context, string path, string parse);
+        public abstract Snippets ParseFragment(Position begin, Position end);
 
         protected SourceContext CreateSourceContext(string viewPath, IViewFolder viewFolder)
         {

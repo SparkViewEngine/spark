@@ -21,6 +21,7 @@ using System.Text;
 using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
+using Spark.Parser.Code;
 using Spark.Parser.Markup;
 
 namespace Spark.Parser.Syntax
@@ -104,6 +105,27 @@ namespace Spark.Parser.Syntax
 
             context.ViewPath = existingPath;
             return includeVisitor.Nodes;
+        }
+
+        public override Snippets ParseFragment(Position begin, Position end)
+        {
+            var result = _grammar.Expression(begin.Constrain(end));
+
+            var unparsedLength = result.Rest.PotentialLength();
+            if (unparsedLength == 0)
+                return result.Value;
+
+            var snippets = new Snippets(result.Value);
+
+            snippets.Add(new Snippet
+            {
+                Value = result.Rest.Peek(unparsedLength),
+                Begin = result.Rest,
+                End = result.Rest.Advance(unparsedLength)
+            });
+
+            return snippets;
+
         }
 
         private IList<INodeVisitor> BuildNodeVisitors(VisitorContext context)

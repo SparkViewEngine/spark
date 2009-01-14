@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using Spark.Compiler;
 using Spark.Compiler.ChunkVisitors;
+using Spark.Parser.Code;
 
 namespace Spark.Ruby.Compiler.ChunkVisitors
 {
@@ -68,7 +69,7 @@ namespace Spark.Ruby.Compiler.ChunkVisitors
             _variables.Declare(chunk.Name);
 
             var value = chunk.Value;
-            if (string.IsNullOrEmpty(value))
+            if (Snippets.IsNullOrEmpty(value))
                 value = "nil";
             _source.Write(chunk.Name).Write("=").WriteLine(value);
         }
@@ -79,7 +80,7 @@ namespace Spark.Ruby.Compiler.ChunkVisitors
                 _variables.Declare(chunk.Name);
 
             var value = chunk.Value;
-            if (string.IsNullOrEmpty(value))
+            if (Snippets.IsNullOrEmpty(value))
                 value = "nil";
             _source.Write(chunk.Name).Write("=").WriteLine(value);
         }
@@ -91,7 +92,7 @@ namespace Spark.Ruby.Compiler.ChunkVisitors
 
             _variables.Declare(chunk.Name);
             var value = chunk.Value;
-            if (string.IsNullOrEmpty(value))
+            if (Snippets.IsNullOrEmpty(value))
                 value = "nil";
             _source.Write(chunk.Name).Write("=").WriteLine(value);
         }

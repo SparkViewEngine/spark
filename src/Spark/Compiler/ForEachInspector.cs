@@ -16,14 +16,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Spark.Parser.Code;
 
 namespace Spark.Compiler
 {
     public class ForEachInspector
     {
-        public ForEachInspector(string code)
+        public ForEachInspector(Snippets code)
         {
-            var terms = code.Split(' ', '\r', '\n', '\t').ToList();
+            var terms = code.ToString().Split(' ', '\r', '\n', '\t').ToList();
             var inIndex = terms.IndexOf("in");
             if (inIndex >= 1)
             {

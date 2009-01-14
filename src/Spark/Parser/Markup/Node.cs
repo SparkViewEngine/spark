@@ -93,7 +93,7 @@ namespace Spark.Parser.Markup
                     else if (node is EntityNode)
                         sb.Append('&').Append(((EntityNode)node).Name).Append(';');
                     else if (node is ExpressionNode)
-                        sb.Append("${").Append(((ExpressionNode) node).Code).Append('}');
+                        sb.Append("${").Append(((ExpressionNode)node).Code).Append('}');
                     else if (node is ConditionNode)
                         sb.Append("?{").Append(((ConditionNode)node).Code).Append('}');
                 }
@@ -105,81 +105,69 @@ namespace Spark.Parser.Markup
 
     public class ConditionNode : Node
     {
-        public ConditionNode(string code)
+        public ConditionNode()
         {
-            Code = code;
             Nodes = new List<Node>();
-        }
-        public ConditionNode(IList<char> code)
-        {
-            Code = new String(code.ToArray());
-            Nodes = new List<Node>();
-        }
-        public ConditionNode(IList<Snippet> snippets)
-        {
-            Snippets = snippets;
-            Code = string.Concat(snippets.Select(s => s.Value).ToArray());
-            Nodes = new List<Node>();
-        }
-        public ConditionNode(SnippetCollection snippets)
-            : this((IList<Snippet>)snippets)
-        {
         }
 
-        public string Code { get; set; }
-        public IList<Snippet> Snippets { get; set; }
+        public ConditionNode(string code)
+            : this()
+        {
+            Code = new Snippets(new[] { new Snippet { Value = code } });
+        }
+
+        public ConditionNode(IEnumerable<Snippet> snippets)
+            : this()
+        {
+            Code = new Snippets(snippets);
+        }
+        public ConditionNode(Snippets snippets)
+            : this()
+        {
+            Code = snippets;
+        }
+
+        public Snippets Code { get; set; }
         public IList<Node> Nodes { get; set; }
     }
 
     public class ExpressionNode : Node
     {
         public ExpressionNode(string code)
+            : this(new Snippets(code))
+        {
+        }
+        public ExpressionNode(IEnumerable<Snippet> code) :
+            this(new Snippets(code))
+        {
+        }
+        public ExpressionNode(Snippets code)
         {
             Code = code;
         }
-        public ExpressionNode(IList<char> code)
-        {
-            Code = new String(code.ToArray());
-        }
-        public ExpressionNode(IList<Snippet> snippets)
-        {
-            Snippets = snippets;
-            Code = string.Concat(snippets.Select(s => s.Value).ToArray());
-        }
-        public ExpressionNode(SnippetCollection snippets)
-            : this((IList<Snippet>)snippets)
-        {
-        }
 
-        public string Code { get; set; }
-        public IList<Snippet> Snippets { get; set; }
+        public Snippets Code { get; set; }
         public bool SilentNulls { get; set; }
         public bool AutomaticEncoding { get; set; }
     }
 
     public class StatementNode : Node
     {
-        public StatementNode(string code)
+        public StatementNode(string code) :
+            this(new Snippets(code))
+        {
+        }
+        public StatementNode(IEnumerable<Snippet> snippets) :
+            this(new Snippets(snippets))
+        {
+        }
+        public StatementNode(Snippets code)
         {
             Code = code;
         }
-        public StatementNode(IList<char> code)
-        {
-            Code = new String(code.ToArray());
-        }
-        public StatementNode(IList<Snippet> snippets)
-        {
-            Snippets = snippets;
-            Code = string.Concat(snippets.Select(s => s.Value).ToArray());
-        }
-        public StatementNode(SnippetCollection snippets)
-            : this((IList<Snippet>)snippets)
-        {
-        }
 
 
-        public string Code { get; set; }
-        public IList<Snippet> Snippets { get; set; }
+        public Snippets Code { get; set; }
     }
 
     public class ExternalIdInfo

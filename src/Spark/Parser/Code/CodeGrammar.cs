@@ -131,7 +131,7 @@ namespace Spark.Parser.Code
                 )).Or(EmptySnip());
 
 
-            Expression = ExpressionTerms.Build(hit => new SnippetCollection(hit));
+            Expression = ExpressionTerms.Build(hit => new Snippets(hit));
 
 
             var statementPiece =
@@ -263,7 +263,7 @@ namespace Spark.Parser.Code
         }
 
         public ParseAction<IList<Snippet>> ExpressionTerms;
-        public ParseAction<SnippetCollection> Expression;
+        public ParseAction<Snippets> Expression;
 
         public ParseAction<IList<Snippet>> Statement1;
         public ParseAction<IList<Snippet>> Statement2;

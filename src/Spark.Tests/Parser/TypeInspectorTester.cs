@@ -28,7 +28,7 @@ namespace Spark.Tests.Parser
         public void SimpleFields()
         {
             var result = new TypeInspector("string");
-            Assert.AreEqual("string", result.Type);
+            Assert.AreEqual("string", (string)result.Type);
             Assert.IsNull(result.Name);
         }
 
@@ -36,7 +36,7 @@ namespace Spark.Tests.Parser
         public void Generics()
         {
             var result = new TypeInspector("IList<something>");
-            Assert.AreEqual("IList<something>", result.Type);
+            Assert.AreEqual("IList<something>", (string)result.Type);
             Assert.IsNull(result.Name);
         }
 
@@ -44,15 +44,15 @@ namespace Spark.Tests.Parser
         public void GenericsWithName()
         {
             var result = new TypeInspector("IList<something>\r\n\tSomethingList");
-            Assert.AreEqual("IList<something>", result.Type);
-            Assert.AreEqual("SomethingList", result.Name);
+            Assert.AreEqual("IList<something>", (string)result.Type);
+            Assert.AreEqual("SomethingList", (string)result.Name);
         }
 
         [Test]
         public void GenericWithSpacesButNoName()
         {
             var result = new TypeInspector("IList<something, int>");
-            Assert.AreEqual("IList<something, int>", result.Type);
+            Assert.AreEqual("IList<something, int>", (string)result.Type);
             Assert.IsNull(result.Name);
         }
     }

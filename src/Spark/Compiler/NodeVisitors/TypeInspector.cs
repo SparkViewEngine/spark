@@ -13,14 +13,15 @@
 // limitations under the License.
 // 
 using System.Linq;
+using Spark.Parser.Code;
 
 namespace Spark.Compiler.NodeVisitors
 {
     public class TypeInspector
     {
-        public TypeInspector(string dataDeclaration)
+        public TypeInspector(Snippets dataDeclaration)
         {
-            var decl = dataDeclaration.Trim();
+            var decl = dataDeclaration.ToString().Trim();
             var lastSpace = decl.LastIndexOfAny(new[] { ' ', '\t', '\r', '\n' });
             if (lastSpace < 0)
             {
@@ -30,7 +31,7 @@ namespace Spark.Compiler.NodeVisitors
 
             Name = decl.Substring(lastSpace + 1);
 
-            if (!Name.ToCharArray().All(ch => char.IsLetterOrDigit(ch) || ch == '_' || ch == '@'))
+            if (!Name.ToString().ToCharArray().All(ch => char.IsLetterOrDigit(ch) || ch == '_' || ch == '@'))
             {
                 Name = null;
                 Type = dataDeclaration;
@@ -40,8 +41,8 @@ namespace Spark.Compiler.NodeVisitors
             Type = decl.Substring(0, lastSpace).Trim();
         }
 
-        public string Name { get; set; }
+        public Snippets Name { get; set; }
 
-        public string Type { get; set; }
+        public Snippets Type { get; set; }
     }
 }

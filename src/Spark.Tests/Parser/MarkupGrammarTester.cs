@@ -275,22 +275,22 @@ namespace Spark.Tests.Parser
             Assert.AreEqual(5, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
             var code = (ExpressionNode)result.Value[2];
-            Assert.AreEqual("bar", code.Code);
+            Assert.AreEqual("bar", (string)code.Code);
 
             result = grammar.Nodes(Source("<hello>foo<%=baaz%>ex</hello>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
             var code2 = (ExpressionNode)result.Value[2];
-            Assert.AreEqual("baaz", code2.Code);
+            Assert.AreEqual("baaz", (string)code2.Code);
 
             result = grammar.Nodes(Source("<hello href='${one}' class=\"<%=two%>\"/>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ElementNode), result.Value[0]);
             var elt = (ElementNode)result.Value[0];
-            Assert.AreEqual("one", ((ExpressionNode)elt.Attributes[0].Nodes[0]).Code);
-            Assert.AreEqual("two", ((ExpressionNode)elt.Attributes[1].Nodes[0]).Code);
+            Assert.AreEqual("one", (string)((ExpressionNode)elt.Attributes[0].Nodes[0]).Code);
+            Assert.AreEqual("two", (string)((ExpressionNode)elt.Attributes[1].Nodes[0]).Code);
 
         }
 
@@ -302,7 +302,7 @@ namespace Spark.Tests.Parser
             Assert.AreEqual(5, result.Value.Count);
             Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
             var code = result.Value[2] as ExpressionNode;
-            Assert.AreEqual("bar", code.Code);
+            Assert.AreEqual("bar", (string)code.Code);
 
 
             Assert.AreEqual("foo", ((TextNode)result.Value[1]).Text);
@@ -328,28 +328,28 @@ namespace Spark.Tests.Parser
         public void CodeStatementsPercentSyntax()
         {
             var direct = grammar.Statement(Source("<%int x = 5;%>"));
-            Assert.AreEqual("int x = 5;", direct.Value.Code);
+            Assert.AreEqual("int x = 5;", (string)direct.Value.Code);
 
             var result = grammar.Nodes(Source("<div>hello <%int x = 5;%> world</div>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Value.Count);
             var stmt = result.Value[2] as StatementNode;
             Assert.IsNotNull(stmt);
-            Assert.AreEqual("int x = 5;", stmt.Code);
+            Assert.AreEqual("int x = 5;", (string)stmt.Code);
         }
 
         [Test]
         public void CodeStatementsHashSyntax()
         {
             var direct = grammar.Statement(Source("\n#int x = 5;\n"));
-            Assert.AreEqual("int x = 5;", direct.Value.Code);
+            Assert.AreEqual("int x = 5;", (string)direct.Value.Code);
 
             var result = grammar.Nodes(Source("<div>hello\n #int x = 5;\n world</div>"));
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Value.Count);
             var stmt = result.Value[2] as StatementNode;
             Assert.IsNotNull(stmt);
-            Assert.AreEqual("int x = 5;", stmt.Code);
+            Assert.AreEqual("int x = 5;", (string)stmt.Code);
         }
 
         [Test]
@@ -393,11 +393,11 @@ namespace Spark.Tests.Parser
         {
             var nodes1 = grammar.Nodes(Source("<p>abc\r\n \t#Logger.Warn('Hello World');\r\ndef</p>"));
             Assert.AreEqual(5, nodes1.Value.Count);
-            Assert.AreEqual("Logger.Warn(\"Hello World\");", ((StatementNode)nodes1.Value[2]).Code);
+            Assert.AreEqual("Logger.Warn(\"Hello World\");", (string)((StatementNode)nodes1.Value[2]).Code);
 
             var nodes2 = grammar.Nodes(Source("<p>abc\r\n \t x#Logger.Warn('Hello World');\r\ndef</p>"));
             Assert.AreEqual(3, nodes2.Value.Count);
-            Assert.AreEqual("abc\r\n \t x#Logger.Warn('Hello World');\r\ndef", ((TextNode)nodes2.Value[1]).Text);
+            Assert.AreEqual("abc\r\n \t x#Logger.Warn('Hello World');\r\ndef", (string)((TextNode)nodes2.Value[1]).Text);
         }
 
         [Test]
@@ -409,7 +409,7 @@ namespace Spark.Tests.Parser
             Assert.AreEqual(2, attr.Value.Nodes.Count);
             Assert.AreEqual("one?{true}", attr.Value.Value);
             Assert.AreEqual("one", ((TextNode)attr.Value.Nodes[0]).Text);
-            Assert.AreEqual("true", ((ConditionNode)attr.Value.Nodes[1]).Code);
+            Assert.AreEqual("true", (string)((ConditionNode)attr.Value.Nodes[1]).Code);
         }
 
         [Test]
@@ -486,7 +486,7 @@ namespace Spark.Tests.Parser
                 Source("#alpha\r\n"));
             Assert.AreEqual(2, result1.Value.Count);
             Assert.IsInstanceOfType(typeof(StatementNode), result1.Value[0]);
-            Assert.AreEqual("alpha", ((StatementNode)result1.Value[0]).Code);
+            Assert.AreEqual("alpha", (string)((StatementNode)result1.Value[0]).Code);
             Assert.IsInstanceOfType(typeof(TextNode), result1.Value[1]);
             Assert.AreEqual("\r\n", ((TextNode)result1.Value[1]).Text);
 
@@ -494,21 +494,21 @@ namespace Spark.Tests.Parser
                 Source("#alpha\r\ntext\r\n#beta"));
             Assert.AreEqual(3, result2.Value.Count);
             Assert.IsInstanceOfType(typeof(StatementNode), result2.Value[0]);
-            Assert.AreEqual("alpha", ((StatementNode)result2.Value[0]).Code);
+            Assert.AreEqual("alpha", (string)((StatementNode)result2.Value[0]).Code);
             Assert.IsInstanceOfType(typeof(TextNode), result2.Value[1]);
             Assert.AreEqual("\r\ntext", ((TextNode)result2.Value[1]).Text);
             Assert.IsInstanceOfType(typeof(StatementNode), result2.Value[2]);
-            Assert.AreEqual("beta", ((StatementNode)result2.Value[2]).Code);
+            Assert.AreEqual("beta", (string)((StatementNode)result2.Value[2]).Code);
 
             var result3 = grammar.Nodes(
                 Source("\r\n#alpha\r\ntext\r\n#beta\r\n"));
             Assert.AreEqual(4, result3.Value.Count);
             Assert.IsInstanceOfType(typeof(StatementNode), result3.Value[0]);
-            Assert.AreEqual("alpha", ((StatementNode)result3.Value[0]).Code);
+            Assert.AreEqual("alpha", (string)((StatementNode)result3.Value[0]).Code);
             Assert.IsInstanceOfType(typeof(TextNode), result3.Value[1]);
             Assert.AreEqual("\r\ntext", ((TextNode)result3.Value[1]).Text);
             Assert.IsInstanceOfType(typeof(StatementNode), result3.Value[2]);
-            Assert.AreEqual("beta", ((StatementNode)result3.Value[2]).Code);
+            Assert.AreEqual("beta", (string)((StatementNode)result3.Value[2]).Code);
             Assert.IsInstanceOfType(typeof(TextNode), result3.Value[3]);
             Assert.AreEqual("\r\n", ((TextNode)result3.Value[3]).Text);
         }

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using Spark.Compiler.ChunkVisitors;
+using Spark.Parser.Code;
 
 namespace Spark.Compiler.CSharp.ChunkVisitors
 {
@@ -80,7 +81,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             }
 
             var type = chunk.Type ?? "object";
-            var typeParts = type.Split(' ', '\t');
+            var typeParts = type.ToString().Split(' ', '\t');
             if (typeParts.Contains("const") || typeParts.Contains("readonly"))
             {
                 _source.AppendFormat("\r\n    {0} {1} = {2};",
@@ -98,10 +99,14 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(ViewDataModelChunk chunk)
         {
-            if (string.IsNullOrEmpty(chunk.TModelAlias))
+            if (Snippets.IsNullOrEmpty(chunk.TModelAlias))
                 return;
 
-            AppendIndent().Append(chunk.TModel).Append(" ").AppendLine(chunk.TModelAlias);
+            AppendIndent()
+                .AppendCode(chunk.TModel)
+                .Append(" ")
+                .AppendCode(chunk.TModelAlias)
+                .AppendLine();
             CodeIndent(chunk).AppendLine("{get {return ViewData.Model;}}");
             CodeDefault();
         }
@@ -112,8 +117,8 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             var name = chunk.Name;
             var type = chunk.Type ?? "object";
 
-            if (!_globalSymbols.ContainsKey(chunk.Name))
-                _globalSymbols.Add(chunk.Name, null);
+            if (!_globalSymbols.ContainsKey(name))
+                _globalSymbols.Add(name, null);
 
             if (_viewDataAdded.ContainsKey(name))
             {
@@ -128,7 +133,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
             _viewDataAdded.Add(name, key + ":" + type);
             AppendIndent().Append(type).Append(" ").AppendLine(name);
-            if (string.IsNullOrEmpty(chunk.Default))
+            if (Snippets.IsNullOrEmpty(chunk.Default))
             {
                 CodeIndent(chunk)
                     .Append("{get {return (")

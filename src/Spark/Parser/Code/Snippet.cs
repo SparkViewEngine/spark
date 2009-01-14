@@ -10,19 +10,29 @@ namespace Spark.Parser.Code
         public Position End { get; set; }
     }
 
-    public class SnippetCollection : List<Snippet>
+    public class Snippets : List<Snippet>
     {
-        public SnippetCollection()
+        public Snippets()
         {
         }
 
-        public SnippetCollection(int capacity)
+        public Snippets(int capacity)
             : base(capacity)
         {
         }
 
-        public SnippetCollection(IEnumerable<Snippet> collection)
+        public Snippets(IEnumerable<Snippet> collection)
             : base(collection)
+        {
+        }
+
+        public Snippets(Snippets collection)
+            : base((Snippets)collection)
+        {
+        }
+
+        public Snippets(string value)
+            : base(new[] { new Snippet { Value = value } })
         {
         }
 
@@ -31,9 +41,34 @@ namespace Spark.Parser.Code
             return string.Concat(this.Select(s => s.Value).ToArray());
         }
 
-        public static implicit operator string(SnippetCollection c)
+        //public override bool Equals(object obj)
+        //{
+        //    return Equals(ToString(), (obj ?? "").ToString());
+        //}
+        //public override int GetHashCode()
+        //{
+        //    return ToString().GetHashCode();
+        //}
+
+        public static implicit operator string(Snippets c)
         {
-            return c.ToString();
+            return c == null ? null : c.ToString();
+        }
+
+        public static implicit operator Snippets(string value)
+        {
+            return new Snippets(value);
+        }
+
+        public static bool IsNullOrEmpty(Snippets value)
+        {
+            if (value == null ||
+                value.Count == 0 ||
+                value.All(s => string.IsNullOrEmpty(s.Value)))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

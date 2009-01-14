@@ -38,7 +38,7 @@ namespace Spark.Compiler.CSharp
 
             var source = new StringBuilder();
             var builder = new SourceBuilder(source);
-            var usingGenerator = new UsingNamespaceVisitor(source);
+            var usingGenerator = new UsingNamespaceVisitor(builder);
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
             var globalsGenerator = new GlobalMembersVisitor(builder, globalSymbols, NullBehaviour);
             
@@ -88,7 +88,12 @@ namespace Spark.Compiler.CSharp
             }
 
             // public class ViewName : BasePageType 
-            source.AppendLine(string.Format("public class {0} : {1}", viewClassName, baseClassGenerator.BaseClassTypeName));
+            builder
+                .Append("public class ")
+                .Append(viewClassName)
+                .Append(" : ")
+                .Append(baseClassGenerator.BaseClassTypeName)
+                .AppendLine();
             source.AppendLine("{");
 
             source.AppendLine();

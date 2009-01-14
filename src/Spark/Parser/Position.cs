@@ -48,20 +48,22 @@ namespace Spark.Parser
         private readonly int _offset;
         private readonly SourceContext _sourceContext;
         private readonly PaintLink _paintLink;
+        private int _sourceContentLength;
 
         public Position(Position position)
-            : this(position.SourceContext, position.Offset, position.Line, position.Column, position.PaintLink)
+            : this(position.SourceContext, position._sourceContentLength, position.Offset, position.Line, position.Column, position.PaintLink)
         {
         }
 
         public Position(SourceContext sourceContext)
-            : this(sourceContext, 0, 1, 1, null)
+            : this(sourceContext, sourceContext.Content.Length, 0, 1, 1, null)
         {
         }
 
-        public Position(SourceContext sourceContext, int offset, int line, int column, PaintLink paintLink)
+        public Position(SourceContext sourceContext, int sourceContextLength, int offset, int line, int column, PaintLink paintLink)
         {
             _sourceContext = sourceContext;
+            _sourceContentLength = sourceContextLength;
             _offset = offset;
             _line = line;
             _column = column;
@@ -107,7 +109,7 @@ namespace Spark.Parser
                 if (specialIndex < 0)
                 {
                     // no special characters found
-                    return new Position(SourceContext, offset + remaining, line, column + remaining, PaintLink);
+                    return new Position(SourceContext, _sourceContentLength, offset + remaining, line, column + remaining, PaintLink);
                 }
 
                 switch (content[offset + specialIndex])
@@ -138,7 +140,12 @@ namespace Spark.Parser
                                                           (int)content[offset + specialIndex]));
                 }
             }
-            return new Position(SourceContext, offset, line, column, PaintLink);
+            return new Position(SourceContext, _sourceContentLength, offset, line, column, PaintLink);
+        }
+
+        public Position Constrain(Position end)
+        {
+            return new Position(this) { _sourceContentLength = end.Offset };
         }
 
         public string Peek(int count)
@@ -148,14 +155,14 @@ namespace Spark.Parser
 
         public char Peek()
         {
-            if (Offset == SourceContext.Content.Length)
+            if (Offset == _sourceContentLength)
                 return default(char);
             return SourceContext.Content[Offset];
         }
 
         public int PotentialLength()
         {
-            return SourceContext.Content.Length - Offset;
+            return _sourceContentLength - Offset;
         }
 
         public int PotentialLength(params char[] stopChars)
@@ -163,7 +170,7 @@ namespace Spark.Parser
             if (stopChars == null)
                 return PotentialLength();
 
-            int limit = SourceContext.Content.Length - Offset;
+            int limit = _sourceContentLength - Offset;
             int length = SourceContext.Content.IndexOfAny(stopChars, Offset, limit) - Offset;
             return length < 0 ? limit : length;
         }
@@ -171,30 +178,32 @@ namespace Spark.Parser
         public Position Paint<T>(Position begin, T value)
         {
             return new Position(
-                _sourceContext,
+                _sourceContext, 
+                _sourceContentLength,
                 _offset,
                 _line,
                 _column,
                 new PaintLink
-                {
-                    Next = PaintLink,
-                    Paint = new Paint<T>
                     {
-                        Begin = begin,
-                        End = this,
-                        Value = value
-                    }
-                });
+                        Next = PaintLink,
+                        Paint = new Paint<T>
+                                    {
+                                        Begin = begin,
+                                        End = this,
+                                        Value = value
+                                    }
+                    });
         }
 
         public IEnumerable<Paint> GetPaint()
         {
             var link = PaintLink;
-            while(link != null)
+            while (link != null)
             {
                 yield return link.Paint;
                 link = link.Next;
             }
         }
+
     }
 }

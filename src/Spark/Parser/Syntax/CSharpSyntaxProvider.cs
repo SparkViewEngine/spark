@@ -20,6 +20,7 @@ using System.Text;
 using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
+using Spark.Parser.Code;
 using Spark.Parser.Markup;
 
 namespace Spark.Parser.Syntax
@@ -29,10 +30,10 @@ namespace Spark.Parser.Syntax
         public CSharpGrammar()
         {
             var expression = Ch("${").And(Rep1(ChNot('}'))).And(Ch('}'))
-                .Build(hit => (Node)new ExpressionNode(hit.Left.Down));
+                .Build(hit => (Node)new ExpressionNode(new string(hit.Left.Down.ToArray())));
 
             var statement = Opt(Ch('\r')).And(Ch('\n')).And(Rep(Ch(char.IsWhiteSpace))).And(Ch("//:")).And(Rep(ChNot('\r','\n')))
-                .Build(hit => (Node)new StatementNode(hit.Down));
+                .Build(hit => (Node)new StatementNode(new string(hit.Down.ToArray())));
 
             var plaincode = Rep1(Ch(c => true).Unless(statement).Unless(expression)).Build(hit => (Node)new TextNode(hit));
 
@@ -65,6 +66,11 @@ namespace Spark.Parser.Syntax
         }
 
         public override IList<Node> IncludeFile(VisitorContext context, string path, string parse)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Snippets ParseFragment(Position begin, Position end)
         {
             throw new System.NotImplementedException();
         }

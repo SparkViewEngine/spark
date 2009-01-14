@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Compiler.ChunkVisitors;
+using Spark.Parser.Code;
 
 namespace Spark.Compiler.ChunkVisitors
 {
@@ -44,17 +45,18 @@ namespace Spark.Compiler.ChunkVisitors
             return entry;
         }
 
-        void Examine(string code)
+        void Examine(Snippets code)
         {
-            if (string.IsNullOrEmpty(code))
+            if (Snippets.IsNullOrEmpty(code))
                 return;
 
+            var codeString = code.ToString();
             foreach(var entry in _entries)
             {
                 if (entry.Detected)
                     continue;
 
-                if (code.Contains(entry.Expression))
+                if (codeString.Contains(entry.Expression))
                     entry.Detected = true;
             }
         }
@@ -117,7 +119,7 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(ConditionalChunk chunk)
         {
-            if (!string.IsNullOrEmpty(chunk.Condition))
+            if (!Snippets.IsNullOrEmpty(chunk.Condition))
                 Examine(chunk.Condition);
             Accept(chunk.Body);
         }

@@ -175,5 +175,18 @@ namespace Spark.Tests.Parser
             var pos2 = position.Advance(11);
             Assert.AreEqual(default(char), pos2.Peek());
         }
+
+        [Test]
+        public void PotentialLengthConstrained()
+        {
+            Position position = new Position(new SourceContext("hello world"));
+            var begin = position.Advance(4);
+            var end = begin.Advance(3);
+            var range = begin.Constrain(end);
+            Assert.AreEqual(3, range.PotentialLength());
+            Assert.AreEqual("o w", range.Peek(3));
+            var done = range.Advance(3);
+            Assert.AreEqual(default(char), done.Peek());
+        }
     }
 }

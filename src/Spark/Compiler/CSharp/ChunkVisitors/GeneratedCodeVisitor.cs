@@ -14,8 +14,8 @@
 // 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Spark.Compiler.ChunkVisitors;
+using Spark.Parser.Code;
 
 namespace Spark.Compiler.CSharp.ChunkVisitors
 {
@@ -131,7 +131,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
         protected override void Visit(SendExpressionChunk chunk)
         {
             var automaticallyEncode = chunk.AutomaticallyEncode;
-            if (chunk.Code.StartsWith("H("))
+            if (chunk.Code.ToString().StartsWith("H("))
                 automaticallyEncode = false;
 
             AppendIndent().AppendLine("try");
@@ -139,7 +139,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             CodeIndent(chunk)
                 .Append("Output.Write(")
                 .Append(automaticallyEncode ? "H(" : "")
-                .AppendCode(chunk.Code, chunk.Snippets)
+                .AppendCode(chunk.Code)
                 .Append(automaticallyEncode ? ")" : "")
                 .AppendLine(");");
             CodeDefault();
@@ -180,7 +180,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(CodeStatementChunk chunk)
         {
-            CodeIndent(chunk).AppendCode(chunk.Code, chunk.Snippets).AppendLine();
+            CodeIndent(chunk).AppendCode(chunk.Code).AppendLine();
             CodeDefault();
         }
 
@@ -189,7 +189,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             DeclareVariable(chunk.Name);
 
             CodeIndent(chunk).Append(chunk.Type).Append(' ').Append(chunk.Name);
-            if (!string.IsNullOrEmpty(chunk.Value))
+            if (!Snippets.IsNullOrEmpty(chunk.Value))
             {
                 _source.Append(" = ").Append(chunk.Value);
             }
@@ -209,7 +209,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
             DeclareVariable(chunk.Name);
             CodeIndent(chunk).Append(chunk.Type).Append(' ').Append(chunk.Name);
-            if (!string.IsNullOrEmpty(chunk.Value))
+            if (!Snippets.IsNullOrEmpty(chunk.Value))
             {
                 _source.Append(" = ").Append(chunk.Value);
             }
@@ -219,20 +219,23 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(ForEachChunk chunk)
         {
-            var terms = chunk.Code.Split(' ', '\r', '\n', '\t').ToList();
+            var terms = chunk.Code.ToString().Split(' ', '\r', '\n', '\t').ToList();
             var inIndex = terms.IndexOf("in");
-            string variableName = (inIndex < 2 ? null : terms[inIndex - 1]);
+            var variableName = (inIndex < 2 ? null : terms[inIndex - 1]);
 
             if (variableName == null)
             {
-                CodeIndent(chunk).AppendLine(string.Format("foreach({0})", chunk.Code));
+                CodeIndent(chunk)
+                    .Append("foreach(")
+                    .Append(chunk.Code)
+                    .AppendLine(")");
                 CodeDefault();
                 PushScope();
                 AppendIndent().AppendLine("{");
                 Indent += 4;
                 Accept(chunk.Body);
                 Indent -= 4;
-                AppendIndent().AppendLine(string.Format("}} //foreach {0}", chunk.Code.Replace("\r", "").Replace("\n", " ")));
+                AppendIndent().AppendLine(string.Format("}} //foreach {0}", chunk.Code.ToString().Replace("\r", "").Replace("\n", " ")));
                 PopScope();
             }
             else
@@ -270,7 +273,10 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                 }
 
                 Indent += 4;
-                CodeIndent(chunk).AppendFormat("foreach({0})\r\n", chunk.Code);
+                CodeIndent(chunk)
+                    .Append("foreach(")
+                    .Append(chunk.Code)
+                    .AppendLine(")");
                 CodeDefault();
 
                 PushScope();
@@ -300,7 +306,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                 _source.Append(' ').AppendLine("}");
                 PopScope();
 
-                AppendIndent().AppendFormat("}} //foreach {0}\r\n", chunk.Code.Replace("\r", "").Replace("\n", " "));
+                AppendIndent().AppendFormat("}} //foreach {0}\r\n", chunk.Code.ToString().Replace("\r", "").Replace("\n", " "));
                 PopScope();
             }
         }
@@ -323,7 +329,11 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(AssignVariableChunk chunk)
         {
-            CodeIndent(chunk).AppendLine(string.Format("{0} = {1};", chunk.Name, chunk.Value));
+            CodeIndent(chunk)
+                .Append(chunk.Name)
+                .Append(" = ")
+                .Append(chunk.Value)
+                .AppendLine(";");
             CodeDefault();
         }
 
@@ -454,7 +464,11 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             {
                 case ConditionalType.If:
                     {
-                        CodeIndent(chunk).AppendLine(string.Format("if ({0})", chunk.Condition));
+                        //CodeIndent(chunk).AppendLine(string.Format("if ({0})", chunk.Condition));
+                        CodeIndent(chunk)
+                            .Append("if (")
+                            .AppendCode(chunk.Condition)
+                            .AppendLine(")");
                         CodeDefault();
                         PushScope();
                         AppendIndent().AppendLine("{");
@@ -462,13 +476,17 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                         Accept(chunk.Body);
                         Indent -= 4;
                         AppendIndent().AppendLine(string.Format("}} // if ({0})",
-                                                                chunk.Condition.Replace("\r", "").Replace("\n", " ")));
+                                                                chunk.Condition.ToString().Replace("\r", "").Replace("\n", " ")));
                         PopScope();
                     }
                     break;
                 case ConditionalType.ElseIf:
                     {
-                        CodeIndent(chunk).AppendLine(string.Format("else if ({0})", chunk.Condition));
+                        //CodeIndent(chunk).AppendLine(string.Format("else if ({0})", chunk.Condition));
+                        CodeIndent(chunk)
+                            .Append("else if (")
+                            .AppendCode(chunk.Condition)
+                            .AppendLine(")");
                         CodeDefault();
                         PushScope();
                         AppendIndent().AppendLine("{");
@@ -476,7 +494,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                         Accept(chunk.Body);
                         Indent -= 4;
                         AppendIndent().AppendLine(string.Format("}} // else if ({0})",
-                                                                chunk.Condition.Replace("\r", "").Replace("\n", " ")));
+                                                                chunk.Condition.ToString().Replace("\r", "").Replace("\n", " ")));
                         PopScope();
                     }
                     break;
