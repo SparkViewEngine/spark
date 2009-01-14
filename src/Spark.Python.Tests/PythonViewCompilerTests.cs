@@ -179,7 +179,7 @@ namespace Spark.Python.Tests
         [Test]
         public void SendingIndentedExpressionOutput()
         {
-            var chunks = Chunks(new SendExpressionChunk { Code = "5 + 3", Position = new Position(null, 0, 50, 3, null) });
+            var chunks = Chunks(new SendExpressionChunk { Code = "5 + 3", Position = new Position(null, 100, 0, 50, 3, null) });
 
             _compiler.GenerateSourceCode(chunks, chunks);
             Assert.That(_compiler.SourceCode.Contains("5 + 3"));
@@ -569,14 +569,14 @@ namespace Spark.Python.Tests
         public void CallingMacro()
         {
             var macroBody = Chunks(
-                new SendLiteralChunk {Text = "1"});
+                new SendLiteralChunk { Text = "1" });
 
             var chunks = Chunks(
-                new MacroChunk {Name = "Foo", Body = macroBody[0]},
-                new LocalVariableChunk {Name = "x", Value = "Foo()"},
-                new SendLiteralChunk {Text = "2"},
-                new SendExpressionChunk {Code = "x"},
-                new SendLiteralChunk {Text = "3"});
+                new MacroChunk { Name = "Foo", Body = macroBody[0] },
+                new LocalVariableChunk { Name = "x", Value = "Foo()" },
+                new SendLiteralChunk { Text = "2" },
+                new SendExpressionChunk { Code = "x" },
+                new SendLiteralChunk { Text = "3" });
 
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();

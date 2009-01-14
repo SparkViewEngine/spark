@@ -32,10 +32,14 @@ namespace Spark.Tests.Visitors
         [Test]
         public void FindLoopParameters()
         {
+            var context = new VisitorContext
+                              {
+                                  SyntaxProvider = new DefaultSyntaxProvider(new SparkSettings())
+                              };
             var nodes = ParseNodes("<for each='var x in new [] {1,2,3}'>${xIndex}${xIsLast}</for>",
-                                   new SpecialNodeVisitor(new VisitorContext()));
+                                   new SpecialNodeVisitor(context));
 
-            var visitor = new ChunkBuilderVisitor(new VisitorContext());
+            var visitor = new ChunkBuilderVisitor(context);
             visitor.Accept(nodes);
 
             var expressionVisitor = new DetectCodeExpressionVisitor(null);

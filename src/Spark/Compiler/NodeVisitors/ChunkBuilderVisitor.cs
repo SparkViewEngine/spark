@@ -407,7 +407,7 @@ namespace Spark.Compiler.NodeVisitors
             var end = LocateEnd(attr.Nodes.LastOrDefault());
             if (begin == null || end == null)
             {
-                begin = new Position(new SourceContext(attr.ToString()));
+                begin = new Position(new SourceContext(attr.Value));
                 end = begin.Advance(begin.PotentialLength());
             }
             return Context.SyntaxProvider.ParseFragment(begin, end);

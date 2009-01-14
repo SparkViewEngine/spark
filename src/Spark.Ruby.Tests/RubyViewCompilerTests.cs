@@ -179,7 +179,7 @@ namespace Spark.Ruby.Tests
         [Test]
         public void SendingIndentedExpressionOutput()
         {
-            var chunks = Chunks(new SendExpressionChunk { Code = "5 + 3", Position = new Position(null, 0, 50, 3, null) });
+            var chunks = Chunks(new SendExpressionChunk { Code = "5 + 3", Position = new Position(null, 100, 0, 50, 3, null) });
 
             _compiler.GenerateSourceCode(chunks, chunks);
             Assert.That(_compiler.SourceCode.Contains("5 + 3"));
