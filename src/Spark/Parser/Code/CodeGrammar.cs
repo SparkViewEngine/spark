@@ -107,9 +107,33 @@ namespace Spark.Parser.Code
             var identifier = availableIdentifier
                 .Or(Snip(Ch('@').And(identifierOrKeyword), hit => "@" + hit.Down));
 
+            // parsing late bound properties #a.b.c into Eval("a.b.c")
+
+            var dotProperty = Snip(Ch('.').And(identifierOrKeyword),
+                                   hit => hit.Left + hit.Down);
+
+            var formatAppendage = Swap(Opt(Rep(Ch(' ', '\t')))
+                                           .And(Ch('\"').And(Rep1(ChNot('\"'))).And(Ch('\"'))
+                                                    .Or(Ch('\'').And(Rep1(ChNot('\''))).And(Ch('\'')))),
+                                       hit => ", \"{0:" + new string(hit.Down.Left.Down.ToArray()) + "}\"");
+
+            var lateBound = Ch('#')
+                .And(Snip(identifierOrKeyword))
+                .And(Snip(Rep(dotProperty)))
+                .And(Opt(formatAppendage))
+                .Build(hit => (IList<Snippet>) new Snippets("Eval(\"")
+                                                   .Concat(hit.Left.Left.Down)
+                                                   .Concat(hit.Left.Down)
+                                                   .Concat(new Snippets("\""))
+                                                   .Concat(hit.Down ?? new Snippet[0])
+                                                   .Concat(new Snippets(")"))
+                                                   .ToList());
+
+
             var codeStretch = Snip(Rep1(
                 Swap(Ch("[["), "<")
                 .Or(Swap(Ch("]]"), ">"))
+                .Or(lateBound)
                 .Or(Snip(ChNot('\"', '\'', '{', '}')))
                 .Unless(identifier.Or(keyword).Or(SpecialCharCast))
                 .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")))));
@@ -137,6 +161,7 @@ namespace Spark.Parser.Code
             var statementPiece =
                 Swap(Ch("[["), "<")
                 .Or(Swap(Ch("]]"), ">"))
+                .Or(lateBound)
                 .Or(Snip(ChNot('\"', '\'')))
                 .Unless(SpecialCharCast)
                 .Unless(Ch("@\"").Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")));
@@ -258,6 +283,16 @@ namespace Spark.Parser.Code
                 var result = parser(position);
                 if (result == null) return null;
                 var snippet = new Snippet { Value = replacement };
+                return new ParseResult<IList<Snippet>>(result.Rest, new[] { snippet });
+            };
+        }
+        static ParseAction<IList<Snippet>> Swap<TValue>(ParseAction<TValue> parser, Func<TValue, string> replacement)
+        {
+            return position =>
+            {
+                var result = parser(position);
+                if (result == null) return null;
+                var snippet = new Snippet { Value = replacement(result.Value) };
                 return new ParseResult<IList<Snippet>>(result.Rest, new[] { snippet });
             };
         }

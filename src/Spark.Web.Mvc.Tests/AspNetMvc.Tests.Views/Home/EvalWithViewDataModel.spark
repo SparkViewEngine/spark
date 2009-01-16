@@ -1,0 +1,3 @@
+﻿
+<viewdata model="Spark.Web.Mvc.Tests.Models.Comment"/>
+<p>${#Text}</p>

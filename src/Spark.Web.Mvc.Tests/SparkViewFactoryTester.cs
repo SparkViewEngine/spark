@@ -470,5 +470,42 @@ namespace Spark.Web.Mvc.Tests
             Assert.AreSame(viewFolder, viewEngine.ViewFolder);
             Assert.AreSame(viewFolder, viewFactory.ViewFolder);
         }
+
+
+        [Test]
+        public void EvalWithViewDataModel()
+        {
+            mocks.ReplayAll();
+            FindViewAndRender("EvalWithViewDataModel", new Comment { Text = "Hello" });
+            mocks.VerifyAll();
+
+            var content = output.ToString();
+            Assert.That(content.Contains("<p>Hello</p>"));
+        }
+
+        [Test]
+        public void EvalWithAnonModel()
+        {
+            mocks.ReplayAll();
+            FindViewAndRender("EvalWithAnonModel", new { Foo = 42, Bar = new Comment { Text = "Hello" } });
+            mocks.VerifyAll();
+
+            var content = output.ToString();
+            Assert.That(content.Contains("<p>42 Hello</p>"));
+        }
+
+
+        [Test]
+        public void EvalWithFormatString()
+        {
+            mocks.ReplayAll();
+            FindViewAndRender("EvalWithFormatString", new { Cost = 134567.89, terms = new { due = new DateTime(1971, 10, 14) } });
+            mocks.VerifyAll();
+
+            var content = output.ToString();
+            Assert.That(content.Contains("<p>134,567.89</p>"));
+            Assert.That(content.Contains("<p>1971/10/14</p>"));
+        }
+
     }
 }

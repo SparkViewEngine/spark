@@ -45,6 +45,11 @@ namespace Spark.Tests.Stubs
         {
             return HttpUtility.HtmlEncode(Convert.ToString(content));
         }
+
+        public object Eval(string expression)
+        {
+            return ViewData.Eval(expression);
+        }
     }
 
     public abstract class StubSparkView<TModel> : StubSparkView

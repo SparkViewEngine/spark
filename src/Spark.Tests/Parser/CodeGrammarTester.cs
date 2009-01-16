@@ -208,5 +208,24 @@ namespace Spark.Tests.Parser
             Assert.AreEqual(@"var @class=1;", Combine(result7.Value));
         }
 
+        [Test]        
+        public void LateBoundSyntaxBecomesEvalFunction()
+        {
+            var result1 = _grammar.Expression(Source("#foo.bar"));
+            Assert.AreEqual(@"Eval(""foo.bar"")", (string) result1.Value);
+
+            var result2 = _grammar.Expression(Source("#foo .bar"));
+            Assert.AreEqual(@"Eval(""foo"") .bar", (string)result2.Value);
+
+            var result3 = _grammar.Expression(Source("(string)#foo+'bar'"));
+            Assert.AreEqual(@"(string)Eval(""foo"")+""bar""", (string)result3.Value);
+
+            var result4 = _grammar.Statement1(Source("Logger.Warn(#some.thing)"));
+            Assert.AreEqual(@"Logger.Warn(Eval(""some.thing""))", (string)new Snippets(result4.Value));
+
+            var result5 = _grammar.Statement1(Source("Logger.Warn(#some.thing)"));
+            Assert.AreEqual(@"Logger.Warn(Eval(""some.thing""))", (string)new Snippets(result5.Value));
+        }
+
     }
 }

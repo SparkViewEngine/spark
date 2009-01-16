@@ -140,6 +140,15 @@ namespace Spark.Web.Mvc
             return Html.Encode(value);
         }
 
+        public object Eval(string expression)
+        {
+            return ViewData.Eval(expression);
+        }
+        public string Eval(string expression, string format)
+        {
+            return ViewData.Eval(expression, format);
+        }
+
         protected virtual void SetViewData(ViewDataDictionary viewData)
         {
             _viewData = viewData;

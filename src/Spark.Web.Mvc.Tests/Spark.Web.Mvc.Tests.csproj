@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C8E58F51-8630-4420-8630-8E634EC8900E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -88,6 +88,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AspNetMvc.Tests.Views\Home\childview.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Home\EvalWithFormatString.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Home\EvalWithAnonModel.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Home\EvalWithViewDataModel.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="AspNetMvc.Tests.Views\Home\foreach.spark">

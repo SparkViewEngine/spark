@@ -875,56 +875,56 @@ namespace Spark.Tests
         }
 
 
-		[Test]
-		public void EachAttributeWorksOnSpecialNodes()
-		{
-			mocks.ReplayAll();
-			var viewContext = MakeViewContext("EachAttributeWorksOnSpecialNodes", null);
-			factory.RenderView(viewContext);
-			mocks.VerifyAll();
-			string content = sb.ToString();
+        [Test]
+        public void EachAttributeWorksOnSpecialNodes()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("EachAttributeWorksOnSpecialNodes", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
 
-			ContainsInOrder(content,
-			                "<p>name-0-alpha</p>",
-			                "<p>name-1-beta</p>",
-			                "<p>name-2-gamma</p>",
-							"<span>one</span>",
-							"<span>two</span>",
-							"<span>three</span>");
-		}
+            ContainsInOrder(content,
+                            "<p>name-0-alpha</p>",
+                            "<p>name-1-beta</p>",
+                            "<p>name-2-gamma</p>",
+                            "<span>one</span>",
+                            "<span>two</span>",
+                            "<span>three</span>");
+        }
 
-		[Test]
-		public void IfAttributeWorksOnSpecialNodes()
-		{
-			mocks.ReplayAll();
-			var viewContext = MakeViewContext("IfAttributeWorksOnSpecialNodes", null);
-			factory.RenderView(viewContext);
-			mocks.VerifyAll();
-			string content = sb.ToString();
+        [Test]
+        public void IfAttributeWorksOnSpecialNodes()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("IfAttributeWorksOnSpecialNodes", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
 
-			ContainsInOrder(content,
-							"<p>name-0-alpha</p>",
-							"<p>name-2-gamma</p>",
-							"<span>one</span>",
-							"<span>three</span>");
+            ContainsInOrder(content,
+                            "<p>name-0-alpha</p>",
+                            "<p>name-2-gamma</p>",
+                            "<span>one</span>",
+                            "<span>three</span>");
 
-			Assert.IsFalse(content.Contains("beta"));
-			Assert.IsFalse(content.Contains("two"));
-		}
+            Assert.IsFalse(content.Contains("beta"));
+            Assert.IsFalse(content.Contains("two"));
+        }
 
-		[Test]
+        [Test]
         public void OnceAttributeWorksOnSpecialNodes()
-		{
-			mocks.ReplayAll();
+        {
+            mocks.ReplayAll();
             var viewContext = MakeViewContext("OnceAttributeWorksOnSpecialNodes", null);
-			factory.RenderView(viewContext);
-			mocks.VerifyAll();
-			string content = sb.ToString();
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
 
-			ContainsInOrder(content,
-							"<p>name-0-alpha</p>",
-							"<span>foo1</span>",
-							"<span>bar0</span>",
+            ContainsInOrder(content,
+                            "<p>name-0-alpha</p>",
+                            "<span>foo1</span>",
+                            "<span>bar0</span>",
                             "<span>quux2</span>");
 
             Assert.IsFalse(content.Contains("name-1"));
@@ -934,5 +934,28 @@ namespace Spark.Tests
             Assert.IsFalse(content.Contains("bar1"));
             Assert.IsFalse(content.Contains("bar3"));
         }
+
+        [Test]
+        public void LateBoundEvalResolvesViewData()
+        {
+            mocks.ReplayAll();
+            var viewData = new StubViewData()
+                               {
+                                   {"alpha", "<strong>hi</strong>"},
+                                   {"beta", "yadda"}
+                               };
+            var viewContext = MakeViewContext("LateBoundEvalResolvesViewData", null, viewData);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                            "<p><strong>hi</strong></p>",
+                            "<p>&lt;strong&gt;hi&lt;/strong&gt;</p>",
+                            "yadda",
+                            "<p>42</p>");
+
+        }
+
     }
 }
