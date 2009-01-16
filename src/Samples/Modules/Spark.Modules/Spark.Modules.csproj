@@ -71,6 +71,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlockBase.cs" />
+    <Compile Include="BlockBuilder.cs" />
     <Compile Include="EmbeddedContentRouteHandler.cs" />
     <Compile Include="IBlock.cs" />
     <Compile Include="IBlockFactory.cs" />

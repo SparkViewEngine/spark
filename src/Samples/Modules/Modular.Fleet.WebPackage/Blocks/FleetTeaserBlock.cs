@@ -4,13 +4,11 @@ using Spark.Modules;
 
 namespace Modular.Fleet.WebPackage.Blocks
 {
-    public class FleetTeaserBlock : IBlock
+    public class FleetTeaserBlock : BlockBase
     {
-        public HtmlHelper Html { get; set; }
-
         private static int _counter;
 
-        public void RenderBlock()
+        public override void RenderBlock()
         {
             // evil! just a demo! honest!
             _counter++;

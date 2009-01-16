@@ -9,7 +9,7 @@ using Spark.Modules;
 
 namespace Modular.Navigation.WebPackage.Blocks
 {
-    public class MenuBlock : IBlock
+    public class MenuBlock : BlockBase
     {
         private readonly INavRegistry _navRegistry;
 
@@ -18,9 +18,7 @@ namespace Modular.Navigation.WebPackage.Blocks
             _navRegistry = navRegistry;
         }
 
-        public HtmlHelper Html { get; set; }
-
-        public void RenderBlock()
+        public override void RenderBlock()
         {
             Html.RenderPartial(@"Navigation\Menu\Block", _navRegistry.ListItems());
         }

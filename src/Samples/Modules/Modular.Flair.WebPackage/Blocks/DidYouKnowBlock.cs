@@ -9,7 +9,7 @@ using Spark.Modules;
 
 namespace Modular.Flair.WebPackage.Blocks
 {
-    public class DidYouKnowBlock : IBlock
+    public class DidYouKnowBlock : BlockBase
     {
         private readonly ITriviaProvider _triviaProvider;
 
@@ -18,9 +18,7 @@ namespace Modular.Flair.WebPackage.Blocks
             _triviaProvider = triviaProvider;
         }
 
-        public HtmlHelper Html { get; set; }
-
-        public void RenderBlock()
+        public override void RenderBlock()
         {
             Html.RenderPartial(@"Flair\DidYouKnow\Block", _triviaProvider.GetRandomTrivia());
         }

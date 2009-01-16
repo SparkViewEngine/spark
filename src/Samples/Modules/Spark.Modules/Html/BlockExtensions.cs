@@ -7,13 +7,32 @@ namespace Spark.Modules.Html
     {
         public static void RenderBlock(this HtmlHelper helper, string blockName)
         {
-            var controllerFactory = ControllerBuilder.Current.GetControllerFactory();
-            var blockFactory = controllerFactory as IBlockFactory;
-            if (blockFactory == null)
-                throw new ApplicationException("IBlockFactory not available");
+            RenderBlockImplementation(blockName, helper.ViewContext, helper.ViewData);
+        }
 
-            var block = blockFactory.CreateBlock(helper.ViewContext, blockName);
-            block.RenderBlock();
+        public static void RenderBlock(this HtmlHelper helper, string blockName, object model)
+        {
+            RenderBlockImplementation(blockName, helper.ViewContext, new ViewDataDictionary(model));
+        }
+
+        public static void RenderBlock(this HtmlHelper helper, string blockName, ViewDataDictionary viewData)
+        {
+            RenderBlockImplementation(blockName, helper.ViewContext, viewData);
+        }
+
+        public static void RenderBlock(this HtmlHelper helper, string blockName, object model, ViewDataDictionary viewData)
+        {
+            RenderBlockImplementation(blockName, helper.ViewContext, new ViewDataDictionary(viewData) { Model = model });
+        }
+
+        private static void RenderBlockImplementation(string blockName, ViewContext viewContext, ViewDataDictionary viewData)
+        {
+            var blockFactory = BlockBuilder.Current.GetBlockFactory();
+            if (blockFactory == null)
+                throw new ApplicationException("IBlockFactory not available from current controller factory");
+
+            var block = blockFactory.CreateBlock(blockName);
+            block.RenderBlock(viewContext);
             blockFactory.ReleaseBlock(block);
         }
     }

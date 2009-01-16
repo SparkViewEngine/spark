@@ -4,7 +4,7 @@ namespace Spark.Modules
 {
     public interface IBlockFactory
     {
-        IBlock CreateBlock(ViewContext viewContext, string blockName);
+        IBlock CreateBlock(string blockName);
         void ReleaseBlock(IBlock block);
     }
 }

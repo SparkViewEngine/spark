@@ -1,7 +1,9 @@
+using System.Web.Mvc;
+
 namespace Spark.Modules
 {
     public interface IBlock
     {
-        void RenderBlock();
+        void RenderBlock(ViewContext viewContext);
     }
 }

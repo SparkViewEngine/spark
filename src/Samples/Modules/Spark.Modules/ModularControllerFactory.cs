@@ -38,14 +38,10 @@ namespace Spark.Modules
             _kernel.ReleaseComponent(controller);
         }
 
-        public IBlock CreateBlock(ViewContext viewContext, string blockName)
+        public IBlock CreateBlock(string blockName)
         {
             var key = blockName.ToLowerInvariant() + "block";
-            var arguments = new Dictionary<string, object>
-                                {
-                                    {"Html", new HtmlHelper(viewContext, (IViewDataContainer)viewContext.View)}
-                                };
-            return _kernel.Resolve<IBlock>(key, arguments);
+            return _kernel.Resolve<IBlock>(key);
         }
 
         public void ReleaseBlock(IBlock block)

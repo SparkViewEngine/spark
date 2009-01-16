@@ -9,7 +9,7 @@ using Spark.Modules;
 
 namespace Modular.Games.WebPackage.Blocks
 {
-    public class HighScoreBlock : IBlock
+    public class HighScoreBlock : BlockBase
     {
         private readonly IHighScoreRepository _highScoreRepository;
 
@@ -18,11 +18,10 @@ namespace Modular.Games.WebPackage.Blocks
             _highScoreRepository = highScoreRepository;
         }
 
-        public HtmlHelper Html { get; set; }
-
-        public void RenderBlock()
+        public override void RenderBlock()
         {
             Html.RenderPartial(@"Games\Home\Scores", _highScoreRepository.ListScores().Take(3));
         }
+
     }
 }
