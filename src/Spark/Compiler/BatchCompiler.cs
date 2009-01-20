@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using Microsoft.CSharp;
 
@@ -38,6 +39,9 @@ namespace Spark.Compiler
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
+                if (assembly is AssemblyBuilder)
+                    continue;
+
                 string location;
                 try
                 {
@@ -49,7 +53,6 @@ namespace Spark.Compiler
                 }
                 compilerParameters.ReferencedAssemblies.Add(location);
             }
-
 
             CompilerResults compilerResults;
             var basePath = AppDomain.CurrentDomain.SetupInformation.DynamicBase ?? Path.GetTempPath();
@@ -116,7 +119,7 @@ namespace Spark.Compiler
                 {
                     using (var reader = new StringReader(sourceCodeItem))
                     {
-                        for (int lineNumber = 1;; ++lineNumber)
+                        for (int lineNumber = 1; ; ++lineNumber)
                         {
                             var line = reader.ReadLine();
                             if (line == null)
@@ -126,7 +129,7 @@ namespace Spark.Compiler
                     }
                 }
                 throw new CompilerException(sb.ToString());
-            }
+            }   
 
             return compilerResults.CompiledAssembly;
         }
