@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework.SyntaxHelpers;
@@ -136,23 +138,61 @@ namespace Spark.Tests.Parser
             syntaxProvider.VerifyAllExpectations();
         }
 
+
+
         [Test]
         public void ExpiresWhenFilesChange()
         {
-            var source = ExpectGetChunks("home\\changing.spark", new SendLiteralChunk { Text = "Hello world" });
-            viewSourceLoader.Expect(x => x.GetViewSource("home\\changing.spark")).Return(source);
-            source.Expect(x => x.LastModified).Return(0);
-            viewSourceLoader.Expect(x => x.GetViewSource("home\\changing.spark")).Return(source);
-            source.Expect(x => x.LastModified).Return(42);
+            var viewFolder = new StubViewFolder { Path = "home\\changing.spark", LastModified = 4 };
 
-            viewSourceLoader.Stub(x => x.HasView("home\\_global.spark")).Return(false);
-            viewSourceLoader.Stub(x => x.HasView("Shared\\_global.spark")).Return(false);
+            var viewLoader = new ViewLoader
+                             {
+                                 ViewFolder = viewFolder,
+                                 SyntaxProvider = MockRepository.GenerateStub<ISparkSyntaxProvider>()
+                             };
+            viewLoader.SyntaxProvider
+                .Expect(x => x.GetChunks(null, null))
+                .IgnoreArguments()
+                .Return(new Chunk[0]);
 
-            loader.Load("home\\changing.spark");
-            Assert.That(loader.IsCurrent());
-            Assert.That(!loader.IsCurrent());
-            viewSourceLoader.VerifyAllExpectations();
-            syntaxProvider.VerifyAllExpectations();
+            viewLoader.Load("home\\changing.spark");
+
+            Assert.That(viewLoader.IsCurrent());
+
+            viewFolder.LastModified = 7;
+            Assert.That(!viewLoader.IsCurrent());
+        }
+
+        public class StubViewFolder : IViewFolder, IViewFile
+        {
+            public string Path { get; set; }
+            public long LastModified { get; set; }
+
+            public IViewFile GetViewSource(string path)
+            {
+                if (string.Equals(path, Path, StringComparison.InvariantCultureIgnoreCase))
+                    return this;
+
+                throw new System.NotImplementedException();
+            }
+
+            public IList<string> ListViews(string path)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public bool HasView(string path)
+            {
+                if (string.Equals(path, Path, StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+
+                return false;
+            }
+
+            public Stream OpenViewStream()
+            {
+                throw new System.NotImplementedException();
+            }
         }
 
         [Test]
