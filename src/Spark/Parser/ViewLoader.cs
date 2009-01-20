@@ -29,15 +29,15 @@ namespace Spark.Parser
     {
         private const string templateFileExtension = "spark";
 
-        private IViewFolder viewFolder;
+        private IViewFolder _viewFolder;
 
         readonly Dictionary<string, Entry> _entries = new Dictionary<string, Entry>();
         readonly List<string> _pending = new List<string>();
 
         public IViewFolder ViewFolder
         {
-            get { return viewFolder; }
-            set { viewFolder = value; }
+            get { return _viewFolder; }
+            set { _viewFolder = value; }
         }
 
         public ParseAction<IList<Node>> Parser { get; set; }
@@ -60,6 +60,8 @@ namespace Spark.Parser
 
             public long LastModified { get; set; }
 
+            public IViewFile ViewFile { get; set; }
+
             public IList<Chunk> Chunks
             {
                 get { return FileContext.Contents; }
@@ -77,9 +79,9 @@ namespace Spark.Parser
             if (_entries.ContainsKey(referencePath))
                 return _entries[referencePath];
 
-            var viewSource = viewFolder.GetViewSource(referencePath);
+            var viewSource = _viewFolder.GetViewSource(referencePath);
 
-            var newEntry = new Entry { ViewPath = referencePath, LastModified = viewSource.LastModified };
+            var newEntry = new Entry { ViewPath = referencePath, ViewFile = viewSource, LastModified = viewSource.LastModified };
             _entries.Add(referencePath, newEntry);
             _pending.Add(referencePath);
             return newEntry;
@@ -87,20 +89,10 @@ namespace Spark.Parser
 
         public virtual bool IsCurrent()
         {
-            foreach (var entry in _entries.Values)
-            {
-                var viewSource = viewFolder.GetViewSource(entry.ViewPath);
-                if (viewSource.LastModified != entry.LastModified)
-                    return false;
-            }
-            return true;
+            // The view is current if all entries' last modified value is the
+            // same as when it was created. 
+            return _entries.All(entry => entry.Value.ViewFile.LastModified == entry.Value.LastModified);
         }
-
-
-        //public IList<Chunk> Load(string controllerName, string viewName)
-        //{
-        //    return Load(ResolveView(controllerName, viewName));
-        //}
 
         public IList<Chunk> Load(string viewPath)
         {
