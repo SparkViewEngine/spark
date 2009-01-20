@@ -17,7 +17,7 @@ using System.Web;
 
 namespace Spark.Tests.Stubs
 {
-    public abstract class StubSparkView : AbstractSparkView
+    public abstract class StubSparkView : SparkViewBase
     {
         protected StubSparkView()
         {

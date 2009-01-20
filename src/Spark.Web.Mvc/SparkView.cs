@@ -19,7 +19,7 @@ using HttpContextWrapper = Spark.Web.Mvc.Wrappers.HttpContextWrapper;
 
 namespace Spark.Web.Mvc
 {
-    public abstract class SparkView : AbstractSparkView, IViewDataContainer, IView
+    public abstract class SparkView : SparkViewBase, IViewDataContainer, IView
     {
         private string _siteRoot;
         private ViewDataDictionary _viewData;
@@ -115,8 +115,8 @@ namespace Spark.Web.Mvc
                 // assume the values of the outer view collections
                 foreach (var kv in outerView.Content)
                     Content.Add(kv.Key, kv.Value);
-                foreach (var kv in outerView._once)
-                    _once.Add(kv.Key, kv.Value);
+                foreach (var kv in outerView.OnceTable)
+                    OnceTable.Add(kv.Key, kv.Value);
             }
 
             RenderView(writer);
@@ -129,10 +129,10 @@ namespace Spark.Web.Mvc
                     if (!outerView.Content.ContainsKey(kv.Key))
                         Content.Add(kv.Key, kv.Value);
                 }
-                foreach (var kv in _once)
+                foreach (var kv in OnceTable)
                 {
-                    if (!outerView._once.ContainsKey(kv.Key))
-                        outerView._once.Add(kv.Key, kv.Value);
+                    if (!outerView.OnceTable.ContainsKey(kv.Key))
+                        outerView.OnceTable.Add(kv.Key, kv.Value);
                 }
             }
             else
