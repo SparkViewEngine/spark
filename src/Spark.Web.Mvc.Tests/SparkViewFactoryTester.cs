@@ -507,5 +507,29 @@ namespace Spark.Web.Mvc.Tests
             Assert.That(content.Contains("<p>1971/10/14</p>"));
         }
 
+        [Test]
+        public void RenderPartialSharesState()
+        {
+            mocks.ReplayAll();
+            FindViewAndRender("RenderPartialSharesState");
+            mocks.VerifyAll();
+
+            var content = output.ToString();
+            ContainsInOrder(content,
+                            "<p>before</p>",
+                            "<p>foo1</p>",
+                            "<p>bar3</p>",
+                            "<p>The Target</p>",
+                            "<p>quux6</p>",
+                            "<p>after</p>",
+                            "<ul>",
+                            "<li>one</li>",
+                            "<li>three</li>",
+                            "<li>two</li>",
+                            "</ul>");
+            Assert.IsFalse(content.Contains("foo2"));
+            Assert.IsFalse(content.Contains("bar4"));
+            Assert.IsFalse(content.Contains("quux7"));
+        }
     }
 }

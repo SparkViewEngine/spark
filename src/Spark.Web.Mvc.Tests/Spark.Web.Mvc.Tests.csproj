@@ -90,6 +90,12 @@
     <None Include="AspNetMvc.Tests.Views\Home\childview.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="AspNetMvc.Tests.Views\Home\RenderPartialTarget.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Home\RenderPartialSharesState.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="AspNetMvc.Tests.Views\Home\EvalWithFormatString.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

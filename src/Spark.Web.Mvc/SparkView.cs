@@ -15,7 +15,7 @@
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using HttpContextWrapper=Spark.Web.Mvc.Wrappers.HttpContextWrapper;
+using HttpContextWrapper = Spark.Web.Mvc.Wrappers.HttpContextWrapper;
 
 namespace Spark.Web.Mvc
 {
@@ -99,22 +99,48 @@ namespace Spark.Web.Mvc
 
         public void Render(ViewContext viewContext, TextWriter writer)
         {
-            var httpContext = new HttpContextWrapper(viewContext.HttpContext, this);
-            var wrapped = new ViewContext(httpContext, viewContext.RouteData, viewContext.Controller,
+            var wrappedHttpContext = new HttpContextWrapper(viewContext.HttpContext, this);
+            var wrappedViewContext = new ViewContext(wrappedHttpContext, viewContext.RouteData, viewContext.Controller,
                                           viewContext.View, viewContext.ViewData, viewContext.TempData);
 
-            ViewContext = wrapped;
-            ViewData = wrapped.ViewData;
-            Html = new HtmlHelper(wrapped, this);
-            Url = new UrlHelper(wrapped);
-            Ajax = new AjaxHelper(wrapped);
+            ViewContext = wrappedViewContext;
+            ViewData = wrappedViewContext.ViewData;
+            Html = new HtmlHelper(wrappedViewContext, this);
+            Url = new UrlHelper(wrappedViewContext);
+            Ajax = new AjaxHelper(wrappedViewContext);
+
+            var outerView = ViewContext.View as SparkView;
+            if (outerView != null && !ReferenceEquals(this, outerView))
+            {
+                // assume the values of the outer view collections
+                foreach (var kv in outerView.Content)
+                    Content.Add(kv.Key, kv.Value);
+                foreach (var kv in outerView._once)
+                    _once.Add(kv.Key, kv.Value);
+            }
 
             RenderView(writer);
 
-            // proactively dispose named content. pools spoolwriter pages. avoids finalizers.
-            foreach (var content in Content.Values)
-                content.Close();
-
+            if (outerView != null && !ReferenceEquals(this, outerView))
+            {
+                // inject added values into outer view collections
+                foreach (var kv in Content)
+                {
+                    if (!outerView.Content.ContainsKey(kv.Key))
+                        Content.Add(kv.Key, kv.Value);
+                }
+                foreach (var kv in _once)
+                {
+                    if (!outerView._once.ContainsKey(kv.Key))
+                        outerView._once.Add(kv.Key, kv.Value);
+                }
+            }
+            else
+            {
+                // proactively dispose named content. pools spoolwriter pages. avoids finalizers.
+                foreach (var content in Content.Values)
+                    content.Close();
+            }
             Content.Clear();
         }
 
@@ -158,7 +184,7 @@ namespace Spark.Web.Mvc
     public abstract class SparkView<TModel> : SparkView where TModel : class
     {
         private ViewDataDictionary<TModel> _viewData;
-        
+
         public new ViewDataDictionary<TModel> ViewData
         {
             get

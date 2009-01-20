@@ -129,7 +129,7 @@ namespace Spark.Compiler
                     }
                 }
                 throw new CompilerException(sb.ToString());
-            }
+            }   
 
             return compilerResults.CompiledAssembly;
         }
