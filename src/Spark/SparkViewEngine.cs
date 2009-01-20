@@ -189,17 +189,15 @@ namespace Spark
 
         public ISparkViewEntry GetEntry(SparkViewDescriptor descriptor)
         {
-            var key = CreateKey(descriptor);
-            return CompiledViewHolder.Current.Lookup(key);
+            return CompiledViewHolder.Current.Lookup(descriptor);
         }
 
         public ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor)
         {
-            var key = CreateKey(descriptor);
-            var entry = CompiledViewHolder.Current.Lookup(key);
+            var entry = CompiledViewHolder.Current.Lookup(descriptor);
             if (entry == null)
             {
-                entry = CreateEntry(key);
+                entry = CreateEntryImplementation(descriptor, true);
                 CompiledViewHolder.Current.Store(entry);
             }
             return entry;
@@ -219,33 +217,20 @@ namespace Spark
                 entry.ReleaseInstance(view);
         }
 
-        public CompiledViewHolder.Key CreateKey(SparkViewDescriptor descriptor)
+        public CompiledViewEntry CreateEntryImplementation(SparkViewDescriptor descriptor, bool compile)
         {
-            return new CompiledViewHolder.Key
-                        {
-                            Descriptor = descriptor
-                        };
-        }
-
-        public CompiledViewHolder.Entry CreateEntry(CompiledViewHolder.Key key)
-        {
-            return CreateEntry(key, true);
-        }
-        
-        public CompiledViewHolder.Entry CreateEntry(CompiledViewHolder.Key key, bool compile)
-        {
-            var entry = new CompiledViewHolder.Entry
+            var entry = new CompiledViewEntry
             {
-                Key = key,
+                Descriptor = descriptor,
                 Loader = CreateViewLoader(),
-                Compiler = LanguageFactory.CreateViewCompiler(this, key.Descriptor),
+                Compiler = LanguageFactory.CreateViewCompiler(this, descriptor),
                 LanguageFactory = LanguageFactory
             };
 
 
             var chunksLoaded = new List<IList<Chunk>>();
             var templatesLoaded = new List<string>();
-            LoadTemplates(entry.Loader, key.Descriptor.Templates, chunksLoaded, templatesLoaded);
+            LoadTemplates(entry.Loader, entry.Descriptor.Templates, chunksLoaded, templatesLoaded);
 
             if (compile)
             {
@@ -253,7 +238,7 @@ namespace Spark
 
                 entry.Activator = ViewActivatorFactory.Register(entry.Compiler.CompiledType);
             }
-            else 
+            else
             {
                 entry.Compiler.GenerateSourceCode(chunksLoaded, entry.Loader.GetEverythingLoaded());
             }
@@ -296,7 +281,7 @@ namespace Spark
                     throw new CompilerException(string.Format(
                                                     "Unable to find master layout file for '{0}'", useMaster.Chunk.Name));
                 }
-                LoadTemplates(loader, new[] {result.Path}, chunksLoaded, templatesLoaded);
+                LoadTemplates(loader, new[] { result.Path }, chunksLoaded, templatesLoaded);
 
                 // Explicit master templates loaded recursively. This loop is abandoned.
                 return;
@@ -332,14 +317,14 @@ namespace Spark
 
         public Assembly BatchCompilation(string outputAssembly, IList<SparkViewDescriptor> descriptors)
         {
-            var batch = new List<CompiledViewHolder.Entry>();
+            var batch = new List<CompiledViewEntry>();
             var sourceCode = new List<string>();
 
             foreach (var descriptor in descriptors)
             {
-                var entry = new CompiledViewHolder.Entry
+                var entry = new CompiledViewEntry
                 {
-                    Key = CreateKey(descriptor),
+                    Descriptor = descriptor,
                     Loader = CreateViewLoader(),
                     Compiler = LanguageFactory.CreateViewCompiler(this, descriptor)
                 };
@@ -381,9 +366,9 @@ namespace Spark
 
                 var descriptor = ((SparkViewAttribute)attributes[0]).BuildDescriptor();
 
-                var entry = new CompiledViewHolder.Entry
+                var entry = new CompiledViewEntry
                                 {
-                                    Key = new CompiledViewHolder.Key { Descriptor = descriptor },
+                                    Descriptor = descriptor,
                                     Loader = new ViewLoader(),
                                     Compiler = new DefaultViewCompiler { CompiledType = type },
                                     Activator = ViewActivatorFactory.Register(type)

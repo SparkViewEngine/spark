@@ -12,11 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Precompiled;
@@ -86,8 +82,8 @@ namespace Spark.Tests
             var attribs = types[0].GetCustomAttributes(typeof(SparkViewAttribute), false);
             var sparkViewAttrib = (SparkViewAttribute)attribs[0];
 
-            var key0 = new CompiledViewHolder.Key { Descriptor = descriptor };
-            var key1 = new CompiledViewHolder.Key { Descriptor = sparkViewAttrib.BuildDescriptor() };
+            var key0 = descriptor;
+            var key1 = sparkViewAttrib.BuildDescriptor();
 
             Assert.AreEqual(key0, key1);
         }
@@ -105,8 +101,8 @@ namespace Spark.Tests
             var attribs = types[0].GetCustomAttributes(typeof(SparkViewAttribute), false);
             var sparkViewAttrib = (SparkViewAttribute)attribs[0];
 
-            var key0 = new CompiledViewHolder.Key { Descriptor = descriptor };
-            var key1 = new CompiledViewHolder.Key { Descriptor = sparkViewAttrib.BuildDescriptor() };
+            var key0 = descriptor;
+            var key1 = sparkViewAttrib.BuildDescriptor();
 
             Assert.AreEqual(key0, key1);
         }

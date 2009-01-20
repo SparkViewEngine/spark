@@ -68,6 +68,7 @@
     <Compile Include="Precompiled\SimplePrecompileController.cs" />
     <Compile Include="Compiler\SourceMappingTester.cs" />
     <Compile Include="SparkBatchDescriptorTester.cs" />
+    <Compile Include="SparkDecoratorTester.cs" />
     <Compile Include="SparkServiceContainerTester.cs" />
     <Compile Include="Spool\SpoolPageTester.cs" />
     <Compile Include="Spool\SpoolWriterTester.cs" />

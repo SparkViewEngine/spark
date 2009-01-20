@@ -29,10 +29,10 @@ namespace Spark.Web.Mvc.Wrappers
     {
         // Fields
         private readonly HttpContextBase _context;
-        private readonly AbstractSparkView _view;
+        private readonly SparkViewBase _view;
 
         // Methods
-        public HttpContextWrapper(HttpContextBase httpContext, AbstractSparkView view)
+        public HttpContextWrapper(HttpContextBase httpContext, SparkViewBase view)
         {
             if (httpContext == null)
             {

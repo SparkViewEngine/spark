@@ -15,8 +15,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Spark.Compiler;
-using Spark.Parser;
 using Spark;
 
 namespace Spark
@@ -25,7 +23,7 @@ namespace Spark
     {
         static private CompiledViewHolder _current;
 
-        readonly Dictionary<Key, Entry> _cache = new Dictionary<Key, Entry>();
+        readonly Dictionary<SparkViewDescriptor, ISparkViewEntry> _cache = new Dictionary<SparkViewDescriptor, ISparkViewEntry>();
 
         public static CompiledViewHolder Current
         {
@@ -38,107 +36,33 @@ namespace Spark
             set { _current = value; }
         }
 
-        public Entry Lookup(Key key)
+        public ISparkViewEntry Lookup(SparkViewDescriptor descriptor)
         {
-            Entry entry;
+            ISparkViewEntry entry;
 
             lock (_cache)
             {
-                if (!_cache.TryGetValue(key, out entry))
+                if (!_cache.TryGetValue(descriptor, out entry))
                     return null;
             }
 
-            return entry.Loader.IsCurrent() ? entry : null;
+            //TODO: refactor see #82 
+            return entry.IsCurrent ? entry : null;
         }
 
-        public Entry Lookup(Guid viewId)
+        public ISparkViewEntry Lookup(Guid viewId)
         {
             lock (_cache)
             {
-                return _cache.Values.FirstOrDefault(e => e.Compiler.GeneratedViewId == viewId);
+                return _cache.Values.FirstOrDefault(e => e.ViewId == viewId);
             }
         }
 
-        public void Store(Entry entry)
+        public void Store(ISparkViewEntry entry)
         {
             lock (_cache)
             {
-                _cache[entry.Key] = entry;
-            }
-        }
-
-        public class Key
-        {
-            public SparkViewDescriptor Descriptor { get; set; }
-
-            public override int GetHashCode()
-            {
-                int hashCode = 0;
-
-                hashCode ^= (Descriptor.TargetNamespace ?? "").GetHashCode();
-
-                foreach (var template in Descriptor.Templates)
-                    hashCode ^= template.ToLowerInvariant().GetHashCode();
-
-                return hashCode;
-            }
-
-            public override bool Equals(object obj)
-            {
-                var that = obj as Key;
-                if (that == null || GetType() != that.GetType())
-                    return false;
-                if (!string.Equals(Descriptor.TargetNamespace, that.Descriptor.TargetNamespace))
-                    return false;
-                if (Descriptor.Templates.Count != that.Descriptor.Templates.Count)
-                    return false;
-                for (int index = 0; index != Descriptor.Templates.Count; ++index)
-                {
-                    if (!string.Equals(Descriptor.Templates[index], that.Descriptor.Templates[index], StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-
-        public class Entry : ISparkViewEntry
-        {
-            public Key Key { get; set; }
-            public ViewLoader Loader { get; set; }
-            public ViewCompiler Compiler { get; set; }
-            public IViewActivator Activator { get; set; }
-            public ISparkLanguageFactory LanguageFactory { get; set; }
-
-            public SparkViewDescriptor Descriptor
-            {
-                get { return Key.Descriptor; }
-            }
-
-            public string SourceCode
-            {
-                get { return Compiler.SourceCode; }
-            }
-
-            public IList<SourceMapping> SourceMappings
-            {
-                get { return Compiler.SourceMappings; }
-            }
-
-            public ISparkView CreateInstance()
-            {
-                var view = Activator.Activate(Compiler.CompiledType);
-                if (LanguageFactory != null)
-                    LanguageFactory.InstanceCreated(Compiler, view);
-                return view;
-            }
-
-            public void ReleaseInstance(ISparkView view)
-            {
-                if (LanguageFactory != null)
-                    LanguageFactory.InstanceReleased(Compiler, view);
-                Activator.Release(Compiler.CompiledType, view);
+                _cache[entry.Descriptor] = entry;
             }
         }
     }

@@ -15,6 +15,7 @@
 namespace Castle.MonoRail.Views.Spark
 {
     using System;
+    using System.Linq;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -25,7 +26,7 @@ namespace Castle.MonoRail.Views.Spark
 
     using global::Spark;
     
-    public abstract class SparkView : AbstractSparkView
+    public abstract class SparkView : SparkViewBase
     {
         protected SparkView()
         {
@@ -90,7 +91,7 @@ namespace Castle.MonoRail.Views.Spark
             _viewEngine = viewEngine;
 
             if (outerView != null)
-                _once = outerView._once;
+                OnceTable = outerView.OnceTable;
         }
 
         public string H(object value)

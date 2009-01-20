@@ -18,74 +18,17 @@ using System.IO;
 using Spark.Spool;
 
 namespace Spark
+
 {
-    public abstract class AbstractSparkView : ISparkView
+    public abstract class AbstractSparkView : SparkViewDecorator
     {
-        public abstract void RenderView(TextWriter writer);
-        public abstract Guid GeneratedViewId { get; }
-
-        private readonly Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
-        protected IDictionary<string, string> _once = new Dictionary<string, string>();
-
-        public virtual bool TryGetViewData(string name, out object value)
+        protected AbstractSparkView()
+            : this(null)
         {
-            value = null;
-            return false;
         }
-
-        public Dictionary<string, TextWriter> Content { get { return _content; } }
-        public TextWriter Output { get; private set; }        
-
-        public IDisposable OutputScope(string name)
+        protected AbstractSparkView(SparkViewBase decorated)
+            : base(decorated)
         {
-            TextWriter writer;
-            if (!_content.TryGetValue(name, out writer))
-            {
-                writer = new SpoolWriter();
-                _content.Add(name, writer);
-            }
-            return new OutputScopeImpl(this, writer);
-        }
-
-        public IDisposable OutputScope(TextWriter writer)
-        {
-            return new OutputScopeImpl(this, writer);
-        }
-
-        public IDisposable OutputScope()
-        {
-            return new OutputScopeImpl(this, new SpoolWriter());
-        }
-
-
-        public bool Once(object flag)
-        {
-            var flagString = Convert.ToString(flag);
-            if (_once.ContainsKey(flagString))
-                return false;
-
-            _once.Add(flagString, null);
-            return true;
-        }
-
-
-        public class OutputScopeImpl : IDisposable
-        {
-            private readonly AbstractSparkView view;
-            private readonly TextWriter previous;
-
-
-            public OutputScopeImpl(AbstractSparkView view, TextWriter writer)
-            {
-                this.view = view;
-                previous = view.Output;
-                view.Output = writer;
-            }
-
-            public void Dispose()
-            {
-                view.Output = previous;
-            }
         }
     }
 }
