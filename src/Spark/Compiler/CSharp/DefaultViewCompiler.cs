@@ -129,7 +129,7 @@ namespace Spark.Compiler.CSharp
 
             // public void RenderView()
             source.AppendLine();
-            source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
+            source.AppendLine("    public override void Render()");
             source.AppendLine("    {");
             for (int invokeLevel = 0; invokeLevel != renderLevel; ++invokeLevel)
             {
@@ -139,7 +139,7 @@ namespace Spark.Compiler.CSharp
                 }
                 else
                 {
-                    source.AppendLine(string.Format("        using (OutputScope(writer)) {{RenderViewLevel{0}();}}", invokeLevel));
+                    source.AppendLine(string.Format("        RenderViewLevel{0}();", invokeLevel));
                 }
             }
             source.AppendLine("    }");

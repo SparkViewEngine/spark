@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Spark.Spool;
 
 namespace Spark
 {
@@ -33,12 +34,11 @@ namespace Spark
         {
             if (_decorated != null)
             {
-                using (OutputScope())
-                {
-                    _decorated.RenderView(Output);
-                    Content["view"] = Output;
-                }
-            }            
+                var spooled = new SpoolWriter();
+                _decorated.RenderView(spooled);
+                Content["view"] = spooled;
+            }
+            base.RenderView(writer);
         }
     }
 }

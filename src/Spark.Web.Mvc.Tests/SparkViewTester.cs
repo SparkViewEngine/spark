@@ -37,7 +37,7 @@ namespace Spark.Web.Mvc.Tests
                 throw new System.NotImplementedException();
             }
 
-            public override void RenderView(TextWriter writer)
+            public override void Render()
             {
                 throw new NotImplementedException();
             }
@@ -92,9 +92,9 @@ namespace Spark.Web.Mvc.Tests
 
         private class ModelViewTest : SparkView<string>
         {
-            public override void RenderView(TextWriter writer)
+            public override void Render()
             {
-                throw new System.NotImplementedException();
+                
             }
 
             public override Guid GeneratedViewId

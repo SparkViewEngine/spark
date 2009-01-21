@@ -26,9 +26,9 @@ namespace Spark.Tests.Precompiled
         Templates = new[] { "Foo\\Bar.spark", "Shared\\Quux.spark" })]
     public class View1 : StubSparkView
     {
-        public override void RenderView(TextWriter writer)
+        public override void Render()
         {
-            writer.Write("<p>Hello world</p>");
+            Output.Write("<p>Hello world</p>");
         }
 
         public override Guid GeneratedViewId
