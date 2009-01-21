@@ -127,7 +127,7 @@ namespace Spark.Web.Mvc
                 foreach (var kv in Content)
                 {
                     if (!outerView.Content.ContainsKey(kv.Key))
-                        Content.Add(kv.Key, kv.Value);
+                        outerView.Content.Add(kv.Key, kv.Value);
                 }
                 foreach (var kv in _once)
                 {
