@@ -119,7 +119,12 @@ namespace Spark
 
         public virtual void RenderView(TextWriter writer)
         {
-
+            using (OutputScope(writer))
+            {
+                Render();
+            }
         }
+
+        public abstract void Render();
     }
 }

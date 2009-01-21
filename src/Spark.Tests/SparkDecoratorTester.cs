@@ -32,18 +32,13 @@ namespace Spark.Tests
                 get { throw new System.NotImplementedException(); }
             }
 
-            public override void RenderView(TextWriter writer)
+            public override void Render()
             {
-                base.RenderView(writer);
+                Output.Write("[layer0]");
 
-                using (OutputScope(writer))
+                using (OutputScope("head"))
                 {
-                    Output.Write("[layer0]");
-
-                    using (OutputScope("head"))
-                    {
-                        Output.Write("[layer0head]");
-                    }
+                    Output.Write("[layer0head]");
                 }
             }
         }
@@ -60,22 +55,17 @@ namespace Spark.Tests
                 get { throw new System.NotImplementedException(); }
             }
 
-            public override void RenderView(TextWriter writer)
+            public override void Render()
             {
-                base.RenderView(writer);
-
-                using (OutputScope(writer))
+                using (OutputScope("head"))
                 {
-                    using (OutputScope("head"))
-                    {
-                        Output.Write("[layer1head]");
-                    }
-
-                    Output.Write("[layer1top]");
-                    Output.Write(Content["head"]);
-                    Output.Write(Content["view"]);
-                    Output.Write("[layer1bottom]");
+                    Output.Write("[layer1head]");
                 }
+
+                Output.Write("[layer1top]");
+                Output.Write(Content["head"]);
+                Output.Write(Content["view"]);
+                Output.Write("[layer1bottom]");
             }
         }
     }

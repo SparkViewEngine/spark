@@ -38,9 +38,9 @@ namespace Spark.Python.Tests
 
         public class TestView : StubSparkView, IScriptingSparkView
         {
-            public override void RenderView(TextWriter writer)
+            public override void Render()
             {
-                throw new NotImplementedException();
+                
             }
 
             public override Guid GeneratedViewId

@@ -139,15 +139,12 @@ namespace Spark.Python.Compiler
             source.Append("get { return @\"").Append(script.ToString().Replace("\"", "\"\"")).AppendLine("\"; }");
             source.AppendLine("}");
             
-            source.AppendLine("public override void RenderView(System.IO.TextWriter writer)");
-            source.AppendLine("{");
-            source.AppendLine("using(OutputScope(writer))");
+            source.AppendLine("public override void Render()");
             source.AppendLine("{");
             source.AppendLine("CompiledCode.Execute(");
             source.AppendLine("CompiledCode.Engine.CreateScope(");
             source.AppendLine("new global::Spark.Python.ScriptingViewSymbolDictionary(this)");
             source.AppendLine("));");
-            source.AppendLine("}");
             source.AppendLine("}");
             
             source.AppendLine("}");
