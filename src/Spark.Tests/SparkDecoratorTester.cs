@@ -20,7 +20,7 @@ namespace Spark.Tests
             Assert.AreEqual("[layer1top][layer0head][layer1head][layer0][layer1bottom]", content);
         }
 
-        public class TestLayer0 : SparkViewDecorator
+        public class TestLayer0 : SparkViewDecorator<object>
         {
             public TestLayer0()
                 : base(null)
@@ -43,9 +43,9 @@ namespace Spark.Tests
             }
         }
 
-        public class TestLayer1 : SparkViewDecorator
+        public class TestLayer1 : SparkViewDecorator<object>
         {
-            public TestLayer1(SparkViewBase decorated)
+            public TestLayer1(SparkViewBase<object> decorated)
                 : base(decorated)
             {
             }

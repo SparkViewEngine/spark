@@ -26,10 +26,10 @@ namespace Spark.Web.Mvc.Wrappers
     {
         // Fields
         private readonly HttpResponseBase _httpResponse;
-        private readonly SparkViewBase _view;
+        private readonly SparkViewBase<MvcViewContext> _view;
 
         // Methods
-        public HttpResponseWrapper(HttpResponseBase httpResponse, SparkViewBase view)
+        public HttpResponseWrapper(HttpResponseBase httpResponse, SparkViewBase<MvcViewContext> view)
         {
             if (httpResponse == null)
             {

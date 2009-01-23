@@ -6,16 +6,26 @@ using Spark.Spool;
 
 namespace Spark
 {
-    public abstract class SparkViewDecorator : SparkViewBase
+    public interface ISparkViewDecorator : ISparkView
     {
-        private readonly SparkViewBase _decorated;
+        ISparkView Decorated { get; }
+    }
 
-        protected SparkViewDecorator(SparkViewBase decorated)
+    public abstract class SparkViewDecorator<TExtendedContext> : SparkViewBase<TExtendedContext>, ISparkViewDecorator
+    {
+        private readonly SparkViewBase<TExtendedContext> _decorated;
+
+        protected SparkViewDecorator(SparkViewBase<TExtendedContext> decorated)
         {
             _decorated = decorated;
         }
 
-        public override SparkViewContext SparkViewContext
+        ISparkView ISparkViewDecorator.Decorated
+        {
+            get { return _decorated; }
+        }
+
+        public override SparkViewContext<TExtendedContext> SparkViewContext
         {
             get
             {
@@ -30,6 +40,7 @@ namespace Spark
             }
         }
 
+
         public override void RenderView(System.IO.TextWriter writer)
         {
             if (_decorated != null)
@@ -40,5 +51,6 @@ namespace Spark
             }
             base.RenderView(writer);
         }
+
     }
 }

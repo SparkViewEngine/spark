@@ -17,9 +17,10 @@ using System.Web;
 
 namespace Spark.Tests.Stubs
 {
-    public abstract class StubSparkView : SparkViewBase
+    public abstract class StubSparkView : SparkViewDecorator<object>
     {
-        protected StubSparkView()
+        protected StubSparkView(SparkViewBase<object> decorated)
+            : base(decorated)
         {
             ViewData = new StubViewData();
         }
@@ -54,6 +55,11 @@ namespace Spark.Tests.Stubs
 
     public abstract class StubSparkView<TModel> : StubSparkView
     {
+        protected StubSparkView(SparkViewBase<object> decorated)
+            : base(decorated)
+        {
+        }
+
         public new StubViewData<TModel> ViewData
         {
             get { return (StubViewData<TModel>)base.ViewData; }

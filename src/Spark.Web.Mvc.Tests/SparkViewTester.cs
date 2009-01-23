@@ -27,6 +27,15 @@ namespace Spark.Web.Mvc.Tests
     {
         private class StubSparkView : SparkView
         {
+            public StubSparkView()
+                : base(null)
+            {
+            }
+            public StubSparkView(SparkViewBase<MvcViewContext> decorated)
+                : base(decorated)
+            {
+            }
+
             public override Guid GeneratedViewId
             {
                 get { throw new NotImplementedException(); }

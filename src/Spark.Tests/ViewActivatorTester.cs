@@ -56,7 +56,7 @@ namespace Spark.Tests
 
             }
 
-            public ISparkView Activate(Type type)
+            public ISparkView Activate(Type type, ISparkView decorated)
             {
                 return new TestView();
             }
@@ -72,7 +72,7 @@ namespace Spark.Tests
             var type = typeof(TestView);
             var factory = new DefaultViewActivator();
             var activator = factory.Register(type);
-            var view = activator.Activate(type);
+            var view = activator.Activate(type, null);
             Assert.IsNotNull(view);
             Assert.IsAssignableFrom(typeof(TestView), view);
         }

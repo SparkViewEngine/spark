@@ -197,7 +197,7 @@ namespace Spark
             var entry = CompiledViewHolder.Current.Lookup(descriptor);
             if (entry == null)
             {
-                entry = CreateEntryImplementation(descriptor, true);
+                entry = BuildEntry(descriptor, true);
                 CompiledViewHolder.Current.Store(entry);
             }
             return entry;
@@ -217,7 +217,29 @@ namespace Spark
                 entry.ReleaseInstance(view);
         }
 
-        public CompiledViewEntry CreateEntryImplementation(SparkViewDescriptor descriptor, bool compile)
+        public ISparkViewEntry BuildEntry(SparkViewDescriptor descriptor, bool compile)
+        {
+            if (descriptor.Templates.Count == 1)
+                return BuildCompiledEntry(descriptor, compile);
+
+            return BuildCompositeEntry(descriptor, compile);
+        }
+
+        public CompositeViewEntry BuildCompositeEntry(SparkViewDescriptor descriptor, bool compile)
+        {
+            var entries = new List<ISparkViewEntry>();
+            foreach(var template in descriptor.Templates)
+            {
+                var compiledDescriptor = new SparkViewDescriptor()
+                    .SetTargetNamespace(descriptor.TargetNamespace)
+                    .AddTemplate(template);
+                entries.Add(CreateEntry(compiledDescriptor));
+            }
+            var entry = new CompositeViewEntry(descriptor, entries);
+            return entry;
+        }
+
+        public CompiledViewEntry BuildCompiledEntry(SparkViewDescriptor descriptor, bool compile)
         {
             var entry = new CompiledViewEntry
             {

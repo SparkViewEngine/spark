@@ -27,10 +27,10 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             get
             {
                 if (Snippets.IsNullOrEmpty(TModel))
-                    return BaseClass ?? "Spark.SparkViewBase";
+                    return BaseClass ?? "Spark.AbstractSparkView";
 
                 var s = new Snippets();
-                s.Add(new Snippet { Value = BaseClass ?? "Spark.SparkViewBase" });
+                s.Add(new Snippet { Value = BaseClass ?? "Spark.AbstractSparkView" });
                 s.Add(new Snippet { Value = "<" });
                 s.AddRange(TModel);
                 s.Add(new Snippet { Value = ">" });

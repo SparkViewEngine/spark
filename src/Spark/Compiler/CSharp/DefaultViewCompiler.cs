@@ -96,6 +96,16 @@ namespace Spark.Compiler.CSharp
                 .AppendLine();
             source.AppendLine("{");
 
+            source
+                .Append("    public ")
+                .Append(viewClassName)
+                .AppendLine("() : base(null) {}");
+
+            source
+                .Append("    public ")
+                .Append(viewClassName)
+                .AppendLine("(" + baseClassGenerator.BaseClassTypeName + " decorated) : base(decorated) {}");
+
             source.AppendLine();
             source.AppendLine("    public override System.Guid GeneratedViewId");
             source.AppendLine(string.Format("    {{ get {{ return new System.Guid(\"{0:n}\"); }} }}", GeneratedViewId));

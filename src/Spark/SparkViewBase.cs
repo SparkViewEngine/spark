@@ -28,9 +28,14 @@ namespace Spark
         public Dictionary<string, string> OnceTable { get; set; }
     }
 
-    public abstract class SparkViewBase : ISparkView
+    public class SparkViewContext<TExtendedContext> : SparkViewContext
     {
-        private SparkViewContext _sparkViewContext;
+        public TExtendedContext ExtendedContext { get; set; }
+    }
+
+    public abstract class SparkViewBase<TExtendedContext> : ISparkView 
+    {
+        private SparkViewContext<TExtendedContext> _sparkViewContext;
 
         public abstract Guid GeneratedViewId { get; }
 
@@ -40,20 +45,26 @@ namespace Spark
             return false;
         }
 
-        public virtual SparkViewContext SparkViewContext
+        public virtual SparkViewContext<TExtendedContext> SparkViewContext
         {
             get
             {
                 return _sparkViewContext ??
-                       Interlocked.CompareExchange(ref _sparkViewContext, CreateSparkViewContext(), null) ?? 
+                       Interlocked.CompareExchange(ref _sparkViewContext, CreateSparkViewContext(), null) ??
                        _sparkViewContext;
             }
             set { _sparkViewContext = value; }
         }
 
-        private static SparkViewContext CreateSparkViewContext()
+        public TExtendedContext ExtendedContext
         {
-            return new SparkViewContext
+            get { return SparkViewContext.ExtendedContext; }
+            set { SparkViewContext.ExtendedContext = value; }
+        }
+
+        private static SparkViewContext<TExtendedContext> CreateSparkViewContext()
+        {
+            return new SparkViewContext<TExtendedContext>
                    {
                        Content = new Dictionary<string, TextWriter>(),
                        Globals = new Dictionary<string, object>(),
@@ -101,10 +112,10 @@ namespace Spark
 
         public class OutputScopeImpl : IDisposable
         {
-            private readonly SparkViewBase view;
+            private readonly SparkViewBase<TExtendedContext> view;
             private readonly TextWriter previous;
 
-            public OutputScopeImpl(SparkViewBase view, TextWriter writer)
+            public OutputScopeImpl(SparkViewBase<TExtendedContext> view, TextWriter writer)
             {
                 this.view = view;
                 previous = view.Output;

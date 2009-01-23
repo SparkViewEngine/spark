@@ -27,7 +27,12 @@ namespace Spark
 
         public ISparkView CreateInstance()
         {
-            var view = Activator.Activate(Compiler.CompiledType);
+            return CreateInstance(null);
+        }
+
+        public ISparkView CreateInstance(ISparkView decorated)
+        {
+            var view = Activator.Activate(Compiler.CompiledType, decorated);
             if (LanguageFactory != null)
                 LanguageFactory.InstanceCreated(Compiler, view);
             return view;

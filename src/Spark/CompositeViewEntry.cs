@@ -9,33 +9,57 @@ namespace Spark
 {
     public class CompositeViewEntry : ISparkViewEntry
     {
-        public CompositeViewEntry()
+        public CompositeViewEntry(SparkViewDescriptor descriptor, List<ISparkViewEntry> compiledEntries)
         {
             ViewId = Guid.NewGuid();
+            Descriptor = descriptor;
+            CompiledEntries = compiledEntries;
         }
-
+    
         public Guid ViewId { get; set; }
-
         public SparkViewDescriptor Descriptor { get; set; }
-        public ViewLoader Loader { get; set; }
-        public ViewCompiler Compiler { get; set; }
-        public IViewActivator Activator { get; set; }
-        public ISparkLanguageFactory LanguageFactory { get; set; }
-
+        public List<ISparkViewEntry> CompiledEntries { get; private set; }
+         
 
         public ISparkView CreateInstance()
         {
-            throw new System.NotImplementedException();
+            return CreateInstance(null);
+        }
+
+        public ISparkView CreateInstance(ISparkView decorated)
+        {
+            var result = decorated;
+            foreach(var entry in CompiledEntries)
+                result = entry.CreateInstance(result);
+
+            return result;
         }
 
         public void ReleaseInstance(ISparkView view)
         {
-            throw new System.NotImplementedException();
+            var count = CompiledEntries.Count;
+
+            var views = new List<ISparkView>(CompiledEntries.Count);
+
+            var decorator = view as ISparkViewDecorator;
+            while(decorator != null)
+            {
+                views.Add(decorator);
+                decorator = decorator.Decorated as ISparkViewDecorator;
+            }
+
+            if (views.Count != count)
+                throw new IndexOutOfRangeException("Incorrect number of views released");
+
+            for(var index = 0; index != count; ++index)
+            {
+                CompiledEntries[index].ReleaseInstance(views[count - index - 1]);
+            }
         }
 
         public bool IsCurrent
         {
-            get { throw new System.NotImplementedException(); }
+            get { return CompiledEntries.All(e => e.IsCurrent); }
         }
 
         public string SourceCode
@@ -45,7 +69,7 @@ namespace Spark
 
         public IList<SourceMapping> SourceMappings
         {
-            get { throw new System.NotImplementedException(); }
+            get { return CompiledEntries.SelectMany(e => e.SourceMappings).ToList(); }
         }
     }
 }

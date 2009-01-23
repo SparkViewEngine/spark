@@ -70,6 +70,7 @@
     <Compile Include="SparkBatchDescriptorTester.cs" />
     <Compile Include="SparkDecoratorTester.cs" />
     <Compile Include="SparkServiceContainerTester.cs" />
+    <Compile Include="SparkViewEngineTester.cs" />
     <Compile Include="Spool\SpoolPageTester.cs" />
     <Compile Include="Spool\SpoolWriterTester.cs" />
     <Compile Include="UseMasterTester.cs" />

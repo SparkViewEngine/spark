@@ -19,37 +19,51 @@ using HttpContextWrapper = Spark.Web.Mvc.Wrappers.HttpContextWrapper;
 
 namespace Spark.Web.Mvc
 {
-    public abstract class SparkView : SparkViewBase, IViewDataContainer, IView
+    public class MvcViewContext
     {
-        private string _siteRoot;
-        private ViewDataDictionary _viewData;
         public ViewContext ViewContext { get; set; }
-
-        public TempDataDictionary TempData
-        {
-            get { return ViewContext.TempData; }
-        }
+        public ViewDataDictionary ViewData { get; set; }
 
         public HtmlHelper Html { get; set; }
         public UrlHelper Url { get; set; }
         public AjaxHelper Ajax { get; set; }
 
-        public HttpContextBase Context
-        {
-            get { return ViewContext.HttpContext; }
-        }
-
-        public HttpRequestBase Request
-        {
-            get { return ViewContext.HttpContext.Request; }
-        }
-
-        public HttpResponseBase Response
-        {
-            get { return ViewContext.HttpContext.Response; }
-        }
-
+        public string SiteRoot { get; set; }
         public IResourcePathManager ResourcePathManager { get; set; }
+    }
+
+    public abstract class SparkView : SparkViewDecorator<MvcViewContext>, IViewDataContainer, IView
+    {
+        protected SparkView(SparkViewBase<MvcViewContext> decorated)
+            : base(decorated)
+        {
+
+        }
+
+
+        public ViewContext ViewContext
+        {
+            get { return ExtendedContext.ViewContext; }
+            set { ExtendedContext.ViewContext = value; }
+        }
+
+        public TempDataDictionary TempData { get { return ViewContext.TempData; } }
+
+        public HtmlHelper Html { get { return ExtendedContext.Html; } }
+        public UrlHelper Url { get { return ExtendedContext.Url; } }
+        public AjaxHelper Ajax { get { return ExtendedContext.Ajax; } }
+
+        public HttpContextBase Context { get { return ViewContext.HttpContext; } }
+
+        public HttpRequestBase Request { get { return ViewContext.HttpContext.Request; } }
+
+        public HttpResponseBase Response { get { return ViewContext.HttpContext.Response; } }
+
+        public IResourcePathManager ResourcePathManager
+        {
+            get { return ExtendedContext.ResourcePathManager; }
+            set { ExtendedContext.ResourcePathManager = value; }
+        }
 
         public override bool TryGetViewData(string name, out object value)
         {
@@ -75,19 +89,19 @@ namespace Spark.Web.Mvc
         {
             get
             {
-                if (_siteRoot == null)
+                if (ExtendedContext.SiteRoot == null)
                 {
                     var appPath = ViewContext.HttpContext.Request.ApplicationPath;
                     if (string.IsNullOrEmpty(appPath) || string.Equals(appPath, "/"))
                     {
-                        _siteRoot = string.Empty;
+                        ExtendedContext.SiteRoot = string.Empty;
                     }
                     else
                     {
-                        _siteRoot = "/" + appPath.Trim('/');
+                        ExtendedContext.SiteRoot = "/" + appPath.Trim('/');
                     }
                 }
-                return _siteRoot;
+                return ExtendedContext.SiteRoot;
             }
         }
         public string SiteResource(string path)
@@ -95,7 +109,6 @@ namespace Spark.Web.Mvc
             return ResourcePathManager.GetResourcePath(SiteRoot, path);
         }
 
-        #region IView Members
 
         public void Render(ViewContext viewContext, TextWriter writer)
         {
@@ -103,11 +116,11 @@ namespace Spark.Web.Mvc
             var wrappedViewContext = new ViewContext(wrappedHttpContext, viewContext.RouteData, viewContext.Controller,
                                           viewContext.View, viewContext.ViewData, viewContext.TempData);
 
-            ViewContext = wrappedViewContext;
+            ExtendedContext.ViewContext = wrappedViewContext;
             ViewData = wrappedViewContext.ViewData;
-            Html = new HtmlHelper(wrappedViewContext, this);
-            Url = new UrlHelper(wrappedViewContext);
-            Ajax = new AjaxHelper(wrappedViewContext);
+            ExtendedContext.Html = new HtmlHelper(wrappedViewContext, this);
+            ExtendedContext.Url = new UrlHelper(wrappedViewContext);
+            ExtendedContext.Ajax = new AjaxHelper(wrappedViewContext);
 
             var outerView = ViewContext.View as SparkView;
             if (outerView != null && !ReferenceEquals(this, outerView))
@@ -144,22 +157,23 @@ namespace Spark.Web.Mvc
             Content.Clear();
         }
 
-        #endregion
-
-        #region IViewDataContainer Members
-
+        
         public ViewDataDictionary ViewData
         {
             get
             {
-                if (_viewData == null)
+                if (ExtendedContext.ViewData == null)
                     SetViewData(new ViewDataDictionary());
-                return _viewData;
+                return ExtendedContext.ViewData;
             }
             set { SetViewData(value); }
         }
 
-        #endregion
+        protected virtual void SetViewData(ViewDataDictionary viewData)
+        {
+            ExtendedContext.ViewData = viewData;
+        }
+        
 
         public string H(object value)
         {
@@ -175,14 +189,19 @@ namespace Spark.Web.Mvc
             return ViewData.Eval(expression, format);
         }
 
-        protected virtual void SetViewData(ViewDataDictionary viewData)
-        {
-            _viewData = viewData;
-        }
     }
 
     public abstract class SparkView<TModel> : SparkView where TModel : class
     {
+        protected SparkView()
+            : base(null)
+        {
+        }
+        protected SparkView(SparkViewBase<MvcViewContext> decorated)
+            : base(decorated)
+        {
+        }
+
         private ViewDataDictionary<TModel> _viewData;
 
         public new ViewDataDictionary<TModel> ViewData

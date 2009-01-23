@@ -24,7 +24,7 @@ namespace Spark
 
     public interface IViewActivator
     {
-        ISparkView Activate(Type type);
+        ISparkView Activate(Type type, ISparkView decorated);
         void Release(Type type, ISparkView view);
     }
 }

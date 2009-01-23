@@ -38,6 +38,14 @@ namespace Spark.Python.Tests
 
         public class TestView : StubSparkView, IScriptingSparkView
         {
+            public TestView() : base(null)
+            {
+                
+            }
+            public TestView(SparkViewBase decorated) : base(decorated)
+            {
+            }
+
             public override void Render()
             {
                 

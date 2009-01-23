@@ -26,6 +26,11 @@ namespace Spark.Tests.Precompiled
         Templates = new[] { "Foo\\Bar.spark", "Shared\\Quux.spark" })]
     public class View1 : StubSparkView
     {
+        public View1(SparkViewBase<object> decorated)
+            : base(decorated)
+        {
+        }
+
         public override void Render()
         {
             Output.Write("<p>Hello world</p>");

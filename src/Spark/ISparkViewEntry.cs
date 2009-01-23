@@ -23,7 +23,9 @@ namespace Spark
         Guid ViewId { get; }
 
         SparkViewDescriptor Descriptor { get; }
+        
         ISparkView CreateInstance();
+        ISparkView CreateInstance(ISparkView decorated);
         void ReleaseInstance(ISparkView view);
 
         //TODO: refactor see #82 

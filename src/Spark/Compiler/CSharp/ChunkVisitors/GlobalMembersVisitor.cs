@@ -24,8 +24,8 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
     {
         private readonly SourceBuilder _source;
         private readonly Dictionary<string, object> _globalSymbols;
-    	private readonly NullBehaviour _nullBehaviour;
-    	readonly Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
+        private readonly NullBehaviour _nullBehaviour;
+        readonly Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
         readonly Dictionary<string, GlobalVariableChunk> _globalAdded = new Dictionary<string, GlobalVariableChunk>();
         private int _indent = 4;
 
@@ -33,7 +33,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
         {
             _source = output;
             _globalSymbols = globalSymbols;
-			_nullBehaviour = nullBehaviour;
+            _nullBehaviour = nullBehaviour;
         }
 
         private int Indent
@@ -89,9 +89,20 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             }
             else
             {
-                _source.AppendFormat(
-                    "\r\n    {0} _{1} = {2};\r\n    public {0} {1} {{ get {{return _{1};}} set {{_{1} = value;}} }}",
-                    type, chunk.Name, chunk.Value);
+                _source
+                    .Append("    public ")
+                    .Append(type)
+                    .Append(" ")
+                    .Append(chunk.Name)
+                    .AppendLine(" {");
+                _source
+                    .AppendFormat("        get {{{1} value; if (!Globals.TryGetValue(\"{0}\", out value) {value = ", chunk.Name, chunk.Type)
+                    .Append(chunk.Value)
+                    .AppendFormat("; Globals[\"{0}\"] = value;}} return value;}}")
+                    .AppendLine();
+                _source
+                    .AppendFormat("        set {{Globals[\"{0}\"] = value;}}", chunk.Name, chunk.Type)
+                    .AppendLine();
             }
             _source.AppendLine();
         }

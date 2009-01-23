@@ -27,9 +27,11 @@ namespace Spark
         {
         }
 
-        public ISparkView Activate(Type type)
+        public ISparkView Activate(Type type, ISparkView decorated)
         {
-            return (ISparkView)Activator.CreateInstance(type);
+            return decorated == null
+                       ? (ISparkView) Activator.CreateInstance(type)
+                       : (ISparkView) Activator.CreateInstance(type, decorated);
         }
 
         public void Release(Type type, ISparkView view)

@@ -36,7 +36,7 @@ namespace Spark.Tests
         [Test]
         public void MakeAndCompile()
         {
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
 
             DoCompileView(compiler, new[] { new SendLiteralChunk { Text = "hello world" } });
 
@@ -51,7 +51,7 @@ namespace Spark.Tests
         public void UnsafeLiteralCharacters()
         {
             var text = "hello\t\r\n\"world";
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
             DoCompileView(compiler, new[] { new SendLiteralChunk { Text = text } });
 
             Assert.That(compiler.SourceCode.Contains("Write(\"hello\\t\\r\\n\\\"world\")"));
@@ -65,7 +65,7 @@ namespace Spark.Tests
         [Test]
         public void SimpleOutput()
         {
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
             DoCompileView(compiler, new[] { new SendExpressionChunk { Code = "3 + 4" } });
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();
@@ -75,7 +75,7 @@ namespace Spark.Tests
         [Test]
         public void LocalVariableDecl()
         {
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
             DoCompileView(compiler, new Chunk[]
 			                     	{
 			                     		new LocalVariableChunk { Name = "i", Value = "5" }, 
@@ -90,7 +90,7 @@ namespace Spark.Tests
         [Test]
         public void ForEachLoop()
         {
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
             DoCompileView(compiler, new Chunk[]
 			                     	{
 			                     		new LocalVariableChunk {Name = "data", Value = "new[]{3,4,5}"},
@@ -115,7 +115,7 @@ namespace Spark.Tests
         [Test]
         public void GlobalVariables()
         {
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
             DoCompileView(compiler, new Chunk[]
 			                     	{
 			                     		new SendExpressionChunk{Code="title"},
@@ -135,7 +135,7 @@ namespace Spark.Tests
         {
             var compiler = new DefaultViewCompiler
                                {
-                                   BaseClass = "Spark.SparkViewBase",
+                                   BaseClass = "Spark.AbstractSparkView",
                                    Descriptor = new SparkViewDescriptor { TargetNamespace = "Testing.Target.Namespace" }
                                };
             DoCompileView(compiler, new Chunk[] { new SendLiteralChunk { Text = "Hello" } });
@@ -148,7 +148,7 @@ namespace Spark.Tests
         [Test, ExpectedException(typeof(CompilerException))]
         public void ProvideFullException()
         {
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
             DoCompileView(compiler, new Chunk[]
 			                     	{
 			                     		new SendExpressionChunk {Code = "NoSuchVariable"}
@@ -158,7 +158,7 @@ namespace Spark.Tests
         [Test]
         public void IfTrueCondition()
         {
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
@@ -177,7 +177,7 @@ namespace Spark.Tests
         [Test]
         public void IfFalseCondition()
         {
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
@@ -196,7 +196,7 @@ namespace Spark.Tests
         [Test]
         public void IfElseFalseCondition()
         {
-            var compiler = new DefaultViewCompiler { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new DefaultViewCompiler { BaseClass = "Spark.AbstractSparkView" };
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
             var falseChunks = new Chunk[] { new SendLiteralChunk { Text = "wasfalse" } };
