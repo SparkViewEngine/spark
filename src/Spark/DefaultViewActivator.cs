@@ -22,7 +22,7 @@ namespace Spark
         {
             return this;
         }
-
+            
         public void Unregister(Type type, IViewActivator activator)
         {
         }

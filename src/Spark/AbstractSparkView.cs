@@ -1,12 +1,12 @@
 ﻿namespace Spark
 {
-    public abstract class AbstractSparkView<TExtendedContext> : SparkViewDecorator<TExtendedContext>
+    public abstract class AbstractSparkView : SparkViewDecorator<object>
     {
         protected AbstractSparkView()
             : this(null)
         {
         }
-        protected AbstractSparkView(SparkViewBase<TExtendedContext> decorated)
+        protected AbstractSparkView(SparkViewBase<object> decorated)
             : base(decorated)
         {
         }

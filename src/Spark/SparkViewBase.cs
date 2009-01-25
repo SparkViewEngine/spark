@@ -20,7 +20,7 @@ using Spark.Spool;
 
 namespace Spark
 {
-    public class SparkViewContext
+    public class SparkContext
     {
         public TextWriter Output { get; set; }
         public Dictionary<string, TextWriter> Content { get; set; }
@@ -28,14 +28,14 @@ namespace Spark
         public Dictionary<string, string> OnceTable { get; set; }
     }
 
-    public class SparkViewContext<TExtendedContext> : SparkViewContext
+    public class SparkContext<TExtended> : SparkContext
     {
-        public TExtendedContext ExtendedContext { get; set; }
+        public TExtended Extended { get; set; }
     }
 
-    public abstract class SparkViewBase<TExtendedContext> : ISparkView 
+    public abstract class SparkViewBase<TExtended> : ISparkView where TExtended : new()
     {
-        private SparkViewContext<TExtendedContext> _sparkViewContext;
+        private SparkContext<TExtended> _sparkContext;
 
         public abstract Guid GeneratedViewId { get; }
 
@@ -45,37 +45,38 @@ namespace Spark
             return false;
         }
 
-        public virtual SparkViewContext<TExtendedContext> SparkViewContext
+        public virtual SparkContext<TExtended> SparkContext
         {
             get
             {
-                return _sparkViewContext ??
-                       Interlocked.CompareExchange(ref _sparkViewContext, CreateSparkViewContext(), null) ??
-                       _sparkViewContext;
+                return _sparkContext ??
+                       Interlocked.CompareExchange(ref _sparkContext, CreateSparkViewContext(), null) ??
+                       _sparkContext;
             }
-            set { _sparkViewContext = value; }
+            set { _sparkContext = value; }
         }
 
-        public TExtendedContext ExtendedContext
+        public TExtended ExtendedContext
         {
-            get { return SparkViewContext.ExtendedContext; }
-            set { SparkViewContext.ExtendedContext = value; }
+            get { return SparkContext.Extended; }
+            set { SparkContext.Extended = value; }
         }
 
-        private static SparkViewContext<TExtendedContext> CreateSparkViewContext()
+        private static SparkContext<TExtended> CreateSparkViewContext()
         {
-            return new SparkViewContext<TExtendedContext>
+            return new SparkContext<TExtended>
                    {
                        Content = new Dictionary<string, TextWriter>(),
                        Globals = new Dictionary<string, object>(),
-                       OnceTable = new Dictionary<string, string>()
+                       OnceTable = new Dictionary<string, string>(),
+                       Extended = new TExtended()
                    };
         }
 
-        public TextWriter Output { get { return SparkViewContext.Output; } set { SparkViewContext.Output = value; } }
-        public Dictionary<string, TextWriter> Content { get { return SparkViewContext.Content; } set { SparkViewContext.Content = value; } }
-        public Dictionary<string, object> Globals { get { return SparkViewContext.Globals; } set { SparkViewContext.Globals = value; } }
-        public Dictionary<string, string> OnceTable { get { return SparkViewContext.OnceTable; } set { SparkViewContext.OnceTable = value; } }
+        public TextWriter Output { get { return SparkContext.Output; } set { SparkContext.Output = value; } }
+        public Dictionary<string, TextWriter> Content { get { return SparkContext.Content; } set { SparkContext.Content = value; } }
+        public Dictionary<string, object> Globals { get { return SparkContext.Globals; } set { SparkContext.Globals = value; } }
+        public Dictionary<string, string> OnceTable { get { return SparkContext.OnceTable; } set { SparkContext.OnceTable = value; } }
 
         public IDisposable OutputScope(string name)
         {
@@ -102,20 +103,20 @@ namespace Spark
         public bool Once(object flag)
         {
             var flagString = Convert.ToString(flag);
-            if (SparkViewContext.OnceTable.ContainsKey(flagString))
+            if (SparkContext.OnceTable.ContainsKey(flagString))
                 return false;
 
-            SparkViewContext.OnceTable.Add(flagString, null);
+            SparkContext.OnceTable.Add(flagString, null);
             return true;
         }
 
 
         public class OutputScopeImpl : IDisposable
         {
-            private readonly SparkViewBase<TExtendedContext> view;
+            private readonly SparkViewBase<TExtended> view;
             private readonly TextWriter previous;
 
-            public OutputScopeImpl(SparkViewBase<TExtendedContext> view, TextWriter writer)
+            public OutputScopeImpl(SparkViewBase<TExtended> view, TextWriter writer)
             {
                 this.view = view;
                 previous = view.Output;

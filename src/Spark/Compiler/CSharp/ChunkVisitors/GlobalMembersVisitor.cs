@@ -94,15 +94,19 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                     .Append(type)
                     .Append(" ")
                     .Append(chunk.Name)
-                    .AppendLine(" {");
+                    .AppendLine();
                 _source
-                    .AppendFormat("        get {{{1} value; if (!Globals.TryGetValue(\"{0}\", out value) {value = ", chunk.Name, chunk.Type)
+                    .AppendLine("    {");
+                _source
+                    .AppendFormat("        get {{object value; if (!Globals.TryGetValue(\"{0}\", out value)) {{value = ", chunk.Name, chunk.Type)
                     .Append(chunk.Value)
-                    .AppendFormat("; Globals[\"{0}\"] = value;}} return value;}}")
+                    .AppendFormat("; Globals[\"{0}\"] = value;}} return ({1})value;}}", chunk.Name, chunk.Type)
                     .AppendLine();
                 _source
                     .AppendFormat("        set {{Globals[\"{0}\"] = value;}}", chunk.Name, chunk.Type)
                     .AppendLine();
+                _source
+                    .AppendLine("    }");
             }
             _source.AppendLine();
         }

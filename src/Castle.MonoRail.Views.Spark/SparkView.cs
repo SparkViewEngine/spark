@@ -26,9 +26,15 @@ namespace Castle.MonoRail.Views.Spark
 
     using global::Spark;
     
-    public abstract class SparkView : SparkViewDecorator
+    public class MonoRailViewContext
     {
-        protected SparkView(SparkViewBase decorated) : base(decorated)
+        
+    }
+
+    public abstract class SparkView : SparkViewDecorator<MonoRailViewContext>
+    {
+        protected SparkView(SparkViewBase<MonoRailViewContext> decorated)
+            : base(decorated)
         {
             ViewData = new SparkViewData(this);
         }

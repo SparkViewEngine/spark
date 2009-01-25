@@ -11,11 +11,11 @@ namespace Spark
         ISparkView Decorated { get; }
     }
 
-    public abstract class SparkViewDecorator<TExtendedContext> : SparkViewBase<TExtendedContext>, ISparkViewDecorator
+    public abstract class SparkViewDecorator<TExtended> : SparkViewBase<TExtended>, ISparkViewDecorator where TExtended : new()
     {
-        private readonly SparkViewBase<TExtendedContext> _decorated;
+        private readonly SparkViewBase<TExtended> _decorated;
 
-        protected SparkViewDecorator(SparkViewBase<TExtendedContext> decorated)
+        protected SparkViewDecorator(SparkViewBase<TExtended> decorated)
         {
             _decorated = decorated;
         }
@@ -25,18 +25,18 @@ namespace Spark
             get { return _decorated; }
         }
 
-        public override SparkViewContext<TExtendedContext> SparkViewContext
+        public override SparkContext<TExtended> SparkContext
         {
             get
             {
-                return _decorated != null ? _decorated.SparkViewContext : base.SparkViewContext;
+                return _decorated != null ? _decorated.SparkContext : base.SparkContext;
             }
             set
             {
                 if (_decorated != null)
-                    _decorated.SparkViewContext = value;
+                    _decorated.SparkContext = value;
                 else
-                    base.SparkViewContext = value;
+                    base.SparkContext = value;
             }
         }
 

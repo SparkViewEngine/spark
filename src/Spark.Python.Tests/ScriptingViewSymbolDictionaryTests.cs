@@ -42,7 +42,8 @@ namespace Spark.Python.Tests
             {
                 
             }
-            public TestView(SparkViewBase decorated) : base(decorated)
+            public TestView(StubSparkView decorated)
+                : base(decorated)
             {
             }
 

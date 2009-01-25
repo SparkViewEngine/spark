@@ -22,11 +22,17 @@ using Spark.Tests.Stubs;
 namespace Spark.Tests.Precompiled
 {
     [SparkView(
-        TargetNamespace = "Spark.Tests.Precompiled", 
+        TargetNamespace = "Spark.Tests.Precompiled",
         Templates = new[] { "Foo\\Bar.spark", "Shared\\Quux.spark" })]
     public class View1 : StubSparkView
     {
-        public View1(SparkViewBase<object> decorated)
+        public View1()
+            : this(null)
+        {
+
+        }
+
+        public View1(StubSparkView decorated)
             : base(decorated)
         {
         }

@@ -10,6 +10,12 @@ namespace Spark.Tests
     [TestFixture]
     public class SparkViewEngineTester
     {
+        [SetUp]
+        public void Init()
+        {
+            CompiledViewHolder.Current = new CompiledViewHolder();
+        }
+
         [Test]
         public void CompilingCombinedEntry()
         {

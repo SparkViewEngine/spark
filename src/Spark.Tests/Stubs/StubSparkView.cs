@@ -19,6 +19,11 @@ namespace Spark.Tests.Stubs
 {
     public abstract class StubSparkView : SparkViewDecorator<object>
     {
+        protected StubSparkView():this(null)
+        {
+            
+        }
+
         protected StubSparkView(SparkViewBase<object> decorated)
             : base(decorated)
         {
