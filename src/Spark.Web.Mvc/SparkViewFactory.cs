@@ -102,15 +102,20 @@ namespace Spark.Web.Mvc
             Engine.ReleaseInstance((ISparkView)view);
         }
 
-
-        private ViewEngineResult FindViewInternal(ControllerContext controllerContext, string viewName,
-                                                  string masterName, bool findDefaultMaster)
+        private string GetAreaName(ControllerContext controllerContext)
         {
-            var controllerName = controllerContext.RouteData.GetRequiredString("controller");
-            var targetNamespace = controllerContext.Controller.GetType().Namespace;
+            object areaName;
+            return controllerContext.RouteData.Values.TryGetValue("area", out areaName)
+                       ? Convert.ToString(areaName)
+                       : null;
+        }
+
+        private ViewEngineResult FindViewInternal(ControllerContext controllerContext, string viewName, string masterName, bool findDefaultMaster)
+        {
             var searchedLocations = new List<string>();
-            var descriptor = CreateDescriptorInternal(targetNamespace, controllerName, viewName, masterName,
-                                                      findDefaultMaster, searchedLocations);
+            var descriptor = CreateDescriptor(controllerContext, viewName, masterName, findDefaultMaster,
+                                              searchedLocations);
+
             if (descriptor == null)
                 return new ViewEngineResult(searchedLocations);
 
@@ -123,21 +128,32 @@ namespace Spark.Web.Mvc
             return new ViewEngineResult(view, this);
         }
 
-        public SparkViewDescriptor CreateDescriptor(ControllerContext controllerContext, string viewName,
-                                                    string masterName, bool findDefaultMaster)
+        public SparkViewDescriptor CreateDescriptor(
+            ControllerContext controllerContext, 
+            string viewName,
+            string masterName, 
+            bool findDefaultMaster,
+            ICollection<string> searchedLocations)
         {
-            var controllerName = controllerContext.RouteData.GetRequiredString("controller");
             var targetNamespace = controllerContext.Controller.GetType().Namespace;
+            var areaName = GetAreaName(controllerContext);
+            var controllerName = controllerContext.RouteData.GetRequiredString("controller");
 
-            return CreateDescriptorInternal(targetNamespace, controllerName, viewName, masterName, findDefaultMaster,
-                                            null);
+            return CreateDescriptorInternal(
+                targetNamespace, 
+                areaName, 
+                controllerName, 
+                viewName, 
+                masterName, 
+                findDefaultMaster,
+                searchedLocations);
         }
 
         public SparkViewDescriptor CreateDescriptor(string targetNamespace, string controllerName, string viewName,
                                                     string masterName, bool findDefaultMaster)
         {
             var searchedLocations = new List<string>();
-            var descriptor = CreateDescriptorInternal(targetNamespace, controllerName, viewName, masterName,
+            var descriptor = CreateDescriptorInternal(targetNamespace, null, controllerName, viewName, masterName,
                                                       findDefaultMaster,
                                                       searchedLocations);
             if (descriptor == null)
@@ -148,67 +164,124 @@ namespace Spark.Web.Mvc
             return descriptor;
         }
 
-        internal SparkViewDescriptor CreateDescriptorInternal(string targetNamespace, string controllerName,
-                                                             string viewName, string masterName, bool findDefaultMaster,
-                                                             ICollection<string> searchedLocations)
+        internal SparkViewDescriptor CreateDescriptorInternal(string targetNamespace, string areaName, string controllerName, string viewName, string masterName, bool findDefaultMaster, ICollection<string> searchedLocations)
         {
             var descriptor = new SparkViewDescriptor
                                  {
                                      TargetNamespace = targetNamespace
                                  };
 
-            if (ViewFolder.HasView(controllerName + "\\" + viewName + ".spark"))
+            if (!LocatePotentialTemplate(
+                PotentialViewLocations(areaName, controllerName, viewName),
+                descriptor.Templates,
+                searchedLocations))
             {
-                descriptor.Templates.Add(controllerName + "\\" + viewName + ".spark");
-            }
-            else if (ViewFolder.HasView("Shared\\" + viewName + ".spark"))
-            {
-                descriptor.Templates.Add("Shared\\" + viewName + ".spark");
-            }
-            else
-            {
-                searchedLocations.Add(controllerName + "\\" + viewName + ".spark");
-                searchedLocations.Add("Shared\\" + viewName + ".spark");
                 return null;
             }
 
             if (!string.IsNullOrEmpty(masterName))
             {
-                if (ViewFolder.HasView("Layouts\\" + masterName + ".spark"))
+                if (!LocatePotentialTemplate(
+                    PotentialMasterLocations(areaName, masterName),
+                    descriptor.Templates,
+                    searchedLocations))
                 {
-                    descriptor.Templates.Add("Layouts\\" + masterName + ".spark");
-                }
-                else if (ViewFolder.HasView("Shared\\" + masterName + ".spark"))
-                {
-                    descriptor.Templates.Add("Shared\\" + masterName + ".spark");
-                }
-                else
-                {
-                    searchedLocations.Add("Layouts\\" + masterName + ".spark");
-                    searchedLocations.Add("Shared\\" + masterName + ".spark");
                     return null;
                 }
             }
             else if (findDefaultMaster)
             {
-                if (ViewFolder.HasView("Layouts\\" + controllerName + ".spark"))
-                {
-                    descriptor.Templates.Add("Layouts\\" + controllerName + ".spark");
-                }
-                else if (ViewFolder.HasView("Shared\\" + controllerName + ".spark"))
-                {
-                    descriptor.Templates.Add("Shared\\" + controllerName + ".spark");
-                }
-                else if (ViewFolder.HasView("Layouts\\Application.spark"))
-                {
-                    descriptor.Templates.Add("Layouts\\Application.spark");
-                }
-                else if (ViewFolder.HasView("Shared\\Application.spark"))
-                {
-                    descriptor.Templates.Add("Shared\\Application.spark");
-                }
+                LocatePotentialTemplate(
+                    PotentialDefaultMasterLocations(areaName, controllerName),
+                    descriptor.Templates,
+                    null);
             }
+
             return descriptor;
+        }
+
+        private bool LocatePotentialTemplate(
+            IEnumerable<string> potentialTemplates,
+            ICollection<string> descriptorTemplates,
+            ICollection<string> searchedLocations)
+        {
+            var template = potentialTemplates.FirstOrDefault(t => ViewFolder.HasView(t));
+            if (template != null)
+            {
+                descriptorTemplates.Add(template);
+                return true;
+            }
+            if (searchedLocations != null)
+            {
+                foreach (var potentialTemplate in potentialTemplates)
+                    searchedLocations.Add(potentialTemplate);
+            }
+            return false;
+        }
+
+        protected virtual IEnumerable<string> PotentialViewLocations(string areaName, string controllerName, string viewName)
+        {
+            if (string.IsNullOrEmpty(areaName))
+            {
+                return new[]
+                           {
+                               controllerName + "\\" + viewName + ".spark",
+                               "Shared\\" + viewName + ".spark"
+                           };
+
+            }
+
+            return new[]
+                       {
+                           areaName + "\\" + controllerName + "\\" + viewName + ".spark",
+                           controllerName + "\\" + viewName + ".spark",
+                           "Shared\\" + viewName + ".spark"
+                       };
+        }
+
+        protected virtual IEnumerable<string> PotentialMasterLocations(string areaName, string masterName)
+        {
+            if (string.IsNullOrEmpty(areaName))
+            {
+                return new[]
+                       {
+                           "Layouts\\" + masterName + ".spark",
+                           "Shared\\" + masterName + ".spark"
+                       };
+            }
+            return new[]
+                           {
+                               areaName + "\\Layouts\\" + masterName + ".spark",
+                               areaName + "\\Shared\\" + masterName + ".spark",
+                               "Layouts\\" + masterName + ".spark",
+                               "Shared\\" + masterName + ".spark"
+                           };
+        }
+
+        protected virtual IEnumerable<string> PotentialDefaultMasterLocations(string areaName, string controllerName)
+        {
+            if (string.IsNullOrEmpty(areaName))
+            {
+                return new[]
+                           {
+                               "Layouts\\" + controllerName + ".spark",
+                               "Shared\\" + controllerName + ".spark",
+                               "Layouts\\Application.spark",
+                               "Shared\\Application.spark"
+                           };
+
+            }
+            return new[]
+                       {
+                           areaName + "\\Layouts\\" + controllerName + ".spark",
+                           areaName + "\\Shared\\" + controllerName + ".spark",
+                           areaName + "\\Layouts\\Application.spark",
+                           areaName + "\\Shared\\Application.spark",
+                           "Layouts\\" + controllerName + ".spark",
+                           "Shared\\" + controllerName + ".spark",
+                           "Layouts\\Application.spark",
+                           "Shared\\Application.spark"
+                       };
         }
 
         public Assembly Precompile(SparkBatchDescriptor batch)
@@ -349,7 +422,7 @@ namespace Spark.Web.Mvc
         {
             Initialize(container);
         }
-        
+
         #endregion
 
 
