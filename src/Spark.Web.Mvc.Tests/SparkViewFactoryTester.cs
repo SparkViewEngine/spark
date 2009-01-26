@@ -526,7 +526,8 @@ namespace Spark.Web.Mvc.Tests
                             "<li>one</li>",
                             "<li>three</li>",
                             "<li>two</li>",
-                            "</ul>");
+                            "</ul>",
+                            "alphabetagammadelta");
             Assert.IsFalse(content.Contains("foo2"));
             Assert.IsFalse(content.Contains("bar4"));
             Assert.IsFalse(content.Contains("quux7"));

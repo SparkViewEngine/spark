@@ -25,45 +25,49 @@ namespace Castle.MonoRail.Views.Spark
     using Castle.MonoRail.Framework.Helpers;
 
     using global::Spark;
-    
+
     public class MonoRailViewContext
     {
-        
+        public IEngineContext EngineContext {get;set;}
+        public IControllerContext ControllerContext { get; set; }
+        public SparkViewFactory ViewEngine { get; set; }
+        public IDictionary ContextVars { get; set; }
     }
 
     public abstract class SparkView : SparkViewDecorator<MonoRailViewContext>
     {
+        protected SparkView()
+            : this(null)
+        {
+        }
+
         protected SparkView(SparkViewBase<MonoRailViewContext> decorated)
             : base(decorated)
         {
             ViewData = new SparkViewData(this);
         }
 
-        private IEngineContext _context;
-        private IControllerContext _controllerContext;
-        private SparkViewFactory _viewEngine;
-        private IDictionary _contextVars;
 
         private ILogger _logger = NullLogger.Instance;
         public ILogger Logger { get { return _logger; } set { _logger = value; } }
 
 
-        public IEngineContext Context { get { return _context; } }
-        public IControllerContext ControllerContext { get { return _controllerContext; } }
+        public IEngineContext Context { get { return SparkContext.Extended.EngineContext; } }
+        public IControllerContext ControllerContext { get { return SparkContext.Extended.ControllerContext; } }
 
-        public IController Controller { get { return _context.CurrentController; } }
-        public IServerUtility Server { get { return _context.Server; } }
-        public IRequest Request { get { return _context.Request; } }
-        public IResponse Response { get { return _context.Response; } }
-        public IDictionary Session { get { return _context.Session; } }
-        public Flash Flash { get { return _context.Flash; } }
-        public string SiteRoot { get { return _context.ApplicationPath; } }
+        public IController Controller { get { return Context.CurrentController; } }
+        public IServerUtility Server { get { return Context.Server; } }
+        public IRequest Request { get { return Context.Request; } }
+        public IResponse Response { get { return Context.Response; } }
+        public IDictionary Session { get { return Context.Session; } }
+        public Flash Flash { get { return Context.Flash; } }
+        public string SiteRoot { get { return Context.ApplicationPath; } }
         public string SiteResource(string path)
         {
-            return _viewEngine.Engine.ResourcePathManager.GetResourcePath(SiteRoot, path);
+            return SparkContext.Extended.ViewEngine.Engine.ResourcePathManager.GetResourcePath(SiteRoot, path);
         }
 
-        public IDictionary PropertyBag { get { return _contextVars ?? _controllerContext.PropertyBag; } }
+        public IDictionary PropertyBag { get { return SparkContext.Extended.ContextVars ?? ControllerContext.PropertyBag; } }
         public NameValueCollection Params { get { return Request.Params; } }
 
         public AjaxHelper Ajax { get { return Helper<AjaxHelper>(); } }
@@ -92,9 +96,9 @@ namespace Castle.MonoRail.Views.Spark
 
         public virtual void Contextualize(IEngineContext context, IControllerContext controllerContext, SparkViewFactory viewEngine, SparkView outerView)
         {
-            _context = context;
-            _controllerContext = controllerContext;
-            _viewEngine = viewEngine;
+            SparkContext.Extended.EngineContext = context;
+            SparkContext.Extended.ControllerContext = controllerContext;
+            SparkContext.Extended.ViewEngine = viewEngine;
 
             if (outerView != null)
                 OnceTable = outerView.OnceTable;
@@ -111,16 +115,16 @@ namespace Castle.MonoRail.Views.Spark
             Action body,
             IDictionary<string, Action> sections)
         {
-            var service = (IViewComponentFactory)_context.GetService(typeof(IViewComponentFactory));
+            var service = (IViewComponentFactory)Context.GetService(typeof(IViewComponentFactory));
             var component = service.Create(name);
 
-            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _viewEngine, name, parameters, body, sections);
+            IViewComponentContext viewComponentContext = new ViewComponentContext(this, SparkContext.Extended.ViewEngine, name, parameters, body, sections);
 
-            var oldContextVars = _contextVars;
+            var oldContextVars = SparkContext.Extended.ContextVars;
             try
             {
-                _contextVars = viewComponentContext.ContextVars;
-                component.Init(_context, viewComponentContext);
+                SparkContext.Extended.ContextVars = viewComponentContext.ContextVars;
+                component.Init(Context, viewComponentContext);
                 component.Render();
 
                 if (viewComponentContext.ViewToRender != null)
@@ -131,7 +135,7 @@ namespace Castle.MonoRail.Views.Spark
             }
             finally
             {
-                _contextVars = oldContextVars;
+                SparkContext.Extended.ContextVars = oldContextVars;
             }
 
             foreach (string key in viewComponentContext.ContextVars.Keys)

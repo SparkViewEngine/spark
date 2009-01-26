@@ -40,18 +40,17 @@ namespace Spark.Web.Mvc
 
         }
 
-
         public ViewContext ViewContext
         {
-            get { return ExtendedContext.ViewContext; }
-            set { ExtendedContext.ViewContext = value; }
+            get { return SparkContext.Extended.ViewContext; }
+            set { SparkContext.Extended.ViewContext = value; }
         }
 
         public TempDataDictionary TempData { get { return ViewContext.TempData; } }
 
-        public HtmlHelper Html { get { return ExtendedContext.Html; } }
-        public UrlHelper Url { get { return ExtendedContext.Url; } }
-        public AjaxHelper Ajax { get { return ExtendedContext.Ajax; } }
+        public HtmlHelper Html { get { return SparkContext.Extended.Html; } }
+        public UrlHelper Url { get { return SparkContext.Extended.Url; } }
+        public AjaxHelper Ajax { get { return SparkContext.Extended.Ajax; } }
 
         public HttpContextBase Context { get { return ViewContext.HttpContext; } }
 
@@ -61,8 +60,8 @@ namespace Spark.Web.Mvc
 
         public IResourcePathManager ResourcePathManager
         {
-            get { return ExtendedContext.ResourcePathManager; }
-            set { ExtendedContext.ResourcePathManager = value; }
+            get { return SparkContext.Extended.ResourcePathManager; }
+            set { SparkContext.Extended.ResourcePathManager = value; }
         }
 
         public override bool TryGetViewData(string name, out object value)
@@ -89,19 +88,19 @@ namespace Spark.Web.Mvc
         {
             get
             {
-                if (ExtendedContext.SiteRoot == null)
+                if (SparkContext.Extended.SiteRoot == null)
                 {
                     var appPath = ViewContext.HttpContext.Request.ApplicationPath;
                     if (string.IsNullOrEmpty(appPath) || string.Equals(appPath, "/"))
                     {
-                        ExtendedContext.SiteRoot = string.Empty;
+                        SparkContext.Extended.SiteRoot = string.Empty;
                     }
                     else
                     {
-                        ExtendedContext.SiteRoot = "/" + appPath.Trim('/');
+                        SparkContext.Extended.SiteRoot = "/" + appPath.Trim('/');
                     }
                 }
-                return ExtendedContext.SiteRoot;
+                return SparkContext.Extended.SiteRoot;
             }
         }
         public string SiteResource(string path)
@@ -116,11 +115,11 @@ namespace Spark.Web.Mvc
             var wrappedViewContext = new ViewContext(wrappedHttpContext, viewContext.RouteData, viewContext.Controller,
                                           viewContext.View, viewContext.ViewData, viewContext.TempData);
 
-            ExtendedContext.ViewContext = wrappedViewContext;
+            SparkContext.Extended.ViewContext = wrappedViewContext;
             ViewData = wrappedViewContext.ViewData;
-            ExtendedContext.Html = new HtmlHelper(wrappedViewContext, this);
-            ExtendedContext.Url = new UrlHelper(wrappedViewContext);
-            ExtendedContext.Ajax = new AjaxHelper(wrappedViewContext);
+            SparkContext.Extended.Html = new HtmlHelper(wrappedViewContext, this);
+            SparkContext.Extended.Url = new UrlHelper(wrappedViewContext);
+            SparkContext.Extended.Ajax = new AjaxHelper(wrappedViewContext);
 
             var outerView = ViewContext.View as SparkView;
             if (outerView != null && !ReferenceEquals(this, outerView))
@@ -140,7 +139,7 @@ namespace Spark.Web.Mvc
                 foreach (var kv in Content)
                 {
                     if (!outerView.Content.ContainsKey(kv.Key))
-                        Content.Add(kv.Key, kv.Value);
+                        outerView.Content.Add(kv.Key, kv.Value);
                 }
                 foreach (var kv in OnceTable)
                 {
@@ -162,16 +161,16 @@ namespace Spark.Web.Mvc
         {
             get
             {
-                if (ExtendedContext.ViewData == null)
+                if (SparkContext.Extended.ViewData == null)
                     SetViewData(new ViewDataDictionary());
-                return ExtendedContext.ViewData;
+                return SparkContext.Extended.ViewData;
             }
             set { SetViewData(value); }
         }
 
         protected virtual void SetViewData(ViewDataDictionary viewData)
         {
-            ExtendedContext.ViewData = viewData;
+            SparkContext.Extended.ViewData = viewData;
         }
         
 

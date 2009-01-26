@@ -10,8 +10,6 @@ namespace Spark.Compiler
     {
         public SourceBuilder(StringBuilder source)
         {
-            int x = 1;
-
             Source = source;
             Mappings = new List<SourceMapping>();
             AdjustDebugSymbols = true;
@@ -45,14 +43,11 @@ namespace Spark.Compiler
             if (prior != null)
                 compacted.Add(prior);
 
-            bool mappingAdded = false;
-
             // write them out and keep mapping-to-spark source information
             foreach (var snippet in compacted)
             {
                 if (snippet.Begin != null)
                 {
-                    mappingAdded = true;
                     Mappings.Add(new SourceMapping
                                      {
                                          Source = snippet,
@@ -61,10 +56,6 @@ namespace Spark.Compiler
                                      });
                 }
                 Source.Append(snippet.Value);
-            }
-            if (mappingAdded == false)
-            {
-                int x = 5;
             }
             return this;
         }

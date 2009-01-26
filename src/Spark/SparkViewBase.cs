@@ -20,16 +20,12 @@ using Spark.Spool;
 
 namespace Spark
 {
-    public class SparkContext
+    public class SparkContext<TExtended> 
     {
         public TextWriter Output { get; set; }
         public Dictionary<string, TextWriter> Content { get; set; }
         public Dictionary<string, object> Globals { get; set; }
         public Dictionary<string, string> OnceTable { get; set; }
-    }
-
-    public class SparkContext<TExtended> : SparkContext
-    {
         public TExtended Extended { get; set; }
     }
 
@@ -50,19 +46,13 @@ namespace Spark
             get
             {
                 return _sparkContext ??
-                       Interlocked.CompareExchange(ref _sparkContext, CreateSparkViewContext(), null) ??
+                       Interlocked.CompareExchange(ref _sparkContext, CreateSparkContext(), null) ??
                        _sparkContext;
             }
             set { _sparkContext = value; }
         }
 
-        public TExtended ExtendedContext
-        {
-            get { return SparkContext.Extended; }
-            set { SparkContext.Extended = value; }
-        }
-
-        private static SparkContext<TExtended> CreateSparkViewContext()
+        private static SparkContext<TExtended> CreateSparkContext()
         {
             return new SparkContext<TExtended>
                    {
