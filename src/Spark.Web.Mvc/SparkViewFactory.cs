@@ -41,7 +41,8 @@ namespace Spark.Web.Mvc
             Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
         }
 
-        public void Initialize(ISparkServiceContainer container)
+
+        public virtual void Initialize(ISparkServiceContainer container)
         {
             Settings = container.GetService<ISparkSettings>();
             Engine = container.GetService<ISparkViewEngine>();
@@ -81,28 +82,26 @@ namespace Spark.Web.Mvc
 
         public IViewFolder ViewFolder
         {
-            get { return Engine.ViewFolder;}
+            get { return Engine.ViewFolder; }
             set { Engine.ViewFolder = value; }
         }
 
-        #region IViewEngine Members
 
-        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
+        public virtual ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
         {
             return FindViewInternal(controllerContext, viewName, masterName, true);
         }
 
-        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName)
+        public virtual ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName)
         {
             return FindViewInternal(controllerContext, partialViewName, null /*masterName*/, false);
         }
 
-        public void ReleaseView(ControllerContext controllerContext, IView view)
+        public virtual void ReleaseView(ControllerContext controllerContext, IView view)
         {
             Engine.ReleaseInstance((ISparkView)view);
         }
 
-        #endregion
 
         private ViewEngineResult FindViewInternal(ControllerContext controllerContext, string viewName,
                                                   string masterName, bool findDefaultMaster)
@@ -119,7 +118,7 @@ namespace Spark.Web.Mvc
             var view = (IView)entry.CreateInstance();
             if (view is SparkView)
             {
-                ((SparkView) view).ResourcePathManager = Engine.ResourcePathManager;
+                ((SparkView)view).ResourcePathManager = Engine.ResourcePathManager;
             }
             return new ViewEngineResult(view, this);
         }
@@ -322,5 +321,46 @@ namespace Spark.Web.Mvc
             return value;
         }
 
+
+
+        #region IViewEngine Members
+
+        ViewEngineResult IViewEngine.FindPartialView(ControllerContext controllerContext, string partialViewName)
+        {
+            return FindPartialView(controllerContext, partialViewName);
+        }
+
+        ViewEngineResult IViewEngine.FindView(ControllerContext controllerContext, string viewName, string masterName)
+        {
+            return FindView(controllerContext, viewName, masterName);
+        }
+
+        void IViewEngine.ReleaseView(ControllerContext controllerContext, IView view)
+        {
+            ReleaseView(controllerContext, view);
+        }
+
+        #endregion
+
+
+        #region ISparkServiceInitialize Members
+
+        void ISparkServiceInitialize.Initialize(ISparkServiceContainer container)
+        {
+            Initialize(container);
+        }
+        
+        #endregion
+
+
+        #region IViewFolderContainer Members
+
+        IViewFolder IViewFolderContainer.ViewFolder
+        {
+            get { return ViewFolder; }
+            set { ViewFolder = value; }
+        }
+
+        #endregion
     }
 }
