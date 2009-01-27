@@ -25,7 +25,7 @@ namespace Spark.Modules
                 var areaControllerKey = Convert.ToString(area).ToLowerInvariant() + "." + controllerKey;
                 if (_kernel.HasComponent(areaControllerKey))
                 {
-                    requestContext.RouteData.Values["controller"] = area + "/" + controllerName;
+                    //requestContext.RouteData.Values["controller"] = area + "/" + controllerName;
                     return _kernel.Resolve<IController>(areaControllerKey);
                 }
             }
