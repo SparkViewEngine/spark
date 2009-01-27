@@ -155,7 +155,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.AreEqual("<p>404 message rendered</p>", output.ToString());
         }
 
-        [Test]
+        [Test, Ignore("Controller Type effects are no longer supported in 1.1")]
         public void ControllerHelperAttributeCanBeUsed()
         {
             controller = new Helpers.HomeController();

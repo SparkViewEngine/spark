@@ -77,6 +77,7 @@
     <Compile Include="SparkEngineStarter.cs" />
     <Compile Include="SparkView.cs" />
     <Compile Include="SparkViewFactory.cs" />
+    <Compile Include="ViewDescriptorBuilder.cs" />
     <Compile Include="ViewFolderExtensions.cs" />
     <Compile Include="Wrappers\HttpContextWrapper.cs" />
     <Compile Include="Wrappers\HttpResponseWrapper.cs" />

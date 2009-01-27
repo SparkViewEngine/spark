@@ -15,6 +15,7 @@ namespace Spark.Web.Mvc
         public static void ConfigureContainer(ISparkServiceContainer container)
         {
             container.SetServiceBuilder<IViewEngine>(c => new SparkViewFactory(c.GetService<ISparkSettings>()));
+            container.SetServiceBuilder<IViewDescriptorBuilder>(c => new ViewDescriptorBuilder());
         }
 
         /// <summary>

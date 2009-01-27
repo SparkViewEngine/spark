@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Spark.Compiler;
+using Spark.Compiler.ChunkVisitors;
 using Spark.Parser;
 
 namespace Spark
@@ -23,6 +25,34 @@ namespace Spark
         public IList<SourceMapping> SourceMappings
         {
             get { return Compiler.SourceMappings; }
+        }
+
+        class UseMasterVisitor : ChunkVisitor
+        {
+            public UseMasterChunk Chunk { get; set; }
+
+            protected override void Visit(UseMasterChunk chunk)
+            {
+                if (Chunk == null)
+                    Chunk = chunk;
+            }
+        }
+
+        public string UseMaster
+        {
+            get
+            {
+                var chunks = Loader.GetEverythingLoaded().FirstOrDefault();
+                if (chunks == null)
+                    return null;
+
+                var useMaster = new UseMasterVisitor();
+                useMaster.Accept(chunks);
+                if (useMaster.Chunk == null)
+                    return null;
+
+                return useMaster.Chunk.Name;
+            }
         }
 
         public ISparkView CreateInstance()

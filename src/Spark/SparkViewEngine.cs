@@ -48,8 +48,6 @@ namespace Spark
 
         public void Initialize(ISparkServiceContainer container)
         {
-            _container = container;
-
             Settings = container.GetService<ISparkSettings>();
             SyntaxProvider = container.GetService<ISparkSyntaxProvider>();
             ViewActivatorFactory = container.GetService<IViewActivatorFactory>();
@@ -58,8 +56,6 @@ namespace Spark
             TemplateLocator = container.GetService<ITemplateLocator>();
             SetViewFolder(container.GetService<IViewFolder>());
         }
-
-        private ISparkServiceContainer _container;
 
         private IViewFolder _viewFolder;
         public IViewFolder ViewFolder
@@ -235,8 +231,7 @@ namespace Spark
                     .AddTemplate(template);
                 entries.Add(CreateEntry(compiledDescriptor));
             }
-            var entry = new CompositeViewEntry(descriptor, entries);
-            return entry;
+            return new CompositeViewEntry(descriptor, entries);
         }
 
         public CompiledViewEntry BuildCompiledEntry(SparkViewDescriptor descriptor, bool compile)
@@ -268,7 +263,7 @@ namespace Spark
             return entry;
         }
 
-        void LoadTemplates(ViewLoader loader, IList<string> templates, IList<IList<Chunk>> chunksLoaded, IList<string> templatesLoaded)
+        void LoadTemplates(ViewLoader loader, IEnumerable<string> templates, ICollection<IList<Chunk>> chunksLoaded, ICollection<string> templatesLoaded)
         {
             foreach (var template in templates)
             {
@@ -282,42 +277,6 @@ namespace Spark
                 var chunks = loader.Load(template);
                 chunksLoaded.Add(chunks);
                 templatesLoaded.Add(template);
-
-                var useMaster = new UseMasterVisitor();
-                useMaster.Accept(chunks);
-                if (useMaster.Chunk == null)
-                {
-                    // process next template normally
-                    continue;
-                }
-
-                if (string.IsNullOrEmpty(useMaster.Chunk.Name))
-                {
-                    // <use master=""/> will explicitly ignore any default master layouts
-                    return;
-                }
-
-                var result = TemplateLocator.LocateMasterFile(ViewFolder, useMaster.Chunk.Name);
-                if (string.IsNullOrEmpty(result.Path))
-                {
-                    throw new CompilerException(string.Format(
-                                                    "Unable to find master layout file for '{0}'", useMaster.Chunk.Name));
-                }
-                LoadTemplates(loader, new[] { result.Path }, chunksLoaded, templatesLoaded);
-
-                // Explicit master templates loaded recursively. This loop is abandoned.
-                return;
-            }
-        }
-
-        class UseMasterVisitor : ChunkVisitor
-        {
-            public UseMasterChunk Chunk { get; set; }
-
-            protected override void Visit(UseMasterChunk chunk)
-            {
-                if (Chunk == null)
-                    Chunk = chunk;
             }
         }
 

@@ -71,5 +71,10 @@ namespace Spark
         {
             get { return CompiledEntries.SelectMany(e => e.SourceMappings).ToList(); }
         }
+
+        public string UseMaster
+        {
+            get { return CompiledEntries.Last().UseMaster; }
+        }
     }
 }

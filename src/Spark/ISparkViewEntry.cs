@@ -33,5 +33,6 @@ namespace Spark
 
         string SourceCode { get; }
         IList<SourceMapping> SourceMappings { get; }
+        string UseMaster { get; }
     }
 }
