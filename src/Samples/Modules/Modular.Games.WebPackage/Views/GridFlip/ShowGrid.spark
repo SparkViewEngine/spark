@@ -17,10 +17,10 @@
 	<table>
 		<tr each="var row in new[] {new[] {0,1,2}, new[] {3,4,5}, new[] {6,7,8}}">
 			<td each="var cell in row" class="lit?{game.Cells[cell]}">
-				!{Html.ActionLink(cell.ToString(), "Toggle", new {controller="GridFlip", area="Games", cell})}
+				!{Html.ActionLink(cell.ToString(), "Toggle", new {cell})}
 			</td>
 		</tr>
 	</table>
 
-	<p>!{Html.ActionLink("New Game", "Reset", new {controller="GridFlip", area="Games"})}</p>
+	<p>!{Html.ActionLink("New Game", "Reset")}</p>
 </div>

@@ -18,7 +18,7 @@
 	<table>
 		<tr each="var row in game.Rows">
 			<td each="var cell in row" class="${cell.State}">
-				!{Html.ActionLink(cell.Letter, "Guess", new {controller="Hangman", area="Games", letter=cell.Letter})}
+				!{Html.ActionLink(cell.Letter, "Guess", new {letter=cell.Letter})}
 			</td>
 		</tr>
 	</table>
@@ -29,5 +29,5 @@
 		</span>
 	</div>
 	
-	<p>!{Html.ActionLink("New Game", "Reset", new {controller="Hangman", area="Games"})}</p>
+	<p>!{Html.ActionLink("New Game", "Reset")}</p>
 </div>

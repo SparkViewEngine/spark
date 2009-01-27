@@ -238,7 +238,7 @@ namespace Spark.Web.Mvc.Tests
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
 
-            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true);
+            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
             mocks.VerifyAll();
 
@@ -266,7 +266,7 @@ namespace Spark.Web.Mvc.Tests
             routeData.Values["action"] = "NotBaaz";
 
 
-            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true);
+            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
             mocks.VerifyAll();
 
@@ -290,7 +290,7 @@ namespace Spark.Web.Mvc.Tests
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
 
-            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true);
+            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
             mocks.VerifyAll();
 
@@ -364,7 +364,7 @@ namespace Spark.Web.Mvc.Tests
 
             mocks.ReplayAll();
 
-            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true);
+            var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
             mocks.VerifyAll();
 
             Assert.AreEqual("Spark.Web.Mvc.Tests.Controllers", descriptor.TargetNamespace);
@@ -531,6 +531,64 @@ namespace Spark.Web.Mvc.Tests
             Assert.IsFalse(content.Contains("foo2"));
             Assert.IsFalse(content.Contains("bar4"));
             Assert.IsFalse(content.Contains("quux7"));
+        }
+
+        [Test]
+        public void CanLocateViewInArea()
+        {
+            mocks.ReplayAll();
+            controllerContext.RouteData.Values.Add("area", "admin");
+            var result = factory.FindView(controllerContext, "index", null);
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), null);
+            viewContext.View.Render(viewContext, output);
+            mocks.VerifyAll();
+
+            Assert.AreEqual("<p>default view admin area</p>", output.ToString().Trim());
+        }
+
+        [Test]
+        public void CanLocateViewInAreaWithLayout()
+        {
+            mocks.ReplayAll();
+            controllerContext.RouteData.Values.Add("area", "admin");
+            var result = factory.FindView(controllerContext, "index", "layout");
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), null);
+            viewContext.View.Render(viewContext, output);
+            mocks.VerifyAll();
+
+            ContainsInOrder(output.ToString(),
+                            "<body>",
+                            "<p>default view admin area</p>",
+                            "</body>");
+        }
+
+        [Test]
+        public void CanLocateViewInAreaWithLayoutInArea()
+        {
+            mocks.ReplayAll();
+            controllerContext.RouteData.Values.Add("area", "admin");
+            var result = factory.FindView(controllerContext, "index", "speciallayout");
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), null);
+            viewContext.View.Render(viewContext, output);
+            mocks.VerifyAll();
+
+            ContainsInOrder(output.ToString(),
+                            "<body class=\"special\">",
+                            "<p>default view admin area</p>",
+                            "</body>");
+        }
+
+        [Test]
+        public void CanLocatePartialViewInArea()
+        {
+            mocks.ReplayAll();
+            controllerContext.RouteData.Values.Add("area", "admin");
+            var result = factory.FindPartialView(controllerContext, "index");
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), null);
+            viewContext.View.Render(viewContext, output);
+            mocks.VerifyAll();
+
+            Assert.AreEqual("<p>default view admin area</p>", output.ToString().Trim());
         }
     }
 }

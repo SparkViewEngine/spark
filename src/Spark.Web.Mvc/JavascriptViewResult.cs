@@ -23,6 +23,7 @@ namespace Spark.Web.Mvc
 {
     public class JavascriptViewResult : ActionResult
     {
+        public string AreaName { get; set; }
         public string ViewName { get; set; }
         public string MasterName { get; set; }
 
@@ -45,7 +46,7 @@ namespace Spark.Web.Mvc
 
             foreach(var factory in factories)
             {
-                var descriptor = factory.CreateDescriptorInternal("", controllerName, ViewName, MasterName, false, searchedLocations);
+                var descriptor = factory.CreateDescriptorInternal("", AreaName, controllerName, ViewName, MasterName, false, searchedLocations);
                 descriptor.Language = LanguageType.Javascript;
                 var entry = factory.Engine.CreateEntry(descriptor);
                 context.HttpContext.Response.ContentType = "text/javascript";

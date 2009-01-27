@@ -1,4 +1,5 @@
 using System.IO;
+using System.Web.Mvc;
 using EmailOrTextTemplating.Templates;
 using Spark;
 using Spark.FileSystem;
@@ -22,7 +23,7 @@ namespace EmailOrTextTemplating.Services
             var view = (TemplateBase)_engine.CreateInstance(descriptor);
             try
             {
-                view.ViewData = new System.Web.Mvc.ViewDataDictionary(data);
+                view.ViewData = new ViewDataDictionary(data);
                 view.RenderView(output);
             }
             finally

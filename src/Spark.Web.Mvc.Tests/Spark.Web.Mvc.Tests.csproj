@@ -69,6 +69,7 @@
     <Compile Include="Controllers\ComplexPrecompileController.cs" />
     <Compile Include="Controllers\SimplePrecompileController.cs" />
     <Compile Include="Controllers\StubController.cs" />
+    <Compile Include="DescriptorBuildingTester.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="MvcMockHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,6 +88,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="AspNetMvc.Tests.Views\Admin\Home\Index.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Admin\Layouts\speciallayout.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="AspNetMvc.Tests.Views\Home\childview.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
