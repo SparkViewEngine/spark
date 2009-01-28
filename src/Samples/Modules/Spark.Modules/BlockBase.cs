@@ -10,7 +10,7 @@ namespace Spark.Modules
     {
         public ViewContext ViewContext { get; set; }
         public ViewDataDictionary ViewData { get; set; }
-        
+
         public HtmlHelper Html { get; set; }
         public AjaxHelper Ajax { get; set; }
         public UrlHelper Url { get; set; }
@@ -20,8 +20,8 @@ namespace Spark.Modules
             ViewData = viewContext.ViewData;
             ViewContext = viewContext;
             Html = new HtmlHelper(viewContext, this);
-            Ajax = new AjaxHelper(viewContext);
-            Url = new UrlHelper(viewContext);
+            Ajax = new AjaxHelper(viewContext, this);
+            Url = new UrlHelper(viewContext.RequestContext);
 
             RenderBlock();
         }

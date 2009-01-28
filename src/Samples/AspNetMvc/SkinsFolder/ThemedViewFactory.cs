@@ -70,21 +70,21 @@ namespace SkinsFolder
             return _defaultEngine;
         }
 
-        ViewEngineResult IViewEngine.FindPartialView(ControllerContext controllerContext, string partialViewName)
+        ViewEngineResult IViewEngine.FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
-            var viewEngine = Associate(controllerContext);
-            return viewEngine.FindPartialView(controllerContext, partialViewName);
+            var viewEngine = Associate(controllerContext.RequestContext);
+            return viewEngine.FindPartialView(controllerContext, partialViewName, useCache);
         }
 
-        ViewEngineResult IViewEngine.FindView(ControllerContext controllerContext, string viewName, string masterName)
+        ViewEngineResult IViewEngine.FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
-            var viewEngine = Associate(controllerContext);
-            return viewEngine.FindView(controllerContext, viewName, masterName);
+            var viewEngine = Associate(controllerContext.RequestContext);
+            return viewEngine.FindView(controllerContext, viewName, masterName, useCache);
         }
 
         void IViewEngine.ReleaseView(ControllerContext controllerContext, IView view)
         {
-            var viewEngine = Associate(controllerContext);
+            var viewEngine = Associate(controllerContext.RequestContext);
             viewEngine.ReleaseView(controllerContext, view);
         }
     }

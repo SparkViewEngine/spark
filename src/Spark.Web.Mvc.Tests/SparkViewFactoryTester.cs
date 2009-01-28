@@ -49,6 +49,7 @@ namespace Spark.Web.Mvc.Tests
             response = context.Response;
             request = context.Request;
             SetupResult.For(request.ApplicationPath).Return("/");
+            SetupResult.For(request.Path).Return("/");
             SetupResult.For(response.ApplyAppPathModifier("")).IgnoreArguments().Do(
                 new Func<string, string>(path => path));
 
@@ -88,7 +89,7 @@ namespace Spark.Web.Mvc.Tests
         private ViewContext MakeViewContext(string viewName)
         {
             var result = factory.FindView(controllerContext, viewName, null);
-            return new ViewContext(controllerContext, result.View, null, null);
+            return new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
         }
 
         private void FindViewAndRender(string viewName)
@@ -109,7 +110,7 @@ namespace Spark.Web.Mvc.Tests
         private void FindViewAndRender(string viewName, string masterName, object viewData)
         {
             var result = factory.FindView(controllerContext, viewName, masterName);
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(viewData), null);
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(viewData), new TempDataDictionary());
             viewContext.View.Render(viewContext, output);
         }
 
@@ -210,14 +211,19 @@ namespace Spark.Web.Mvc.Tests
         {
             mocks.ReplayAll();
 
+
             var viewContext = MakeViewContext("helpers");
+
+            var appPath = viewContext.HttpContext.Request.ApplicationPath;
+            var currentPath = viewContext.HttpContext.Request.Path;
+
             var html = new HtmlHelper(viewContext, new ViewDataContainer { ViewData = viewContext.ViewData });
             var link = html.ActionLink("hello", "world");
             response.Write(link);
 
             mocks.VerifyAll();
 
-            Assert.AreEqual("<a href=\"/Home/world\">hello</a>", link);
+            Assert.AreEqual("<a href=\"Home/world\">hello</a>", link);
         }
 
         [Test]
@@ -380,7 +386,7 @@ namespace Spark.Web.Mvc.Tests
 
             mocks.VerifyAll();
             var content = output.ToString();
-            Assert.That(content.Contains("<p><a href=\"/Home/Sort\">Click me</a></p>"));
+            Assert.That(content.Contains("<p><a href=\"Home/Sort\">Click me</a></p>"));
             Assert.That(content.Contains("<p>foo&gt;bar</p>"));
         }
 
@@ -539,7 +545,7 @@ namespace Spark.Web.Mvc.Tests
             mocks.ReplayAll();
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindView(controllerContext, "index", null);
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), null);
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
             viewContext.View.Render(viewContext, output);
             mocks.VerifyAll();
 
@@ -552,7 +558,7 @@ namespace Spark.Web.Mvc.Tests
             mocks.ReplayAll();
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindView(controllerContext, "index", "layout");
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), null);
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
             viewContext.View.Render(viewContext, output);
             mocks.VerifyAll();
 
@@ -568,7 +574,7 @@ namespace Spark.Web.Mvc.Tests
             mocks.ReplayAll();
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindView(controllerContext, "index", "speciallayout");
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), null);
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
             viewContext.View.Render(viewContext, output);
             mocks.VerifyAll();
 
@@ -584,7 +590,7 @@ namespace Spark.Web.Mvc.Tests
             mocks.ReplayAll();
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindPartialView(controllerContext, "index");
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), null);
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
             viewContext.View.Render(viewContext, output);
             mocks.VerifyAll();
 

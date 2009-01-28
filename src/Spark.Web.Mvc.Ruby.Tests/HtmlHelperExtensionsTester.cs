@@ -56,8 +56,8 @@ namespace Spark.Web.Mvc.Ruby.Tests
             var controller = new StubController();
             var controllerContext = new ControllerContext(httpContext, routeData, controller);
 
-            var result = viewEngine.FindPartialView(controllerContext, "index");
-            return new ViewContext(controllerContext, result.View, null, null);
+            var result = viewEngine.FindPartialView(controllerContext, "index", false);
+            return new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
         }
 
         [Test]

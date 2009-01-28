@@ -34,7 +34,7 @@ namespace Spark.Web.Mvc.Tests
 
             public override bool TryGetViewData(string name, out object value)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public override void RenderView(TextWriter writer)
@@ -47,11 +47,11 @@ namespace Spark.Web.Mvc.Tests
         public void SiteRootActsAsSafePrefix()
         {
             var mocks = new MockRepository();
-            var httpContext = mocks.CreateMock<HttpContextBase>();
-            var httpRequest = mocks.CreateMock<HttpRequestBase>();
+            var httpContext = mocks.StrictMock<HttpContextBase>();
+            var httpRequest = mocks.StrictMock<HttpRequestBase>();
             SetupResult.For(httpContext.Request).Return(httpRequest);
 
-            var controller = mocks.CreateMock<ControllerBase>();
+            var controller = mocks.StrictMock<ControllerBase>();
 
             Expect.Call(httpRequest.ApplicationPath).Return("/");
             Expect.Call(httpRequest.ApplicationPath).Return("/TestApp");
@@ -64,27 +64,27 @@ namespace Spark.Web.Mvc.Tests
             mocks.ReplayAll();
 
             var view = new StubSparkView();
-            var viewContext = new ViewContext(httpContext, new RouteData(), controller, view, null, null);
+            var viewContext = new ViewContext(new ControllerContext(httpContext, new RouteData(), controller), view, new ViewDataDictionary(), new TempDataDictionary());
 
             view = new StubSparkView { ViewContext = viewContext };
             Assert.AreEqual("", view.SiteRoot);
 
-            view = new StubSparkView {ViewContext = viewContext};
+            view = new StubSparkView { ViewContext = viewContext };
             Assert.AreEqual("/TestApp", view.SiteRoot);
 
-            view = new StubSparkView {ViewContext = viewContext};
+            view = new StubSparkView { ViewContext = viewContext };
             Assert.AreEqual("/TestApp", view.SiteRoot);
 
-            view = new StubSparkView {ViewContext = viewContext};
+            view = new StubSparkView { ViewContext = viewContext };
             Assert.AreEqual("", view.SiteRoot);
 
-            view = new StubSparkView {ViewContext = viewContext};
+            view = new StubSparkView { ViewContext = viewContext };
             Assert.AreEqual("", view.SiteRoot);
 
-            view = new StubSparkView {ViewContext = viewContext};
+            view = new StubSparkView { ViewContext = viewContext };
             Assert.AreEqual("/TestApp", view.SiteRoot);
 
-            view = new StubSparkView {ViewContext = viewContext};
+            view = new StubSparkView { ViewContext = viewContext };
             Assert.AreEqual("/TestApp", view.SiteRoot);
 
             mocks.VerifyAll();
@@ -94,20 +94,19 @@ namespace Spark.Web.Mvc.Tests
         {
             public override void RenderView(TextWriter writer)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public override Guid GeneratedViewId
             {
-                get { throw new System.NotImplementedException(); }
+                get { throw new NotImplementedException(); }
             }
         }
 
         [Test]
         public void CanAccessModelViaModel()
         {
-            var view = new ModelViewTest();
-            view.ViewData.Model = "asd";
+            var view = new ModelViewTest { ViewData = { Model = "asd" } };
             Assert.AreEqual("asd", view.Model);
         }
     }

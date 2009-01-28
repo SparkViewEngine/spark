@@ -37,9 +37,9 @@ namespace Spark.Web.Mvc
             {
                 ViewName = context.RouteData.GetRequiredString("action");
             }
-
-            var searchedLocations = new List<string>(); 
-            var factories = ViewEngines.DefaultEngine.EngineCollection.OfType<SparkViewFactory>();
+            
+            var searchedLocations = new List<string>();
+            var factories = ViewEngines.Engines.OfType<SparkViewFactory>();
 
             if (factories.Count() == 0)
                 throw new CompilerException("No SparkViewFactory instances are registered");

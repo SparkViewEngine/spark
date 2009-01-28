@@ -100,14 +100,18 @@ namespace Spark.Web.Mvc
         public void Render(ViewContext viewContext, TextWriter writer)
         {
             var wrappedHttpContext = new HttpContextWrapper(viewContext.HttpContext, this);
-            var wrappedViewContext = new ViewContext(wrappedHttpContext, viewContext.RouteData, viewContext.Controller,
-                                          viewContext.View, viewContext.ViewData, viewContext.TempData);
+
+            var wrappedViewContext = new ViewContext(
+                new ControllerContext(wrappedHttpContext, viewContext.RouteData, viewContext.Controller),
+                viewContext.View,
+                viewContext.ViewData,
+                viewContext.TempData);
 
             ViewContext = wrappedViewContext;
             ViewData = wrappedViewContext.ViewData;
             Html = new HtmlHelper(wrappedViewContext, this);
-            Url = new UrlHelper(wrappedViewContext);
-            Ajax = new AjaxHelper(wrappedViewContext);
+            Url = new UrlHelper(wrappedViewContext.RequestContext);
+            Ajax = new AjaxHelper(wrappedViewContext, this);
 
             var outerView = ViewContext.View as SparkView;
             if (outerView != null && !ReferenceEquals(this, outerView))

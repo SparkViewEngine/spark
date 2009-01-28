@@ -398,12 +398,12 @@ namespace Spark.Web.Mvc
 
         #region IViewEngine Members
 
-        ViewEngineResult IViewEngine.FindPartialView(ControllerContext controllerContext, string partialViewName)
+        ViewEngineResult IViewEngine.FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
             return FindPartialView(controllerContext, partialViewName);
         }
 
-        ViewEngineResult IViewEngine.FindView(ControllerContext controllerContext, string viewName, string masterName)
+        ViewEngineResult IViewEngine.FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
             return FindView(controllerContext, viewName, masterName);
         }
@@ -434,6 +434,6 @@ namespace Spark.Web.Mvc
             set { ViewFolder = value; }
         }
 
-        #endregion
+        #endregion        
     }
 }
