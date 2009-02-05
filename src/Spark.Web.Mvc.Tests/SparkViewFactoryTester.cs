@@ -223,7 +223,7 @@ namespace Spark.Web.Mvc.Tests
 
             mocks.VerifyAll();
 
-            Assert.AreEqual("<a href=\"Home/world\">hello</a>", link);
+            Assert.AreEqual("<a href=\"/Home/world\">hello</a>", link);
         }
 
         [Test]
@@ -386,7 +386,7 @@ namespace Spark.Web.Mvc.Tests
 
             mocks.VerifyAll();
             var content = output.ToString();
-            Assert.That(content.Contains("<p><a href=\"Home/Sort\">Click me</a></p>"));
+            Assert.That(content.Contains("<p><a href=\"/Home/Sort\">Click me</a></p>"));
             Assert.That(content.Contains("<p>foo&gt;bar</p>"));
         }
 
