@@ -1,0 +1,26 @@
+﻿<invoice>
+  <invoiceNumber>PLI005738</invoiceNumber>
+  <customer>
+    <first>Louis</first>
+    <last>DeJardin</last>
+    <account>N10000497</account>
+  </customer>
+  <detail>
+    <line>
+      <number>1</number>
+      <part>
+        <name>Refund</name>
+        <subclass>Domestic ground</subclass>
+      </part>
+      <quantity>1</quantity>
+      <price>60.00</price>
+    </line>
+  </detail>
+  <comments>
+    <section>Customer service</section>
+    <paragraph>
+      Part was wrong after all in original order <order id="PLI004959"/>. 
+      Be sure to verify medical constraints/regulations of parts this customer will be using.
+    </paragraph>
+  </comments>
+</invoice>

@@ -1,0 +1,77 @@
+﻿
+<use namespace="System"/>
+<use namespace="System.Linq"/>
+<use namespace="System.Xml.Linq"/>
+<use namespace="System.Web.Mvc.Html"/>
+
+<var rules="new ActionSample.Helpers.RuleTable()"/>
+
+#rules.For<XElement>(elt => elt.Name == "invoice", elt =>
+#{ // Root handler for invoice element
+	   
+	<h2>Invoice ${(string)elt.Element("invoiceNumber")}</h2>
+
+	<div class="customer">!{CustomerInfo(elt.Element("customer"))}</div>
+	  
+	<div class="lines">
+	<h3>Details</h3>
+	#rules.Dispatch(elt.Elements("detail").Elements("line"));
+	</div>
+
+	<div class="notes">
+	<h3>Notes</h3>
+	#rules.Dispatch(elt.Elements("comments").Elements());
+	</div>
+
+
+#}).For<XElement>(elt => elt.Name == "line", elt =>
+#{ // write out all fields using xml names
+   <ul>!{ShowElementListItems(elt)}</ul>
+	
+	
+#}).For<XElement>(elt => elt.Name == "section", elt =>
+#{ // sections can only be text
+	<h4 class="section">${elt.Value}</h4>
+
+
+#}).For<XElement>(elt => elt.Name == "paragraph", elt =>
+#{ // paragraph contents are written as individually matches rules
+	<p><%rules.Dispatch(elt.Nodes());%></p>
+
+
+#}).For<XText>(txt => true /*always match XText type*/, txt =>
+#{ // text passes through when it's dispatched (happens in paragraph)
+	${txt.Value}
+
+
+#}).For<XElement>(elt => elt.Name == "order", elt =>
+#{ // <order id="xxx"/> is rendered with some constant text and an action link 
+	<var orderId="(string)elt.Attribute('id')"/>
+	(See invoice #!{Html.ActionLink(orderId, "Invoice", new { id = orderId })})
+
+
+#}).For<XElement>(elt => elt.Ancestors("paragraph").Count() != 0, elt =>
+#{ // any unrecognized element, if it's in a paragraph, is written out to enable simple semantic styles
+	<wrap name="elt.Name"><%rules.Dispatch(elt.Nodes());%></wrap>
+
+#});
+
+
+<viewdata model="XNode"/>
+<h1>Hello world</h1>
+#rules.Dispatch(Model);
+
+<macro name="CustomerInfo" customer="XElement">
+<span>Account #${(string)customer.Element("account")}</span><br/>
+<span>${(string)customer.Element("last")}, ${(string)customer.Element("first")}</span>
+</macro>
+
+<macro name="ShowElementListItems" root="XElement">
+<var allElementsInRoot="root.DescendantNodes().OfType<XElement>()"/>
+<var allElementsWithOnlyText="allElementsInRoot.Where(field => field.Nodes().All(x => x is XText))"/>
+<li each="var field in allElementsWithOnlyText">
+	<var trailFromFieldToRoot="field.AncestorsAndSelf().TakeWhile(x => x != root.Parent)"/>
+	<var namesFromRootToField="trailFromFieldToRoot.Reverse().Select(x => x.Name.LocalName)"/>
+	${string.Join(".", namesFromRootToField.ToArray())}:<strong>${field.Value}</strong>
+</li>
+</macro>
