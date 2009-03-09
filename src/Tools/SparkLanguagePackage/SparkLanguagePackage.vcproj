@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
-				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;;&quot;C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\IDL&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;;&quot;C:\Program Files\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\IDL&quot;"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -55,7 +55,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
@@ -134,7 +134,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
-				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;;&quot;C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\IDL&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;;&quot;C:\Program Files\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\IDL&quot;"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -148,7 +148,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -227,7 +227,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG;RETAIL"
-				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;;&quot;C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\IDL&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;;&quot;C:\Program Files\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\IDL&quot;"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -241,7 +241,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Program Files (x86)\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Visual Studio 2008 SDK\VisualStudioIntegration\Common\Inc&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
