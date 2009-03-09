@@ -175,9 +175,14 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             CodeHidden();
             _source.AppendLine("        using(OutputScope(new System.IO.StringWriter()))");
             _source.AppendLine("        {");
-
             CodeDefault();
-            var generator = new GeneratedCodeVisitor(_source, null, _nullBehaviour) { Indent = 12 };
+            
+            var variables = new Dictionary<string, object>();
+            foreach (var param in chunk.Parameters)
+            {
+                variables.Add(param.Name, null);
+            }
+            var generator = new GeneratedCodeVisitor(_source, variables, _nullBehaviour) { Indent = 12 };
             generator.Accept(chunk.Body);
 
             CodeHidden();

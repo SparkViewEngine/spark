@@ -1,0 +1,4 @@
+﻿
+<default foo="8" quad="8"/>
+
+<p if="foo!= 8 && quad == 8">${foo}${bar}</p>

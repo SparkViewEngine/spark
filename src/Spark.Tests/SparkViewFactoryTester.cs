@@ -957,5 +957,22 @@ namespace Spark.Tests
 
         }
 
+        [Test]
+        public void PartialInMacroMayUseDefaultElement()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("PartialInMacroMayUseDefaultElement", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                            "<p>3hello</p>",
+                            "<p>2hello.</p>",
+                            "<p>1hello..</p>",
+                            "<p>0hello...</p>");
+            
+        }
+
     }
 }

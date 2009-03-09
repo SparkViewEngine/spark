@@ -1,0 +1,9 @@
+﻿
+<macro name="RecursiveThing" foo="int" bar="string">
+  <PartialInMacro quux="6"/>
+  <test if="foo != 0">
+	  !{RecursiveThing(foo - 1, bar + ".")}
+  </test>
+</macro>
+
+!{RecursiveThing(3, "hello")}
