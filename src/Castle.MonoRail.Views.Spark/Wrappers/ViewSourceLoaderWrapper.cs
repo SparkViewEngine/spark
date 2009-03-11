@@ -33,6 +33,10 @@ namespace Castle.MonoRail.Views.Spark.Wrappers
         public IViewFile GetViewSource(string path)
         {
             var viewSource = _container.ViewSourceLoader.GetViewSource(Path.ChangeExtension(path, ".spark"));
+            if(viewSource==null)
+            {
+              throw new FileNotFoundException(string.Format("Template {0} not found", path), path);
+            }
             return new ViewSourceWrapper(viewSource);
         }
 

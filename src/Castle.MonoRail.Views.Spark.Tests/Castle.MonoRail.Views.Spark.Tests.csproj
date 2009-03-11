@@ -93,6 +93,7 @@
     <Compile Include="ViewComponents\ViewComponentRenderViewTests.cs" />
     <Compile Include="ViewComponents\ViewComponentSectionChunkBuilderVisitorTests.cs" />
     <Compile Include="ViewComponents\ViewComponentSectionTests.cs" />
+    <Compile Include="ViewSourceLoaderWrapperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Castle.MonoRail.Views.Spark\Castle.MonoRail.Views.Spark.csproj">
