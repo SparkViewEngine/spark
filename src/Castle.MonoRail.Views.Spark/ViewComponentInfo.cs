@@ -24,12 +24,11 @@ namespace Castle.MonoRail.Views.Spark
         {
 
         }
-        public ViewComponentInfo(Type type)
+        public ViewComponentInfo(ViewComponent component)
         {
-            Type = type;
-            Details = type.GetCustomAttributes(typeof(ViewComponentDetailsAttribute), false).OfType<ViewComponentDetailsAttribute>().FirstOrDefault();
-            if (Details == null)
-                Instance = (ViewComponent)Activator.CreateInstance(type);
+            Type = component.GetType();
+            Details = Type.GetCustomAttributes(typeof(ViewComponentDetailsAttribute), false).OfType<ViewComponentDetailsAttribute>().FirstOrDefault();
+            Instance = component;
         }
 
         public Type Type { get; set; }

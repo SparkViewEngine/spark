@@ -44,7 +44,7 @@ namespace Castle.MonoRail.Views.Spark
                 {
                     if (componentFactory.Registry.HasViewComponent(node.Name))
                     {
-                        viewComponentInfo = new ViewComponentInfo(componentFactory.Registry.GetViewComponent(node.Name));
+                        viewComponentInfo = new ViewComponentInfo(componentFactory.Create(node.Name));
                         _cachedViewComponent.Add(node.Name, viewComponentInfo);
                     }
                     else
