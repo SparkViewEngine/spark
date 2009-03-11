@@ -1,0 +1,5 @@
+build
+src/Spark.sln.cache
+src/_ReSharper.Spark
+src/*/bin
+src/*/obj
