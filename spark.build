@@ -62,18 +62,9 @@
   <target name="get-subversion-revision">
     <!-- Retrieve subversion revision number -->
     <echo message="Retrieving Subversion revision number"/>
-    <property name="svn.revision" value="0"/>
-    <exec
-        program="svn"
-        commandline='log "${solution.dir}" --xml --limit 1'
-        output="${build.base}\_revision.xml"
-        failonerror="false"/>
-    <xmlpeek
-        file="${build.base}\_revision.xml"
-        xpath="/log/logentry/@revision"
-        property="svn.revision"
-        failonerror="false"/>
+    <property name="svn.revision" value="1"/>
     <echo message="Using Subversion revision number: ${svn.revision}"/>
+    <!-- TODO - come up with alternate revision number -->
     <property name="version.build" value="${svn.revision}"/>
   </target>
 
