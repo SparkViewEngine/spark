@@ -1,4 +1,4 @@
-﻿namespace Spark.Parser
+namespace Spark.Parser
 {
     public interface IParserSettings
     {

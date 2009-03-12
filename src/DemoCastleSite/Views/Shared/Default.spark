@@ -1,4 +1,4 @@
-﻿<html>
+<html>
   <head>
     <use namespace="System"/>
     <use namespace="Castle.MonoRail.Views.Spark"/>

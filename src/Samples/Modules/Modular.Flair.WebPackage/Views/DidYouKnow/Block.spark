@@ -1,4 +1,4 @@
-﻿<smallbox>
+<smallbox>
 	<viewdata model="Modular.Flair.WebPackage.Models.Trivia trivia"/>
 	<h3>Did you know?</h3>
 	<div>

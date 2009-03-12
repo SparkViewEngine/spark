@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="BenchmarkMvcSpark.GlobalApplication" Language="C#" %>
+<%@ Application Codebehind="Global.asax.cs" Inherits="BenchmarkMvcSpark.GlobalApplication" Language="C#" %>

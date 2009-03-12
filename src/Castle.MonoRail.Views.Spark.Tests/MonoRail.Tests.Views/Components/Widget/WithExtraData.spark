@@ -1,4 +1,4 @@
-﻿<viewdata Mode="string" ExtraData="string" />
+<viewdata Mode="string" ExtraData="string" />
 <span>Mode ${Mode} and ${ExtraData}</span>
 <content name="messages">
   <p class="message">!!${Mode}!!</p>

@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <var Names='new[] {"Alpha", "Beta", "Gamma", "Delta"}' Styles='new[] {"even", "odd"}'/>
 
   <for each="var name in Names">

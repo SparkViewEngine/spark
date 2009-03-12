@@ -1,4 +1,4 @@
-﻿namespace MediumTrustHosting
+namespace MediumTrustHosting
 {
     partial class PostBuildStep
     {

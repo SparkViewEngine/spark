@@ -1,4 +1,4 @@
-﻿<global type="INavRepository" Nav="null"/>
+<global type="INavRepository" Nav="null"/>
 <var menu="Nav.GetMenu(name)"/>
 <ul>
   <li>${menu.Name}</li>

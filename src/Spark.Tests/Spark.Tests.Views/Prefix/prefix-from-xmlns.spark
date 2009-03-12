@@ -1,4 +1,4 @@
-﻿<div xmlns:foo="http://sparkviewengine.com/">
+<div xmlns:foo="http://sparkviewengine.com/">
   <foo:use namespace="System.Collections.Generic"/>
   <foo:var styles="new[]{'odd', 'even'}"/>
   <foo:viewdata Names="IList[[string]]"/>

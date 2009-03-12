@@ -1,4 +1,4 @@
-﻿<div id="${navId}">
+<div id="${navId}">
   <!--
   The INavProvider Nav being used here is added to the abstract class View in the project
   

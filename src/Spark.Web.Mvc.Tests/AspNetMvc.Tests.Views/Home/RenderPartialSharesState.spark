@@ -1,4 +1,4 @@
-﻿
+
 <p>before</p>
 <p once="foo">foo1</p>
 <content name="list"><li>one</li></content>

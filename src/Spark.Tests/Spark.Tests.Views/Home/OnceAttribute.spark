@@ -1,4 +1,4 @@
-﻿
+
 <test once="foo">foo1</test>
 <test once="foo">foo2</test>
 <test once="foo">foo3</test>

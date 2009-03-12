@@ -1,4 +1,4 @@
-﻿!{NavItem("About", Url.Action("about", "home"))}
+!{NavItem("About", Url.Action("about", "home"))}
 !{NavItem("Content blocks", Url.Action("addingatplaceholders", "home"))}
 !{NavItem("Panels and boxes", Url.Action("boxes", "home"))}
 !{NavItem("Paging and repeater", Url.Action("pagingandrepeater", "home"))}

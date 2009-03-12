@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <var arg="5"/>
 
   <p if="arg==5">argis5</p>

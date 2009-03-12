@@ -1,4 +1,4 @@
-﻿<content var="newvar">new-var</content>
+<content var="newvar">new-var</content>
 
 <content def="newdef">new-def</content>
 

@@ -1,4 +1,4 @@
-﻿<content name="Hello" each="var name in new[]{'alpha', 'beta', 'gamma'}" once="fred">
+<content name="Hello" each="var name in new[]{'alpha', 'beta', 'gamma'}" once="fred">
   <p>name-${nameIndex}-${name}</p>
 </content>
 <use content="Hello"/>

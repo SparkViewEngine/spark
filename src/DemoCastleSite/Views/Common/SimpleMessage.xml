@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <h3>$H(ViewData["caption"]);</h3>
   <var link='Url.Link("Continue", ViewData["continue"])'/>
   <p>

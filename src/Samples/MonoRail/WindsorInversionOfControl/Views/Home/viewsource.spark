@@ -1,4 +1,4 @@
-﻿
+
 <viewdata id="object" entry="Spark.CompiledViewHolder.Entry"/>
 
 <test if="entry != null">

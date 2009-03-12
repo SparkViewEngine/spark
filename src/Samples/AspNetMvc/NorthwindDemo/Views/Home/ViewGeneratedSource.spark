@@ -1,4 +1,4 @@
-﻿<viewdata model="Spark.CompiledViewHolder.Entry"/>
+<viewdata model="Spark.CompiledViewHolder.Entry"/>
 
 #Break(ViewData.Model == null);
 

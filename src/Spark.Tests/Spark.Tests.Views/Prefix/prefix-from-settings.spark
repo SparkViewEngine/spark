@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <s:use namespace="System.Collections.Generic"/>
   <s:var styles="new[]{'odd', 'even'}"/>
   <s:viewdata Names="IList[[string]]"/>

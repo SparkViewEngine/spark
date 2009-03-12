@@ -1,4 +1,4 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using Castle.Core.Logging;
 
 namespace Modular.Fleet.WebPackage.Controllers

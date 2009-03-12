@@ -1,4 +1,4 @@
-﻿Hello ${#user.name},
+Hello ${#user.name},
 
 
 Welcome to the site.

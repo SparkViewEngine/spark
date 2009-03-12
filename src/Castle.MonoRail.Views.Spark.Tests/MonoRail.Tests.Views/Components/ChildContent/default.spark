@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   one
   ${ViewData["componentChildContent"]}
   two

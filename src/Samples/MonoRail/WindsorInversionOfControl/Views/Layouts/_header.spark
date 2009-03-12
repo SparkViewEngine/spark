@@ -1,4 +1,4 @@
-﻿<div id="header">
+<div id="header">
   <h1>!{Url.Link(Title, new {controller="home", action="index"})}</h1>
   <h2>space reserved for your website slogan!</h2>
 </div>

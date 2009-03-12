@@ -1,4 +1,4 @@
-﻿<viewdata model="ProductsEditViewData"/>
+<viewdata model="ProductsEditViewData"/>
 !{PageTitle(ViewData.Model.Product.ProductName)}
 <CategoryMenuItems category="ViewData.Model.Product.Category"/>
 <Rounded extraPadding="10">

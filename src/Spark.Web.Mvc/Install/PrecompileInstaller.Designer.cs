@@ -1,4 +1,4 @@
-﻿namespace Spark.Web.Mvc.Install
+namespace Spark.Web.Mvc.Install
 {
     partial class PrecompileInstaller
     {

@@ -1,4 +1,4 @@
-﻿namespace PrecompiledViews
+namespace PrecompiledViews
 {
     partial class PostBuildStep
     {

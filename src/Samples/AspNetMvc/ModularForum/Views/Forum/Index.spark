@@ -1,4 +1,4 @@
-﻿<viewdata forums="IList[[Models.Forum]]"/>
+<viewdata forums="IList[[Models.Forum]]"/>
 
 <div each="var forum in forums">
   <h2>!{Html.ActionLink[[ForumController]](c=>c.Show(forum.Id), forum.Name)}</h2>

@@ -1,4 +1,4 @@
-﻿<default showJabberHeader="True"/>
+<default showJabberHeader="True"/>
 <h2 if="showJabberHeader">JABBERWOCKY</h2>
 <h3 if="showJabberHeader">Lewis Carroll</h3>
 <p if="showJabberHeader">

@@ -1,4 +1,4 @@
-﻿<div xmlns:s="http://sparkviewengine.com/">
+<div xmlns:s="http://sparkviewengine.com/">
   
   <p s:if="false">fail</p>
   <p s:elseif="false">fail</p>

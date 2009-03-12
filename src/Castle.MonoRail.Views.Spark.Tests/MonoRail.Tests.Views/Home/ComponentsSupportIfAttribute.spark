@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <Simple Caption="'foo1'" if="true"/>
   <Simple Caption="'foo2'" if="false"/>
   <Simple Caption="name" each="var name in new[] {'alpha', 'beta', 'gamma'}" if="name != 'beta'"/>

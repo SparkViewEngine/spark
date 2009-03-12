@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="IronRubyViews.Global" Language="C#" %>
+<%@ Application Codebehind="Global.asax.cs" Inherits="IronRubyViews.Global" Language="C#" %>

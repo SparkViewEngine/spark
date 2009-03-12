@@ -1,1 +1,1 @@
-﻿<!-- placeholder file - do not remove -->
+<!-- placeholder file - do not remove -->

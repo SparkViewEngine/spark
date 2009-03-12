@@ -1,4 +1,4 @@
-﻿<macro:ForumWidgetText>
+<macro:ForumWidgetText>
   <var forums="new ForumRepository().ListForums()"/>
   Visit ${forums.Count} forums
 </macro:ForumWidgetText>

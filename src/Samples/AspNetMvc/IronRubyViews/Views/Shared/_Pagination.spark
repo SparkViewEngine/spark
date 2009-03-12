@@ -1,4 +1,4 @@
-﻿
+
 <content:head once="pagination-css">
   ## style from http://www.thewebhelp.com/css/pagination_style_template/
   <link type="text/css" rel="stylesheet" href="~/content/pagination.css"/>

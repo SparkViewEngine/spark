@@ -1,4 +1,4 @@
-﻿<h1>Product List</h1>
+<h1>Product List</h1>
 
 <viewdata products="IList[[Product]]"/>
 

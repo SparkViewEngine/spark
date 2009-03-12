@@ -1,4 +1,4 @@
-﻿<content def="yadda">data</content>
+<content def="yadda">data</content>
 <content set="yadda" add="after">after</content>
 <content set="yadda" add="before">before</content>
 <p>${yadda}</p>

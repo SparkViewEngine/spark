@@ -1,4 +1,4 @@
-﻿<h2>About this sample</h2>
+<h2>About this sample</h2>
 <p>
   This is a Castle MonoRail demo, but the spark techniques
   should work equally well in Asp.Net Mvc. The helpers that are used

@@ -1,4 +1,4 @@
-﻿<test if="page.Count() == 0">
+<test if="page.Count() == 0">
   <render:nodata/>
   <else/>
   <render:beforeall/>

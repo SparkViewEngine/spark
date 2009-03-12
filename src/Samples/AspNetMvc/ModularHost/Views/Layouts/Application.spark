@@ -1,4 +1,4 @@
-﻿<html>
+<html>
   <head>
     <global Title="'Client Rendering Views Sample'"/>
     <title>${Title}</title>

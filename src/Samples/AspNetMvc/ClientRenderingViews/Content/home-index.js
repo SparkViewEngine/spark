@@ -1,4 +1,4 @@
-﻿$(function(){
+$(function(){
 
 $(".refresh").click(function(e) {
     e.preventDefault();

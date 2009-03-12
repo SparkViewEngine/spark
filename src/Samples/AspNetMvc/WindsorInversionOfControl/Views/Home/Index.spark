@@ -1,4 +1,4 @@
-﻿<viewdata Products="IList[[Product]]" Intro="string"/>
+<viewdata Products="IList[[Product]]" Intro="string"/>
 
 <h3>${H(Intro)}</h3>
 

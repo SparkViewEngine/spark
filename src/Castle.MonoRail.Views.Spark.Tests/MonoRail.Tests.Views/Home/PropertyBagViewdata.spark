@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <viewdata foo="string" bar="int"/>
   <p>foo:${foo}</p>
   <p>bar:${ViewData["bar"]}</p>

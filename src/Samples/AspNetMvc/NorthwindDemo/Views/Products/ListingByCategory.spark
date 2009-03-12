@@ -1,4 +1,4 @@
-﻿<viewdata model="IList[[Product]]"  CategoryName="string"/>
+<viewdata model="IList[[Product]]"  CategoryName="string"/>
 <Rounded>
   !{PageTitle(CategoryName)}
   <CategoryMenuItems category="ViewData.Model.Select(p=>p.Category).FirstOrDefault()"/>

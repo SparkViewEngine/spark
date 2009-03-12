@@ -1,3 +1,3 @@
-﻿<%@ Page Language="C#" %>
+<%@ Page Language="C#" %>
 
 <p>Progress... Complete.</p>

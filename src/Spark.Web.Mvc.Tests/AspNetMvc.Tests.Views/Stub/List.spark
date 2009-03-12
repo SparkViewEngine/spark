@@ -1,4 +1,4 @@
-﻿<p>list</p>
+<p>list</p>
 <viewdata stuff="System.Collections.Generic.List[[string]]"/>
 
 <for each="var s in stuff">

@@ -1,4 +1,4 @@
-﻿<test if="3 != 5">
+<test if="3 != 5">
   <p>out-1</p>
 </test>
 

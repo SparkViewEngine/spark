@@ -1,4 +1,4 @@
-﻿
+
 //: foreach(var ns in new [] {"System", "System.Collections.Generic", "System.Text"}) 
 //: {
 using ${ns};

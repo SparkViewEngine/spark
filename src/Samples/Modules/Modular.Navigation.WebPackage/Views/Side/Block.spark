@@ -1,4 +1,4 @@
-﻿
+
 <viewdata model="IEnumerable[[Modular.Navigation.WebPackage.Models.SideItem]]"/>
 <for each="var item in Model">
 #Html.RenderBlock(item.BlockName);

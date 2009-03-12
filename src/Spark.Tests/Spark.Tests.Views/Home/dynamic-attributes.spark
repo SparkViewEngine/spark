@@ -1,4 +1,4 @@
-﻿
+
 <div>
   <elt1 a1="1" a2="?{false}" a3="3"></elt1>
   <elt2 a1="1" a2="2?{false}" a3="3"></elt2>

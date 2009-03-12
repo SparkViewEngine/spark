@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Shared/Default.Master" AutoEventWireup="true"
+<%@ Page Language="C#" MasterPageFile="~/Shared/Default.Master" AutoEventWireup="true"
     CodeBehind="Index.aspx.cs" Inherits="BenchmarkAspx.Home.Index" Title="Untitled Page" %>
 
 

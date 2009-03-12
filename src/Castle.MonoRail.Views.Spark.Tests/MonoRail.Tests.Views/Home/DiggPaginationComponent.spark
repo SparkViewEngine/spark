@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <ul>
     <li each="var item in items">${item}</li>
   </ul>

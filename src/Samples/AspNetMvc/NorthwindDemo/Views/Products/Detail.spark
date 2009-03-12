@@ -1,4 +1,4 @@
-﻿
+
 <viewdata model="Product"/>
 
 !{PageTitle(ViewData.Model.ProductName)}

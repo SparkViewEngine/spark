@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <ComponentWithBody>
     <script src="foo.js"></script>
     <link href="bar.css"/>

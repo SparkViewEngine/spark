@@ -1,4 +1,4 @@
-﻿<h2>Client Rendering Views</h2>
+<h2>Client Rendering Views</h2>
 <p>
   Ajax <strong>${ajaxEnabled ? 'enabled' : 'disabled'}</strong>.
   <a href="~/home/enableajax">enable</a>

@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <viewdata entry="Spark.CompiledViewHolder.Entry"/>
 
   <div if="entry != null">

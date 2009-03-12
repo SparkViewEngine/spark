@@ -1,4 +1,4 @@
-﻿<global something="'thedefault'" calls="0"/>
+<global something="'thedefault'" calls="0"/>
 <set calls="calls + 1"/>
 <p>something:${something}</p>
 <p>calls:${calls}</p>

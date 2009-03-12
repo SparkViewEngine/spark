@@ -1,4 +1,4 @@
-﻿<test if="len([0 for item in source]) == 0">
+<test if="len([0 for item in source]) == 0">
   <render:nodata/>
   <else/>
   <render:beforeall/>

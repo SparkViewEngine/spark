@@ -1,4 +1,4 @@
-﻿<ul>
+<ul>
   <var x='"zero"'>
     <render partial='partial'/>
   </var>

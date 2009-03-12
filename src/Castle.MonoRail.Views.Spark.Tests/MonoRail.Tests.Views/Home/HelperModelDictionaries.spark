@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <use namespace="Castle.MonoRail.Views.Spark"/>
 
   <p>${Url.For(new {action="foo", querystring="bar=quux"})}</p>

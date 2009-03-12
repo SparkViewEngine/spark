@@ -1,2 +1,2 @@
-﻿<%@ Control Language="C#" %>
+<%@ Control Language="C#" %>
 <p>Something</p>

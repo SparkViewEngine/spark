@@ -1,4 +1,4 @@
-﻿<html>
+<html>
   <head>
     <global title='"Alternate Title"' type="string"/>
     <title>${title}</title>

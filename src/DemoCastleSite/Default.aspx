@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#"  %>
+<%@ Page Language="C#"  %>
 
 <script runat="server">
     void Page_Load()

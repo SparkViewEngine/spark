@@ -1,4 +1,4 @@
-﻿<for each="var item in 'abcdef'.ToCharArray()">
+<for each="var item in 'abcdef'.ToCharArray()">
   <test if="item >= (char)'d'">
     <test if="item==(char)'d'">
       <p>d</p>

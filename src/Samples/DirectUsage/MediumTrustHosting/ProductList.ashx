@@ -1,1 +1,1 @@
-﻿<%@ WebHandler Language="C#" CodeBehind="ProductList.ashx.cs" Class="MediumTrustHosting.ProductList" %>
+<%@ WebHandler Language="C#" CodeBehind="ProductList.ashx.cs" Class="MediumTrustHosting.ProductList" %>

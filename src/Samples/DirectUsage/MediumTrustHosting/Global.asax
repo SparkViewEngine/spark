@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="MediumTrustHosting.Global" Language="C#" %>
+<%@ Application Codebehind="Global.asax.cs" Inherits="MediumTrustHosting.Global" Language="C#" %>

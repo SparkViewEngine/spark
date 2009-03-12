@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="IronPythonViews.Global" Language="C#" %>
+<%@ Application Codebehind="Global.asax.cs" Inherits="IronPythonViews.Global" Language="C#" %>

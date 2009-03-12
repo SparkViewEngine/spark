@@ -1,4 +1,4 @@
-﻿!{NavItem("About", url.action("about", "home"))}
+!{NavItem("About", url.action("about", "home"))}
 !{NavItem("Content blocks", url.action("addingatplaceholders", "home"))}
 !{NavItem("Panels and boxes", url.action("boxes", "home"))}
 !{NavItem("Paging and repeater", url.action("pagingandrepeater", "home"))}

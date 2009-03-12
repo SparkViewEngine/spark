@@ -1,4 +1,4 @@
-﻿
+
 <macro name="RecursiveThing" foo="int" bar="string">
   <PartialInMacro quux="6"/>
   <test if="foo != 0">

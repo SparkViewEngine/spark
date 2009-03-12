@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;

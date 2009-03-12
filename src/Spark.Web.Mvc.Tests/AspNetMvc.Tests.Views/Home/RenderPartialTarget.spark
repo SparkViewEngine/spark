@@ -1,4 +1,4 @@
-﻿
+
 <p once="foo">foo2</p>
 <p once="bar">bar3</p>
 <p>The Target</p>

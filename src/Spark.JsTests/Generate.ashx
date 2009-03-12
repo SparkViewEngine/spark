@@ -1,1 +1,1 @@
-﻿<%@ WebHandler Language="C#" CodeBehind="Generate.ashx.cs" Class="Spark.JsTests.Generate" %>
+<%@ WebHandler Language="C#" CodeBehind="Generate.ashx.cs" Class="Spark.JsTests.Generate" %>

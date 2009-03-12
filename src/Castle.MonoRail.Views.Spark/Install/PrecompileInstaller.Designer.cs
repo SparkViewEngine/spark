@@ -1,4 +1,4 @@
-﻿namespace Castle.MonoRail.Views.Spark.Install
+namespace Castle.MonoRail.Views.Spark.Install
 {
     partial class PrecompileInstaller
     {

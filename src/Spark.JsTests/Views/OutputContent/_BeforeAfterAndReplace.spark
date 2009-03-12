@@ -1,4 +1,4 @@
-﻿<content var="blah">grab</content>
+<content var="blah">grab</content>
 <content set="blah" add="after">after</content>
 <content set="blah" add="before">before</content>
 one${blah}two

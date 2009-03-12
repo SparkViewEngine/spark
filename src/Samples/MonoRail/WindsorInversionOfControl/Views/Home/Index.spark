@@ -1,4 +1,4 @@
-﻿
+
 <p>Home index</p>
 
 #Logger.Debug("Someone is viewing the home page");

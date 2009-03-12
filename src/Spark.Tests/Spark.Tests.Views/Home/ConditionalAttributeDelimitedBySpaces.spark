@@ -1,4 +1,4 @@
-﻿<h1 class="one?{true} two?{false} three?{true}"/>
+<h1 class="one?{true} two?{false} three?{true}"/>
 
 <h2 class="one?{false} two?{false} three?{false}"/>
 

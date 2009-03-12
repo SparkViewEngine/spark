@@ -1,4 +1,4 @@
-﻿<p if="x1==7">ok1</p>
+<p if="x1==7">ok1</p>
 <else>fail</else>
 
 <default x2="3">

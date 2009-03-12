@@ -1,4 +1,4 @@
-﻿
+
 <global type="string" Title="'Modular Site Example'"/>
 
 <use namespace="System.Collections.Generic"/>

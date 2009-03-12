@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <content:sample>two</content:sample>
   one<use:sample/>three
 </div>

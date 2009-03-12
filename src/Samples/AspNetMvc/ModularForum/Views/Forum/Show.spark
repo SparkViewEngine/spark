@@ -1,4 +1,4 @@
-﻿<viewdata forum="Models.Forum"/>
+<viewdata forum="Models.Forum"/>
 <h2>${forum.Name}</h2>
 <content:subcontent>
   <div class="small box">${forum.Description}</div>

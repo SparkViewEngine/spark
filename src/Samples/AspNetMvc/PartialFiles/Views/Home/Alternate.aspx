@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/DefaultLayout.Master" %>
+<%@ Page Language="C#" MasterPageFile="~/Views/Shared/DefaultLayout.Master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>

@@ -1,4 +1,4 @@
-﻿Hi ${#user.name},
+Hi ${#user.name},
 
 You opted into our spam at some point, and now that's going to pay off!
 

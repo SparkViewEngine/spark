@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <viewdata items="IEnumerable" foo="string"/>
 
   <DiggStylePagination Page="items"/>

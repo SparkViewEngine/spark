@@ -1,4 +1,4 @@
-﻿<use namespace="Castle.MonoRail.Framework.Helpers"/>
+<use namespace="Castle.MonoRail.Framework.Helpers"/>
 <use namespace="Castle.Components.Pagination"/>
 <use namespace="AdvancedPartials.Models"/>
 <use namespace="System.Linq"/>

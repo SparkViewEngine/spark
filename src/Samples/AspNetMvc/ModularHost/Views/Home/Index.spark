@@ -1,4 +1,4 @@
-﻿<h2>Modular site</h2>
+<h2>Modular site</h2>
 <p>
   This example, ModularHost, has only a home/index view and a normal layout. 
   It includes another site's primary output assembly, ModularForum. That assembly

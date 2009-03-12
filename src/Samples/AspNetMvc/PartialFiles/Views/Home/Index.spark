@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <p>Top of the view</p>
   <div style="border:solid 1px grey">
     <p>RenderPartial Yay ascx</p>

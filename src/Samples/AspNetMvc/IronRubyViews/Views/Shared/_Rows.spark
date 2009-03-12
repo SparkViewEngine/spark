@@ -1,4 +1,4 @@
-﻿<test if="false">
+<test if="false">
   <render:nodata/>
   <else/>
   <render:beforeall/>

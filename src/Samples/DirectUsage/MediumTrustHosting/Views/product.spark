@@ -1,4 +1,4 @@
-﻿<h3>Product ${product.Id} Details</h3>
+<h3>Product ${product.Id} Details</h3>
 <p>Id: ${product.Id}</p>
 <p>Name: ${product.Name}</p>
 

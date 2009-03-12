@@ -1,4 +1,4 @@
-﻿<div>
+<div>
 
   <macro:HelloWorld name="string">
     <p>Hello, ${name}!</p>

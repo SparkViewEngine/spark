@@ -1,4 +1,4 @@
-﻿
+
 <Pagination page="@birds"/>
 
 <content:head>

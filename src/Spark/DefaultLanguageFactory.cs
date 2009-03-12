@@ -1,4 +1,4 @@
-﻿using Spark.Compiler;
+using Spark.Compiler;
 using Spark.Compiler.CSharp;
 using Spark.Compiler.Javascript;
 

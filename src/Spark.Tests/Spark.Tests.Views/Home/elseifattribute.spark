@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <use namespace="Spark.Tests.Models" />
 
   <var bob='new UserInfo{Name="Bob", UserType=UserType.Registered}' />

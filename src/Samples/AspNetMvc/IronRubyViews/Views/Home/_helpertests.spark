@@ -1,4 +1,4 @@
-﻿<ol>
+<ol>
   <li>!{url.Action('View', 'Home')}</li>
   <li>!{html.ActionLink("hello", '1', '2')}</li>
   <li>!{html.ActionLink("world", '3')}</li>

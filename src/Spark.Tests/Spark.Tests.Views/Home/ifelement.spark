@@ -1,4 +1,4 @@
-﻿<div>
+<div>
   <var arg="5"/>
 
   <if condition="arg==5">
