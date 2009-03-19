@@ -152,7 +152,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             var handler = new MonoRailHttpHandlerFactory.NotFoundHandler("", "nosuchcontroller", engineContext);
             handler.ProcessRequest(null);
             Assert.AreEqual(404, response.StatusCode);
-            Assert.AreEqual("<p>404 message rendered</p>", output.ToString());
+            Assert.AreEqual("<p>404 message rendered</p>\r\n", output.ToString());
         }
 
         [Test]

@@ -14,10 +14,10 @@ using System.Runtime.InteropServices;
 
 [assembly: ComVisibleAttribute(false)]
 [assembly: AssemblyVersionAttribute("1.0")]
-[assembly: AssemblyFileVersionAttribute("1.0.313.0")]
+[assembly: AssemblyFileVersionAttribute("1.0.1.0")]
 [assembly: AssemblyCopyrightAttribute("Copyright © Louis DeJardin 2008-2009")]
 [assembly: AssemblyProductAttribute("Spark")]
 [assembly: AssemblyCompanyAttribute("Louis DeJardin")]
 [assembly: AssemblyConfigurationAttribute("release")]
-[assembly: AssemblyInformationalVersionAttribute("1.0.313.0")]
+[assembly: AssemblyInformationalVersionAttribute("1.0.1.0")]
 
