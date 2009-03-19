@@ -3,18 +3,24 @@ build
 src/CommonAssemblyInfo.cs
 src/CommonVersionInfo.h
 
+src/*.user
+src/*/*.user
+src/*/*/*.user
+src/*/bin
+src/*/obj
+src/*/*/bin
+src/*/*/obj
+
 src/Spark.suo
 src/Spark.sln.cache
 src/_ReSharper.Spark
-src/*/bin
-src/*/obj
 
 src/Tools/Tools.suo
+src/Tools/Tools.ncb
 src/Tools/Tools.sln.cache
-src/Tools/*/bin
-src/Tools/*/obj
+src/Tools/_ReSharper.Tools
 
 src/Tools/SparkLanguagePackage/*_i.c
 src/Tools/SparkLanguagePackage/*_i.h
 src/Tools/SparkLanguagePackage/*_p.c
-src/Tools/SparkLanguagePackage/packageloadkey.h
+src/Tools/SparkLanguagePackage/PackageLoadKey.h
