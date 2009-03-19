@@ -19,7 +19,7 @@
   <property name="nant.settings.currentframework" value="net-3.5" />
   <property name="ncover.path" value="${bin.dir}\ncover" />
 
-  <property name="project.copyright" value="Copyright &#x00A9; ${company.name} 2008-${datetime::get-year(datetime::now())}"/>
+  <property name="project.copyright" value="Copyright (c) ${company.name} 2008-${datetime::get-year(datetime::now())}"/>
 
   <property name="package.dir" value="${build.base}\package" />
 
@@ -62,7 +62,7 @@
   <target name="get-subversion-revision">
     <!-- Retrieve subversion revision number -->
     <echo message="Retrieving Subversion revision number"/>
-    <property name="svn.revision" value="1"/>
+    <property name="svn.revision" value="39890"/>
     <echo message="Using Subversion revision number: ${svn.revision}"/>
     <!-- TODO - come up with alternate revision number -->
     <property name="version.build" value="${svn.revision}"/>
