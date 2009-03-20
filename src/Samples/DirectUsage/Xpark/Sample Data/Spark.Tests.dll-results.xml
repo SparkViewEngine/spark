@@ -1,0 +1,476 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Projects\spark\build\net-3.5.win32-Spark-release\Spark.Tests.dll" total="266" failures="0" not-run="2" date="2009-03-18" time="11:41:26">
+  <environment nunit-version="2.2.8.0" clr-version="2.0.50727.3053" os-version="Microsoft Windows NT 5.1.2600 Service Pack 3" platform="Win32NT" cwd="C:\Projects\spark" machine-name="GLIMP-VPC1" user="Louis" user-domain="GLIMP-VPC1" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite name="C:\Projects\spark\build\net-3.5.win32-Spark-release\Spark.Tests.dll" success="True" time="28.010" asserts="0">
+    <results>
+      <test-suite name="Spark" success="True" time="27.980" asserts="0">
+        <results>
+          <test-suite name="Spark.Tests" success="True" time="27.950" asserts="0">
+            <results>
+              <test-suite name="Spark.Tests.Compiler" success="True" time="0.070" asserts="0">
+                <results>
+                  <test-suite name="Spark.Tests.Compiler.ExpressionBuilderTester" success="True" time="0.060" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Compiler.ExpressionBuilderTester.AddSeveralLiterals" executed="True" success="True" time="0.040" asserts="1" />
+                      <test-case name="Spark.Tests.Compiler.ExpressionBuilderTester.TextIsEscaped" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Compiler.ExpressionBuilderTester.CodeEndsUpConcatinated" executed="True" success="True" time="0.020" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Compiler.ForEachInspectorTester" success="True" time="0.000" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Compiler.ForEachInspectorTester.LocatingTheVariable" executed="True" success="True" time="0.000" asserts="3" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.DefaultResourcePathManagerTester" success="True" time="0.010" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.DefaultResourcePathManagerTester.NormalUrlPathsAreUnchanged" executed="True" success="True" time="0.010" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultResourcePathManagerTester.SiteRootPrependedByDefault" executed="True" success="True" time="0.000" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultResourcePathManagerTester.ReplacingJustSomePrefixes" executed="True" success="True" time="0.000" asserts="2" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.FileSystem" success="True" time="0.361" asserts="0">
+                <results>
+                  <test-suite name="Spark.Tests.FileSystem.CombinedViewFolderTester" success="True" time="0.050" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.FileSystem.CombinedViewFolderTester.HasTemplate" executed="True" success="True" time="0.010" asserts="3" />
+                      <test-case name="Spark.Tests.FileSystem.CombinedViewFolderTester.OpenFileStream" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.FileSystem.CombinedViewFolderTester.OpenMissingFile" executed="True" success="True" time="0.010" asserts="0" />
+                      <test-case name="Spark.Tests.FileSystem.CombinedViewFolderTester.OpenFromFirstViewFolder" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.FileSystem.CombinedViewFolderTester.ListFilesWithDedupe" executed="True" success="True" time="0.030" asserts="4" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.FileSystem.SubViewFolderTester" success="True" time="0.010" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.FileSystem.SubViewFolderTester.SharingExtraFolders" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.FileSystem.SubViewFolderTester.ForwardAndBackSlashAreInterchangeable" executed="True" success="True" time="0.010" asserts="18" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.FileSystem.ViewFolderSettingsTester" success="True" time="0.280" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.FileSystem.ViewFolderSettingsTester.ApplySettings" executed="True" success="True" time="0.270" asserts="3" />
+                      <test-case name="Spark.Tests.FileSystem.ViewFolderSettingsTester.CustomViewFolder" executed="True" success="True" time="0.010" asserts="4" />
+                      <test-case name="Spark.Tests.FileSystem.ViewFolderSettingsTester.AssemblyParameter" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Spark.Tests.FileSystem.ViewFolderSettingsTester.TypeFileSystemCreatesFileSystemViewFolder" executed="True" success="True" time="0.000" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.FileSystem.EmbeddedViewFolderTester" success="True" time="0.010" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.FileSystem.EmbeddedViewFolderTester.LocateEmbeddedFiles" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.FileSystem.EmbeddedViewFolderTester.ListViewsSameResults" executed="True" success="True" time="0.000" asserts="7" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.ImportAndIncludeTester" success="True" time="3.535" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.ImportExplicitFile" executed="True" success="True" time="0.621" asserts="2" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.ImportExplicitFileFromShared" executed="True" success="True" time="0.260" asserts="2" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.ImportExplicitWithoutExtension" executed="True" success="True" time="0.250" asserts="2" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.ImportImplicit" executed="True" success="True" time="0.250" asserts="2" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.IncludeFile" executed="True" success="True" time="0.220" asserts="1" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.MissingFileThrowsException" executed="True" success="True" time="0.000" asserts="0" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.MissingFileWithEmptyFallbackIsBlank" executed="True" success="True" time="0.250" asserts="1" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.MissingFileWithFallbackUsesContents" executed="True" success="True" time="0.290" asserts="1" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.ValidIncludeFallbackDisappears" executed="True" success="True" time="0.210" asserts="1" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.FallbackContainsAnotherInclude" executed="True" success="True" time="0.240" asserts="1" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.IncludeRelativePath" executed="True" success="True" time="0.230" asserts="1" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.IncludeInsideAnInclude" executed="True" success="True" time="0.230" asserts="1" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.UsingXmlns" executed="True" success="True" time="0.240" asserts="1" />
+                  <test-case name="Spark.Tests.ImportAndIncludeTester.IncludingAsText" executed="True" success="True" time="0.230" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.ClientsideCompilerTester" success="True" time="0.130" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.ClientsideCompilerTester.GenerateSimpleTemplate" executed="True" success="True" time="0.130" asserts="2" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.Parser" success="True" time="2.083" asserts="0">
+                <results>
+                  <test-suite name="Spark.Tests.Parser.AutomaticEncodingTester" success="True" time="0.811" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Parser.AutomaticEncodingTester.DollarSyntaxHasRawContentWhenDisabled" executed="True" success="True" time="0.010" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.AutomaticEncodingTester.BangSyntaxHasRawContentWhenDisabled" executed="True" success="True" time="0.010" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.AutomaticEncodingTester.DollarHasEncodedContentWhenEnabled" executed="True" success="True" time="0.010" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.AutomaticEncodingTester.BangSyntaxStillHasRawContentWhenEnabled" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.AutomaticEncodingTester.AutomaticEncodingFalseAlwaysAllowsRawHtml" executed="True" success="True" time="0.240" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.AutomaticEncodingTester.AutomaticEncodingTrueEncodesDollarSyntax" executed="True" success="True" time="0.290" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.AutomaticEncodingTester.AutomaticEncodingTrueOmitsRedundantEncoding" executed="True" success="True" time="0.240" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Parser.CodeGrammarTester" success="True" time="0.050" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.SimpleStatement" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.StringConstants" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.EnclosedEscapes" executed="True" success="True" time="0.010" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.BraceMatching" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.StopAtExpressionTerminators" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.SpecialCastAllowsCharConstant" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.ChangeDoubleBraceAliases" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.Statement1StopsWithEndOfLine" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.Statement2StopsWithPercentAngle" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.StringsMayHavePercentAngle" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.StatementMayContainUnmatchedBraces" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.VerbatimDoubleQuotes" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.VerbatimSingleQuotes" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.CommentHasQuotes" executed="True" success="True" time="0.010" asserts="4" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.ClassKeywordUsedAsIdentifier" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="Spark.Tests.Parser.CodeGrammarTester.LateBoundSyntaxBecomesEvalFunction" executed="True" success="True" time="0.020" asserts="5" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Parser.CSharpSyntaxProviderTester" success="True" time="0.461" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Parser.CSharpSyntaxProviderTester.CanParseSimpleFile" executed="True" success="True" time="0.010" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.CSharpSyntaxProviderTester.UsingCSharpSyntaxInsideEngine" executed="True" success="True" time="0.250" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.CSharpSyntaxProviderTester.StatementAndExpressionInCode" executed="True" success="True" time="0.200" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Parser.MarkupGrammarTester" success="True" time="0.130" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.RepDigits" executed="True" success="True" time="0.010" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.TextNode" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.EntityNode" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.Rep1WontBeNone" executed="True" success="True" time="0.010" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.EntityTextSeries" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.ParsingAttribute" executed="True" success="True" time="0.010" asserts="7" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.ParsingElement" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.ParsingElementWithAttributes" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.AttributeWithEntity" executed="True" success="True" time="0.000" asserts="14" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.AttributeWithConditionalAnd" executed="True" success="True" time="0.010" asserts="16" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.ParsingEndElement" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.PassingSimpleMarkup" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.SelfEnding" executed="True" success="True" time="0.010" asserts="8" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.DoctypeParser" executed="True" success="True" time="0.010" asserts="13" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.CodeInText" executed="True" success="True" time="0.000" asserts="13" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.AspxStyleOutputInText" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.CommentParser" executed="True" success="True" time="0.010" asserts="5" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.CodeStatementsPercentSyntax" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.CodeStatementsHashSyntax" executed="True" success="True" time="0.000" asserts="5" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.SpecialCharactersInAttributes" executed="True" success="True" time="0.010" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.JQueryIdSelectorInAttribute" executed="True" success="True" time="0.010" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.JQueryIdSelectorInText" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.HashStatementMustBeFirstNonWhitespaceCharacter" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.ConditionalSyntaxInAttributes" executed="True" success="True" time="0.010" asserts="6" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.XMLDeclParser" executed="True" success="True" time="0.000" asserts="9" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.ProcessingInstructionWontParseXMLDecl" executed="True" success="True" time="0.010" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.ProcessingInstruction" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.LessThanCanBeUsedAsText" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.Parser.MarkupGrammarTester.StatementAtStartOfFile" executed="True" success="True" time="0.010" asserts="21" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Parser.PaintTester" success="True" time="0.020" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Parser.PaintTester.PaintingRangeOfText" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="Spark.Tests.Parser.PaintTester.PaintingArray" executed="True" success="True" time="0.010" asserts="11" />
+                      <test-case name="Spark.Tests.Parser.PaintTester.PaintingNodes" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.PaintTester.PaintingAttributes" executed="True" success="True" time="0.010" asserts="9" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Parser.PositionTester" success="True" time="0.010" asserts="0">
+                    <categories>
+                      <category name="SparkViewEngine" />
+                    </categories>
+                    <results>
+                      <test-case name="Spark.Tests.Parser.PositionTester.PositionStartsOnOneOne" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Spark.Tests.Parser.PositionTester.AdvanceChangesColumnOffset" executed="True" success="True" time="0.000" asserts="6" />
+                      <test-case name="Spark.Tests.Parser.PositionTester.NewlineChangesLine" executed="True" success="True" time="0.000" asserts="13" />
+                      <test-case name="Spark.Tests.Parser.PositionTester.UnixStyleNewlines" executed="True" success="True" time="0.000" asserts="15" />
+                      <test-case name="Spark.Tests.Parser.PositionTester.PeekReturnsText" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.Parser.PositionTester.FourSpaceTabs" executed="True" success="True" time="0.000" asserts="11" />
+                      <test-case name="Spark.Tests.Parser.PositionTester.PotentialLengths" executed="True" success="True" time="0.000" asserts="11" />
+                      <test-case name="Spark.Tests.Parser.PositionTester.PotentialLengthMultiChar" executed="True" success="True" time="0.000" asserts="9" />
+                      <test-case name="Spark.Tests.Parser.PositionTester.DefaultEndOfSourceCharacter" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.PositionTester.PotentialLengthConstrained" executed="True" success="True" time="0.000" asserts="3" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Parser.TypeInspectorTester" success="True" time="0.000" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Parser.TypeInspectorTester.SimpleFields" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.TypeInspectorTester.Generics" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.TypeInspectorTester.GenericsWithName" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.TypeInspectorTester.GenericWithSpacesButNoName" executed="True" success="True" time="0.000" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Parser.ViewLoaderTester" success="True" time="0.571" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Parser.ViewLoaderTester.LoadSimpleFile" executed="True" success="True" time="0.531" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.ViewLoaderTester.LoadUsedFile" executed="True" success="True" time="0.010" asserts="1" />
+                      <test-case name="Spark.Tests.Parser.ViewLoaderTester.LoadSharedFile" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="Spark.Tests.Parser.ViewLoaderTester.FindPartialFiles" executed="True" success="True" time="0.010" asserts="7" />
+                      <test-case name="Spark.Tests.Parser.ViewLoaderTester.FileNotFoundException" executed="True" success="True" time="0.000" asserts="0" />
+                      <test-case name="Spark.Tests.Parser.ViewLoaderTester.ExpiresWhenFilesChange" executed="True" success="True" time="0.010" asserts="2" />
+                      <test-case name="Spark.Tests.Parser.ViewLoaderTester.LoadingPartialInsideNamedSection" executed="True" success="True" time="0.010" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.SourceMappingTester" success="True" time="0.991" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.SourceMappingTester.SimpleExpressionsEntirelyMapped" executed="True" success="True" time="0.270" asserts="6" />
+                  <test-case name="Spark.Tests.SourceMappingTester.EmbeddedCodeMapped" executed="True" success="True" time="0.250" asserts="6" />
+                  <test-case name="Spark.Tests.SourceMappingTester.ExpressionInAttributeMapped" executed="True" success="True" time="0.210" asserts="6" />
+                  <test-case name="Spark.Tests.SourceMappingTester.SingleQuotesAreAvoided" executed="True" success="True" time="0.260" asserts="10" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.SparkBatchDescriptorTester" success="True" time="0.010" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.SparkBatchDescriptorTester.BatchForControllerWithSimplePrecompileAttrib" executed="True" success="True" time="0.010" asserts="5" />
+                  <test-case name="Spark.Tests.SparkBatchDescriptorTester.BatchForControllerWithComplexPrecompileAttrib" executed="True" success="True" time="0.000" asserts="7" />
+                  <test-case name="Spark.Tests.SparkBatchDescriptorTester.BatchFromAssembly" executed="True" success="True" time="0.000" asserts="2" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.SparkServiceContainerTester" success="True" time="0.010" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.SparkServiceContainerTester.ContainterCreatesDefaultServices" executed="True" success="True" time="0.000" asserts="2" />
+                  <test-case name="Spark.Tests.SparkServiceContainerTester.ConfigSettingsUsedByDefault" executed="True" success="True" time="0.000" asserts="1" />
+                  <test-case name="Spark.Tests.SparkServiceContainerTester.CreatedSettingsUsedWhenProvided" executed="True" success="True" time="0.010" asserts="1" />
+                  <test-case name="Spark.Tests.SparkServiceContainerTester.SettingsServiceReplacesType" executed="True" success="True" time="0.000" asserts="1" />
+                  <test-case name="Spark.Tests.SparkServiceContainerTester.AddingServiceInstanceCallsInitialize" executed="True" success="True" time="0.000" asserts="3" />
+                  <test-case name="Spark.Tests.SparkServiceContainerTester.AddingServiceBuilderCallsInitialize" executed="True" success="True" time="0.000" asserts="2" />
+                  <test-case name="Spark.Tests.SparkServiceContainerTester.EngineGetsCustomServiceAndViewFolderSettings" executed="True" success="True" time="0.000" asserts="2" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.Spool" success="True" time="0.070" asserts="0">
+                <results>
+                  <test-suite name="Spark.Tests.Spool.SpoolPageTester" success="True" time="0.020" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Spool.SpoolPageTester.Appending" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Spark.Tests.Spool.SpoolPageTester.AppendMultiple" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.Spool.SpoolPageTester.AppendOverBoundary" executed="True" success="True" time="0.020" asserts="4" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Spool.SpoolWriterTester" success="True" time="0.050" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Spool.SpoolWriterTester.ToStringCombinesResults" executed="True" success="True" time="0.010" asserts="1" />
+                      <test-case name="Spark.Tests.Spool.SpoolWriterTester.MultiplePagesCombinedResult" executed="True" success="True" time="0.010" asserts="1" />
+                      <test-case name="Spark.Tests.Spool.SpoolWriterTester.StringWriterToSpoolWriter" executed="True" success="True" time="0.010" asserts="1" />
+                      <test-case name="Spark.Tests.Spool.SpoolWriterTester.SpoolWriterToStringWriter" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Spool.SpoolWriterTester.SpoolWriterToSpoolWriter" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Spool.SpoolWriterTester.AppendingOwnsBuffer" executed="True" success="True" time="0.010" asserts="17" />
+                      <test-case name="Spark.Tests.Spool.SpoolWriterTester.WritingCharacters" executed="True" success="True" time="0.010" asserts="1" />
+                      <test-case name="Spark.Tests.Spool.SpoolWriterTester.DisposingWriter" executed="True" success="True" time="0.000" asserts="3" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.UseMasterTester" success="True" time="1.542" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.UseMasterTester.NormalSituationUsesNoLayout" executed="True" success="True" time="0.270" asserts="1" />
+                  <test-case name="Spark.Tests.UseMasterTester.UseMasterLooksInLayoutFolder" executed="True" success="True" time="0.220" asserts="1" />
+                  <test-case name="Spark.Tests.UseMasterTester.TemplateWontLoadRecursively" executed="True" success="True" time="0.010" asserts="0" />
+                  <test-case name="Spark.Tests.UseMasterTester.DefaultLayoutsOverriddenByElement" executed="True" success="True" time="0.561" asserts="2" />
+                  <test-case name="Spark.Tests.UseMasterTester.DaisyChainingMasterRendersMultipleLayers" executed="True" success="True" time="0.240" asserts="1" />
+                  <test-case name="Spark.Tests.UseMasterTester.EmptyMasterPreventsDefaultLayout" executed="True" success="True" time="0.230" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.BatchCompilationTester" success="True" time="0.711" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.BatchCompilationTester.CompileMultipleDescriptors" executed="True" success="True" time="0.250" asserts="4" />
+                  <test-case name="Spark.Tests.BatchCompilationTester.DescriptorsAreEqual" executed="True" success="True" time="0.220" asserts="2" />
+                  <test-case name="Spark.Tests.BatchCompilationTester.DescriptorsWithNoTargetNamespace" executed="True" success="True" time="0.220" asserts="2" />
+                  <test-case name="Spark.Tests.BatchCompilationTester.LoadCompiledViews" executed="True" success="True" time="0.010" asserts="3" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.Visitors" success="True" time="0.070" asserts="0">
+                <results>
+                  <test-suite name="Spark.Tests.Visitors.ChunkBuilderVisitorTester" success="True" time="0.010" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Visitors.ChunkBuilderVisitorTester.MakeLiteralChunk" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Visitors.ChunkBuilderVisitorTester.SelfClosingElementWithAttributes" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Visitors.ChunkBuilderVisitorTester.WritingDocTypes" executed="True" success="True" time="0.010" asserts="2" />
+                      <test-case name="Spark.Tests.Visitors.ChunkBuilderVisitorTester.RenderPartialContainsChunks" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Spark.Tests.Visitors.ChunkBuilderVisitorTester.RenderPartialContainsSections" executed="True" success="True" time="0.000" asserts="6" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Visitors.DetectCodeExpressionTester" success="True" time="0.030" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Visitors.DetectCodeExpressionTester.FindLoopParameters" executed="True" success="True" time="0.010" asserts="4" />
+                      <test-case name="Spark.Tests.Visitors.DetectCodeExpressionTester.ParametersInPartial" executed="True" success="True" time="0.010" asserts="2" />
+                      <test-case name="Spark.Tests.Visitors.DetectCodeExpressionTester.ParametersInCallerBody" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Visitors.DetectCodeExpressionTester.ParametersInNamedSection" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Visitors.DetectCodeExpressionTester.IterationInPartialFile" executed="True" success="True" time="0.010" asserts="2" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Visitors.NamespaceVisitorTester" success="True" time="0.010" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Visitors.NamespaceVisitorTester.AssignNamespaceToElement" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Visitors.NamespaceVisitorTester.AssignNamespaceWithDefaultPrefix" executed="True" success="True" time="0.000" asserts="2" />
+                      <test-case name="Spark.Tests.Visitors.NamespaceVisitorTester.AssignNamespaceToAttributes" executed="True" success="True" time="0.000" asserts="3" />
+                      <test-case name="Spark.Tests.Visitors.NamespaceVisitorTester.ElementCanUseXmlnsOnSelf" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.Visitors.NamespaceVisitorTester.ScopeOfXmlnsIsLimited" executed="True" success="True" time="0.010" asserts="14" />
+                      <test-case name="Spark.Tests.Visitors.NamespaceVisitorTester.NestedElementsDontWreckScope" executed="True" success="True" time="0.000" asserts="14" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Visitors.ConditionalAttributeVisitorTester" success="True" time="0.010" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Visitors.ConditionalAttributeVisitorTester.DetectIfAttribute" executed="True" success="True" time="0.000" asserts="4" />
+                      <test-case name="Spark.Tests.Visitors.ConditionalAttributeVisitorTester.ChainConditionalAttribute" executed="True" success="True" time="0.010" asserts="7" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Visitors.OmitExtraLinesVisitorTester" success="True" time="0.000" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Visitors.OmitExtraLinesVisitorTester.RemoveLinesBeforeSpecialNodes" executed="True" success="True" time="0.000" asserts="10" />
+                    </results>
+                  </test-suite>
+                  <test-suite name="Spark.Tests.Visitors.SpecialNodeVisitorTester" success="True" time="0.010" asserts="0">
+                    <results>
+                      <test-case name="Spark.Tests.Visitors.SpecialNodeVisitorTester.WellMatchedNodesWrapContent" executed="True" success="True" time="0.000" asserts="7" />
+                      <test-case name="Spark.Tests.Visitors.SpecialNodeVisitorTester.UnclosedNodeThrowsCompilerException" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Visitors.SpecialNodeVisitorTester.MismatchedSpecialNodeThrowsCompilerException" executed="True" success="True" time="0.000" asserts="1" />
+                      <test-case name="Spark.Tests.Visitors.SpecialNodeVisitorTester.ExtraEndSpecialNodeThrowCompilerException" executed="True" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.CompiledViewHolderTester" success="True" time="0.050" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.CompiledViewHolderTester.LookupNonExistantReturnsNull" executed="True" success="True" time="0.000" asserts="1" />
+                  <test-case name="Spark.Tests.CompiledViewHolderTester.LookupReturnsStoredInstance" executed="True" success="True" time="0.000" asserts="2" />
+                  <test-case name="Spark.Tests.CompiledViewHolderTester.VariousKeyEqualities" executed="True" success="True" time="0.000" asserts="7" />
+                  <test-case name="Spark.Tests.CompiledViewHolderTester.ExpiredEntryReturnsNull" executed="True" success="True" time="0.050" asserts="2" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.FileSystemViewFolderTester" success="True" time="0.090" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.FileSystemViewFolderTester.HasViewBoolean" executed="True" success="True" time="0.000" asserts="2" />
+                  <test-case name="Spark.Tests.FileSystemViewFolderTester.ListingViewsInFolder" executed="True" success="True" time="0.000" asserts="3" />
+                  <test-case name="Spark.Tests.FileSystemViewFolderTester.GetSourceNotFound" executed="True" success="True" time="0.000" asserts="0" />
+                  <test-case name="Spark.Tests.FileSystemViewFolderTester.ReadingFileContents" executed="True" success="True" time="0.000" asserts="1" />
+                  <test-case name="Spark.Tests.FileSystemViewFolderTester.LastModifiedChanges" executed="True" success="True" time="0.080" asserts="2" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.InMemoryViewFolderTester" success="True" time="0.230" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.InMemoryViewFolderTester.HasViewCaseInsensitive" executed="True" success="True" time="0.000" asserts="5" />
+                  <test-case name="Spark.Tests.InMemoryViewFolderTester.ListViewsInFolder" executed="True" success="True" time="0.000" asserts="4" />
+                  <test-case name="Spark.Tests.InMemoryViewFolderTester.FileNotFoundException" executed="True" success="True" time="0.010" asserts="0" />
+                  <test-case name="Spark.Tests.InMemoryViewFolderTester.ReadFileContents" executed="True" success="True" time="0.000" asserts="1" />
+                  <test-case name="Spark.Tests.InMemoryViewFolderTester.LastModifiedChanges" executed="True" success="True" time="0.000" asserts="3" />
+                  <test-case name="Spark.Tests.InMemoryViewFolderTester.InMemoryViewFolderUsedByEngine" executed="True" success="True" time="0.220" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.PrefixSupportTester" success="True" time="1.562" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.PrefixSupportTester.PrefixFromSettings" executed="True" success="True" time="0.260" asserts="11" />
+                  <test-case name="Spark.Tests.PrefixSupportTester.PrefixFromXmlns" executed="True" success="True" time="0.280" asserts="11" />
+                  <test-case name="Spark.Tests.PrefixSupportTester.ConditionalAttributes" executed="True" success="True" time="0.310" asserts="7" />
+                  <test-case name="Spark.Tests.PrefixSupportTester.MacroAndContentPrefixes" executed="True" success="True" time="0.240" asserts="10" />
+                  <test-case name="Spark.Tests.PrefixSupportTester.SectionAndRenderPrefixes" executed="True" success="True" time="0.240" asserts="8" />
+                  <test-case name="Spark.Tests.PrefixSupportTester.MacroAndContentPrefixesFromSettings" executed="True" success="True" time="0.230" asserts="6" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.SparkExtensionTester" success="True" time="0.220" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.SparkExtensionTester.TestExtensions" executed="True" success="True" time="0.220" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.SparkSectionHandlerTester" success="True" time="0.290" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.SparkSectionHandlerTester.CanLoadFromAppConfig" executed="True" success="True" time="0.000" asserts="5" />
+                  <test-case name="Spark.Tests.SparkSectionHandlerTester.CreateSectionHandlerFluentInterface" executed="True" success="True" time="0.000" asserts="3" />
+                  <test-case name="Spark.Tests.SparkSectionHandlerTester.CreateSettingsFluentInterface" executed="True" success="True" time="0.000" asserts="4" />
+                  <test-case name="Spark.Tests.SparkSectionHandlerTester.UseAssemblyAndNamespaceFromSettings" executed="True" success="True" time="0.290" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.SparkViewFactoryTester" success="True" time="12.147" asserts="0">
+                <categories>
+                  <category name="SparkViewEngine" />
+                </categories>
+                <results>
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.RenderPlainView" executed="True" success="True" time="0.260" asserts="0" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ForEachTest" executed="True" success="True" time="0.210" asserts="3" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.GlobalSetTest" executed="True" success="True" time="0.240" asserts="2" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.MasterTest" executed="True" success="True" time="0.240" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.CaptureNamedContent" executed="True" success="True" time="0.240" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.UsingHtmlHelper" executed="False">
+                    <reason>
+                      <message><![CDATA[Library no longer references asp.net mvc directly]]></message>
+                    </reason>
+                  </test-case>
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.UsingPartialFile" executed="True" success="True" time="0.240" asserts="5" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.UsingPartialWithRenderElement" executed="True" success="True" time="0.240" asserts="5" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.UsingPartialFileImplicit" executed="True" success="True" time="0.220" asserts="2" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.DeclaringViewDataAccessor" executed="False">
+                    <reason>
+                      <message><![CDATA[Library no longer references asp.net mvc directly]]></message>
+                    </reason>
+                  </test-case>
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.UsingNamespace" executed="True" success="True" time="0.240" asserts="3" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.IfElseElements" executed="True" success="True" time="0.240" asserts="8" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.IfElseAttributes" executed="True" success="True" time="0.230" asserts="8" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ChainingElseIfElement" executed="True" success="True" time="0.270" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ChainingElseIfElement2" executed="True" success="True" time="0.230" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ChainingElseIfAttribute" executed="True" success="True" time="0.250" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.EachAttribute" executed="True" success="True" time="0.260" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.MarkupBasedMacros" executed="True" success="True" time="0.250" asserts="7" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.TestForEachIndex" executed="True" success="True" time="0.210" asserts="12" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ForEachMoreAutoVariable" executed="True" success="True" time="0.240" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ConditionalTestElement" executed="True" success="True" time="0.240" asserts="7" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ConditionalTestElementNested" executed="True" success="True" time="0.210" asserts="1" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.PartialFilesCanHaveSpecialElements" executed="True" success="True" time="0.240" asserts="2" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.StatementTerminatingStrings" executed="True" success="True" time="0.270" asserts="1" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ExpressionHasVerbatimStrings" executed="True" success="True" time="0.220" asserts="1" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.RelativeApplicationPaths" executed="True" success="True" time="0.240" asserts="3" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.UseAssembly" executed="True" success="True" time="0.240" asserts="1" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.AddViewDataMoreThanOnce" executed="True" success="True" time="0.230" asserts="2" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.AddViewDataDifferentTypes" executed="True" success="True" time="0.000" asserts="0" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.RenderPartialWithContainedContent" executed="True" success="True" time="0.260" asserts="13" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.RenderPartialWithSectionContent" executed="True" success="True" time="0.230" asserts="15" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.CaptureContentAsVariable" executed="True" success="True" time="0.240" asserts="1" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.CaptureContentBeforeAndAfter" executed="True" success="True" time="0.210" asserts="1" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ConstAndReadonlyGlobals" executed="True" success="True" time="0.250" asserts="1" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.PrefixContentNotation" executed="True" success="True" time="0.230" asserts="1" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.DynamicAttributes" executed="True" success="True" time="0.250" asserts="14" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.XMLDeclAndProcessingInstruction" executed="True" success="True" time="0.250" asserts="2" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ForEachAutovariablesUsedInline" executed="True" success="True" time="0.220" asserts="7" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.AlternateViewdataSyntax" executed="True" success="True" time="0.240" asserts="12" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.DefaultValuesDontCollideWithExistingLocals" executed="True" success="True" time="0.260" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.DefaultValuesDontReplaceGlobals" executed="True" success="True" time="0.220" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.DefaultValuesDontReplaceViewData" executed="True" success="True" time="0.260" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.DefaultValuesActAsLocal" executed="True" success="True" time="0.210" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.DefaultValuesStandInForNullViewData" executed="True" success="True" time="0.240" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.NullExceptionHandledAutomatically" executed="True" success="True" time="0.330" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.CodeCommentsCanHaveQuotes" executed="True" success="True" time="0.270" asserts="6" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.ConditionalAttributeDelimitedBySpaces" executed="True" success="True" time="0.230" asserts="8" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.OnceAttribute" executed="True" success="True" time="0.230" asserts="9" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.EachAttributeWorksOnSpecialNodes" executed="True" success="True" time="0.260" asserts="6" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.IfAttributeWorksOnSpecialNodes" executed="True" success="True" time="0.240" asserts="6" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.OnceAttributeWorksOnSpecialNodes" executed="True" success="True" time="0.270" asserts="10" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.LateBoundEvalResolvesViewData" executed="True" success="True" time="0.230" asserts="4" />
+                  <test-case name="Spark.Tests.SparkViewFactoryTester.PartialInMacroMayUseDefaultElement" executed="True" success="True" time="0.240" asserts="4" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.ViewActivatorTester" success="True" time="0.220" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.ViewActivatorTester.CreateViewInstance" executed="True" success="True" time="0.000" asserts="2" />
+                  <test-case name="Spark.Tests.ViewActivatorTester.CustomViewActivator" executed="True" success="True" time="0.220" asserts="2" />
+                </results>
+              </test-suite>
+              <test-suite name="Spark.Tests.DefaultViewCompilerTester" success="True" time="3.495" asserts="0">
+                <results>
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.MakeAndCompile" executed="True" success="True" time="0.260" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.UnsafeLiteralCharacters" executed="True" success="True" time="0.240" asserts="2" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.SimpleOutput" executed="True" success="True" time="0.210" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.LocalVariableDecl" executed="True" success="True" time="0.260" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.ForEachLoop" executed="True" success="True" time="0.260" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.GlobalVariables" executed="True" success="True" time="0.230" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.TargetNamespace" executed="True" success="True" time="0.230" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.ProvideFullException" executed="True" success="True" time="0.351" asserts="0" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.IfTrueCondition" executed="True" success="True" time="0.240" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.IfFalseCondition" executed="True" success="True" time="0.240" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.IfElseFalseCondition" executed="True" success="True" time="0.250" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.LenientSilentNullDoesNotCauseWarningCS0168" executed="True" success="True" time="0.240" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.LenientOutputNullDoesNotCauseWarningCS0168" executed="True" success="True" time="0.230" asserts="1" />
+                  <test-case name="Spark.Tests.DefaultViewCompilerTester.StrictNullUsesException" executed="True" success="True" time="0.220" asserts="3" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
