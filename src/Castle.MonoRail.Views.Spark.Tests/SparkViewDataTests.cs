@@ -63,7 +63,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             //* engineContext.Flash
             //* controller.PropertyBag
 
-            var resource = mocks.CreateMock<IResource>();
+            var resource = MockRepository.GenerateMock<IResource>();
 
             mocks.ReplayAll();
 

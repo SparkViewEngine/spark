@@ -84,14 +84,11 @@ namespace Spark.Tests
         [Test]
         public void ExpiredEntryReturnsNull()
         {
-            var mocks = new MockRepository();
-            var loader = mocks.CreateMock<ViewLoader>();
+            var loader = MockRepository.GenerateMock<ViewLoader>();
 
             isCurrent = true;
-            Func<bool> foo = delegate { return isCurrent; };
-            SetupResult.For(loader.IsCurrent()).Do(foo);
-
-            mocks.ReplayAll();
+            Func<bool> foo = () => isCurrent;
+            loader.Stub(x => x.IsCurrent()).Do(foo);
 
             var key = BuildKey("c\\v", "shared\\m");
             var entry = new CompiledViewHolder.Entry { Key = key, Loader = loader };

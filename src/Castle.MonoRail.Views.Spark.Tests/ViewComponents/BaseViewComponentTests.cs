@@ -52,7 +52,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             factory = new SparkViewFactory();
             factory.Service(services);
 
-            controller = mocks.CreateMock<IController>();
+            controller = MockRepository.GenerateMock<IController>();
             controllerContext = new ControllerContext();
             var request = new StubRequest();
             request.FilePath = "";

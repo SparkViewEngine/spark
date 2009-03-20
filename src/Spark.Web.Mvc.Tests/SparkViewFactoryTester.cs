@@ -44,19 +44,33 @@ namespace Spark.Web.Mvc.Tests
                                           Defaults = new RouteValueDictionary(new { action = "Index", id = "" })
                                       });
 
-            mocks = new MockRepository();
-            context = mocks.DynamicHttpContextBase();
-            response = context.Response;
-            request = context.Request;
-            SetupResult.For(request.ApplicationPath).Return("/");
-            SetupResult.For(request.Path).Return("/");
-            SetupResult.For(response.ApplyAppPathModifier("")).IgnoreArguments().Do(
-                new Func<string, string>(path => path));
+            _contextBase = MockRepository.GenerateStub<HttpContextBase>();
+            _requestBase = MockRepository.GenerateStub<HttpRequestBase>();
+            _responseBase = MockRepository.GenerateStub<HttpResponseBase>();
+            _sessionStateBase = MockRepository.GenerateStub<HttpSessionStateBase>();
+            _serverUtilityBase = MockRepository.GenerateStub<HttpServerUtilityBase>();
 
-            mocks.Replay(response);
+            _contextBase.Stub(x => x.Request).Return(_requestBase);
+            _contextBase.Stub(x => x.Response).Return(_responseBase);
+            _contextBase.Stub(x => x.Session).Return(_sessionStateBase);
+            _contextBase.Stub(x => x.Server).Return(_serverUtilityBase);
+
+            _responseBase.Stub(x => x.OutputStream).Return(new MemoryStream());
+            _responseBase.Stub(x => x.Output).Return(new StringWriter());
+
+
+            _requestBase.Stub(x => x.ApplicationPath).Return("/");
+            _requestBase.Stub(x => x.Path).Return("/");
+            _responseBase.Stub(x => x.ApplyAppPathModifier(null))
+                .IgnoreArguments()
+                .Do(new Func<string, string>(path => path));
+
+            context = _contextBase;
+            response = context.Response;
+
             output = response.Output;
 
-            controller = mocks.DynamicMock<ControllerBase>();
+            controller = MockRepository.GenerateStub<ControllerBase>();
 
 
             routeData = new RouteData();
@@ -74,9 +88,7 @@ namespace Spark.Web.Mvc.Tests
 
         #endregion
 
-        private MockRepository mocks;
         private HttpContextBase context;
-        private HttpRequestBase request;
         private HttpResponseBase response;
         private ControllerBase controller;
         private RouteData routeData;
@@ -85,6 +97,12 @@ namespace Spark.Web.Mvc.Tests
         private SparkViewFactory factory;
 
         private TextWriter output;
+
+        private HttpContextBase _contextBase;
+        private HttpRequestBase _requestBase;
+        private HttpResponseBase _responseBase;
+        private HttpSessionStateBase _sessionStateBase;
+        private HttpServerUtilityBase _serverUtilityBase;
 
         private ViewContext MakeViewContext(string viewName)
         {
@@ -137,11 +155,10 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CaptureNamedContent()
         {
-            mocks.ReplayAll();
 
             FindViewAndRender("namedcontent", "layout");
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
             var content = output.ToString();
             Assert.That(content.Contains("<p>main content</p>"));
             Assert.That(content.Contains("<p>this is the header</p>"));
@@ -152,12 +169,12 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void DeclaringViewDataAccessor()
         {
-            mocks.ReplayAll();
+            
             var comments = new[] { new Comment { Text = "foo" }, new Comment { Text = "bar" } };
 
             FindViewAndRender("viewdata", new { Comments = comments, Caption = "Hello world" });
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
             var content = output.ToString();
             Assert.That(content.Contains("<h1>Hello world</h1>"));
             Assert.That(content.Contains("<p>foo</p>"));
@@ -168,11 +185,11 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void ForEachTest()
         {
-            mocks.ReplayAll();
+            
 
             FindViewAndRender("foreach", null);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString();
             Assert.That(content.Contains(@"<li class=""odd"">1: foo</li>"));
@@ -184,11 +201,11 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void GlobalSetTest()
         {
-            mocks.ReplayAll();
+            
 
             FindViewAndRender("globalset", null);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString();
             Assert.That(content.Contains("<p>default: Global set test</p>"));
@@ -198,9 +215,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void HtmlEncodeFunctionH()
         {
-            mocks.ReplayAll();
+            
             FindViewAndRender("html-encode-function-h");
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
             Assert.AreEqual("<p>&lt;p&gt;&amp;lt;&amp;gt;&lt;/p&gt;</p>", content);
@@ -209,19 +226,16 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void HtmlHelperWorksOnItsOwn()
         {
-            mocks.ReplayAll();
+            
 
 
             var viewContext = MakeViewContext("helpers");
-
-            var appPath = viewContext.HttpContext.Request.ApplicationPath;
-            var currentPath = viewContext.HttpContext.Request.Path;
 
             var html = new HtmlHelper(viewContext, new ViewDataContainer { ViewData = viewContext.ViewData });
             var link = html.ActionLink("hello", "world");
             response.Write(link);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             Assert.AreEqual("<a href=\"/Home/world\">hello</a>", link);
         }
@@ -229,24 +243,24 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void MasterApplicationIfPresent()
         {
-            var viewFolder = mocks.CreateMock<IViewFolder>();
-            Expect.Call(viewFolder.HasView("Foo\\Baaz.spark")).Return(true);
-            Expect.Call(viewFolder.HasView("Layouts\\Foo.spark")).Return(false);
-            Expect.Call(viewFolder.HasView("Shared\\Foo.spark")).Return(false);
-            Expect.Call(viewFolder.HasView("Layouts\\Application.spark")).Return(false);
-            Expect.Call(viewFolder.HasView("Shared\\Application.spark")).Return(true);
+            var viewFolder = MockRepository.GenerateMock<IViewFolder>();
+            viewFolder.Expect(x=>x.HasView("Foo\\Baaz.spark")).Return(true);
+            viewFolder.Expect(x=>x.HasView("Layouts\\Foo.spark")).Return(false);
+            viewFolder.Expect(x=>x.HasView("Shared\\Foo.spark")).Return(false);
+            viewFolder.Expect(x=>x.HasView("Layouts\\Application.spark")).Return(false);
+            viewFolder.Expect(x=>x.HasView("Shared\\Application.spark")).Return(true);
 
             factory.ViewFolder = viewFolder;
 
 
-            mocks.ReplayAll();
+            
 
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
 
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             Assert.AreEqual(2, descriptor.Templates.Count);
             Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
@@ -256,17 +270,17 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void MasterEmptyByDefault()
         {
-            var viewSourceLoader = mocks.CreateMock<IViewFolder>();
-            Expect.Call(viewSourceLoader.HasView("Foo\\Baaz.spark")).Return(true);
-            Expect.Call(viewSourceLoader.HasView("Layouts\\Foo.spark")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Shared\\Foo.spark")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Layouts\\Application.spark")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Shared\\Application.spark")).Return(false);
+            var viewSourceLoader = MockRepository.GenerateMock<IViewFolder>();
+            viewSourceLoader.Expect(x=>x.HasView("Foo\\Baaz.spark")).Return(true);
+            viewSourceLoader.Expect(x=>x.HasView("Layouts\\Foo.spark")).Return(false);
+            viewSourceLoader.Expect(x=>x.HasView("Shared\\Foo.spark")).Return(false);
+            viewSourceLoader.Expect(x=>x.HasView("Layouts\\Application.spark")).Return(false);
+            viewSourceLoader.Expect(x=>x.HasView("Shared\\Application.spark")).Return(false);
 
             factory.ViewFolder = viewSourceLoader;
 
 
-            mocks.ReplayAll();
+            
 
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
@@ -274,7 +288,7 @@ namespace Spark.Web.Mvc.Tests
 
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             Assert.AreEqual(1, descriptor.Templates.Count);
             Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
@@ -283,22 +297,22 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void MasterForControllerIfPresent()
         {
-            var viewSourceLoader = mocks.CreateMock<IViewFolder>();
-            Expect.Call(viewSourceLoader.HasView("Foo\\Baaz.spark")).Return(true);
-            Expect.Call(viewSourceLoader.HasView("Layouts\\Foo.spark")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Shared\\Foo.spark")).Return(true);
+            var viewSourceLoader = MockRepository.GenerateMock<IViewFolder>();
+            viewSourceLoader.Expect(x=>x.HasView("Foo\\Baaz.spark")).Return(true);
+            viewSourceLoader.Expect(x=>x.HasView("Layouts\\Foo.spark")).Return(false);
+            viewSourceLoader.Expect(x=>x.HasView("Shared\\Foo.spark")).Return(true);
 
             factory.ViewFolder = viewSourceLoader;
 
 
-            mocks.ReplayAll();
+            
 
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
 
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             Assert.AreEqual(2, descriptor.Templates.Count);
             Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
@@ -308,11 +322,11 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void MasterTest()
         {
-            mocks.ReplayAll();
+            
 
             FindViewAndRender("childview", "layout");
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
             var content = output.ToString();
             Assert.That(content.Contains("<title>Standalone Index View</title>"));
             Assert.That(content.Contains("<h1>Standalone Index View</h1>"));
@@ -323,9 +337,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void NullViewDataIsSafe()
         {
-            mocks.ReplayAll();
+            
             FindViewAndRender("viewdatanull", null);
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString();
             Assert.That(content.Contains("<p>nothing</p>"));
@@ -334,9 +348,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void RenderPartialOrderCorrect()
         {
-            mocks.ReplayAll();
+            
             FindViewAndRender("renderpartial-ordercorrect", "ajax");
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString();
             ContainsInOrder(content,
@@ -348,30 +362,30 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void RenderPlainView()
         {
-            mocks.ReplayAll();
+            
 
             var viewContext = MakeViewContext("index");
             var viewEngineResult = factory.FindView(controllerContext, "index", null);
             viewEngineResult.View.Render(viewContext, output);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
         }
 
         [Test]
         public void TargetNamespaceFromController()
         {
-            var viewSourceLoader = mocks.CreateMock<IViewFolder>();
-            Expect.Call(viewSourceLoader.HasView("Home\\Baaz.spark")).Return(true);
-            Expect.Call(viewSourceLoader.HasView("Layouts\\Home.spark")).Return(true);
+            var viewSourceLoader = MockRepository.GenerateMock<IViewFolder>();
+            viewSourceLoader.Expect(x=>x.HasView("Home\\Baaz.spark")).Return(true);
+            viewSourceLoader.Expect(x=>x.HasView("Layouts\\Home.spark")).Return(true);
             factory.ViewFolder = viewSourceLoader;
 
             controller = new StubController();
             controllerContext = new ControllerContext(context, routeData, controller);
 
-            mocks.ReplayAll();
+            
 
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             Assert.AreEqual("Spark.Web.Mvc.Tests.Controllers", descriptor.TargetNamespace);
         }
@@ -380,11 +394,11 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void UsingHtmlHelper()
         {
-            mocks.ReplayAll();
+            
 
             FindViewAndRender("helpers", null);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
             var content = output.ToString();
             Assert.That(content.Contains("<p><a href=\"/Home/Sort\">Click me</a></p>"));
             Assert.That(content.Contains("<p>foo&gt;bar</p>"));
@@ -393,10 +407,10 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void UsingNamespace()
         {
-            mocks.ReplayAll();
+            
             FindViewAndRender("usingnamespace");
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
             var content = output.ToString();
             Assert.That(content.Contains("<p>Foo</p>"));
             Assert.That(content.Contains("<p>Bar</p>"));
@@ -406,11 +420,11 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void UsingPartialFile()
         {
-            mocks.ReplayAll();
+            
 
             FindViewAndRender("usingpartial", null);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
             var content = output.ToString();
             Assert.That(content.Contains("<li>Partial where x=\"zero\"</li>"));
             Assert.That(content.Contains("<li>Partial where x=\"one\"</li>"));
@@ -422,11 +436,11 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void UsingPartialFileImplicit()
         {
-            mocks.ReplayAll();
+            
 
             FindViewAndRender("usingpartialimplicit", null);
 
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
             var content = output.ToString();
             Assert.That(content.Contains("<li class=\"odd\">one</li>"));
             Assert.That(content.Contains("<li class=\"even\">two</li>"));
@@ -436,9 +450,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void ViewDataWithModel()
         {
-            mocks.ReplayAll();
+            
             FindViewAndRender("viewdatamodel", new Comment { Text = "Hello" });
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString();
             Assert.That(content.Contains("<p>Hello</p>"));
@@ -447,9 +461,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void ViewSourceLoaderCanBeChanged()
         {
-            var replacement = mocks.DynamicMock<IViewFolder>();
+            var replacement = MockRepository.GenerateStub<IViewFolder>();
 
-            mocks.ReplayAll();
+            
 
             var existing = factory.ViewFolder;
             Assert.AreNotSame(existing, replacement);
@@ -481,9 +495,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void EvalWithViewDataModel()
         {
-            mocks.ReplayAll();
+            
             FindViewAndRender("EvalWithViewDataModel", new Comment { Text = "Hello" });
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString();
             Assert.That(content.Contains("<p>Hello</p>"));
@@ -492,9 +506,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void EvalWithAnonModel()
         {
-            mocks.ReplayAll();
+            
             FindViewAndRender("EvalWithAnonModel", new { Foo = 42, Bar = new Comment { Text = "Hello" } });
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString();
             Assert.That(content.Contains("<p>42 Hello</p>"));
@@ -504,9 +518,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void EvalWithFormatString()
         {
-            mocks.ReplayAll();
+            
             FindViewAndRender("EvalWithFormatString", new { Cost = 134567.89, terms = new { due = new DateTime(1971, 10, 14) } });
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString();
             Assert.That(content.Contains("<p>134,567.89</p>"));
@@ -516,9 +530,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void RenderPartialSharesState()
         {
-            mocks.ReplayAll();
+            
             FindViewAndRender("RenderPartialSharesState");
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             var content = output.ToString();
             ContainsInOrder(content,
@@ -542,12 +556,12 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanLocateViewInArea()
         {
-            mocks.ReplayAll();
+            
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindView(controllerContext, "index", null);
             var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
             viewContext.View.Render(viewContext, output);
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             Assert.AreEqual("<p>default view admin area</p>", output.ToString().Trim());
         }
@@ -555,12 +569,12 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanLocateViewInAreaWithLayout()
         {
-            mocks.ReplayAll();
+            
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindView(controllerContext, "index", "layout");
             var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
             viewContext.View.Render(viewContext, output);
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             ContainsInOrder(output.ToString(),
                             "<body>",
@@ -571,12 +585,12 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanLocateViewInAreaWithLayoutInArea()
         {
-            mocks.ReplayAll();
+            
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindView(controllerContext, "index", "speciallayout");
             var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
             viewContext.View.Render(viewContext, output);
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             ContainsInOrder(output.ToString(),
                             "<body class=\"special\">",
@@ -587,12 +601,12 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanLocatePartialViewInArea()
         {
-            mocks.ReplayAll();
+            
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindPartialView(controllerContext, "index");
             var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
             viewContext.View.Render(viewContext, output);
-            mocks.VerifyAll();
+            //mocks.VerifyAll();
 
             Assert.AreEqual("<p>default view admin area</p>", output.ToString().Trim());
         }

@@ -59,7 +59,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             output = new StringWriter();
 
             server = new StubServerUtility();
-            routingEngine = mocks.CreateMock<IRoutingEngine>();
+            routingEngine = MockRepository.GenerateMock<IRoutingEngine>();
             var urlBuilder = new DefaultUrlBuilder(server, routingEngine);
             serviceProvider.UrlBuilder = urlBuilder;
             serviceProvider.AddService(typeof(IUrlBuilder), urlBuilder);

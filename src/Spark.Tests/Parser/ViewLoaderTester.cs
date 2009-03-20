@@ -26,7 +26,7 @@ namespace Spark.Tests.Parser
     [TestFixture]
     public class ViewLoaderTester
     {
-        private MockRepository mocks;
+
         private ViewLoader loader;
 
         private IViewFolder viewSourceLoader;
@@ -35,26 +35,25 @@ namespace Spark.Tests.Parser
         [SetUp]
         public void Init()
         {
-            mocks = new MockRepository();
 
-            viewSourceLoader = mocks.CreateMock<IViewFolder>();
-            SetupResult.For(viewSourceLoader.ListViews("home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
-            SetupResult.For(viewSourceLoader.ListViews("Home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
-            SetupResult.For(viewSourceLoader.ListViews("Account")).Return(new[] { "index.spark" });
-            SetupResult.For(viewSourceLoader.ListViews("Shared")).Return(new[] { "layout.spark", "_header.spark", "default.spark", "_footer.spark" });
+            viewSourceLoader = MockRepository.GenerateMock<IViewFolder>();
+            viewSourceLoader.Stub(x => x.ListViews("home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
+            viewSourceLoader.Stub(x => x.ListViews("Home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
+            viewSourceLoader.Stub(x => x.ListViews("Account")).Return(new[] { "index.spark" });
+            viewSourceLoader.Stub(x => x.ListViews("Shared")).Return(new[] { "layout.spark", "_header.spark", "default.spark", "_footer.spark" });
 
-            syntaxProvider = mocks.CreateMock<ISparkSyntaxProvider>();
+            syntaxProvider = MockRepository.GenerateMock<ISparkSyntaxProvider>();
 
             loader = new ViewLoader { ViewFolder = viewSourceLoader, SyntaxProvider = syntaxProvider };
         }
 
         IViewFile ExpectGetChunks(string path, params Chunk[] chunks)
         {
-            var source = mocks.CreateMock<IViewFile>();
+            var source = MockRepository.GenerateMock<IViewFile>();
 
-            Expect.Call(viewSourceLoader.GetViewSource(path)).Return(source);
-            Expect.Call(source.LastModified).Return(0);
-            Expect.Call(syntaxProvider.GetChunks(null, null)).IgnoreArguments().Return(chunks);
+            viewSourceLoader.Expect(x => x.GetViewSource(path)).Return(source);
+            source.Expect(x => x.LastModified).Return(0);
+            syntaxProvider.Expect(x => x.GetChunks(null, null)).IgnoreArguments().Return(chunks);
 
             return source;
         }
@@ -63,12 +62,12 @@ namespace Spark.Tests.Parser
         public void LoadSimpleFile()
         {
             ExpectGetChunks("home\\simple.spark", new SendLiteralChunk());
-            SetupResult.For(viewSourceLoader.HasView("home\\_global.spark")).Return(false);
-            SetupResult.For(viewSourceLoader.HasView("Shared\\_global.spark")).Return(false);
+            viewSourceLoader.Stub(x => x.HasView("home\\_global.spark")).Return(false);
+            viewSourceLoader.Stub(x => x.HasView("Shared\\_global.spark")).Return(false);
 
-            mocks.ReplayAll();
             var chunks = loader.Load("home\\simple.spark");
-            mocks.VerifyAll();
+            viewSourceLoader.VerifyAllExpectations();
+            syntaxProvider.VerifyAllExpectations();
 
             Assert.AreEqual(1, chunks.Count());
             Assert.AreEqual(1, loader.GetEverythingLoaded().Count());
@@ -78,14 +77,14 @@ namespace Spark.Tests.Parser
         public void LoadUsedFile()
         {
             ExpectGetChunks("Home\\usefile.spark", new RenderPartialChunk { Name = "mypartial" });
-            Expect.Call(viewSourceLoader.HasView("Home\\mypartial.spark")).Return(true);
+            viewSourceLoader.Expect(x => x.HasView("Home\\mypartial.spark")).Return(true);
             ExpectGetChunks("Home\\mypartial.spark", new SendLiteralChunk { Text = "Hello world" });
-            SetupResult.For(viewSourceLoader.HasView("Home\\_global.spark")).Return(false);
-            SetupResult.For(viewSourceLoader.HasView("Shared\\_global.spark")).Return(false);
+            viewSourceLoader.Stub(x => x.HasView("Home\\_global.spark")).Return(false);
+            viewSourceLoader.Stub(x => x.HasView("Shared\\_global.spark")).Return(false);
 
-            mocks.ReplayAll();
             loader.Load("Home\\usefile.spark");
-            mocks.VerifyAll();
+            viewSourceLoader.VerifyAllExpectations();
+            syntaxProvider.VerifyAllExpectations();
 
             Assert.AreEqual(2, loader.GetEverythingLoaded().Count());
         }
@@ -95,25 +94,25 @@ namespace Spark.Tests.Parser
         public void LoadSharedFile()
         {
             ExpectGetChunks("Home\\usefile.spark", new RenderPartialChunk { Name = "mypartial" });
-            Expect.Call(viewSourceLoader.HasView("Home\\mypartial.spark")).Return(false);
-            Expect.Call(viewSourceLoader.HasView("Shared\\mypartial.spark")).Return(true);
+            viewSourceLoader.Expect(x => x.HasView("Home\\mypartial.spark")).Return(false);
+            viewSourceLoader.Expect(x => x.HasView("Shared\\mypartial.spark")).Return(true);
             ExpectGetChunks("Shared\\mypartial.spark", new SendLiteralChunk { Text = "Hello world" });
 
-            SetupResult.For(viewSourceLoader.HasView("Home\\_global.spark")).Return(false);
-            SetupResult.For(viewSourceLoader.HasView("Shared\\_global.spark")).Return(false);
+            viewSourceLoader.Stub(x => x.HasView("Home\\_global.spark")).Return(false);
+            viewSourceLoader.Stub(x => x.HasView("Shared\\_global.spark")).Return(false);
 
-            mocks.ReplayAll();
             loader.Load("Home\\usefile.spark");
-            mocks.VerifyAll();
+            viewSourceLoader.VerifyAllExpectations();
+            syntaxProvider.VerifyAllExpectations();
         }
 
         [Test]
         public void FindPartialFiles()
         {
-            mocks.ReplayAll();
             var partials3 = loader.FindPartialFiles("Home\\other.spark");
             var partials2 = loader.FindPartialFiles("Account\\index.spark");
-            mocks.VerifyAll();
+            viewSourceLoader.VerifyAllExpectations();
+            syntaxProvider.VerifyAllExpectations();
 
             Assert.AreEqual(3, partials3.Count);
             Assert.That(partials3.Contains("comment"));
@@ -129,30 +128,30 @@ namespace Spark.Tests.Parser
         [Test, ExpectedException(typeof(FileNotFoundException))]
         public void FileNotFoundException()
         {
-            Expect.Call(viewSourceLoader.GetViewSource("Home\\nosuchfile.spark")).Throw(new FileNotFoundException());
+            viewSourceLoader.Expect(x => x.GetViewSource("Home\\nosuchfile.spark")).Throw(new FileNotFoundException());
 
-            mocks.ReplayAll();
             loader.Load("Home\\nosuchfile.spark");
-            mocks.VerifyAll();
+            viewSourceLoader.VerifyAllExpectations();
+            syntaxProvider.VerifyAllExpectations();
         }
 
         [Test]
         public void ExpiresWhenFilesChange()
         {
             var source = ExpectGetChunks("home\\changing.spark", new SendLiteralChunk { Text = "Hello world" });
-            Expect.Call(viewSourceLoader.GetViewSource("home\\changing.spark")).Return(source);
-            Expect.Call(source.LastModified).Return(0);
-            Expect.Call(viewSourceLoader.GetViewSource("home\\changing.spark")).Return(source);
-            Expect.Call(source.LastModified).Return(42);
+            viewSourceLoader.Expect(x => x.GetViewSource("home\\changing.spark")).Return(source);
+            source.Expect(x=>x.LastModified).Return(0);
+            viewSourceLoader.Expect(x => x.GetViewSource("home\\changing.spark")).Return(source);
+            source.Expect(x=>x.LastModified).Return(42);
 
-            SetupResult.For(viewSourceLoader.HasView("home\\_global.spark")).Return(false);
-            SetupResult.For(viewSourceLoader.HasView("Shared\\_global.spark")).Return(false);
+            viewSourceLoader.Stub(x => x.HasView("home\\_global.spark")).Return(false);
+            viewSourceLoader.Stub(x => x.HasView("Shared\\_global.spark")).Return(false);
 
-            mocks.ReplayAll();
             loader.Load("home\\changing.spark");
             Assert.That(loader.IsCurrent());
             Assert.That(!loader.IsCurrent());
-            mocks.VerifyAll();
+            viewSourceLoader.VerifyAllExpectations();
+            syntaxProvider.VerifyAllExpectations();
         }
 
         [Test]
