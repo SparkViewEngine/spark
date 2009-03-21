@@ -27,14 +27,36 @@ namespace Spark
 
         public string GetResourcePath(string siteRoot, string path)
         {
+            var effectivePath = path;
             foreach(var mapping in _settings.ResourceMappings)
             {
-                if (path.StartsWith(mapping.Match, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return mapping.Location + path.Substring(mapping.Match.Length);
-                }
+                if (!mapping.IsMatch(effectivePath)) 
+                    continue;
+
+                effectivePath = mapping.Map(effectivePath);
+                if (mapping.Stop)
+                    return effectivePath;
             }
-            return siteRoot + path;
+            if (effectivePath.StartsWith("~/", StringComparison.InvariantCultureIgnoreCase))
+            {
+                effectivePath = effectivePath.Substring(1);
+            }
+            return PathConcat(siteRoot, effectivePath);
         }
+
+        public string PathConcat(string siteRoot, string path)
+        {
+            var trailingSlash = siteRoot.EndsWith("/");
+            var leadingSlash = path.StartsWith("/");
+            
+            if (leadingSlash && trailingSlash)
+                return siteRoot + path.Substring(1);
+            
+            if (leadingSlash || trailingSlash)
+                return siteRoot + path;
+
+            return siteRoot + "/" + path;
+        }
+
     }
 }

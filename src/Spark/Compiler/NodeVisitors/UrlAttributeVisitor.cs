@@ -103,18 +103,12 @@ namespace Spark.Compiler.NodeVisitors
             if (first == null || !first.Text.StartsWith("~/"))
                 return;
 
-            string transformPath = TransformPath(first.Text);
+            var expr = "SiteResource(\"" + first.Text + "\")";
+            attribute.Nodes[0] = new ExpressionNode(expr) { OriginalNode = first };
 
-            if (transformPath.StartsWith("~/"))
-            {
-                var expr = "SiteResource(\"" + transformPath.Substring(1) + "\")";
-                attribute.Nodes[0] = new ExpressionNode(expr) { OriginalNode = first };
-            }
+            
         }
 
-        private string TransformPath(string text)
-        {
-            return text;
-        }
+        
     }
 }

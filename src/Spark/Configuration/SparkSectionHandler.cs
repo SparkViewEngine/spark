@@ -123,12 +123,12 @@ namespace Spark.Configuration
             }
         }
 
-        IEnumerable<ResourceMapping> ISparkSettings.ResourceMappings
+        IEnumerable<IResourceMapping> ISparkSettings.ResourceMappings
         {
             get
             {
                 foreach (ResourcePathElement resource in Pages.Resources)
-                    yield return new ResourceMapping { Match = resource.Match, Location = resource.Location };
+                    yield return new SimpleResourceMapping { Match = resource.Match, Location = resource.Location };
             }
         }
 

@@ -19,32 +19,54 @@ using Spark.Parser;
 
 namespace Spark
 {
-	public enum NullBehaviour
-	{
-		/// <summary>Catch NullReferenceExceptions, and either render the literal expression, or render nothing, respectively, when ${expression} or $!{expression} syntax is used</summary>
-		/// <remarks><c>Lenient</c> is the default setting.</remarks>
-		Lenient,
-		/// <summary>Do not wrap expressions in try/catch blocks.  Intended for fail-fast in development environment.</summary>
-		Strict
-	}
+    public enum NullBehaviour
+    {
+        /// <summary>Catch NullReferenceExceptions, and either render the literal expression, or render nothing, respectively, when ${expression} or $!{expression} syntax is used</summary>
+        /// <remarks><c>Lenient</c> is the default setting.</remarks>
+        Lenient,
+        /// <summary>Do not wrap expressions in try/catch blocks.  Intended for fail-fast in development environment.</summary>
+        Strict
+    }
 
     public interface ISparkSettings : IParserSettings
     {
         bool Debug { get; }
-		NullBehaviour NullBehaviour { get; }
+        NullBehaviour NullBehaviour { get; }
         string Prefix { get; }
         string PageBaseType { get; set; }
 
         IEnumerable<string> UseNamespaces { get; }
         IEnumerable<string> UseAssemblies { get; }
-        IEnumerable<ResourceMapping> ResourceMappings { get; }
+        IEnumerable<IResourceMapping> ResourceMappings { get; }
         IEnumerable<IViewFolderSettings> ViewFolders { get; }
     }
 
-    public class ResourceMapping
+    public interface IResourceMapping
     {
+        bool IsMatch(string path);
+        string Map(string path);
+        bool Stop { get; }
+    }
+
+    public class SimpleResourceMapping : IResourceMapping
+    {
+
         public string Match { get; set; }
         public string Location { get; set; }
+        public bool Stop { get; set; }
+
+
+        public bool IsMatch(string path)
+        {
+            return path.StartsWith(Match, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public string Map(string path)
+        {
+            return Location + path.Substring(Match.Length);
+        }
+
+
     }
 
     public interface IViewFolderSettings

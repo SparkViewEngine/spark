@@ -32,9 +32,9 @@ namespace Spark.Configuration
             return ((ResourcePathElement)element).Match;
         }
 
-        public void Add(string match, string location)
+        public void Add(string match, string location, bool stop)
         {
-            base.BaseAdd(new ResourcePathElement { Match = match, Location = location });
+            base.BaseAdd(new ResourcePathElement { Match = match, Location = location, Stop = stop});
         }
     }
 }

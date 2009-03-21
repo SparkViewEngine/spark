@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Spark.Tests
 {
@@ -40,6 +41,47 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void SiteRootPrependedByDefaultEnsureSlashBetweenSiteRootAndPath()
+        {
+            var manager = new DefaultResourcePathManager(new SparkSettings());
+
+            var path = manager.GetResourcePath("/my/webapp", "content/js/jquery.1.2.6.js");
+            Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);
+
+            path = manager.GetResourcePath("/my/webapp/", "/content/js/jquery.1.2.6.js");
+            Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);
+        }
+
+
+
+        [Test]
+        public void TildePrefixedPathMorphAsSiteRootPrependedByDefault()
+        {
+            var manager = new DefaultResourcePathManager(new SparkSettings());
+            var path = manager.GetResourcePath("/my/webapp", "~/content/js/jquery.1.2.6.js");
+            Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);   
+        }
+
+        [Test]
+        public void WhenResourceMappingWithNoStopAttributeThenNextMatchOrDefaultMatchWillBeProcessedWithItOutput()
+        {
+            var settings = new SparkSettings()
+                .AddResourceMapping("/js", "~/content/js", false);
+
+            var manager = new DefaultResourcePathManager(settings);
+
+            var path = manager.GetResourcePath("/my/webapp", "/js/jquery.1.2.6.js");
+            Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);
+
+            settings.AddResourceMapping("/ftpmirror", "/ftp/mymyrror.com", false);
+            settings.AddResourceMapping("/ftp/", "ftp://");
+
+            var path2 = manager.GetResourcePath("/my/webapp", "/ftpmirror/1.zip");
+            Assert.AreEqual("ftp://mymyrror.com/1.zip", path2);
+        }
+
+
+        [Test]
         public void ReplacingJustSomePrefixes()
         {
             var settings = new SparkSettings()
@@ -52,6 +94,21 @@ namespace Spark.Tests
 
             var path2 = manager.GetResourcePath("/my/webapp", "/content/css/yadda.css");
             Assert.AreEqual("/my/webapp/content/css/yadda.css", path2);
+        }
+
+        [Test]
+        public void AllTypesOfPathSlashesShouldCombineWithSingleForwardSlash()
+        {
+            var manager = new DefaultResourcePathManager(new SparkSettings());
+            var path1 = manager.PathConcat("foo", "bar");
+            var path2 = manager.PathConcat("foo/", "bar");
+            var path3 = manager.PathConcat("foo", "/bar");
+            var path4 = manager.PathConcat("foo/", "/bar");
+
+            Assert.That(path1, Is.EqualTo("foo/bar"));
+            Assert.That(path2, Is.EqualTo("foo/bar"));
+            Assert.That(path3, Is.EqualTo("foo/bar"));
+            Assert.That(path4, Is.EqualTo("foo/bar"));
         }
     }
 }

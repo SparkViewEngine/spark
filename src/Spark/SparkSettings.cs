@@ -26,7 +26,7 @@ namespace Spark
         {
             _useNamespaces = new List<string>();
             _useAssemblies = new List<string>();
-            _resourceMappings = new List<ResourceMapping>();
+            _resourceMappings = new List<IResourceMapping>();
             _viewFolders = new List<IViewFolderSettings>();
  			NullBehaviour = NullBehaviour.Lenient;
 
@@ -51,8 +51,8 @@ namespace Spark
             get { return _useAssemblies; }
         }
 
-        private readonly IList<ResourceMapping> _resourceMappings;
-        public IEnumerable<ResourceMapping> ResourceMappings
+        private readonly IList<IResourceMapping> _resourceMappings;
+        public IEnumerable<IResourceMapping> ResourceMappings
         {
             get { return _resourceMappings; }
         }
@@ -118,8 +118,13 @@ namespace Spark
         }
 
         public SparkSettings AddResourceMapping(string match, string replace)
+            {
+            return AddResourceMapping(match, replace, true);
+            }
+
+        public SparkSettings AddResourceMapping(string match, string replace, bool stopProcess)
         {
-            _resourceMappings.Add(new ResourceMapping { Match = match, Location = replace });
+            _resourceMappings.Add(new SimpleResourceMapping { Match = match, Location = replace, Stop = stopProcess});
             return this;
         }
 

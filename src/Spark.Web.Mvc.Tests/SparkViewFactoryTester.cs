@@ -13,7 +13,9 @@
 // limitations under the License.
 // 
 using System;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -515,16 +517,34 @@ namespace Spark.Web.Mvc.Tests
         }
 
 
+        public class ScopedCulture:IDisposable
+        {
+            private readonly CultureInfo savedCulture;
+ 
+            public ScopedCulture(CultureInfo culture)
+            {
+                savedCulture = Thread.CurrentThread.CurrentCulture;
+                Thread.CurrentThread.CurrentCulture = culture;
+            }
+
+            public void Dispose()
+            {
+                Thread.CurrentThread.CurrentCulture = savedCulture;
+            }
+        }
+
         [Test]
         public void EvalWithFormatString()
         {
-            
-            FindViewAndRender("EvalWithFormatString", new { Cost = 134567.89, terms = new { due = new DateTime(1971, 10, 14) } });
-            //mocks.VerifyAll();
+            using ( new ScopedCulture( CultureInfo.CreateSpecificCulture("en-us") ) )
+            {
+                mocks.ReplayAll();
+                FindViewAndRender("EvalWithFormatString", new { Cost = 134567.89, terms = new { due = new DateTime(1971, 10, 14) } });
 
-            var content = output.ToString();
-            Assert.That(content.Contains("<p>134,567.89</p>"));
-            Assert.That(content.Contains("<p>1971/10/14</p>"));
+                var content = output.ToString();
+                Assert.That(content.Contains("<p>134,567.89</p>"));
+                Assert.That(content.Contains("<p>1971/10/14</p>"));
+            }
         }
 
         [Test]

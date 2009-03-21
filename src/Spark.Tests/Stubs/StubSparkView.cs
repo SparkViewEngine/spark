@@ -33,7 +33,7 @@ namespace Spark.Tests.Stubs
 
         public string SiteResource(string path)
         {
-            return SiteRoot + path;
+            return SiteRoot + path.TrimStart('~');
         }
 
         public override bool TryGetViewData(string name, out object value)

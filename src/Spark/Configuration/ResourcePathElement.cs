@@ -31,5 +31,12 @@ namespace Spark.Configuration
             get { return (string)this["location"]; }
             set { this["location"] = value; }
         }
+
+        [ConfigurationProperty("stop")]
+        public bool Stop
+        {
+            get { return (bool) this["stop"]; }
+            set { this["stop"] = value; }
+        }
     }
 }
