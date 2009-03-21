@@ -1,4 +1,4 @@
-// Copyright 2008 Louis DeJardin - http://whereslou.com
+// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-
 namespace Castle.MonoRail.Views.Spark.Tests
 {
     using System.Collections.Generic;
