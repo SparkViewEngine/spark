@@ -538,7 +538,6 @@ namespace Spark.Web.Mvc.Tests
         {
             using ( new ScopedCulture( CultureInfo.CreateSpecificCulture("en-us") ) )
             {
-                mocks.ReplayAll();
                 FindViewAndRender("EvalWithFormatString", new { Cost = 134567.89, terms = new { due = new DateTime(1971, 10, 14) } });
 
                 var content = output.ToString();
