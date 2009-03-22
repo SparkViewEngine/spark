@@ -12,7 +12,7 @@
   <property name="samples.dir" value="${solution.dir}\samples"/>
   <property name="version.major" value="1"/>
   <property name="version.minor" value="0"/>
-  <property name="version.build" value="0"/>
+  <property name="version.build" value="1"/>
   <property name="version.revision" value="0"/>
   <property name="project.version" value="${version.major}.${version.minor}" dynamic="true" />
   <property name="project.fullversion" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true" />
@@ -59,18 +59,14 @@
     <delete dir="${build.dir}" failonerror="false" />
   </target>
 
-  <target name="get-subversion-revision">
-    <!-- Retrieve subversion revision number -->
-    <echo message="Retrieving Subversion revision number"/>
-    <property name="svn.revision" value="39890"/>
-    <echo message="Using Subversion revision number: ${svn.revision}"/>
-    <!-- TODO - come up with alternate revision number -->
-    <property name="version.build" value="${svn.revision}"/>
-  </target>
-
-  <target name="version" depends="get-subversion-revision" description="mark AssemblyInfo builds with the build number">
+  <target name="version" description="mark AssemblyInfo builds with the build number">
     <if test="${property::exists('CCNetLabel')}">
-      <property name="version.revision" value="${CCNetLabel}"/>
+      <property name="version.build" value="${CCNetLabel}"/>
+      <echo message="Using CruiseControl build number ${CCNetLabel}" />
+    </if>
+    <if test="${property::exists('build.number')}">
+      <property name="version.build" value="${build.number}"/>
+      <echo message="Using TeamCity build number ${build.number}" />
     </if>
     <property name="dist.revision" value="${project.fullversion}"/>
   </target>
