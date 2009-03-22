@@ -48,7 +48,7 @@ namespace Spark.Tests
 
     internal class StubExtensionFactory : ISparkExtensionFactory
     {
-        public ISparkExtension CreateExtension(ElementNode node)
+        public ISparkExtension CreateExtension(VisitorContext context, ElementNode node)
         {
             if (node.Name == "unittest")
                 return new TestExtension();

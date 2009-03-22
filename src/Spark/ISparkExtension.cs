@@ -24,7 +24,7 @@ namespace Spark
 {
     public interface ISparkExtensionFactory
     {
-        ISparkExtension CreateExtension(ElementNode node);
+        ISparkExtension CreateExtension(VisitorContext context, ElementNode node);
     }
 
     public interface ISparkExtension

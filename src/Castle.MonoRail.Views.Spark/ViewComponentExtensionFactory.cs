@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using Castle.Core;
 using Castle.MonoRail.Framework;
 using Spark;
+using Spark.Compiler.NodeVisitors;
 using Spark.Parser.Markup;
 
 namespace Castle.MonoRail.Views.Spark
@@ -31,7 +32,7 @@ namespace Castle.MonoRail.Views.Spark
             _serviceProvider = serviceProvider;
         }
 
-        public ISparkExtension CreateExtension(ElementNode node)
+        public ISparkExtension CreateExtension(VisitorContext context, ElementNode node)
         {
             var componentFactory = (IViewComponentFactory)_serviceProvider.GetService(typeof(IViewComponentFactory));
             if (componentFactory == null || componentFactory.Registry == null)

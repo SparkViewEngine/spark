@@ -179,7 +179,7 @@ namespace Spark.Compiler.NodeVisitors
                 return false;
             }
 
-            extension = Context.ExtensionFactory.CreateExtension(node);
+            extension = Context.ExtensionFactory.CreateExtension(Context, node);
             return extension != null;
         }
 
