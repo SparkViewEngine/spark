@@ -1,0 +1,29 @@
+﻿
+<var results="
+	from s in Model.Elements('stories').Elements('story') 
+	select new {
+		link = (string)s.Attribute('link'),
+		title = (string)s.Element('title'),
+		description = (string)s.Element('description'),
+		thumbnail = s.Elements('thumbnail').Any() ? new { 
+			src = (string)s.Element('thumbnail').Attribute('src') 
+		} : null
+	}"/>
+
+<html>
+  <head>
+    <title>Top Stories</title>
+    <style type="text/css">
+		<include href="diggstyle.css" parse="text"/>
+    </style>
+  </head>
+  <body>
+	<div each="var story in results" class="story">
+		<h3><a href="!{story.link}">${story.title}</a></h3>
+		<p>
+			<img if="story.thumbnail != null" src="!{story.thumbnail.src}" class="thumbnail"/> 
+			${story.description}
+		</p>
+	</div>
+  </body>
+</html>

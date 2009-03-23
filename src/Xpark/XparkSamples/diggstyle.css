@@ -1,0 +1,14 @@
+﻿.story
+{
+    clear: both;
+    font-family: Trebuchet MS;
+    font-size: 70%;
+    width: 480px;
+    margin-top: 20px;
+    border-top: solid 2px #9ce;
+}
+.story .thumbnail
+{
+    float: right;
+    margin: 0 16px 20px 16px;
+}

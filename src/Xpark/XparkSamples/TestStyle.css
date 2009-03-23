@@ -1,0 +1,56 @@
+﻿
+body
+{
+    font-family: Arial;
+    font-size: 85%;
+}
+
+.suite
+{
+    border-top: solid 2px #89d;
+    border-left: solid 2px #89d;
+    padding-top: 6px;
+    padding-left: 18px;
+}
+
+.suite .suite
+{
+    border-top: solid 2px #78c;
+    border-left: solid 2px #78c;
+}
+
+.suite .suite .suite
+{
+    border-top: solid 2px #67b;
+    border-left: solid 2px #67b;
+}
+
+.suite .suite .suite .suite
+{
+    border-top: solid 2px #57a;
+    border-left: solid 2px #57a;
+}
+
+p
+{
+    margin: 4px 0 0 0;
+    padding-bottom: 8px;
+}
+
+.suite
+{
+    font-weight: bold;
+}
+.case
+{
+    font-weight: normal;
+    color: #ccbb44;
+}
+.executed
+{
+    color: #773333;
+}
+.success
+{
+    color: #33aa55;
+}

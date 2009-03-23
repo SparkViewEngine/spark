@@ -1,0 +1,29 @@
+﻿
+<var results="Model.Element('test-results')"/>
+
+<html>
+  <head>
+    <title>${(string)results.Attribute('name')}</title>
+    <style type="text/css">
+		<include href="teststyle.css" parse="text"/>
+    </style>
+  </head>
+  <body>
+    !{ShowResults(results)}
+  </body>
+</html>
+
+<macro name="ShowResults" results="XElement">
+	<div each="var testSuite in results.Elements('test-suite')"
+		class="suite success?{(string)testSuite.Attribute('success')=='True'}">
+		<p>${(string)testSuite.Attribute('name')}</p>
+		!{ShowResults(testSuite.Element('results'))}
+	</div>
+	<div each="var testCase in results.Elements('test-case')"
+		class="case success?{(string)testCase.Attribute('success')=='True'} executed?{(string)testCase.Attribute('executed')=='True'}">
+		<p>${(string)testCase.Attribute('name')}</p>
+		<p if="testCase.Elements('reason').Any()">
+			${testCase.Element('reason').Value}
+		</p>
+	</div>
+</macro>
