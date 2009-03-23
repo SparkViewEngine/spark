@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using MvcContrib.SparkViewEngine;
+using Spark.Web.Mvc;
 
 namespace NorthwindDemo
 {
@@ -23,7 +23,7 @@ namespace NorthwindDemo
         protected void Application_Start(object sender, EventArgs e)
         {
             RegisterRoutes(RouteTable.Routes);
-            ViewEngines.Engines.Add(new SparkViewFactory());
+            SparkEngineStarter.RegisterViewEngine();
         }
     }
 }
