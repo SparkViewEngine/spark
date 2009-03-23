@@ -1,0 +1,32 @@
+﻿<content name="MainContent">
+    <viewdata model="Product"/>
+    
+    <% using(Html.BeginForm()) { %>
+    <fieldset>
+        <legend>Add Product</legend>
+        
+        <if condition="!ViewData.ModelState.IsValid">
+            ${Html.ValidationSummary()}
+        </if>
+        <div>
+            <label for="ProductName">Name:</label>
+            ${Html.TextBox("ProductName")}
+        </div>
+        <div>
+            <label for="CategoryID">Category:</label>
+            ${Html.DropDownList("CategoryID")}
+        </div>
+        <div>
+            <label for="SupplierID">Supplier:</label>
+            ${Html.DropDownList("SupplierID")}
+        </div>
+        
+        <div>
+            <label for="UnitPrice">Unit Price:</label>
+            ${Html.TextBox("UnitPrice")}
+        </div>
+        <input type="submit" value="Save" /> ${Html.RouteLink("cancel", new {controller="Products", action="List", id=ViewData["CategoryName"]})}
+    </fieldset>
+    <% } %>
+
+</content>

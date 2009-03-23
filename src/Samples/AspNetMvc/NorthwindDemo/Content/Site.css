@@ -1,0 +1,239 @@
+﻿/*----------------------------------------------------------
+The base color for this template is #5c87b2. If you'd like
+to use a different color start by replacing all instances of
+#5c87b2 with your new color.
+----------------------------------------------------------*/
+body
+{
+    background-color: #5c87b2;
+    font-size: .9em;
+    font-family: Verdana, Helvetica, Sans-Serif;
+    margin: 0;
+    padding: 0;
+    color: #696969;
+}
+
+a:link
+{
+    color: #034af3;
+    text-decoration: underline;
+}
+a:visited
+{
+    color: #505abc;
+}
+a:hover
+{
+    color: #1d60ff;
+    text-decoration: none;
+}
+a:active
+{
+    color: #12eb87;
+}
+
+p, ul
+{
+    margin-bottom: 20px;
+    line-height: 1.6em;
+}
+
+/* HEADINGS   
+----------------------------------------------------------*/
+h1, h2, h3, h4, h5, h6
+{
+    font-size: 1.5em;
+    color: #000;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1
+{
+    font-size: 2em;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+h2
+{
+    padding: 0 0 10px 0;
+}
+h3
+{
+    font-size: 1.2em;
+}
+h4
+{
+    font-size: 1.1em;
+}
+h5, h6
+{
+    font-size: 1em;
+}
+
+/* this rule styles <h2> tags that are the 
+first child of the left and right table columns */
+.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2
+{
+    margin-top: 0;
+}
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+/* you can specify a greater or lesser percentage for the 
+page width. Or, you can specify an exact pixel width. */
+.page
+{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#header
+{
+    position: relative;
+    margin-bottom: 0px;
+    color: #000;
+    padding: 0 0px 0 0;
+}
+
+p#logo, h1#logo
+{
+    font-weight: bold;
+    font-size: 24px !important;
+    padding: 10px 0;
+    margin: 0;
+    color: #FFF;
+    border: none;
+    line-height: 2em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#logo a
+{
+    color: #FFF;
+    text-decoration: none;
+    font-size: 32px !important;
+}
+
+#main
+{
+    padding: 30px 30px 15px 30px;
+    background-color: #FFF;
+    margin-bottom: 30px;
+    _height: 1px; /* only IE6 applies CSS properties starting with an underscrore */
+}
+
+#footer
+{
+    color: #999;
+    padding: 5px 0 0 0;
+    text-align: center;
+    line-height: normal;
+    clear: both;
+}
+
+#footer p
+{
+    padding: 5px 0;
+    margin: 0;
+    font-size: .9em;
+}
+
+/* TAB MENU   
+----------------------------------------------------------*/
+ul#menu
+{
+    border-bottom: 1px #5C87B2 solid;
+    padding: 0 0 2px;
+    position: relative;
+    margin: 0;
+    text-align: right;
+}
+
+ul#menu li
+{
+    display: inline;
+    list-style: none;
+}
+
+ul#menu li a
+{
+    padding: 10px 20px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 2.8em;
+    background-color: #e8eef4;
+    color: #034af3;
+}
+
+ul#menu li a:hover
+{
+    background-color: #FFF;
+    text-decoration: none;
+}
+
+ul#menu li a:active
+{
+    background-color: #a6e2a6;
+    text-decoration: none;
+}
+
+ul#menu li.selected a
+{
+    background-color: #FFF;
+    color: #000;
+}
+
+/* MISC  
+----------------------------------------------------------*/
+.clear
+{
+    clear: both;
+}
+
+ul.productlist
+{
+    list-style-type: none;
+}
+
+ul.productlist li
+{
+    margin-bottom: 10px;
+    clear:both;
+}
+
+ul.productlist div
+{
+    margin-left: 10px;
+    float:left;
+}
+
+.error
+{
+    color: #c00;
+}
+
+label.error + td input {
+    border: solid 1px #c00;   
+}
+
+span.action {
+    font-size: .8em;
+    font-weight: normal;
+}
+
+.important {
+    color: #00c;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.input-validation-error {
+    color: Red;
+    border: solid 1px red;
+}
+
+th {
+    text-align: left;
+}
