@@ -188,6 +188,7 @@
     <mkdir dir="${package.dir}/" />
     <mkdir dir="${package.dir}/Bin" />
     <mkdir dir="${package.dir}/Bin/Dependencies" />
+    <mkdir dir="${package.dir}/Bin/XparkSamples" />
     <mkdir dir="${package.dir}/Docs" />
 
 
@@ -197,7 +198,7 @@
       </fileset>
     </copy>
 
-    <copy file="${out.dir}/SparkVsIntegration.msi" 
+    <copy file="${out.dir}/SparkVsIntegration.msi"
           tofile="${package.dir}/SparkVsIntegration-${dist.revision}-${project.config}.msi"
           if="${property::exists('tools.solution.file')}" />
 
@@ -207,9 +208,16 @@
         <exclude name="*Demo*"/>
         <include name="*spark*.dll" />
         <include name="*spark*.pdb" />
+        <include name="xpark.*" />
       </fileset>
     </copy>
-
+    
+    <copy todir="${package.dir}/Bin/XparkSamples" flatten="true">
+      <fileset basedir="${out.dir}/XparkSamples">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+    
     <copy todir="${package.dir}/Bin/Dependencies" flatten="true">
       <fileset basedir="${bin.dir}">
         <include name="aspnetmvc/*.*" />
