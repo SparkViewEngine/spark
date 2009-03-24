@@ -165,50 +165,57 @@ namespace Spark.Parser
             }
         }
 
+        private static IEnumerable<string> PartialViewFolderPaths(string viewPath)
+        {
+            var folderPath = Path.GetDirectoryName(viewPath);
+            for(;;)
+            {
+                yield return folderPath;
+                yield return Path.Combine(folderPath, "Shared");
+
+                if (string.IsNullOrEmpty(folderPath))
+                    yield break;
+
+                folderPath = Path.GetDirectoryName(folderPath);
+            }
+        }
+
+        private IEnumerable<string> FindAllPartialFiles(IEnumerable<string> folderPaths)
+        {
+            foreach(var folderPath in folderPaths.Distinct())
+            {
+                foreach(var view in ViewFolder.ListViews(folderPath))
+                {
+                    var baseName = Path.GetFileNameWithoutExtension(view);
+                    if (baseName.StartsWith("_"))
+                        yield return baseName.Substring(1);
+                }
+            }
+        }
 
         public IList<string> FindPartialFiles(string viewPath)
         {
-            var results = new List<string>();
-
-            string controllerPath = Path.GetDirectoryName(viewPath);
-            foreach (var view in ViewFolder.ListViews(controllerPath))
-            {
-                string baseName = Path.GetFileNameWithoutExtension(view);
-                if (baseName.StartsWith("_"))
-                    results.Add(baseName.Substring(1));
-            }
-            foreach (var view in ViewFolder.ListViews("Shared"))
-            {
-                string baseName = Path.GetFileNameWithoutExtension(view);
-                if (baseName.StartsWith("_"))
-                    results.Add(baseName.Substring(1));
-            }
-            return results;
+            var folderPaths = PartialViewFolderPaths(viewPath);
+            var partialNames = FindAllPartialFiles(folderPaths);
+            return partialNames.Distinct().ToArray();
         }
 
         string ResolveReference(string existingViewPath, string viewName)
         {
-            string controllerPath = Path.GetDirectoryName(existingViewPath);
+            var viewNameWithExtension = Path.ChangeExtension(viewName, templateFileExtension);
+            var folderPaths = PartialViewFolderPaths(existingViewPath);
+            
+            var partialPaths = folderPaths.Select(x => Path.Combine(x, viewNameWithExtension));
+            var partialViewLocation = partialPaths.FirstOrDefault(x => ViewFolder.HasView(x));
 
-            return ResolveView(controllerPath, viewName);
+            if (partialViewLocation == null)
+            {
+                var message = string.Format("Unable to locate {0} in {1}", viewName, string.Join(", ", partialPaths.ToArray()));
+                throw new FileNotFoundException(message, viewName);
+            }
+
+            return partialViewLocation;
         }
 
-        string ResolveView(string controllerName, string viewName)
-        {
-            if (string.IsNullOrEmpty(viewName))
-                return null;
-
-            string attempt1 = Path.Combine(controllerName, Path.ChangeExtension(viewName, templateFileExtension));
-            if (ViewFolder.HasView(attempt1))
-                return attempt1;
-
-            string attempt2 = Path.Combine("Shared", Path.ChangeExtension(viewName, templateFileExtension));
-            if (ViewFolder.HasView(attempt2))
-                return attempt2;
-
-            throw new FileNotFoundException(
-                string.Format("Unable to find {0} or {1}", attempt1, attempt2),
-                attempt1);
-        }
     }
 }

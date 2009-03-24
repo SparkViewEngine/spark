@@ -14,6 +14,7 @@
 // 
 using System.IO;
 using System.Linq;
+using NUnit.Framework.SyntaxHelpers;
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -106,7 +107,7 @@ namespace Spark.Tests.Parser
             syntaxProvider.VerifyAllExpectations();
         }
 
-        [Test]
+        [Test, Ignore("This test is invalidated. Mocks are hard to keep 'current'.")]
         public void FindPartialFiles()
         {
             var partials3 = loader.FindPartialFiles("Home\\other.spark");
@@ -140,9 +141,9 @@ namespace Spark.Tests.Parser
         {
             var source = ExpectGetChunks("home\\changing.spark", new SendLiteralChunk { Text = "Hello world" });
             viewSourceLoader.Expect(x => x.GetViewSource("home\\changing.spark")).Return(source);
-            source.Expect(x=>x.LastModified).Return(0);
+            source.Expect(x => x.LastModified).Return(0);
             viewSourceLoader.Expect(x => x.GetViewSource("home\\changing.spark")).Return(source);
-            source.Expect(x=>x.LastModified).Return(42);
+            source.Expect(x => x.LastModified).Return(42);
 
             viewSourceLoader.Stub(x => x.HasView("home\\_global.spark")).Return(false);
             viewSourceLoader.Stub(x => x.HasView("Shared\\_global.spark")).Return(false);
@@ -163,11 +164,82 @@ namespace Spark.Tests.Parser
                                      {"home\\_Guts.spark", "<div><render:foo/></div>"},
                                      {"home\\_Another.spark", "<p>hello world</p>"}
                                  };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
-            var chunks = loader.Load("home\\index.spark");
-            var everything = loader.GetEverythingLoaded();
+            var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+            var chunks = viewLoader.Load("home\\index.spark");
+            var everything = viewLoader.GetEverythingLoaded();
             Assert.AreEqual(3, everything.Count());
+        }
 
+        [Test]
+        public void PartialsInSameFolderAreDiscovered()
+        {
+            var viewFolder = new InMemoryViewFolder
+                             {
+                                 {"home\\zero.spark", ""},
+                                 {"home\\_one.spark", ""},
+                                 {"product\\two.spark", ""},
+                                 {"product\\_three.spark", ""},
+                                 {"product\\_four.spark", ""},
+                                 {"invoice\\five.spark", ""},
+                             };
+
+            var viewLoader = new ViewLoader { ViewFolder = viewFolder };
+            var zero = viewLoader.FindPartialFiles("home\\zero.spark");
+            var product = viewLoader.FindPartialFiles("product\\two.spark");
+            var invoice = viewLoader.FindPartialFiles("invoice\\five.spark");
+
+            Assert.That(zero.Count(), Is.EqualTo(1));
+            Assert.That(zero, Has.Some.EqualTo("one"));
+
+            Assert.That(product.Count(), Is.EqualTo(2));
+            Assert.That(product, Has.Some.EqualTo("three"));
+            Assert.That(product, Has.Some.EqualTo("four"));
+
+            Assert.That(invoice.Count(), Is.EqualTo(0));
+
+            zero = viewLoader.FindPartialFiles("home/zero.spark");
+            product = viewLoader.FindPartialFiles("product/two.spark");
+            invoice = viewLoader.FindPartialFiles("invoice/five.spark");
+
+            Assert.That(zero.Count(), Is.EqualTo(1));
+            Assert.That(zero, Has.Some.EqualTo("one"));
+
+            Assert.That(product.Count(), Is.EqualTo(2));
+            Assert.That(product, Has.Some.EqualTo("three"));
+            Assert.That(product, Has.Some.EqualTo("four"));
+
+            Assert.That(invoice.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void PartialsInCascadingBaseFoldersAndSharedFoldersAreDiscovered()
+        {
+            var viewFolder = new InMemoryViewFolder
+                             {
+                                 {"area1\\controller2\\view3.spark", ""},
+                                 {"area1\\controller2\\Shared\\_alpha.spark", ""},
+                                 {"area1\\Shared\\_beta.spark", ""},
+                                 {"Shared\\_gamma.spark", ""},
+                                 {"area1\\controller2\\_epsilon.spark", ""},
+                                 {"area1\\_zeta.spark", ""},
+                                 {"_eta.spark", ""},
+                                 {"area1\\controller4\\_dontfind1.spark", ""},
+                                 {"area1\\controller4\\Shared\\_dontfind2.spark", ""},
+                                 {"area2\\Shared\\_dontfind3.spark", ""},
+                             };
+
+            var viewLoader = new ViewLoader { ViewFolder = viewFolder };
+
+            var partials = viewLoader.FindPartialFiles("area1\\controller2\\view3.spark");
+            Assert.That(partials, Has.Some.EqualTo("alpha"));
+            Assert.That(partials, Has.Some.EqualTo("beta"));
+            Assert.That(partials, Has.Some.EqualTo("gamma"));
+            Assert.That(partials, Has.Some.EqualTo("epsilon"));
+            Assert.That(partials, Has.Some.EqualTo("zeta"));
+            Assert.That(partials, Has.Some.EqualTo("eta"));
+            Assert.That(partials, Has.None.EqualTo("dontfind1"));
+            Assert.That(partials, Has.None.EqualTo("dontfind2"));
+            Assert.That(partials, Has.None.EqualTo("dontfind3"));
         }
     }
 }
