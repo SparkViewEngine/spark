@@ -1,0 +1,11 @@
+﻿
+<h1>PDF Rendering Sample</h1>
+
+<p>!{Html.ActionLink("Rough list of itext elements", "iTextMarkup")}</p>
+
+<p>!{Html.ActionLink("View invoice", "invoice", new { r = DateTime.Now.Ticks })}</p>
+
+<p>!{Html.ActionLink("Deconstruct pdf", "deconstruct")}</p>
+
+<p>!{Html.ActionLink("View this page as PDF", "index", new { format = 'pdf' })}</p>
+

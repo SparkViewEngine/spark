@@ -1,0 +1,29 @@
+﻿<h2>iText elements and attributes</h2>
+
+<viewdata model="ICollection[[ElementInfo]]"/>
+
+<ul style="list-style:none;">
+	<for each="var info in Model">
+		<li>
+			${info.Name}
+		</li>
+		<ul style="list-style:none;">
+			<li>
+				!{ShowAttrs(info.Attributes)}
+			</li>
+		</ul>
+	</for>
+</ul>
+
+
+<macro name="ShowAttrs" attrs="ICollection[[string]]">
+<for each="var attr in attrs">
+	<test if="attr.StartsWith(':')">
+		</li><li>
+		(from ${attr.Substring(1)}) !{ShowAttrs(Model.Single(x => x.Name == attr.Substring(1)).Attributes)}
+		</li><li>
+	<else/>
+		${attr}
+	</test>
+</for>
+</macro>
