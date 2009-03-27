@@ -70,6 +70,7 @@
     <Compile Include="Controllers\SimplePrecompileController.cs" />
     <Compile Include="Controllers\StubController.cs" />
     <Compile Include="DescriptorBuildingTester.cs" />
+    <Compile Include="MockHttpContextBase.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkBatchCompilerTester.cs" />
