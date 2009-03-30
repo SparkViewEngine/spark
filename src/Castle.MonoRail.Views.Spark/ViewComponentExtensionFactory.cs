@@ -34,6 +34,10 @@ namespace Castle.MonoRail.Views.Spark
 
         public ISparkExtension CreateExtension(VisitorContext context, ElementNode node)
         {
+            if(_serviceProvider==null)
+            {
+              return null;
+            }
             var componentFactory = (IViewComponentFactory)_serviceProvider.GetService(typeof(IViewComponentFactory));
             if (componentFactory == null || componentFactory.Registry == null)
                 return null;
