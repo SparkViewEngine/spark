@@ -65,6 +65,8 @@
     <Compile Include="Compiler\BatchCompiler.cs" />
     <Compile Include="Compiler\Chunk.cs" />
     <Compile Include="Compiler\ChunkVisitors\AbstractChunkVisitor.cs" />
+    <Compile Include="Compiler\Javascript\ChunkVisitors\CodeProcessingChunkVisitor.cs" />
+    <Compile Include="Compiler\Javascript\ChunkVisitors\JavascriptAnonymousTypeVisitor.cs" />
     <Compile Include="Compiler\SourceBuilder.cs" />
     <Compile Include="Compiler\SourceMapping.cs" />
     <Compile Include="DefaultLanguageFactory.cs" />

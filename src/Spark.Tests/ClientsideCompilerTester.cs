@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Spark.FileSystem;
 
 namespace Spark.Tests
@@ -36,6 +37,24 @@ namespace Spark.Tests
 
             Assert.IsNotNull(entry.SourceCode);
             Assert.IsNotEmpty(entry.SourceCode);
+        }
+
+        [Test]
+        public void AnonymousTypeBecomesHashLikeObject()
+        {
+            var descriptor = new SparkViewDescriptor()
+                .SetLanguage(LanguageType.Javascript)
+                .AddTemplate("Clientside\\AnonymousTypeBecomesHashLikeObject.spark");
+
+            var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+            var entry = engine.CreateEntry(descriptor);
+
+            Assert.IsNotNull(entry.SourceCode);
+            Assert.IsNotEmpty(entry.SourceCode);
+
+            Assert.That(entry.SourceCode, Text.Contains("x = {foo:\"bar\",quux:5}"));
+            Assert.That(entry.SourceCode, Text.Contains("HelloWorld({id:23,data:x})"));
+
         }
     }
 }
