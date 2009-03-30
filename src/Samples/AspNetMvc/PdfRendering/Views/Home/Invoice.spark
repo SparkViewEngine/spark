@@ -10,6 +10,13 @@
 	<for each="var letter in 'Welcome to the Machine'" scale="256 * letterIndex / letterCount"><chunk red="${scale / 2}" green="${255 - scale}" blue="${scale}">${letter}</chunk></for>
 </paragraph>
 
+<paragraph><chunk style="font-weight:bold;">Invoice #:</chunk> ${Model.InvoiceNumber}</paragraph>
+<paragraph><chunk style="font-weight:bold;">Purchace Order:</chunk> ${Model.PurchaseOrder}</paragraph>
+
+<table width="100%" widths="1;1"><row>
+<cell><Address caption="'Ship to'" account="Model.ShipTo"/></cell>
+<cell><Address caption="'Bill to'" account="Model.BillTo"/></cell>
+</row></table>
 
 <table width="100%" widths="3;8;2;4;4">
 <row>

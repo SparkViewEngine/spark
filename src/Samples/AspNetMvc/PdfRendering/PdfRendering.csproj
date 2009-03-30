@@ -34,6 +34,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\build\package\Bin\Dependencies\itextsharp.dll</HintPath>
     </Reference>
+    <Reference Include="Spark, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7f8549eed921a12c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\build\package\Bin\Spark.dll</HintPath>
+    </Reference>
+    <Reference Include="Spark.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\build\package\Bin\Spark.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Spark.Web.Mvc.Pdf, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\build\package\Bin\Spark.Web.Mvc.Pdf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core">
@@ -103,19 +115,10 @@
     <None Include="Views\Home\iTextMarkup.spark" />
     <None Include="Views\Home\Index.spark" />
     <None Include="Views\Home\Invoice.spark" />
+    <None Include="Views\Home\_Address.spark" />
     <None Include="Views\Layouts\Application.spark" />
     <None Include="Views\Layouts\iText.spark" />
     <None Include="Views\Shared\_global.spark" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Spark.Web.Mvc.Pdf\Spark.Web.Mvc.Pdf.csproj">
-      <Project>{0A90BB41-BE2E-4608-B5DB-A3A8A5269E2F}</Project>
-      <Name>Spark.Web.Mvc.Pdf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Spark.Web.Mvc\Spark.Web.Mvc.csproj">
-      <Project>{286050D6-95A1-4381-93D8-93381D8AB8E2}</Project>
-      <Name>Spark.Web.Mvc</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

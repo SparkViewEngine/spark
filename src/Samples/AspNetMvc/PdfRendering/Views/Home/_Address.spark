@@ -1,0 +1,6 @@
+﻿<paragraph style="font-weight:bold;">${caption}</paragraph>
+<paragraph>${account.Name}</paragraph>
+<paragraph>${account.Address1}</paragraph>
+<paragraph>${account.Address2}</paragraph>
+<var showComma="!string.IsNullOrEmpty(account.City) && (!string.IsNullOrEmpty(account.State) || !string.IsNullOrEmpty(account.Zip))"/>
+<paragraph>${account.City}<test if="showComma">,</test> ${account.State} ${account.Zip}</paragraph>

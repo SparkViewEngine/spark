@@ -35,6 +35,12 @@ namespace PdfRendering
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
+            string path = Request.AppRelativeCurrentExecutionFilePath;
+            if (string.Equals(path, "~/default.aspx", StringComparison.InvariantCultureIgnoreCase) ||
+                string.Equals(path, "~/"))
+            {
+                Context.RewritePath("~/Home");
+            }
 
         }
 

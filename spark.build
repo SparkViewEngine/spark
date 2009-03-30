@@ -223,7 +223,7 @@
         <include name="aspnetmvc/*.*" />
         <include name="ironpython/*.*" />
         <include name="ironruby/*.*" />
-        <include name="itextspark/*.*" />
+        <include name="itextsharp/*.*" />
         <include name="mvccontrib/*.*" />
         <include name="castle/*.*" />
         <include name="nunit/nunit.framework.dll" />
