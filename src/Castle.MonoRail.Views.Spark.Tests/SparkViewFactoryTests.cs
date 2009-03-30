@@ -22,6 +22,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
     using Castle.MonoRail.Framework.Services;
     using NUnit.Framework;
     using global::Spark;
+    using NUnit.Framework.SyntaxHelpers;
 
 
     [TestFixture]
@@ -177,6 +178,15 @@ namespace Castle.MonoRail.Views.Spark.Tests
 			Assert.That(output.ToString().Contains("<p>Hello</p>"));
 		}
 
+        [Test]
+        public void LateBoundExpressionShouldCallEval()
+        {
+            mocks.ReplayAll();
+            propertyBag["hello"] = "world";
+            propertyBag["foo"] = 1005.3;
+            manager.Process("Home\\LateBoundExpressionShouldCallEval", output, engineContext, controller, controllerContext);
+            Assert.That(output.ToString(), Text.Contains("<p>world 1,005.30</p>"));
+        }
     }
 
 }
