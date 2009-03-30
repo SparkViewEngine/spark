@@ -1,0 +1,5 @@
+﻿<viewdata Caption="string" Address="ViewComponents.Models.Account"/>
+<p><strong>${Caption}</strong></p>
+<p>${Address.Name}<br/>
+${Address.Address1}<br/>
+${Address.Address2}</p>
