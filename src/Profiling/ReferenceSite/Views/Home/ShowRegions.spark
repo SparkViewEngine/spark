@@ -1,0 +1,10 @@
+﻿
+
+<div class="showregion">view</div>
+
+<for each="var region in new[] { 'breadcrumbs', 'right-navigation' }">
+#using (OutputScope(region))
+#{
+   <div class="showregion">${region}</div>
+#}
+</for>

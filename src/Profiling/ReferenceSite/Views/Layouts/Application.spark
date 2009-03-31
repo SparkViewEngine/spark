@@ -1,0 +1,53 @@
+﻿<use master="Html"/>
+
+<content name="head">
+<link rel="stylesheet" type="text/css" href="~/Content/reference-site.css" media="screen" />
+</content>
+
+
+<div id="wrap">
+
+<div id="top"></div>
+
+<div id="content">
+
+<div class="header">
+<h1>${Html.ActionLink("Reference Site", "index", "home")}</h1>
+<h2>Free xhtml/css Template</h2>
+</div>
+
+<div class="breadcrumbs">
+<use content="breadcrumbs"><a href="#">Home</a> &middot; You are here</use>
+</div>
+
+<div class="middle"><use content="view"/></div>
+		
+<div class="right">
+		
+<h2>Navigation</h2>
+<ul>
+<use content="right-navigation">
+<li><a href="http://www.minimalistic-design.net">Minimalistic Design</a></li>
+<li><a href="http://www.oswd.org">Open Source Web Design</a></li>
+<li><a href="http://www.opendesigns.org">Open Designs</a></li>
+<li><a href="http://www.openwebdesign.org">Open Web Design</a></li>
+<li><a href="http://www.iollo.com">Iollo's review highway</a></li>
+<li><a href="http://www.historyexplorer.net">History Timelines</a></li>
+<li><a href="http://www.quakerparrot.info">Quaker Parrot</a></li>
+<li><a href="http://www.moneybookersclub.com">Moneybookers Club</a></li>
+</use>
+</ul>
+
+</div>
+
+<div id="clear"></div>
+
+</div>
+
+<div id="bottom"></div>
+
+</div>
+
+<div id="footer">
+Design by <a href="http://www.minimalistic-design.net">Minimalistic Design</a>
+</div>
