@@ -86,8 +86,8 @@ namespace Spark.Tests
             var attribs = types[0].GetCustomAttributes(typeof(SparkViewAttribute), false);
             var sparkViewAttrib = (SparkViewAttribute)attribs[0];
 
-            var key0 = new CompiledViewHolder.Key { Descriptor = descriptor };
-            var key1 = new CompiledViewHolder.Key { Descriptor = sparkViewAttrib.BuildDescriptor() };
+            var key0 = descriptor;
+            var key1 = sparkViewAttrib.BuildDescriptor();
 
             Assert.AreEqual(key0, key1);
         }
@@ -105,8 +105,8 @@ namespace Spark.Tests
             var attribs = types[0].GetCustomAttributes(typeof(SparkViewAttribute), false);
             var sparkViewAttrib = (SparkViewAttribute)attribs[0];
 
-            var key0 = new CompiledViewHolder.Key { Descriptor = descriptor };
-            var key1 = new CompiledViewHolder.Key { Descriptor = sparkViewAttrib.BuildDescriptor() };
+            var key0 = descriptor;
+            var key1 = sparkViewAttrib.BuildDescriptor();
 
             Assert.AreEqual(key0, key1);
         }

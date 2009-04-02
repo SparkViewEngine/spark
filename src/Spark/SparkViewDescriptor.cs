@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
 using System.Collections.Generic;
 
 namespace Spark
@@ -69,5 +70,43 @@ namespace Spark
             Accessors.Add(new Accessor { Property = property, GetValue = getValue });
             return this;
         }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+
+            hashCode ^= (TargetNamespace ?? "").GetHashCode();
+
+            foreach (var template in Templates)
+                hashCode ^= template.ToLowerInvariant().GetHashCode();
+
+            return hashCode;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var that = obj as SparkViewDescriptor;
+
+            if (that == null || GetType() != that.GetType())
+                return false;
+
+            if (!string.Equals(TargetNamespace, that.TargetNamespace))
+                return false;
+
+            if (Templates.Count != that.Templates.Count)
+                return false;
+
+            for (var index = 0; index != Templates.Count; ++index)
+            {
+                if (!string.Equals(Templates[index], that.Templates[index], StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+
     }
 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
@@ -33,8 +29,7 @@ namespace Spark.Web.Mvc.Pdf.Tests
             var controllerContext = GetControllerContext(stream);
 
             IView view;
-            var viewEngine = MockViewEngine(controllerContext, out view);
-
+            var viewEngine = MockViewEngine(controllerContext, out view);            
 
             var result = new PdfViewResult
                          {
@@ -48,13 +43,13 @@ namespace Spark.Web.Mvc.Pdf.Tests
             view.VerifyAllExpectations();
         }
 
-        private IViewEngine MockViewEngine(ControllerContext controllerContext, out IView view)
+        private static IViewEngine MockViewEngine(ControllerContext controllerContext, out IView view)
         {
             var viewEngine = MockRepository.GenerateMock<IViewEngine>();
             view = MockRepository.GenerateMock<IView>();
-
+            
             viewEngine
-                .Expect(x => x.FindPartialView(controllerContext, "quux", true))
+                .Expect(x => x.FindView(controllerContext, "quux", "", true))
                 .Return(new ViewEngineResult(view, viewEngine));
 
             view

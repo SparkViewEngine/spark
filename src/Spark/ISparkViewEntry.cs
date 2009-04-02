@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
 using System.Collections.Generic;
 using Spark.Compiler;
 
@@ -25,5 +26,8 @@ namespace Spark
 
         string SourceCode { get; }
         IList<SourceMapping> SourceMappings { get; }
+
+        Guid ViewId { get; }
+        bool IsCurrent();
     }
 }

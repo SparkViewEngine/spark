@@ -17,6 +17,9 @@ namespace Spark.Web.Mvc.Pdf
         protected override ViewEngineResult FindView(ControllerContext context)
         {
             var result = base.FindView(context);
+            if (result.View == null)
+                return result;
+
             var pdfView = new PdfView(result);
             return new ViewEngineResult(pdfView, pdfView);
         }

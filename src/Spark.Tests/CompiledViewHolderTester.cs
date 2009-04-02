@@ -30,15 +30,12 @@ namespace Spark.Tests
             holder = new CompiledViewHolder();
         }
 
-        private CompiledViewHolder.Key BuildKey(params string[] templates)
+        private SparkViewDescriptor BuildKey(params string[] templates)
         {
-            return new CompiledViewHolder.Key
-            {
-                Descriptor = new SparkViewDescriptor
-                {
-                    Templates = templates
-                }
-            };
+            return new SparkViewDescriptor
+                   {
+                       Templates = templates
+                   };
         }
 
         [Test]
@@ -53,7 +50,7 @@ namespace Spark.Tests
         public void LookupReturnsStoredInstance()
         {
             var key = BuildKey("c\\v", "shared\\m");
-            var entry = new CompiledViewHolder.Entry { Key = key, Loader = new ViewLoader() };
+            var entry = new CompiledViewEntry { Descriptor = key, Loader = new ViewLoader() };
             Assert.IsNull(holder.Lookup(key));
             holder.Store(entry);
             Assert.AreSame(entry, holder.Lookup(key));
@@ -91,7 +88,7 @@ namespace Spark.Tests
             loader.Stub(x => x.IsCurrent()).Do(foo);
 
             var key = BuildKey("c\\v", "shared\\m");
-            var entry = new CompiledViewHolder.Entry { Key = key, Loader = loader };
+            var entry = new CompiledViewEntry { Descriptor = key, Loader = loader };
             holder.Store(entry);
             Assert.AreSame(entry, holder.Lookup(key));
             isCurrent = false;

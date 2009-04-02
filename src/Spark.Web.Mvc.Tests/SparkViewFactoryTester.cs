@@ -239,14 +239,11 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void MasterApplicationIfPresent()
         {
-            var viewFolder = MockRepository.GenerateMock<IViewFolder>();
-            viewFolder.Expect(x => x.HasView("Foo\\Baaz.spark")).Return(true);
-            viewFolder.Expect(x => x.HasView("Layouts\\Foo.spark")).Return(false);
-            viewFolder.Expect(x => x.HasView("Shared\\Foo.spark")).Return(false);
-            viewFolder.Expect(x => x.HasView("Layouts\\Application.spark")).Return(false);
-            viewFolder.Expect(x => x.HasView("Shared\\Application.spark")).Return(true);
-
-            factory.ViewFolder = viewFolder;
+            factory.ViewFolder = new InMemoryViewFolder
+                             {
+                                 {"Foo\\Baaz.spark", ""},
+                                 {"Shared\\Application.spark", ""}
+                             };
 
 
 
@@ -266,17 +263,10 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void MasterEmptyByDefault()
         {
-            var viewSourceLoader = MockRepository.GenerateMock<IViewFolder>();
-            viewSourceLoader.Expect(x => x.HasView("Foo\\Baaz.spark")).Return(true);
-            viewSourceLoader.Expect(x => x.HasView("Layouts\\Foo.spark")).Return(false);
-            viewSourceLoader.Expect(x => x.HasView("Shared\\Foo.spark")).Return(false);
-            viewSourceLoader.Expect(x => x.HasView("Layouts\\Application.spark")).Return(false);
-            viewSourceLoader.Expect(x => x.HasView("Shared\\Application.spark")).Return(false);
-
-            factory.ViewFolder = viewSourceLoader;
-
-
-
+            factory.ViewFolder = new InMemoryViewFolder
+                             {
+                                 {"Foo\\Baaz.spark", ""}
+                             };
 
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
@@ -284,7 +274,6 @@ namespace Spark.Web.Mvc.Tests
 
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
-            //mocks.VerifyAll();
 
             Assert.AreEqual(1, descriptor.Templates.Count);
             Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
@@ -293,12 +282,11 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void MasterForControllerIfPresent()
         {
-            var viewSourceLoader = MockRepository.GenerateMock<IViewFolder>();
-            viewSourceLoader.Expect(x => x.HasView("Foo\\Baaz.spark")).Return(true);
-            viewSourceLoader.Expect(x => x.HasView("Layouts\\Foo.spark")).Return(false);
-            viewSourceLoader.Expect(x => x.HasView("Shared\\Foo.spark")).Return(true);
-
-            factory.ViewFolder = viewSourceLoader;
+            factory.ViewFolder = new InMemoryViewFolder
+                             {
+                                 {"Foo\\Baaz.spark", ""},
+                                 {"Shared\\Foo.spark",""}
+                             };
 
 
 
@@ -307,8 +295,6 @@ namespace Spark.Web.Mvc.Tests
             routeData.Values["action"] = "NotBaaz";
 
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
-
-            //mocks.VerifyAll();
 
             Assert.AreEqual(2, descriptor.Templates.Count);
             Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
@@ -370,10 +356,11 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void TargetNamespaceFromController()
         {
-            var viewSourceLoader = MockRepository.GenerateMock<IViewFolder>();
-            viewSourceLoader.Expect(x => x.HasView("Home\\Baaz.spark")).Return(true);
-            viewSourceLoader.Expect(x => x.HasView("Layouts\\Home.spark")).Return(true);
-            factory.ViewFolder = viewSourceLoader;
+            factory.ViewFolder = new InMemoryViewFolder
+                             {
+                                 {"Home\\Baaz.spark", ""},
+                                 {"Layouts\\Home.spark",""}
+                             };
 
             controller = new StubController();
             controllerContext = new ControllerContext(httpContext, routeData, controller);

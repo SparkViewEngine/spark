@@ -36,6 +36,8 @@ namespace Spark.Web.Mvc.Tests
         [SetUp]
         public void Init()
         {
+            CompiledViewHolder.Current = null;
+
             _factory = new SparkViewFactory();
             _viewFolder = new InMemoryViewFolder();
             _factory.ViewFolder = _viewFolder;
@@ -224,6 +226,65 @@ namespace Spark.Web.Mvc.Tests
             AssertDescriptorTemplates(
                 result, searchedLocations,
                 @"Admin\Home\Index.spark");
+        }
+
+        [Test]
+        public void UseMasterCreatesTemplateChain()
+        {
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.spark", "<use master='Green'/>");
+            _viewFolder.Add(@"Layouts\Red.spark", "<use master='Blue'/>");
+            _viewFolder.Add(@"Layouts\Green.spark", "<use master='Red'/>");
+            _viewFolder.Add(@"Layouts\Blue.spark", "");
+            _viewFolder.Add(@"Layouts\Application.spark", "");
+            _viewFolder.Add(@"Layouts\Home.spark", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.spark",
+                @"Layouts\Green.spark",
+                @"Layouts\Red.spark",
+                @"Layouts\Blue.spark");
+        }
+
+        [Test]
+        public void NamedMasterOverridesViewMaster()
+        {
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.spark", "<use master='Green'/>");
+            _viewFolder.Add(@"Layouts\Red.spark", "<use master='Blue'/>");
+            _viewFolder.Add(@"Layouts\Green.spark", "<use master='Red'/>");
+            _viewFolder.Add(@"Layouts\Blue.spark", "");
+            _viewFolder.Add(@"Layouts\Application.spark", "");
+            _viewFolder.Add(@"Layouts\Home.spark", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", "Red", true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.spark",
+                @"Layouts\Red.spark",
+                @"Layouts\Blue.spark");
+        }
+
+        [Test]
+        public void PartialViewIgnoresUseMasterAndDefault()
+        {
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.spark", "<use master='Green'/>");
+            _viewFolder.Add(@"Layouts\Red.spark", "<use master='Blue'/>");
+            _viewFolder.Add(@"Layouts\Green.spark", "<use master='Red'/>");
+            _viewFolder.Add(@"Layouts\Blue.spark", "");
+            _viewFolder.Add(@"Layouts\Application.spark", "");
+            _viewFolder.Add(@"Layouts\Home.spark", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.spark");
         }
     }
 }

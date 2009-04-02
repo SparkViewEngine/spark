@@ -61,6 +61,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AbstractSparkView.cs" />
+    <Compile Include="CompiledViewEntry.cs" />
     <Compile Include="CompiledViewHolder.cs" />
     <Compile Include="Compiler\BatchCompiler.cs" />
     <Compile Include="Compiler\Chunk.cs" />
