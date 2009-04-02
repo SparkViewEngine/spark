@@ -1,9 +1,9 @@
 
-<viewdata id="object" entry="Spark.CompiledViewHolder.Entry"/>
+<viewdata id="object" entry="Spark.ISparkViewEntry"/>
 
 <test if="entry != null">
   <code>
-    !{H(entry.Compiler.SourceCode).Replace("\r\n", "<br/>").Replace(" ", "&nbsp;")}
+    !{H(entry.SourceCode).Replace("\r\n", "<br/>").Replace(" ", "&nbsp;")}
   </code>
   <else/>
   <p>The view for ${id} was not found</p>
