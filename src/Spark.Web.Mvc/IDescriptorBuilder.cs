@@ -55,5 +55,34 @@ namespace Spark.Web.Mvc
         {
             get { return _findDefaultMaster; }
         }
+
+        private static int Hash(string str)
+        {
+            return str == null ? 0 : str.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            return Hash(_viewName) ^
+                   Hash(_controllerName) ^
+                   Hash(_targetNamespace) ^
+                   Hash(_areaName) ^
+                   Hash(_masterName) ^
+                   _findDefaultMaster.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var that = obj as BuildDescriptorParams;
+            if (that == null || that.GetType() != GetType())
+                return false;
+
+            return string.Equals(_viewName, that._viewName) &&
+                   string.Equals(_controllerName, that._controllerName) &&
+                   string.Equals(_targetNamespace, that._targetNamespace) &&
+                   string.Equals(_areaName, that._areaName) &&
+                   string.Equals(_masterName, that._masterName) &&
+                   _findDefaultMaster == that._findDefaultMaster;
+        }
     }
 }

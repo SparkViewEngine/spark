@@ -100,15 +100,24 @@ namespace Spark.Web.Mvc
             set { _descriptorBuilder = value; }
         }
 
-
         public virtual ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
         {
-            return FindViewInternal(controllerContext, viewName, masterName, true);
+            return FindViewInternal(controllerContext, viewName, masterName, true, false);
+        }
+
+        public virtual ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+        {
+            return FindViewInternal(controllerContext, viewName, masterName, true, useCache);
         }
 
         public virtual ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName)
         {
-            return FindViewInternal(controllerContext, partialViewName, null /*masterName*/, false);
+            return FindViewInternal(controllerContext, partialViewName, null /*masterName*/, false, false);
+        }
+
+        public virtual ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+        {
+            return FindViewInternal(controllerContext, partialViewName, null /*masterName*/, false, useCache);
         }
 
         public virtual void ReleaseView(ControllerContext controllerContext, IView view)
@@ -116,16 +125,55 @@ namespace Spark.Web.Mvc
             Engine.ReleaseInstance((ISparkView)view);
         }
 
-        private ViewEngineResult FindViewInternal(ControllerContext controllerContext, string viewName, string masterName, bool findDefaultMaster)
+        private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> _cache =
+            new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
+
+        private readonly ViewEngineResult _cacheMissResult = new ViewEngineResult(new string[0]);
+
+        private ViewEngineResult FindViewInternal(ControllerContext controllerContext, string viewName, string masterName, bool findDefaultMaster, bool useCache)
         {
             var searchedLocations = new List<string>();
-            var descriptor = CreateDescriptor(controllerContext, viewName, masterName, findDefaultMaster,
-                                              searchedLocations);
+            var targetNamespace = controllerContext.Controller.GetType().Namespace;
+
+            object areaValue;
+            var areaName = controllerContext.RouteData.Values.TryGetValue("area", out areaValue)
+                               ? Convert.ToString((object) areaValue)
+                               : null;
+
+            var controllerName = controllerContext.RouteData.GetRequiredString("controller");
+
+            var descriptorParams = new BuildDescriptorParams(
+                targetNamespace,
+                areaName,
+                controllerName,
+                viewName,
+                masterName,
+                findDefaultMaster);
+
+            ISparkViewEntry entry;
+            if (useCache)
+            {
+                if (_cache.TryGetValue(descriptorParams, out entry) && entry.IsCurrent())
+                {
+                    return BuildResult(entry);
+                }
+                return _cacheMissResult;
+            }
+
+            var descriptor = DescriptorBuilder.BuildDescriptor(
+                descriptorParams,
+                searchedLocations);
 
             if (descriptor == null)
                 return new ViewEngineResult(searchedLocations);
+            
+            entry = Engine.CreateEntry(descriptor);
+            _cache[descriptorParams] = entry;
+            return BuildResult(entry);
+        }
 
-            var entry = Engine.CreateEntry(descriptor);
+        private ViewEngineResult BuildResult(ISparkViewEntry entry)
+        {
             var view = (IView)entry.CreateInstance();
             if (view is SparkView)
             {
@@ -300,12 +348,12 @@ namespace Spark.Web.Mvc
 
         ViewEngineResult IViewEngine.FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
-            return FindPartialView(controllerContext, partialViewName);
+            return FindPartialView(controllerContext, partialViewName, useCache);
         }
 
         ViewEngineResult IViewEngine.FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
-            return FindView(controllerContext, viewName, masterName);
+            return FindView(controllerContext, viewName, masterName, useCache);
         }
 
         void IViewEngine.ReleaseView(ControllerContext controllerContext, IView view)
