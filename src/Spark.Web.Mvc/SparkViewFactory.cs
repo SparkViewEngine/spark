@@ -137,7 +137,7 @@ namespace Spark.Web.Mvc
 
             object areaValue;
             var areaName = controllerContext.RouteData.Values.TryGetValue("area", out areaValue)
-                               ? Convert.ToString((object) areaValue)
+                               ? Convert.ToString((object)areaValue)
                                : null;
 
             var controllerName = controllerContext.RouteData.GetRequiredString("controller");
@@ -148,12 +148,13 @@ namespace Spark.Web.Mvc
                 controllerName,
                 viewName,
                 masterName,
-                findDefaultMaster, null);
+                findDefaultMaster,
+                DescriptorBuilder.GetExtraParameters(controllerContext));
 
             ISparkViewEntry entry;
             if (useCache)
             {
-                if (_cache.TryGetValue(descriptorParams, out entry) && entry.IsCurrent())
+                if (TryGetCacheValue(descriptorParams, out entry) && entry.IsCurrent())
                 {
                     return BuildResult(entry);
                 }
@@ -166,11 +167,22 @@ namespace Spark.Web.Mvc
 
             if (descriptor == null)
                 return new ViewEngineResult(searchedLocations);
-            
+
             entry = Engine.CreateEntry(descriptor);
-            _cache[descriptorParams] = entry;
+            SetCacheValue(descriptorParams, entry);
             return BuildResult(entry);
         }
+
+        private bool TryGetCacheValue(BuildDescriptorParams descriptorParams, out ISparkViewEntry entry)
+        {
+            lock (_cache) return _cache.TryGetValue(descriptorParams, out entry);
+        }
+
+        private void SetCacheValue(BuildDescriptorParams descriptorParams, ISparkViewEntry entry)
+        {
+            lock (_cache) _cache[descriptorParams] = entry;
+        }
+
 
         private ViewEngineResult BuildResult(ISparkViewEntry entry)
         {
@@ -205,7 +217,7 @@ namespace Spark.Web.Mvc
                     controllerName,
                     viewName,
                     masterName,
-                    findDefaultMaster, 
+                    findDefaultMaster,
                     DescriptorBuilder.GetExtraParameters(controllerContext)),
                 searchedLocations);
         }
@@ -383,6 +395,6 @@ namespace Spark.Web.Mvc
             set { ViewFolder = value; }
         }
 
-        #endregion        
+        #endregion
     }
 }
