@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Spark;
 using Spark.Web.Mvc;
 
 namespace Internationalization
@@ -23,14 +24,16 @@ namespace Internationalization
     {
         public static void RegisterViewEngine(ICollection<IViewEngine> engines)
         {
-            engines.Add(new SparkViewFactory());
+            var services = SparkEngineStarter.CreateContainer();
+            services.SetServiceBuilder<IDescriptorBuilder>(x => new CustomDescriptorBuilder());
+            SparkEngineStarter.RegisterViewEngine(services);
         }
 
         public static void RegisterRoutes(ICollection<RouteBase> routes)
         {
             routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
                            {
-                               Defaults = new RouteValueDictionary(new {action = "Index", id = ""}),
+                               Defaults = new RouteValueDictionary(new { action = "Index", id = "" }),
                            });
         }
     }

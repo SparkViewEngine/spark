@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<title><use content="title">Internationalization Samples</use></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+	<use content="view"/>
+	<hr/>
+	<p>This example is actually showing two different things. One is an example of using
+	the current culture and string resources built into satellite assemblies, which are accessed
+	via the SR class. The other is an example of using a custom descriptor builder to have an 
+	extra parameter, like culture, extend the default view location strategy.</p>
+  </body>
+</html>
