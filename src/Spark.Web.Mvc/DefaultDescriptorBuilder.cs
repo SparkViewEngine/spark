@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
 
@@ -23,17 +24,26 @@ namespace Spark.Web.Mvc
             _engine = container.GetService<ISparkViewEngine>();
         }
 
+        public virtual IList<string> GetExtraParameters(ControllerContext controllerContext)
+        {
+            return null;
+        }
+
         public virtual SparkViewDescriptor BuildDescriptor(BuildDescriptorParams buildDescriptorParams, ICollection<string> searchedLocations)
         {
             var descriptor = new SparkViewDescriptor
-            {
-                TargetNamespace = buildDescriptorParams.TargetNamespace
-            };
+                                 {
+                                     TargetNamespace = buildDescriptorParams.TargetNamespace
+                                 };
 
             if (!LocatePotentialTemplate(
-                PotentialViewLocations(buildDescriptorParams.AreaName, buildDescriptorParams.ControllerName, buildDescriptorParams.ViewName),
-                descriptor.Templates,
-                searchedLocations))
+                     PotentialViewLocations(
+                         buildDescriptorParams.AreaName,
+                         buildDescriptorParams.ControllerName,
+                         buildDescriptorParams.ViewName,
+                         buildDescriptorParams.Extra),
+                     descriptor.Templates,
+                     searchedLocations))
             {
                 return null;
             }
@@ -41,9 +51,12 @@ namespace Spark.Web.Mvc
             if (!string.IsNullOrEmpty(buildDescriptorParams.MasterName))
             {
                 if (!LocatePotentialTemplate(
-                    PotentialMasterLocations(buildDescriptorParams.AreaName, buildDescriptorParams.MasterName),
-                    descriptor.Templates,
-                    searchedLocations))
+                         PotentialMasterLocations(
+                             buildDescriptorParams.AreaName,
+                             buildDescriptorParams.MasterName,
+                             buildDescriptorParams.Extra),
+                         descriptor.Templates,
+                         searchedLocations))
                 {
                     return null;
                 }
@@ -51,7 +64,10 @@ namespace Spark.Web.Mvc
             else if (buildDescriptorParams.FindDefaultMaster && string.IsNullOrEmpty(TrailingUseMasterName(descriptor)))
             {
                 LocatePotentialTemplate(
-                    PotentialDefaultMasterLocations(buildDescriptorParams.AreaName, buildDescriptorParams.ControllerName),
+                    PotentialDefaultMasterLocations(
+                        buildDescriptorParams.AreaName,
+                        buildDescriptorParams.ControllerName,
+                        buildDescriptorParams.Extra),
                     descriptor.Templates,
                     null);
             }
@@ -60,9 +76,12 @@ namespace Spark.Web.Mvc
             while (buildDescriptorParams.FindDefaultMaster && !string.IsNullOrEmpty(trailingUseMaster))
             {
                 if (!LocatePotentialTemplate(
-                    PotentialMasterLocations(buildDescriptorParams.AreaName, trailingUseMaster),
-                    descriptor.Templates,
-                    searchedLocations))
+                         PotentialMasterLocations(
+                            buildDescriptorParams.AreaName,
+                            trailingUseMaster,
+                            buildDescriptorParams.Extra),
+                         descriptor.Templates,
+                         searchedLocations))
                 {
                     return null;
                 }
@@ -105,7 +124,7 @@ namespace Spark.Web.Mvc
             return false;
         }
 
-        protected virtual IEnumerable<string> PotentialViewLocations(string areaName, string controllerName, string viewName)
+        protected virtual IEnumerable<string> PotentialViewLocations(string areaName, string controllerName, string viewName, IList<string> extra)
         {
             return string.IsNullOrEmpty(areaName)
                        ? new[]
@@ -121,7 +140,7 @@ namespace Spark.Web.Mvc
                              };
         }
 
-        protected virtual IEnumerable<string> PotentialMasterLocations(string areaName, string masterName)
+        protected virtual IEnumerable<string> PotentialMasterLocations(string areaName, string masterName, IList<string> extra)
         {
             return string.IsNullOrEmpty(areaName)
                        ? new[]
@@ -138,7 +157,7 @@ namespace Spark.Web.Mvc
                              };
         }
 
-        protected virtual IEnumerable<string> PotentialDefaultMasterLocations(string areaName, string controllerName)
+        protected virtual IEnumerable<string> PotentialDefaultMasterLocations(string areaName, string controllerName, IList<string> extra)
         {
             return string.IsNullOrEmpty(areaName)
                        ? new[]

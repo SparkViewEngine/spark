@@ -14,12 +14,14 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Spark.FileSystem;
 
@@ -49,8 +51,8 @@ namespace Spark.Web.Mvc.Tests
         }
 
         private static void AssertDescriptorTemplates(
-            SparkViewDescriptor descriptor, 
-            ICollection<string> searchedLocations, 
+            SparkViewDescriptor descriptor,
+            ICollection<string> searchedLocations,
             params string[] templates)
         {
             Assert.AreEqual(templates.Length, descriptor.Templates.Count, "Descriptor template count must match");
@@ -87,7 +89,7 @@ namespace Spark.Web.Mvc.Tests
                 @"Layouts\Application.spark");
         }
 
-        
+
         [Test]
         public void NormalViewAndControllerLayoutOverrides()
         {
@@ -205,7 +207,7 @@ namespace Spark.Web.Mvc.Tests
             AssertDescriptorTemplates(
                 result, searchedLocations,
                 @"Admin\Home\Index.spark",
-                @"Admin\Layouts\Site.spark");            
+                @"Admin\Layouts\Site.spark");
         }
 
         [Test]
@@ -285,6 +287,116 @@ namespace Spark.Web.Mvc.Tests
             AssertDescriptorTemplates(
                 result, searchedLocations,
                 @"Home\Index.spark");
+        }
+
+        [Test]
+        public void BuildDescriptorParamsActsAsKey()
+        {
+            var param1 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, null);
+            var param2 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, null);
+            var param3 = new BuildDescriptorParams("a", "b", "c", "d", "e", true, null);
+            var param4 = new BuildDescriptorParams("a", "b", "c2", "d", "e", false, null);
+
+            Assert.That(param1, Is.EqualTo(param2));
+            Assert.That(param1, Is.Not.EqualTo(param3));
+            Assert.That(param1, Is.Not.EqualTo(param4));
+        }
+
+        [Test]
+        public void ParamsExtraNullActsAsEmpty()
+        {
+            var param1 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, null);
+            var param2 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new string[0]);
+
+            Assert.That(param1, Is.EqualTo(param2));
+        }
+
+        [Test]
+        public void ParamsExtraEqualityMustBeIdenticalAndInOrder()
+        {
+            var param1 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "alpha", "beta" });
+            var param2 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "alpha" });
+            var param3 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "beta" });
+            var param4 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "beta", "alpha" });
+            var param5 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, null);
+            var param6 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new string[0]);
+            var param7 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "alpha", "beta" });
+
+            Assert.That(param1, Is.Not.EqualTo(param2));
+            Assert.That(param1, Is.Not.EqualTo(param3));
+            Assert.That(param1, Is.Not.EqualTo(param4));
+            Assert.That(param1, Is.Not.EqualTo(param5));
+            Assert.That(param1, Is.Not.EqualTo(param6));
+            Assert.That(param1, Is.EqualTo(param7));
+        }
+
+        [Test]
+        public void CustomParameterAddedToViewSearchPath()
+        {
+            _factory.DescriptorBuilder = new LocalizedDescriptorBuilder(_factory.Engine);
+            _routeData.Values.Add("controller", "Home");
+            _routeData.Values.Add("language", "en-us");
+            _viewFolder.Add(@"Home\Index.en-us.spark", "");
+            _viewFolder.Add(@"Home\Index.en.spark", "");
+            _viewFolder.Add(@"Home\Index.spark", "");
+            _viewFolder.Add(@"Layouts\Application.en.spark", "");
+            _viewFolder.Add(@"Layouts\Application.ru.spark", "");
+            _viewFolder.Add(@"Layouts\Application.spark", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.en-us.spark",
+                @"Layouts\Application.en.spark");
+        }
+
+        public class LocalizedDescriptorBuilder : DefaultDescriptorBuilder
+        {
+            public LocalizedDescriptorBuilder()
+            {
+            }
+
+            public LocalizedDescriptorBuilder(ISparkViewEngine engine) : base(engine)
+            {
+            }
+
+            public override IList<string> GetExtraParameters(ControllerContext controllerContext)
+            {
+                return new[] { Convert.ToString(controllerContext.RouteData.Values["language"]) };
+            }
+
+            protected override IEnumerable<string> PotentialViewLocations(string areaName, string controllerName, string viewName, IList<string> extra)
+            {
+                return Merge(base.PotentialViewLocations(areaName, controllerName, viewName, extra), extra[0]);
+            }
+
+            protected override IEnumerable<string> PotentialMasterLocations(string areaName, string masterName, IList<string> extra)
+            {
+                return Merge(base.PotentialMasterLocations(areaName, masterName, extra), extra[0]);
+            }
+            
+            protected override IEnumerable<string> PotentialDefaultMasterLocations(string areaName, string controllerName, IList<string> extra)
+            {
+                return Merge(base.PotentialDefaultMasterLocations(areaName, controllerName, extra), extra[0]);
+            }
+
+            static IEnumerable<string> Merge(IEnumerable<string> locations, string region)
+            {
+                var slashPos = (region ?? "").IndexOf('-');
+                var language = slashPos == -1 ? null : region.Substring(0, slashPos);
+
+                foreach (var location in locations)
+                {
+                    if (!string.IsNullOrEmpty(region))
+                    {
+                        yield return Path.ChangeExtension(location, region + ".spark");
+                        if (slashPos != -1)
+                            yield return Path.ChangeExtension(location, language + ".spark");
+                    }
+                    yield return location;
+                }
+            }
         }
     }
 }

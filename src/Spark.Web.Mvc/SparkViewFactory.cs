@@ -148,7 +148,7 @@ namespace Spark.Web.Mvc
                 controllerName,
                 viewName,
                 masterName,
-                findDefaultMaster);
+                findDefaultMaster, null);
 
             ISparkViewEntry entry;
             if (useCache)
@@ -205,7 +205,8 @@ namespace Spark.Web.Mvc
                     controllerName,
                     viewName,
                     masterName,
-                    findDefaultMaster),
+                    findDefaultMaster, 
+                    DescriptorBuilder.GetExtraParameters(controllerContext)),
                 searchedLocations);
         }
 
@@ -220,7 +221,7 @@ namespace Spark.Web.Mvc
                     controllerName,
                     viewName,
                     masterName,
-                    findDefaultMaster),
+                    findDefaultMaster, null),
                 searchedLocations);
 
             if (descriptor == null)
