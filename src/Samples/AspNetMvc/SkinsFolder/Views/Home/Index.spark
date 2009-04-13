@@ -5,7 +5,7 @@
 <p>The way it works has changed recently because of an update to Spark's capabilities. The sample now 
 uses the IDescriptorBuilder extensibility point.</p>
 
-<p>You'll find this in the following Application.cs function:</p>
+<p>You'll find the following in Application.cs:</p>
 <code><pre>
 public void RegisterViewEngine(ICollection<IViewEngine> engines)
 {
