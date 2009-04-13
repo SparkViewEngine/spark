@@ -12,25 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Spark.Web.Mvc;
 
-namespace ClientRenderingViews
+namespace PartialFiles
 {
-    public partial class Global
+    public class Application
     {
-        public static void RegisterViewEngine(ICollection<IViewEngine> engines)
+        public void RegisterViewEngine(ViewEngineCollection engines)
         {
             engines.Add(new SparkViewFactory());
         }
 
-        public static void RegisterRoutes(ICollection<RouteBase> routes)
+        public void RegisterRoutes(RouteCollection routes)
         {
             routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
                            {
                                Defaults = new RouteValueDictionary(new {action = "Index", id = ""}),
+                           });
+
+            routes.Add(new Route("Default.aspx", new MvcRouteHandler())
+                           {
+                               Defaults = new RouteValueDictionary(new {controller = "Home", action = "Index", id = ""}),
                            });
         }
     }

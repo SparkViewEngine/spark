@@ -22,9 +22,9 @@ using Spark.Web.Mvc.Descriptors;
 
 namespace Internationalization
 {
-    public partial class Global
+    public class Application
     {
-        public static void RegisterViewEngine(ICollection<IViewEngine> engines)
+        public void RegisterViewEngine(ICollection<IViewEngine> engines)
         {
             var services = SparkEngineStarter.CreateContainer();
             services.AddFilter(LanguageDescriptorFilter.For(GetSessionCulture));
@@ -41,7 +41,7 @@ namespace Internationalization
             controllerContext.HttpContext.Session["culture"] = culture;
         }
 
-        public static void RegisterRoutes(ICollection<RouteBase> routes)
+        public void RegisterRoutes(ICollection<RouteBase> routes)
         {
             routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
                            {

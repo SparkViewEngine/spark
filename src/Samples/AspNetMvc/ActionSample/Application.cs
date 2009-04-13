@@ -17,6 +17,7 @@ namespace ActionSample
                 new RouteValueDictionary(new { controller = "home", action = "index", id = "" }),
                 new MvcRouteHandler()));
         }
+
         public void RegisterViewEngine(IList<IViewEngine> engines)
         {
             SparkEngineStarter.RegisterViewEngine(engines);

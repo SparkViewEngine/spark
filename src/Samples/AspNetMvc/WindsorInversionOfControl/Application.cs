@@ -23,12 +23,12 @@ using WindsorInversionOfControl.Models;
 
 namespace WindsorInversionOfControl
 {
-    public partial class Global
+    public class Application
     {
-        public void ConfigureIoC()
+        public void ConfigureIoC(string configPath)
         {
             // create a Windsor container with various component parameters established
-            var container = new WindsorContainer(Server.MapPath("~/castle.config"));
+            var container = new WindsorContainer(configPath);
 
             // Replaces the default IViewEngine. 
             container.AddComponent<IViewEngine, SparkViewFactory>();
@@ -51,7 +51,7 @@ namespace WindsorInversionOfControl
             ViewEngines.Engines.Add(container.Resolve<IViewEngine>());
         }
 
-        public static void AddRoutes(RouteCollection routes)
+        public void AddRoutes(RouteCollection routes)
         {
             routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
                            {

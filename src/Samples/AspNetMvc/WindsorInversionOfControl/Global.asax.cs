@@ -18,12 +18,14 @@ using System.Web.Routing;
 
 namespace WindsorInversionOfControl
 {
-    public partial class Global : HttpApplication
+    public class Global : HttpApplication
     {
+        private readonly Application _application = new Application();
+
         protected void Application_Start(object sender, EventArgs e)
         {
-            ConfigureIoC();
-            AddRoutes(RouteTable.Routes);
+            _application.ConfigureIoC(Server.MapPath("~/castle.config"));
+            _application.AddRoutes(RouteTable.Routes);
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
