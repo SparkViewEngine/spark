@@ -64,6 +64,12 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Descriptors\DescriptorFilterBase.cs" />
+    <Compile Include="Descriptors\AreaDescriptorFilter.cs" />
+    <Compile Include="Descriptors\DescriptorFilterExtensions.cs" />
+    <Compile Include="Descriptors\IDescriptorFilter.cs" />
+    <Compile Include="Descriptors\LanguageDescriptorFilter.cs" />
+    <Compile Include="Descriptors\ThemeDescriptorFilter.cs" />
     <Compile Include="IDescriptorBuilder.cs" />
     <Compile Include="JavascriptViewResult.cs" />
     <Compile Include="Install\DescribeBatchEventArgs.cs" />

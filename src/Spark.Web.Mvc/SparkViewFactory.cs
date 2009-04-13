@@ -135,16 +135,10 @@ namespace Spark.Web.Mvc
             var searchedLocations = new List<string>();
             var targetNamespace = controllerContext.Controller.GetType().Namespace;
 
-            object areaValue;
-            var areaName = controllerContext.RouteData.Values.TryGetValue("area", out areaValue)
-                               ? Convert.ToString((object)areaValue)
-                               : null;
-
             var controllerName = controllerContext.RouteData.GetRequiredString("controller");
 
             var descriptorParams = new BuildDescriptorParams(
                 targetNamespace,
-                areaName,
                 controllerName,
                 viewName,
                 masterName,
@@ -203,17 +197,11 @@ namespace Spark.Web.Mvc
         {
             var targetNamespace = controllerContext.Controller.GetType().Namespace;
 
-            object areaValue;
-            var areaName = controllerContext.RouteData.Values.TryGetValue("area", out areaValue)
-                               ? Convert.ToString(areaValue)
-                               : null;
-
             var controllerName = controllerContext.RouteData.GetRequiredString("controller");
 
             return DescriptorBuilder.BuildDescriptor(
                 new BuildDescriptorParams(
                     targetNamespace,
-                    areaName,
                     controllerName,
                     viewName,
                     masterName,
@@ -228,8 +216,7 @@ namespace Spark.Web.Mvc
             var searchedLocations = new List<string>();
             var descriptor = DescriptorBuilder.BuildDescriptor(
                 new BuildDescriptorParams(
-                    targetNamespace,
-                    null /*areaName*/,
+                    targetNamespace /*areaName*/,
                     controllerName,
                     viewName,
                     masterName,

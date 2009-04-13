@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
+using Spark.Web.Mvc.Descriptors;
 
 namespace Spark.Web.Mvc
 {
@@ -12,9 +13,14 @@ namespace Spark.Web.Mvc
 
         public DefaultDescriptorBuilder()
         {
+            Filters = new List<IDescriptorFilter>
+                          {
+                              new AreaDescriptorFilter()
+                          };
         }
 
         public DefaultDescriptorBuilder(ISparkViewEngine engine)
+            : this()
         {
             _engine = engine;
         }
@@ -24,9 +30,14 @@ namespace Spark.Web.Mvc
             _engine = container.GetService<ISparkViewEngine>();
         }
 
-        public virtual IList<string> GetExtraParameters(ControllerContext controllerContext)
+        public IList<IDescriptorFilter> Filters { get; set; }
+
+        public virtual IDictionary<string, object> GetExtraParameters(ControllerContext controllerContext)
         {
-            return null;
+            var extra = new Dictionary<string, object>();
+            foreach (var filter in Filters)
+                filter.ExtraParameters(controllerContext, extra);
+            return extra;
         }
 
         public virtual SparkViewDescriptor BuildDescriptor(BuildDescriptorParams buildDescriptorParams, ICollection<string> searchedLocations)
@@ -37,9 +48,7 @@ namespace Spark.Web.Mvc
                                  };
 
             if (!LocatePotentialTemplate(
-                     PotentialViewLocations(
-                         buildDescriptorParams.AreaName,
-                         buildDescriptorParams.ControllerName,
+                     PotentialViewLocations(buildDescriptorParams.ControllerName,
                          buildDescriptorParams.ViewName,
                          buildDescriptorParams.Extra),
                      descriptor.Templates,
@@ -51,9 +60,7 @@ namespace Spark.Web.Mvc
             if (!string.IsNullOrEmpty(buildDescriptorParams.MasterName))
             {
                 if (!LocatePotentialTemplate(
-                         PotentialMasterLocations(
-                             buildDescriptorParams.AreaName,
-                             buildDescriptorParams.MasterName,
+                         PotentialMasterLocations(buildDescriptorParams.MasterName,
                              buildDescriptorParams.Extra),
                          descriptor.Templates,
                          searchedLocations))
@@ -64,9 +71,7 @@ namespace Spark.Web.Mvc
             else if (buildDescriptorParams.FindDefaultMaster && string.IsNullOrEmpty(TrailingUseMasterName(descriptor)))
             {
                 LocatePotentialTemplate(
-                    PotentialDefaultMasterLocations(
-                        buildDescriptorParams.AreaName,
-                        buildDescriptorParams.ControllerName,
+                    PotentialDefaultMasterLocations(buildDescriptorParams.ControllerName,
                         buildDescriptorParams.Extra),
                     descriptor.Templates,
                     null);
@@ -76,9 +81,7 @@ namespace Spark.Web.Mvc
             while (buildDescriptorParams.FindDefaultMaster && !string.IsNullOrEmpty(trailingUseMaster))
             {
                 if (!LocatePotentialTemplate(
-                         PotentialMasterLocations(
-                            buildDescriptorParams.AreaName,
-                            trailingUseMaster,
+                         PotentialMasterLocations(trailingUseMaster,
                             buildDescriptorParams.Extra),
                          descriptor.Templates,
                          searchedLocations))
@@ -90,7 +93,6 @@ namespace Spark.Web.Mvc
 
             return descriptor;
         }
-
 
         public string TrailingUseMasterName(SparkViewDescriptor descriptor)
         {
@@ -124,60 +126,41 @@ namespace Spark.Web.Mvc
             return false;
         }
 
-        protected virtual IEnumerable<string> PotentialViewLocations(string areaName, string controllerName, string viewName, IList<string> extra)
+        private IEnumerable<string> ApplyFilters(IEnumerable<string> locations, IDictionary<string, object> extra)
         {
-            return string.IsNullOrEmpty(areaName)
-                       ? new[]
-                             {
-                                 controllerName + "\\" + viewName + ".spark",
-                                 "Shared\\" + viewName + ".spark"
-                             }
-                       : new[]
-                             {
-                                 areaName + "\\" + controllerName + "\\" + viewName + ".spark",
-                                 controllerName + "\\" + viewName + ".spark",
-                                 "Shared\\" + viewName + ".spark"
-                             };
+            // apply all of the filters PotentialLocations in order
+            return Filters.Aggregate(
+                locations,
+                (aggregate, filter) => filter.PotentialLocations(aggregate, extra));
         }
 
-        protected virtual IEnumerable<string> PotentialMasterLocations(string areaName, string masterName, IList<string> extra)
+        protected virtual IEnumerable<string> PotentialViewLocations(string controllerName, string viewName, IDictionary<string, object> extra)
         {
-            return string.IsNullOrEmpty(areaName)
-                       ? new[]
-                             {
-                                 "Layouts\\" + masterName + ".spark",
-                                 "Shared\\" + masterName + ".spark"
-                             }
-                       : new[]
-                             {
-                                 areaName + "\\Layouts\\" + masterName + ".spark",
-                                 areaName + "\\Shared\\" + masterName + ".spark",
-                                 "Layouts\\" + masterName + ".spark",
-                                 "Shared\\" + masterName + ".spark"
-                             };
+            return ApplyFilters(new[]
+                                    {
+                                        controllerName + "\\" + viewName + ".spark",
+                                        "Shared\\" + viewName + ".spark"
+                                    }, extra);
         }
 
-        protected virtual IEnumerable<string> PotentialDefaultMasterLocations(string areaName, string controllerName, IList<string> extra)
+        protected virtual IEnumerable<string> PotentialMasterLocations(string masterName, IDictionary<string, object> extra)
         {
-            return string.IsNullOrEmpty(areaName)
-                       ? new[]
-                             {
-                                 "Layouts\\" + controllerName + ".spark",
-                                 "Shared\\" + controllerName + ".spark",
-                                 "Layouts\\Application.spark",
-                                 "Shared\\Application.spark"
-                             }
-                       : new[]
-                             {
-                                 areaName + "\\Layouts\\" + controllerName + ".spark",
-                                 areaName + "\\Shared\\" + controllerName + ".spark",
-                                 areaName + "\\Layouts\\Application.spark",
-                                 areaName + "\\Shared\\Application.spark",
-                                 "Layouts\\" + controllerName + ".spark",
-                                 "Shared\\" + controllerName + ".spark",
-                                 "Layouts\\Application.spark",
-                                 "Shared\\Application.spark"
-                             };
+            return ApplyFilters(new[]
+                                    {
+                                        "Layouts\\" + masterName + ".spark",
+                                        "Shared\\" + masterName + ".spark"
+                                    }, extra);
+        }
+
+        protected virtual IEnumerable<string> PotentialDefaultMasterLocations(string controllerName, IDictionary<string, object> extra)
+        {
+            return ApplyFilters(new[]
+                                    {
+                                        "Layouts\\" + controllerName + ".spark",
+                                        "Shared\\" + controllerName + ".spark",
+                                        "Layouts\\Application.spark",
+                                        "Shared\\Application.spark"
+                                    }, extra);
         }
     }
 }

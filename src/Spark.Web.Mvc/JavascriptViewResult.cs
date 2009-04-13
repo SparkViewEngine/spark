@@ -47,7 +47,7 @@ namespace Spark.Web.Mvc
             foreach (var factory in factories)
             {
                 var descriptor = factory.DescriptorBuilder.BuildDescriptor(
-                    new BuildDescriptorParams("", AreaName, controllerName, ViewName, MasterName, false, factory.DescriptorBuilder.GetExtraParameters(context)), searchedLocations);
+                    new BuildDescriptorParams("", controllerName, ViewName, MasterName, false, factory.DescriptorBuilder.GetExtraParameters(context)), searchedLocations);
                 descriptor.Language = LanguageType.Javascript;
                 var entry = factory.Engine.CreateEntry(descriptor);
                 context.HttpContext.Response.ContentType = "text/javascript";

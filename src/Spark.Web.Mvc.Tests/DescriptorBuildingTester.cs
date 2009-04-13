@@ -24,6 +24,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Spark.FileSystem;
+using Spark.Web.Mvc.Descriptors;
 
 namespace Spark.Web.Mvc.Tests
 {
@@ -292,10 +293,10 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void BuildDescriptorParamsActsAsKey()
         {
-            var param1 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, null);
-            var param2 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, null);
-            var param3 = new BuildDescriptorParams("a", "b", "c", "d", "e", true, null);
-            var param4 = new BuildDescriptorParams("a", "b", "c2", "d", "e", false, null);
+            var param1 = new BuildDescriptorParams("a", "c", "d", "e", false, null);
+            var param2 = new BuildDescriptorParams("a", "c", "d", "e", false, null);
+            var param3 = new BuildDescriptorParams("a", "c", "d", "e", true, null);
+            var param4 = new BuildDescriptorParams("a", "c2", "d", "e", false, null);
 
             Assert.That(param1, Is.EqualTo(param2));
             Assert.That(param1, Is.Not.EqualTo(param3));
@@ -305,22 +306,22 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void ParamsExtraNullActsAsEmpty()
         {
-            var param1 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, null);
-            var param2 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new string[0]);
+            var param1 = new BuildDescriptorParams("a", "c", "d", "e", false, null);
+            var param2 = new BuildDescriptorParams("a", "c", "d", "e", false, new Dictionary<string, object>());
 
             Assert.That(param1, Is.EqualTo(param2));
         }
 
         [Test]
-        public void ParamsExtraEqualityMustBeIdenticalAndInOrder()
+        public void ParamsExtraEqualityMustBeIdentical()
         {
-            var param1 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "alpha", "beta" });
-            var param2 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "alpha" });
-            var param3 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "beta" });
-            var param4 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "beta", "alpha" });
-            var param5 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, null);
-            var param6 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new string[0]);
-            var param7 = new BuildDescriptorParams("a", "b", "c", "d", "e", false, new[] { "alpha", "beta" });
+            var param1 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new[] { "alpha", "beta" }));
+            var param2 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new[] { "alpha" }));
+            var param3 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new[] { "beta" }));
+            var param4 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new[] { "beta", "alpha" }));
+            var param5 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(null));
+            var param6 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new string[0]));
+            var param7 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new[] { "alpha", "beta" }));
 
             Assert.That(param1, Is.Not.EqualTo(param2));
             Assert.That(param1, Is.Not.EqualTo(param3));
@@ -330,10 +331,19 @@ namespace Spark.Web.Mvc.Tests
             Assert.That(param1, Is.EqualTo(param7));
         }
 
+        private static IDictionary<string, object> Dict(IEnumerable<string> values)
+        {
+            return values == null
+                       ? null
+                       : values
+                             .Select((v, k) => new {k, v})
+                             .ToDictionary(kv => kv.k.ToString(), kv => (object) kv.v);
+        }
+
         [Test]
         public void CustomParameterAddedToViewSearchPath()
         {
-            _factory.DescriptorBuilder = new LocalizedDescriptorBuilder(_factory.Engine);
+            _factory.DescriptorBuilder = new ExtendingDescriptorBuilderWithInheritance(_factory.Engine);
             _routeData.Values.Add("controller", "Home");
             _routeData.Values.Add("language", "en-us");
             _viewFolder.Add(@"Home\Index.en-us.spark", "");
@@ -351,34 +361,38 @@ namespace Spark.Web.Mvc.Tests
                 @"Layouts\Application.en.spark");
         }
 
-        public class LocalizedDescriptorBuilder : DefaultDescriptorBuilder
+        public class ExtendingDescriptorBuilderWithInheritance : DefaultDescriptorBuilder
         {
-            public LocalizedDescriptorBuilder()
+            public ExtendingDescriptorBuilderWithInheritance()
             {
             }
 
-            public LocalizedDescriptorBuilder(ISparkViewEngine engine) : base(engine)
+            public ExtendingDescriptorBuilderWithInheritance(ISparkViewEngine engine)
+                : base(engine)
             {
             }
 
-            public override IList<string> GetExtraParameters(ControllerContext controllerContext)
+            public override IDictionary<string, object> GetExtraParameters(ControllerContext controllerContext)
             {
-                return new[] { Convert.ToString(controllerContext.RouteData.Values["language"]) };
+                return new Dictionary<string, object>
+                           {
+                               {"language", Convert.ToString(controllerContext.RouteData.Values["language"])}
+                           };
             }
 
-            protected override IEnumerable<string> PotentialViewLocations(string areaName, string controllerName, string viewName, IList<string> extra)
+            protected override IEnumerable<string> PotentialViewLocations(string controllerName, string viewName, IDictionary<string, object> extra)
             {
-                return Merge(base.PotentialViewLocations(areaName, controllerName, viewName, extra), extra[0]);
+                return Merge(base.PotentialViewLocations(controllerName, viewName, extra), extra["language"].ToString());
             }
 
-            protected override IEnumerable<string> PotentialMasterLocations(string areaName, string masterName, IList<string> extra)
+            protected override IEnumerable<string> PotentialMasterLocations(string masterName, IDictionary<string, object> extra)
             {
-                return Merge(base.PotentialMasterLocations(areaName, masterName, extra), extra[0]);
+                return Merge(base.PotentialMasterLocations(masterName, extra), extra["language"].ToString());
             }
-            
-            protected override IEnumerable<string> PotentialDefaultMasterLocations(string areaName, string controllerName, IList<string> extra)
+
+            protected override IEnumerable<string> PotentialDefaultMasterLocations(string controllerName, IDictionary<string, object> extra)
             {
-                return Merge(base.PotentialDefaultMasterLocations(areaName, controllerName, extra), extra[0]);
+                return Merge(base.PotentialDefaultMasterLocations(controllerName, extra), extra["language"].ToString());
             }
 
             static IEnumerable<string> Merge(IEnumerable<string> locations, string region)
@@ -397,6 +411,13 @@ namespace Spark.Web.Mvc.Tests
                     yield return location;
                 }
             }
+        }
+
+        [Test, ExpectedException(typeof(InvalidCastException))]
+        public void CustomDescriptorBuildersCantUseDescriptorFilters()
+        {
+            _factory.DescriptorBuilder = MockRepository.GenerateStub<IDescriptorBuilder>();
+            _factory.AddFilter(MockRepository.GenerateStub<IDescriptorFilter>());
         }
     }
 }
