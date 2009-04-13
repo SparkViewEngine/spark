@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Spark;
 using Spark.Web.Mvc;
+using Spark.Web.Mvc.Descriptors;
 
 namespace Internationalization
 {
@@ -25,8 +27,18 @@ namespace Internationalization
         public static void RegisterViewEngine(ICollection<IViewEngine> engines)
         {
             var services = SparkEngineStarter.CreateContainer();
-            services.SetServiceBuilder<IDescriptorBuilder>(x => new CustomDescriptorBuilder());
+            services.AddFilter(LanguageDescriptorFilter.For(GetSessionCulture));
             SparkEngineStarter.RegisterViewEngine(services);
+        }
+
+        public static string GetSessionCulture(ControllerContext controllerContext)
+        {
+            return Convert.ToString(controllerContext.HttpContext.Session["culture"]);
+        }
+
+        public static void SetSessionCulture(ControllerContext controllerContext, string culture)
+        {
+            controllerContext.HttpContext.Session["culture"] = culture;
         }
 
         public static void RegisterRoutes(ICollection<RouteBase> routes)
