@@ -1,1 +1,2 @@
 <use namespace="System.Collections.Generic"/>
+<use namespace="System.Linq"/>
