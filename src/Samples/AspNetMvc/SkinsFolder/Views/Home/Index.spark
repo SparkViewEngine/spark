@@ -2,6 +2,31 @@
 
 <p>This is a theme/skin sample.</p>
 
+<p>The way it works has changed recently because of an update to Spark's capabilities. The sample now 
+uses the IDescriptorBuilder extensibility point.</p>
+
+<p>You'll find this in the following Application.cs function:</p>
+<code><pre>
+public void RegisterViewEngine(ICollection<IViewEngine> engines)
+{
+    var services = SparkEngineStarter.CreateContainer();
+    services.AddFilter(ThemeDescriptorFilter.For(GetTheme));
+    SparkEngineStarter.RegisterViewEngine(engines, services);
+}
+private static string GetTheme(ControllerContext context)
+{
+    var cookie = context.HttpContext.Request.Cookies["theme"];
+    return cookie == null ? null : cookie.Value;
+}
+</pre></code>
+
+<p>This filter will cause the DefaultDescriptorBuilder to look into a <code>Views/Themes/(name)</code> subfolder for
+views before looking in the normal paths.</p>
+
+<p>It's up to the application to provide a lambda or method which can resolve the name of the theme for the current request.</p>
+
+
+<h2>Previous sample</h2>
 <p>
   It works by creating a distinct view engine for each theme. The IViewFolder for
   the theme will look in the ~/Themes/{name}/* folder for spark files <i>before</i> looking in the
