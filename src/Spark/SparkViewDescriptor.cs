@@ -75,7 +75,7 @@ namespace Spark
         {
             int hashCode = 0;
 
-            hashCode ^= (TargetNamespace ?? "").GetHashCode();
+            hashCode ^= (TargetNamespace ?? "").GetHashCode() ^ Language.GetHashCode();
 
             foreach (var template in Templates)
                 hashCode ^= template.ToLowerInvariant().GetHashCode();
@@ -90,11 +90,12 @@ namespace Spark
             if (that == null || GetType() != that.GetType())
                 return false;
 
-            if (!string.Equals(TargetNamespace, that.TargetNamespace))
+            if (!string.Equals(TargetNamespace ?? "", that.TargetNamespace ?? "") ||
+                Language != that.Language ||
+                Templates.Count != that.Templates.Count)
+            {
                 return false;
-
-            if (Templates.Count != that.Templates.Count)
-                return false;
+            }
 
             for (var index = 0; index != Templates.Count; ++index)
             {

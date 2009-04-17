@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 using System;
+using NUnit.Framework.SyntaxHelpers;
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -94,6 +95,34 @@ namespace Spark.Tests
             isCurrent = false;
             Assert.IsNull(holder.Lookup(key));
 
+        }
+
+        [Test]
+        public void SparkViewDescriptorTargetNamespaceNullAndEmptyAreEqual()
+        {
+            var desc1 = new SparkViewDescriptor()
+                .AddTemplate("foo.spark")
+                .SetTargetNamespace(null);
+
+            var desc2 = new SparkViewDescriptor()
+                .AddTemplate("foo.spark")
+                .SetTargetNamespace("");
+
+            Assert.That(desc1, Is.EqualTo(desc2));
+        }
+
+        [Test]
+        public void SparkViewDescriptorLangaugesAreDifferent()
+        {
+            var desc1 = new SparkViewDescriptor()
+                .AddTemplate("foo.spark")
+                .SetLanguage(LanguageType.Default);
+
+            var desc2 = new SparkViewDescriptor()
+                .AddTemplate("foo.spark")
+                .SetLanguage(LanguageType.Javascript);
+
+            Assert.That(desc1, Is.Not.EqualTo(desc2));
         }
     }
 }
