@@ -24,6 +24,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Spark.FileSystem;
+using Spark.Parser;
 using Spark.Web.Mvc.Descriptors;
 
 namespace Spark.Web.Mvc.Tests
@@ -418,6 +419,27 @@ namespace Spark.Web.Mvc.Tests
         {
             _factory.DescriptorBuilder = MockRepository.GenerateStub<IDescriptorBuilder>();
             _factory.AddFilter(MockRepository.GenerateStub<IDescriptorFilter>());
+        }
+
+        [Test]
+        public void SimplifiedUseMasterGrammarDetectsElementCorrectly()
+        {
+            var builder = new DefaultDescriptorBuilder();
+
+            var a = builder.ParseUseMaster(new Position(new SourceContext("<use master='a'/>")));
+            var b = builder.ParseUseMaster(new Position(new SourceContext("<use\r\nmaster \r\n =\r\n'b' />")));
+            var c = builder.ParseUseMaster(new Position(new SourceContext("<use master=\"c\"/>")));
+            var def = builder.ParseUseMaster(new Position(new SourceContext("  x <use etc=''/> <use master=\"def\"/> y ")));
+            var none = builder.ParseUseMaster(new Position(new SourceContext("  x <use etc=''/> <using master=\"def\"/> y ")));
+            var g = builder.ParseUseMaster(new Position(new SourceContext("-<use master=\"g\"/>-<use master=\"h\"/>-")));
+
+
+            Assert.That(a.Value, Is.EqualTo("a"));
+            Assert.That(b.Value, Is.EqualTo("b"));
+            Assert.That(c.Value, Is.EqualTo("c"));
+            Assert.That(def.Value, Is.EqualTo("def"));
+            Assert.That(none, Is.Null);
+            Assert.That(g.Value, Is.EqualTo("g"));
         }
     }
 }

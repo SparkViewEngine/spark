@@ -53,7 +53,7 @@ namespace Spark.Parser.Code
             // @' " '' ' becomes @" "" ' "
             var aposVerbatimPiece =
                 Swap(Ch("''"), "'")
-                .Or(Swap(Ch("\""), "\"\""))
+                .Or(Swap(Ch('\"'), "\"\""))
                 .Or(Snip(ChNot('\'')));
 
             var aposVerbatimLiteral = Snip(Swap(Ch("@'"), "@\"").And(Snip(Rep(aposVerbatimPiece))).And(Swap(Ch('\''), "\"")));

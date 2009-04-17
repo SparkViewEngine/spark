@@ -148,16 +148,23 @@ namespace Spark.Parser
             return new Position(this) { _sourceContentLength = end.Offset };
         }
 
-        public string Peek(int count)
-        {
-            return SourceContext.Content.Substring(Offset, count);
-        }
-
         public char Peek()
         {
             if (Offset == _sourceContentLength)
                 return default(char);
             return SourceContext.Content[Offset];
+        }
+        
+        public string Peek(int count)
+        {
+            return SourceContext.Content.Substring(Offset, count);
+        }
+
+        public bool PeekTest(string match)
+        {
+            if (_sourceContentLength - Offset < match.Length)
+                return false;
+            return string.CompareOrdinal(SourceContext.Content, Offset, match, 0, match.Length) == 0;
         }
 
         public int PotentialLength()
@@ -204,6 +211,7 @@ namespace Spark.Parser
                 link = link.Next;
             }
         }
+
 
     }
 }

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Web.Mvc;
 using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
+using Spark.Parser;
+using Spark.Parser.Syntax;
 using Spark.Web.Mvc.Descriptors;
 
 namespace Spark.Web.Mvc
@@ -94,17 +96,59 @@ namespace Spark.Web.Mvc
             return descriptor;
         }
 
+        /// <summary>
+        /// Simplified parser for &lt;use master=""/&gt; detection.
+        /// TODO: get rid of this.
+        /// switch to a cache of view-file to master location with iscurrent detection?
+        /// </summary>
+        class UseMasterGrammar : CharGrammar
+        {
+            public UseMasterGrammar()
+            {
+                var whiteSpace0 = Rep(Ch(char.IsWhiteSpace));
+                var whiteSpace1 = Rep1(Ch(char.IsWhiteSpace));
+                var startOfElement = Ch("<use");
+                var startOfAttribute = Ch("master").And(whiteSpace0).And(Ch('=')).And(whiteSpace0);
+                var attrValue = Ch('\'').And(Rep(ChNot('\''))).And(Ch('\''))
+                    .Or(Ch('\"').And(Rep(ChNot('\"'))).And(Ch('\"')));
+
+                var endOfElement = Ch("/>");
+
+                var useMaster = startOfElement
+                    .And(whiteSpace1)
+                    .And(startOfAttribute)
+                    .And(attrValue)
+                    .And(whiteSpace0)
+                    .And(endOfElement)
+                    .Build(hit => new string(hit.Left.Left.Down.Left.Down.ToArray()));
+
+                ParseUseMaster =
+                    pos =>
+                        {
+                            for (var scan = pos; scan.PotentialLength() != 0; scan = scan.Advance(1))
+                            {
+                                var result = useMaster(scan);
+                                if (result != null)
+                                    return result;
+                            }
+                            return null;
+                        };
+            }
+
+            public ParseAction<string> ParseUseMaster { get; set; }
+        }
+
+        private readonly UseMasterGrammar _grammar = new UseMasterGrammar();
+        public ParseAction<string> ParseUseMaster { get { return _grammar.ParseUseMaster; } }
+
         public string TrailingUseMasterName(SparkViewDescriptor descriptor)
         {
-            var context = new VisitorContext
-                          {
-                              ViewFolder = _engine.ViewFolder,
-                              SyntaxProvider = _engine.SyntaxProvider,
-                              ViewPath = descriptor.Templates.Last()
-                          };
-            var chunks = _engine.SyntaxProvider.GetChunks(context, context.ViewPath);
-            var useMasterChunks = chunks.OfType<UseMasterChunk>();
-            return useMasterChunks.Any() ? useMasterChunks.First().Name : null;
+            var lastTemplate = descriptor.Templates.Last();
+            var sourceContext = AbstractSyntaxProvider.CreateSourceContext(lastTemplate, _engine.ViewFolder);
+            if (sourceContext == null)
+                return null;
+            var result = ParseUseMaster(new Position(sourceContext));
+            return result == null ? null : result.Value;
         }
 
         private bool LocatePotentialTemplate(

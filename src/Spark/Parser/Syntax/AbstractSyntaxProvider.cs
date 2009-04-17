@@ -29,7 +29,7 @@ namespace Spark.Parser.Syntax
         public abstract IList<Node> IncludeFile(VisitorContext context, string path, string parse);
         public abstract Snippets ParseFragment(Position begin, Position end);
 
-        protected SourceContext CreateSourceContext(string viewPath, IViewFolder viewFolder)
+        public static SourceContext CreateSourceContext(string viewPath, IViewFolder viewFolder)
         {
             var viewSource = viewFolder.GetViewSource(viewPath);
 

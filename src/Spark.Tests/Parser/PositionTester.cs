@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using NUnit.Framework.SyntaxHelpers;
 using Spark.Parser;
 using NUnit.Framework;
 
@@ -187,6 +188,26 @@ namespace Spark.Tests.Parser
             Assert.AreEqual("o w", range.Peek(3));
             var done = range.Advance(3);
             Assert.AreEqual(default(char), done.Peek());
+        }
+
+        [Test]
+        public void PeekTestChecksNextCharacters()
+        {
+            var position = new Position(new SourceContext("hello world"));
+            Assert.That(position.PeekTest("hello"), Is.True);
+            Assert.That(position.PeekTest("hello world"), Is.True);
+            Assert.That(position.PeekTest("hello world!"), Is.False);
+            Assert.That(position.PeekTest("Hello"), Is.False);
+            Assert.That(position.PeekTest(""), Is.True);
+            var more = position.Advance(4);
+            Assert.That(more.PeekTest("hello"), Is.False);
+            Assert.That(more.PeekTest("o"), Is.True);
+            Assert.That(more.PeekTest("o world"), Is.True);
+            Assert.That(more.PeekTest("o world!"), Is.False);
+            var tail = more.Advance(7);
+            Assert.That(tail.PeekTest(""), Is.True);
+            Assert.That(tail.PeekTest("d"), Is.False);
+
         }
     }
 }

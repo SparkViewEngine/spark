@@ -41,13 +41,28 @@ namespace Spark.Parser
 
         public static ParseAction<string> Ch(string match)
         {
+            if (match.Length < 2)
+            {
+                int x = 5;
+            }
             return delegate(Position input)
                        {
-                           if (input.PotentialLength() < match.Length || !string.Equals(input.Peek(match.Length), match))
+                           if (!input.PeekTest(match))
                                return null;
                            return new ParseResult<string>(input.Advance(match.Length), match);
                        };
         }
+
+        public static ParseAction<char> Ch(char allowed)
+        {
+            return delegate(Position input)
+            {
+                if (input.Peek() != allowed)
+                    return null;
+                return new ParseResult<char>(input.Advance(1), allowed);
+            };
+        }
+
         public static ParseAction<char> Ch(params char[] allowed)
         {
             return delegate(Position input)
@@ -56,6 +71,16 @@ namespace Spark.Parser
                                return null;
                            return new ParseResult<char>(input.Advance(1), input.Peek());
                        };
+        }
+        public static ParseAction<char> ChNot(char disallowed)
+        {
+            return delegate(Position input)
+            {
+                var ch = input.Peek();
+                if (ch == disallowed)
+                    return null;
+                return new ParseResult<char>(input.Advance(1), ch);
+            };
         }
         public static ParseAction<char> ChNot(params char[] disallowed)
         {
