@@ -110,5 +110,20 @@ namespace Spark.Tests
             Assert.That(path3, Is.EqualTo("foo/bar"));
             Assert.That(path4, Is.EqualTo("foo/bar"));
         }
+
+        [Test]
+        public void ReplacingJustSomePrefixesThatHaveTildeNoStop()
+        {
+            var settings = new SparkSettings()
+                .AddResourceMapping("~/content/js", "http://my.cdn.com/myaccount/content/js", false);
+
+            var manager = new DefaultResourcePathManager(settings);
+
+            var path = manager.GetResourcePath("/my/webapp", "~/content/js/jquery.1.2.6.js");
+            Assert.AreEqual("http://my.cdn.com/myaccount/content/js/jquery.1.2.6.js", path);
+
+            var path2 = manager.GetResourcePath("/my/webapp", "~/content/css/yadda.css");
+            Assert.AreEqual("/my/webapp/content/css/yadda.css", path2);
+        }
     }
 }
