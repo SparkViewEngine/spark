@@ -257,6 +257,6 @@ namespace Spark.Compiler
 
     public class PageBaseTypeChunk : Chunk
     {
-        public string BaseClass { get; set; }
+        public Snippets BaseClass { get; set; }
     }
 }

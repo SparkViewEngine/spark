@@ -493,7 +493,7 @@ namespace Spark.Compiler.NodeVisitors
                 }
                 else if (pageBaseTypeAttr != null)
                 {
-                    var usePageBaseTypeChunk = new PageBaseTypeChunk { BaseClass = pageBaseTypeAttr.Value };
+                    var usePageBaseTypeChunk = new PageBaseTypeChunk { BaseClass = AsCode(pageBaseTypeAttr) };
                     AddUnordered(usePageBaseTypeChunk);
                 }
                 else
