@@ -64,6 +64,7 @@
     <Compile Include="ImportAndIncludeTester.cs" />
     <Compile Include="ClientsideCompilerTester.cs" />
     <Compile Include="Parser\AutomaticEncodingTester.cs" />
+    <Compile Include="Parser\CharGrammarTester.cs" />
     <Compile Include="Parser\JavascriptAnonymousTypeGrammarTester.cs" />
     <Compile Include="Precompiled\ComplexPrecompileController.cs" />
     <Compile Include="Precompiled\SimplePrecompileController.cs" />

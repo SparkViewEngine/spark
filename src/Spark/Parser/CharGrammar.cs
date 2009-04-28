@@ -77,7 +77,7 @@ namespace Spark.Parser
             return delegate(Position input)
             {
                 var ch = input.Peek();
-                if (ch == disallowed)
+                if (ch == default(char) || ch == disallowed)
                     return null;
                 return new ParseResult<char>(input.Advance(1), ch);
             };
