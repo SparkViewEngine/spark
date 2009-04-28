@@ -534,6 +534,9 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         }
 
+        protected override void Visit(PageBaseTypeChunk chunk)
+        {
+        }
     }
 
 }

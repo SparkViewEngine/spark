@@ -26,11 +26,15 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
         {
             get
             {
+                var baseClass = BaseClass.Replace("[[", "<").Replace("]]", ">");
+
                 if (Snippets.IsNullOrEmpty(TModel))
                     return BaseClass ?? "Spark.SparkViewBase";
 
                 var s = new Snippets();
-                s.Add(new Snippet { Value = BaseClass ?? "Spark.SparkViewBase" });
+                //Todo: Remove this and use a code grammar as in specifying TModel
+                //s.Add(new Snippet { Value = BaseClass ?? "Spark.SparkViewBase" });
+                s.Add(new Snippet { Value = baseClass ?? "Spark.SparkViewBase" });
                 s.Add(new Snippet { Value = "<" });
                 s.AddRange(TModel);
                 s.Add(new Snippet { Value = ">" });
@@ -46,6 +50,16 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                                                           chunk.TModel));
             }
             TModel = chunk.TModel;
+        }
+
+        protected override void Visit(PageBaseTypeChunk chunk)
+        {
+            if (string.IsNullOrEmpty(BaseClass) && BaseClass != chunk.BaseClass)
+            {
+                throw new CompilerException(string.Format("Only one pageBaseType can be declared. {0} != {1}", BaseClass,
+                                                          chunk.BaseClass));
+            }
+            BaseClass = chunk.BaseClass;
         }
     }
 }
