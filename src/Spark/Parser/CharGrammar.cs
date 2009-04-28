@@ -41,10 +41,6 @@ namespace Spark.Parser
 
         public static ParseAction<string> Ch(string match)
         {
-            if (match.Length < 2)
-            {
-                int x = 5;
-            }
             return delegate(Position input)
                        {
                            if (!input.PeekTest(match))
