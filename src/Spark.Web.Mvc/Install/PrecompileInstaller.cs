@@ -35,6 +35,8 @@ namespace Spark.Web.Mvc.Install
 
         public event DescribeBatchHandler DescribeBatch;
 
+        public Func<ISparkSettings> SettingsInstantiator { get; set; }
+
         public override void Install(IDictionary stateSaver)
         {
             // figure out all paths based on this assembly in the bin dir
@@ -48,16 +50,23 @@ namespace Spark.Web.Mvc.Install
             if (!string.IsNullOrEmpty(TargetAssemblyFile))
                 targetPath = Path.Combine(webBinPath, TargetAssemblyFile);
 
-            // this hack enables you to open the web.config as if it was an .exe.config
-            File.Create(webFileHack).Close();
-            var config = ConfigurationManager.OpenExeConfiguration(webFileHack);
-            File.Delete(webFileHack);
+            ISparkSettings settings;
+            if (SettingsInstantiator != null)
+            {
+                settings = SettingsInstantiator();
+            }
+            else
+            {
+                // this hack enables you to open the web.config as if it was an .exe.config
+                File.Create(webFileHack).Close();
+                var config = ConfigurationManager.OpenExeConfiguration(webFileHack);
+                File.Delete(webFileHack);
 
-            // GetSection will try to resolve the "Spark" assembly, which the installutil appdomain needs help finding
-            AppDomain.CurrentDomain.AssemblyResolve +=
-                ((sender, e) => Assembly.LoadFile(Path.Combine(webBinPath, e.Name + ".dll")));
-            var settings = (ISparkSettings) config.GetSection("spark");
-
+                // GetSection will try to resolve the "Spark" assembly, which the installutil appdomain needs help finding
+                AppDomain.CurrentDomain.AssemblyResolve +=
+                    ((sender, e) => Assembly.LoadFile(Path.Combine(webBinPath, e.Name + ".dll")));
+                settings = (ISparkSettings) config.GetSection("spark");
+            }
 
             // Finally create an engine with the <spark> settings from the web.config
             var factory = new SparkViewFactory(settings)
