@@ -39,4 +39,9 @@ src/Tools/SparkLanguagePackage/*_i.h
 src/Tools/SparkLanguagePackage/*_p.c
 src/Tools/SparkLanguagePackage/PackageLoadKey.h
 
-
+bin/aspnetmvc/System.Web.Mvc.pdb
+bin/aspnetmvc/Microsoft.Web.Mvc.pdb
+bin/mvccontrib/MvcContrib.pdb
+bin/mvccontrib/MvcContrib.xml
+bin/mvccontrib/MvcContrib.Castle.pdb
+bin/mvccontrib/MvcContrib.Castle.xml
