@@ -131,9 +131,9 @@ namespace SparkLanguage
             }
         }
 
-        public IEnumerable<ResourceMapping> ResourceMappings
+        public IEnumerable<IResourceMapping> ResourceMappings
         {
-            get { return new ResourceMapping[0]; }
+            get { return new IResourceMapping[0]; }
         }
 
         public IEnumerable<IViewFolderSettings> ViewFolders

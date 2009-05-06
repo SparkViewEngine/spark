@@ -92,7 +92,7 @@ namespace SparkLanguage
             var descriptor = new SparkViewDescriptor()
                 .AddTemplate(_path);
 
-            var entry = _engine.CreateEntry(_engine.CreateKey(descriptor), false);
+            var entry = _engine.CreateEntryInternal(descriptor, false);
 
 
             var mappings = entry.SourceMappings
