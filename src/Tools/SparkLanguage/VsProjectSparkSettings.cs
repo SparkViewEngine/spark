@@ -83,6 +83,11 @@ namespace SparkLanguage
             get { return GetSetting("pages/@automaticEncoding", ParserSettings.DefaultAutomaticEncoding); }
         }
 
+        public string StatementMarker
+        {
+            get { return GetSetting("pages/@statementMarker", "#"); }
+        }
+
         public bool Debug
         {
             get { return false; }

@@ -89,7 +89,12 @@ namespace Spark.Configuration
             get { return Pages.AutomaticEncoding; }
         }
 
-    	NullBehaviour ISparkSettings.NullBehaviour
+        string IParserSettings.StatementMarker
+        {
+            get { return Pages.StatementMarker; }
+        }
+
+        NullBehaviour ISparkSettings.NullBehaviour
     	{
 			get { return Compilation.NullBehaviour; }
     	}

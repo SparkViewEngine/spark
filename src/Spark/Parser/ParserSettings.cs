@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
+
 namespace Spark.Parser
 {
     public interface IParserSettings
     {
         bool AutomaticEncoding { get; }
+
+        string StatementMarker { get; }
     }
 
     public class ParserSettings : IParserSettings
@@ -38,5 +42,11 @@ namespace Spark.Parser
         {
             get { return new ParserSettings { AutomaticEncoding = DefaultAutomaticEncoding }; }
         }
+
+        /// <summary>
+        /// Optional character sequence that denotes a line of code when it's the first
+        /// non-whitespace text in a line. Default is "#"
+        /// </summary>
+        public string StatementMarker { get; set; }
     }
 }
