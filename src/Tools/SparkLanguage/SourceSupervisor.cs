@@ -14,8 +14,9 @@ namespace SparkLanguage
     public class SourceSupervisor : ISourceSupervisor
     {
         readonly SparkViewEngine _engine;
+        readonly MarkupGrammar _grammar;
         readonly ISparkSource _source;
-        private readonly string _path;
+        readonly string _path;
 
         uint _dwLastCookie;
         readonly IDictionary<uint, ISourceSupervisorEvents> _events = new Dictionary<uint, ISourceSupervisorEvents>();
@@ -46,6 +47,8 @@ namespace SparkLanguage
                           {
                               ViewFolder = viewFolder
                           };
+
+            _grammar = new MarkupGrammar(settings);
         }
 
         private static string GetDocumentPath(IVsHierarchy hierarchy, uint itemid)
@@ -81,7 +84,6 @@ namespace SparkLanguage
                 _events.Remove(dwCookie);
         }
 
-        static readonly MarkupGrammar _grammar = new MarkupGrammar();
 
         public void PrimaryTextChanged(int processImmediately)
         {
