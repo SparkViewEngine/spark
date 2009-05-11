@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using Spark.Compiler;
 using Spark.Parser.Markup;
 using SparkLanguage.VsAdapters;
 using SparkLanguagePackageLib;
@@ -20,6 +21,16 @@ namespace SparkLanguage
 
         uint _dwLastCookie;
         readonly IDictionary<uint, ISourceSupervisorEvents> _events = new Dictionary<uint, ISourceSupervisorEvents>();
+
+        static SourceSupervisor()
+        {
+            // To enable Visual Studio to correlate errors, the location of the 
+            // error must be allowed to come from the natural location 
+            // in the generated file. This setting is changed for the entire 
+            // AppDomain running inside the devenv process.
+
+            SourceBuilder.AdjustDebugSymbolsDefault = false;
+        }
 
         public SourceSupervisor(ISparkSource source)
         {
@@ -128,6 +139,7 @@ namespace SparkLanguage
             int cPaints = paints.Length;
             if (cPaints == 0)
                 paints = new _SOURCEPAINTING[1];
+
 
             foreach (var events in _events.Values)
             {

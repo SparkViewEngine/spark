@@ -22,13 +22,19 @@ namespace Spark.Compiler
 {
     public class SourceBuilder
     {
+        static SourceBuilder()
+        {
+            AdjustDebugSymbolsDefault = true;
+        }
+
         public SourceBuilder(StringBuilder source)
         {
             Source = source;
             Mappings = new List<SourceMapping>();
-            AdjustDebugSymbols = true;
+            AdjustDebugSymbols = AdjustDebugSymbolsDefault;
         }
 
+        public static bool AdjustDebugSymbolsDefault { get; set; }
         public bool AdjustDebugSymbols { get; set; }
         public StringBuilder Source { get; set; }
         public IList<SourceMapping> Mappings { get; set; }
