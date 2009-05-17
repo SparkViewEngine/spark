@@ -24,7 +24,7 @@ namespace Spark
         public abstract void RenderView(TextWriter writer);
         public abstract Guid GeneratedViewId { get; }
 
-        private readonly Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
+        protected Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
         protected IDictionary<string, string> _once = new Dictionary<string, string>();
 
         public virtual bool TryGetViewData(string name, out object value)

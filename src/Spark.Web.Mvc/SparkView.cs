@@ -114,30 +114,35 @@ namespace Spark.Web.Mvc
             Ajax = new AjaxHelper(wrappedViewContext, this);
 
             var outerView = ViewContext.View as SparkView;
-            if (outerView != null && !ReferenceEquals(this, outerView))
+            var isNestedView = outerView != null && ReferenceEquals(this, outerView) == false;
+
+            var priorContent = _content;
+            var priorOnce = _once;
+            TextWriter priorContentView = null;
+
+            if (isNestedView)
             {
                 // assume the values of the outer view collections
-                foreach (var kv in outerView.Content)
-                    Content.Add(kv.Key, kv.Value);
-                foreach (var kv in outerView._once)
-                    _once.Add(kv.Key, kv.Value);
+                _content = outerView._content;
+                _once = outerView._once;
+
+                // set aside the "view" content, to avoid modification
+                if (_content.TryGetValue("view", out priorContentView))
+                    _content.Remove("view");
             }
 
             RenderView(writer);
 
-            if (outerView != null && !ReferenceEquals(this, outerView))
+            if (isNestedView)
             {
-                // inject added values into outer view collections
-                foreach (var kv in Content)
-                {
-                    if (!outerView.Content.ContainsKey(kv.Key))
-                        outerView.Content.Add(kv.Key, kv.Value);
-                }
-                foreach (var kv in _once)
-                {
-                    if (!outerView._once.ContainsKey(kv.Key))
-                        outerView._once.Add(kv.Key, kv.Value);
-                }
+                _content = priorContent;
+                _once = priorOnce;
+
+                // restore previous state of "view" content
+                if (priorContentView != null)
+                    _content["view"] = priorContentView;
+                else if (_content.ContainsKey("view"))
+                    _content.Remove("view");
             }
             else
             {
@@ -145,6 +150,7 @@ namespace Spark.Web.Mvc
                 foreach (var content in Content.Values)
                     content.Close();
             }
+
             Content.Clear();
         }
 
