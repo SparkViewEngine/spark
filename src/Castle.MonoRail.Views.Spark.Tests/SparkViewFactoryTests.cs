@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
+using System.Globalization;
+using System.Threading;
+
 namespace Castle.MonoRail.Views.Spark.Tests
 {
     using System.IO;
@@ -184,10 +188,26 @@ namespace Castle.MonoRail.Views.Spark.Tests
             mocks.ReplayAll();
             propertyBag["hello"] = "world";
             propertyBag["foo"] = 1005.3;
-            manager.Process("Home\\LateBoundExpressionShouldCallEval", output, engineContext, controller, controllerContext);
-            Assert.That(output.ToString(), Text.Contains("<p>world 1,005.30</p>"));
+			using (new CurrentCultureScope(""))
+			{
+				manager.Process("Home\\LateBoundExpressionShouldCallEval", output, engineContext, controller, controllerContext);
+				Assert.That(output.ToString(), Text.Contains("<p>world 1,005.30</p>"));
+			}
         }
     }
 
+	public class CurrentCultureScope : IDisposable
+	{
+		private readonly CultureInfo _culture;
+		public CurrentCultureScope(string name)
+		{
+			_culture = Thread.CurrentThread.CurrentCulture;
+			Thread.CurrentThread.CurrentCulture = new CultureInfo(name);
+		}
+		public void Dispose()
+		{
+			Thread.CurrentThread.CurrentCulture = _culture;
+		}
+	}
 }
     
