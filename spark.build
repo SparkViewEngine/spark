@@ -152,11 +152,6 @@
           <exclude name="Integration" />
         </categories>
       </test>
-      <test assemblyname="${build.dir}/MvcContrib.SparkViewEngine.Tests.dll">
-        <categories>
-          <exclude name="Integration" />
-        </categories>
-      </test>
       <test assemblyname="${build.dir}/Castle.MonoRail.Views.Spark.Tests.dll">
         <categories>
           <exclude name="Integration" />
@@ -231,7 +226,6 @@
         <include name="ironpython/*.*" />
         <include name="ironruby/*.*" />
         <include name="itextsharp/*.*" />
-        <include name="mvccontrib/*.*" />
         <include name="castle/*.*" />
         <include name="nunit/nunit.framework.dll" />
       </fileset>
