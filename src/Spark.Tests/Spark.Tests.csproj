@@ -261,6 +261,21 @@
     <None Include="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\_NestedPartialsInner.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\NestedPartialsCanBackRenderUpAndReRenderDown.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\_NestedPartialsOuter.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\_UsedByRecursivePartialsThrowCompilerException.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\RecursivePartialsThrowCompilerException.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\_PartialInMacro.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

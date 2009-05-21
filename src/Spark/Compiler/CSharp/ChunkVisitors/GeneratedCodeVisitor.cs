@@ -14,6 +14,7 @@
 // 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Spark.Compiler.ChunkVisitors;
 using Spark.Parser.Code;
 
@@ -412,30 +413,29 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             CodeDefault();
         }
 
-        public RenderPartialChunk OuterPartial { get; set; }
         protected override void Visit(RenderPartialChunk chunk)
         {
-            var priorOuterPartial = OuterPartial;
-            OuterPartial = chunk;
+            EnterRenderPartial(chunk);
             Accept(chunk.FileContext.Contents);
-            OuterPartial = priorOuterPartial;
+            ExitRenderPartial(chunk);
         }
-
 
         protected override void Visit(RenderSectionChunk chunk)
         {
+            var outer = ExitRenderPartial();
             if (string.IsNullOrEmpty(chunk.Name))
             {
-                Accept(OuterPartial.Body);
+                Accept(outer.Body);
             }
-            else if (OuterPartial.Sections.ContainsKey(chunk.Name))
+            else if (outer.Sections.ContainsKey(chunk.Name))
             {
-                Accept(OuterPartial.Sections[chunk.Name]);
+                Accept(outer.Sections[chunk.Name]);
             }
             else
             {
                 Accept(chunk.Default);
             }
+            EnterRenderPartial(outer);
         }
 
         protected override void Visit(ViewDataChunk chunk)

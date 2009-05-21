@@ -14,11 +14,20 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Spark.Compiler.ChunkVisitors
 {
     public abstract class AbstractChunkVisitor : IChunkVisitor
     {
+        private readonly Stack<RenderPartialChunk> _renderPartialStack = new Stack<RenderPartialChunk>();
+
+        public RenderPartialChunk OuterPartial
+        {
+            get { return _renderPartialStack.Any() ? _renderPartialStack.Peek() : null; }
+        }
+
         public void Accept(IList<Chunk> chunks)
         {
             if (chunks == null) throw new ArgumentNullException("chunks");
@@ -157,5 +166,49 @@ namespace Spark.Compiler.ChunkVisitors
         protected abstract void Visit(ContentChunk chunk);
         protected abstract void Visit(UseNamespaceChunk chunk);
         protected abstract void Visit(PageBaseTypeChunk chunk);
+
+        protected void EnterRenderPartial(RenderPartialChunk chunk)
+        {
+            // throw an exception if a partial is entered recursively
+            if (_renderPartialStack.Any(recursed => recursed.FileContext == chunk.FileContext))
+            {
+                var sb = new StringBuilder();
+                foreach (var recursed in _renderPartialStack.Concat(new[] { chunk }))
+                {
+                    sb
+                        .Append(recursed.Position.SourceContext.FileName)
+                        .Append("(")
+                        .Append(recursed.Position.Line)
+                        .Append(",")
+                        .Append(recursed.Position.Line)
+                        .Append("): rendering partial '")
+                        .Append(recursed.Name)
+                        .AppendLine("'");
+                }
+                throw new CompilerException(string.Format("Recursive rendering of partial files not possible.\r\n{0}", sb));
+            }
+            _renderPartialStack.Push(chunk);
+        }
+
+        protected RenderPartialChunk ExitRenderPartial()
+        {
+            if (_renderPartialStack.Any() == false)
+            {
+                throw new CompilerException("Internal compiler error. Partial stack unexpectedly empty.");
+            }
+            return _renderPartialStack.Pop();
+        }
+
+        protected void ExitRenderPartial(RenderPartialChunk expectedTopChunk)
+        {
+            var topChunk = ExitRenderPartial();
+            if (expectedTopChunk != topChunk)
+            {
+                throw new CompilerException(string.Format(
+                                                "Internal compiler error. Expected to be leaving partial {0} but was {1}",
+                                                expectedTopChunk.FileContext.ViewSourcePath,
+                                                topChunk.FileContext.ViewSourcePath));
+            }
+        }
     }
 }

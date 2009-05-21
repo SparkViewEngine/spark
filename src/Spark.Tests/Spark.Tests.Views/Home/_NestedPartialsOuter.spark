@@ -1,0 +1,25 @@
+[101]
+<NestedPartialsInner>
+	<section name="alpha">
+		[102]
+		<NestedPartialsInner>
+			[103]
+			<section name="alpha">
+				[104]
+			</section>
+			[105]
+		</NestedPartialsInner>
+		[106]
+		<render section="beta"/>
+		[107]
+		<NestedPartialsInner>
+			[108]
+			<section name="alpha">
+				[109]
+			</section>
+			[110]
+		</NestedPartialsInner>
+		[111]
+	</section>
+</NestedPartialsInner>
+[112]
