@@ -39,7 +39,6 @@ namespace Spark.Parser.Syntax
         {
             context.SyntaxProvider = this;
             context.ViewPath = path;
-            context.PartialFileNames = FindPartialFiles(path, context.ViewFolder);
 
             var sourceContext = CreateSourceContext(context.ViewPath, context.ViewFolder);
             var position = new Position(sourceContext);

@@ -139,7 +139,8 @@ namespace Spark.Parser
                                          {
                                              ViewFolder = ViewFolder,
                                              Prefix = Prefix,
-                                             ExtensionFactory = ExtensionFactory
+                                             ExtensionFactory = ExtensionFactory,
+                                             PartialFileNames = FindPartialFiles(viewPath)
                                          };
             newEntry.Chunks = SyntaxProvider.GetChunks(context, viewPath);
 

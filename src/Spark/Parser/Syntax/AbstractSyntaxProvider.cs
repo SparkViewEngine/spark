@@ -49,26 +49,6 @@ namespace Spark.Parser.Syntax
             }
         }
 
-        public IList<string> FindPartialFiles(string viewPath, IViewFolder viewFolder)
-        {
-            var results = new List<string>();
-
-            string controllerPath = Path.GetDirectoryName(viewPath);
-            foreach (var view in viewFolder.ListViews(controllerPath))
-            {
-                string baseName = Path.GetFileNameWithoutExtension(view);
-                if (baseName.StartsWith("_"))
-                    results.Add(baseName.Substring(1));
-            }
-            foreach (var view in viewFolder.ListViews("Shared"))
-            {
-                string baseName = Path.GetFileNameWithoutExtension(view);
-                if (baseName.StartsWith("_"))
-                    results.Add(baseName.Substring(1));
-            }
-            return results;
-        }
-
         protected void ThrowParseException(string viewPath, Position position, Position rest)
         {
             string message = string.Format("Unable to parse view {0} around line {1} column {2}", viewPath,
