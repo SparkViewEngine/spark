@@ -191,7 +191,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 			using (new CurrentCultureScope(""))
 			{
 				manager.Process("Home\\LateBoundExpressionShouldCallEval", output, engineContext, controller, controllerContext);
-				Assert.That(output.ToString(), Text.Contains("<p>world 1,005.30</p>"));
+				Assert.That(output.ToString(), Text.Contains(string.Format("<p>world {0:#,##0.00}</p>", 1005.3)));
 			}
         }
     }
