@@ -23,8 +23,6 @@ namespace Spark.Compiler.ChunkVisitors
 {
     public class DetectCodeExpressionVisitor : AbstractChunkVisitor
     {
-        private RenderPartialChunk _currentPartial;
-
         public class Entry
         {
             public string Expression { get; set; }
