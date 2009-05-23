@@ -34,19 +34,26 @@ namespace Castle.MonoRail.Views.Spark
         public Type Type { get; set; }
         public ViewComponentDetailsAttribute Details { get; set; }
         public ViewComponent Instance { get; set; }
-
+        
         public bool SupportsSection(string sectionName)
         {
-            if (Details != null)
-                return Details.SupportsSection(sectionName);
-            
+            // only return if supporting in the attribute
+            if (Details != null && Details.SupportsSection(sectionName) == true)
+                return true;
+
+            // research ahead for answer in the instance if available
             if (Instance != null)
             {
                 // if a component doesn't provide an implementation the default may throw an exception
-                try { return Instance.SupportsSection(sectionName); }
-                catch (NullReferenceException) { }
+                try
+                {
+                    if (Instance.SupportsSection(sectionName))
+                        return true;
+                }
+                catch (NullReferenceException)
+                {
+                }
             }
-
             return false;
         }
     }
