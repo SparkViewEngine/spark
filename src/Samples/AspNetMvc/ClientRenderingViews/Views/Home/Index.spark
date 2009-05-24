@@ -11,7 +11,7 @@
 </p>
 
 <viewdata
-  products="IList[[Models.Product]]"
+  products="IList[[ClientRenderingViews.Models.Product]]"
   ajaxEnabled="bool"/>
 
 <content:head if="ajaxEnabled">
