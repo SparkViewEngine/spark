@@ -123,7 +123,7 @@ namespace Castle.MonoRail.Views.Spark
 
             descriptor.Templates.Add(Path.ChangeExtension(templateName, ViewFileExtension));
 
-            foreach (var layoutName in controllerContext.LayoutNames ?? new string[0])
+            foreach (var layoutName in (controllerContext.LayoutNames ?? new string[0]).Reverse())
             {
                 descriptor.Templates.Add(Path.ChangeExtension(LayoutPath(layoutName), ViewFileExtension));
             }
@@ -385,7 +385,7 @@ namespace Castle.MonoRail.Views.Spark
                 throw new CompilerException(string.Format("Unable to find templates {0}\\{1}.spark", controllerPath, viewName));
             }
 
-            foreach (var layoutName in layouts ?? new string[0])
+            foreach (var layoutName in (layouts ?? new string[0]).Reverse())
             {
                 if (HasTemplate("Layouts\\" + layoutName))
                 {
