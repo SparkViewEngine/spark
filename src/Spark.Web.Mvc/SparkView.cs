@@ -122,13 +122,13 @@ namespace Spark.Web.Mvc
 
             if (isNestedView)
             {
+                // set aside the "view" content, to avoid modification
+                if (outerView._content.TryGetValue("view", out priorContentView))
+                    outerView._content.Remove("view");
+
                 // assume the values of the outer view collections
                 _content = outerView._content;
                 _once = outerView._once;
-
-                // set aside the "view" content, to avoid modification
-                if (_content.TryGetValue("view", out priorContentView))
-                    _content.Remove("view");
             }
 
             RenderView(writer);
@@ -140,9 +140,9 @@ namespace Spark.Web.Mvc
 
                 // restore previous state of "view" content
                 if (priorContentView != null)
-                    _content["view"] = priorContentView;
-                else if (_content.ContainsKey("view"))
-                    _content.Remove("view");
+                    outerView._content["view"] = priorContentView;
+                else if (outerView._content.ContainsKey("view"))
+                    outerView._content.Remove("view");
             }
             else
             {
