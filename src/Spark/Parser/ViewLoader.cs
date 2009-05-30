@@ -27,7 +27,7 @@ namespace Spark.Parser
 {
     public class ViewLoader
     {
-        private const string templateFileExtension = "spark";
+        private const string templateFileExtension = ".spark";
 
         private IViewFolder _viewFolder;
 
@@ -195,7 +195,7 @@ namespace Spark.Parser
 
         string ResolveReference(string existingViewPath, string viewName)
         {
-            var viewNameWithExtension = Path.ChangeExtension(viewName, templateFileExtension);
+            var viewNameWithExtension = EnsureSparkExtension(viewName);
             var folderPaths = PartialViewFolderPaths(existingViewPath);
             
             var partialPaths = folderPaths.Select(x => Path.Combine(x, viewNameWithExtension));
@@ -210,5 +210,16 @@ namespace Spark.Parser
             return partialViewLocation;
         }
 
+        static string EnsureSparkExtension(string viewName)
+        {
+            var needsSparkExtension = string.Equals(
+                Path.GetExtension(viewName),
+                templateFileExtension,
+                StringComparison.OrdinalIgnoreCase) == false;
+
+            return needsSparkExtension
+                ? viewName + templateFileExtension
+                : viewName;
+        }
     }
 }

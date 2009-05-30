@@ -590,6 +590,25 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void RenderlPartialWithDotInName()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("render-dotted-partial", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                    "<p>",
+                    "this.is.some.text:",
+                    "test456",
+                    "</p>"
+                    );
+
+            Assert.IsFalse(content.Contains("<PartialWith.Dot"));
+        }
+
+        [Test]
         public void CaptureContentAsVariable()
         {
             mocks.ReplayAll();
