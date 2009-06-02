@@ -8,8 +8,9 @@
   
   <?define VisualStudioRegistryRoot = "Software\Microsoft\VisualStudio\9.0" ?>
 
+
   <Product Id="*"
-           Name="Spark View Engine"
+           Name="Spark Visual Studio 2008 Integration (Preview)"
            Language="1033"
            Version="$(var.ProductVersion)"
            Manufacturer="Spark View Engine"
@@ -31,6 +32,11 @@
     <Property Id="DEVENV_EXE_PATH">
       <RegistrySearch Id="RegSearch_DevenvExe_Path" Root="HKLM" Key="$(var.VisualStudioRegistryRoot)\Setup\VS" Name="EnvironmentPath" Type="raw" />
     </Property>
+
+    <!-- User interface -->
+    <UIRef Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION"/>
+    <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
 
     <!-- Launch conditions -->
     <Condition Message="An administrator must approve or install [ProductName]."> Privileged </Condition>
