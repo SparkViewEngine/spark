@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Markup;
@@ -144,5 +145,44 @@ namespace Spark.Tests.Parser
             var content = RenderView(new SparkViewDescriptor().AddTemplate("home\\index.spark"));
             Assert.AreEqual("&lt;span&gt;hello&lt;/span&gt; &lt;span&gt;world&lt;/span&gt;", content);
         }
+
+
+        [Test]
+        public void HashSyntaxForStatementsByDefault()
+        {
+            var settings = new ParserSettings { AutomaticEncoding = true };
+            var grammar = new MarkupGrammar(settings);
+            var result = grammar.Nodes(Source("  #foo  \r\n"));
+
+            Assert.AreEqual(2, result.Value.Count);
+            var statement = result.Value.OfType<StatementNode>().Single();
+            Assert.That(statement.Code.ToString(), Is.EqualTo("foo  "));
+        }
+
+        [Test]
+        public void CustomMarkerForStatements()
+        {
+            var settings = new ParserSettings { AutomaticEncoding = true, StatementMarker="hi" };
+            var grammar = new MarkupGrammar(settings);
+            var result = grammar.Nodes(Source("  hibernate  \r\n"));
+
+            Assert.AreEqual(2, result.Value.Count);
+            var statement = result.Value.OfType<StatementNode>().Single();
+            Assert.That(statement.Code.ToString(), Is.EqualTo("bernate  "));
+        }
+
+
+        [Test]
+        public void HashSyntaxIgnoredWhenCustomMarkerProvided()
+        {
+            var settings = new ParserSettings { AutomaticEncoding = true, StatementMarker = "hi" };
+            var grammar = new MarkupGrammar(settings);
+            var result = grammar.Nodes(Source("  #foo  \r\n"));
+
+            Assert.AreEqual(1, result.Value.Count);
+            var statement = result.Value.OfType<StatementNode>().Any();
+            Assert.That(statement, Is.False);
+        }
+
     }
 }

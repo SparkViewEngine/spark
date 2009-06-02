@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
+using System.Globalization;
+using System.Threading;
+
 namespace Castle.MonoRail.Views.Spark.Tests
 {
     using System.IO;
@@ -22,6 +26,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
     using Castle.MonoRail.Framework.Services;
     using NUnit.Framework;
     using global::Spark;
+    using NUnit.Framework.SyntaxHelpers;
 
 
     [TestFixture]
@@ -155,7 +160,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.AreEqual("<p>404 message rendered</p>\r\n", output.ToString());
         }
 
-        [Test]
+        [Test, Ignore("Controller Type effects are no longer supported in 1.1")]
         public void ControllerHelperAttributeCanBeUsed()
         {
             controller = new Helpers.HomeController();
@@ -177,7 +182,32 @@ namespace Castle.MonoRail.Views.Spark.Tests
 			Assert.That(output.ToString().Contains("<p>Hello</p>"));
 		}
 
+        [Test]
+        public void LateBoundExpressionShouldCallEval()
+        {
+            mocks.ReplayAll();
+            propertyBag["hello"] = "world";
+            propertyBag["foo"] = 1005.3;
+			using (new CurrentCultureScope(""))
+			{
+				manager.Process("Home\\LateBoundExpressionShouldCallEval", output, engineContext, controller, controllerContext);
+				Assert.That(output.ToString(), Text.Contains(string.Format("<p>world {0:#,##0.00}</p>", 1005.3)));
+			}
+        }
     }
 
+	public class CurrentCultureScope : IDisposable
+	{
+		private readonly CultureInfo _culture;
+		public CurrentCultureScope(string name)
+		{
+			_culture = Thread.CurrentThread.CurrentCulture;
+			Thread.CurrentThread.CurrentCulture = new CultureInfo(name);
+		}
+		public void Dispose()
+		{
+			Thread.CurrentThread.CurrentCulture = _culture;
+		}
+	}
 }
     

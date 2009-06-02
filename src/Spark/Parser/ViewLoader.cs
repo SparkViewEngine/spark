@@ -27,17 +27,17 @@ namespace Spark.Parser
 {
     public class ViewLoader
     {
-        private const string templateFileExtension = "spark";
+        private const string templateFileExtension = ".spark";
 
-        private IViewFolder viewFolder;
+        private IViewFolder _viewFolder;
 
         readonly Dictionary<string, Entry> _entries = new Dictionary<string, Entry>();
         readonly List<string> _pending = new List<string>();
 
         public IViewFolder ViewFolder
         {
-            get { return viewFolder; }
-            set { viewFolder = value; }
+            get { return _viewFolder; }
+            set { _viewFolder = value; }
         }
 
         public ParseAction<IList<Node>> Parser { get; set; }
@@ -60,6 +60,8 @@ namespace Spark.Parser
 
             public long LastModified { get; set; }
 
+            public IViewFile ViewFile { get; set; }
+
             public IList<Chunk> Chunks
             {
                 get { return FileContext.Contents; }
@@ -77,9 +79,9 @@ namespace Spark.Parser
             if (_entries.ContainsKey(referencePath))
                 return _entries[referencePath];
 
-            var viewSource = viewFolder.GetViewSource(referencePath);
+            var viewSource = _viewFolder.GetViewSource(referencePath);
 
-            var newEntry = new Entry { ViewPath = referencePath, LastModified = viewSource.LastModified };
+            var newEntry = new Entry { ViewPath = referencePath, ViewFile = viewSource, LastModified = viewSource.LastModified };
             _entries.Add(referencePath, newEntry);
             _pending.Add(referencePath);
             return newEntry;
@@ -87,20 +89,10 @@ namespace Spark.Parser
 
         public virtual bool IsCurrent()
         {
-            foreach (var entry in _entries.Values)
-            {
-                var viewSource = viewFolder.GetViewSource(entry.ViewPath);
-                if (viewSource.LastModified != entry.LastModified)
-                    return false;
-            }
-            return true;
+            // The view is current if all entries' last modified value is the
+            // same as when it was created. 
+            return _entries.All(entry => entry.Value.ViewFile.LastModified == entry.Value.LastModified);
         }
-
-
-        //public IList<Chunk> Load(string controllerName, string viewName)
-        //{
-        //    return Load(ResolveView(controllerName, viewName));
-        //}
 
         public IList<Chunk> Load(string viewPath)
         {
@@ -147,7 +139,8 @@ namespace Spark.Parser
                                          {
                                              ViewFolder = ViewFolder,
                                              Prefix = Prefix,
-                                             ExtensionFactory = ExtensionFactory
+                                             ExtensionFactory = ExtensionFactory,
+                                             PartialFileNames = FindPartialFiles(viewPath)
                                          };
             newEntry.Chunks = SyntaxProvider.GetChunks(context, viewPath);
 
@@ -165,50 +158,68 @@ namespace Spark.Parser
             }
         }
 
+        private static IEnumerable<string> PartialViewFolderPaths(string viewPath)
+        {
+            var folderPath = Path.GetDirectoryName(viewPath);
+            for(;;)
+            {
+                yield return folderPath;
+                yield return Path.Combine(folderPath, "Shared");
+
+                if (string.IsNullOrEmpty(folderPath))
+                    yield break;
+
+                folderPath = Path.GetDirectoryName(folderPath);
+            }
+        }
+
+        private IEnumerable<string> FindAllPartialFiles(IEnumerable<string> folderPaths)
+        {
+            foreach(var folderPath in folderPaths.Distinct())
+            {
+                foreach(var view in ViewFolder.ListViews(folderPath))
+                {
+                    var baseName = Path.GetFileNameWithoutExtension(view);
+                    if (baseName.StartsWith("_"))
+                        yield return baseName.Substring(1);
+                }
+            }
+        }
 
         public IList<string> FindPartialFiles(string viewPath)
         {
-            var results = new List<string>();
-
-            string controllerPath = Path.GetDirectoryName(viewPath);
-            foreach (var view in ViewFolder.ListViews(controllerPath))
-            {
-                string baseName = Path.GetFileNameWithoutExtension(view);
-                if (baseName.StartsWith("_"))
-                    results.Add(baseName.Substring(1));
-            }
-            foreach (var view in ViewFolder.ListViews("Shared"))
-            {
-                string baseName = Path.GetFileNameWithoutExtension(view);
-                if (baseName.StartsWith("_"))
-                    results.Add(baseName.Substring(1));
-            }
-            return results;
+            var folderPaths = PartialViewFolderPaths(viewPath);
+            var partialNames = FindAllPartialFiles(folderPaths);
+            return partialNames.Distinct().ToArray();
         }
 
         string ResolveReference(string existingViewPath, string viewName)
         {
-            string controllerPath = Path.GetDirectoryName(existingViewPath);
+            var viewNameWithExtension = EnsureSparkExtension(viewName);
+            var folderPaths = PartialViewFolderPaths(existingViewPath);
+            
+            var partialPaths = folderPaths.Select(x => Path.Combine(x, viewNameWithExtension));
+            var partialViewLocation = partialPaths.FirstOrDefault(x => ViewFolder.HasView(x));
 
-            return ResolveView(controllerPath, viewName);
+            if (partialViewLocation == null)
+            {
+                var message = string.Format("Unable to locate {0} in {1}", viewName, string.Join(", ", partialPaths.ToArray()));
+                throw new FileNotFoundException(message, viewName);
+            }
+
+            return partialViewLocation;
         }
 
-        string ResolveView(string controllerName, string viewName)
+        static string EnsureSparkExtension(string viewName)
         {
-            if (string.IsNullOrEmpty(viewName))
-                return null;
+            var needsSparkExtension = string.Equals(
+                Path.GetExtension(viewName),
+                templateFileExtension,
+                StringComparison.OrdinalIgnoreCase) == false;
 
-            string attempt1 = Path.Combine(controllerName, Path.ChangeExtension(viewName, templateFileExtension));
-            if (ViewFolder.HasView(attempt1))
-                return attempt1;
-
-            string attempt2 = Path.Combine("Shared", Path.ChangeExtension(viewName, templateFileExtension));
-            if (ViewFolder.HasView(attempt2))
-                return attempt2;
-
-            throw new FileNotFoundException(
-                string.Format("Unable to find {0} or {1}", attempt1, attempt2),
-                attempt1);
+            return needsSparkExtension
+                ? viewName + templateFileExtension
+                : viewName;
         }
     }
 }

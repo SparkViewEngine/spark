@@ -1,7 +1,0 @@
-
-
-function killer()
-{
-  var x = $'$';('foo');
-}
-

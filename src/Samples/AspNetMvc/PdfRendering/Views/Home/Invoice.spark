@@ -1,0 +1,53 @@
+﻿
+<use master="itext"/>
+
+<viewdata model="Invoice"/>
+
+<image url="${Context.Server.MapPath('~/Content/images/logo.png')}"/>
+
+<paragraph style="font-family:Helvetica;font-size:18;font-style:italic;">
+	<var scale="0"/>
+	<for each="var letter in 'Welcome to the Machine'" scale="256 * letterIndex / letterCount"><chunk red="${scale / 2}" green="${255 - scale}" blue="${scale}">${letter}</chunk></for>
+</paragraph>
+
+<paragraph><chunk style="font-weight:bold;">Invoice #:</chunk> <chunk>${Model.InvoiceNumber}</chunk></paragraph>
+<paragraph><chunk style="font-weight:bold;">Purchace Order:</chunk> <chunk>${Model.PurchaseOrder}</chunk></paragraph>
+
+<table width="100%" widths="1;1"><row>
+<cell><Address caption="'Ship to'" account="Model.ShipTo"/></cell>
+<cell><Address caption="'Bill to'" account="Model.BillTo"/></cell>
+</row></table>
+
+<table width="100%" widths="3;8;2;4;4">
+<row>
+	<cell>Part#</cell>
+	<cell>Description</cell>
+	<cell horizontalalign="right">Qty</cell>
+	<cell horizontalalign="right">Price</cell>
+	<cell horizontalalign="right">Total</cell>
+</row>
+<row each="var line in Model.Items">
+	<cell><chunk style="font-size:8;">${line.Product.PartNumber}</chunk></cell>
+	<cell>${line.Product.Name}</cell>
+	<cell horizontalalign="right">${line.Quantity}</cell>
+	<cell horizontalalign="right">${line.Product.Price.ToString("c")}</cell>
+	<cell horizontalalign="right">${line.TotalPrice().ToString("c")}</cell>
+</row>
+<row>
+	<cell/>
+	<cell colspan="3">Total</cell>
+	<cell horizontalalign="right">${Model.TotalPrice().ToString("c")}</cell>
+</row>
+</table>
+
+<paragraph leading="48.0" font="unknown" align="Default"  red="255" green="0" blue="0">
+	Hello World! Yay!
+	<Chunk>${DateTime.Now}</Chunk>  
+</paragraph>
+
+
+<list listsymbol="#" symbolindent="15">
+	<listitem each="var n in new[] { 10, 20, 30, 40, 50, 60, 70, 80, 90 }" red="${100 - n}" green="${n * 2}" blue="${255 - n}">
+		${n}
+	</listitem>
+</list>

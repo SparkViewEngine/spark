@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using Spark.Compiler;
 using Spark.Parser.Markup;
 using SparkLanguage.VsAdapters;
 using SparkLanguagePackageLib;
@@ -14,11 +15,22 @@ namespace SparkLanguage
     public class SourceSupervisor : ISourceSupervisor
     {
         readonly SparkViewEngine _engine;
+        readonly MarkupGrammar _grammar;
         readonly ISparkSource _source;
-        private readonly string _path;
+        readonly string _path;
 
         uint _dwLastCookie;
         readonly IDictionary<uint, ISourceSupervisorEvents> _events = new Dictionary<uint, ISourceSupervisorEvents>();
+
+        static SourceSupervisor()
+        {
+            // To enable Visual Studio to correlate errors, the location of the 
+            // error must be allowed to come from the natural location 
+            // in the generated file. This setting is changed for the entire 
+            // AppDomain running inside the devenv process.
+
+            SourceBuilder.AdjustDebugSymbolsDefault = false;
+        }
 
         public SourceSupervisor(ISparkSource source)
         {
@@ -46,6 +58,8 @@ namespace SparkLanguage
                           {
                               ViewFolder = viewFolder
                           };
+
+            _grammar = new MarkupGrammar(settings);
         }
 
         private static string GetDocumentPath(IVsHierarchy hierarchy, uint itemid)
@@ -81,62 +95,108 @@ namespace SparkLanguage
                 _events.Remove(dwCookie);
         }
 
-        static readonly MarkupGrammar _grammar = new MarkupGrammar();
+        class PaintInfo
+        {
+            public int Count { get; set; }
+            public _SOURCEPAINTING[] Paint { get; set; }
+            public Exception ParseError { get; set; }
+        }
+
+        class MappingInfo
+        {
+            public string GeneratedCode { get; set; }
+            public int Count { get; set; }
+            public _SOURCEMAPPING[] Mapping { get; set; }
+            public Exception GenerationError { get; set; }
+        }
 
         public void PrimaryTextChanged(int processImmediately)
         {
             var primaryText = _source.GetPrimaryText();
-            var sourceContext = new SourceContext(primaryText, 0, _path);
-            var result = _grammar.Nodes(new Position(sourceContext));
 
-            var descriptor = new SparkViewDescriptor()
-                .AddTemplate(_path);
+            var paintInfo = GetPaintInfo(primaryText);
 
-            var entry = _engine.CreateEntry(_engine.CreateKey(descriptor), false);
+            var mappingInfo = GetMappingInfo();
 
-
-            var mappings = entry.SourceMappings
-                .Where(m => string.Equals(m.Source.Begin.SourceContext.FileName, _path,
-                                          StringComparison.InvariantCultureIgnoreCase))
-                .Select(m => new _SOURCEMAPPING
-                                 {
-                                     start1 = m.Source.Begin.Offset,
-                                     end1 = m.Source.End.Offset,
-                                     start2 = m.OutputBegin,
-                                     end2 = m.OutputEnd
-                                 })
-                .ToArray();
-
-            var paints = result.Rest.GetPaint()
-                .OfType<Paint<SparkTokenType>>()
-                .Where(p => string.Equals(p.Begin.SourceContext.FileName, _path,
-                                          StringComparison.InvariantCultureIgnoreCase))
-                .Select(p => new _SOURCEPAINTING
-                                 {
-                                     start = p.Begin.Offset,
-                                     end = p.End.Offset,
-                                     color = (int)p.Value
-                                 })
-                .ToArray();
-
-            int cMappings = mappings.Length;
-            if (cMappings == 0)
-                mappings = new _SOURCEMAPPING[1];
-
-            int cPaints = paints.Length;
-            if (cPaints == 0)
-                paints = new _SOURCEPAINTING[1];
 
             foreach (var events in _events.Values)
             {
                 events.OnGenerated(
                     primaryText,
-                    entry.SourceCode,
-                    cMappings,
-                    ref mappings[0],
-                    cPaints,
-                    ref paints[0]);
+                    mappingInfo.GeneratedCode,
+                    mappingInfo.Count,
+                    ref mappingInfo.Mapping[0],
+                    paintInfo.Count,
+                    ref paintInfo.Paint[0]);
             }
+        }
+
+        private PaintInfo GetPaintInfo(string primaryText)
+        {
+            var paintInfo = new PaintInfo();
+            try
+            {
+                var sourceContext = new SourceContext(primaryText, 0, _path);
+                var result = _grammar.Nodes(new Position(sourceContext));
+
+                paintInfo.Paint = result.Rest.GetPaint()
+                    .OfType<Paint<SparkTokenType>>()
+                    .Where(p => string.Equals(p.Begin.SourceContext.FileName, _path,
+                                              StringComparison.InvariantCultureIgnoreCase))
+                    .Select(p => new _SOURCEPAINTING
+                                     {
+                                         start = p.Begin.Offset,
+                                         end = p.End.Offset,
+                                         color = (int)p.Value
+                                     })
+                    .ToArray();
+
+                paintInfo.Count = paintInfo.Paint.Length;
+            }
+            catch (Exception ex)
+            {
+                paintInfo.ParseError = ex;
+            }
+
+            if (paintInfo.Count == 0)
+                paintInfo.Paint = new _SOURCEPAINTING[1];
+            return paintInfo;
+        }
+
+        private MappingInfo GetMappingInfo()
+        {
+            var mappingInfo = new MappingInfo();
+            try
+            {
+                var descriptor = new SparkViewDescriptor()
+                    .AddTemplate(_path);
+
+                var entry = _engine.CreateEntryInternal(descriptor, false);
+
+                mappingInfo.GeneratedCode = entry.SourceCode;
+
+                mappingInfo.Mapping = entry.SourceMappings
+                    .Where(m => string.Equals(m.Source.Begin.SourceContext.FileName, _path,
+                                              StringComparison.InvariantCultureIgnoreCase))
+                    .Select(m => new _SOURCEMAPPING
+                    {
+                        start1 = m.Source.Begin.Offset,
+                        end1 = m.Source.End.Offset,
+                        start2 = m.OutputBegin,
+                        end2 = m.OutputEnd
+                    })
+                    .ToArray();
+
+                mappingInfo.Count = mappingInfo.Mapping.Length;
+            }
+            catch (Exception ex)
+            {
+                mappingInfo.GenerationError = ex;
+            }
+
+            if (mappingInfo.Count == 0)
+                mappingInfo.Mapping = new _SOURCEMAPPING[1];
+            return mappingInfo;
         }
 
         public void OnTypeChar(IVsTextView pView, string ch)

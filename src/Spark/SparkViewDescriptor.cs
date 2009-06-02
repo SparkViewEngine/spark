@@ -71,7 +71,6 @@ namespace Spark
             return this;
         }
 
-
         public override int GetHashCode()
         {
             var hashCode = 0;
@@ -88,19 +87,17 @@ namespace Spark
 
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType())
+            var that = obj as SparkViewDescriptor;
+
+            if (that == null || GetType() != that.GetType())
                 return false;
 
-            var that = (SparkViewDescriptor)obj;
-            
-            if (!string.Equals(TargetNamespace, that.TargetNamespace))
+            if (!string.Equals(TargetNamespace ?? "", that.TargetNamespace ?? "") ||
+                Language != that.Language ||
+                Templates.Count != that.Templates.Count)
+            {
                 return false;
-
-            if (Language != that.Language)
-                return false;
-
-            if (Templates.Count != that.Templates.Count)
-                return false;
+            }
 
             for (var index = 0; index != Templates.Count; ++index)
             {
@@ -109,7 +106,6 @@ namespace Spark
                     return false;
                 }
             }
-
             return true;
         }
     }

@@ -1,0 +1,14 @@
+﻿
+<img src="http://farm3.static.flickr.com/2272/1756264889_f3f7d2db06.jpg?v=0" width="26" height="16" style="float:left; margin:6px;"/>
+
+<!-- as an example, the invariant file is included -->
+<use file="Index.spark"/>
+
+<!-- and an addendum is added when the language is fr-* 
+     although you could just as easily provide a completely customized view
+     for any given language or language-region code -->
+
+<h3>Addendum</h3>
+<p><a href="http://fr.wikipedia.org/wiki/Internationalisation_de_logiciel">Internationalisation de logiciel</a></p>
+<p>L'internationalisation d'un logiciel consiste à le préparer à la régionalisation ((en) localization), c'est-à-dire à l'adaptation à des langues et des cultures différentes. Contrairement à la régionalisation, qui nécessite surtout des compétences en langues, l'internationalisation est un travail essentiellement technique, mené par des programmeurs.</p>
+<p>On abrège souvent internationalisation en i18n car, en anglais, il y a dix-huit lettres dans le mot, entre le i et le n. De même pour localization avec l10n.</p>

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
 using Spark.Compiler.ChunkVisitors;
 using Spark.Parser.Code;
 
@@ -19,18 +20,25 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 {
     public class BaseClassVisitor : ChunkVisitor
     {
-        public string BaseClass { get; set; }
+        public Snippets BaseClass { get; set; }
         public Snippets TModel { get; set; }
+
+        bool _encounteredBaseClass;
+        bool _encounteredTModel;
 
         public Snippets BaseClassTypeName
         {
             get
             {
+                var baseClass = BaseClass;
+                if (Snippets.IsNullOrEmpty(baseClass))
+                    baseClass = "Spark.SparkViewBase";
+
                 if (Snippets.IsNullOrEmpty(TModel))
-                    return BaseClass ?? "Spark.SparkViewBase";
+                    return baseClass;
 
                 var s = new Snippets();
-                s.Add(new Snippet { Value = BaseClass ?? "Spark.SparkViewBase" });
+                s.AddRange(baseClass);
                 s.Add(new Snippet { Value = "<" });
                 s.AddRange(TModel);
                 s.Add(new Snippet { Value = ">" });
@@ -40,12 +48,24 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(ViewDataModelChunk chunk)
         {
-            if (!Snippets.IsNullOrEmpty(TModel) && TModel != chunk.TModel)
+            if (_encounteredTModel && !string.Equals(TModel, chunk.TModel, StringComparison.Ordinal))
             {
                 throw new CompilerException(string.Format("Only one viewdata model can be declared. {0} != {1}", TModel,
                                                           chunk.TModel));
             }
             TModel = chunk.TModel;
+            _encounteredTModel = true;
+        }
+
+        protected override void Visit(PageBaseTypeChunk chunk)
+        {
+            if (_encounteredBaseClass && !string.Equals(BaseClass, chunk.BaseClass, StringComparison.Ordinal))
+            {
+                throw new CompilerException(string.Format("Only one pageBaseType can be declared. {0} != {1}", BaseClass,
+                                                          chunk.BaseClass));
+            }
+            BaseClass = chunk.BaseClass;
+            _encounteredBaseClass = true;
         }
     }
 }

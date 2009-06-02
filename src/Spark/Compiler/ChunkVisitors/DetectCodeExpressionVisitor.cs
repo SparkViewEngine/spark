@@ -23,8 +23,6 @@ namespace Spark.Compiler.ChunkVisitors
 {
     public class DetectCodeExpressionVisitor : AbstractChunkVisitor
     {
-        private RenderPartialChunk _currentPartial;
-
         public class Entry
         {
             public string Expression { get; set; }
@@ -35,7 +33,8 @@ namespace Spark.Compiler.ChunkVisitors
 
         public DetectCodeExpressionVisitor(RenderPartialChunk currentPartial)
         {
-            _currentPartial = currentPartial;
+            if (currentPartial != null)
+                EnterRenderPartial(currentPartial);
         }
 
         public Entry Add(string expression)
@@ -72,29 +71,29 @@ namespace Spark.Compiler.ChunkVisitors
         }
 
 
-
         protected override void Visit(RenderPartialChunk chunk)
         {
-            var priorPartial = _currentPartial;
-            _currentPartial = chunk;
+            EnterRenderPartial(chunk);
             Accept(chunk.FileContext.Contents);
-            _currentPartial = priorPartial;
+            ExitRenderPartial(chunk);
         }
 
         protected override void Visit(RenderSectionChunk chunk)
         {
+            var currentPartial = ExitRenderPartial();
             if (string.IsNullOrEmpty(chunk.Name))
             {
-                Accept(_currentPartial.Body);
+                Accept(currentPartial.Body);
             }
-            else if (_currentPartial.Sections.ContainsKey(chunk.Name))
+            else if (currentPartial.Sections.ContainsKey(chunk.Name))
             {
-                Accept(_currentPartial.Sections[chunk.Name]);
+                Accept(currentPartial.Sections[chunk.Name]);
             }
             else
             {
                 Accept(chunk.Default);
             }
+            EnterRenderPartial(currentPartial);
         }
 
         protected override void Visit(UseAssemblyChunk chunk)
@@ -194,6 +193,10 @@ namespace Spark.Compiler.ChunkVisitors
         protected override void Visit(UseNamespaceChunk chunk)
         {
             //no-op
+        }
+
+        protected override void Visit(PageBaseTypeChunk chunk)
+        {
         }
     }
 }

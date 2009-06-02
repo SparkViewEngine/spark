@@ -1,0 +1,7 @@
+﻿<default image="(Thumbnail)null" imageTitle="(string)null" imageLink="(string)null"/>
+<div class="thumbnail">
+<test if="!string.IsNullOrEmpty(imageLink)"><a href="${imageLink}"></test>
+<img src="!{image.Src}" height="${image.Height}" width="${image.Width}" 
+	title="${imageTitle}?{!string.IsNullOrEmpty(imageTitle)}"/>
+<test if="!string.IsNullOrEmpty(imageLink)"></a></test>
+</div>

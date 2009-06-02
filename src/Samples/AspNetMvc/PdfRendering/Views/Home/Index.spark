@@ -1,0 +1,9 @@
+﻿
+<h1>PDF Rendering Sample</h1>
+
+<p>!{Html.ActionLink("View invoice", "invoice", new { invoiceNumber = DateTime.Now.Ticks })}</p>
+
+<p>!{Html.ActionLink("View invoice itext xml", "invoice", new { invoiceNumber = DateTime.Now.Ticks, format = "xml" })}</p>
+
+<p>!{Html.ActionLink("View this page as PDF", "index", new { format = 'pdf' })}</p>
+

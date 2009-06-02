@@ -31,13 +31,20 @@ namespace Spark.Compiler.Javascript
         {
             var source = new StringBuilder();
 
+            var anonymousTypeVisitor = new JavascriptAnonymousTypeVisitor();
             var globalMembers = new JavascriptGlobalMembersVisitor(source);
             var preRenderVisitor = new JavascriptPreRenderVisitor(source);
             var generatedJavascript = new JavascriptGeneratedCodeVisitor(source);
             var postRenderVisitor = new JavascriptPostRenderVisitor(source);
 
             var primaryName = Descriptor.Templates[0];
-            var nameParts = primaryName.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries).Select(name => SafeName(name));
+            var nameParts = primaryName
+                .Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(name => SafeName(name));
+
+            // convert some syntax from csharp to javascript
+            foreach (var template in viewTemplates)
+                anonymousTypeVisitor.Accept(template);
 
             var cumulativeName = "window.Spark";
             foreach (var part in nameParts)

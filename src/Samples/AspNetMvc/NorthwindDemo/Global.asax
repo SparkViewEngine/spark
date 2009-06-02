@@ -1,1 +1,1 @@
-<%@ Application Codebehind="Global.asax.cs" Inherits="NorthwindDemo.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="NorthwindDemo.GlobalApplication" Language="C#" %>

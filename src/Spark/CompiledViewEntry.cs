@@ -40,7 +40,6 @@ namespace Spark
             Activator.Release(Compiler.CompiledType, view);
         }
 
-        //TODO: refactor see #82 
-        public bool IsCurrent { get { return Loader.IsCurrent(); } }
+        public bool IsCurrent() { return Loader.IsCurrent(); }
     }
 }

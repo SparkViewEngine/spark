@@ -83,6 +83,11 @@ namespace SparkLanguage
             get { return GetSetting("pages/@automaticEncoding", ParserSettings.DefaultAutomaticEncoding); }
         }
 
+        public string StatementMarker
+        {
+            get { return GetSetting("pages/@statementMarker", "#"); }
+        }
+
         public bool Debug
         {
             get { return false; }
@@ -131,9 +136,9 @@ namespace SparkLanguage
             }
         }
 
-        public IEnumerable<ResourceMapping> ResourceMappings
+        public IEnumerable<IResourceMapping> ResourceMappings
         {
-            get { return new ResourceMapping[0]; }
+            get { return new IResourceMapping[0]; }
         }
 
         public IEnumerable<IViewFolderSettings> ViewFolders

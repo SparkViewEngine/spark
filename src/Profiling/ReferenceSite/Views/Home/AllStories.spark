@@ -1,0 +1,11 @@
+﻿
+<viewdata model="IEnumerable[[Story]]"/>
+
+<h1>All Stories</h1>
+
+<div each="var story in Model" class="story status-${story.Status}">
+  <thumbnail if="story.Thumbnail != null"  image="story.Thumbnail" imageTitle="story.Title" imageLink="story.Href"/>
+  <h2><a href="!{story.Link}">${story.Title}</a></h2>
+  <p>${story.Description}</p>
+</div>
+

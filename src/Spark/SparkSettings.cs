@@ -36,7 +36,8 @@ namespace Spark
         public bool Debug { get; set; }
 		public NullBehaviour NullBehaviour { get; set; }
         public bool AutomaticEncoding { get; set; }
-    	public string Prefix { get; set; }
+        public string StatementMarker { get; set; }
+        public string Prefix { get; set; }
         public string PageBaseType { get; set; }
 
         private readonly IList<string> _useNamespaces;
@@ -72,6 +73,12 @@ namespace Spark
         public SparkSettings SetAutomaticEncoding(bool automaticEncoding)
         {
             AutomaticEncoding = automaticEncoding;
+            return this;
+        }
+
+        public SparkSettings SetStatementMarker(string statementMarker)
+        {
+            StatementMarker = statementMarker;
             return this;
         }
 

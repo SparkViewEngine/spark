@@ -1,0 +1,8 @@
+﻿<table>
+<row><cell><chunk style="font-weight:bold;">${caption}</chunk></cell></row>
+<row if="!string.IsNullOrEmpty(account.Name)"><cell>${account.Name}</cell></row>
+<row if="!string.IsNullOrEmpty(account.Address1)"><cell>${account.Address1}</cell></row>
+<row if="!string.IsNullOrEmpty(account.Address2)"><cell>${account.Address2}</cell></row>
+<var showComma="!string.IsNullOrEmpty(account.City) && (!string.IsNullOrEmpty(account.State) || !string.IsNullOrEmpty(account.Zip))"/>
+<row><cell>${account.City}<test if="showComma">,</test> ${account.State} ${account.Zip}</cell></row>
+</table>

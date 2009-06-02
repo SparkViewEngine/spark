@@ -33,9 +33,9 @@ namespace Spark
             throw new System.NotImplementedException();
         }
 
-        public bool IsCurrent
+        public bool IsCurrent()
         {
-            get { throw new System.NotImplementedException(); }
+            throw new System.NotImplementedException();
         }
 
         public string SourceCode

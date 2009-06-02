@@ -48,8 +48,6 @@ namespace Spark
 
         public void Initialize(ISparkServiceContainer container)
         {
-            _container = container;
-
             Settings = container.GetService<ISparkSettings>();
             SyntaxProvider = container.GetService<ISparkSyntaxProvider>();
             ViewActivatorFactory = container.GetService<IViewActivatorFactory>();
@@ -58,8 +56,6 @@ namespace Spark
             TemplateLocator = container.GetService<ITemplateLocator>();
             SetViewFolder(container.GetService<IViewFolder>());
         }
-
-        private ISparkServiceContainer _container;
 
         private IViewFolder _viewFolder;
         public IViewFolder ViewFolder
@@ -192,17 +188,6 @@ namespace Spark
             return CompiledViewHolder.Current.Lookup(descriptor);
         }
 
-        public ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor)
-        {
-            var entry = CompiledViewHolder.Current.Lookup(descriptor);
-            if (entry == null)
-            {
-                entry = CreateEntryImplementation(descriptor, true);
-                CompiledViewHolder.Current.Store(entry);
-            }
-            return entry;
-        }
-
         public ISparkView CreateInstance(SparkViewDescriptor descriptor)
         {
             return CreateEntry(descriptor).CreateInstance();
@@ -217,7 +202,20 @@ namespace Spark
                 entry.ReleaseInstance(view);
         }
 
-        public CompiledViewEntry CreateEntryImplementation(SparkViewDescriptor descriptor, bool compile)
+
+        public ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor)
+        {
+            var entry = CompiledViewHolder.Current.Lookup(descriptor);
+            if (entry == null)
+            {
+                entry = CreateEntryInternal(descriptor, true);
+                CompiledViewHolder.Current.Store(entry);
+            }
+            return entry;
+        }
+
+
+        public ISparkViewEntry CreateEntryInternal(SparkViewDescriptor descriptor, bool compile)
         {
             var entry = new CompiledViewEntry
             {
@@ -246,7 +244,7 @@ namespace Spark
             return entry;
         }
 
-        void LoadTemplates(ViewLoader loader, IList<string> templates, IList<IList<Chunk>> chunksLoaded, IList<string> templatesLoaded)
+        void LoadTemplates(ViewLoader loader, IEnumerable<string> templates, ICollection<IList<Chunk>> chunksLoaded, ICollection<string> templatesLoaded)
         {
             foreach (var template in templates)
             {

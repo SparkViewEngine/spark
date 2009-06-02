@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -64,6 +64,8 @@
     <Compile Include="ImportAndIncludeTester.cs" />
     <Compile Include="ClientsideCompilerTester.cs" />
     <Compile Include="Parser\AutomaticEncodingTester.cs" />
+    <Compile Include="Parser\CharGrammarTester.cs" />
+    <Compile Include="Parser\JavascriptAnonymousTypeGrammarTester.cs" />
     <Compile Include="Precompiled\ComplexPrecompileController.cs" />
     <Compile Include="Precompiled\SimplePrecompileController.cs" />
     <Compile Include="Compiler\SourceMappingTester.cs" />
@@ -71,7 +73,9 @@
     <Compile Include="SparkDecoratorTester.cs" />
     <Compile Include="SparkServiceContainerTester.cs" />
     <Compile Include="Spool\SpoolPageTester.cs" />
+    <Compile Include="Spool\SpoolReaderTester.cs" />
     <Compile Include="Spool\SpoolWriterTester.cs" />
+    <Compile Include="Stubs\StubSparkView2.cs" />
     <Compile Include="UseMasterTester.cs" />
     <Compile Include="Visitors\BaseVisitorTester.cs" />
     <Compile Include="BatchCompilationTester.cs" />
@@ -128,7 +132,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\childview.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\addviewdatadifferenttypes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -146,49 +150,49 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\testelementnested.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\eachattribute.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\elseifattribute.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\elseifelement.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\elseifelement2.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\extensionelements.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\foreach.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\foreachindex.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\globalset.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\helpers.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\ifattribute.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\ifelement.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\Index.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\macros.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\namedcontent.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\testelement.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -197,16 +201,16 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\usingnamespace.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\usingpartial.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\usingpartialimplicit.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\viewdata.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\_AddViewDataPartial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -234,6 +238,9 @@
     <EmbeddedResource Include="FileSystem\Embedded\Shared\Default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Spark.Tests.Views\Clientside\AnonymousTypeBecomesHashLikeObject.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Clientside\simple.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -255,26 +262,47 @@
     <None Include="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\render-dotted-partial.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\_NestedPartialsInner.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\NestedPartialsCanBackRenderUpAndReRenderDown.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\_NestedPartialsOuter.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\_PartialWith.Dot.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\_UsedByRecursivePartialsThrowCompilerException.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\RecursivePartialsThrowCompilerException.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\_PartialInMacro.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\PartialInMacroMayUseDefaultElement.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\LateBoundEvalResolvesViewData.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\OnceAttributeWorksOnSpecialNodes.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\IfAttributeWorksOnSpecialNodes.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\_SimpleValue.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\EachAttributeWorksOnSpecialNodes.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\OnceAttribute.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -343,7 +371,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\usingpartial-render-element.spark">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\render-partial-with-contained-content.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

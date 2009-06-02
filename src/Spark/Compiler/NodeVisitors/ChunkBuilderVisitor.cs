@@ -457,6 +457,7 @@ namespace Spark.Compiler.NodeVisitors
                 var assemblyAttr = inspector.TakeAttribute("assembly");
                 var importAttr = inspector.TakeAttribute("import");
                 var masterAttr = inspector.TakeAttribute("master");
+                var pageBaseTypeAttr = inspector.TakeAttribute("pageBaseType");
 
                 if (contentAttr != null)
                 {
@@ -489,6 +490,11 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     var useMasterChunk = new UseMasterChunk { Name = masterAttr.Value };
                     AddUnordered(useMasterChunk);
+                }
+                else if (pageBaseTypeAttr != null)
+                {
+                    var usePageBaseTypeChunk = new PageBaseTypeChunk { BaseClass = AsCode(pageBaseTypeAttr) };
+                    AddUnordered(usePageBaseTypeChunk);
                 }
                 else
                 {

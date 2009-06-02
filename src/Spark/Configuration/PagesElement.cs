@@ -44,6 +44,13 @@ namespace Spark.Configuration
             set { this["automaticEncoding"] = value; }
         }
 
+        [ConfigurationProperty("statementMarker", DefaultValue = "#")]
+        public string StatementMarker
+        {
+            get { return (string)this["statementMarker"]; }
+            set { this["statementMarker"] = value; }
+        }
+
         [ConfigurationProperty("namespaces")]
         [ConfigurationCollection(typeof(NamespaceElementCollection))]
         public NamespaceElementCollection Namespaces

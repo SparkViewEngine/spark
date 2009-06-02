@@ -1,36 +1,26 @@
-
-<viewdata model="Product"/>
-
-!{PageTitle(ViewData.Model.ProductName)}
-
-<CategoryMenuItems category="ViewData.Model.Category"/>
-<table class="productdetail">
-
-  <tr>
-    <td colspan="2">
-      <ProductImage product='ViewData.Model' style='""'/>
-    </td>
-  </tr>
-
-  <tr>
-    <td>Price:</td>
-    <td>
-      <%= String.Format("{0:C2}", ViewData.Model.UnitPrice) %>
-    </td>
-  </tr>
-
-  <tr>
-    <td>Manufacturer:</td>
-    <td>
-      <%= ViewData.Model.Supplier.CompanyName %>
-    </td>
-  </tr>
-
-  <tr>
-    <td>In Stock:</td>
-    <td>
-      <%= ViewData.Model.UnitsInStock > 0 ? "Yes" : "No" %>
-    </td>
-  </tr>
-
-</table>
+﻿<content name="MainContent">
+    <viewdata model="Product"/>
+    
+    <h2>Product Detail</h2>
+    
+    <table>
+        <tr>
+            <th>Name</th>
+            <td>${ViewData.Model.ProductName}</td>
+        </tr>
+        <tr>
+            <th>Category</th>
+            <td>${ViewData.Model.Category.CategoryName}</td>
+        </tr>
+        <tr>
+            <th>Supplier</th>
+            <td>${ViewData.Model.Supplier.CompanyName}</td>
+        </tr>
+        <tr>
+            <th>Unit Price</th>
+            <td>${ViewData.Model.UnitPrice}</td>
+        </tr>
+    </table>
+    ${Html.RouteLink("back", new {controller="Products", action="List", id=ViewData.Model.Category.CategoryName})}
+    
+</content>

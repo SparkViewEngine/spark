@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Spark.Compiler;
 using Spark.FileSystem;
@@ -589,6 +590,25 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void RenderlPartialWithDotInName()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("render-dotted-partial", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                    "<p>",
+                    "this.is.some.text:",
+                    "test456",
+                    "</p>"
+                    );
+
+            Assert.IsFalse(content.Contains("<PartialWith.Dot"));
+        }
+
+        [Test]
         public void CaptureContentAsVariable()
         {
             mocks.ReplayAll();
@@ -971,8 +991,37 @@ namespace Spark.Tests
                             "<p>2hello.</p>",
                             "<p>1hello..</p>",
                             "<p>0hello...</p>");
-            
+
         }
 
+        [Test, ExpectedException(typeof(CompilerException))]
+        public void RecursivePartialsThrowCompilerException()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("RecursivePartialsThrowCompilerException", null);
+            factory.RenderView(viewContext);
+        }
+
+
+        [Test]
+        public void NestedPartialsCanBackRenderUpAndReRenderDown()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("NestedPartialsCanBackRenderUpAndReRenderDown", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            var stripped = content.Replace(" ", "").Replace("\t","").Replace("\r\n", "");
+            Assert.That(stripped, Is.EqualTo(
+                "[001][101]" + 
+                "[201][102]" + 
+                "[201][104][202]" + 
+                "[106][002][107]" +
+                "[201][109][202]" + 
+                "[111][202]" + 
+                "[112][003]"));
+
+        }
     }
 }

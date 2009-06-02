@@ -122,5 +122,9 @@ namespace Spark.Compiler.ChunkVisitors
         protected override void Visit(CodeStatementChunk chunk)
         {
         }
+
+        protected override void Visit(PageBaseTypeChunk chunk)
+        {
+        }
     }
 }

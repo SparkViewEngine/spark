@@ -26,10 +26,9 @@ namespace Spark
         ISparkView CreateInstance();
         void ReleaseInstance(ISparkView view);
 
-        //TODO: refactor see #82 
-        bool IsCurrent { get; }
-
         string SourceCode { get; }
         IList<SourceMapping> SourceMappings { get; }
+
+        bool IsCurrent();
     }
 }

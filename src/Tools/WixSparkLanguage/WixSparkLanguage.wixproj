@@ -41,6 +41,7 @@
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="license.rtf" />
     <Content Include="vs2008.wxi" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +55,11 @@
       <Project>{f10178e7-afcd-45b6-b94a-0cc4ecf4e1aa}</Project>
       <Private>True</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+    </WixExtension>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

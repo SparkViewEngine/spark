@@ -1,0 +1,8 @@
+﻿<html>
+<head>
+	<title><use content="title">Pdf Rendering Sample</use></title>
+</head>
+<body>
+	<use content="view"/>
+</body>
+</html>

@@ -61,6 +61,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="HelperExtensions.cs" />
+    <Compile Include="Helpers\SparkJavascriptHelper.cs" />
     <Compile Include="Install\DescribeBatchEventArgs.cs" />
     <Compile Include="Install\DescribeBatchEventHandler.cs" />
     <Compile Include="Install\PrecompileInstaller.cs">

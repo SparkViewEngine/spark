@@ -1,4 +1,4 @@
-/*----------------------------------------------------------
+﻿/*----------------------------------------------------------
 The base color for this template is #5c87b2. If you'd like
 to use a different color start by replacing all instances of
 #5c87b2 with your new color.
@@ -203,7 +203,7 @@ ul.productlist li
     clear:both;
 }
 
-ul.productlist p
+ul.productlist div
 {
     margin-left: 10px;
     float:left;
@@ -218,42 +218,22 @@ label.error + td input {
     border: solid 1px #c00;   
 }
 
-.even
-{
+span.action {
+    font-size: .8em;
+    font-weight: normal;
 }
 
-.odd
-{
-	background-color:#e8eef4;
+.important {
+    color: #00c;
+    font-weight: bold;
+    font-style: italic;
 }
 
-#xsnazzy ul 
-{
-	padding: 20px;
-	margin: 0;
-	list-style: none;
+.input-validation-error {
+    color: Red;
+    border: solid 1px red;
 }
 
-/* Rounded box - http://www.cssplay.co.uk/boxes/snazzy.html
-----------------------------------------------------------*/
-
-
-#xsnazzy h1, #xsnazzy h2, #xsnazzy p {margin:0 10px; letter-spacing:1px;}
-#xsnazzy h1 {font-size:2.5em; color:#fff;}
-#xsnazzy h2 {font-size:2em;color:#06a; border:0;}
-#xsnazzy p {padding-bottom:0.5em;}
-#xsnazzy h2 {padding-top:0.5em;}
-
-#xsnazzy {background: transparent; margin:1em;}
-
-.xtop, .xbottom {display:block; background:transparent; font-size:1px;}
-.xb1, .xb2, .xb3, .xb4 {display:block; overflow:hidden;}
-.xb1, .xb2, .xb3 {height:1px;}
-.xb2, .xb3, .xb4 {background:#F8F8FF; border-left:1px solid #08c; border-right:1px solid #08c;}
-.xb1 {margin:0 5px; background:#08c;}
-.xb2 {margin:0 3px; border-width:0 2px;}
-.xb3 {margin:0 2px;}
-.xb4 {height:2px; margin:0 1px;}
-
-.xboxcontent {display:block; background:#F8F8FF; border:0 solid #08c; border-width:0 1px;}
-
+th {
+    text-align: left;
+}

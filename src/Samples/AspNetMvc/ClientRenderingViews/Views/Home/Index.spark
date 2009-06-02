@@ -11,7 +11,7 @@
 </p>
 
 <viewdata
-  products="IList[[Models.Product]]"
+  products="IList[[ClientRenderingViews.Models.Product]]"
   ajaxEnabled="bool"/>
 
 <content:head if="ajaxEnabled">
@@ -21,13 +21,16 @@
   <script type="text/javascript" src="~/Content/home-index.js"></script>
 </content:head>
 
-<ul>
+<ul if="products.Any()">
   <li each="var product in products">
     ${product.Name}
     ${product.UnitPrice}
     <a class="cartajax?{ajaxEnabled}" href="~/home/addtocart/${product.Id}">Add to cart</a>
   </li>
 </ul>
+<else>
+  <p>No products available</p>
+</else>
 
 <content:subcontent>
   <a class="refresh" href="~/home/index">Refresh</a>

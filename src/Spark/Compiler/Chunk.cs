@@ -254,4 +254,9 @@ namespace Spark.Compiler
         public ISparkExtension Extension { get; set; }
         public IList<Chunk> Body { get; set; }
     }
+
+    public class PageBaseTypeChunk : Chunk
+    {
+        public Snippets BaseClass { get; set; }
+    }
 }

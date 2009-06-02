@@ -13,7 +13,7 @@
     <hr/>
     <code>
       <var entry="Spark.CompiledViewHolder.Current.Lookup(GeneratedViewId)"/>
-      !{H(entry.Compiler.SourceCode).Replace("\r\n", "<br/>").Replace(" ", "&nbsp;")}
+      !{H(entry.SourceCode).Replace("\r\n", "<br/>").Replace(" ", "&nbsp;")}
     </code>
   </body>
 </html>

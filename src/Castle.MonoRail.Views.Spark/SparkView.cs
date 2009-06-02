@@ -80,6 +80,15 @@ namespace Castle.MonoRail.Views.Spark
         {
             return ViewData.TryGetViewData(name, out value);
         }
+        public object Eval(string expression)
+        {
+            object value;
+            return TryGetViewData(expression, out value) ? value : null;
+        }
+        public string Eval(string expression, string format)
+        {
+            return string.Format(format, Eval(expression));
+        }
 
         public T Helper<T>() where T : class { return ControllerContext.Helpers[typeof(T).Name] as T; }
         public T Helper<T>(string name) where T : class { return ControllerContext.Helpers[name] as T; }

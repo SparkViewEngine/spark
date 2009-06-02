@@ -1,151 +1,146 @@
-// Copyright 2008 Louis DeJardin - http://whereslou.com
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// 
-using System;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
-using NorthwindDemo.Models;
-
-namespace NorthwindDemo.Controllers
+﻿namespace NorthwindDemo.Controllers
 {
-    public class ProductsController : Controller
-    {
-        private readonly NorthwindRepository repository;
+    using System;
+    using System.Web.Mvc;
+    using System.Linq;
+    using System.Collections.Specialized;
+    using System.Collections.Generic;
+    using System.Data;
+    using NorthwindModel;
+    using NorthwindDemo.Models;
+    using System.Web.Routing;
 
+    public class ProductsController : Controller {
         public ProductsController()
             : this(new NorthwindRepository(new NorthwindDataContext()))
-        {
-        }
+        { }
 
         public ProductsController(NorthwindRepository context)
         {
-            repository = context;
+            this.repository = context;
         }
+
+        NorthwindRepository repository;
 
         public object Index()
         {
-            return Categories();
-        }
-
-        public object Categories()
-        {
-            return View("Categories", repository.Categories.ToList());
+            return View(repository.Categories);
         }
 
         public object Detail(int id)
         {
-            Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
+            Product product = this.repository.Products.SingleOrDefault(p => p.ProductID == id);
             return View(product);
         }
 
         public object List(string id)
         {
-            Category category = repository.Categories.SingleOrDefault(c => c.CategoryName == id);
+            var category = repository.Categories.SingleOrDefault(c => c.CategoryName == id);
 
-            IQueryable<Product> products = from p in repository.Products
-                                           where p.CategoryID == category.CategoryID
-                                           select p;
+            var products = from p in repository.Products
+                           where p.CategoryID == category.CategoryID
+                           select p;
 
             ViewData["Title"] = "Hello World!";
-            ViewData["CategoryName"] = id;
 
-            //this.ViewEngine = new MvcContrib.NHamlViewEngine.NHamlViewFactory();
-            return View("ListingByCategory", products.ToList());
+            return View(products.ToList());
         }
 
-        public object Category(int id)
+        [AcceptVerbs(HttpVerbs.Get)]
+        public object New(string id)
         {
-            Category category = repository.Categories.SingleOrDefault(c => c.CategoryID == id);
-            return View("List", category);
-        }
+            Product product = new Product();
 
-        public object New()
-        {
-            var viewData = new ProductsNewViewData();
-
-            viewData.Suppliers = repository.Suppliers.ToList();
-            viewData.Categories = repository.Categories.ToList();
-
-            return View("New", viewData);
-        }
-
-        public object Create()
-        {
-            var product = new Product();
-
-            throw new NotImplementedException("Not sure what BindingHelperExtensions turned into");
-            //BindingHelperExtensions.UpdateFrom(product, Request.Form);
-
-            repository.InsertProductOnSubmit(product);
-            repository.SubmitChanges();
-
-            return RedirectToRoute(new RouteValueDictionary(new {Action = "List", ID = product.Category.CategoryName}));
-        }
-
-        public object Edit(int id)
-        {
-            var viewData = new ProductsEditViewData();
-
-            Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
-            viewData.Product = product;
-
-            if (TempData.ContainsKey("ErrorMessage"))
-            {
-                foreach (var item in TempData)
-                {
+            if (TempData.ContainsKey("ErrorMessage")) {
+                foreach (var item in TempData) {
                     ViewData[item.Key] = item.Value;
                 }
             }
 
-            ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName",
-                                                    ViewData["CategoryID"] ?? product.CategoryID);
-            ViewData["SupplierID"] = new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName",
-                                                    ViewData["SupplierID"] ?? product.SupplierID);
+            ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName", null);
+            ViewData["SupplierID"] = new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName", null);
+            ViewData["CategoryName"] = id;
 
-            return View("Edit", viewData);
+            return View(product);
         }
 
-        public object Update(int id)
-        {
-            Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
-            if (!IsValid())
-            {
-                Request.Form.CopyTo(TempData);
-                TempData["ErrorMessage"] = "An error occurred";
-                return RedirectToAction("Edit", new {id});
+        [AcceptVerbs(HttpVerbs.Post)]
+        public object New(string id, FormCollection form) {
+            Product product = new Product();
+            
+            if(TryUpdateModel(product, form.ToValueProvider())) {
+                repository.InsertProductOnSubmit(product);
+                repository.SubmitChanges();
+                return RedirectToAction("List", new { id = product.Category.CategoryName });
             }
+            
+            ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName", ViewData["CategoryID"]);
+            ViewData["SupplierID"] = new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName", ViewData["SupplierID"]);
 
-            throw new NotImplementedException("Not sure what BindingHelperExtensions turned into");
-            //BindingHelperExtensions.UpdateFrom(product, Request.Form);
+            return View(product);
+        }
+
+
+        public object NewCategory() {
+            return View();
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult CreateCategory(string name, string description) {
+            var c = new Category();
+            c.CategoryName = name;
+            c.Description = description;
+
+
+            repository.InsertCategoryOnSubmit(c);
             repository.SubmitChanges();
 
-            return RedirectToRoute(new RouteValueDictionary(new {Action = "List", ID = product.Category.CategoryName}));
+            return RedirectToAction("Index");
         }
 
-        private bool IsValid()
+        public object Edit(int id)
         {
-            bool valid = true;
+            Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
 
-            if (!IsValidPrice(Request.Form["UnitPrice"]))
-            {
+            if (TempData.ContainsKey("ErrorMessage")) {
+                foreach (var item in TempData) {
+                    ViewData[item.Key] = item.Value;
+                }
+            }
+
+            ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName", ViewData["CategoryID"] ?? product.CategoryID);
+            ViewData["SupplierID"]= new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName", ViewData["SupplierID"] ?? product.SupplierID);
+
+            return View(product);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public object Edit(int id, FormCollection form)
+        {
+            Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
+            try {
+                UpdateModel(product, form.ToValueProvider());
+                repository.SubmitChanges();
+                return RedirectToAction("List", new {id=product.Category.CategoryName});
+            }
+            catch {
+            }
+
+            ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName", ViewData["CategoryID"] ?? product.CategoryID);
+            ViewData["SupplierID"] = new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName", ViewData["SupplierID"] ?? product.SupplierID);
+
+            return View(product);
+        }
+
+        bool IsValid() {
+            bool valid = true;
+            
+            if (!IsValidPrice(Request.Form["UnitPrice"])) {
                 valid = false;
                 SetInvalid("UnitPrice");
             }
 
-            if (String.IsNullOrEmpty(Request.Form["ProductName"]))
-            {
+            if (String.IsNullOrEmpty(Request.Form["ProductName"])) {
                 valid = false;
                 SetInvalid("ProductName");
             }
@@ -153,13 +148,11 @@ namespace NorthwindDemo.Controllers
             return valid;
         }
 
-        private void SetInvalid(string key)
-        {
+        void SetInvalid(string key) {
             TempData["Error:" + key] = Request.Form[key];
         }
 
-        private bool IsValidPrice(string price)
-        {
+        bool IsValidPrice(string price) {
             if (String.IsNullOrEmpty(price))
                 return false;
 

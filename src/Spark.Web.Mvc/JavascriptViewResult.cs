@@ -41,12 +41,13 @@ namespace Spark.Web.Mvc
             var searchedLocations = new List<string>();
             var factories = ViewEngines.Engines.OfType<SparkViewFactory>();
 
-            if (factories.Count() == 0)
+            if (!factories.Any())
                 throw new CompilerException("No SparkViewFactory instances are registered");
 
-            foreach(var factory in factories)
+            foreach (var factory in factories)
             {
-                var descriptor = factory.CreateDescriptorInternal("", AreaName, controllerName, ViewName, MasterName, false, searchedLocations);
+                var descriptor = factory.DescriptorBuilder.BuildDescriptor(
+                    new BuildDescriptorParams("", controllerName, ViewName, MasterName, false, factory.DescriptorBuilder.GetExtraParameters(context)), searchedLocations);
                 descriptor.Language = LanguageType.Javascript;
                 var entry = factory.Engine.CreateEntry(descriptor);
                 context.HttpContext.Response.ContentType = "text/javascript";

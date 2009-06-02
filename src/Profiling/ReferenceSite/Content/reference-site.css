@@ -1,0 +1,28 @@
+﻿div.showregion
+{
+	background-color: #ee99aa;
+	border: dotted 1px #ffffff;
+	color: #ffffff;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+div.story
+{
+	clear: both;
+	margin-top: 20px;
+}
+
+div.thumbnail
+{
+	float: right;
+	margin-left: 16px;
+	padding-top: 2px;
+}
+
+div.thumbnail img
+{
+	border: solid 1px #aabbff;
+	padding: 4px;
+}
+

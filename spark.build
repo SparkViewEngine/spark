@@ -47,6 +47,10 @@
     </tstamp>
     <delete dir="${build.base}"/>
     <mkdir dir="${build.dir}" />
+    <if test="${not file::exists(solution.dir + '\Tools\SparkLanguagePackage\PackageLoadKey.h')}">
+      <echo message="Creating placeholder PackageLoadKey.h file" />
+      <echo message="// this is an auto-generated placeholder file" file="${solution.dir}\Tools\SparkLanguagePackage\PackageLoadKey.h"  />
+    </if>
     <echo message="Current Directory: ${project::get-base-directory()}"/>
   </target>
 
@@ -73,16 +77,19 @@
 
   <target name="compile" depends="init">
     <echo message="Build Directory is ${build.dir}" />
+
     <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
 				  commandline="${solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir} /v:q" workingdir="." />
     <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
 				  commandline="${solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir} /v:q" workingdir="." />
 
     <if test="${property::exists('tools.solution.file')}">
+      <property name="wix-parameters" value="WixTargetsPath=..\..\..\bin\msbuild\Microsoft\WiX\v3.0\wix.targets;WixTasksPath=WixTasks.dll;WixToolPath=..\..\..\bin\wix"/>
+
       <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
-            commandline="${tools.solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir} /v:q" workingdir="." />
+            commandline="${tools.solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters} /v:q" workingdir="." />
       <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
-            commandline="${tools.solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir};ProjectFullVersion=${project.fullversion} /v:q" workingdir="." />
+            commandline="${tools.solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};ProjectFullVersion=${project.fullversion} /v:q" workingdir="." />
     </if>
   </target>
 
@@ -141,11 +148,6 @@
         </categories>
       </test>
       <test assemblyname="${build.dir}/Spark.Web.Mvc.Tests.dll">
-        <categories>
-          <exclude name="Integration" />
-        </categories>
-      </test>
-      <test assemblyname="${build.dir}/MvcContrib.SparkViewEngine.Tests.dll">
         <categories>
           <exclude name="Integration" />
         </categories>
@@ -223,7 +225,7 @@
         <include name="aspnetmvc/*.*" />
         <include name="ironpython/*.*" />
         <include name="ironruby/*.*" />
-        <include name="mvccontrib/*.*" />
+        <include name="itextsharp/*.*" />
         <include name="castle/*.*" />
         <include name="nunit/nunit.framework.dll" />
       </fileset>

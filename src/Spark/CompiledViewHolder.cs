@@ -46,8 +46,7 @@ namespace Spark
                     return null;
             }
 
-            //TODO: refactor see #82 
-            return entry.IsCurrent ? entry : null;
+            return entry.IsCurrent() ? entry : null;
         }
 
         public ISparkViewEntry Lookup(Guid viewId)

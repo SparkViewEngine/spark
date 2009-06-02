@@ -27,6 +27,7 @@ namespace Spark
         ISparkExtensionFactory ExtensionFactory { get; set; }
         IViewActivatorFactory ViewActivatorFactory { get; set; }
         string DefaultPageBaseType { get; set; }
+        ISparkSyntaxProvider SyntaxProvider { get; set; }
 
         ISparkViewEntry GetEntry(SparkViewDescriptor descriptor);
         ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor);

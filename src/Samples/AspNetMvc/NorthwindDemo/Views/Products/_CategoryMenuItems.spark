@@ -1,5 +1,0 @@
-<content name="menu">
-  <li>!{Html.ActionLink[[ProductsController]](c=>c.Categories(), "Categories")}</li>
-
-  <li if="category != null">!{Html.ActionLink[[ProductsController]](c=>c.List(category.CategoryName), category.CategoryName)}</li>
-</content>

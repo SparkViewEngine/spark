@@ -84,7 +84,7 @@ namespace SparkLanguage.Tests
 
             Assert.AreEqual(1, (int)SparkTokenType.HtmlTagDelimiter);
             items[4].GetDisplayName(out name);
-            Assert.AreEqual("Spark HTML Tag Delimiter", name);
+            Assert.AreEqual("HTML Tag Delimiter", name);
 
             Assert.AreEqual(10, (int)SparkTokenType.SparkDelimiter);
             items[13].GetDisplayName(out name);

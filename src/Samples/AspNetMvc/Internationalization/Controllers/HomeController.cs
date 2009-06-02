@@ -23,7 +23,7 @@ namespace Internationalization.Controllers
             var user = new UserInfo
                                    {
                                        Name = "Frankie",
-                                       Culture = Convert.ToString(Session["culture"])
+                                       Culture = Application.GetSessionCulture(ControllerContext)
                                    };
 
             try
@@ -43,7 +43,7 @@ namespace Internationalization.Controllers
 
         public object ChooseLanguage(string culture)
         {
-            Session["culture"] = culture;
+            Application.SetSessionCulture(ControllerContext, culture);
             return RedirectToAction("index");
         }
     }

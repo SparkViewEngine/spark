@@ -29,7 +29,7 @@ namespace Spark.Parser.Syntax
         public abstract IList<Node> IncludeFile(VisitorContext context, string path, string parse);
         public abstract Snippets ParseFragment(Position begin, Position end);
 
-        protected SourceContext CreateSourceContext(string viewPath, IViewFolder viewFolder)
+        public static SourceContext CreateSourceContext(string viewPath, IViewFolder viewFolder)
         {
             var viewSource = viewFolder.GetViewSource(viewPath);
 
@@ -47,26 +47,6 @@ namespace Spark.Parser.Syntax
                     return new SourceContext(reader.ReadToEnd(), viewSource.LastModified, fileName);
                 }
             }
-        }
-
-        public IList<string> FindPartialFiles(string viewPath, IViewFolder viewFolder)
-        {
-            var results = new List<string>();
-
-            string controllerPath = Path.GetDirectoryName(viewPath);
-            foreach (var view in viewFolder.ListViews(controllerPath))
-            {
-                string baseName = Path.GetFileNameWithoutExtension(view);
-                if (baseName.StartsWith("_"))
-                    results.Add(baseName.Substring(1));
-            }
-            foreach (var view in viewFolder.ListViews("Shared"))
-            {
-                string baseName = Path.GetFileNameWithoutExtension(view);
-                if (baseName.StartsWith("_"))
-                    results.Add(baseName.Substring(1));
-            }
-            return results;
         }
 
         protected void ThrowParseException(string viewPath, Position position, Position rest)

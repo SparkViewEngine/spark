@@ -7,27 +7,41 @@ src/*.user
 src/*/*.user
 src/*/*/*.user
 src/*/*/*/*.user
+
 src/*/bin
-src/*/obj
 src/*/*/bin
-src/*/*/obj
 src/*/*/*/bin
+
+src/*/obj
+src/*/*/obj
 src/*/*/*/obj
 
-src/Spark.suo
-src/Spark.sln.cache
-src/_ReSharper.Spark
+src/_ReSharper.*
+src/*/_ReSharper.*
+src/*/*/_ReSharper.*
+src/*/*/*/_ReSharper.*
 
-src/Tools/Tools.suo
+src/*.suo
+src/*/*.suo
+src/*/*/*.suo
+src/*/*/*/*.suo
+
+src/*.sln.cache
+src/*/*.sln.cache
+src/*/*/*.sln.cache
+src/*/*/*/*.sln.cache
+
+
 src/Tools/Tools.ncb
-src/Tools/Tools.sln.cache
-src/Tools/_ReSharper.Tools
 
 src/Tools/SparkLanguagePackage/*_i.c
 src/Tools/SparkLanguagePackage/*_i.h
 src/Tools/SparkLanguagePackage/*_p.c
 src/Tools/SparkLanguagePackage/PackageLoadKey.h
 
-src/Samples/Samples.suo
-src/Samples/_ReSharper.Samples
-
+bin/aspnetmvc/System.Web.Mvc.pdb
+bin/aspnetmvc/Microsoft.Web.Mvc.pdb
+bin/mvccontrib/MvcContrib.pdb
+bin/mvccontrib/MvcContrib.xml
+bin/mvccontrib/MvcContrib.Castle.pdb
+bin/mvccontrib/MvcContrib.Castle.xml

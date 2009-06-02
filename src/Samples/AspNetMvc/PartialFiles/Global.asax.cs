@@ -19,12 +19,14 @@ using System.Web.Routing;
 
 namespace PartialFiles
 {
-    public partial class Global : HttpApplication
+    public class Global : HttpApplication
     {
+        private readonly Application _application = new Application();
+
         protected void Application_Start(object sender, EventArgs e)
         {
-            RegisterViewEngine(ViewEngines.Engines);
-            RegisterRoutes(RouteTable.Routes);
+            _application.RegisterViewEngine(ViewEngines.Engines);
+            _application.RegisterRoutes(RouteTable.Routes);
         }
 
         protected void Session_Start(object sender, EventArgs e)

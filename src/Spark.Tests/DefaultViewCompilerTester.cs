@@ -13,9 +13,12 @@
 // limitations under the License.
 // 
 using System.Collections.Generic;
+using NUnit.Framework.SyntaxHelpers;
 using Spark.Compiler;
 using NUnit.Framework;
 using Spark.Compiler.CSharp;
+using Spark.Tests.Models;
+using Spark.Tests.Stubs;
 
 namespace Spark.Tests
 {
@@ -264,7 +267,63 @@ namespace Spark.Tests
             compiler.CompileView(new[] { chunks }, new[] { chunks });
             Assert.That(compiler.SourceCode.Contains("catch(System.NullReferenceException ex)"));
             Assert.That(compiler.SourceCode.Contains("ArgumentNullException("));
-            Assert.That(compiler.SourceCode.Contains(", ex);"));            
+            Assert.That(compiler.SourceCode.Contains(", ex);"));
+        }
+
+        [Test]
+        public void PageBaseTypeOverridesBaseClass()
+        {
+            var compiler = new DefaultViewCompiler()
+            {
+                BaseClass = "Spark.Tests.Stubs.StubSparkView",
+                NullBehaviour = NullBehaviour.Strict
+            };
+            DoCompileView(compiler, new Chunk[]
+                             {
+                                 new PageBaseTypeChunk {  BaseClass="Spark.Tests.Stubs.StubSparkView2"},
+                                 new SendLiteralChunk{ Text = "Hello world"}
+                             });
+            var instance = compiler.CreateInstance();
+            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2)));
+        }
+
+
+        [Test]
+        public void PageBaseTypeWorksWithOptionalModel()
+        {
+            var compiler = new DefaultViewCompiler()
+                           {
+                               BaseClass = "Spark.Tests.Stubs.StubSparkView",
+                               NullBehaviour = NullBehaviour.Strict
+                           };
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new PageBaseTypeChunk {BaseClass = "Spark.Tests.Stubs.StubSparkView2"},
+                                        new ViewDataModelChunk {TModel = "Spark.Tests.Models.Comment"},
+                                        new SendLiteralChunk {Text = "Hello world"}
+                                    });
+            var instance = compiler.CreateInstance();
+            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2)));
+            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2<Comment>)));
+        }
+
+        [Test]
+        public void PageBaseTypeWorksWithGenericParametersIncluded()
+        {
+            var compiler = new DefaultViewCompiler()
+            {
+                BaseClass = "Spark.Tests.Stubs.StubSparkView",
+                NullBehaviour = NullBehaviour.Strict
+            };
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new PageBaseTypeChunk {BaseClass = "Spark.Tests.Stubs.StubSparkView3<Spark.Tests.Models.Comment, string>"},
+                                        new SendLiteralChunk {Text = "Hello world"}
+                                    });
+            var instance = compiler.CreateInstance();
+            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2)));
+            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2<Comment>)));
+            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView3<Comment, string>)));
         }
     }
 }
