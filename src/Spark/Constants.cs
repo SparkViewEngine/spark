@@ -14,6 +14,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Spark.Compiler.NodeVisitors;
@@ -31,5 +32,9 @@ namespace Spark
 
         public const string XIncludeNamespace = "http://www.w3.org/2001/XInclude";
 
+        public static readonly string SharedSlash = "Shared" + Path.DirectorySeparatorChar;
+        public static readonly string LayoutsSlash = "Layouts" + Path.DirectorySeparatorChar;
+        public static readonly string GlobalSpark = "_global.spark";
+        public static readonly string DotSpark = ".spark";
     }
 }

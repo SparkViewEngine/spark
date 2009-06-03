@@ -24,20 +24,20 @@ namespace Spark
     {
         public LocateResult LocateMasterFile(IViewFolder viewFolder, string masterName)
         {
-            if (viewFolder.HasView("Layouts\\" + masterName + ".spark"))
+            if (viewFolder.HasView(Constants.LayoutsSlash + masterName + Constants.DotSpark))
             {
-                return Result(viewFolder, "Layouts\\" + masterName + ".spark");
+                return Result(viewFolder, Constants.LayoutsSlash + masterName + Constants.DotSpark);
             }
-            if (viewFolder.HasView("Shared\\" + masterName + ".spark"))
+            if (viewFolder.HasView(Constants.SharedSlash + masterName + Constants.DotSpark))
             {
-                return Result(viewFolder, "Shared\\" + masterName + ".spark");
+                return Result(viewFolder, Constants.SharedSlash + masterName + Constants.DotSpark);
             }
             return new LocateResult
                    {
                        SearchedLocations = new[]
                                            {
-                                               "Layouts\\" + masterName + ".spark", 
-                                               "Shared\\" + masterName + ".spark"
+                                               Constants.LayoutsSlash + masterName + Constants.DotSpark, 
+                                               Constants.SharedSlash + masterName + Constants.DotSpark
                                            }
                    };
         }
