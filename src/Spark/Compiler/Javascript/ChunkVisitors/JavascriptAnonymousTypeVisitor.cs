@@ -14,6 +14,9 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
 
         public override Snippets Process(Chunk chunk, Snippets code)
         {
+            if (code == null)
+                return null;
+
             var result = _grammar.ReformatCode(new Position(new SourceContext(code.ToString())));
 
             if (result == null)
