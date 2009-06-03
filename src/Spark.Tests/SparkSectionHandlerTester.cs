@@ -87,12 +87,12 @@ namespace Spark.Tests
                 .SetPageBaseType(typeof(StubSparkView));
 
             var views = new InMemoryViewFolder();
-            views.Add("Home\\Index.spark", "<div>${ProcessStatus.Alive}</div>");
+            views.Add("Home\\Index.spark".AsPath(), "<div>${ProcessStatus.Alive}</div>");
 
             var engine = new SparkViewEngine(settings) {ViewFolder = views};
 
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("home\\index.spark");
+            descriptor.Templates.Add("home\\index.spark".AsPath());
 
             var contents = engine.CreateInstance(descriptor).RenderView();
             Assert.AreEqual("<div>Alive</div>", contents);

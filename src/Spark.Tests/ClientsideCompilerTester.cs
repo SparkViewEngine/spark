@@ -30,7 +30,7 @@ namespace Spark.Tests
         {
             var descriptor = new SparkViewDescriptor()
                 .SetLanguage(LanguageType.Javascript)
-                .AddTemplate("Clientside\\simple.spark");
+                .AddTemplate("Clientside\\simple.spark".AsPath());
 
             var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             var entry = engine.CreateEntry(descriptor);
@@ -44,7 +44,7 @@ namespace Spark.Tests
         {
             var descriptor = new SparkViewDescriptor()
                 .SetLanguage(LanguageType.Javascript)
-                .AddTemplate("Clientside\\AnonymousTypeBecomesHashLikeObject.spark");
+                .AddTemplate("Clientside\\AnonymousTypeBecomesHashLikeObject.spark".AsPath());
 
             var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             var entry = engine.CreateEntry(descriptor);

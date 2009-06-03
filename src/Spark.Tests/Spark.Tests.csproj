@@ -74,6 +74,7 @@
     <Compile Include="Spool\SpoolPageTester.cs" />
     <Compile Include="Spool\SpoolReaderTester.cs" />
     <Compile Include="Spool\SpoolWriterTester.cs" />
+    <Compile Include="PathExtensions.cs" />
     <Compile Include="Stubs\StubSparkView2.cs" />
     <Compile Include="UseMasterTester.cs" />
     <Compile Include="Visitors\BaseVisitorTester.cs" />

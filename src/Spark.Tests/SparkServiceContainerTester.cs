@@ -90,7 +90,7 @@ namespace Spark.Tests
         {
             var settings = new SparkSettings();
             settings.AddViewFolder(typeof(TestViewFolder),
-                                   new Dictionary<string, string> { { "testpath", "hello\\world.spark" } });
+                                   new Dictionary<string, string> { { "testpath", "hello\\world.spark".AsPath() } });
 
             var container = new SparkServiceContainer(settings);
             container.SetServiceBuilder<IViewActivatorFactory>(c=>new TestActivatorFactory());
@@ -98,7 +98,7 @@ namespace Spark.Tests
             var engine = container.GetService<ISparkViewEngine>();
             Assert.IsInstanceOfType(typeof(TestActivatorFactory), engine.ViewActivatorFactory);
 
-            Assert.IsTrue(engine.ViewFolder.HasView("hello\\world.spark"));
+            Assert.IsTrue(engine.ViewFolder.HasView("hello\\world.spark".AsPath()));
         }
     }
 

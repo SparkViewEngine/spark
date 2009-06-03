@@ -40,7 +40,7 @@ namespace Spark.Tests
         public void TestExtensions()
         {
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("Home\\extensionelements.spark");
+            descriptor.Templates.Add("Home\\extensionelements.spark".AsPath());
             var entry = engine.CreateEntry(descriptor);
             Assert.That(entry.SourceCode.Contains("//this was a test"));
         }

@@ -31,11 +31,12 @@ namespace Spark.Tests
             _viewFolder = new FileSystemViewFolder("Spark.Tests.Views");
         }
 
+
         [Test]
         public void HasViewBoolean()
         {
-            var fileExists = _viewFolder.HasView("Home\\foreach.spark");
-            var fileNotFound = _viewFolder.HasView("Home\\fakefile.spark");
+            var fileExists = _viewFolder.HasView("Home\\foreach.spark".AsPath());
+            var fileNotFound = _viewFolder.HasView("Home\\fakefile.spark".AsPath());
             Assert.IsTrue(fileExists);
             Assert.IsFalse(fileNotFound);
         }
@@ -52,14 +53,14 @@ namespace Spark.Tests
         [Test, ExpectedException(typeof(FileNotFoundException))]
         public void GetSourceNotFound()
         {
-            _viewFolder.GetViewSource("Home\\NoSuchFile.spark");
+            _viewFolder.GetViewSource("Home\\NoSuchFile.spark".AsPath());
         }
 
 
         [Test]
         public void ReadingFileContents()
         {
-            var viewSource = _viewFolder.GetViewSource("Home\\foreach.spark");
+            var viewSource = _viewFolder.GetViewSource("Home\\foreach.spark".AsPath());
             var reader = new StreamReader(viewSource.OpenViewStream());
             var contents = reader.ReadToEnd();
             Assert.That(contents.Contains("<for each="));
@@ -68,7 +69,7 @@ namespace Spark.Tests
         [Test]
         public void LastModifiedChanges()
         {
-            var viewSource = _viewFolder.GetViewSource("Home\\foreach.spark");
+            var viewSource = _viewFolder.GetViewSource("Home\\foreach.spark".AsPath());
             var lastModified1 = viewSource.LastModified;
 
             Thread.Sleep(TimeSpan.FromMilliseconds(75));
@@ -76,7 +77,7 @@ namespace Spark.Tests
 
             Assert.AreEqual(lastModified1, lastModified2);
 
-            File.SetLastWriteTimeUtc("Spark.Tests.Views\\Home\\foreach.spark", DateTime.UtcNow);
+            File.SetLastWriteTimeUtc("Spark.Tests.Views\\Home\\foreach.spark".AsPath(), DateTime.UtcNow);
             var lastModified3 = viewSource.LastModified;
 
             Assert.AreNotEqual(lastModified1, lastModified3);

@@ -60,12 +60,12 @@ namespace Spark.Tests.Visitors
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts/></for>"},
-                                     {"home\\_Guts.spark", "<p>${xIndex}</p>"}
+                                     {"home\\index.spark".AsPath(), "<for each='var x in new[]{1,2,3}'><Guts/></for>"},
+                                     {"home\\_Guts.spark".AsPath(), "<p>${xIndex}</p>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
-            var chunks = loader.Load("home\\index.spark");
+            var chunks = loader.Load("home\\index.spark".AsPath());
 
             var detectCode = new DetectCodeExpressionVisitor(null);
             var index = detectCode.Add("xIndex");
@@ -82,12 +82,12 @@ namespace Spark.Tests.Visitors
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts>${xIndex}</Guts></for>"},
-                                     {"home\\_Guts.spark", "<p><render/></p>"}
+                                     {"home\\index.spark".AsPath(), "<for each='var x in new[]{1,2,3}'><Guts>${xIndex}</Guts></for>"},
+                                     {"home\\_Guts.spark".AsPath(), "<p><render/></p>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
-            var chunks = loader.Load("home\\index.spark");
+            var chunks = loader.Load("home\\index.spark".AsPath());
 
             var detectCode = new DetectCodeExpressionVisitor(null);
             var index = detectCode.Add("xIndex");
@@ -103,12 +103,12 @@ namespace Spark.Tests.Visitors
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts><section:foo>${xIndex}</section:foo></Guts></for>"},
-                                     {"home\\_Guts.spark", "<p><render:foo/></p>"}
+                                     {"home\\index.spark".AsPath(), "<for each='var x in new[]{1,2,3}'><Guts><section:foo>${xIndex}</section:foo></Guts></for>"},
+                                     {"home\\_Guts.spark".AsPath(), "<p><render:foo/></p>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
-            var chunks = loader.Load("home\\index.spark");
+            var chunks = loader.Load("home\\index.spark".AsPath());
 
             var detectCode = new DetectCodeExpressionVisitor(null);
             var index = detectCode.Add("xIndex");
@@ -124,12 +124,12 @@ namespace Spark.Tests.Visitors
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<Guts items='new[]{1,2,3}'><section:each>${xIndex}</section:each></Guts>"},
-                                     {"home\\_Guts.spark", "<for each='var x in items'><render:each/></for>"}
+                                     {"home\\index.spark".AsPath(), "<Guts items='new[]{1,2,3}'><section:each>${xIndex}</section:each></Guts>"},
+                                     {"home\\_Guts.spark".AsPath(), "<for each='var x in items'><render:each/></for>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
-            var chunks = loader.Load("home\\index.spark");
+            var chunks = loader.Load("home\\index.spark".AsPath());
 
             var detectCode = new DetectCodeExpressionVisitor(null);
             var index = detectCode.Add("xIndex");

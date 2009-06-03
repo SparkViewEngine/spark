@@ -27,12 +27,12 @@ namespace Spark.Tests
         public void HasViewCaseInsensitive()
         {
             var folder = new InMemoryViewFolder();
-            Assert.IsFalse(folder.HasView("Home\\Index.spark"));
-            folder.Add("Home\\Index.spark", "stuff");
-            Assert.IsTrue(folder.HasView("Home\\Index.spark"));
-            Assert.IsFalse(folder.HasView("Home\\Index"));
-            Assert.IsTrue(folder.HasView("Home\\index.spark"));
-            Assert.IsTrue(folder.HasView("home\\INDEX.SPARK"));
+            Assert.IsFalse(folder.HasView("Home\\Index.spark".AsPath()));
+            folder.Add("Home\\Index.spark".AsPath(), "stuff");
+            Assert.IsTrue(folder.HasView("Home\\Index.spark".AsPath()));
+            Assert.IsFalse(folder.HasView("Home\\Index".AsPath()));
+            Assert.IsTrue(folder.HasView("Home\\index.spark".AsPath()));
+            Assert.IsTrue(folder.HasView("home\\INDEX.SPARK".AsPath()));
         }
 
         [Test]
@@ -40,11 +40,11 @@ namespace Spark.Tests
         {
             var folder = new InMemoryViewFolder
                              {
-                                 {"Home\\Alpha.spark", "stuff"},
-                                 {"Home\\Beta.spark", "stuff"},
-                                 {"Home2\\Gamma.spark", "stuff"},
-                                 {"home\\Delta.spark", "stuff"},
-                                 {"Home\\Something\\else.spark", "stuff"}
+                                 {"Home\\Alpha.spark".AsPath(), "stuff"},
+                                 {"Home\\Beta.spark".AsPath(), "stuff"},
+                                 {"Home2\\Gamma.spark".AsPath(), "stuff"},
+                                 {"home\\Delta.spark".AsPath(), "stuff"},
+                                 {"Home\\Something\\else.spark".AsPath(), "stuff"}
                              };
 
             var views = folder.ListViews("Home");
@@ -60,16 +60,16 @@ namespace Spark.Tests
         public void FileNotFoundException()
         {
             var folder = new InMemoryViewFolder();
-            folder.Add("Home\\Index.spark", "stuff");
-            folder.GetViewSource("Home\\List.spark");            
+            folder.Add("Home\\Index.spark".AsPath(), "stuff");
+            folder.GetViewSource("Home\\List.spark".AsPath());            
         }
 
         [Test]
         public void ReadFileContents()
         {
             var folder = new InMemoryViewFolder();
-            folder.Add("Home\\Index.spark", "this is the file contents");
-            var source = folder.GetViewSource("Home\\Index.spark");
+            folder.Add("Home\\Index.spark".AsPath(), "this is the file contents");
+            var source = folder.GetViewSource("Home\\Index.spark".AsPath());
             using (var stream = source.OpenViewStream())
             {
                 using(var reader = new StreamReader(stream))
@@ -84,12 +84,12 @@ namespace Spark.Tests
         public void LastModifiedChanges()
         {
             var folder = new InMemoryViewFolder();
-            folder.Add("Home\\Index.spark", "this is the file contents");
-            var source1 = folder.GetViewSource("Home\\Index.spark");
+            folder.Add("Home\\Index.spark".AsPath(), "this is the file contents");
+            var source1 = folder.GetViewSource("Home\\Index.spark".AsPath());
             var lastModified1 = source1.LastModified;
-            
-            folder.Set("Home\\Index.spark", "this is the file contents");
-            var source2 = folder.GetViewSource("Home\\Index.spark");
+
+            folder.Set("Home\\Index.spark".AsPath(), "this is the file contents");
+            var source2 = folder.GetViewSource("Home\\Index.spark".AsPath());
             var lastModified2 = source2.LastModified;
 
             Assert.AreNotEqual(lastModified1, lastModified2);
@@ -106,11 +106,11 @@ namespace Spark.Tests
         public void InMemoryViewFolderUsedByEngine()
         {
             var folder = new InMemoryViewFolder();
-            folder.Add("home\\index.spark", "<p>Hello world</p>");
+            folder.Add("home\\index.spark".AsPath(), "<p>Hello world</p>");
             var engine = new SparkViewEngine(new SparkSettings().SetPageBaseType(typeof (StubSparkView))){ViewFolder = folder};
 
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("home\\index.spark");
+            descriptor.Templates.Add("home\\index.spark".AsPath());
             var view = engine.CreateInstance(descriptor);
             var contents = view.RenderView();
             Assert.AreEqual("<p>Hello world</p>", contents);
