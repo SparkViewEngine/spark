@@ -10,7 +10,8 @@
     using NorthwindDemo.Models;
     using System.Web.Routing;
 
-    public class ProductsController : Controller {
+    public class ProductsController : Controller
+    {
         public ProductsController()
             : this(new NorthwindRepository(new NorthwindDataContext()))
         { }
@@ -51,8 +52,10 @@
         {
             Product product = new Product();
 
-            if (TempData.ContainsKey("ErrorMessage")) {
-                foreach (var item in TempData) {
+            if (TempData.ContainsKey("ErrorMessage"))
+            {
+                foreach (var item in TempData)
+                {
                     ViewData[item.Key] = item.Value;
                 }
             }
@@ -65,15 +68,17 @@
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public object New(string id, FormCollection form) {
+        public object New(string id, FormCollection form)
+        {
             Product product = new Product();
-            
-            if(TryUpdateModel(product, form.ToValueProvider())) {
+
+            if (TryUpdateModel(product, form.ToValueProvider()) && Validate(product))
+            {
                 repository.InsertProductOnSubmit(product);
                 repository.SubmitChanges();
                 return RedirectToAction("List", new { id = product.Category.CategoryName });
             }
-            
+
             ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName", ViewData["CategoryID"]);
             ViewData["SupplierID"] = new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName", ViewData["SupplierID"]);
 
@@ -81,12 +86,14 @@
         }
 
 
-        public object NewCategory() {
+        public object NewCategory()
+        {
             return View();
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateCategory(string name, string description) {
+        public ActionResult CreateCategory(string name, string description)
+        {
             var c = new Category();
             c.CategoryName = name;
             c.Description = description;
@@ -102,28 +109,12 @@
         {
             Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
 
-            if (TempData.ContainsKey("ErrorMessage")) {
-                foreach (var item in TempData) {
+            if (TempData.ContainsKey("ErrorMessage"))
+            {
+                foreach (var item in TempData)
+                {
                     ViewData[item.Key] = item.Value;
                 }
-            }
-
-            ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName", ViewData["CategoryID"] ?? product.CategoryID);
-            ViewData["SupplierID"]= new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName", ViewData["SupplierID"] ?? product.SupplierID);
-
-            return View(product);
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public object Edit(int id, FormCollection form)
-        {
-            Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
-            try {
-                UpdateModel(product, form.ToValueProvider());
-                repository.SubmitChanges();
-                return RedirectToAction("List", new {id=product.Category.CategoryName});
-            }
-            catch {
             }
 
             ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName", ViewData["CategoryID"] ?? product.CategoryID);
@@ -132,15 +123,44 @@
             return View(product);
         }
 
-        bool IsValid() {
+        [AcceptVerbs(HttpVerbs.Post)]
+        public object Edit(int id, FormCollection form)
+        {
+            Product product = repository.Products.SingleOrDefault(p => p.ProductID == id);
+            if (TryUpdateModel(product, form.ToValueProvider()) && Validate(product))
+            {
+                repository.SubmitChanges();
+                return RedirectToAction("List", new { id = product.Category.CategoryName });
+            }
+
+
+            ViewData["CategoryID"] = new SelectList(repository.Categories.ToList(), "CategoryID", "CategoryName", ViewData["CategoryID"] ?? product.CategoryID);
+            ViewData["SupplierID"] = new SelectList(repository.Suppliers.ToList(), "SupplierID", "CompanyName", ViewData["SupplierID"] ?? product.SupplierID);
+
+            return View(product);
+        }
+
+        private bool Validate(Product product)
+        {
+            if (string.IsNullOrEmpty(product.ProductName))
+                ModelState.AddModelError("ProductName", "Name is required");
+            if (product.UnitPrice < 0)
+                ModelState.AddModelError("UnitPrice", "Price must not be negative");
+            return ModelState.IsValid;
+        }
+
+        bool IsValid()
+        {
             bool valid = true;
-            
-            if (!IsValidPrice(Request.Form["UnitPrice"])) {
+
+            if (!IsValidPrice(Request.Form["UnitPrice"]))
+            {
                 valid = false;
                 SetInvalid("UnitPrice");
             }
 
-            if (String.IsNullOrEmpty(Request.Form["ProductName"])) {
+            if (String.IsNullOrEmpty(Request.Form["ProductName"]))
+            {
                 valid = false;
                 SetInvalid("ProductName");
             }
@@ -148,11 +168,13 @@
             return valid;
         }
 
-        void SetInvalid(string key) {
+        void SetInvalid(string key)
+        {
             TempData["Error:" + key] = Request.Form[key];
         }
 
-        bool IsValidPrice(string price) {
+        bool IsValidPrice(string price)
+        {
             if (String.IsNullOrEmpty(price))
                 return false;
 

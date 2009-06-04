@@ -1,16 +1,16 @@
 ﻿<content name="MainContent">
     <viewdata model="Product"/>
     
-    <form method="post" action='${Url.Action("CreateCategory")}'>
+    <form method="post" action='!{Url.Action("CreateCategory")}'>
         <div>
             <label for="Name">Category Name:</label>
-            ${Html.TextBox("Name") }
+            !{Html.TextBox("Name") }
         </div>
         <div>
             <label for="Description">Description:</label>
-            ${Html.TextBox("Description") }
+            !{Html.TextBox("Description") }
         </div>
-        <input type="submit" /> ${Html.ActionLink("cancel", "Index")}
+        <input type="submit" /> !{Html.ActionLink("cancel", "Index")}
     </form>
 
 </content>

@@ -1,20 +1,20 @@
 ﻿<content name="MainContent">
     <viewdata model="IEnumerable[[Product]]"/>
-    <h2>${ViewData["CategoryName"]} <span class="action">${ Html.ActionLink("[add]", "New", new { id=ViewData["CategoryName"] })}</span></h2> 
+    <h2>${ViewData["CategoryName"]} <span class="action">!{Html.ActionLink("[add]", "New", new { id=ViewData["CategoryName"] })}</span></h2> 
     
     <if condition='TempData.ContainsKey("Message")'>
-        <span class="important">${ TempData["Message"] }</span>
+        <span class="important">${TempData["Message"]}</span>
     </if>
     
     <ul class="productlist">
-        <li each="var product in ViewData.Model">
-            <img src="/Content/Images/${product.ProductID}.jpg" alt="${Html.AttributeEncode(product.ProductName)}" align="left" /> 
+        <li each="var product in Model">
+            <img src="/Content/Images/!{product.ProductID}.jpg" alt="${product.ProductName}" align="left" /> 
             <div>
-                <a href="/Products/Detail/${product.ProductID}"> ${product.ProductName } </a>
+                <a href="/Products/Detail/!{product.ProductID}"> ${product.ProductName} </a>
                 <br />
                 Price: ${String.Format("{0:C2}", product.UnitPrice)} 
                   <span class="editlink"">
-                    (${Html.ActionLink("Edit", "Edit", new { ID=product.ProductID })})
+                    (!{Html.ActionLink("Edit", "Edit", new { ID=product.ProductID })})
                 </span>
             </div>
         </li>

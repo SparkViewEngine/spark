@@ -1,37 +1,40 @@
 ﻿<content name="MainContent">
     <viewdata model="Product"/>
     
-        <h2>${ViewData.Model.ProductName}</h2>
-        
-        <form method="post" action="/Products/Edit/${ViewData.Model.ProductID}">
-        <table>
-            <if condition='ViewData.ContainsKey("ErrorMessage")'>
-                <tr>
-                    <td colspan="2">
-                        <em class="error">${ViewData["ErrorMessage"]}</em>
-                    </td>
-                </tr>
-            </if>
-            <tr>
-                <td>${Html.Label("Name:", "ProductName")}</td>
-                <td>${Html.TextBox("ProductName")}</td>
-            </tr>
+    <h2>${Model.ProductName}</h2>
+    
+    <form method="post" action="/Products/Edit/${Model.ProductID}">
+		<table>
+			<if condition="!ViewData.ModelState.IsValid">
+				!{Html.ValidationSummary("Update was unsuccessful. Please correct the errors and try again.")}
+			</if>
+			<if condition='ViewData.ContainsKey("ErrorMessage")'>
+				<tr>
+					<td colspan="2">
+						<em class="error">${ViewData["ErrorMessage"]}</em>
+					</td>
+				</tr>
+			</if>
+			<tr>
+				<td>!{Html.Label("Name:", "ProductName")}</td>
+				<td>!{Html.TextBox("ProductName")} !{Html.ValidationMessage("ProductName", "*")}</td>
+			</tr>
 
-            <tr>
-                <td>Category:</td>
-                <td>${Html.DropDownList("CategoryID")}</td>
-            </tr>
+			<tr>
+				<td>Category:</td>
+				<td>!{Html.DropDownList("CategoryID")} !{Html.ValidationMessage("CategoryID", "*")}</td>
+			</tr>
 
-            <tr>
-                <td>Supplier:</td>
-                <td>${Html.DropDownList("SupplierID")}</td>
-            </tr>
+			<tr>
+				<td>Supplier:</td>
+				<td>!{Html.DropDownList("SupplierID")} !{Html.ValidationMessage("SupplierID", "*")}</td>
+			</tr>
 
-            <tr>
-                <td>${Html.Label("Unit Price:", "UnitPrice")}</td>
-                <td>${Html.TextBox("UnitPrice")}</td>
-            </tr>
-        </table>
-        <input type="submit" value="Save" /> ${Html.RouteLink("cancel", new {controller="Products", action="List", id=ViewData.Model.Category.CategoryName})}
-        </form>
+			<tr>
+				<td>!{Html.Label("Unit Price:", "UnitPrice")}</td>
+				<td>!{Html.TextBox("UnitPrice")} !{Html.ValidationMessage("UnitPrice", "*")}</td>
+			</tr>
+		</table>
+		<input type="submit" value="Save" /> !{Html.RouteLink("cancel", new {controller="Products", action="List", id=Model.Category.CategoryName})}
+    </form>
 </content>

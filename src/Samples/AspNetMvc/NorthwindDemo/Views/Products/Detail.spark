@@ -6,21 +6,20 @@
     <table>
         <tr>
             <th>Name</th>
-            <td>${ViewData.Model.ProductName}</td>
+            <td>${Model.ProductName}</td>
         </tr>
         <tr>
             <th>Category</th>
-            <td>${ViewData.Model.Category.CategoryName}</td>
+            <td>${Model.Category.CategoryName}</td>
         </tr>
         <tr>
             <th>Supplier</th>
-            <td>${ViewData.Model.Supplier.CompanyName}</td>
+            <td>${Model.Supplier.CompanyName}</td>
         </tr>
         <tr>
             <th>Unit Price</th>
-            <td>${ViewData.Model.UnitPrice}</td>
+            <td>${Model.UnitPrice}</td>
         </tr>
     </table>
-    ${Html.RouteLink("back", new {controller="Products", action="List", id=ViewData.Model.Category.CategoryName})}
-    
+    !{Html.RouteLink("back", new {controller="Products", action="List", id=Model.Category.CategoryName})}
 </content>
