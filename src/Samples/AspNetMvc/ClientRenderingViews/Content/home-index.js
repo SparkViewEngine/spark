@@ -21,7 +21,11 @@ $(".cartajax").livequery(
   
 });
 
-function SiteResource(path) {return path;}
+function SiteResource(path) {
+    if (path.length >= 2 && path.substr(0, 2) == '~/')
+        return appBasePath + path.substr(2);
+    return path;
+}
 
 window.Html = 
 {
