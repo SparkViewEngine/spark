@@ -26,8 +26,8 @@ namespace Spark.FileSystem
         private readonly string _virtualBaseDir;
 
         public VirtualPathProviderViewFolder(string virtualBaseDir)
-        {
-            _virtualBaseDir = virtualBaseDir.TrimEnd('/', '\\') + "/";
+        {            
+            _virtualBaseDir = virtualBaseDir.TrimEnd(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar) + "/";
         }
 
         public string VirtualBaseDir
@@ -82,7 +82,6 @@ namespace Spark.FileSystem
                 return VirtualBaseDir;
 
             return HostingEnvironment.VirtualPathProvider.CombineVirtualPaths(VirtualBaseDir, path);
-            //return _virtualBaseDir.TrimEnd('/', '\\') + '/' + path.TrimStart('/', '\\');
         }
     }
 }

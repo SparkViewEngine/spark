@@ -92,8 +92,9 @@ namespace Spark.FileSystem
 
             static string Adjust(string obj)
             {
-                return obj == null ? null : obj.Replace('/', '\\');
+                return obj == null ? null : obj.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             }
+
             public bool Equals(string x, string y)
             {
                 return _baseComparer.Equals(Adjust(x), Adjust(y));

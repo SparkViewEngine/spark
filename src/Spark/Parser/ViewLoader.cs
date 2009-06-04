@@ -105,11 +105,11 @@ namespace Spark.Parser
 
             // import _global.spark files from template path and shared path
 
-            var perFolderGlobal = Path.GetDirectoryName(viewPath) + "\\_global.spark";
+            var perFolderGlobal = Path.GetDirectoryName(viewPath) + Path.DirectorySeparatorChar + Constants.GlobalSpark;
             if (ViewFolder.HasView(perFolderGlobal))
                 BindEntry(perFolderGlobal);
 
-            const string sharedGlobal = "Shared\\_global.spark";
+            var sharedGlobal = Constants.SharedSlash + Constants.GlobalSpark;
             if (ViewFolder.HasView(sharedGlobal))
                 BindEntry(sharedGlobal);
 
