@@ -77,7 +77,7 @@
     <br/>
     Would not, could not, would not,
     <br/>
-    Could not, could not join the cance.
+    Could not, could not join the dance.
   </p>
 </content>
 <content set="parts[2]">
@@ -112,7 +112,7 @@
   <for each="var part in parts">
     <RoundBox>
       <section:header>The Lobster Quadrille ${partIndex + 1} of ${partCount}</section:header>
-      <section:body>${part}</section:body>
+      <section:body>!{part}</section:body>
     </RoundBox>
   </for>
 </content:splitcontentleft>
