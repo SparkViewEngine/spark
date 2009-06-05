@@ -1,5 +1,0 @@
-
-<use namespace="System.Web.Mvc.Html"/>
-<viewdata model="System.Collections.Generic.IEnumerable[[string]]">
-<ul><li each="var name in Model">!{Html.ActionLink(name, "invoice", new{id=name})}</li></ul>
-
