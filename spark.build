@@ -16,7 +16,20 @@
   <property name="version.revision" value="0"/>
   <property name="project.version" value="${version.major}.${version.minor}" dynamic="true" />
   <property name="project.fullversion" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true" />
-  <property name="nant.settings.currentframework" value="net-3.5" />
+
+  <!-- determining runtime platform properties -->
+  <if test="${framework::get-family(framework::get-runtime-framework()) == 'net'}">
+    <property name="nant.settings.currentframework" value="net-3.5"/>
+    <property name="tools.msbuild.shellcommandname" value="msbuild.exe" />
+    <property name="tools.msbuild.dir" value="${framework::get-framework-directory(framework::get-target-framework())}/"/>
+  </if>
+  <if test="${framework::get-family(framework::get-runtime-framework()) == 'mono'}">
+    <property name="nant.settings.currentframework" value="mono-3.5"/>
+    <property name="tools.msbuild.shellcommandname" value="xbuild" />
+    <property name="tools.msbuild.dir" value="/usr/bin/"/>
+  </if>
+  <property name="tools.msbuild.commandline" value="${tools.msbuild.dir}${tools.msbuild.shellcommandname}"/>
+
   <property name="ncover.path" value="${bin.dir}\ncover" />
 
   <property name="project.copyright" value="Copyright (c) ${company.name} 2008-${datetime::get-year(datetime::now())}"/>
@@ -78,17 +91,17 @@
   <target name="compile" depends="init">
     <echo message="Build Directory is ${build.dir}" />
 
-    <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+    <exec program="${tools.msbuild.commandline}"
 				  commandline="${solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir} /v:q" workingdir="." />
-    <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+    <exec program="${tools.msbuild.commandline}"
 				  commandline="${solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir} /v:q" workingdir="." />
 
     <if test="${property::exists('tools.solution.file')}">
       <property name="wix-parameters" value="WixTargetsPath=..\..\..\bin\msbuild\Microsoft\WiX\v3.0\wix.targets;WixTasksPath=WixTasks.dll;WixToolPath=..\..\..\bin\wix"/>
 
-      <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+      <exec program="${framework::get-framework-directory(framework::get-target-framework())}\${tools.msbuild.shellcommandname}"
             commandline="${tools.solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters} /v:q" workingdir="." />
-      <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+      <exec program="${framework::get-framework-directory(framework::get-target-framework())}\${tools.msbuild.shellcommandname}"
             commandline="${tools.solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};ProjectFullVersion=${project.fullversion} /v:q" workingdir="." />
     </if>
   </target>
@@ -177,7 +190,7 @@
 
 
   <target name="package">
-    <!-- 		
+    <!--
 			make a new dir for release.
 			include subfolders
 				Bin
@@ -213,13 +226,13 @@
         <include name="xpark.*" />
       </fileset>
     </copy>
-    
+
     <copy todir="${package.dir}/Bin/XparkSamples" flatten="true">
       <fileset basedir="${out.dir}/XparkSamples">
         <include name="*.*" />
       </fileset>
     </copy>
-    
+
     <copy todir="${package.dir}/Bin/Dependencies" flatten="true">
       <fileset basedir="${bin.dir}">
         <include name="aspnetmvc/*.*" />
