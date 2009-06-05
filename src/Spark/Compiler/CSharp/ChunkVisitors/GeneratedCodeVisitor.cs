@@ -20,7 +20,7 @@ using Spark.Parser.Code;
 
 namespace Spark.Compiler.CSharp.ChunkVisitors
 {
-    public class GeneratedCodeVisitor : AbstractChunkVisitor
+    public class GeneratedCodeVisitor : GeneratedCodeVisitorBase
     {
         private readonly SourceBuilder _source;
         private readonly NullBehaviour _nullBehaviour;
@@ -413,30 +413,6 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             CodeDefault();
         }
 
-        protected override void Visit(RenderPartialChunk chunk)
-        {
-            EnterRenderPartial(chunk);
-            Accept(chunk.FileContext.Contents);
-            ExitRenderPartial(chunk);
-        }
-
-        protected override void Visit(RenderSectionChunk chunk)
-        {
-            var outer = ExitRenderPartial();
-            if (string.IsNullOrEmpty(chunk.Name))
-            {
-                Accept(outer.Body);
-            }
-            else if (outer.Sections.ContainsKey(chunk.Name))
-            {
-                Accept(outer.Sections[chunk.Name]);
-            }
-            else
-            {
-                Accept(chunk.Default);
-            }
-            EnterRenderPartial(outer);
-        }
 
         protected override void Visit(ViewDataChunk chunk)
         {

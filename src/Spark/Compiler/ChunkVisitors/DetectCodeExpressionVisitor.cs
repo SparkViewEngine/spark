@@ -80,20 +80,22 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(RenderSectionChunk chunk)
         {
-            var currentPartial = ExitRenderPartial();
+            var outer = ExitRenderPartial();
             if (string.IsNullOrEmpty(chunk.Name))
             {
-                Accept(currentPartial.Body);
+                Accept(outer.Body);
             }
-            else if (currentPartial.Sections.ContainsKey(chunk.Name))
+            else if (outer.Sections.ContainsKey(chunk.Name))
             {
-                Accept(currentPartial.Sections[chunk.Name]);
+                Accept(outer.Sections[chunk.Name]);
             }
             else
             {
+                EnterRenderPartial(outer);
                 Accept(chunk.Default);
+                ExitRenderPartial(outer);
             }
-            EnterRenderPartial(currentPartial);
+            EnterRenderPartial(outer);
         }
 
         protected override void Visit(UseAssemblyChunk chunk)
