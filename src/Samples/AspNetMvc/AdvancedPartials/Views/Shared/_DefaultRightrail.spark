@@ -1,0 +1,29 @@
+
+<h2>In This Project</h2>
+<ul class="menublock">
+  <AllDemoPages/>
+</ul>
+
+#//default right rail has "aboverightrail" and "belowrightrail" sections you can <content> into
+        
+<use content="aboverightrail"/>
+
+<h2>Links</h2>
+<ul class="menublock">
+  <li><a href="http://dev.dejardin.org">Spark</a></li>
+  <li><a href="http://castleproject.org">Castle Project</a></li>
+  <li><a href="http://www.codeplex.com/MVCContrib">MVC Contrib</a></li>
+  <li><a href="http://forums.asp.net/1146.aspx">ASP.NET MVC Forums</a></li>
+</ul>
+
+<div id="searchbar">
+  <h2>Search This Site</h2>
+  <form action="#" method="get">
+    <fieldset>
+      <input value="demo only" name="s" id="s" alt="not functional, demo only" />
+      <input type="submit" value="Go!" id="searchbutton" name="searchbutton" />
+    </fieldset>
+  </form>
+</div>
+
+<use content="belowrightrail"/>

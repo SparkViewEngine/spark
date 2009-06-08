@@ -1,0 +1,11 @@
+<div class="box">
+  <content var="boxheader">
+    <render section="header"/>
+  </content>
+  <h3 if="!string.IsNullOrEmpty(boxheader.Trim())">!{boxheader}</h3>
+  
+  #//render <section name="body"> or just fallback to the html that's not in a <section> element
+  <render section="body">
+    <render/>
+  </render>
+</div>

@@ -1,0 +1,6 @@
+!{NavItem("About", new {controller='home', action='about'})}
+!{NavItem("Content blocks", new {controller='home', action='addingatplaceholders'})}
+!{NavItem("Panels and boxes", new {controller='home', action='boxes'})}
+!{NavItem("Paging and repeater", new {controller='home', action='pagingandrepeater'})}
+
+!{NavItem("Style guide", new {controller='home', action='styleguide'})}

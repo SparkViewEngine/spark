@@ -1,0 +1,44 @@
+
+#// http://www.thewebhelp.com/css/pagination_style_template/ 
+
+<default actionName="'pagingandrepeater'"/>
+
+<content name="head">
+  <link type="text/css" rel="stylesheet" href="~/content/pagination.css" once="pagination.css" />
+</content>
+
+<div class="tnt_pagination">
+
+  <test if="page.HasPreviousPage">
+    <a href="!{Url.Action(actionName, new {id=page.CurrentPage - 1})}">
+      <render section="prev">« Previous</render>
+    </a>
+    <else/>
+    <span class="disabled_tnt_pagination">
+      <render section="prev">« Previous</render>
+    </span>
+  </test>
+
+  #for(int pageIndex = 1; pageIndex [[= page.PageCount; ++pageIndex) {
+  <test if="page.CurrentPage == pageIndex">
+    <span class="active_tnt_link">
+      <render section="item">${pageIndex}</render>
+    </span>
+    <else/>
+    <a href="!{Url.Action(actionName, new {id=pageIndex})}">
+      <render section="item">${pageIndex}</render>
+    </a>
+  </test>
+  #}
+
+  <test if="page.HasNextPage">
+    <a href="!{Url.Action(actionName, new {id=page.CurrentPage + 1 })}">
+      <render section="next">Next »</render>
+    </a>
+    <else/>
+    <span class="disabled_tnt_pagination">
+      <render section="next">Next »</render>
+    </span>
+  </test>
+
+</div>
