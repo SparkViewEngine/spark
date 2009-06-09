@@ -19,7 +19,7 @@
 
 <h3>Html Source</h3>
 <content var="grabhtml"><helpertests/></content>
-<pre>${grabhtml}</pre>
+<pre>${H(grabhtml)}</pre>
 
 <h3>Collection autovariables</h3>
 <ul>
