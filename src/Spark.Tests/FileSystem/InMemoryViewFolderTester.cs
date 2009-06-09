@@ -1,4 +1,4 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+﻿// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,9 @@ using System.Linq;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
+using NUnit.Framework.SyntaxHelpers;
 
-namespace Spark.Tests
+namespace Spark.Tests.FileSystem
 {
     [TestFixture]
     public class InMemoryViewFolderTester 
@@ -114,6 +115,46 @@ namespace Spark.Tests
             var view = engine.CreateInstance(descriptor);
             var contents = view.RenderView();
             Assert.AreEqual("<p>Hello world</p>", contents);
+        }
+
+        static string ReadToEnd(IViewFolder viewFolder, string path)
+        {
+            using (var stream = viewFolder.GetViewSource(path).OpenViewStream())
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+        static string RenderView(ISparkViewEngine engine, string path)
+        {
+            var descriptor = new SparkViewDescriptor()
+                .AddTemplate(path);
+
+            return engine
+                .CreateInstance(descriptor)                
+                .RenderView();
+        }
+
+        [Test]
+        public void UnicodeCharactersSurviveConversionToByteArrayAndBack()
+        {
+            var folder = new InMemoryViewFolder();
+            folder.Add("Home\\fr.spark", "Fran\u00E7ais");
+            folder.Add("Home\\ru.spark", "\u0420\u0443\u0441\u0441\u043A\u0438\u0439");
+            folder.Add("Home\\ja.spark", "\u65E5\u672C\u8A9E");
+
+            Assert.That(ReadToEnd(folder, "Home\\fr.spark"), Is.EqualTo("Français"));
+            Assert.That(ReadToEnd(folder, "Home\\ru.spark"), Is.EqualTo("Русский"));
+            Assert.That(ReadToEnd(folder, "Home\\ja.spark"), Is.EqualTo("日本語"));
+            
+            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+            var engine = new SparkViewEngine(settings) { ViewFolder = folder };
+            Assert.That(RenderView(engine, "Home\\fr.spark"), Is.EqualTo("Français"));
+            Assert.That(RenderView(engine, "Home\\ru.spark"), Is.EqualTo("Русский"));
+            Assert.That(RenderView(engine, "Home\\ja.spark"), Is.EqualTo("日本語"));
         }
     }
 }

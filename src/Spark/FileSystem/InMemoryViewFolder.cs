@@ -29,15 +29,26 @@ namespace Spark.FileSystem
         {
         }
 
+        private static byte[] GetBytes(string value)
+        {
+            using(var stream = new MemoryStream())
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(value);
+                }
+                return stream.ToArray();
+            }
+        }
 
         public void Add(string key, string value)
         {
-            Add(key, Encoding.Default.GetBytes(value));
+            Add(key, GetBytes(value));
         }
 
         public void Set(string key, string value)
         {
-            this[key] = Encoding.Default.GetBytes(value);
+            this[key] = GetBytes(value);
         }
 
         public virtual IViewFile GetViewSource(string path)
