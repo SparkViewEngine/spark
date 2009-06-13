@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>${H(Title)}</title>
+    <link rel="stylesheet" href="~/Content/Site.css" type="text/css" />
+    <use content="head"/>
+  </head>
+  <body>
+    <use content="view"/>
+    <hr>
+    Footer Content<br/>
+    <use content="footer" />
+    </hr>
+  </body>
+</html>

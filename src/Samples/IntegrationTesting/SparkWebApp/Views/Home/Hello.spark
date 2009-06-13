@@ -1,0 +1,11 @@
+<content:head>
+<style>
+	b { color: #FF0000; }
+</style>
+</content:head>
+
+This is a <b>Test</b>.
+
+<content:footer>
+This is also the footer. 
+</content:footer>

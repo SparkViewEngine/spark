@@ -1,0 +1,5 @@
+<use namespace="System" />
+<use namespace="System.Collections.Generic"/>
+<use namespace="System.Web.Mvc.Html"/>
+
+<global type="string" MyTitle="'Spark Demo!'" MyName="'Donn Felker'" />
