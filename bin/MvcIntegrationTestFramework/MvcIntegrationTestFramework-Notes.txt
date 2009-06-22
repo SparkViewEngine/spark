@@ -1,0 +1,15 @@
+
+from
+  Integration Testing Your ASP.NET MVC Application
+  Steve Sanderson’s blog
+
+http://blog.codeville.net/2009/06/11/integration-testing-your-aspnet-mvc-application/
+
+
+Some of the code in MvcIntegrationTestFramework was adapted from Chot’s CodeProject [1] article, some of the ideas came from a discussion at DDD South West with Richard Fennell who’s already doing something similar except with a dependency on TypeMock [2], and some bits of my HttpWorkerRequest simulation code were demonstrated years ago by Phil Haack in his HttpSimulator code, which is similar to MvcIntegrationTestFramework except it predates ASP.NET MVC.
+
+
+[1] http://www.codeproject.com/KB/cs/AnonymousSerialization.aspx
+[2] http://msmvps.com/blogs/rfennell/archive/2009/05/01/testing-access-attributes-on-the-microsoft-mvc-framework.aspx
+[3] http://haacked.com/archive/2007/06/19/unit-tests-web-code-without-a-web-server-using-httpsimulator.aspx
+
