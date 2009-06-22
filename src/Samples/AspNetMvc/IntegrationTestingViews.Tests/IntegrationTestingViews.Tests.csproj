@@ -8,8 +8,8 @@
     <ProjectGuid>{53374419-3EA9-4660-AF00-7D790FC6D145}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IntegrationAndViewTests</RootNamespace>
-    <AssemblyName>IntegrationAndViewTests</AssemblyName>
+    <RootNamespace>IntegrationTestingViews.Tests</RootNamespace>
+    <AssemblyName>IntegrationTestingViews.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="MvcIntegrationTestFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\MvcIntegrationTestFramework.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Dependencies\MvcIntegrationTestFramework.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -41,11 +41,11 @@
     </Reference>
     <Reference Include="Spark, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7f8549eed921a12c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SparkWebApp\bin\Spark.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Spark.dll</HintPath>
     </Reference>
     <Reference Include="Spark.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SparkWebApp\bin\Spark.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\..\..\build\package\Bin\Spark.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -67,7 +67,14 @@
   <ItemGroup>
     <Compile Include="EndToEndIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SparkTestHelpers.cs" />
     <Compile Include="ViewTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IntegrationTestingViews\IntegrationTestingViews.csproj">
+      <Project>{443C0038-5832-45ED-91B0-9F99AE7476F7}</Project>
+      <Name>IntegrationTestingViews</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -78,6 +85,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)*.dll" "$(TargetDir)..\..\..\SparkWebApp\bin\"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)*.dll" "$(TargetDir)..\..\..\IntegrationTestingViews\bin\"</PostBuildEvent>
   </PropertyGroup>
 </Project>

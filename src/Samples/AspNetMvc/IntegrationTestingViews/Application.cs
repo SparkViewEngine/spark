@@ -13,7 +13,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using Spark.Web.Mvc;
 
-namespace SparkWebApp.WebHost
+namespace IntegrationTestingViews
 {
     public class Application
     {

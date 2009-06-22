@@ -8,7 +8,7 @@ using Spark.FileSystem;
 using Spark.Web.Mvc;
 using System.Collections.Generic;
 
-namespace SparkWebApp.WebHost.Controllers
+namespace IntegrationTestingViews.Controllers
 {
     public class HomeController : Controller
     {

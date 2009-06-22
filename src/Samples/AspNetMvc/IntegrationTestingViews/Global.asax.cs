@@ -2,8 +2,9 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using IntegrationTestingViews;
 
-namespace SparkWebApp.WebHost
+namespace IntegrationTestingViews
 {
     public class Global : HttpApplication
     {

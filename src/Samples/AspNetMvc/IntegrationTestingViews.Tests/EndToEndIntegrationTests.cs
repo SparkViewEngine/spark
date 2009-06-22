@@ -9,7 +9,7 @@ using MvcIntegrationTestFramework.Hosting;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace IntegrationAndViewTests
+namespace IntegrationTestingViews.Tests
 {
     /// <summary>
     /// These tests are using the framework provided by Steve Sanderson: 
@@ -18,7 +18,7 @@ namespace IntegrationAndViewTests
     [TestFixture]
     public class EndToEndIntegrationTests
     {
-        private static readonly string _mvcAppPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\..\..\..\SparkWebApp");
+        private static readonly string _mvcAppPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\..\..\..\IntegrationTestingViews");
         private readonly AppHost _appHost = new AppHost(_mvcAppPath);
 
         [Test]
