@@ -228,6 +228,7 @@
         <include name="itextsharp/*.*" />
         <include name="castle/*.*" />
         <include name="nunit/nunit.framework.dll" />
+	<include name="MvcIntegrationTestFramework/*.*" />
       </fileset>
     </copy>
 
