@@ -27,7 +27,7 @@ namespace Spark.Compiler.CSharp
             GenerateSourceCode(viewTemplates, allResources);
 
             var batchCompiler = new BatchCompiler();
-            var assembly = batchCompiler.Compile(Debug, SourceCode);
+            var assembly = batchCompiler.Compile(Debug, "csharp", SourceCode);
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 
@@ -122,7 +122,7 @@ namespace Spark.Compiler.CSharp
             {
                 source.AppendLine();
                 EditorBrowsableStateNever(source, 4); 
-                source.AppendLine(string.Format("    public void RenderViewLevel{0}()", renderLevel));
+                source.AppendLine(string.Format("    private void RenderViewLevel{0}()", renderLevel));
                 source.AppendLine("    {");
                 var viewGenerator = new GeneratedCodeVisitor(builder, globalSymbols, NullBehaviour) { Indent = 8 };
                 viewGenerator.Accept(viewTemplate);

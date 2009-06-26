@@ -338,7 +338,7 @@ namespace Spark
 
             var batchCompiler = new BatchCompiler { OutputAssembly = outputAssembly };
 
-            var assembly = batchCompiler.Compile(Settings.Debug, sourceCode.ToArray());
+            var assembly = batchCompiler.Compile(Settings.Debug, "csharp", sourceCode.ToArray());
             foreach (var entry in batch)
             {
                 entry.Compiler.CompiledType = assembly.GetType(entry.Compiler.ViewClassFullName);

@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Spark.Compiler.CSharp.ChunkVisitors;
+using Spark.Compiler.VisualBasic.ChunkVisitors;
 
 namespace Spark.Compiler.VisualBasic
 {
@@ -27,7 +26,7 @@ namespace Spark.Compiler.VisualBasic
             GenerateSourceCode(viewTemplates, allResources);
 
             var batchCompiler = new BatchCompiler();
-            var assembly = batchCompiler.Compile(Debug, SourceCode);
+            var assembly = batchCompiler.Compile(Debug, "visualbasic", SourceCode);
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 
@@ -37,12 +36,13 @@ namespace Spark.Compiler.VisualBasic
             var globalSymbols = new Dictionary<string, object>();
 
             var source = new StringBuilder();
-            var builder = new SourceBuilder(source);
+            // debug symbols not adjusted until the matching-directive issue resolved
+            var builder = new SourceBuilder(source) { AdjustDebugSymbols = false };
             var usingGenerator = new UsingNamespaceVisitor(builder);
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
             var globalsGenerator = new GlobalMembersVisitor(builder, globalSymbols, NullBehaviour);
-            
 
+            source.AppendLine("Option Infer On");
 
             // using <namespaces>;
             foreach (var ns in UseNamespaces ?? new string[0])
@@ -68,8 +68,7 @@ namespace Spark.Compiler.VisualBasic
                 ViewClassFullName = TargetNamespace + "." + viewClassName;
 
                 source.AppendLine();
-                source.AppendLine(string.Format("namespace {0}", TargetNamespace));
-                source.AppendLine("{");
+                source.AppendLine(string.Format("Namespace {0}", TargetNamespace));
             }
 
             source.AppendLine();
@@ -77,31 +76,36 @@ namespace Spark.Compiler.VisualBasic
             if (Descriptor != null)
             {
                 // [SparkView] attribute
-                source.AppendLine("[global::Spark.SparkViewAttribute(");
+                source.AppendLine("<Global.Spark.SparkViewAttribute(");
                 if (TargetNamespace != null)
-                    source.AppendFormat("    TargetNamespace=\"{0}\",", TargetNamespace).AppendLine();
-                source.AppendLine("    Templates = new string[] {");
+                    source.AppendFormat("    TargetNamespace:=\"{0}\",", TargetNamespace).AppendLine();
+                source.AppendLine("    Templates := New String() {");
                 source.Append("      ").AppendLine(string.Join(",\r\n      ",
                                                                Descriptor.Templates.Select(
                                                                    t => "\"" + t.Replace("\\", "\\\\") + "\"").ToArray()));
-                source.AppendLine("    })]");
+                source.AppendLine("    })> _");
             }
 
             // public class ViewName : BasePageType 
             builder
-                .Append("public class ")
-                .Append(viewClassName)
-                .Append(" : ")
-                .Append(baseClassGenerator.BaseClassTypeName)
-                .AppendLine();
-            source.AppendLine("{");
+                .Append("Public Class ")
+                .AppendLine(viewClassName)
+                .Append("    Inherits ")
+                .AppendLine(baseClassGenerator.BaseClassTypeName);
 
             source.AppendLine();
-            source.AppendLine("    public override System.Guid GeneratedViewId");
-            source.AppendLine(string.Format("    {{ get {{ return new System.Guid(\"{0:n}\"); }} }}", GeneratedViewId));
+            source.AppendLine(string.Format("    Private Shared ReadOnly _generatedViewId As Global.System.Guid = New Global.System.Guid(\"{0:n}\")", GeneratedViewId));
+
+
+            source.AppendLine("    Public Overrides ReadOnly Property GeneratedViewId() As Global.System.Guid");
+            source.AppendLine("      Get");
+            source.AppendLine("        Return _generatedViewId");
+            source.AppendLine("      End Get");
+            source.AppendLine("    End Property");
 
             if (Descriptor != null && Descriptor.Accessors != null)
             {
+                //TODO: correct this
                 foreach (var accessor in Descriptor.Accessors)
                 {
                     source.AppendLine();
@@ -119,41 +123,53 @@ namespace Spark.Compiler.VisualBasic
             foreach (var viewTemplate in viewTemplates)
             {
                 source.AppendLine();
-                source.AppendLine(string.Format("    public void RenderViewLevel{0}()", renderLevel));
-                source.AppendLine("    {");
+                EditorBrowsableStateNever(source, 4); 
+                source.AppendLine(string.Format("    Private Sub RenderViewLevel{0}()", renderLevel));
                 var viewGenerator = new GeneratedCodeVisitor(builder, globalSymbols, NullBehaviour) { Indent = 8 };
                 viewGenerator.Accept(viewTemplate);
-                source.AppendLine("    }");
+                source.AppendLine("    End Sub");
                 ++renderLevel;
             }
-
+            
             // public void RenderView()
             source.AppendLine();
-            source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
-            source.AppendLine("    {");
-            for (int invokeLevel = 0; invokeLevel != renderLevel; ++invokeLevel)
+            EditorBrowsableStateNever(source, 4); 
+            source.AppendLine("    Public Overrides Sub RenderView(ByVal writer As Global.System.IO.TextWriter)");
+            for (var invokeLevel = 0; invokeLevel != renderLevel; ++invokeLevel)
             {
                 if (invokeLevel != renderLevel - 1)
                 {
-                    source.AppendLine(string.Format("        using (OutputScope()) {{RenderViewLevel{0}(); Content[\"view\"] = Output;}}", invokeLevel));
+                    source.AppendLine("        Using OutputScope()");
+                    source.AppendLine(string.Format("            RenderViewLevel{0}()", invokeLevel));
+                    source.AppendLine("          Content(\"view\") = Output");
+                    source.AppendLine("        End Using");
                 }
                 else
                 {
-                    source.AppendLine(string.Format("        using (OutputScope(writer)) {{RenderViewLevel{0}();}}", invokeLevel));
+                    source.AppendLine("        Using OutputScope(writer)");
+                    source.AppendLine(string.Format("            RenderViewLevel{0}()", invokeLevel));
+                    source.AppendLine("        End Using");
                 }
             }
-            source.AppendLine("    }");
+            source.AppendLine("    End Sub");
 
-            source.AppendLine("}");
+
+            source.AppendLine("End Class");
 
             if (!string.IsNullOrEmpty(TargetNamespace))
             {
-                source.AppendLine("}");
+                source.AppendLine("End Namespace");
             }
 
             SourceCode = source.ToString();
             SourceMappings = builder.Mappings;
         }
 
+        private static void EditorBrowsableStateNever(StringBuilder source, int indentation)
+        {
+            source
+                .Append(new string(' ', indentation))
+                .AppendLine("<System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)> _");
+        }
     }
 }
