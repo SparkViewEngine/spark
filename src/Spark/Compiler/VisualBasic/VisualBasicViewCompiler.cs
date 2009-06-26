@@ -18,9 +18,9 @@ using System.Linq;
 using System.Text;
 using Spark.Compiler.CSharp.ChunkVisitors;
 
-namespace Spark.Compiler.CSharp
+namespace Spark.Compiler.VisualBasic
 {
-    public class DefaultViewCompiler : ViewCompiler
+    public class VisualBasicViewCompiler : ViewCompiler
     {
         public override void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {

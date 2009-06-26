@@ -20,7 +20,7 @@ using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 
-namespace Spark.Tests
+namespace Spark.Tests.Compiler
 {
     [TestFixture]
     public class SourceMappingTester
@@ -60,7 +60,7 @@ namespace Spark.Tests
             _viewFolder.Add("Home\\Index.spark", "<p>Hello ${\"world\"}</p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate("Home\\Index.spark"));
 
             Assert.AreEqual("<p>Hello world</p>", contents);
             Assert.AreEqual(1, _entry.SourceMappings.Count);
@@ -79,7 +79,7 @@ namespace Spark.Tests
             _viewFolder.Add("Home\\Index.spark", "<p><%var x = 5;%>${x}</p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate("Home\\Index.spark"));
 
             Assert.AreEqual("<p>5</p>", contents);
             Assert.AreEqual(2, _entry.SourceMappings.Count);
@@ -99,7 +99,7 @@ namespace Spark.Tests
             _viewFolder.Add("Home\\Index.spark", "<p class='${\"Hello\"}'>World</p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate("Home\\Index.spark"));
 
             Assert.AreEqual("<p class=\"Hello\">World</p>", contents);
             Assert.AreEqual(1, _entry.SourceMappings.Count);
@@ -118,7 +118,7 @@ namespace Spark.Tests
             _viewFolder.Add("Home\\Index.spark", "<p class=\"${'Hello' + 5}\">World</p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate("Home\\Index.spark"));
 
             Assert.AreEqual("<p class=\"Hello5\">World</p>", contents);
             Assert.AreEqual(2, _entry.SourceMappings.Count);

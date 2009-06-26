@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler\VisualBasicViewCompilerTester.cs" />
     <Compile Include="Compiler\ExpressionBuilderTester.cs" />
     <Compile Include="Compiler\ForEachInspectorTester.cs" />
     <Compile Include="DefaultResourcePathManagerTester.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="Stubs\StubViewData.cs" />
     <Compile Include="Stubs\StubViewFactory.cs" />
     <Compile Include="ViewActivatorTester.cs" />
-    <Compile Include="DefaultViewCompilerTester.cs" />
+    <Compile Include="Compiler\CSharpViewCompilerTester.cs" />
     <Compile Include="Parser\ViewLoaderTester.cs" />
     <Compile Include="Visitors\SpecialNodeVisitorTester.cs" />
   </ItemGroup>

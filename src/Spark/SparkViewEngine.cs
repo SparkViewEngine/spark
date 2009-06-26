@@ -367,7 +367,7 @@ namespace Spark
                                 {
                                     Descriptor = descriptor,
                                     Loader = new ViewLoader(),
-                                    Compiler = new DefaultViewCompiler { CompiledType = type },
+                                    Compiler = new CSharpViewCompiler { CompiledType = type },
                                     Activator = ViewActivatorFactory.Register(type)
                                 };
                 CompiledViewHolder.Current.Store(entry);
