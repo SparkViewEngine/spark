@@ -145,7 +145,7 @@ namespace Spark.Compiler.VisualBasic
             source.WriteLine();
             EditorBrowsableStateNever(source, 4);
             source
-                .WriteLine("Public Overrides Sub RenderView(ByVal writer As Global.System.IO.TextWriter)")
+                .WriteLine("Public Overrides Sub Render()")
                 .AddIndent();
             for (var invokeLevel = 0; invokeLevel != renderLevel; ++invokeLevel)
             {
@@ -162,11 +162,7 @@ namespace Spark.Compiler.VisualBasic
                 else
                 {
                     source
-                        .WriteLine("Using OutputScope(writer)")
-                        .AddIndent()
-                        .WriteLine("RenderViewLevel{0}()", invokeLevel)
-                        .RemoveIndent()
-                        .WriteLine("End Using");
+                        .WriteLine("RenderViewLevel{0}()", invokeLevel);
                 }
             }
             source
