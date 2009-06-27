@@ -24,6 +24,12 @@ namespace Spark.Tests.FileSystem
     [TestFixture]
     public class InMemoryViewFolderTester 
     {
+        [SetUp]
+        public void Init()
+        {
+            CompiledViewHolder.Current = new CompiledViewHolder();
+        }
+
         [Test]
         public void HasViewCaseInsensitive()
         {
