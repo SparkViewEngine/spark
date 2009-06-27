@@ -14,6 +14,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Spark.Compiler.CSharp.ChunkVisitors;
@@ -36,11 +37,12 @@ namespace Spark.Compiler.CSharp
         {
             var globalSymbols = new Dictionary<string, object>();
 
-            var source = new StringBuilder();
-            var builder = new SourceBuilder(source);
-            var usingGenerator = new UsingNamespaceVisitor(builder);
+            var writer = new StringWriter();
+            var source = new SourceWriter(writer);
+
+            var usingGenerator = new UsingNamespaceVisitor(source);
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
-            var globalsGenerator = new GlobalMembersVisitor(builder, globalSymbols, NullBehaviour);
+            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, NullBehaviour);
             
 
 
@@ -67,48 +69,49 @@ namespace Spark.Compiler.CSharp
             {
                 ViewClassFullName = TargetNamespace + "." + viewClassName;
 
-                source.AppendLine();
-                source.AppendLine(string.Format("namespace {0}", TargetNamespace));
-                source.AppendLine("{");
+                source
+                    .WriteLine()
+                    .WriteLine(string.Format("namespace {0}", TargetNamespace))
+                    .WriteLine("{").AddIndent();
             }
 
-            source.AppendLine();
+            source.WriteLine();
 
             if (Descriptor != null)
             {
                 // [SparkView] attribute
-                source.AppendLine("[global::Spark.SparkViewAttribute(");
+                source.WriteLine("[global::Spark.SparkViewAttribute(");
                 if (TargetNamespace != null)
-                    source.AppendFormat("    TargetNamespace=\"{0}\",", TargetNamespace).AppendLine();
-                source.AppendLine("    Templates = new string[] {");
-                source.Append("      ").AppendLine(string.Join(",\r\n      ",
+                    source.WriteFormat("    TargetNamespace=\"{0}\",", TargetNamespace).WriteLine();
+                source.WriteLine("    Templates = new string[] {");
+                source.Write("      ").WriteLine(string.Join(",\r\n      ",
                                                                Descriptor.Templates.Select(
                                                                    t => "\"" + t.Replace("\\", "\\\\") + "\"").ToArray()));
-                source.AppendLine("    })]");
+                source.WriteLine("    })]");
             }
 
             // public class ViewName : BasePageType 
-            builder
-                .Append("public class ")
-                .Append(viewClassName)
-                .Append(" : ")
-                .Append(baseClassGenerator.BaseClassTypeName)
-                .AppendLine();
-            source.AppendLine("{");
+            source
+                .Write("public class ")
+                .Write(viewClassName)
+                .Write(" : ")
+                .WriteCode(baseClassGenerator.BaseClassTypeName)
+                .WriteLine();
+            source.WriteLine("{").AddIndent();
 
-            source.AppendLine();
+            source.WriteLine();
             EditorBrowsableStateNever(source, 4);
-            source.AppendLine(string.Format("    private static System.Guid _generatedViewId = new System.Guid(\"{0:n}\");", GeneratedViewId));
-            source.AppendLine("    public override System.Guid GeneratedViewId");
-            source.AppendLine("    { get { return _generatedViewId; } }");
+            source.WriteLine("private static System.Guid _generatedViewId = new System.Guid(\"{0:n}\");", GeneratedViewId);
+            source.WriteLine("public override System.Guid GeneratedViewId");
+            source.WriteLine("{ get { return _generatedViewId; } }");
 
             if (Descriptor != null && Descriptor.Accessors != null)
             {
                 foreach (var accessor in Descriptor.Accessors)
                 {
-                    source.AppendLine();
-                    source.Append("    public ").AppendLine(accessor.Property);
-                    source.Append("    { get { return ").Append(accessor.GetValue).AppendLine("; } }");
+                    source.WriteLine();
+                    source.Write("public ").WriteLine(accessor.Property);
+                    source.Write("{ get { return ").Write(accessor.GetValue).WriteLine("; } }");
                 }
             }
 
@@ -120,50 +123,51 @@ namespace Spark.Compiler.CSharp
             int renderLevel = 0;
             foreach (var viewTemplate in viewTemplates)
             {
-                source.AppendLine();
+                source.WriteLine();
                 EditorBrowsableStateNever(source, 4); 
-                source.AppendLine(string.Format("    private void RenderViewLevel{0}()", renderLevel));
-                source.AppendLine("    {");
-                var viewGenerator = new GeneratedCodeVisitor(builder, globalSymbols, NullBehaviour) { Indent = 8 };
+                source.WriteLine(string.Format("private void RenderViewLevel{0}()", renderLevel));
+                source.WriteLine("{").AddIndent();
+                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols, NullBehaviour);
                 viewGenerator.Accept(viewTemplate);
-                source.AppendLine("    }");
+                source.RemoveIndent().WriteLine("}");
                 ++renderLevel;
             }
 
             // public void RenderView()
-            source.AppendLine();
+            source.WriteLine();
             EditorBrowsableStateNever(source, 4); 
-            source.AppendLine("    public override void RenderView(System.IO.TextWriter writer)");
-            source.AppendLine("    {");
-            for (int invokeLevel = 0; invokeLevel != renderLevel; ++invokeLevel)
+            source.WriteLine("public override void RenderView(System.IO.TextWriter writer)");
+            source.WriteLine("{").AddIndent();
+            for (var invokeLevel = 0; invokeLevel != renderLevel; ++invokeLevel)
             {
                 if (invokeLevel != renderLevel - 1)
                 {
-                    source.AppendLine(string.Format("        using (OutputScope()) {{RenderViewLevel{0}(); Content[\"view\"] = Output;}}", invokeLevel));
+                    source.WriteLine("using (OutputScope()) {{RenderViewLevel{0}(); Content[\"view\"] = Output;}}", invokeLevel);
                 }
                 else
                 {
-                    source.AppendLine(string.Format("        using (OutputScope(writer)) {{RenderViewLevel{0}();}}", invokeLevel));
+                    source.WriteLine("using (OutputScope(writer)) {{RenderViewLevel{0}();}}", invokeLevel);
                 }
             }
-            source.AppendLine("    }");
+            source.RemoveIndent().WriteLine("}");
 
-            source.AppendLine("}");
+            // end class
+            source.RemoveIndent().WriteLine("}");
 
             if (!string.IsNullOrEmpty(TargetNamespace))
             {
-                source.AppendLine("}");
+                source.RemoveIndent().WriteLine("}");
             }
 
             SourceCode = source.ToString();
-            SourceMappings = builder.Mappings;
+            SourceMappings = source.Mappings;
         }
 
-        private static void EditorBrowsableStateNever(StringBuilder source, int indentation)
+        private static void EditorBrowsableStateNever(SourceWriter source, int indentation)
         {
             source
-                .Append(new string(' ', indentation))
-                .AppendLine("[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]");
+                .Indent(indentation)
+                .WriteLine("[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]");
         }
     }
 }

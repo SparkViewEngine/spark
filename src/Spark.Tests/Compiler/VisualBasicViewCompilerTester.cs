@@ -264,45 +264,45 @@ namespace Spark.Tests.Compiler
             Assert.AreEqual("<p>wastrue</p>", contents);
         }
 
-        //[Test]
-        //public void IfFalseCondition()
-        //{
-        //    var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
+        [Test]
+        public void IfFalseCondition()
+        {
+            var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
 
-        //    var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
+            var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
-        //    DoCompileView(compiler, new Chunk[]
-        //                            {
-        //                                new SendLiteralChunk {Text = "<p>"},
-        //                                new LocalVariableChunk{Name="arg", Value="5"},
-        //                                new ConditionalChunk{Type=ConditionalType.If, Condition="arg==6", Body=trueChunks},
-        //                                new SendLiteralChunk {Text = "</p>"}
-        //                            });
-        //    var instance = compiler.CreateInstance();
-        //    var contents = instance.RenderView();
-        //    Assert.AreEqual("<p></p>", contents);
-        //}
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new SendLiteralChunk {Text = "<p>"},
+                                        new LocalVariableChunk{Name="arg", Value="5"},
+                                        new ConditionalChunk{Type=ConditionalType.If, Condition="arg=6", Body=trueChunks},
+                                        new SendLiteralChunk {Text = "</p>"}
+                                    });
+            var instance = compiler.CreateInstance();
+            var contents = instance.RenderView();
+            Assert.AreEqual("<p></p>", contents);
+        }
 
-        //[Test]
-        //public void IfElseFalseCondition()
-        //{
-        //    var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
+        [Test]
+        public void IfElseFalseCondition()
+        {
+            var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
 
-        //    var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
-        //    var falseChunks = new Chunk[] { new SendLiteralChunk { Text = "wasfalse" } };
+            var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
+            var falseChunks = new Chunk[] { new SendLiteralChunk { Text = "wasfalse" } };
 
-        //    DoCompileView(compiler, new Chunk[]
-        //                            {
-        //                                new SendLiteralChunk {Text = "<p>"},
-        //                                new LocalVariableChunk{Name="arg", Value="5"},
-        //                                new ConditionalChunk{Type=ConditionalType.If, Condition="arg==6", Body=trueChunks},
-        //                                new ConditionalChunk{Type=ConditionalType.Else, Body=falseChunks},
-        //                                new SendLiteralChunk {Text = "</p>"}
-        //                            });
-        //    var instance = compiler.CreateInstance();
-        //    var contents = instance.RenderView();
-        //    Assert.AreEqual("<p>wasfalse</p>", contents);
-        //}
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new SendLiteralChunk {Text = "<p>"},
+                                        new LocalVariableChunk{Name="arg", Value="5"},
+                                        new ConditionalChunk{Type=ConditionalType.If, Condition="arg=6", Body=trueChunks},
+                                        new ConditionalChunk{Type=ConditionalType.Else, Body=falseChunks},
+                                        new SendLiteralChunk {Text = "</p>"}
+                                    });
+            var instance = compiler.CreateInstance();
+            var contents = instance.RenderView();
+            Assert.AreEqual("<p>wasfalse</p>", contents);
+        }
 
         //[Test]
         //public void LenientSilentNullDoesNotCauseWarningCS0168()

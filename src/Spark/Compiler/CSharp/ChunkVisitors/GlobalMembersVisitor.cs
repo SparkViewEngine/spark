@@ -22,46 +22,50 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 {
     public class GlobalMembersVisitor : ChunkVisitor
     {
-        private readonly SourceBuilder _source;
+        private readonly SourceWriter _source;
         private readonly Dictionary<string, object> _globalSymbols;
     	private readonly NullBehaviour _nullBehaviour;
     	readonly Dictionary<string, string> _viewDataAdded = new Dictionary<string, string>();
         readonly Dictionary<string, GlobalVariableChunk> _globalAdded = new Dictionary<string, GlobalVariableChunk>();
-        private int _indent = 4;
-
-        public GlobalMembersVisitor(SourceBuilder output, Dictionary<string, object> globalSymbols, NullBehaviour nullBehaviour)
+       
+        public GlobalMembersVisitor(SourceWriter output, Dictionary<string, object> globalSymbols, NullBehaviour nullBehaviour)
         {
             _source = output;
             _globalSymbols = globalSymbols;
 			_nullBehaviour = nullBehaviour;
         }
 
-        private int Indent
-        {
-            get { return _indent; }
-        }
 
-        private SourceBuilder AppendIndent()
-        {
-            return _source.Append(' ', Indent);
-        }
 
-        private SourceBuilder CodeIndent(Chunk chunk)
+        private SourceWriter CodeIndent(Chunk chunk)
         {
-            if (chunk != null && chunk.Position != null)
-                return _source.AppendFormat("#line {0} \"{1}\"", chunk.Position.Line, chunk.Position.SourceContext.FileName).AppendLine().Append(' ', chunk.Position.Column - 1);
+            if (_source.AdjustDebugSymbols)
+            {
+                if (chunk != null && chunk.Position != null)
+                {
+                    _source.StartOfLine = false;
+                    return _source
+                        .WriteDirective("#line {0} \"{1}\"", chunk.Position.Line, chunk.Position.SourceContext.FileName)
+                        .Indent(chunk.Position.Column - 1);
+                }
 
-            return _source.AppendLine("#line default").Append(' ', Indent);
+                _source.StartOfLine = false;
+                return _source.WriteLine("#line default");
+            }
+
+            return _source;
         }
 
         private void CodeHidden()
         {
-            _source.AppendLine("#line hidden");
+            if (_source.AdjustDebugSymbols)
+                _source.WriteDirective("#line hidden");
         }
 
         private void CodeDefault()
         {
-            _source.AppendLine("#line default");
+            if (_source.AdjustDebugSymbols)
+                _source.WriteDirective("#line default");
         }
 
         protected override void Visit(GlobalVariableChunk chunk)
@@ -84,16 +88,16 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             var typeParts = type.ToString().Split(' ', '\t');
             if (typeParts.Contains("const") || typeParts.Contains("readonly"))
             {
-                _source.AppendFormat("\r\n    {0} {1} = {2};",
+                _source.WriteFormat("\r\n    {0} {1} = {2};",
                                      type, chunk.Name, chunk.Value);
             }
             else
             {
-                _source.AppendFormat(
+                _source.WriteFormat(
                     "\r\n    {0} _{1} = {2};\r\n    public {0} {1} {{ get {{return _{1};}} set {{_{1} = value;}} }}",
                     type, chunk.Name, chunk.Value);
             }
-            _source.AppendLine();
+            _source.WriteLine();
         }
 
 
@@ -102,12 +106,12 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             if (Snippets.IsNullOrEmpty(chunk.TModelAlias))
                 return;
 
-            AppendIndent()
-                .AppendCode(chunk.TModel)
-                .Append(" ")
-                .AppendCode(chunk.TModelAlias)
-                .AppendLine();
-            CodeIndent(chunk).AppendLine("{get {return ViewData.Model;}}");
+            _source
+                .WriteCode(chunk.TModel)
+                .Write(" ")
+                .WriteCode(chunk.TModelAlias)
+                .WriteLine();
+            CodeIndent(chunk).WriteLine("{get {return ViewData.Model;}}");
             CodeDefault();
         }
 
@@ -132,49 +136,49 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             }
 
             _viewDataAdded.Add(name, key + ":" + type);
-            AppendIndent().Append(type).Append(" ").AppendLine(name);
+            _source.WriteCode(type).Write(" ").WriteLine(name);
             if (Snippets.IsNullOrEmpty(chunk.Default))
             {
                 CodeIndent(chunk)
-                    .Append("{get {return (")
-                    .Append(type)
-                    .Append(")ViewData.Eval(\"")
-                    .Append(key)
-                    .AppendLine("\");}}");
+                    .Write("{get {return (")
+                    .WriteCode(type)
+                    .Write(")ViewData.Eval(\"")
+                    .Write(key)
+                    .WriteLine("\");}}");
             }
             else
             {
                 CodeIndent(chunk)
-                    .Append("{get {return (")
-                    .Append(type)
-                    .Append(")(ViewData.Eval(\"")
-                    .Append(key)
-                    .Append("\")??")
-                    .Append(chunk.Default)
-                    .AppendLine(");}}");
+                    .Write("{get {return (")
+                    .WriteCode(type)
+                    .Write(")(ViewData.Eval(\"")
+                    .Write(key)
+                    .Write("\")??")
+                    .WriteCode(chunk.Default)
+                    .WriteLine(");}}");
             }
             CodeDefault();
         }
 
         protected override void Visit(ExtensionChunk chunk)
         {
-            chunk.Extension.VisitChunk(this, OutputLocation.ClassMembers, chunk.Body, _source.Source);
+            chunk.Extension.VisitChunk(this, OutputLocation.ClassMembers, chunk.Body, _source.GetStringBuilder());
         }
 
         protected override void Visit(MacroChunk chunk)
         {
-            _source.Append(string.Format("\r\n    string {0}(", chunk.Name));
+            _source.Write(string.Format("\r\n    string {0}(", chunk.Name));
             string delimiter = "";
             foreach (var parameter in chunk.Parameters)
             {
-                _source.Append(delimiter).Append(parameter.Type).Append(" ").Append(parameter.Name);
+                _source.Write(delimiter).WriteCode(parameter.Type).Write(" ").Write(parameter.Name);
                 delimiter = ", ";
             }
-            _source.AppendLine(")");
-            CodeIndent(chunk).AppendLine("{");
+            _source.WriteLine(")");
+            CodeIndent(chunk).WriteLine("{");
             CodeHidden();
-            _source.AppendLine("        using(OutputScope(new System.IO.StringWriter()))");
-            _source.AppendLine("        {");
+            _source.WriteLine("        using(OutputScope(new System.IO.StringWriter()))");
+            _source.WriteLine("        {");
             CodeDefault();
             
             var variables = new Dictionary<string, object>();
@@ -182,13 +186,13 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             {
                 variables.Add(param.Name, null);
             }
-            var generator = new GeneratedCodeVisitor(_source, variables, _nullBehaviour) { Indent = 12 };
+            var generator = new GeneratedCodeVisitor(_source, variables, _nullBehaviour);
             generator.Accept(chunk.Body);
 
             CodeHidden();
-            _source.AppendLine("            return Output.ToString();");
-            _source.AppendLine("        }");
-            _source.AppendLine("    }");
+            _source.WriteLine("            return Output.ToString();");
+            _source.WriteLine("        }");
+            _source.WriteLine("    }");
             CodeDefault();
         }
     }

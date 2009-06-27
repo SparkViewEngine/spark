@@ -22,7 +22,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 {
     public class UsingNamespaceVisitor : ChunkVisitor
     {
-        private readonly SourceBuilder _source;
+        private readonly SourceWriter _source;
 
         private readonly Dictionary<string, object> _namespaceAdded = new Dictionary<string, object>();
         private readonly Dictionary<string, Assembly> _assemblyAdded = new Dictionary<string, Assembly>();
@@ -30,7 +30,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
         readonly Stack<string> _noncyclic = new Stack<string>();
 
 
-        public UsingNamespaceVisitor(SourceBuilder output)
+        public UsingNamespaceVisitor(SourceWriter output)
         {
             _source = output;
         }
@@ -49,7 +49,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(ExtensionChunk chunk)
         {
-            chunk.Extension.VisitChunk(this, OutputLocation.UsingNamespace, chunk.Body, _source.Source);
+            chunk.Extension.VisitChunk(this, OutputLocation.UsingNamespace, chunk.Body, _source.GetStringBuilder());
         }
 
         protected override void Visit(RenderPartialChunk chunk)
@@ -68,7 +68,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                 return;
 
             _namespaceAdded.Add(ns, null);
-            _source.Append("using ").Append(ns).AppendLine(";");
+            _source.Write("using ").WriteCode(ns).WriteLine(";");
         }
 
         public void UsingAssembly(string assemblyString)

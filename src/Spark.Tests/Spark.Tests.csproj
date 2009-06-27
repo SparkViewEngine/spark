@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler\SourceWriterTester.cs" />
     <Compile Include="Compiler\VisualBasicViewCompilerTester.cs" />
     <Compile Include="Compiler\ExpressionBuilderTester.cs" />
     <Compile Include="Compiler\ForEachInspectorTester.cs" />
