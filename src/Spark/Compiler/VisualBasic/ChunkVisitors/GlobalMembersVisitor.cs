@@ -48,20 +48,21 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
 
         private SourceBuilder CodeIndent(Chunk chunk)
         {
-            if (chunk != null && chunk.Position != null)
-                return _source.AppendFormat("#line {0} \"{1}\"", chunk.Position.Line, chunk.Position.SourceContext.FileName).AppendLine().Append(' ', chunk.Position.Column - 1);
+            //if (chunk != null && chunk.Position != null)
+            //    return _source.AppendFormat("#line {0} \"{1}\"", chunk.Position.Line, chunk.Position.SourceContext.FileName).AppendLine().Append(' ', chunk.Position.Column - 1);
 
-            return _source.AppendLine("#line default").Append(' ', Indent);
+            //return _source.AppendLine("#line default").Append(' ', Indent);
+            return _source.Append(' ', Indent);
         }
 
         private void CodeHidden()
         {
-            _source.AppendLine("#line hidden");
+            //_source.AppendLine("#line hidden");
         }
 
         private void CodeDefault()
         {
-            _source.AppendLine("#line default");
+            //_source.AppendLine("#line default");
         }
 
         protected override void Visit(GlobalVariableChunk chunk)
@@ -80,7 +81,7 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
                 return;
             }
 
-            var type = chunk.Type ?? "object";
+            var type = chunk.Type ?? "Object";
             var typeParts = type.ToString().Split(' ', '\t');
             if (typeParts.Contains("const") || typeParts.Contains("readonly"))
             {
@@ -90,7 +91,15 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
             else
             {
                 _source.AppendFormat(
-                    "\r\n    {0} _{1} = {2};\r\n    public {0} {1} {{ get {{return _{1};}} set {{_{1} = value;}} }}",
+                    "\r\n    Private _{1} As {0} = {2}"+
+                    "\r\n    Public Property {1}() As {0}"+
+                    "\r\n        Get" +
+                    "\r\n            Return _{1}" +
+                    "\r\n        End Get" +
+                    "\r\n        Set(ByVal value as {0})" +
+                    "\r\n            _{1} = value" +
+                    "\r\n        End Set" +
+                    "\r\n    End Property",
                     type, chunk.Name, chunk.Value);
             }
             _source.AppendLine();

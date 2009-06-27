@@ -363,8 +363,7 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
             CodeIndent(chunk)
                 .Append(chunk.Name)
                 .Append(" = ")
-                .Append(chunk.Value)
-                .AppendLine(";");
+                .AppendLine(chunk.Value);
             CodeDefault();
         }
 
@@ -472,17 +471,15 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
                     {
                         //CodeIndent(chunk).AppendLine(string.Format("if ({0})", chunk.Condition));
                         CodeIndent(chunk)
-                            .Append("if (")
+                            .Append("If ")
                             .AppendCode(chunk.Condition)
-                            .AppendLine(")");
+                            .AppendLine(" Then");
                         CodeDefault();
                         PushScope();
-                        AppendIndent().AppendLine("{");
                         Indent += 4;
                         Accept(chunk.Body);
                         Indent -= 4;
-                        AppendIndent().AppendLine(string.Format("}} // if ({0})",
-                                                                chunk.Condition.ToString().Replace("\r", "").Replace("\n", " ")));
+                        AppendIndent().AppendLine("End If");
                         PopScope();
                     }
                     break;

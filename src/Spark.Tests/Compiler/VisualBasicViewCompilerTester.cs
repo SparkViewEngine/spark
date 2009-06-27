@@ -201,23 +201,24 @@ namespace Spark.Tests.Compiler
             var contents = instance.RenderView();
             Assert.AreEqual("<ul><li>3TrueFalse03</li><li>4FalseFalse13</li><li>5FalseTrue23</li></ul>", contents);
         }
-        //[Test]
-        //public void GlobalVariables()
-        //{
-        //    var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
-        //    DoCompileView(compiler, new Chunk[]
-        //                            {
-        //                                new SendExpressionChunk{Code="title"},
-        //                                new AssignVariableChunk{ Name="item", Value="8"},
-        //                                new SendLiteralChunk{ Text=":"},
-        //                                new SendExpressionChunk{Code="item"},
-        //                                new GlobalVariableChunk{ Name="title", Value="\"hello world\""},
-        //                                new GlobalVariableChunk{ Name="item", Value="3"}
-        //                            });
-        //    var instance = compiler.CreateInstance();
-        //    var contents = instance.RenderView();
-        //    Assert.AreEqual("hello world:8", contents);
-        //}
+
+        [Test]
+        public void GlobalVariables()
+        {
+            var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new SendExpressionChunk{Code="title"},
+                                        new AssignVariableChunk{ Name="item", Value="8"},
+                                        new SendLiteralChunk{ Text=":"},
+                                        new SendExpressionChunk{Code="item"},
+                                        new GlobalVariableChunk{ Name="title", Value="\"hello world\""},
+                                        new GlobalVariableChunk{ Name="item", Value="3"}
+                                    });
+            var instance = compiler.CreateInstance();
+            var contents = instance.RenderView();
+            Assert.AreEqual("hello world:8", contents);
+        }
 
         [Test]
         public void TargetNamespace()
@@ -234,34 +235,34 @@ namespace Spark.Tests.Compiler
         }
 
 
-        //[Test, ExpectedException(typeof(CompilerException))]
-        //public void ProvideFullException()
-        //{
-        //    var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
-        //    DoCompileView(compiler, new Chunk[]
-        //                            {
-        //                                new SendExpressionChunk {Code = "NoSuchVariable"}
-        //                            });
-        //}
+        [Test, ExpectedException(typeof(CompilerException))]
+        public void ProvideFullException()
+        {
+            var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new SendExpressionChunk {Code = "NoSuchVariable"}
+                                    });
+        }
 
-        //[Test]
-        //public void IfTrueCondition()
-        //{
-        //    var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
+        [Test]
+        public void IfTrueCondition()
+        {
+            var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
 
-        //    var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
+            var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
-        //    DoCompileView(compiler, new Chunk[]
-        //                            {
-        //                                new SendLiteralChunk {Text = "<p>"},
-        //                                new LocalVariableChunk{Name="arg", Value="5"},
-        //                                new ConditionalChunk{Type=ConditionalType.If, Condition="arg==5", Body=trueChunks},
-        //                                new SendLiteralChunk {Text = "</p>"}
-        //                            });
-        //    var instance = compiler.CreateInstance();
-        //    var contents = instance.RenderView();
-        //    Assert.AreEqual("<p>wastrue</p>", contents);
-        //}
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new SendLiteralChunk {Text = "<p>"},
+                                        new LocalVariableChunk{Name="arg", Value="5"},
+                                        new ConditionalChunk{Type=ConditionalType.If, Condition="arg=5", Body=trueChunks},
+                                        new SendLiteralChunk {Text = "</p>"}
+                                    });
+            var instance = compiler.CreateInstance();
+            var contents = instance.RenderView();
+            Assert.AreEqual("<p>wastrue</p>", contents);
+        }
 
         //[Test]
         //public void IfFalseCondition()
