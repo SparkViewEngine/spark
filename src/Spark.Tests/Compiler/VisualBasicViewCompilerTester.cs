@@ -17,10 +17,7 @@ using System.Collections.Generic;
 using NUnit.Framework.SyntaxHelpers;
 using Spark.Compiler;
 using NUnit.Framework;
-using Spark.Compiler.CSharp;
 using Spark.Compiler.VisualBasic;
-using Spark.Tests.Models;
-using Spark.Tests.Stubs;
 
 namespace Spark.Tests.Compiler
 {
@@ -151,31 +148,59 @@ namespace Spark.Tests.Compiler
             Assert.AreEqual("5", contents);
         }
 
-        //[Test]
-        //public void ForEachLoop()
-        //{
-        //    var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
-        //    DoCompileView(compiler, new Chunk[]
-        //                            {
-        //                                new LocalVariableChunk {Name = "data", Value = "new[]{3,4,5}"},
-        //                                new SendLiteralChunk {Text = "<ul>"},
-        //                                new ForEachChunk
-        //                                {
-        //                                    Code = "var item in data",
-        //                                    Body = new Chunk[]
-        //                                           { 
-        //                                               new SendLiteralChunk {Text = "<li>"},
-        //                                               new SendExpressionChunk {Code = "item"},
-        //                                               new SendLiteralChunk {Text = "</li>"}
-        //                                           }
-        //                                },
-        //                                new SendLiteralChunk {Text = "</ul>"}
-        //                            });
-        //    var instance = compiler.CreateInstance();
-        //    var contents = instance.RenderView();
-        //    Assert.AreEqual("<ul><li>3</li><li>4</li><li>5</li></ul>", contents);
-        //}
+        [Test]
+        public void ForEachLoop()
+        {
+            var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new LocalVariableChunk {Name = "data", Value = "new Integer(){3,4,5}"},
+                                        new SendLiteralChunk {Text = "<ul>"},
+                                        new ForEachChunk
+                                        {
+                                            Code = "item in data",
+                                            Body = new Chunk[]
+                                                   { 
+                                                       new SendLiteralChunk {Text = "<li>"},
+                                                       new SendExpressionChunk {Code = "item"},
+                                                       new SendLiteralChunk {Text = "</li>"}
+                                                   }
+                                        },
+                                        new SendLiteralChunk {Text = "</ul>"}
+                                    });
+            var instance = compiler.CreateInstance();
+            var contents = instance.RenderView();
+            Assert.AreEqual("<ul><li>3</li><li>4</li><li>5</li></ul>", contents);
+        }
 
+        [Test]
+        public void ForEachAutoVariables()
+        {
+            var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new LocalVariableChunk {Name = "data", Value = "new Integer(){3,4,5}"},
+                                        new SendLiteralChunk {Text = "<ul>"},
+                                        new ForEachChunk
+                                        {
+                                            Code = "item in data",
+                                            Body = new Chunk[]
+                                                   { 
+                                                       new SendLiteralChunk {Text = "<li>"},
+                                                       new SendExpressionChunk {Code = "item"},
+                                                       new SendExpressionChunk {Code = "itemIsFirst"},
+                                                       new SendExpressionChunk {Code = "itemIsLast"},
+                                                       new SendExpressionChunk {Code = "itemIndex"},
+                                                       new SendExpressionChunk {Code = "itemCount"},
+                                                       new SendLiteralChunk {Text = "</li>"}
+                                                   }
+                                        },
+                                        new SendLiteralChunk {Text = "</ul>"}
+                                    });
+            var instance = compiler.CreateInstance();
+            var contents = instance.RenderView();
+            Assert.AreEqual("<ul><li>3TrueFalse03</li><li>4FalseFalse13</li><li>5FalseTrue23</li></ul>", contents);
+        }
         //[Test]
         //public void GlobalVariables()
         //{
@@ -194,19 +219,19 @@ namespace Spark.Tests.Compiler
         //    Assert.AreEqual("hello world:8", contents);
         //}
 
-        //[Test]
-        //public void TargetNamespace()
-        //{
-        //    var compiler = new VisualBasicViewCompiler
-        //                   {
-        //                       BaseClass = "Spark.AbstractSparkView",
-        //                       Descriptor = new SparkViewDescriptor { TargetNamespace = "Testing.Target.Namespace" }
-        //                   };
-        //    DoCompileView(compiler, new Chunk[] { new SendLiteralChunk { Text = "Hello" } });
-        //    var instance = compiler.CreateInstance();
-        //    Assert.AreEqual("Testing.Target.Namespace", instance.GetType().Namespace);
+        [Test]
+        public void TargetNamespace()
+        {
+            var compiler = new VisualBasicViewCompiler
+                           {
+                               BaseClass = "Spark.AbstractSparkView",
+                               Descriptor = new SparkViewDescriptor { TargetNamespace = "Testing.Target.Namespace" }
+                           };
+            DoCompileView(compiler, new Chunk[] { new SendLiteralChunk { Text = "Hello" } });
+            var instance = compiler.CreateInstance();
+            Assert.AreEqual("Testing.Target.Namespace", instance.GetType().Namespace);
 
-        //}
+        }
 
 
         //[Test, ExpectedException(typeof(CompilerException))]

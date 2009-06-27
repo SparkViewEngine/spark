@@ -71,15 +71,17 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
                 _source.AppendLine("#End ExternalSource");
         }
 
-        private void AppendOpenBrace()
+        private void AppendOpenScope()
         {
-            AppendIndent().AppendLine("{");
+            PushScope();
+            AppendIndent().AppendLine("If True Then");
             Indent += 4;
         }
-        private void AppendCloseBrace()
+        private void AppendCloseScope()
         {
             Indent -= 4;
-            AppendIndent().AppendLine("}");
+            AppendIndent().AppendLine("End If");
+            PopScope();
         }
 
         class Scope
@@ -241,25 +243,34 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
             CodeDefault();
         }
 
+        static bool IsInOrAs(string part)
+        {
+            return string.Equals(part, "In", StringComparison.InvariantCultureIgnoreCase) ||
+                   string.Equals(part, "As", StringComparison.InvariantCultureIgnoreCase);
+        }
+        static bool IsIn(string part)
+        {
+            return string.Equals(part, "In", StringComparison.InvariantCultureIgnoreCase);
+        }
+
         protected override void Visit(ForEachChunk chunk)
         {
             var terms = chunk.Code.ToString().Split(' ', '\r', '\n', '\t').ToList();
-            var inIndex = terms.IndexOf("in");
-            var variableName = (inIndex < 2 ? null : terms[inIndex - 1]);
+            var inIndex = terms.FindIndex(IsIn);
+            var inOrAsIndex = terms.FindIndex(IsInOrAs);
+            var variableName = (inOrAsIndex < 1 ? null : terms[inOrAsIndex - 1]);
 
             if (variableName == null)
             {
                 CodeIndent(chunk)
-                    .Append("foreach(")
-                    .Append(chunk.Code)
-                    .AppendLine(")");
+                    .Append("For Each ")
+                    .AppendLine(chunk.Code);
                 CodeDefault();
                 PushScope();
-                AppendIndent().AppendLine("{");
                 Indent += 4;
                 Accept(chunk.Body);
                 Indent -= 4;
-                AppendIndent().AppendLine(string.Format("}} //foreach {0}", chunk.Code.ToString().Replace("\r", "").Replace("\n", " ")));
+                AppendIndent().AppendLine("Next");
                 PopScope();
             }
             else
@@ -277,61 +288,57 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
                     autoCount.Detected = true;
                 }
 
-                PushScope();
-                AppendIndent().AppendLine("{");
+                AppendOpenScope();
+
                 if (autoIndex.Detected)
                 {
                     DeclareVariable(variableName + "Index");
-                    _source.Append(' ', Indent + 4).AppendFormat("int {0}Index = 0;\r\n", variableName);
+                    _source.Append(' ', Indent + 4).AppendFormat("Dim {0}Index As Integer = 0\r\n", variableName);
                 }
                 if (autoIsFirst.Detected)
                 {
                     DeclareVariable(variableName + "IsFirst");
-                    _source.Append(' ', Indent + 4).AppendFormat("bool {0}IsFirst = true;\r\n", variableName);
+                    _source.Append(' ', Indent + 4).AppendFormat("Dim {0}IsFirst As Boolean = True\r\n", variableName);
                 }
                 if (autoCount.Detected)
                 {
                     DeclareVariable(variableName + "Count");
-                    string collectionCode = string.Join(" ", terms.ToArray(), inIndex + 1, terms.Count - inIndex - 1);
-                    _source.Append(' ', Indent + 4).AppendFormat("int {0}Count = global::Spark.Compiler.CollectionUtility.Count({1});\r\n", variableName, collectionCode);
+                    var collectionCode = string.Join(" ", terms.ToArray(), inIndex + 1, terms.Count - inIndex - 1);
+                    _source.Append(' ', Indent + 4).AppendFormat("Dim {0}Count As Integer = Global.Spark.Compiler.CollectionUtility.Count({1})\r\n", variableName, collectionCode);
                 }
 
-                Indent += 4;
                 CodeIndent(chunk)
-                    .Append("foreach(")
-                    .Append(chunk.Code)
-                    .AppendLine(")");
+                    .Append("For Each ")
+                    .AppendLine(chunk.Code);
                 CodeDefault();
-
+                Indent += 4;
                 PushScope();
+
                 DeclareVariable(variableName);
-                _source.Append(' ', Indent).AppendLine("{");
 
                 CodeHidden();
                 if (autoIsLast.Detected)
                 {
                     DeclareVariable(variableName + "IsLast");
-                    _source.Append(' ', Indent + 4).AppendFormat("bool {0}IsLast = ({0}Index == {0}Count - 1);\r\n",
+                    _source.Append(' ', Indent + 4).AppendFormat("Dim {0}IsLast As Boolean = ({0}Index = {0}Count - 1)\r\n",
                                                                  variableName);
                 }
                 CodeDefault();
 
-                Indent += 8;
                 Accept(chunk.Body);
-                Indent -= 8;
 
                 CodeHidden();
                 if (autoIndex.Detected)
-                    _source.Append(' ', Indent + 4).AppendFormat("++{0}Index;\r\n", variableName);
+                    _source.Append(' ', Indent + 4).AppendFormat("{0}Index = {0}Index + 1\r\n", variableName);
                 if (autoIsFirst.Detected)
-                    _source.Append(' ', Indent + 4).AppendFormat("{0}IsFirst = false;\r\n", variableName);
+                    _source.Append(' ', Indent + 4).AppendFormat("{0}IsFirst = False\r\n", variableName);
                 CodeDefault();
 
-                _source.Append(' ').AppendLine("}");
                 PopScope();
+                Indent -= 4;
+                _source.Append(' ', Indent).AppendLine("Next");
 
-                AppendIndent().AppendFormat("}} //foreach {0}\r\n", chunk.Code.ToString().Replace("\r", "").Replace("\n", " "));
-                PopScope();
+                AppendCloseScope();
             }
         }
 

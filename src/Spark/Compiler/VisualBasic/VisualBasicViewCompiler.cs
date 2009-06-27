@@ -76,13 +76,13 @@ namespace Spark.Compiler.VisualBasic
             if (Descriptor != null)
             {
                 // [SparkView] attribute
-                source.AppendLine("<Global.Spark.SparkViewAttribute(");
+                source.AppendLine("<Global.Spark.SparkViewAttribute( _");
                 if (TargetNamespace != null)
-                    source.AppendFormat("    TargetNamespace:=\"{0}\",", TargetNamespace).AppendLine();
-                source.AppendLine("    Templates := New String() {");
-                source.Append("      ").AppendLine(string.Join(",\r\n      ",
+                    source.AppendFormat("    TargetNamespace:=\"{0}\", _", TargetNamespace).AppendLine();
+                source.AppendLine("    Templates := New String() { _");
+                source.Append("      ").Append(string.Join(", _\r\n      ",
                                                                Descriptor.Templates.Select(
-                                                                   t => "\"" + t.Replace("\\", "\\\\") + "\"").ToArray()));
+                                                                   t => "\"" + t + "\"").ToArray()));
                 source.AppendLine("    })> _");
             }
 
