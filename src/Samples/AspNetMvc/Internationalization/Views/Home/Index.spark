@@ -1,5 +1,7 @@
 <viewdata user="UserInfo"/>
 
+<content name="title">${SR.Internationalization} Samples</content>
+
 <h2>${SR.Internationalization}</h2>
 <p>${SR.WelcomeUserFormat(user.Name)}</p>
 

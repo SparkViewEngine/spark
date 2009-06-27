@@ -1,0 +1,29 @@
+﻿<html>
+  <head>
+    <title><use content="title">Internationalization Samples</use></title>
+    <link type="text/css" rel="stylesheet" href="~/content/andreas08/andreas08.css"/>
+    <link type="text/css" rel="stylesheet" href="~/content/application.css"/>
+    <use:head/>
+  </head>
+  <body>
+
+    <div id="container">
+      <div id="header">
+        <h1><use content="title">Internationalization Samples</use></h1>
+        <h2>space reserved for your website slogan!</h2>
+      </div>
+
+      <div id="content">
+        <use:view/>
+      </div>
+      <div id="subcontent">
+        <use:subcontent/>
+      </div>
+      <div id="footer">
+        <p>
+          &copy; 2005-2006 <a href="#">Your Name</a> | Design by <a href="http://andreasviklund.com">Andreas Viklund</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

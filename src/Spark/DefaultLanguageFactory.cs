@@ -31,7 +31,7 @@ namespace Spark
             {
                 case LanguageType.Default:
                 case LanguageType.CSharp:
-                    viewCompiler = new DefaultViewCompiler();
+                    viewCompiler = new CSharpViewCompiler();
                     break;
                 case LanguageType.Javascript:
                     viewCompiler = new JavascriptViewCompiler();

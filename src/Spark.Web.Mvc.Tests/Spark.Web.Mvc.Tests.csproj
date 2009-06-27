@@ -89,6 +89,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="AspNetMvc.Tests.Views\Admin\Home\Index.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -30,7 +30,7 @@ namespace Spark.Python.Compiler
             GenerateSourceCode(viewTemplates, allResources);
 
             var compiler = new BatchCompiler();
-            var assembly = compiler.Compile(Debug, SourceCode);
+            var assembly = compiler.Compile(Debug, "csharp", SourceCode);
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 

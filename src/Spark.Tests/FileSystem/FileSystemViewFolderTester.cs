@@ -18,7 +18,7 @@ using System.Threading;
 using NUnit.Framework;
 using Spark.FileSystem;
 
-namespace Spark.Tests
+namespace Spark.Tests.FileSystem
 {
     [TestFixture]
     public class FileSystemViewFolderTester

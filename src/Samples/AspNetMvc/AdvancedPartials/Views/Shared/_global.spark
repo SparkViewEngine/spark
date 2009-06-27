@@ -1,0 +1,14 @@
+﻿
+<use namespace="System"/>
+<use namespace="System.Linq"/>
+<use namespace="System.Web.Mvc"/>
+<use namespace="System.Web.Mvc.Html"/>
+<use namespace="System.Web.Routing"/>
+
+<use namespace="AdvancedPartials.Models"/>
+
+<macro name="NavItem" text="string" args="object">
+  <var values="new RouteValueDictionary(args)" />
+  <var action="Convert.ToString(values['action'])" />
+  <li class="selected?{Url.Action(action, values) == Context.Request.RawUrl}">!{Html.ActionLink(text, action, values)}</li>
+</macro>

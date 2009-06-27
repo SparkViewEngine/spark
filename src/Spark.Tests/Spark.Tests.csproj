@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler\SourceWriterTester.cs" />
+    <Compile Include="Compiler\VisualBasicViewCompilerTester.cs" />
     <Compile Include="Compiler\ExpressionBuilderTester.cs" />
     <Compile Include="Compiler\ForEachInspectorTester.cs" />
     <Compile Include="DefaultResourcePathManagerTester.cs" />
@@ -110,7 +112,7 @@
     <Compile Include="Stubs\StubViewData.cs" />
     <Compile Include="Stubs\StubViewFactory.cs" />
     <Compile Include="ViewActivatorTester.cs" />
-    <Compile Include="DefaultViewCompilerTester.cs" />
+    <Compile Include="Compiler\CSharpViewCompilerTester.cs" />
     <Compile Include="Parser\ViewLoaderTester.cs" />
     <Compile Include="Visitors\SpecialNodeVisitorTester.cs" />
   </ItemGroup>
@@ -260,6 +262,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\_NamedSectionFallback.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\SectionRenderingFallbackMayRenderSection.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\render-dotted-partial.spark">

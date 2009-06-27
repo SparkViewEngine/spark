@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title><use content="title">Advanced Partials Demo</use></title>
+    <link type="text/css" rel="stylesheet" href="~/content/andreas08/andreas08.css"/>
+    <link type="text/css" rel="stylesheet" href="~/content/extra.css"/>
+    <use content="head"/>
+  </head>
+  <body>
+    <div id="container" >
+
+      <div id="header">
+        <h1><use content="title">Advanced Partials Demo</use></h1>
+        <h2>space reserved for your website slogan!</h2>
+      </div>
+
+      <div id="navigation">
+        #// use {content:navigation} to replace the entire menu
+        <use content="navigation">
+          <ul>
+            !{NavItem("Home", new { controller = "home", action = "index" })}
+            !{NavItem("About", new { controller = "home", action = "about" })}
+            #// use {content:navextra} to add menu items
+            <use content="navextra"/>
+            !{NavItem("Style Guide", new { controller = "home", action = "styleguide" })}
+          </ul>
+        </use>
+      </div>
+
+      <div id="content">
+        <use content="view"/>
+        #// use {content:splitcontentleft} or {content:splitcontentleft} to
+        #// produce this divided lower section
+        <test if="Content.ContainsKey('splitcontentleft') || Content.ContainsKey('splitcontentright')">
+          <div class="splitcontentleft">
+            <use content="splitcontentleft"/>
+          </div>
+          <div class="splitcontentright">
+            <use content="splitcontentright"/>
+          </div>
+        </test>
+      </div>
+
+      <div id="subcontent">
+        #// use {content:rightrail} to replace the right rail
+        <use content="rightrail">
+		  #// fallback is to _DefaultRightrail.spark
+          <DefaultRightrail/>
+        </use>
+      </div>
+
+      <div id="footer">
+        <p>
+          &copy; 2005-2006 <a href="#">Your Name</a> | Design by <a href="http://andreasviklund.com">Andreas Viklund</a>
+        </p>
+      </div>
+
+
+    </div>
+  </body>
+</html>

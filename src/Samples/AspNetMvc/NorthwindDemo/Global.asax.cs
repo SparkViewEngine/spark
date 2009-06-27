@@ -16,7 +16,7 @@ namespace NorthwindDemo
             //       automatic support on IIS6 and IIS7 classic mode
 
             routes.MapRoute("mvcroute", "{controller}/{action}/{id}"
-                , new { controller="products", action = "Index", id = "" }
+                , new { controller="Products", action = "Index", id = "" }
                 , new { controller=@"[^\.]*"});
         }
 
@@ -24,6 +24,16 @@ namespace NorthwindDemo
         {
             RegisterRoutes(RouteTable.Routes);
             SparkEngineStarter.RegisterViewEngine();
+        }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            string path = Request.AppRelativeCurrentExecutionFilePath;
+            if (string.Equals(path, "~/default.aspx", StringComparison.InvariantCultureIgnoreCase) ||
+                string.Equals(path, "~/"))
+            {
+                Context.RewritePath("~/Products");
+            }
         }
     }
 }

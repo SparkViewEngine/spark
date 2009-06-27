@@ -1021,7 +1021,23 @@ namespace Spark.Tests
                 "[201][109][202]" + 
                 "[111][202]" + 
                 "[112][003]"));
+        }
 
+        [Test]
+        public void SectionRenderingFallbackMayRenderSection()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("SectionRenderingFallbackMayRenderSection", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+            var stripped = content.Replace(" ", "").Replace("\t", "").Replace("\r\n", "");
+            Assert.That(stripped, Is.EqualTo(
+                "[001]" +
+                "[101][102]" +
+                "[002][004]" +
+                "[103][104]" +
+                "[005]"));
         }
     }
 }

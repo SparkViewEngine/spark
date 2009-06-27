@@ -69,10 +69,16 @@
     <Compile Include="Compiler\BatchCompiler.cs" />
     <Compile Include="Compiler\Chunk.cs" />
     <Compile Include="Compiler\ChunkVisitors\AbstractChunkVisitor.cs" />
+    <Compile Include="Compiler\ChunkVisitors\GeneratedCodeVisitorBase.cs" />
     <Compile Include="Compiler\Javascript\ChunkVisitors\CodeProcessingChunkVisitor.cs" />
     <Compile Include="Compiler\Javascript\ChunkVisitors\JavascriptAnonymousTypeVisitor.cs" />
-    <Compile Include="Compiler\SourceBuilder.cs" />
     <Compile Include="Compiler\SourceMapping.cs" />
+    <Compile Include="Compiler\SourceWriter.cs" />
+    <Compile Include="Compiler\VisualBasic\ChunkVisitors\BaseClassVisitor.cs" />
+    <Compile Include="Compiler\VisualBasic\ChunkVisitors\GeneratedCodeVisitor.cs" />
+    <Compile Include="Compiler\VisualBasic\ChunkVisitors\GlobalMembersVisitor.cs" />
+    <Compile Include="Compiler\VisualBasic\ChunkVisitors\UsingNamespaceVisitor.cs" />
+    <Compile Include="Compiler\VisualBasic\VisualBasicViewCompiler.cs" />
     <Compile Include="DefaultLanguageFactory.cs" />
     <Compile Include="Compiler\ExpressionBuilder.cs" />
     <Compile Include="Compiler\CSharp\ChunkVisitors\BaseClassVisitor.cs" />
@@ -90,7 +96,7 @@
     <Compile Include="Compiler\CSharp\ChunkVisitors\UsingNamespaceVisitor.cs" />
     <Compile Include="Compiler\CollectionUtility.cs" />
     <Compile Include="Compiler\CompilerException.cs" />
-    <Compile Include="Compiler\CSharp\DefaultViewCompiler.cs" />
+    <Compile Include="Compiler\CSharp\CSharpViewCompiler.cs" />
     <Compile Include="Compiler\FileContext.cs" />
     <Compile Include="Compiler\Javascript\JavascriptViewCompiler.cs" />
     <Compile Include="Compiler\NodeVisitors\ChunkBuilderVisitor.cs" />

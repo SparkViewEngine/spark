@@ -1,0 +1,11 @@
+<test if="page.Count() == 0">
+  <render section="nodata"/>
+  <else/>
+  <render section="beforeall"/>
+  <for each="var item in page">
+    <render section="before"/>
+    <render section="each"/>
+    <render section="after"/>
+  </for>
+  <render section="afterall"/>
+</test>

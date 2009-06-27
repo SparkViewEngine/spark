@@ -28,14 +28,21 @@ namespace Spark.Compiler
     {
         public string OutputAssembly { get; set; }
 
-        public Assembly Compile(bool debug, params string[] sourceCode)
+        public Assembly Compile(bool debug, string languageOrExtension, params string[] sourceCode)
         {
-            var providerOptions = new Dictionary<string, string> { { "CompilerVersion", "v3.5" } };
+            var all = CodeDomProvider.GetAllCompilerInfo();
 
-            var codeProvider = new CSharpCodeProvider(providerOptions);
+            var language = languageOrExtension;
+            if (CodeDomProvider.IsDefinedLanguage(languageOrExtension) == false &&
+                CodeDomProvider.IsDefinedExtension(languageOrExtension))
+            {
+                language = CodeDomProvider.GetLanguageFromExtension(languageOrExtension);
+            }
+            var compilerInfo = CodeDomProvider.GetCompilerInfo(language);
+            var codeProvider = CodeDomProvider.CreateProvider(language);
 
-            var compilerParameters = new CompilerParameters();
-
+            var extension = codeProvider.FileExtension;
+            var compilerParameters = compilerInfo.CreateDefaultCompilerParameters();
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -51,7 +58,9 @@ namespace Spark.Compiler
                 {
                     continue;
                 }
-                compilerParameters.ReferencedAssemblies.Add(location);
+
+                if (string.IsNullOrEmpty(location) == false)
+                    compilerParameters.ReferencedAssemblies.Add(location);
             }
 
             CompilerResults compilerResults;
@@ -67,7 +76,7 @@ namespace Spark.Compiler
                 foreach (string sourceCodeItem in sourceCode)
                 {
                     ++fileCount;
-                    var codeFile = baseFile + "-" + fileCount + ".cs";
+                    var codeFile = baseFile + "-" + fileCount + "." + extension;
                     using (var stream = new FileStream(codeFile, FileMode.Create, FileAccess.Write))
                     {
                         using (var writer = new StreamWriter(stream))
@@ -129,7 +138,7 @@ namespace Spark.Compiler
                     }
                 }
                 throw new CompilerException(sb.ToString());
-            }   
+            }
 
             return compilerResults.CompiledAssembly;
         }

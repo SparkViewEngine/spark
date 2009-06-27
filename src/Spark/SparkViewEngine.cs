@@ -339,7 +339,7 @@ namespace Spark
 
             var batchCompiler = new BatchCompiler { OutputAssembly = outputAssembly };
 
-            var assembly = batchCompiler.Compile(Settings.Debug, sourceCode.ToArray());
+            var assembly = batchCompiler.Compile(Settings.Debug, "csharp", sourceCode.ToArray());
             foreach (var entry in batch)
             {
                 entry.Compiler.CompiledType = assembly.GetType(entry.Compiler.ViewClassFullName);
@@ -368,7 +368,7 @@ namespace Spark
                                 {
                                     Descriptor = descriptor,
                                     Loader = new ViewLoader(),
-                                    Compiler = new DefaultViewCompiler { CompiledType = type },
+                                    Compiler = new CSharpViewCompiler { CompiledType = type },
                                     Activator = ViewActivatorFactory.Register(type)
                                 };
                 CompiledViewHolder.Current.Store(entry);

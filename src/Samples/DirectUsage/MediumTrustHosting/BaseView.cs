@@ -63,7 +63,9 @@ namespace MediumTrustHosting
         /// </summary>
         public string SiteResource(string path)
         {
-            return SiteRoot + path;
+            if (path.StartsWith("~/"))
+                return SiteRoot + path.Substring(1);
+            return path;
         }
 
         /// <summary>

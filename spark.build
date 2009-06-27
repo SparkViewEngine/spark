@@ -228,6 +228,7 @@
         <include name="itextsharp/*.*" />
         <include name="castle/*.*" />
         <include name="nunit/nunit.framework.dll" />
+	<include name="MvcIntegrationTestFramework/*.*" />
       </fileset>
     </copy>
 
@@ -240,7 +241,9 @@
       <fileset basedir="${solution.dir}/">
         <exclude name="**/bin/**"/>
         <exclude name="**/obj/**"/>
+        <exclude name="/**xpark**/**"/>
         <exclude name="**/samples/**"/>
+        <exclude name="**/*.resharper*"/>
         <include name="/**samples**/**" />
       </fileset>
     </copy>
@@ -252,6 +255,7 @@
         <exclude name="/**resharper**/**"/>
         <exclude name="**/*.suo"/>
         <exclude name="**/*.user"/>
+        <exclude name="**/*.resharper*"/>
         <include name="/**/**" />
       </fileset>
     </copy>
