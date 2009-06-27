@@ -76,33 +76,26 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
                 if (_globalAdded[chunk.Name].Type != chunk.Type ||
                     _globalAdded[chunk.Name].Value != chunk.Value)
                 {
-                    throw new CompilerException(string.Format("The global named {0} cannot be declared repeatedly with different types or values",
-                                                              chunk.Name));
+                    throw new CompilerException(
+                        string.Format(
+                            "The global named {0} cannot be declared repeatedly with different types or values",
+                            chunk.Name));
                 }
                 return;
             }
 
             var type = chunk.Type ?? "Object";
-            var typeParts = type.ToString().Split(' ', '\t');
-            if (typeParts.Contains("const") || typeParts.Contains("readonly"))
-            {
-                _source.WriteFormat("\r\n    {0} {1} = {2};",
-                                     type, chunk.Name, chunk.Value);
-            }
-            else
-            {
-                _source.WriteFormat(
-                    "\r\n    Private _{1} As {0} = {2}"+
-                    "\r\n    Public Property {1}() As {0}"+
-                    "\r\n        Get" +
-                    "\r\n            Return _{1}" +
-                    "\r\n        End Get" +
-                    "\r\n        Set(ByVal value as {0})" +
-                    "\r\n            _{1} = value" +
-                    "\r\n        End Set" +
-                    "\r\n    End Property",
-                    type, chunk.Name, chunk.Value);
-            }
+            _source.WriteFormat(
+                "\r\n    Private _{1} As {0} = {2}" +
+                "\r\n    Public Property {1}() As {0}" +
+                "\r\n        Get" +
+                "\r\n            Return _{1}" +
+                "\r\n        End Get" +
+                "\r\n        Set(ByVal value as {0})" +
+                "\r\n            _{1} = value" +
+                "\r\n        End Set" +
+                "\r\n    End Property",
+                type, chunk.Name, chunk.Value);
             _source.WriteLine();
         }
 
@@ -142,15 +135,23 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
             }
 
             _viewDataAdded.Add(name, key + ":" + type);
-            _source.WriteCode(type).Write(" ").WriteLine(name);
+            //_source.WriteCode(type).Write(" ").WriteLine(name);
+            _source
+                .Write("Public ReadOnly Property ")
+                .WriteCode(name)
+                .Write("() As ")
+                .WriteCode(type)
+                .WriteLine().AddIndent()
+                .WriteLine("Get").AddIndent();
+
             if (Snippets.IsNullOrEmpty(chunk.Default))
             {
                 CodeIndent(chunk)
-                    .Write("{get {return (")
-                    .WriteCode(type)
-                    .Write(")ViewData.Eval(\"")
+                    .Write("Return CType(ViewData.Eval(\"")
                     .Write(key)
-                    .WriteLine("\");}}");
+                    .Write("\"),")
+                    .WriteCode(type)
+                    .WriteLine(")");
             }
             else
             {
@@ -163,6 +164,10 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
                     .WriteCode(chunk.Default)
                     .WriteLine(");}}");
             }
+            _source
+                .RemoveIndent().WriteLine("End Get")
+                .RemoveIndent().WriteLine("End Property");
+
             CodeDefault();
         }
 
