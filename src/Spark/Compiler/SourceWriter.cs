@@ -99,10 +99,6 @@ namespace Spark.Compiler
             return this;
         }
 
-        public SourceWriter Write(int value)
-        {
-            return Write(value.ToString());
-        }
 
         public SourceWriter WriteFormat(string format, params object[] args)
         {
@@ -186,10 +182,6 @@ namespace Spark.Compiler
             return WriteLine(string.Format(format, args));
         }
 
-        public SourceWriter WriteLine(int value)
-        {
-            return Write(value).WriteLine();
-        }
 
 
         public SourceWriter WriteDirective(string line)

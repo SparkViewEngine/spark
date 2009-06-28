@@ -46,12 +46,14 @@ namespace Spark.Compiler.VisualBasic
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
             var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, NullBehaviour);
 
+            // needed for proper vb functionality
             source.WriteLine("Option Infer On");
 
-            // using <namespaces>;
+            usingGenerator.UsingNamespace("Microsoft.VisualBasic");
             foreach (var ns in UseNamespaces ?? new string[0])
                 usingGenerator.UsingNamespace(ns);
 
+            usingGenerator.UsingAssembly("Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
             foreach (var assembly in UseAssemblies ?? new string[0])
                 usingGenerator.UsingAssembly(assembly);
 

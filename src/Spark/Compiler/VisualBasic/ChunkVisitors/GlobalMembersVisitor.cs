@@ -106,12 +106,16 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
                 return;
 
             _source
-                .WriteCode(chunk.TModel)
-                .Write(" ")
+                .Write("Public ReadOnly Property ")
                 .WriteCode(chunk.TModelAlias)
-                .WriteLine();
-            CodeIndent(chunk).WriteLine("{get {return ViewData.Model;}}");
-            CodeDefault();
+                .Write("() As ")
+                .WriteCode(chunk.TModel)
+                .WriteLine().AddIndent();
+            _source.WriteLine("Get").AddIndent();
+            _source.WriteLine("Return ViewData.Model");
+            _source.RemoveIndent().WriteLine("End Get");
+            _source.RemoveIndent().WriteLine("End Property");
+            CodeDefault();                
         }
 
         protected override void Visit(ViewDataChunk chunk)
@@ -156,13 +160,13 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
             else
             {
                 CodeIndent(chunk)
-                    .Write("{get {return (")
-                    .WriteCode(type)
-                    .Write(")(ViewData.Eval(\"")
+                    .Write("Return CType(If(ViewData.Eval(\"")
                     .Write(key)
-                    .Write("\")??")
+                    .Write("\"),")
                     .WriteCode(chunk.Default)
-                    .WriteLine(");}}");
+                    .Write("),")
+                    .WriteCode(type)
+                    .WriteLine(")");
             }
             _source
                 .RemoveIndent().WriteLine("End Get")
