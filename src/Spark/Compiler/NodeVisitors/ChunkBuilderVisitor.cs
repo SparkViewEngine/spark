@@ -284,9 +284,9 @@ namespace Spark.Compiler.NodeVisitors
             }
             processedNodes.AddRange(accumulatedNodes);
 
-            bool allNodesAreConditional = processedNodes.All(node => node is ConditionNode);
+            var allNodesAreConditional = processedNodes.All(node => node is ConditionNode);
 
-            if (!allNodesAreConditional)
+            if (allNodesAreConditional == false || processedNodes.Any() == false)
             {
                 // This attribute may not disapper - send it literally
                 AddLiteral(" " + attributeNode.Name + "=\"");
