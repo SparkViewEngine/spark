@@ -319,5 +319,32 @@ ${x}
             var contents = Render("index");
             Assert.That(contents.Trim(), Is.EqualTo("[barfredquad]"));
         }
+
+        [Test]
+        public void ConditionalAttributes()
+        {
+            _viewFolder.Add("vbhome\\index.spark", @"<div class=""""/>
+<div class=""foo""/>
+
+<div class=""foo?{True}""/>
+<div class=""foo?{False}""/>
+
+<div class=""foo?{True} bar?{True}""/>
+<div class=""foo?{True} bar?{False}""/>
+<div class=""foo?{False} bar?{True}""/>
+<div class=""foo?{False} bar?{False}""/>");
+
+            var contents = Render("index");
+            Assert.That(contents.Trim(), Is.EqualTo(@"<div class=""""/>
+<div class=""foo""/>
+
+<div class=""foo""/>
+<div/>
+
+<div class=""foo bar""/>
+<div class=""foo""/>
+<div class="" bar""/>
+<div/>"));
+        }
     }
 }

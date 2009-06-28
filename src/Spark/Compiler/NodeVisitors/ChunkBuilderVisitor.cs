@@ -299,9 +299,9 @@ namespace Spark.Compiler.NodeVisitors
                 var scope = new ScopeChunk();
                 scope.Body.Add(new LocalVariableChunk { Name = "__just__once__", Value = new Snippets("0") });
 
-                _sendAttributeOnce = new ConditionalChunk { Type = ConditionalType.If, Condition = new Snippets("__just__once__ == 0") };
+                _sendAttributeOnce = new ConditionalChunk { Type = ConditionalType.If, Condition = new Snippets("__just__once__ < 1") };
                 _sendAttributeOnce.Body.Add(new SendLiteralChunk { Text = " " + attributeNode.Name + "=\"" });
-                _sendAttributeIncrement = new AssignVariableChunk { Name = "__just__once__", Value = "__just__once__+1" };
+                _sendAttributeIncrement = new AssignVariableChunk { Name = "__just__once__", Value = "1" };
 
 
                 Chunks.Add(scope);
@@ -314,7 +314,7 @@ namespace Spark.Compiler.NodeVisitors
                 _sendAttributeOnce = null;
                 _sendAttributeIncrement = null;
 
-                var ifWasSent = new ConditionalChunk { Type = ConditionalType.If, Condition = new Snippets("__just__once__ != 0") };
+                var ifWasSent = new ConditionalChunk { Type = ConditionalType.If, Condition = new Snippets("__just__once__ > 0") };
                 scope.Body.Add(ifWasSent);
                 ifWasSent.Body.Add(new SendLiteralChunk { Text = "\"" });
             }
