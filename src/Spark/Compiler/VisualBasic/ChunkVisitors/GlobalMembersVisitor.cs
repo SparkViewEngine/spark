@@ -182,33 +182,40 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
 
         protected override void Visit(MacroChunk chunk)
         {
-            _source.Write(string.Format("\r\n    string {0}(", chunk.Name));
-            string delimiter = "";
+            _source
+                .Write("Public Function ")
+                .Write(chunk.Name)
+                .Write("(");
+            var delimiter = "";
             foreach (var parameter in chunk.Parameters)
             {
-                _source.Write(delimiter).WriteCode(parameter.Type).Write(" ").Write(parameter.Name);
+                _source
+                    .Write(delimiter)
+                    .Write(parameter.Name)
+                    .Write(" As ")
+                    .WriteCode(parameter.Type);
                 delimiter = ", ";
             }
-            _source.WriteLine(")");
-            CodeIndent(chunk).WriteLine("{");
-            CodeHidden();
-            _source.WriteLine("        using(OutputScope(new System.IO.StringWriter()))");
-            _source.WriteLine("        {");
-            CodeDefault();
-            
+            _source
+                .WriteLine(") As String")
+                .AddIndent();
+            _source
+                .WriteLine("Using OutputScope(new Global.System.IO.StringWriter())")
+                .AddIndent();
+
             var variables = new Dictionary<string, object>();
             foreach (var param in chunk.Parameters)
             {
                 variables.Add(param.Name, null);
             }
+
             var generator = new GeneratedCodeVisitor(_source, variables, _nullBehaviour);
             generator.Accept(chunk.Body);
 
-            CodeHidden();
-            _source.WriteLine("            return Output.ToString();");
-            _source.WriteLine("        }");
-            _source.WriteLine("    }");
-            CodeDefault();
+            _source
+                .WriteLine("Return Output.ToString()")
+                .RemoveIndent().WriteLine("End Using")
+                .RemoveIndent().WriteLine("End Function");
         }
     }
 }

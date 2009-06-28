@@ -346,5 +346,18 @@ ${x}
 <div class="" bar""/>
 <div/>"));
         }
+
+        [Test]
+        public void MacroChunks()
+        {
+            _viewFolder.Add("vbhome\\index.spark", @"
+<macro name='foo'>bar</macro>
+<macro name='foo2' quux='String'>bar2${quux}bar3</macro>
+${foo2('alpha')} ${foo}
+");
+
+            var contents = Render("index");
+            Assert.That(contents.Trim(), Is.EqualTo("bar2alphabar3 bar"));
+        }
     }
 }
