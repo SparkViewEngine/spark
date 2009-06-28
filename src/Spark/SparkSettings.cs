@@ -39,6 +39,7 @@ namespace Spark
         public string StatementMarker { get; set; }
         public string Prefix { get; set; }
         public string PageBaseType { get; set; }
+        public LanguageType DefaultLanguage { get; set; }
 
         private readonly IList<string> _useNamespaces;
         public IEnumerable<string> UseNamespaces
@@ -97,6 +98,12 @@ namespace Spark
         public SparkSettings SetPageBaseType(Type type)
         {
             PageBaseType = type.FullName;
+            return this;
+        }
+
+        public SparkSettings SetDefaultLanguage(LanguageType language)
+        {
+            DefaultLanguage = language;
             return this;
         }
 

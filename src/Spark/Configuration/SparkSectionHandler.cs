@@ -110,6 +110,11 @@ namespace Spark.Configuration
             set { Pages.PageBaseType = value; }
         }
 
+        LanguageType ISparkSettings.DefaultLanguage
+        {
+            get { return Compilation.DefaultLanguage; }
+        }
+
         IEnumerable<string> ISparkSettings.UseNamespaces
         {
             get

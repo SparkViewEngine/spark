@@ -15,6 +15,7 @@
 using Spark.Compiler;
 using Spark.Compiler.CSharp;
 using Spark.Compiler.Javascript;
+using Spark.Compiler.VisualBasic;
 
 namespace Spark
 {
@@ -26,12 +27,19 @@ namespace Spark
             if (string.IsNullOrEmpty(pageBaseType))
                 pageBaseType = engine.DefaultPageBaseType;
 
+            var language = descriptor.Language;
+            if (language == LanguageType.Default)
+                language = engine.Settings.DefaultLanguage;
+
             ViewCompiler viewCompiler;
-            switch (descriptor.Language)
+            switch (language)
             {
                 case LanguageType.Default:
                 case LanguageType.CSharp:
                     viewCompiler = new CSharpViewCompiler();
+                    break;
+                case LanguageType.VisualBasic:
+                    viewCompiler = new VisualBasicViewCompiler();
                     break;
                 case LanguageType.Javascript:
                     viewCompiler = new JavascriptViewCompiler();

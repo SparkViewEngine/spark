@@ -33,6 +33,13 @@ namespace Spark.Configuration
             set { this["nullBehaviour"] = value; }
         }
 
+        [ConfigurationProperty("defaultLanguage", DefaultValue = LanguageType.Default)]
+        public LanguageType DefaultLanguage
+        {
+            get { return (LanguageType)this["defaultLanguage"]; }
+            set { this["defaultLanguage"] = value; }
+        }
+
         [ConfigurationProperty("assemblies")]
         [ConfigurationCollection(typeof(AssemblyElementCollection))]
         public AssemblyElementCollection Assemblies
@@ -40,6 +47,5 @@ namespace Spark.Configuration
             get { return (AssemblyElementCollection)this["assemblies"]; }
             set { this["assemblies"] = value; }
         }
-
     }
 }

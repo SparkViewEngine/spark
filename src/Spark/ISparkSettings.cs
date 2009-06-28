@@ -34,6 +34,7 @@ namespace Spark
         NullBehaviour NullBehaviour { get; }
         string Prefix { get; }
         string PageBaseType { get; set; }
+        LanguageType DefaultLanguage { get; }
 
         IEnumerable<string> UseNamespaces { get; }
         IEnumerable<string> UseAssemblies { get; }

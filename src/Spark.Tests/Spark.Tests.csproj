@@ -115,6 +115,7 @@
     <Compile Include="Compiler\CSharpViewCompilerTester.cs" />
     <Compile Include="Parser\ViewLoaderTester.cs" />
     <Compile Include="Visitors\SpecialNodeVisitorTester.cs" />
+    <Compile Include="VisualBasicViewTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj">
