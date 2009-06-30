@@ -232,7 +232,7 @@
       </fileset>
     </copy>
 
-    <get src="http://dev.dejardin.org/book/export/html/4" dest="${package.dir}/Docs/index.html"/>
+    <get src="http://sparkviewengine.com/book/export/html/4" dest="${package.dir}/Docs/index.html" failonerror="false"/>
 
 
     <mkdir dir="${package.dir}/Samples" />
