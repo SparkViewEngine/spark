@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title><use content="title"/></title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/SiteExtra.css" rel="stylesheet" type="text/css" />
+    <use content="head"/>
+</head>
+
+<body>
+    <div class="page">
+
+        <div id="header">
+            <div id="title">
+                <h1>My MVC Application</h1>
+            </div>
+              
+            <div id="logindisplay">
+                # Html.RenderPartial("LogOnUserControl")
+            </div> 
+            
+            <div id="menucontainer">
+            
+                <ul id="menu">              
+                    <li>!{ Html.ActionLink("Home", "Index", "Home") }</li>
+                    <li>!{ Html.ActionLink("About", "About", "Home") }</li>
+                    <use content="navextra"/>
+                </ul>
+            
+            </div>
+        </div>
+
+        <div id="main">
+			<div id="rightrail">
+				<use content="rightrail">
+					<use content="aboverightrail"/>
+
+					<h2>In This Project</h2>
+					<ul class="menublock">
+					  <AllDemoPages/>
+					</ul>
+					
+					<use content="belowrightrail"/>
+				</use>
+			</div>
+			
+            <use content="view"/>
+            
+            <div id="left">
+				<use content="splitcontentleft"/>
+			</div>
+			<div id="right">
+				<use content="splitcontentright"/>
+			</div>
+
+            <div id="footer">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

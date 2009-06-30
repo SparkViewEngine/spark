@@ -1,0 +1,118 @@
+<content:splitcontentleft>
+  <Box>
+    This has no header
+  </Box>
+  <Box>
+    <section:header>Another box</section:header>
+    This one does
+  </Box>
+  !{JabberBoxy()}
+</content:splitcontentleft>
+
+<macro:JabberBoxy>
+  <RoundBox color="'color_c'">
+    <section:header>Jabberwocky - Lewis Carroll</section:header>
+    <section:body>
+      <Jabberwocky showJabberHeader="false"/>
+    </section:body>
+  </RoundBox>
+</macro:JabberBoxy>
+
+<content:splitcontentright>
+  <Box>
+    <section:header>Rounded Jabberwocky HTML</section:header>
+    !{H(JabberBoxy()).Replace(vbCrLf, "<br/>")}
+  </Box>
+</content:splitcontentright>
+
+<var parts="New String() {'','',''}"/>
+<content set="parts(0)">
+  <p>
+    "Will you walk a little faster?"
+    <br/>
+    Said a whiting to a snail,
+    <br/>
+    "There's a porpoise close behind us,
+    <br/>
+    And he's treading on my tail.
+    <br/>
+    See how eagerly the lobsters
+    <br/>
+    And the turtles all advance!
+    <br/>
+    They are waiting on the shingle -
+    <br/>
+    Will you come and join the dance?
+    <br/>
+    Will you, won't you, will you,
+    <br/>
+    Won't you, will you join the dance?
+    <br/>
+    Will you, won't you, will you,
+    <br/>
+    Won't you, won't you join the dance?
+  </p>
+</content>
+<content set="parts(1)">
+  <p>
+    "You can really have no notion
+    <br/>
+    How delightful it will be
+    <br/>
+    When they take us up and throw us,
+    <br/>
+    With the lobsters, out to sea!"
+    <br/>
+    But the snail replied, "Too far, too far!"
+    <br/>
+    And gave a look askance -
+    <br/>
+    Said he thanked the whiting kindly,
+    <br/>
+    But he would not join the dance.
+    <br/>
+    Would not, could not, would not,
+    <br/>
+    Could not, would not join the dance.
+    <br/>
+    Would not, could not, would not,
+    <br/>
+    Could not, could not join the dance.
+  </p>
+</content>
+<content set="parts(2)">
+  <p>
+    "What matters it how far we go?"
+    <br/>
+    His scaly friend replied.
+    <br/>
+    "There is another shore, you know,
+    <br/>
+    Upon the other side.
+    <br/>
+    The further off from England
+    <br/>
+    The nearer is to France -
+    <br/>
+    Then turn not pale, beloved snail,
+    <br/>
+    But come and join the dance.
+    <br/>
+    Will you, won't you, will you,
+    <br/>
+    Won't you, will you join the dance?
+    <br/>
+    Will you, won't you, will you,
+    <br/>
+    Won't you, won't you join the dance?
+  </p>
+</content>
+
+<content:splitcontentleft>
+  <for each="part in parts">
+    <RoundBox>
+      <section:header>The Lobster Quadrille ${partIndex + 1} of ${partCount}</section:header>
+      <section:body>!{part}</section:body>
+    </RoundBox>
+  </for>
+</content:splitcontentleft>

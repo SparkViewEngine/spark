@@ -1,0 +1,48 @@
+<div class="xsnazzy" style="margin-bottom:20px;">
+  <content name="head">
+    <style type="text/css" once="RoundBox_style">
+      .zsnazzy {width:745px;}
+      .xsnazzy h1, .zsnazzy h1 {margin:0; font-size:1.2em; padding:0 10px 5px 10px; border-bottom:1px solid #444;}
+      .xsnazzy p, .zsnazzy p { margin:0; padding:5px 10px; font-size:10px;}
+      .xsnazzy {background: transparent; width:280px; float:left; margin:0 3px;}
+
+      .xtop, .xbottom {display:block; background:transparent; font-size:1px;}
+      .xb1, .xb2, .xb3, .xb4 {display:block; overflow:hidden;}
+      .xb1, .xb2, .xb3 {height:1px;}
+      .xb2, .xb3, .xb4 {background:#fff; border-left:1px solid #444; border-right:1px solid #444;}
+      .xb1 {margin:0 5px; background:#444;}
+      .xb2 {margin:0 3px; border-width:0 2px;}
+      .xb3 {margin:0 2px;}
+      .xb4 {height:2px; margin:0 1px;}
+
+      .xboxcontent {display:block; border:0 solid #444; border-width:0 1px; height:auto;}
+      * html .xboxcontent {height:1px;}
+
+      .color_a {background:#c9ba65; color:#fff;}
+      .color_b {background:#d4d8bd; color:#000;}
+      .color_c {background:#758279; color:#fff;}
+      .color_d {background:#b2ab9b; color:#000;}
+    </style>
+  </content>
+  <default color="'color_a'"/>
+  <b class="xtop">
+    <b class="xb1"></b>
+    <b class="xb2 ${color}"></b>
+    <b class="xb3 ${color}"></b>
+    <b class="xb4 ${color}"></b>
+  </b>
+  <div class="xboxcontent">
+    <h1 class="${color}">
+      <render section="header"/>
+    </h1>
+    <render section="body">
+      <render/>
+    </render>
+  </div>
+  <b class="xbottom">
+    <b class="xb4"></b>
+    <b class="xb3"></b>
+    <b class="xb2"></b>
+    <b class="xb1"></b>
+  </b>
+</div>

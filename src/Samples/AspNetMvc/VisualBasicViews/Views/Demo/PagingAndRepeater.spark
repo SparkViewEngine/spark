@@ -1,0 +1,56 @@
+
+<use namespace="AdvancedPartials.Models"/>
+<viewdata model="Page(Of Bird)"/>
+
+<Pagination page="Model"/>
+
+<content name="head">
+  <style type="text/css">
+    .birdtable { border-spacing:0px; border-collapse:collapse; clear:both; margin-left:20px; }
+    .birdtable .top { background-color:#F5F5F5; border:1px solid #EBEBEB;}
+    .birdtable .alt { background-color:#F5F5F5; }
+    .birdtable .active { background-color:#d5e5ee; }
+
+    .birdtable td {padding:1px 4px 1px 4px;}
+    .birdtable .red {color: #FF1616;}
+    .birdtable .blue {color: #3EA2C7;}
+    .birdtable .mn {font-weight: bold;}
+  </style>
+</content>
+
+#// This would be a lot easier with a simple {tr each=""}
+#// but its for the sake of a demo. The partial is calling
+#// back repeatedly with different values. item and itemIndex
+#// are provided by _Rows.spark's <for each="var item in ...">
+<Rows page="Model">
+  <section name="beforeall">
+    <table class="birdtable">
+      <tr class="top">
+        <th style="width:50px;"></th>
+        <th style="width:150px;">Bird</th>
+        <th style="width:150px;">State</th>
+      </tr>
+  </section>
+  <section name="each">
+    <tr class="alt?{itemIndex % 2 == 1} active?{item.State == 'Minnesota'}">
+      <td>${itemIndex + Model.FirstItemIndex}</td>
+      <td class="red?{item.Name == 'Cardinal'} blue?{item.Name.Contains('Blue')}">${item.Name}</td>
+      <td class="mn?{item.State == 'Minnesota'}">${item.State}</td>
+    </tr>
+  </section>
+  <section name="afterall">
+    </table>
+  </section>
+</Rows>
+
+<Pagination page="Model">
+  <section name="prev">&laquo;</section>
+  <section name="next">&raquo;</section>
+  <section name="item">
+    <test if="pageIndex [[= 3">
+      ${new[] { "one", "two", "three" }[pageIndex - 1]}
+      <else/>
+      ${pageIndex}
+    </test>
+  </section>
+</Pagination>

@@ -1,0 +1,54 @@
+<h2>Adding content at known placeholders</h2>
+<p>
+  <strong>content</strong> elements can be used to put material into predefined locations
+</p>
+<p>
+  Those locations have <strong>use</strong> elements of the same name.
+</p>
+
+<Comment Caption="'Adding items to a box'">
+  A partial named _Comment.spark is accumulating
+  items which are later displayed in the left-side split.
+</Comment>
+
+
+<Comment Caption="'Showing split sections'">
+  Optional content blocks are being filled in which the
+  layout will take as a queue those two areas should be displayed.
+</Comment>
+
+<content:splitcontentright>
+  <Jabberwocky/>
+</content:splitcontentright>
+
+<Comment Caption="'Adding above right rail'">
+  A _SmallBox.spark note is being added to the top of the
+  right rail. The entire right rail can also be replaced by
+  providing content of the correct name.
+</Comment>
+
+<content:aboverightrail>
+  <SmallBox>
+    <strong>Note: </strong> This is a box. It can be used for special messages both in the sidebar
+    and the content section. You could use it for special notes and
+    announcements, but also as a frame for photos. This space can be used for a short website presentation!
+  </SmallBox>
+</content:aboverightrail>
+
+<Comment Caption="'Adding navigation items'">
+  The navextra is being used along with the NavItem macro to add a just-for-this-view
+  item to the tab menu.
+</Comment>
+
+<content:navextra>
+  !{NavItem("Extra Home Item", New With {.controller='home', .action='index'})}
+  !{NavItem("Adding At Placeholders", New With {.controller='demo', .action='addingatplaceholders'})}
+</content:navextra>
+
+<content:splitcontentleft>
+  <h2>What this page is doing:</h2>
+  <div class="box">
+    <use:comments/>
+  </div>
+</content:splitcontentleft>
+

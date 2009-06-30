@@ -1,0 +1,9 @@
+﻿
+<content name="Title">Home Page</content>
+
+<viewdata Message="String"/>
+
+<h2>${Message}</h2>
+<p>
+    To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+</p>

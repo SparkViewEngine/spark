@@ -1,0 +1,4 @@
+!{NavItem("About", New With {.controller='home', .action='about'})}
+!{NavItem("Content blocks", New With {.controller='demo', .action='addingatplaceholders'})}
+!{NavItem("Panels and boxes", New With {.controller='demo', .action='boxes'})}
+

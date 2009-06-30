@@ -1,0 +1,9 @@
+<div class="box">
+  <content var="boxheader">
+    <render:header/>
+  </content>
+  <h3 if="Not String.IsNullOrEmpty(boxheader.Trim())">!{boxheader}</h3>
+  <render:body>
+    <render/>
+  </render:body>
+</div>

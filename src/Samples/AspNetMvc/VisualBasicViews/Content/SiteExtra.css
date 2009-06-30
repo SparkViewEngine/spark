@@ -1,0 +1,35 @@
+﻿
+
+#rightrail
+{
+    width:20%;
+    float:right;
+}
+#left
+{
+    width:40%;
+    float:left;
+    margin-right:1%;
+}
+#right
+{
+    width:38%;
+    float:left;
+}
+#footer
+{
+    clear:both;
+}
+
+#main dl{margin:0 5px 10px 25px;}
+#main dt{font-weight:bold; margin-bottom:5px;}
+#main dd{margin:0 0 10px 15px;}
+
+.box{
+margin:0 0 20px 0;
+padding:10px;
+border:1px solid #c0c0c0;
+background-color:#fafbfc;
+color:#505050;
+line-height:1.5em;
+}
