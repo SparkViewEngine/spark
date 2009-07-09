@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
@@ -30,12 +31,12 @@ namespace Spark.Web.Mvc.Ruby.Tests
     {
         public class StubHttpContext : HttpContextBase
         {
-
+            public override Cache Cache { get { return null; } }
         }
 
         public class StubController : Controller
         {
-            
+
         }
 
         [Test]
@@ -52,7 +53,7 @@ namespace Spark.Web.Mvc.Ruby.Tests
         private static ViewContext CompileView(string viewContents)
         {
             CompiledViewHolder.Current = new CompiledViewHolder();
-            
+
             var settings = new SparkSettings();
             var container = SparkRubyEngineStarter.CreateContainer(settings);
 
