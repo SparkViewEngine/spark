@@ -200,5 +200,10 @@ namespace Spark.Compiler.ChunkVisitors
         protected override void Visit(PageBaseTypeChunk chunk)
         {
         }
+
+        protected override void Visit(CacheChunk chunk)
+        {
+            Accept(chunk.Body);
+        }
     }
 }

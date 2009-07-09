@@ -86,9 +86,11 @@ namespace Spark.Compiler.NodeVisitors
                                       {"use", VisitUse},
                                       {"macro", (n,i)=>VisitMacro(i)},
                                       {"render", VisitRender},
-                                      {"section", VisitSection}
+                                      {"section", VisitSection},
+                                      {"cache", VisitCache}
                                   };
         }
+
 
 
         private Position Locate(Node expressionNode)
@@ -633,6 +635,23 @@ namespace Spark.Compiler.NodeVisitors
                 throw new CompilerException("content element must have name, var, def, or set attribute");
             }
         }
+
+        private void VisitCache(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            var keyAttr = inspector.TakeAttribute("key");
+
+            var chunk = new CacheChunk { Position = Locate(specialNode.Element) };
+
+            if (keyAttr != null)
+                chunk.Key = AsCode(keyAttr);
+            else
+                chunk.Key = "\"\"";
+
+            Chunks.Add(chunk);
+            using (new Frame(this, chunk.Body))
+                Accept(inspector.Body);
+        }
+
 
         private void VisitIf(SpecialNode specialNode, SpecialNodeInspector inspector)
         {

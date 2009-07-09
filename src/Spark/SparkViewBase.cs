@@ -117,6 +117,79 @@ namespace Spark
             }
         }
 
+        public IDisposable CacheScope(string site, string key)
+        {
+            return new CacheScopeImpl(this, site, key);
+        }
+
+        //todo: fix for decorator pattern context?
+        public CacheScopeImpl CacheContext { get; set; }
+        public ICacheService CacheService { get; set; }
+
+        public class CacheScopeImpl : IDisposable
+        {
+            private readonly SparkViewBase _view;
+            private readonly string _site;
+            private readonly string _key;
+            private readonly CacheScopeImpl _previous;
+
+            private TextWriter _output;
+            private IDisposable _outputScope;
+
+            private static readonly ICacheService _nullCacheService = new NullCacheService();
+
+
+            public CacheScopeImpl(SparkViewBase view, string site, string key)
+            {
+                _view = view;
+                _site = site;
+                _key = key;
+                _previous = _view.CacheContext;
+                _view.CacheContext = this;
+            }
+
+            public void Dispose()
+            {
+                _view.CacheContext = _previous;
+            }
+
+            public bool Begin()
+            {
+                var cacheItem = (StringWriter)(_view.CacheService ?? _nullCacheService).Get(_site + _key);
+                if (cacheItem == null)
+                {
+                    _output = new StringWriter();
+                    _outputScope = _view.OutputScope(_output);
+                    return true;
+                }
+
+                cacheItem.WriteTo(_view.Output);
+                return false;
+            }
+
+            public void End()
+            {
+                _outputScope.Dispose();
+                _outputScope = null;
+
+                _output.WriteTo(_view.Output);
+                (_view.CacheService ?? _nullCacheService).Store(_site + _key, _output);
+            }
+
+
+            private class NullCacheService : ICacheService
+            {
+                public object Get(string identifier)
+                {
+                    return null;
+                }
+
+                public void Store(string identifier, object item)
+                {
+                }
+            }
+        }
+
         public virtual void RenderView(TextWriter writer)
         {
             using (OutputScope(writer))
@@ -127,4 +200,5 @@ namespace Spark
 
         public abstract void Render();
     }
+
 }

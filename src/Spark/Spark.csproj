@@ -63,6 +63,8 @@
     <Compile Include="Compiler\NodeVisitors\SpecialAttributeVisitorBase.cs" />
     <Compile Include="CompositeViewEntry.cs" />
     <Compile Include="AbstractSparkView.cs" />
+    <Compile Include="DefaultCacheManager.cs" />
+    <Compile Include="ICacheManager.cs" />
     <Compile Include="SparkViewBase.cs" />
     <Compile Include="CompiledViewEntry.cs" />
     <Compile Include="CompiledViewHolder.cs" />

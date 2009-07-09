@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             _scope = new Scope(new Scope(null) { Variables = globalSymbols });
         }
 
-        
+
         private SourceWriter CodeIndent(Chunk chunk)
         {
             if (_source.AdjustDebugSymbols)
@@ -140,7 +141,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                 .WriteCode(chunk.Code)
                 .Write(automaticallyEncode ? ")" : "")
                 .WriteLine(");");
-            CodeDefault();            
+            CodeDefault();
             _source
                 .WriteLine("}");
 
@@ -266,7 +267,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                     _source.WriteLine("int {0}Count = global::Spark.Compiler.CollectionUtility.Count({1});", variableName, collectionCode);
                 }
 
-                
+
                 CodeIndent(chunk)
                     .Write("foreach(")
                     .WriteCode(chunk.Code)
@@ -283,7 +284,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                     _source.WriteLine("bool {0}IsLast = ({0}Index == {0}Count - 1);", variableName);
                 }
                 CodeDefault();
-                
+
                 Accept(chunk.Body);
 
                 CodeHidden();
@@ -427,7 +428,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                     break;
                 case ConditionalType.Else:
                     {
-                        _source.WriteLine("else");                        
+                        _source.WriteLine("else");
                     }
                     break;
                 case ConditionalType.Once:
@@ -435,7 +436,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                         CodeIndent(chunk)
                             .Write("if (Once(")
                             .WriteCode(chunk.Condition)
-                            .WriteLine("))");                                                
+                            .WriteLine("))");
                     }
                     break;
                 default:
@@ -447,13 +448,31 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             AppendCloseBrace();
         }
 
-        protected override void Visit(ViewDataModelChunk chunk)
+        protected override void Visit(CacheChunk chunk)
         {
+            var siteGuid = Guid.NewGuid();
+            CodeIndent(chunk)
+                .Write("using(CacheScope(\"")
+                .Write(siteGuid.ToString("n"))
+                .Write("\", ")
+                .WriteCode(chunk.Key)
+                .WriteLine("))");
+            AppendOpenBrace();
 
-        }
+            _source
+                .WriteLine("if (CacheContext.Begin())")
+                .WriteLine("{").AddIndent()
+                .WriteLine("try")
+                .WriteLine("{").AddIndent();
 
-        protected override void Visit(PageBaseTypeChunk chunk)
-        {
+            Accept(chunk.Body);
+
+            _source
+                .RemoveIndent().WriteLine("}")
+                .WriteLine("finally { CacheContext.End(); }")
+                .RemoveIndent().WriteLine("}");
+
+            AppendCloseBrace();
         }
     }
 

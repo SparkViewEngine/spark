@@ -24,6 +24,7 @@ namespace Spark.Tests.Stubs
     public class StubViewFactory
     {
         public ISparkViewEngine Engine { get; set; }
+        public ICacheService CacheService { get; set; }
 
         public void RenderView(StubViewContext viewContext)
         {
@@ -34,6 +35,7 @@ namespace Spark.Tests.Stubs
  
             var sparkView = Engine.CreateInstance(descriptor);
             ((StubSparkView)sparkView).ViewData = viewContext.Data;
+            ((StubSparkView)sparkView).CacheService = CacheService;
             sparkView.RenderView(new StringWriter(viewContext.Output));
         }
     }
