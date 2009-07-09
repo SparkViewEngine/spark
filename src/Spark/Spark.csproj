@@ -60,6 +60,12 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Caching\CacheMemento.cs" />
+    <Compile Include="Caching\CacheOriginator.cs" />
+    <Compile Include="Caching\ICacheSubject.cs" />
+    <Compile Include="Caching\SpoolWriterOriginator.cs" />
+    <Compile Include="Caching\StringWriterOriginator.cs" />
+    <Compile Include="Caching\TextWriterOriginator.cs" />
     <Compile Include="Compiler\NodeVisitors\SpecialAttributeVisitorBase.cs" />
     <Compile Include="CompositeViewEntry.cs" />
     <Compile Include="AbstractSparkView.cs" />
