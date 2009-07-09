@@ -30,6 +30,7 @@ namespace Spark.Web.Mvc
         {
             container.SetServiceBuilder<IViewEngine>(c => new SparkViewFactory(c.GetService<ISparkSettings>()));
             container.SetServiceBuilder<IDescriptorBuilder>(c => new DefaultDescriptorBuilder());
+            container.SetServiceBuilder<ICacheServiceProvider>(c => new DefaultCacheServiceProvider());
         }
 
         /// <summary>
