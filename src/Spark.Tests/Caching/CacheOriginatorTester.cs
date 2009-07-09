@@ -25,9 +25,11 @@ namespace Spark.Tests.Caching
             {
                 Output = new SpoolWriter();
                 Content = new Dictionary<string, TextWriter>();
+                OnceTable = new Dictionary<string, string>();
             }
             public TextWriter Output { get; set; }
             public Dictionary<string, TextWriter> Content { get; set; }
+            public Dictionary<string, string> OnceTable { get; set; }
         }
 
         [SetUp]
@@ -140,16 +142,55 @@ namespace Spark.Tests.Caching
             Assert.That(_subject2.Content["foo"].ToString(), Is.EqualTo("worldbeta"));
         }
 
-        [Test, Ignore("Not implemented yet")]
+        [Test]
         public void OnceCollectionExtendedWhenApplied()
         {
-            throw new NotImplementedException();
+            _subject.OnceTable.Add("hana", "duul");
+            _originator.BeginMemento();
+            _subject.OnceTable.Add("set", "net");
+            var memento = _originator.EndMemento();
+            _subject.OnceTable.Add("daset", "yaset");
+
+            _subject2.OnceTable.Add("ilgot", "yadul");
+            _originator2.DoMemento(memento);
+            _subject2.OnceTable.Add("ahop", "yuul");
+
+            Assert.That(_subject.OnceTable.Count(), Is.EqualTo(3));
+            Assert.That(_subject.OnceTable["hana"], Is.EqualTo("duul"));
+            Assert.That(_subject.OnceTable["set"], Is.EqualTo("net"));
+            Assert.That(_subject.OnceTable["daset"], Is.EqualTo("yaset"));
+
+            Assert.That(_subject2.OnceTable.Count(), Is.EqualTo(3));
+            Assert.That(_subject2.OnceTable["ilgot"], Is.EqualTo("yadul"));
+            Assert.That(_subject2.OnceTable["set"], Is.EqualTo("net"));
+            Assert.That(_subject2.OnceTable["ahop"], Is.EqualTo("yuul"));
         }
 
-        [Test, Ignore("Not implemented yet")]
+        [Test]
         public void OutputWhileNamedContentActiveShouldAppearOnceAtCorrectTarget()
         {
-            throw new NotImplementedException();
+            _subject.Content.Add("foo", new SpoolWriter());
+            _subject.Content.Add("bar", new SpoolWriter());
+            _subject.Output = _subject.Content["foo"];
+            _subject.Output.Write("hello");
+            
+            _originator.BeginMemento();
+            _subject.Content["foo"].Write(" ");
+            _subject.Content["bar"].Write("yadda");
+            _subject.Output.Write("world");
+            _subject.Content["foo"].Write("!");
+            var memento = _originator.EndMemento();
+
+            Assert.That(_subject.Output.ToString(), Is.EqualTo("hello world!"));
+            Assert.That(_subject.Content["foo"].ToString(), Is.EqualTo("hello world!"));
+
+            _subject2.Content.Add("foo", new SpoolWriter());
+            _subject2.Output = _subject2.Content["foo"];
+            _subject2.Output.Write("hello");
+            _originator2.DoMemento(memento);
+
+            Assert.That(_subject2.Output.ToString(), Is.EqualTo("hello world!"));
+            Assert.That(_subject2.Content["foo"].ToString(), Is.EqualTo("hello world!"));
         }
     }
 }

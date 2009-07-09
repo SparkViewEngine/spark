@@ -7,5 +7,6 @@ namespace Spark.Caching
     {
         TextWriter Output { get; set; }
         Dictionary<string, TextWriter> Content { get; }
+        Dictionary<string, string> OnceTable { get; }
     }
 }

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Spark.Caching;
 using Spark.Spool;
 
 namespace Spark
@@ -28,7 +29,7 @@ namespace Spark
         public Dictionary<string, string> OnceTable { get; set; }
     }
 
-    public abstract class SparkViewBase : ISparkView
+    public abstract class SparkViewBase : ISparkView, ICacheSubject
     {
         private SparkViewContext _sparkViewContext;
 
@@ -45,7 +46,7 @@ namespace Spark
             get
             {
                 return _sparkViewContext ??
-                       Interlocked.CompareExchange(ref _sparkViewContext, CreateSparkViewContext(), null) ?? 
+                       Interlocked.CompareExchange(ref _sparkViewContext, CreateSparkViewContext(), null) ??
                        _sparkViewContext;
             }
             set { _sparkViewContext = value; }
@@ -117,63 +118,65 @@ namespace Spark
             }
         }
 
-        public IDisposable CacheScope(string site, string key)
+        protected bool BeginCachedContent(string site, object key)
         {
-            return new CacheScopeImpl(this, site, key);
+            _currentCacheScope = new CacheScopeImpl(this, site, key);
+            return _currentCacheScope.Begin();
         }
 
-        //todo: fix for decorator pattern context?
-        public CacheScopeImpl CacheContext { get; set; }
+        protected void EndCachedContent()
+        {
+            _currentCacheScope = _currentCacheScope.End();
+        }
+
+        private CacheScopeImpl _currentCacheScope;
         public ICacheService CacheService { get; set; }
 
-        public class CacheScopeImpl : IDisposable
-        {
-            private readonly SparkViewBase _view;
-            private readonly string _site;
-            private readonly string _key;
-            private readonly CacheScopeImpl _previous;
 
-            private TextWriter _output;
-            private IDisposable _outputScope;
+        private class CacheScopeImpl
+        {
+            private readonly CacheScopeImpl _previousCacheScope;
+
+            private readonly ICacheService _cacheService;
+            private readonly CacheOriginator _originator;
+            private readonly string _identifier;
+            private bool _recording;
 
             private static readonly ICacheService _nullCacheService = new NullCacheService();
 
-
-            public CacheScopeImpl(SparkViewBase view, string site, string key)
+            public CacheScopeImpl(SparkViewBase view, string site, object key)
             {
-                _view = view;
-                _site = site;
-                _key = key;
-                _previous = _view.CacheContext;
-                _view.CacheContext = this;
-            }
-
-            public void Dispose()
-            {
-                _view.CacheContext = _previous;
+                _previousCacheScope = view._currentCacheScope;
+                _cacheService = view.CacheService ?? _nullCacheService;
+                _originator = new CacheOriginator(view);
+                _identifier = site + Convert.ToString(key);
             }
 
             public bool Begin()
             {
-                var cacheItem = (StringWriter)(_view.CacheService ?? _nullCacheService).Get(_site + _key);
-                if (cacheItem == null)
+                var memento = _cacheService.Get(_identifier) as CacheMemento;
+                if (memento == null)
                 {
-                    _output = new StringWriter();
-                    _outputScope = _view.OutputScope(_output);
-                    return true;
+                    _recording = true;
+                    _originator.BeginMemento();
+                }
+                else
+                {
+                    _recording = false;
+                    _originator.DoMemento(memento);
                 }
 
-                cacheItem.WriteTo(_view.Output);
-                return false;
+                return _recording;
             }
 
-            public void End()
+            public CacheScopeImpl End()
             {
-                _outputScope.Dispose();
-                _outputScope = null;
-
-                _output.WriteTo(_view.Output);
-                (_view.CacheService ?? _nullCacheService).Store(_site + _key, _output);
+                if (_recording)
+                {
+                    var memento = _originator.EndMemento();
+                    _cacheService.Store(_identifier, memento);
+                }
+                return _previousCacheScope;
             }
 
 

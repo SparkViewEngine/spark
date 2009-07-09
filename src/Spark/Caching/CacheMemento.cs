@@ -6,13 +6,14 @@ namespace Spark.Caching
 {
     public class CacheMemento
     {
-        public CacheMemento(SpoolWriter spoolOutput)
+        public CacheMemento()
         {
-            SpoolOutput = spoolOutput;
             Content = new Dictionary<string, TextWriterMemento>();
+            OnceTable = new Dictionary<string, string>();
         }
 
         public SpoolWriter SpoolOutput { get; set; }
         public Dictionary<string, TextWriterMemento> Content { get; set;}
+        public Dictionary<string, string> OnceTable { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace Spark.Caching
         private SpoolWriter _spoolOutput;
 
         private readonly Dictionary<string, TextWriterOriginator> _priorContent = new Dictionary<string, TextWriterOriginator>();
+        private Dictionary<string, string> _priorOnceTable;
 
         public CacheOriginator(ICacheSubject subject)
         {
@@ -24,16 +25,22 @@ namespace Spark.Caching
         /// </summary>
         public void BeginMemento()
         {
-            _priorOutput = _subject.Output;
-            _spoolOutput = new SpoolWriter();
-            _subject.Output = _spoolOutput;
-
-            //TODO: don't capture output if it's also one of the content streams
             foreach (var content in _subject.Content)
             {
                 var writerOriginator = TextWriterOriginator.Create(content.Value);
                 _priorContent.Add(content.Key, writerOriginator);
                 writerOriginator.BeginMemento();
+            }
+
+            _priorOnceTable = _subject.OnceTable.ToDictionary(kv=>kv.Key, kv=>kv.Value);
+
+            // capture current output also if it's not locked into a named output at the moment
+            // this could be a case in view's output, direct to network, or various macro or content captures
+            if (_subject.Content.Any(kv => ReferenceEquals(kv.Value, _subject.Output)) == false)
+            {
+                _priorOutput = _subject.Output;
+                _spoolOutput = new SpoolWriter();
+                _subject.Output = _spoolOutput;
             }
         }
 
@@ -43,19 +50,35 @@ namespace Spark.Caching
         /// <returns>memento holding the details of the resulting state delta</returns>
         public CacheMemento EndMemento()
         {
-            _subject.Output = _priorOutput;
-            _spoolOutput.WriteTo(_subject.Output);
+            var memento = new CacheMemento();
 
-            var memento = new CacheMemento(_spoolOutput);
+            // for capturing subject.Output directly, replay what was spooled, and save it
+            // in the memento
+            if (_priorOutput != null)
+            {
+                _spoolOutput.WriteTo(_priorOutput);
+                _subject.Output = _priorOutput;
+                memento.SpoolOutput = _spoolOutput;
+            }
+            
+            // save any deltas on named content that have expanded
             foreach (var content in _priorContent)
             {
-                memento.Content.Add(content.Key, content.Value.EndMemento());
+                var textMemento = content.Value.EndMemento();
+                if (textMemento.Written.Any(part=>string.IsNullOrEmpty(part) == false))
+                    memento.Content.Add(content.Key, textMemento);
             }
+
+            // also save any named content in it's entirety that added created after BeginMemento was called
             foreach (var content in _subject.Content.Where(kv => _priorContent.ContainsKey(kv.Key) == false))
             {
                 var originator = TextWriterOriginator.Create(content.Value);
                 memento.Content.Add(content.Key, originator.CreateMemento());
             }
+
+            // capture anything from the oncetable that was added after BeginMemento was called
+            var newItems = _subject.OnceTable.Where(once => _priorOnceTable.ContainsKey(once.Key) == false);
+            memento.OnceTable = newItems.ToDictionary(once => once.Key, once => once.Value);
             return memento;
         }
 
@@ -67,7 +90,7 @@ namespace Spark.Caching
         {
             memento.SpoolOutput.WriteTo(_subject.Output);
 
-            foreach(var content in memento.Content)
+            foreach (var content in memento.Content)
             {
                 // create named content if it doesn't exist
                 TextWriter writer;
@@ -80,6 +103,13 @@ namespace Spark.Caching
                 // and in any case apply the delta
                 var originator = TextWriterOriginator.Create(writer);
                 originator.DoMemento(content.Value);
+            }
+
+            // add recorded once deltas that were not yet in this subject's table
+            var newItems = memento.OnceTable.Where(once => _subject.OnceTable.ContainsKey(once.Key) == false);
+            foreach (var once in newItems)
+            {
+                _subject.OnceTable.Add(once.Key, once.Value);
             }
         }
     }

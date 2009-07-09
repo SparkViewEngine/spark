@@ -451,28 +451,28 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
         protected override void Visit(CacheChunk chunk)
         {
             var siteGuid = Guid.NewGuid();
+
+            _source
+                .WriteLine("try")
+                .WriteLine("{").AddIndent();
+
             CodeIndent(chunk)
-                .Write("using(CacheScope(\"")
+                .Write("if (BeginCachedContent(\"")
                 .Write(siteGuid.ToString("n"))
                 .Write("\", ")
                 .WriteCode(chunk.Key)
                 .WriteLine("))");
+            
             AppendOpenBrace();
-
-            _source
-                .WriteLine("if (CacheContext.Begin())")
-                .WriteLine("{").AddIndent()
-                .WriteLine("try")
-                .WriteLine("{").AddIndent();
-
             Accept(chunk.Body);
+            AppendCloseBrace();
 
             _source
                 .RemoveIndent().WriteLine("}")
-                .WriteLine("finally { CacheContext.End(); }")
+                .WriteLine("finally")
+                .WriteLine("{").AddIndent()
+                .WriteLine("EndCachedContent();")
                 .RemoveIndent().WriteLine("}");
-
-            AppendCloseBrace();
         }
     }
 

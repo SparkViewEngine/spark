@@ -247,5 +247,111 @@ placed
 <p>12[8]</p>
 </div>"));
         }
+
+
+        [Test]
+        public void OutputWhileNamedContentActiveShouldAppearOnceAtCorrectTarget()
+        {
+
+            _viewFolder.Add("home\\index.spark", @"
+<viewdata model=""System.Func<string>""/>
+<ul>
+<content name='foo'>
+<li>${ViewData.Model()}[1]</li>
+</content>
+<li>${ViewData.Model()}[2]</li>
+<content name='foo'>
+<cache>
+<li>${ViewData.Model()}[3]c</li>
+<content name='foo'>
+hana
+</content>
+<li>${ViewData.Model()}[4]c</li>
+</cache>
+</content>
+<li>${ViewData.Model()}[5]</li>
+<content name='foo'>
+<li>${ViewData.Model()}[6]</li>
+</content>
+<use content='foo'/>
+</ul>");
+
+            var calls = 0;
+            var data = new StubViewData<Func<string>>
+            {
+                Model = () => (++calls).ToString()
+            };
+
+            var contents = Render("index", data);
+            Assert.That(calls, Is.EqualTo(6));
+            Assert.That(contents, Is.EqualTo(@"
+<ul>
+<li>2[2]</li>
+<li>5[5]</li>
+<li>1[1]</li>
+<li>3[3]c</li>
+hana
+<li>4[4]c</li>
+<li>6[6]</li>
+</ul>"));
+
+            
+            contents = Render("index", data);
+            Assert.That(calls, Is.EqualTo(10));
+            Assert.That(contents, Is.EqualTo(@"
+<ul>
+<li>8[2]</li>
+<li>9[5]</li>
+<li>7[1]</li>
+<li>3[3]c</li>
+hana
+<li>4[4]c</li>
+<li>10[6]</li>
+</ul>"));
+        }
+
+
+        [Test]
+        public void OnceFlagsSetWhenCacheRecordedShouldBeSetWhenCacheReplayed()
+        {
+            _viewFolder.Add("home\\index.spark", @"
+<viewdata model=""System.Func<string>""/>
+<ul>
+<li once='foo'>${ViewData.Model()}[1]</li>
+<cache>
+<li once='bar'>${ViewData.Model()}[2]</li>
+<li once='foo'>${ViewData.Model()}[3]</li>
+</cache>
+<li once='quux'>${ViewData.Model()}[4]</li>
+<li once='bar'>${ViewData.Model()}[5]</li>
+<li once='foo'>${ViewData.Model()}[6]</li>
+<li once='quux'>${ViewData.Model()}[7]</li>
+</ul>");
+
+            var calls = 0;
+            var data = new StubViewData<Func<string>>
+            {
+                Model = () => (++calls).ToString()
+            };
+
+            var contents = Render("index", data);
+            Assert.That(calls, Is.EqualTo(3));
+            Assert.That(contents, Is.EqualTo(@"
+<ul>
+<li>1[1]</li>
+<li>2[2]</li>
+<li>3[4]</li>
+</ul>"));
+
+            contents = Render("index", data);
+            Assert.That(calls, Is.EqualTo(5));
+            Assert.That(contents, Is.EqualTo(@"
+<ul>
+<li>4[1]</li>
+<li>2[2]</li>
+<li>5[4]</li>
+</ul>"));
+        }
+
     }
 }
