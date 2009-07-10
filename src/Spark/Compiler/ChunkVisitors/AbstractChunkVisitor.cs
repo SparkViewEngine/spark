@@ -136,6 +136,10 @@ namespace Spark.Compiler.ChunkVisitors
             {
                 Visit((PageBaseTypeChunk)chunk);
             }
+            else if (chunk is CacheChunk)
+            {
+                Visit((CacheChunk)chunk);
+            }
             else
             {
                 throw new CompilerException(string.Format("Unknown chunk type {0}", chunk.GetType().Name));
@@ -166,6 +170,7 @@ namespace Spark.Compiler.ChunkVisitors
         protected abstract void Visit(ContentChunk chunk);
         protected abstract void Visit(UseNamespaceChunk chunk);
         protected abstract void Visit(PageBaseTypeChunk chunk);
+        protected abstract void Visit(CacheChunk chunk);
 
         protected void EnterRenderPartial(RenderPartialChunk chunk)
         {

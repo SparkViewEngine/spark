@@ -20,6 +20,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Wrappers;
@@ -30,6 +31,7 @@ namespace Spark.Web.Mvc
     {
         private ISparkViewEngine _engine;
         private IDescriptorBuilder _descriptorBuilder;
+        private ICacheServiceProvider _cacheServiceProvider;
 
 
         public SparkViewFactory()
@@ -100,6 +102,17 @@ namespace Spark.Web.Mvc
             set { _descriptorBuilder = value; }
         }
 
+        public ICacheServiceProvider CacheServiceProvider
+        {
+            get
+            {
+                return _cacheServiceProvider ??
+                       Interlocked.CompareExchange(ref _cacheServiceProvider, new DefaultCacheServiceProvider(), null) ??
+                       _cacheServiceProvider;
+            }
+            set { _cacheServiceProvider = value; }
+        }
+
         public virtual ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
         {
             return FindViewInternal(controllerContext, viewName, masterName, true, false);
@@ -150,7 +163,7 @@ namespace Spark.Web.Mvc
             {
                 if (TryGetCacheValue(descriptorParams, out entry) && entry.IsCurrent())
                 {
-                    return BuildResult(entry);
+                    return BuildResult(controllerContext.RequestContext, entry);
                 }
                 return _cacheMissResult;
             }
@@ -164,7 +177,7 @@ namespace Spark.Web.Mvc
 
             entry = Engine.CreateEntry(descriptor);
             SetCacheValue(descriptorParams, entry);
-            return BuildResult(entry);
+            return BuildResult(controllerContext.RequestContext, entry);
         }
 
         private bool TryGetCacheValue(BuildDescriptorParams descriptorParams, out ISparkViewEntry entry)
@@ -178,12 +191,14 @@ namespace Spark.Web.Mvc
         }
 
 
-        private ViewEngineResult BuildResult(ISparkViewEntry entry)
+        private ViewEngineResult BuildResult(RequestContext requestContext, ISparkViewEntry entry)
         {
             var view = (IView)entry.CreateInstance();
             if (view is SparkView)
             {
-                ((SparkView)view).ResourcePathManager = Engine.ResourcePathManager;
+                var sparkView = (SparkView)view;
+                sparkView.ResourcePathManager = Engine.ResourcePathManager;
+                sparkView.CacheService = CacheServiceProvider.GetCacheService(requestContext);
             }
             return new ViewEngineResult(view, this);
         }

@@ -259,4 +259,15 @@ namespace Spark.Compiler
     {
         public Snippets BaseClass { get; set; }
     }
+
+    public class CacheChunk : Chunk
+    {
+        public CacheChunk()
+        {
+            Body = new List<Chunk>();
+        }
+
+        public Snippets Key { get; set; }
+        public IList<Chunk> Body { get; set; }
+    }
 }

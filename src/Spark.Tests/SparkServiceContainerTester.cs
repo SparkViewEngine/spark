@@ -35,6 +35,9 @@ namespace Spark.Tests
 
             var resourcePathManager = container.GetService<IResourcePathManager>();
             Assert.IsInstanceOfType(typeof(DefaultResourcePathManager), resourcePathManager);
+
+            var cacheManager = container.GetService<ICacheManager>();
+            Assert.IsInstanceOfType(typeof(DefaultCacheManager), cacheManager);
         }
 
         [Test]

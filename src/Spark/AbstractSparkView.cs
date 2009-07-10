@@ -30,40 +30,5 @@ namespace Spark
         {
         }
 
-/*
-        public abstract void RenderView(TextWriter writer);
-        public abstract Guid GeneratedViewId { get; }
-
-        protected Dictionary<string, TextWriter> _content = new Dictionary<string, TextWriter>();
-        protected IDictionary<string, string> _once = new Dictionary<string, string>();
-
-        public virtual bool TryGetViewData(string name, out object value)
-        {
-            value = null;
-            return false;
-        }
-
-        public Dictionary<string, TextWriter> Content { get { return _content; } }
-        public TextWriter Output { get; private set; }        
-
-        public IDisposable OutputScope(string name)
-        {
-            TextWriter writer;
-            if (!_content.TryGetValue(name, out writer))
-            {
-                writer = new SpoolWriter();
-                _content.Add(name, writer);
-            }
-            return new OutputScopeImpl(this, writer);
-        }
-
-        public IDisposable OutputScope(TextWriter writer)
-        {
-            return new OutputScopeImpl(this, writer);
-        }
-
-        public IDisposable OutputScope()
-
-    */
     }
 }
