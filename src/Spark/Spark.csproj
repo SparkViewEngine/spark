@@ -62,7 +62,6 @@
     </Compile>
     <Compile Include="Caching\CacheMemento.cs" />
     <Compile Include="Caching\CacheOriginator.cs" />
-    <Compile Include="Caching\ICacheSubject.cs" />
     <Compile Include="Caching\SpoolWriterOriginator.cs" />
     <Compile Include="Caching\StringWriterOriginator.cs" />
     <Compile Include="Caching\TextWriterOriginator.cs" />

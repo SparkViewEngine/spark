@@ -7,7 +7,7 @@ namespace Spark.Caching
 {
     public class CacheOriginator
     {
-        private readonly ICacheSubject _subject;
+        private readonly SparkViewContext _state;
 
         private TextWriter _priorOutput;
         private SpoolWriter _spoolOutput;
@@ -15,9 +15,9 @@ namespace Spark.Caching
         private readonly Dictionary<string, TextWriterOriginator> _priorContent = new Dictionary<string, TextWriterOriginator>();
         private Dictionary<string, string> _priorOnceTable;
 
-        public CacheOriginator(ICacheSubject subject)
+        public CacheOriginator(SparkViewContext state)
         {
-            _subject = subject;
+            _state = state;
         }
 
         /// <summary>
@@ -25,22 +25,22 @@ namespace Spark.Caching
         /// </summary>
         public void BeginMemento()
         {
-            foreach (var content in _subject.Content)
+            foreach (var content in _state.Content)
             {
                 var writerOriginator = TextWriterOriginator.Create(content.Value);
                 _priorContent.Add(content.Key, writerOriginator);
                 writerOriginator.BeginMemento();
             }
 
-            _priorOnceTable = _subject.OnceTable.ToDictionary(kv=>kv.Key, kv=>kv.Value);
+            _priorOnceTable = _state.OnceTable.ToDictionary(kv=>kv.Key, kv=>kv.Value);
 
             // capture current output also if it's not locked into a named output at the moment
             // this could be a case in view's output, direct to network, or various macro or content captures
-            if (_subject.Content.Any(kv => ReferenceEquals(kv.Value, _subject.Output)) == false)
+            if (_state.Content.Any(kv => ReferenceEquals(kv.Value, _state.Output)) == false)
             {
-                _priorOutput = _subject.Output;
+                _priorOutput = _state.Output;
                 _spoolOutput = new SpoolWriter();
-                _subject.Output = _spoolOutput;
+                _state.Output = _spoolOutput;
             }
         }
 
@@ -57,7 +57,7 @@ namespace Spark.Caching
             if (_priorOutput != null)
             {
                 _spoolOutput.WriteTo(_priorOutput);
-                _subject.Output = _priorOutput;
+                _state.Output = _priorOutput;
                 memento.SpoolOutput = _spoolOutput;
             }
             
@@ -70,14 +70,14 @@ namespace Spark.Caching
             }
 
             // also save any named content in it's entirety that added created after BeginMemento was called
-            foreach (var content in _subject.Content.Where(kv => _priorContent.ContainsKey(kv.Key) == false))
+            foreach (var content in _state.Content.Where(kv => _priorContent.ContainsKey(kv.Key) == false))
             {
                 var originator = TextWriterOriginator.Create(content.Value);
                 memento.Content.Add(content.Key, originator.CreateMemento());
             }
 
             // capture anything from the oncetable that was added after BeginMemento was called
-            var newItems = _subject.OnceTable.Where(once => _priorOnceTable.ContainsKey(once.Key) == false);
+            var newItems = _state.OnceTable.Where(once => _priorOnceTable.ContainsKey(once.Key) == false);
             memento.OnceTable = newItems.ToDictionary(once => once.Key, once => once.Value);
             return memento;
         }
@@ -88,16 +88,16 @@ namespace Spark.Caching
         /// <param name="memento">memento captured in previous begin/end calls</param>
         public void DoMemento(CacheMemento memento)
         {
-            memento.SpoolOutput.WriteTo(_subject.Output);
+            memento.SpoolOutput.WriteTo(_state.Output);
 
             foreach (var content in memento.Content)
             {
                 // create named content if it doesn't exist
                 TextWriter writer;
-                if (_subject.Content.TryGetValue(content.Key, out writer) == false)
+                if (_state.Content.TryGetValue(content.Key, out writer) == false)
                 {
                     writer = new SpoolWriter();
-                    _subject.Content.Add(content.Key, writer);
+                    _state.Content.Add(content.Key, writer);
                 }
 
                 // and in any case apply the delta
@@ -106,10 +106,10 @@ namespace Spark.Caching
             }
 
             // add recorded once deltas that were not yet in this subject's table
-            var newItems = memento.OnceTable.Where(once => _subject.OnceTable.ContainsKey(once.Key) == false);
+            var newItems = memento.OnceTable.Where(once => _state.OnceTable.ContainsKey(once.Key) == false);
             foreach (var once in newItems)
             {
-                _subject.OnceTable.Add(once.Key, once.Value);
+                _state.OnceTable.Add(once.Key, once.Value);
             }
         }
     }

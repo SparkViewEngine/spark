@@ -23,13 +23,20 @@ namespace Spark
 {
     public class SparkViewContext
     {
+        public SparkViewContext()
+        {
+            Content = new Dictionary<string, TextWriter>();
+            Globals = new Dictionary<string, object>();
+            OnceTable = new Dictionary<string, string>();
+        }
+
         public TextWriter Output { get; set; }
         public Dictionary<string, TextWriter> Content { get; set; }
         public Dictionary<string, object> Globals { get; set; }
         public Dictionary<string, string> OnceTable { get; set; }
     }
 
-    public abstract class SparkViewBase : ISparkView, ICacheSubject
+    public abstract class SparkViewBase : ISparkView
     {
         private SparkViewContext _sparkViewContext;
 
@@ -46,21 +53,12 @@ namespace Spark
             get
             {
                 return _sparkViewContext ??
-                       Interlocked.CompareExchange(ref _sparkViewContext, CreateSparkViewContext(), null) ??
+                       Interlocked.CompareExchange(ref _sparkViewContext, new SparkViewContext(), null) ??
                        _sparkViewContext;
             }
             set { _sparkViewContext = value; }
         }
 
-        private static SparkViewContext CreateSparkViewContext()
-        {
-            return new SparkViewContext
-                   {
-                       Content = new Dictionary<string, TextWriter>(),
-                       Globals = new Dictionary<string, object>(),
-                       OnceTable = new Dictionary<string, string>()
-                   };
-        }
 
         public TextWriter Output { get { return SparkViewContext.Output; } set { SparkViewContext.Output = value; } }
         public Dictionary<string, TextWriter> Content { get { return SparkViewContext.Content; } set { SparkViewContext.Content = value; } }
@@ -148,7 +146,7 @@ namespace Spark
             {
                 _previousCacheScope = view._currentCacheScope;
                 _cacheService = view.CacheService ?? _nullCacheService;
-                _originator = new CacheOriginator(view);
+                _originator = new CacheOriginator(view.SparkViewContext);
                 _identifier = site + Convert.ToString(key);
             }
 

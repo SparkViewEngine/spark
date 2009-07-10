@@ -13,32 +13,20 @@ namespace Spark.Tests.Caching
     [TestFixture]
     public class CacheOriginatorTester
     {
-        private ICacheSubject _subject;
+        private SparkViewContext _subject;
         private CacheOriginator _originator;
 
-        private ICacheSubject _subject2;
+        private SparkViewContext _subject2;
         private CacheOriginator _originator2;
 
-        public class TestSubject : ICacheSubject
-        {
-            public TestSubject()
-            {
-                Output = new SpoolWriter();
-                Content = new Dictionary<string, TextWriter>();
-                OnceTable = new Dictionary<string, string>();
-            }
-            public TextWriter Output { get; set; }
-            public Dictionary<string, TextWriter> Content { get; set; }
-            public Dictionary<string, string> OnceTable { get; set; }
-        }
 
         [SetUp]
         public void Init()
         {
-            _subject = new TestSubject();
+            _subject = new SparkViewContext {Output = new SpoolWriter()};
             _originator = new CacheOriginator(_subject);
 
-            _subject2 = new TestSubject();
+            _subject2 = new SparkViewContext { Output = new SpoolWriter() };
             _originator2 = new CacheOriginator(_subject2);
         }
 
@@ -99,7 +87,7 @@ namespace Spark.Tests.Caching
             Assert.That(_subject2.Output.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
             _subject2.Output.Dispose();
 
-            var subject3 = new TestSubject();
+            var subject3 = new SparkViewContext { Output = new SpoolWriter() };
 
             subject3.Output.Write("Zeta"); 
             new CacheOriginator(subject3).DoMemento(memento);            
