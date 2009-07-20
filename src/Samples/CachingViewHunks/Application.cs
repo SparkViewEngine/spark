@@ -22,5 +22,8 @@ namespace CachingViewHunks
                 Defaults = new RouteValueDictionary(new { controller = "Home", action = "Index", id = "" }),
             });
         }
+
+        public static int FetchEmployeeListCalls { get; set; }
+        public static int FetchEmployeeDetailCalls { get; set; }
     }
 }

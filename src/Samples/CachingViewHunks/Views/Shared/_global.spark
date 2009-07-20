@@ -5,6 +5,7 @@
 <use namespace="System.Web.Mvc"/>
 <use namespace="System.Web.Mvc.Html"/>
 <use namespace="System.Web.Routing"/>
+<use namespace="Spark"/>
 
 <macro name="NavItem" text="string" args="object">
   <var values="new RouteValueDictionary(args)" />

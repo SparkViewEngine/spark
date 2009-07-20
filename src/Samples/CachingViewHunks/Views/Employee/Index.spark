@@ -1,0 +1,61 @@
+﻿
+<h2>Employees</h2>
+
+<use namespace="CachingViewHunks.Models"/>
+<use namespace="CachingViewHunks.Controllers"/>
+
+<viewdata 
+	page="int" 
+	employees.Value="IEnumerable[[Employee]] employees" 
+	pageCount.Value="int pageCount"/>
+
+<p>Page viewed ${DateTime.Now}<p>
+
+<cache key="page">
+<p>This part cached ${DateTime.Now}<p>
+
+!{paging()}
+<table>
+<tr>
+	<th>Employee</th>
+	<th>Territories</th>
+	<th>Reports To</th>
+</tr>
+<tr each="var employee in employees" style="vertical-align:top;">
+	<var territories="from et in employee.EmployeeTerritories select et.Territory"/>
+	<td>${employee.Title}<br/>!{Html.ActionLink(employee.FirstName + " " + employee.LastName, "Details", new { id = employee.EmployeeID })}</td>
+	<td>
+		<ul>
+			<li each="var territory in territories">${territory.TerritoryDescription.Trim()}, ${territory.Region.RegionDescription}</li>
+		</ul>
+	</td>
+	<td if="employee.ReportsToEmployee != null">${employee.ReportsToEmployee.Title}<br/>${employee.ReportsToEmployee.FirstName} ${employee.ReportsToEmployee.LastName}</td>
+	<else><td>N/A</td></else>
+</tr>
+</table>
+!{paging()}
+
+</cache>
+	
+	
+<macro name="paging">
+	<p>
+		!{Html.ActionLink("First", "Index", new { page = 1 })}
+		&bull;
+		<test if="page - 1 != 0">
+			!{Html.ActionLink("< Prev", "Index", new { page = page - 1 })}
+		<else/>
+			< Prev
+		</test>
+		&bull;
+		${page}
+		&bull;
+		<test if="page != pageCount">
+			!{Html.ActionLink("Next >", "Index", new { page = page + 1 })}
+		<else/>
+			Next >
+		</test>
+		&bull;
+		!{Html.ActionLink("Last", "Index", new { page = pageCount })}
+	</p>
+</macro>

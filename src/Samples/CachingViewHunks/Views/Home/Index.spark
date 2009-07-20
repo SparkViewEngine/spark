@@ -1,5 +1,5 @@
-<h2>Demonstration of advanced partial techniques</h2>
-<p>This site contains to following demonstrations</p>
-<ul>
-  <AllDemoPages/>
-</ul>
+<h2>Caching demonstration</h2>
+
+<p>!{Html.ActionLink("Employees", "Index", "Employee")}</p>
+
+<p>Note: database usage stats below showing how cache hits avoid db calls.</p>

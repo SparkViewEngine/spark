@@ -19,7 +19,7 @@
         <use content="navigation">
           <ul>
             !{NavItem("Home", new { controller = "home", action = "index" })}
-            !{NavItem("About", new { controller = "home", action = "about" })}
+            !{NavItem("Employees", new { controller = "employee", action = "index" })}
             #// use {content:navextra} to add menu items
             <use content="navextra"/>
             !{NavItem("Style Guide", new { controller = "home", action = "styleguide" })}
@@ -52,6 +52,10 @@
       <div id="footer">
         <p>
           &copy; 2005-2006 <a href="#">Your Name</a> | Design by <a href="http://andreasviklund.com">Andreas Viklund</a>
+        </p>
+        <p>
+        FetchEmployeeListCalls: ${CachingViewHunks.Application.FetchEmployeeListCalls},
+        FetchEmployeeDetailCalls: ${CachingViewHunks.Application.FetchEmployeeDetailCalls}
         </p>
       </div>
 

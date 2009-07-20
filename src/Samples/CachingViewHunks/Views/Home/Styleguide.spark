@@ -6,10 +6,10 @@
 <p>I get a lot of requests about new open source templates, and this one was created as a response to one of those requests. This template is based on the design of my own website, with only small changes (hopefully improvements!) from my own design. Among the changes, it is worth to note that this template does not use any images - and browser-based font resizing is fully supported. Other than that, there are no special features or extras, only valid and well-structured XHTML 1.1 and CSS2 code.</p>
 <p>Current template version: 1.0 (November 28, 2005).</p>
 
-<h2>Note- the styleguide "view" portion is cached</h2>
-<p>Just for the heck of it the whole styleguide.spark is wrapped in cache, except for 
+<h2>Note- the Styleguide "view" portion is cached</h2>
+<p>Just for the heck of it the whole Styleguide.spark is wrapped in cache, except for 
 the second datetime below.</p>
-<p>Styleguide cached ${DateTime.Now}</p>
+<p>Styleguide was cached at ${DateTime.Now}</p>
 <p>It is now </cache>${DateTime.Now}<cache></p>
 <p>Really I was just trying to see if it would break, but it seems to have held together 
 just fine.</p>
