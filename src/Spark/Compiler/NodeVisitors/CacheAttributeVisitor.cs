@@ -18,33 +18,29 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-	public class CacheAttributeVisitor : SpecialAttributeVisitorBase
+    public class CacheAttributeVisitor : SpecialAttributeVisitorBase
     {
         public CacheAttributeVisitor(VisitorContext context)
-			: base(context)
-		{
-		}
-
-	    protected override bool IsSpecialAttribute(ElementNode element, AttributeNode attr)
+            : base(context)
         {
-            var eltName = NameUtility.GetName(element.Name);
-            if (eltName != "test" && eltName != "if" && eltName != "elseif" && eltName != "else")
-                return false;
+        }
 
+        protected override bool IsSpecialAttribute(ElementNode element, AttributeNode attr)
+        {
             if (Context.Namespaces == NamespacesType.Unqualified)
-                return attr.Name == "once";
+                return attr.Name == "cache";
 
             if (attr.Namespace != Constants.Namespace)
                 return false;
 
             var nqName = NameUtility.GetName(attr.Name);
-            return nqName == "once";
+            return nqName == "cache";
         }
 
-	    protected override SpecialNode CreateWrappingNode(AttributeNode conditionalAttr)
-		{
-            var fakeAttribute = new AttributeNode("once", conditionalAttr.Nodes);
-            var fakeElement = new ElementNode("test", new[] { fakeAttribute }, false) { OriginalNode = conditionalAttr };
+        protected override SpecialNode CreateWrappingNode(AttributeNode conditionalAttr)
+        {
+            var fakeAttribute = new AttributeNode("key", conditionalAttr.Nodes);
+            var fakeElement = new ElementNode("cache", new[] { fakeAttribute }, false) { OriginalNode = conditionalAttr };
             return new SpecialNode(fakeElement);
         }
     }

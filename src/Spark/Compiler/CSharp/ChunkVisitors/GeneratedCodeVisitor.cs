@@ -452,28 +452,30 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
         {
             var siteGuid = Guid.NewGuid();
 
-            _source
-                .WriteLine("try")
-                .WriteLine("{").AddIndent();
-
             CodeIndent(chunk)
                 .Write("if (BeginCachedContent(\"")
                 .Write(siteGuid.ToString("n"))
                 .Write("\", ")
                 .WriteCode(chunk.Key)
-                .WriteLine("))");
+                .WriteLine("))")
+                .WriteLine("{").AddIndent();
+
+            _source
+                .WriteLine("try");
             
             AppendOpenBrace();
             Accept(chunk.Body);
             AppendCloseBrace();
 
             _source
-                .RemoveIndent().WriteLine("}")
                 .WriteLine("finally")
                 .WriteLine("{").AddIndent()
                 .WriteLine("EndCachedContent();")
+                .RemoveIndent().WriteLine("}")
                 .RemoveIndent().WriteLine("}");
         }
+
+        
     }
 
 }

@@ -135,6 +135,7 @@ namespace Spark.Parser.Syntax
                            new IncludeVisitor(context),
                            new PrefixExpandingVisitor(context),
                            new SpecialNodeVisitor(context),
+                           new CacheAttributeVisitor(context),
                            new ForEachAttributeVisitor(context),
                            new ConditionalAttributeVisitor(context),
                            new OmitExtraLinesVisitor(context),

@@ -353,5 +353,41 @@ hana
 </ul>"));
         }
 
+        [Test, ExpectedException(typeof(ApplicationException))]
+        public void CacheFinallyShouldNotThrowExceptionWhenKeyIsBad()
+        {
+            _viewFolder.Add("home\\index.spark", @"
+<macro name='boom'>
+#throw new System.ApplicationException();
+</macro>
+<cache key='boom()'>
+foo
+</cache>
+");
+            Render("index", new StubViewData());
+
+        }
+
+        [Test]
+        public void CacheAttributeUsedAsKey()
+        {
+            _viewFolder.Add("home\\index.spark", @"
+<var stuff='new[]{1,3,5,2,3,3,5,7}' count='0'/>
+<for each='var x in stuff'>
+<p cache='x'>${x}:${++count}</p>
+</for>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"
+<p>1:1</p>
+<p>3:2</p>
+<p>5:3</p>
+<p>2:4</p>
+<p>3:2</p>
+<p>3:2</p>
+<p>5:3</p>
+<p>7:5</p>
+".Replace("\r\n","")));
+        }
     }
 }

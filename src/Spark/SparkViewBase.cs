@@ -119,7 +119,11 @@ namespace Spark
         protected bool BeginCachedContent(string site, object key)
         {
             _currentCacheScope = new CacheScopeImpl(this, site, key);
-            return _currentCacheScope.Begin();
+            if (_currentCacheScope.Begin())
+                return true;
+
+            EndCachedContent();
+            return false;
         }
 
         protected void EndCachedContent()

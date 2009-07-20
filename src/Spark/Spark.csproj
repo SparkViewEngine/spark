@@ -65,6 +65,7 @@
     <Compile Include="Caching\SpoolWriterOriginator.cs" />
     <Compile Include="Caching\StringWriterOriginator.cs" />
     <Compile Include="Caching\TextWriterOriginator.cs" />
+    <Compile Include="Compiler\NodeVisitors\CacheAttributeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\SpecialAttributeVisitorBase.cs" />
     <Compile Include="CompositeViewEntry.cs" />
     <Compile Include="AbstractSparkView.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Spool\SpoolReader.cs" />
     <Compile Include="Spool\SpoolWriter.cs" />
     <Compile Include="Spool\TextWriterExtensions.cs" />
+    <Compile Include="ValueHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SparkKey.snk" />
