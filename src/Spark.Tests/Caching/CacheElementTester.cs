@@ -15,12 +15,14 @@ namespace Spark.Tests.Caching
 
         private InMemoryViewFolder _viewFolder;
         private StubViewFactory _factory;
+        private StubCacheService _cacheService;
 
         [SetUp]
         public void Init()
         {
             CompiledViewHolder.Current = new CompiledViewHolder();
             _viewFolder = new InMemoryViewFolder();
+            _cacheService = new StubCacheService();
             _factory = new StubViewFactory
             {
                 Engine = new SparkViewEngine(
@@ -29,7 +31,7 @@ namespace Spark.Tests.Caching
                 {
                     ViewFolder = _viewFolder
                 },
-                CacheService = new StubCacheService()
+                CacheService = _cacheService
             };
         }
 
@@ -295,7 +297,7 @@ hana
 <li>6[6]</li>
 </ul>"));
 
-            
+
             contents = Render("index", data);
             Assert.That(calls, Is.EqualTo(10));
             Assert.That(contents, Is.EqualTo(@"
@@ -387,7 +389,70 @@ foo
 <p>3:2</p>
 <p>5:3</p>
 <p>7:5</p>
-".Replace("\r\n","")));
+".Replace("\r\n", "")));
+        }
+
+        [Test]
+        public void CacheExpiresTakesOutContentAfterTime()
+        {
+            _viewFolder.Add("home\\index.spark", @"
+<viewdata model=""System.Func<string>""/>
+<for each='var x in new[]{1,2,3,1,2,3}'>
+<cache key='x' expires='System.TimeSpan.FromSeconds(30)'>
+<p>${x}:${ViewData.Model()}</p>
+</cache>
+</for>
+<p cache.expires='40'>last:${ViewData.Model()}</p>
+");
+
+            var calls = 0;
+            var data = new StubViewData<Func<string>>
+            {
+                Model = () => (++calls).ToString()
+            };
+
+            var contents = Render("index", data);
+            Assert.That(contents, Is.EqualTo(@"
+<p>1:1</p>
+<p>2:2</p>
+<p>3:3</p>
+<p>1:1</p>
+<p>2:2</p>
+<p>3:3</p><p>last:4</p>
+"));
+
+            _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(25);
+            contents = Render("index", data);
+            Assert.That(contents, Is.EqualTo(@"
+<p>1:1</p>
+<p>2:2</p>
+<p>3:3</p>
+<p>1:1</p>
+<p>2:2</p>
+<p>3:3</p><p>last:4</p>
+"));
+
+            _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(10);
+            contents = Render("index", data);
+            Assert.That(contents, Is.EqualTo(@"
+<p>1:5</p>
+<p>2:6</p>
+<p>3:7</p>
+<p>1:5</p>
+<p>2:6</p>
+<p>3:7</p><p>last:4</p>
+"));
+
+            _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(10);
+            contents = Render("index", data);
+            Assert.That(contents, Is.EqualTo(@"
+<p>1:5</p>
+<p>2:6</p>
+<p>3:7</p>
+<p>1:5</p>
+<p>2:6</p>
+<p>3:7</p><p>last:8</p>
+"));
         }
     }
 }

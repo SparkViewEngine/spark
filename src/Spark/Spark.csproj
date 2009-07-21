@@ -60,6 +60,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CacheExpires.cs" />
     <Compile Include="Caching\CacheMemento.cs" />
     <Compile Include="Caching\CacheOriginator.cs" />
     <Compile Include="Caching\SpoolWriterOriginator.cs" />

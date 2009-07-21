@@ -38,10 +38,10 @@ namespace Spark.Compiler.NodeVisitors
 			return NameUtility.GetName(attribute.Name) == "each";
 		}
 
-	    protected override SpecialNode CreateWrappingNode(AttributeNode eachAttr)
+	    protected override SpecialNode CreateWrappingNode(AttributeNode attr, ElementNode node)
 		{
-			var fakeAttribute = new AttributeNode("each", eachAttr.Nodes) { OriginalNode = eachAttr };
-			var fakeElement = new ElementNode("for", new[] { fakeAttribute }, false) { OriginalNode = eachAttr };
+			var fakeAttribute = new AttributeNode("each", attr.Nodes) { OriginalNode = attr };
+			var fakeElement = new ElementNode("for", new[] { fakeAttribute }, false) { OriginalNode = attr };
 			return new SpecialNode(fakeElement);
 		}
 	}

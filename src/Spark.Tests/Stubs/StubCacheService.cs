@@ -1,20 +1,57 @@
+using System;
 using System.Collections.Generic;
 
 namespace Spark.Tests.Stubs
 {
     public class StubCacheService : ICacheService
     {
-        private IDictionary<string, object> _cache = new Dictionary<string, object>();
+        private readonly IDictionary<string, Entry> _cache = new Dictionary<string, Entry>();
+
+        public StubCacheService()
+        {
+            UtcNow = new DateTime(2009, 1, 2, 3, 4, 5);
+        }
 
         public object Get(string identifier)
         {
-            object item;
-            return _cache.TryGetValue(identifier, out item) ? item : null;
+            Entry item;
+            return _cache.TryGetValue(identifier, out item) && IsValid(item) ? item.Value : null;
         }
 
-        public void Store(string identifier, object item)
+        private bool IsValid(Entry item)
         {
-            _cache[identifier] = item;
+            return item.UtcExpires == CacheExpires.NoAbsoluteExpiration ||
+                item.UtcExpires > UtcNow;
+        }
+
+        public void Store(string identifier, CacheExpires expires, object item)
+        {
+            _cache[identifier] = new Entry { Value = item, UtcExpires = ToAbsolute(expires) };
+        }
+
+        private DateTime ToAbsolute(CacheExpires expires)
+        {
+            // this is less sophisticated than the web caching implementation, but
+            // it only needs to satisfy expectations of unit tests. they should always
+            // use utc for abs
+
+            if (expires == null)
+                return CacheExpires.NoAbsoluteExpiration;
+
+            if (expires.Sliding != CacheExpires.NoSlidingExpiration)
+            {
+                return UtcNow.Add(expires.Sliding);
+            }
+
+            return expires.Absolute;
+        }
+
+        public DateTime UtcNow { get; set; }
+
+        class Entry
+        {
+            public object Value { get; set; }
+            public DateTime UtcExpires { get; set; }
         }
     }
 }

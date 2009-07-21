@@ -116,9 +116,9 @@ namespace Spark
             }
         }
 
-        protected bool BeginCachedContent(string site, object key)
+        protected bool BeginCachedContent(string site, CacheExpires expires, params object[] key)
         {
-            _currentCacheScope = new CacheScopeImpl(this, site, key);
+            _currentCacheScope = new CacheScopeImpl(this, site, expires, key);
             if (_currentCacheScope.Begin())
                 return true;
 
@@ -142,16 +142,18 @@ namespace Spark
             private readonly ICacheService _cacheService;
             private readonly CacheOriginator _originator;
             private readonly string _identifier;
+            private readonly CacheExpires _expires;
             private bool _recording;
 
             private static readonly ICacheService _nullCacheService = new NullCacheService();
 
-            public CacheScopeImpl(SparkViewBase view, string site, object key)
+            public CacheScopeImpl(SparkViewBase view, string site, CacheExpires expires, object[] key)
             {
+                _expires = expires;
                 _previousCacheScope = view._currentCacheScope;
                 _cacheService = view.CacheService ?? _nullCacheService;
                 _originator = new CacheOriginator(view.SparkViewContext);
-                _identifier = site + Convert.ToString(key);
+                _identifier = site + string.Concat(key);                
             }
 
             public bool Begin()
@@ -176,7 +178,7 @@ namespace Spark
                 if (_recording)
                 {
                     var memento = _originator.EndMemento();
-                    _cacheService.Store(_identifier, memento);
+                    _cacheService.Store(_identifier, _expires, memento);
                 }
                 return _previousCacheScope;
             }
@@ -189,7 +191,7 @@ namespace Spark
                     return null;
                 }
 
-                public void Store(string identifier, object item)
+                public void Store(string identifier, CacheExpires expires, object item)
                 {
                 }
             }

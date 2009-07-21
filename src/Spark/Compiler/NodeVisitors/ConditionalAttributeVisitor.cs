@@ -40,10 +40,10 @@ namespace Spark.Compiler.NodeVisitors
             return nqName == "if" || nqName == "elseif";
         }
 
-	    protected override SpecialNode CreateWrappingNode(AttributeNode conditionalAttr)
+	    protected override SpecialNode CreateWrappingNode(AttributeNode attr, ElementNode node)
 		{
-			var fakeAttribute = new AttributeNode("condition", conditionalAttr.Nodes);
-			var fakeElement = new ElementNode(NameUtility.GetName(conditionalAttr.Name), new[] { fakeAttribute }, false) { OriginalNode = conditionalAttr };
+			var fakeAttribute = new AttributeNode("condition", attr.Nodes);
+			var fakeElement = new ElementNode(NameUtility.GetName(attr.Name), new[] { fakeAttribute }, false) { OriginalNode = attr };
 			return new SpecialNode(fakeElement);
 		}
     }

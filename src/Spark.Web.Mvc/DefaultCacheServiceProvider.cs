@@ -27,7 +27,7 @@ namespace Spark.Web.Mvc
                 return _cache.Get(identifier);
             }
 
-            public void Store(string identifier, object item)
+            public void Store(string identifier, CacheExpires expires, object item)
             {
                 _cache.Insert(identifier, item);
             }

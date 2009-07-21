@@ -27,21 +27,41 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override bool IsSpecialAttribute(ElementNode element, AttributeNode attr)
         {
-            if (Context.Namespaces == NamespacesType.Unqualified)
-                return attr.Name == "cache";
+            var name = AttrName(attr);
 
-            if (attr.Namespace != Constants.Namespace)
-                return false;
-
-            var nqName = NameUtility.GetName(attr.Name);
-            return nqName == "cache";
+            return name == "cache" || name == "cache.key" || name == "cache.expires";
         }
 
-        protected override SpecialNode CreateWrappingNode(AttributeNode conditionalAttr)
+        private string AttrName(AttributeNode attr)
         {
-            var fakeAttribute = new AttributeNode("key", conditionalAttr.Nodes);
-            var fakeElement = new ElementNode("cache", new[] { fakeAttribute }, false) { OriginalNode = conditionalAttr };
+            return Context.Namespaces == NamespacesType.Qualified
+                       ? NameUtility.GetName(attr.Name)
+                       : attr.Name;
+        }
+
+        protected override SpecialNode CreateWrappingNode(AttributeNode attr, ElementNode node)
+        {
+            var attrKey = 
+                ExtractFakeAttribute(node, "cache", "key") ??
+                ExtractFakeAttribute(node, "cache.key", "key");
+
+            var attrExpires = 
+                ExtractFakeAttribute(node, "cache.expires", "expires");
+
+            var attrNodes = new[] { attrKey, attrExpires }.Where(x => x != null).ToList();
+
+            var fakeElement = new ElementNode("cache", attrNodes, false) { OriginalNode = attr };
             return new SpecialNode(fakeElement);
+        }
+
+        private AttributeNode ExtractFakeAttribute(ElementNode node, string name, string fakeName)
+        {
+            var attribute = node.Attributes.SingleOrDefault(x => AttrName(x) == name);
+            if (attribute == null)
+                return null;
+
+            node.Attributes.Remove(attribute);
+            return new AttributeNode(fakeName, attribute.Nodes);
         }
     }
 }

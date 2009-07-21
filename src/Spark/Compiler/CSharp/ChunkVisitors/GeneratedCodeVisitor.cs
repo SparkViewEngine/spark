@@ -455,7 +455,9 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             CodeIndent(chunk)
                 .Write("if (BeginCachedContent(\"")
                 .Write(siteGuid.ToString("n"))
-                .Write("\", ")
+                .Write("\", new global::Spark.CacheExpires(")
+                .WriteCode(chunk.Expires)
+                .Write("), ")
                 .WriteCode(chunk.Key)
                 .WriteLine("))")
                 .WriteLine("{").AddIndent();

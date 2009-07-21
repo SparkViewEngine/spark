@@ -17,14 +17,14 @@ namespace Spark.Compiler.NodeVisitors
         }
 
         protected abstract bool IsSpecialAttribute(ElementNode element, AttributeNode attribute);
-        protected abstract SpecialNode CreateWrappingNode(AttributeNode eachAttr);
+        protected abstract SpecialNode CreateWrappingNode(AttributeNode attr, ElementNode node);
 
         protected override void Visit(ElementNode node)
         {
             var specialAttr = node.Attributes.FirstOrDefault(attr => IsSpecialAttribute(node, attr));
             if (specialAttr != null)
             {
-                var wrapping = CreateWrappingNode(specialAttr);
+                var wrapping = CreateWrappingNode(specialAttr, node);
                 node.Attributes.Remove(specialAttr);
                 wrapping.Body.Add(node);
 
@@ -71,9 +71,8 @@ namespace Spark.Compiler.NodeVisitors
 
             if (specialAttr != null)
             {
+                var wrapping = CreateWrappingNode(specialAttr, reconstructed.Element);
                 reconstructed.Element.Attributes.Remove(specialAttr);
-
-                var wrapping = CreateWrappingNode(specialAttr);
                 Nodes.Add(wrapping);
                 PushFrame(wrapping.Body, new Frame());
             }
@@ -96,9 +95,8 @@ namespace Spark.Compiler.NodeVisitors
             var eachAttr = reconstructed.Element.Attributes.FirstOrDefault(attr => IsSpecialAttribute(node.Element, attr));
             if (eachAttr != null)
             {
+                var wrapping = CreateWrappingNode(eachAttr, reconstructed.Element);
                 reconstructed.Element.Attributes.Remove(eachAttr);
-
-                var wrapping = CreateWrappingNode(eachAttr);
                 Nodes.Add(wrapping);
                 PushFrame(wrapping.Body, new Frame());
             }
