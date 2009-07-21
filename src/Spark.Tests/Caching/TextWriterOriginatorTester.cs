@@ -14,7 +14,7 @@ namespace Spark.Tests.Caching
     public class TextWriterOriginatorTester
     {
         [Test]
-        public void StringWriterOriginator()
+        public void StringWriterOriginatorBuildsMementoWithChanges()
         {
             var writer = new StringWriter();
             var originator = TextWriterOriginator.Create(writer);
@@ -35,7 +35,7 @@ namespace Spark.Tests.Caching
         }
 
         [Test]
-        public void SpoolWriterOriginator()
+        public void SpoolWriterOriginatorBuildsMementoWithChanges()
         {
             var writer = new SpoolWriter();
             var originator = TextWriterOriginator.Create(writer);
