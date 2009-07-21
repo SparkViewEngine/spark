@@ -29,7 +29,7 @@ namespace Spark.Web.Mvc
 
             public void Store(string identifier, CacheExpires expires, object item)
             {
-                _cache.Insert(identifier, item);
+                _cache.Insert(identifier, item, null, expires.Absolute, expires.Sliding);
             }
         }
     }
