@@ -53,7 +53,6 @@ namespace Spark
             ViewActivatorFactory = container.GetService<IViewActivatorFactory>();
             LanguageFactory = container.GetService<ISparkLanguageFactory>();
             ResourcePathManager = container.GetService<IResourcePathManager>();
-            CacheManager = container.GetService<ICacheManager>();
             TemplateLocator = container.GetService<ITemplateLocator>();
             SetViewFolder(container.GetService<IViewFolder>());
         }
@@ -162,18 +161,6 @@ namespace Spark
                 return _resourcePathManager;
             }
             set { _resourcePathManager = value; }
-        }
-
-        private ICacheManager _cacheManager;
-        public ICacheManager CacheManager
-        {
-            get
-            {
-                if (_cacheManager == null)
-                    _cacheManager = new DefaultCacheManager();
-                return _cacheManager;
-            }
-            set { _cacheManager = value; }
         }
 
         public ISparkExtensionFactory ExtensionFactory { get; set; }
