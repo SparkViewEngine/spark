@@ -472,7 +472,9 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             _source
                 .WriteLine("finally")
                 .WriteLine("{").AddIndent()
-                .WriteLine("EndCachedContent();")
+                .Write("EndCachedContent(")
+                .WriteCode(chunk.Signal)
+                .Write(");")
                 .RemoveIndent().WriteLine("}")
                 .RemoveIndent().WriteLine("}");
         }

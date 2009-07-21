@@ -269,6 +269,8 @@ namespace Spark.Compiler
 
         public Snippets Key { get; set; }
         public Snippets Expires { get; set; }
+        public Snippets Signal { get; set; }
+
         public IList<Chunk> Body { get; set; }
     }
 }

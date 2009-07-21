@@ -29,7 +29,7 @@ namespace Spark.Compiler.NodeVisitors
         {
             var name = AttrName(attr);
 
-            return name == "cache" || name == "cache.key" || name == "cache.expires";
+            return name == "cache" || name == "cache.key" || name == "cache.expires" || name == "cache.signal";
         }
 
         private string AttrName(AttributeNode attr)
@@ -48,7 +48,10 @@ namespace Spark.Compiler.NodeVisitors
             var attrExpires = 
                 ExtractFakeAttribute(node, "cache.expires", "expires");
 
-            var attrNodes = new[] { attrKey, attrExpires }.Where(x => x != null).ToList();
+            var attrSignal =
+                ExtractFakeAttribute(node, "cache.signal", "signal");
+
+            var attrNodes = new[] { attrKey, attrExpires, attrSignal }.Where(x => x != null).ToList();
 
             var fakeElement = new ElementNode("cache", attrNodes, false) { OriginalNode = attr };
             return new SpecialNode(fakeElement);

@@ -640,6 +640,7 @@ namespace Spark.Compiler.NodeVisitors
         {
             var keyAttr = inspector.TakeAttribute("key");
             var expiresAttr = inspector.TakeAttribute("expires");
+            var signalAttr = inspector.TakeAttribute("signal");
 
             var chunk = new CacheChunk { Position = Locate(specialNode.Element) };
 
@@ -652,6 +653,11 @@ namespace Spark.Compiler.NodeVisitors
                 chunk.Expires = AsCode(expiresAttr);
             else
                 chunk.Expires = "";
+
+            if (signalAttr != null)
+                chunk.Signal = AsCode(signalAttr);
+            else
+                chunk.Signal = "";
 
             Chunks.Add(chunk);
             using (new Frame(this, chunk.Body))

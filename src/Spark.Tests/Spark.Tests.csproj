@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Caching\CacheElementTester.cs" />
     <Compile Include="Caching\CacheOriginatorTester.cs" />
+    <Compile Include="Caching\CacheSignalTester.cs" />
     <Compile Include="Caching\CacheUtilitiesTester.cs" />
     <Compile Include="Caching\TextWriterOriginatorTester.cs" />
     <Compile Include="Compiler\SourceWriterTester.cs" />

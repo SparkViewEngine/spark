@@ -487,5 +487,56 @@ foo
             Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f4"), Is.EqualTo(1));
             Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f5"), Is.EqualTo(1));
         }
+
+
+        [Test]
+        public void SignalWillExpireOutputCachingEntry()
+        {
+            _viewFolder.Add("home\\index.spark", @"
+<viewdata model=""System.Func<string>"" datasignal='Spark.ICacheSignal'/>
+<div>
+<cache key='string.Empty' signal='datasignal'>
+<p>${ViewData.Model()}</p>
+</cache>
+</div>");
+            var signal = new CacheSignal();
+            var calls = 0;
+            var data = new StubViewData<Func<string>>
+            {
+                Model = () => (++calls).ToString()
+            };
+            data["datasignal"] = signal;
+
+            var contents = Render("index", data);
+            Assert.That(contents, Is.EqualTo(@"
+<div>
+<p>1</p>
+</div>"));
+            Assert.That(calls, Is.EqualTo(1));
+
+            contents = Render("index", data);
+            Assert.That(contents, Is.EqualTo(@"
+<div>
+<p>1</p>
+</div>"));
+            Assert.That(calls, Is.EqualTo(1));
+
+            signal.FireChanged();
+
+            contents = Render("index", data);
+            Assert.That(contents, Is.EqualTo(@"
+<div>
+<p>2</p>
+</div>"));
+            Assert.That(calls, Is.EqualTo(2));
+
+            contents = Render("index", data);
+            Assert.That(contents, Is.EqualTo(@"
+<div>
+<p>2</p>
+</div>"));
+            Assert.That(calls, Is.EqualTo(2));
+
+        }
     }
 }

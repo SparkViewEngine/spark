@@ -24,9 +24,14 @@ namespace Spark.Tests.Stubs
                 item.UtcExpires > UtcNow;
         }
 
-        public void Store(string identifier, CacheExpires expires, object item)
+        public void Store(string identifier, CacheExpires expires, ICacheSignal signal, object item)
         {
-            _cache[identifier] = new Entry { Value = item, UtcExpires = ToAbsolute(expires) };
+            _cache[identifier] = new Entry {Value = item, UtcExpires = ToAbsolute(expires)};
+
+            if (signal != null)
+            {
+                signal.Changed += (sender, e) => _cache.Remove(identifier);
+            }
         }
 
         private DateTime ToAbsolute(CacheExpires expires)

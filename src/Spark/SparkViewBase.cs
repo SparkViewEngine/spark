@@ -129,7 +129,12 @@ namespace Spark
 
         protected void EndCachedContent()
         {
-            _currentCacheScope = _currentCacheScope.End();
+            _currentCacheScope = _currentCacheScope.End(null);
+        }
+
+        protected void EndCachedContent(ICacheSignal signal)
+        {
+            _currentCacheScope = _currentCacheScope.End(signal);
         }
 
         private CacheScopeImpl _currentCacheScope;
@@ -175,12 +180,12 @@ namespace Spark
                 return _recording;
             }
 
-            public CacheScopeImpl End()
+            public CacheScopeImpl End(ICacheSignal signal)
             {
                 if (_recording)
                 {
                     var memento = _originator.EndMemento();
-                    _cacheService.Store(_identifier, _expires, memento);
+                    _cacheService.Store(_identifier, _expires, signal, memento);
                 }
                 return _previousCacheScope;
             }
@@ -193,7 +198,7 @@ namespace Spark
                     return null;
                 }
 
-                public void Store(string identifier, CacheExpires expires, object item)
+                public void Store(string identifier, CacheExpires expires, ICacheSignal signal, object item)
                 {
                 }
             }

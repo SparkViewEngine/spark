@@ -27,10 +27,48 @@ namespace Spark.Web.Mvc
                 return _cache.Get(identifier);
             }
 
-            public void Store(string identifier, CacheExpires expires, object item)
+            public void Store(string identifier, CacheExpires expires, ICacheSignal signal, object item)
             {
-                _cache.Insert(identifier, item, null, expires.Absolute, expires.Sliding);
+                _cache.Insert(
+                    identifier, 
+                    item, 
+                    SignalDependency.For(signal), 
+                    expires.Absolute, 
+                    expires.Sliding);
+            }
+        }
+
+        class SignalDependency : CacheDependency
+        {
+            private readonly ICacheSignal _signal;
+
+            SignalDependency(ICacheSignal signal)
+            {
+                _signal = signal;
+                _signal.Changed += SignalChanged;
+            }
+
+            ~SignalDependency()
+            {
+                _signal.Changed -= SignalChanged;
+            }
+
+            public static CacheDependency For(ICacheSignal signal)
+            {
+                return signal == null ? null : new SignalDependency(signal);
+            }
+
+            void SignalChanged(object sender, EventArgs e)
+            {
+                NotifyDependencyChanged(this, e);
+            }
+
+            protected override void DependencyDispose()
+            {
+                _signal.Changed -= SignalChanged;
             }
         }
     }
+
+    
 }
