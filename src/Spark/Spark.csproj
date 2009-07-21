@@ -196,6 +196,7 @@
     <Compile Include="Spool\SpoolReader.cs" />
     <Compile Include="Spool\SpoolWriter.cs" />
     <Compile Include="Spool\TextWriterExtensions.cs" />
+    <Compile Include="Utilities\CacheUtilities.cs" />
     <Compile Include="ValueHolder.cs" />
   </ItemGroup>
   <ItemGroup>

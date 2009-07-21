@@ -18,6 +18,7 @@ using System.IO;
 using System.Threading;
 using Spark.Caching;
 using Spark.Spool;
+using Spark.Utilities;
 
 namespace Spark
 {
@@ -118,7 +119,7 @@ namespace Spark
 
         protected bool BeginCachedContent(string site, CacheExpires expires, params object[] key)
         {
-            _currentCacheScope = new CacheScopeImpl(this, site, expires, key);
+            _currentCacheScope = new CacheScopeImpl(this, CacheUtilities.ToIdentifier(site, key), expires);
             if (_currentCacheScope.Begin())
                 return true;
 
@@ -147,14 +148,15 @@ namespace Spark
 
             private static readonly ICacheService _nullCacheService = new NullCacheService();
 
-            public CacheScopeImpl(SparkViewBase view, string site, CacheExpires expires, object[] key)
+            public CacheScopeImpl(SparkViewBase view, string identifier, CacheExpires expires)
             {
+                _identifier = identifier;
                 _expires = expires;
                 _previousCacheScope = view._currentCacheScope;
                 _cacheService = view.CacheService ?? _nullCacheService;
                 _originator = new CacheOriginator(view.SparkViewContext);
-                _identifier = site + string.Concat(key);                
             }
+
 
             public bool Begin()
             {

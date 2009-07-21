@@ -203,6 +203,8 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(CacheChunk chunk)
         {
+            Examine(chunk.Key);
+            Examine(chunk.Expires);
             Accept(chunk.Body);
         }
     }

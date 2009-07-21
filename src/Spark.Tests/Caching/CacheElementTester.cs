@@ -454,5 +454,38 @@ foo
 <p>3:7</p><p>last:8</p>
 "));
         }
+
+        [Test]
+        public void CommaCreatesMultiPartKey()
+        {
+            _viewFolder.Add("home\\index.spark",
+                            @"
+<viewdata model=""System.Func<string>""/>
+<for each='var x in new[]{1,2,3,1,2,3}'>
+<p cache='x,xIndex'>${x}:${ViewData.Model()}</p>
+</for>");
+
+            var calls = 0;
+            var data = new StubViewData<Func<string>>
+                       {
+                           Model = () => (++calls).ToString()
+                       };
+
+            var contents = Render("index", data);
+            Assert.That(contents, Is.EqualTo(@"
+<p>1:1</p>
+<p>2:2</p>
+<p>3:3</p>
+<p>1:4</p>
+<p>2:5</p>
+<p>3:6</p>".Replace("\r\n","")));
+
+            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f0"), Is.EqualTo(1));
+            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f1"), Is.EqualTo(1));
+            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f2"), Is.EqualTo(1));
+            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f3"), Is.EqualTo(1));
+            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f4"), Is.EqualTo(1));
+            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f5"), Is.EqualTo(1));
+        }
     }
 }

@@ -47,6 +47,7 @@ namespace Spark.Tests.Stubs
         }
 
         public DateTime UtcNow { get; set; }
+        public IEnumerable<string> AllKeys { get { return _cache.Keys; } }
 
         class Entry
         {
