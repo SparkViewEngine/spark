@@ -20,6 +20,7 @@
           <ul>
             !{NavItem("Home", new { controller = "home", action = "index" })}
             !{NavItem("Employees", new { controller = "employee", action = "index" })}
+            !{NavItem("Tiles", new { controller = "tile", action = "index" })}
             #// use {content:navextra} to add menu items
             <use content="navextra"/>
             !{NavItem("Style Guide", new { controller = "home", action = "styleguide" })}

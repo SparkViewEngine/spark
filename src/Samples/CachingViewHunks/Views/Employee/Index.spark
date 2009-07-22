@@ -11,8 +11,8 @@
 
 <p>Page viewed ${DateTime.Now}<p>
 
-<cache key="page">
-<p>This part cached ${DateTime.Now}<p>
+<cache key="page" expires="DateTime.UtcNow.AddSeconds(20)">
+<p>This part cached ${DateTime.Now}, expires ${DateTime.Now.AddSeconds(20)}<p>
 
 !{paging()}
 <table>

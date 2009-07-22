@@ -2,7 +2,13 @@
 
 <use namespace="CachingViewHunks.Models"/>
 
-#// The name.Value is a viewdata trick. It will result in a property like:
+#// ViewData["employee"] is of type ValueHolder<Employee>
+#// it has an 'int Key' and a lazy-loaded 'Employee Value' property
+#// if you only refer to the 'Value' inside cached segments you can
+#// avoid the database call when you have a cache-hit
+
+#// The viewdata dotted attribute just below is an eval trick. 
+#// It will result in aliased properties like:
 #//   public Employee employee { get { ViewData.Eval('employee.Value'); } }
 #// and
 #//   public int EmployeeID { get { ViewData.Eval('employee.Key'); } }
@@ -16,11 +22,11 @@
 #// and using 
 #//   ${employee.Key} and ${employee.Value.FirstName}
 
-<h2 cache="EmployeeID">${employee.FirstName} ${employee.LastName}</h2>
+<h2 cache.key="EmployeeID">${employee.FirstName} ${employee.LastName}</h2>
 
 <p>Page viewed ${DateTime.Now}<p>
-<cache key="EmployeeID">
-<p>This part cached ${DateTime.Now}<p>
+<cache key="EmployeeID" expires="20">
+<p>This part cached ${DateTime.Now} - will drop out of cache if unused for 20 seconds<p>
 <p>Employee: ${employee.Title} ${employee.FirstName} ${employee.LastName}</p>
 
 <p>Hire Date: ${employee.HireDate.GetValueOrDefault().ToString("D")}<p>

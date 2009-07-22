@@ -1,0 +1,20 @@
+﻿
+<h2>Tiles</h2>
+
+<use namespace="CachingViewHunks.Models"/>
+
+<viewdata tiles="IEnumerable[[Tile]]" />
+
+<p>Page viewed ${DateTime.Now}<p>
+
+<ul>
+<for each="var tile in tiles">
+	<li cache.key="tile.TileId" cache.signal="tile.Signal">
+		!{Html.ActionLink(tile.Text, "scramble", new { id = tile.TileId })} 
+		${DateTime.Now}
+	</li>
+</for>
+</ul>
+
+<p>!{Html.ActionLink("Reset all", "ResetAll")}</p>
+<p>!{Html.ActionLink("Signal all", "SignalAll")}</p>

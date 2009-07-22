@@ -88,6 +88,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TileController.cs" />
     <Compile Include="Default.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>Default.aspx</DependentUpon>
@@ -103,6 +104,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Northwind.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tile.cs" />
+    <Compile Include="Models\TileRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +136,7 @@
     <None Include="Models\Northwind.dbml.layout">
       <DependentUpon>Northwind.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Tile\Index.spark" />
     <Content Include="Views\Employee\Details.spark" />
     <Content Include="Views\Employee\Index.spark" />
   </ItemGroup>
