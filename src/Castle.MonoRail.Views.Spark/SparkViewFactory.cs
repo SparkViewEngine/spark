@@ -48,6 +48,7 @@ namespace Castle.MonoRail.Views.Spark
 
             _controllerDescriptorProvider = (IControllerDescriptorProvider)provider.GetService(typeof(IControllerDescriptorProvider));
             _viewActivatorFactory = (IViewActivatorFactory)provider.GetService(typeof(IViewActivatorFactory));
+            _cacheServiceProvider = (ICacheServiceProvider)provider.GetService(typeof(ICacheServiceProvider));
 
             SetEngine((ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine)));
         }
@@ -79,6 +80,21 @@ namespace Castle.MonoRail.Views.Spark
 
             if (_viewActivatorFactory != null)
                 _engine.ViewActivatorFactory = _viewActivatorFactory;
+        }
+
+        private ICacheServiceProvider _cacheServiceProvider;
+        public ICacheServiceProvider CacheServiceProvider
+        {
+            get
+            {
+                if (_cacheServiceProvider == null)
+                    _cacheServiceProvider = new HybridCacheServiceProvider();
+                return _cacheServiceProvider;
+            }
+            set
+            {
+                _cacheServiceProvider = value;
+            }
         }
 
         IViewSourceLoader IViewSourceLoaderContainer.ViewSourceLoader
@@ -148,7 +164,7 @@ namespace Castle.MonoRail.Views.Spark
             view.RenderView(output);
 
             // proactively dispose named content. pools spoolwriter pages. avoids finalizers.
-            foreach(var writer in view.Content.Values)
+            foreach (var writer in view.Content.Values)
                 writer.Close();
 
             view.Content.Clear();
@@ -179,15 +195,15 @@ namespace Castle.MonoRail.Views.Spark
                     controllerContext.PropertyBag[parameter.Key] = parameter.Value;
             }
 
-			if (engineContext != null)
-			{
-				var controller = engineContext.CurrentController as Controller;
-				if (controller != null)
-				{
-					foreach (string key in controller.Helpers.Keys)
-						controllerContext.Helpers.Add(key, controller.Helpers[key]);
-				}
-			}
+            if (engineContext != null)
+            {
+                var controller = engineContext.CurrentController as Controller;
+                if (controller != null)
+                {
+                    foreach (string key in controller.Helpers.Keys)
+                        controllerContext.Helpers.Add(key, controller.Helpers[key]);
+                }
+            }
 
             Process(templateName, output, engineContext, null, controllerContext);
         }
@@ -403,7 +419,7 @@ namespace Castle.MonoRail.Views.Spark
                 }
             }
 
-            foreach(var accessor in accessors)
+            foreach (var accessor in accessors)
             {
                 descriptor.AddAccessor(accessor.Property, accessor.GetValue);
             }

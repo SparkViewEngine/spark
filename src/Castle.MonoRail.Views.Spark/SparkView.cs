@@ -99,6 +99,9 @@ namespace Castle.MonoRail.Views.Spark
             _controllerContext = controllerContext;
             _viewEngine = viewEngine;
 
+            if (_viewEngine != null && _viewEngine.CacheServiceProvider != null)
+                CacheService = _viewEngine.CacheServiceProvider.GetCacheService(context);
+
             if (outerView != null)
                 OnceTable = outerView.OnceTable;
         }
