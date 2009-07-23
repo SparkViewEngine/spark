@@ -64,6 +64,7 @@
     <Compile Include="CacheSignal.cs" />
     <Compile Include="Caching\CacheMemento.cs" />
     <Compile Include="Caching\CacheOriginator.cs" />
+    <Compile Include="Caching\DefaultCacheService.cs" />
     <Compile Include="Caching\SpoolWriterOriginator.cs" />
     <Compile Include="Caching\StringWriterOriginator.cs" />
     <Compile Include="Caching\TextWriterOriginator.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="AbstractSparkView.cs" />
     <Compile Include="ICacheService.cs" />
     <Compile Include="ICacheSignal.cs" />
+    <Compile Include="NullCacheService.cs" />
     <Compile Include="SparkViewBase.cs" />
     <Compile Include="CompiledViewEntry.cs" />
     <Compile Include="CompiledViewHolder.cs" />
