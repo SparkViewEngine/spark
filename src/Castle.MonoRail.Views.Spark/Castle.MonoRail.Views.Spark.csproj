@@ -81,6 +81,7 @@
     <Compile Include="ViewComponentExtensionFactory.cs" />
     <Compile Include="ViewComponentInfo.cs" />
     <Compile Include="ViewComponentVisitor.cs" />
+    <Compile Include="Wrappers\HybridCacheService.cs" />
     <Compile Include="Wrappers\HybridCacheServiceProvider.cs" />
     <Compile Include="Wrappers\IViewSourceLoaderContainer.cs" />
     <Compile Include="Wrappers\ViewSourceLoaderWrapper.cs" />
