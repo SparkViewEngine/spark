@@ -71,6 +71,7 @@
     <Compile Include="Controllers\StubController.cs" />
     <Compile Include="DescriptorBuildingTester.cs" />
     <Compile Include="DescriptorFilterTester.cs" />
+    <Compile Include="LanguageKitFolderTester.cs" />
     <Compile Include="MockHttpContextBase.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

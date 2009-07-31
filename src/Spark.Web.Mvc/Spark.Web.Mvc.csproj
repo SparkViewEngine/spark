@@ -70,6 +70,7 @@
     <Compile Include="Descriptors\DescriptorFilterExtensions.cs" />
     <Compile Include="Descriptors\IDescriptorFilter.cs" />
     <Compile Include="Descriptors\LanguageDescriptorFilter.cs" />
+    <Compile Include="LanguageKit.cs" />
     <Compile Include="Descriptors\ThemeDescriptorFilter.cs" />
     <Compile Include="ICacheServiceProvider.cs" />
     <Compile Include="IDescriptorBuilder.cs" />
