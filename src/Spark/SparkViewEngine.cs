@@ -258,42 +258,6 @@ namespace Spark
                 var chunks = loader.Load(template);
                 chunksLoaded.Add(chunks);
                 templatesLoaded.Add(template);
-
-                var useMaster = new UseMasterVisitor();
-                useMaster.Accept(chunks);
-                if (useMaster.Chunk == null)
-                {
-                    // process next template normally
-                    continue;
-                }
-
-                if (string.IsNullOrEmpty(useMaster.Chunk.Name))
-                {
-                    // <use master=""/> will explicitly ignore any default master layouts
-                    return;
-                }
-
-                var result = TemplateLocator.LocateMasterFile(ViewFolder, useMaster.Chunk.Name);
-                if (string.IsNullOrEmpty(result.Path))
-                {
-                    throw new CompilerException(string.Format(
-                                                    "Unable to find master layout file for '{0}'", useMaster.Chunk.Name));
-                }
-                LoadTemplates(loader, new[] { result.Path }, chunksLoaded, templatesLoaded);
-
-                // Explicit master templates loaded recursively. This loop is abandoned.
-                return;
-            }
-        }
-
-        class UseMasterVisitor : ChunkVisitor
-        {
-            public UseMasterChunk Chunk { get; set; }
-
-            protected override void Visit(UseMasterChunk chunk)
-            {
-                if (Chunk == null)
-                    Chunk = chunk;
             }
         }
 

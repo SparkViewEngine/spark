@@ -19,7 +19,7 @@ using Spark.Tests.Stubs;
 
 namespace Spark.Tests
 {
-    [TestFixture]
+    [TestFixture, Ignore("use master is no longer supported universally. framework specific variations prevent it.")]
     public class UseMasterTester
     {
         private ISparkViewEngine _engine;
