@@ -21,9 +21,13 @@
       </div>
       <div id="footer">
         <p>
-          &copy; 2005-2006 <a href="#">Your Name</a> | Design by <a href="http://andreasviklund.com">Andreas Viklund</a>
+			<copyright/> | Design by <a href="http://andreasviklund.com">Andreas Viklund</a>
         </p>
       </div>
     </div>
   </body>
 </html>
+
+!{'<'}!--
+!{Spark.CompiledViewHolder.Current.Lookup(this.GeneratedViewId).SourceCode.Replace("-->","- ->")}
+-->

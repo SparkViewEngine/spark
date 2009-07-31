@@ -1,8 +1,7 @@
 ﻿
 <img src="http://farm3.static.flickr.com/2272/1756264889_f3f7d2db06.jpg?v=0" width="26" height="16" style="float:left; margin:6px;"/>
 
-<!-- as an example, the invariant Index.spark file is included inline here -->
-<use file="Index.spark"/>
+<use file="IndexCore"/>
 
 <!-- and an addendum is added when the language is fr-* 
      although you could just as easily provide a completely customized view

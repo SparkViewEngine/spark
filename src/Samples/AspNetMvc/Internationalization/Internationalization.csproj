@@ -105,12 +105,17 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\Home\IndexCore.spark" />
     <None Include="Views\Home\Index.fr.spark" />
     <None Include="Views\Home\Index.spark" />
-    <None Include="Views\Home\_global.spark" />
+    <None Include="Views\Shared\_global.spark" />
     <None Include="Views\Layouts\Andreas08.spark" />
     <None Include="Views\Layouts\Application.spark" />
     <None Include="Views\Layouts\Application.en.spark" />
+    <None Include="Views\Shared\_copyright.en.spark" />
+    <None Include="Views\Shared\_copyright.es.spark" />
+    <None Include="Views\Shared\_copyright.fr.spark" />
+    <None Include="Views\Shared\_copyright.spark" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.pt.resx">

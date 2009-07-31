@@ -26,9 +26,8 @@ namespace Internationalization
     {
         public void RegisterViewEngine(ICollection<IViewEngine> engines)
         {
-            var services = SparkEngineStarter.CreateContainer();
-            services.AddFilter(LanguageDescriptorFilter.For(GetSessionCulture));
-            SparkEngineStarter.RegisterViewEngine(engines, services);
+            SparkEngineStarter.RegisterViewEngine(engines);
+            LanguageKit.Install(engines, GetSessionCulture);
         }
 
         public static string GetSessionCulture(ControllerContext controllerContext)
