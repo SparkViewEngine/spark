@@ -638,7 +638,7 @@ namespace Spark.Web.Mvc.Tests
         {
             public IController CreateController(RequestContext requestContext, string controllerName)
             {
-                return new StubController();
+                return new RenderActionController();
             }
 
             public void ReleaseController(IController controller)
