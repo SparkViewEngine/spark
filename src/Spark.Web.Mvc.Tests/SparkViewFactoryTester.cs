@@ -25,6 +25,7 @@ using Rhino.Mocks;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Tests.Controllers;
 using Spark.Web.Mvc.Tests.Models;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Spark.Web.Mvc.Tests
 {
@@ -83,8 +84,17 @@ namespace Spark.Web.Mvc.Tests
             var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html");
             factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
 
+            var stubFactory = new StubControllerFactory();
+            ControllerBuilder.Current.SetControllerFactory(stubFactory);
+
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(factory);
+        }
+
+        [TearDown]
+        public void Term()
+        {
+            ViewEngines.Engines.Clear();
         }
 
         #endregion
@@ -609,6 +619,38 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
 
             Assert.AreEqual("<p>default view admin area</p>", output.ToString().Trim());
+        }
+
+        [Test]
+        public void FuturesRenderActionCanRunThroughItsProcess()
+        {
+            System.Reflection.Assembly.Load("Microsoft.Web.Mvc");
+            var result = factory.FindPartialView(controllerContext, "FuturesRenderActionCanRunThroughItsProcess");
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
+            viewContext.View.Render(viewContext, output);
+
+            Assert.That(output.ToString().Replace("\r\n", ""),
+                        Is.EqualTo("<p>alpha</p><p>gamma</p><p>beta</p>"));
+        }
+
+        public class StubControllerFactory : IControllerFactory
+        {
+            public IController CreateController(RequestContext requestContext, string controllerName)
+            {
+                return new StubController();
+            }
+
+            public void ReleaseController(IController controller)
+            {                
+            }
+        }
+
+        public class StubController : Controller
+        {
+            public ActionResult Header()
+            {
+                return View("FuturesRenderActionCanRunThroughItsProcess_Header");
+            }
         }
     }
 }
