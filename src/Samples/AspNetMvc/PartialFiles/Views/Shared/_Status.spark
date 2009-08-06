@@ -1,1 +1,3 @@
-<p>Success</p>
+<viewdata code="string"/>
+<p>Success ${code}</p>
+<content name="foo">[bar ${code}]</content>

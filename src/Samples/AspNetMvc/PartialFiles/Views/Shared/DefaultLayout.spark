@@ -10,6 +10,7 @@
     <use:view/>
     #Html.RenderPartial("footer");
 
+	<use:foo/>
     <hr/>
     <code>
       <var entry="Spark.CompiledViewHolder.Current.Lookup(GeneratedViewId)"/>
