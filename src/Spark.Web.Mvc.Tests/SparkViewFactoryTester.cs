@@ -84,8 +84,7 @@ namespace Spark.Web.Mvc.Tests
             var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html");
             factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
 
-            var stubFactory = new StubControllerFactory();
-            ControllerBuilder.Current.SetControllerFactory(stubFactory);
+            ControllerBuilder.Current.SetControllerFactory(new DefaultControllerFactory());
 
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(factory);
@@ -624,6 +623,8 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void FuturesRenderActionCanRunThroughItsProcess()
         {
+            ControllerBuilder.Current.SetControllerFactory(new RenderActionControllerFactory());
+
             System.Reflection.Assembly.Load("Microsoft.Web.Mvc");
             var result = factory.FindPartialView(controllerContext, "FuturesRenderActionCanRunThroughItsProcess");
             var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
@@ -633,7 +634,7 @@ namespace Spark.Web.Mvc.Tests
                         Is.EqualTo("<p>alpha</p><p>gamma</p><p>beta</p>"));
         }
 
-        public class StubControllerFactory : IControllerFactory
+        public class RenderActionControllerFactory : IControllerFactory
         {
             public IController CreateController(RequestContext requestContext, string controllerName)
             {
@@ -645,7 +646,7 @@ namespace Spark.Web.Mvc.Tests
             }
         }
 
-        public class StubController : Controller
+        public class RenderActionController : Controller
         {
             public ActionResult Header()
             {
