@@ -461,17 +461,23 @@ namespace Spark.Web.Mvc.Tests
         public void CreatingViewEngineWithSimpleContainer()
         {
             var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html");
-            var container = new SparkServiceContainer(settings);
-            container.SetServiceBuilder<IViewEngine>(c => new SparkViewFactory(c.GetService<ISparkSettings>()));
+            var container = SparkEngineStarter.CreateContainer(settings);
 
             var viewFactory = (SparkViewFactory)container.GetService<IViewEngine>();
             var viewEngine = container.GetService<ISparkViewEngine>();
             var viewFolder = container.GetService<IViewFolder>();
+            var descriptorBuilder = container.GetService<IDescriptorBuilder>();
+            var cacheServiceProvider = container.GetService<ICacheServiceProvider>();
+            var viewActivatorFactory = container.GetService<IViewActivatorFactory>();
+
             Assert.AreSame(settings, viewFactory.Settings);
             Assert.AreSame(settings, viewEngine.Settings);
             Assert.AreSame(viewEngine, viewFactory.Engine);
             Assert.AreSame(viewFolder, viewEngine.ViewFolder);
             Assert.AreSame(viewFolder, viewFactory.ViewFolder);
+            Assert.AreSame(descriptorBuilder, viewFactory.DescriptorBuilder);
+            Assert.AreSame(cacheServiceProvider, viewFactory.CacheServiceProvider);
+            Assert.AreSame(viewActivatorFactory, viewFactory.ViewActivatorFactory);
         }
 
 

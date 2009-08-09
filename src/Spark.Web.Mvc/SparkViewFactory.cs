@@ -50,6 +50,7 @@ namespace Spark.Web.Mvc
             Settings = container.GetService<ISparkSettings>();
             Engine = container.GetService<ISparkViewEngine>();
             DescriptorBuilder = container.GetService<IDescriptorBuilder>();
+            CacheServiceProvider = container.GetService<ICacheServiceProvider>();
         }
 
         public ISparkSettings Settings { get; set; }
