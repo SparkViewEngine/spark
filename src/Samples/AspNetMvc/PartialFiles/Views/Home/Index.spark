@@ -10,11 +10,15 @@
   </div>
   <div style="border:solid 1px grey">
     <p>RenderPartial _Status spark</p>
-    # Html.RenderPartial("_Status");
+    # Html.RenderPartial("_Status", new { code = "alpha" });
   </div>
   <div style="border:solid 1px grey">
     <p>Inclusion _Status spark</p>
-    <Status/>
+    <Status code="'beta'"/>
+  </div>
+  <div style="border:solid 1px grey">
+    <p>RenderAction ShowStatus</p>
+    #Html.RenderAction<PartialFiles.Controllers.HomeController>(x => x.ShowStatus("gamma"));
   </div>
   <p>Bottom of the view</p>
 </div>
