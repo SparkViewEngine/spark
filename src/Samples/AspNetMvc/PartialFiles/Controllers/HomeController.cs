@@ -32,5 +32,10 @@ namespace PartialFiles.Controllers
         {
             return View("Alternate", "DefaultLayout");
         }
+
+        public ActionResult ShowStatus(string code)
+        {
+            return PartialView("_Status", new { code });
+        }
     }
 }
