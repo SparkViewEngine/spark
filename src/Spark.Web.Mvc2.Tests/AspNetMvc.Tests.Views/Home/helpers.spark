@@ -1,0 +1,5 @@
+<div>
+	<p>!{Html.ActionLink("Click me", "Sort")}</p>
+	<var stuff='"foo>bar"'/>
+	<p>!{Html.Encode(stuff)}</p>
+</div>

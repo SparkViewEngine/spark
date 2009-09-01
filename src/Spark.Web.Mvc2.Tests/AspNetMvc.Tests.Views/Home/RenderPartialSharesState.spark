@@ -1,0 +1,19 @@
+
+<p>before</p>
+<p once="foo">foo1</p>
+<content name="list"><li>one</li></content>
+<content name="chunk1">alpha</content>
+<div><%Html.RenderPartial("RenderPartialTarget");%></div>
+<content name="chunk2">delta</content>
+<content name="list"><li>two</li></content>
+<p once="bar">bar4</p>
+<p once="foo">foo5</p>
+<p once="quux">quux6</p>
+<p once="quux">quux7</p>
+<p>after</p>
+
+<ul>
+<use content="list"/>
+</ul>
+
+<use content="chunk1"/><use content="chunk2"/>

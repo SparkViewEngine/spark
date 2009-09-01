@@ -1,0 +1,9 @@
+<viewdata
+	Comments="System.Collections.Generic.IList[[Spark.Web.Mvc.Tests.Models.Comment]]"
+	Caption="string"/>
+
+<h1>${Caption}</h1>
+
+<for each='var item in Comments'>
+  <p>${item.Text}</p>
+</for>

@@ -1,0 +1,5 @@
+
+<p>${#cost "#,##0.00"}</p>
+
+<p>${#terms.Due 'yyyy/MM/dd'}</p>
+

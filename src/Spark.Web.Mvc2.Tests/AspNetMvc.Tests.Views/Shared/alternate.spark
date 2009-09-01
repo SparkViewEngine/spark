@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <global title='"Alternate Title"' type="string"/>
+    <title>${title}</title>
+  </head>
+  <body>
+    <h2>Mobile for example?</h2>
+    <div id="main">
+      <use content="view"/>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+<use namespace="System.Collections.Generic"/>
+
+<var args='new List[[string]] { "Foo","Bar" }' comment='new Comment {Text="Hello"}'/>
+
+<for each='var arg in args'>
+  <p>${arg}</p>
+  <use namespace="Spark.Web.Mvc.Tests.Models"/>
+</for>
+
+<p>${comment.Text}</p>

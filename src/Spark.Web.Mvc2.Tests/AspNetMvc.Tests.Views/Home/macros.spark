@@ -1,0 +1,18 @@
+<!-- NOT IMPL -->
+<macro name="Comment" person="string" item="Spark.Web.Mvc.Tests.Models.Comment">
+	<div class="comment">
+		<p>${person}</p>
+		<p>${item.Text}</p>
+	</div>
+</macro>
+
+<p>
+	<for each="var comment in comments">
+		${Macro.Comment("Lou", comment)}
+	</for>
+	${Macro.Rating(5)}
+</p>
+
+<macro name="Rating" score="double">
+	<span class="yadda">Rating: ${score}</span>
+</macro>
