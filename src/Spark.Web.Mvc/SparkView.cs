@@ -17,13 +17,16 @@ using System.Web;
 using System.Web.Mvc;
 using HttpContextWrapper = Spark.Web.Mvc.Wrappers.HttpContextWrapper;
 
+using System.Web.Mvc.Html;
+
 namespace Spark.Web.Mvc
 {
     public abstract class SparkView : SparkViewBase, IViewDataContainer, IView
     {
         private string _siteRoot;
         private ViewDataDictionary _viewData;
-        public ViewContext ViewContext { get; set; }
+        private ViewContext _viewContext;
+
 
         public TempDataDictionary TempData
         {
@@ -50,6 +53,41 @@ namespace Spark.Web.Mvc
         }
 
         public IResourcePathManager ResourcePathManager { get; set; }
+
+        public ViewDataDictionary ViewData
+        {
+            get
+            {
+                if (_viewData == null)
+                    SetViewData(new ViewDataDictionary());
+                return _viewData;
+            }
+            set { SetViewData(value); }
+        }
+
+        public ViewContext ViewContext
+        {
+            get { return _viewContext; }
+            set { SetViewContext(value); }
+        }
+
+        protected virtual void SetViewData(ViewDataDictionary viewData)
+        {
+            _viewData = viewData;
+        }
+
+        protected virtual void SetViewContext(ViewContext viewContext)
+        {
+            _viewContext = viewContext;
+            CreateHelpers();
+        }
+
+        protected virtual void CreateHelpers()
+        {
+            Html = new HtmlHelper(ViewContext, this);
+            Url = new UrlHelper(ViewContext.RequestContext);
+            Ajax = new AjaxHelper(ViewContext, this);
+        }
 
         public override bool TryGetViewData(string name, out object value)
         {
@@ -95,7 +133,6 @@ namespace Spark.Web.Mvc
             return ResourcePathManager.GetResourcePath(SiteRoot, path);
         }
 
-        #region IView Members
 
         public void Render(ViewContext viewContext, TextWriter writer)
         {
@@ -109,9 +146,6 @@ namespace Spark.Web.Mvc
 
             ViewContext = wrappedViewContext;
             ViewData = wrappedViewContext.ViewData;
-            Html = new HtmlHelper(wrappedViewContext, this);
-            Url = new UrlHelper(wrappedViewContext.RequestContext);
-            Ajax = new AjaxHelper(wrappedViewContext, this);
 
             var outerView = ViewContext.View as SparkView;
             var isNestedView = outerView != null && ReferenceEquals(this, outerView) == false;
@@ -154,22 +188,8 @@ namespace Spark.Web.Mvc
             Content.Clear();
         }
 
-        #endregion
 
-        #region IViewDataContainer Members
 
-        public ViewDataDictionary ViewData
-        {
-            get
-            {
-                if (_viewData == null)
-                    SetViewData(new ViewDataDictionary());
-                return _viewData;
-            }
-            set { SetViewData(value); }
-        }
-
-        #endregion
 
         public string H(object value)
         {
@@ -185,15 +205,19 @@ namespace Spark.Web.Mvc
             return ViewData.Eval(expression, format);
         }
 
-        protected virtual void SetViewData(ViewDataDictionary viewData)
-        {
-            _viewData = viewData;
-        }
+
     }
 
     public abstract class SparkView<TModel> : SparkView where TModel : class
     {
         private ViewDataDictionary<TModel> _viewData;
+        private HtmlHelper<TModel> _htmlHelper;
+        private AjaxHelper<TModel> _ajaxHelper;
+
+        public TModel Model
+        {
+            get { return ViewData.Model; }
+        }
 
         public new ViewDataDictionary<TModel> ViewData
         {
@@ -206,15 +230,37 @@ namespace Spark.Web.Mvc
             set { SetViewData(value); }
         }
 
-        public TModel Model
+        public new HtmlHelper<TModel> Html
         {
-            get { return ViewData.Model; }
+            get { return _htmlHelper; }
+            set
+            {
+                _htmlHelper = value; 
+                base.Html = value;
+            }
+        }
+
+        public new AjaxHelper<TModel> Ajax
+        {
+            get { return _ajaxHelper; }
+            set
+            {
+                _ajaxHelper = value;
+                base.Ajax = value;
+            }
         }
 
         protected override void SetViewData(ViewDataDictionary viewData)
         {
             _viewData = new ViewDataDictionary<TModel>(viewData);
             base.SetViewData(_viewData);
+        }
+
+        protected override void CreateHelpers()
+        {
+            Html = new HtmlHelper<TModel>(ViewContext, this);
+            Url = new UrlHelper(ViewContext.RequestContext);
+            Ajax = new AjaxHelper<TModel>(ViewContext, this);
         }
     }
 }
