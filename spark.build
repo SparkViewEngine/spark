@@ -228,7 +228,13 @@
         <include name="itextsharp/*.*" />
         <include name="castle/*.*" />
         <include name="nunit/nunit.framework.dll" />
-	<include name="MvcIntegrationTestFramework/*.*" />
+		<include name="MvcIntegrationTestFramework/*.*" />
+      </fileset>
+    </copy>
+
+    <copy todir="${package.dir}/Bin/Dependencies MVC 2" flatten="true">
+	  <fileset basedir="${bin.dir}">
+        <include name="aspnetmvc2/*.*" />
       </fileset>
     </copy>
 
