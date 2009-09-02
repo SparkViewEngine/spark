@@ -29,7 +29,7 @@ namespace SparkLanguage
             // in the generated file. This setting is changed for the entire 
             // AppDomain running inside the devenv process.
 
-            SourceBuilder.AdjustDebugSymbolsDefault = false;
+            SourceWriter.AdjustDebugSymbolsDefault = false;
         }
 
         public SourceSupervisor(ISparkSource source)

@@ -110,6 +110,11 @@ namespace SparkLanguage
             set { _defaultBaseType = value; }
         }
 
+        public LanguageType DefaultLanguage
+        {
+            get { return (LanguageType)Enum.Parse(typeof(LanguageType), GetSetting("compilation/@defaultLanguage", "Default")); }
+        }
+
         public IEnumerable<string> UseNamespaces
         {
             get
