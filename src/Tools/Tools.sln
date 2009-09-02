@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SparkLanguagePackageUI", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkLanguage.Tests", "SparkLanguage.Tests\SparkLanguage.Tests.csproj", "{C328A04E-2A66-47EE-83F2-8323F6C47D16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSiteProject", "WebSiteProject\WebSiteProject.csproj", "{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,24 @@ Global
 		{C328A04E-2A66-47EE-83F2-8323F6C47D16}.Retail|Mixed Platforms.Build.0 = Release|Any CPU
 		{C328A04E-2A66-47EE-83F2-8323F6C47D16}.Retail|Win32.ActiveCfg = Release|Any CPU
 		{C328A04E-2A66-47EE-83F2-8323F6C47D16}.Retail|x86.ActiveCfg = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Release|Win32.ActiveCfg = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Release|x86.ActiveCfg = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Retail|Any CPU.ActiveCfg = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Retail|Any CPU.Build.0 = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Retail|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Retail|Mixed Platforms.Build.0 = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Retail|Win32.ActiveCfg = Release|Any CPU
+		{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}.Retail|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
