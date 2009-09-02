@@ -1,0 +1,9 @@
+﻿
+<content name="title">About Us</content>
+
+<content name="main">
+    <h2>About</h2>
+    <p>
+        Put content here.
+    </p>
+</content>
