@@ -18,6 +18,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Spark.Bindings;
 using Spark.FileSystem;
 
 namespace Spark.Tests
@@ -26,7 +27,7 @@ namespace Spark.Tests
     public class SparkServiceContainerTester
     {
         [Test]
-        public void ContainterCreatesDefaultServices()
+        public void ContainerCreatesDefaultServices()
         {
             var container = new SparkServiceContainer();
 
@@ -36,6 +37,8 @@ namespace Spark.Tests
             var resourcePathManager = container.GetService<IResourcePathManager>();
             Assert.IsInstanceOfType(typeof(DefaultResourcePathManager), resourcePathManager);
 
+            var bindingProvider = container.GetService<IBindingProvider>();
+            Assert.IsInstanceOfType(typeof(DefaultBindingProvider), bindingProvider);
         }
 
         [Test]

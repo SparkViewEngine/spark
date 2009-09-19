@@ -20,6 +20,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Web.Hosting;
+using Spark.Bindings;
 using Spark.Compiler;
 using Spark.Compiler.ChunkVisitors;
 using Spark.Compiler.CSharp;
@@ -52,6 +53,7 @@ namespace Spark
             SyntaxProvider = container.GetService<ISparkSyntaxProvider>();
             ViewActivatorFactory = container.GetService<IViewActivatorFactory>();
             LanguageFactory = container.GetService<ISparkLanguageFactory>();
+            BindingProvider = container.GetService<IBindingProvider>();
             ResourcePathManager = container.GetService<IResourcePathManager>();
             TemplateLocator = container.GetService<ITemplateLocator>();
             SetViewFolder(container.GetService<IViewFolder>());
@@ -79,6 +81,19 @@ namespace Spark
                 return _langaugeFactory;
             }
             set { _langaugeFactory = value; }
+        }
+
+
+        private IBindingProvider _bindingProvider;
+        public IBindingProvider BindingProvider
+        {
+            get
+            {
+                if (_bindingProvider == null)
+                    _bindingProvider = new DefaultBindingProvider();
+                return _bindingProvider;
+            }
+            set { _bindingProvider = value; }
         }
 
         private static IViewFolder CreateDefaultViewFolder()

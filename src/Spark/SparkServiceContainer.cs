@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Hosting;
+using Spark.Bindings;
 using Spark.FileSystem;
 using Spark.Parser.Syntax;
 
@@ -37,9 +38,9 @@ namespace Spark
         }
 
 
-        public Dictionary<Type, object> _services = new Dictionary<Type, object>();
+        readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
 
-        public Dictionary<Type, Func<ISparkServiceContainer, object>> _defaults =
+        readonly Dictionary<Type, Func<ISparkServiceContainer, object>> _defaults =
             new Dictionary<Type, Func<ISparkServiceContainer, object>>
                 {
                     {typeof (ISparkSettings), c => ConfigurationManager.GetSection("spark") ?? new SparkSettings()},
@@ -49,6 +50,7 @@ namespace Spark
                     {typeof (IViewActivatorFactory), c => new DefaultViewActivator()},
                     {typeof (IResourcePathManager), c => new DefaultResourcePathManager(c.GetService<ISparkSettings>())},
                     {typeof (ITemplateLocator), c => new DefaultTemplateLocator()},
+                    {typeof (IBindingProvider), c => new DefaultBindingProvider()},
                     {typeof (IViewFolder), CreateDefaultViewFolder}
                 };
 
