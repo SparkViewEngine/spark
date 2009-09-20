@@ -10,7 +10,7 @@ using Spark.Parser;
 namespace Spark.Tests.Bindings
 {
     [TestFixture]
-    public class BindingTester
+    public class BindingGrammarTester
     {
         private Position Source(string code)
         {
@@ -102,6 +102,27 @@ namespace Spark.Tests.Bindings
             Assert.That(((BindingLiteral)result.Value[2]).Text, Is.EqualTo("*, "));
             Assert.That(((BindingPrefixReference)result.Value[3]).Prefix ?? "", Is.EqualTo(""));
             Assert.That(((BindingLiteral)result.Value[4]).Text, Is.EqualTo("*)"));
+        }
+
+        [Test]
+        public void OptionalQuotesMarkAssumeStringValueAsTrue()
+        {
+            var grammar = new BindingGrammar();
+            var result = grammar.Nodes(Source("@one'@two'\"@three\"@four.*'@five.*'\"@six.*\""));
+            Assert.That(result.Value.Count(), Is.EqualTo(6));
+            var one = (BindingNameReference)result.Value[0];
+            var two = (BindingNameReference)result.Value[1];
+            var three = (BindingNameReference)result.Value[2];
+            var four = (BindingPrefixReference)result.Value[3];
+            var five = (BindingPrefixReference)result.Value[4];
+            var six = (BindingPrefixReference)result.Value[5];
+
+            Assert.That(one.AssumeStringValue, Is.False);
+            Assert.That(two.AssumeStringValue, Is.True);
+            Assert.That(three.AssumeStringValue, Is.True);
+            Assert.That(four.AssumeStringValue, Is.False);
+            Assert.That(five.AssumeStringValue, Is.True);
+            Assert.That(six.AssumeStringValue, Is.True);
         }
     }
 }

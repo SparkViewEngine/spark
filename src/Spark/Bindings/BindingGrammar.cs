@@ -17,12 +17,24 @@ namespace Spark.Bindings
                 Ch(char.IsLetter).Or(Ch('_', ':')).And(Rep(NameChar))
                 .Build(hit => hit.Left + new string(hit.Down.ToArray()));
 
+            var stringPrefixReference = 
+                Ch("\"@").And(Opt(Name)).And(Ch("*\""))
+                .Or(Ch("'@").And(Opt(Name)).And(Ch("*'")))
+                .Build(hit => (BindingNode)new BindingPrefixReference(hit.Left.Down) { AssumeStringValue = true });
 
-            PrefixReference = Ch('@').And(Opt(Name)).And(Ch('*'))
+            var rawPrefixReference = Ch('@').And(Opt(Name)).And(Ch('*'))
                 .Build(hit => (BindingNode)new BindingPrefixReference(hit.Left.Down));
 
-            NameReference = Ch('@').And(Name)
+            PrefixReference = stringPrefixReference.Or(rawPrefixReference);
+
+            var stringNameReference = Ch("\"@").And(Name).And(Ch('\"'))
+                .Or(Ch("'@").And(Name).And(Ch('\'')))
+                .Build(hit => (BindingNode)new BindingNameReference(hit.Left.Down) { AssumeStringValue = true });
+
+            var rawNameReference = Ch('@').And(Name)
                 .Build(hit => (BindingNode)new BindingNameReference(hit.Down));
+
+            NameReference = stringNameReference.Or(rawNameReference);
 
             Literal = Rep1(Ch(ch => true).Unless(PrefixReference.Or(NameReference)))
                 .Build(hit => (BindingNode)new BindingLiteral(hit));

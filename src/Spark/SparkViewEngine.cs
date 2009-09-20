@@ -283,7 +283,8 @@ namespace Spark
                            ViewFolder = ViewFolder,
                            SyntaxProvider = SyntaxProvider,
                            ExtensionFactory = ExtensionFactory,
-                           Prefix = Settings.Prefix
+                           Prefix = Settings.Prefix,
+                           BindingProvider = BindingProvider
                        };
         }
 

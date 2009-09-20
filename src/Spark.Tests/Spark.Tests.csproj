@@ -55,8 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bindings\BindingExecutionTester.cs" />
+    <Compile Include="Bindings\BindingExpansionVisitorTester.cs" />
     <Compile Include="Bindings\ViewFolderBindingProviderTester.cs" />
-    <Compile Include="Bindings\BindingTester.cs" />
+    <Compile Include="Bindings\BindingGrammarTester.cs" />
     <Compile Include="Caching\CacheElementTester.cs" />
     <Compile Include="Caching\CacheOriginatorTester.cs" />
     <Compile Include="Caching\CacheSignalTester.cs" />

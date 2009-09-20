@@ -26,5 +26,16 @@ namespace Spark.Tests.Bindings
             Assert.That(bindings[0].Nodes.Count, Is.EqualTo(1));
             Assert.That(((BindingLiteral)bindings[0].Nodes[0]).Text, Is.EqualTo("bar"));
         }
+
+
+        [Test]
+        public void MissingFileDoesNotCauseException()
+        {
+            var viewFolder = new InMemoryViewFolder();
+            var provider = new DefaultBindingProvider();
+            var bindings = provider.GetBindings(viewFolder).ToList();
+
+            Assert.That(bindings.Count, Is.EqualTo(0));
+        }
     }
 }

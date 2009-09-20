@@ -81,6 +81,7 @@
     <Compile Include="ICacheService.cs" />
     <Compile Include="ICacheSignal.cs" />
     <Compile Include="NullCacheService.cs" />
+    <Compile Include="Compiler\NodeVisitors\BindingExpansionVisitor.cs" />
     <Compile Include="SparkViewBase.cs" />
     <Compile Include="CompiledViewEntry.cs" />
     <Compile Include="CompiledViewHolder.cs" />

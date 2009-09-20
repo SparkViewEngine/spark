@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Spark.Bindings;
 using Spark.Compiler;
 using Spark.Compiler.CSharp.ChunkVisitors;
 using Spark.Compiler.NodeVisitors;
@@ -48,9 +49,11 @@ namespace Spark.Parser
 
         public string Prefix { get; set; }
 
+        public IBindingProvider BindingProvider { get; set; }
+
         private class Entry
         {
-            private readonly FileContext fileContext = new FileContext();
+            private readonly FileContext _fileContext = new FileContext();
 
             public string ViewPath
             {
@@ -70,7 +73,7 @@ namespace Spark.Parser
 
             public FileContext FileContext
             {
-                get { return fileContext; }
+                get { return _fileContext; }
             }
         }
 
@@ -140,7 +143,8 @@ namespace Spark.Parser
                                              ViewFolder = ViewFolder,
                                              Prefix = Prefix,
                                              ExtensionFactory = ExtensionFactory,
-                                             PartialFileNames = FindPartialFiles(viewPath)
+                                             PartialFileNames = FindPartialFiles(viewPath),
+                                             Bindings = FindBindings()
                                          };
             newEntry.Chunks = SyntaxProvider.GetChunks(context, viewPath);
 
@@ -157,6 +161,7 @@ namespace Spark.Parser
                 }
             }
         }
+
 
         private static IEnumerable<string> PartialViewFolderPaths(string viewPath)
         {
@@ -191,6 +196,13 @@ namespace Spark.Parser
             var folderPaths = PartialViewFolderPaths(viewPath);
             var partialNames = FindAllPartialFiles(folderPaths);
             return partialNames.Distinct().ToArray();
+        }
+
+        private IEnumerable<Binding> FindBindings()
+        {
+            if (BindingProvider == null)
+                return new Binding[0];
+            return BindingProvider.GetBindings(ViewFolder);
         }
 
         string ResolveReference(string existingViewPath, string viewName)

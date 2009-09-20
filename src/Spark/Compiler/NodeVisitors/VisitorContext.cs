@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Spark.Bindings;
 using Spark.FileSystem;
 using Spark.Parser;
 
@@ -46,6 +47,6 @@ namespace Spark.Compiler.NodeVisitors
         public IEnumerable<Paint> Paint { get; set; }
         public IList<string> PartialFileNames { get; set; }
         public ISparkExtensionFactory ExtensionFactory { get; set; }
-
+        public IEnumerable<Binding> Bindings { get; set; }
     }
 }

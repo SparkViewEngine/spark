@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -141,7 +140,8 @@ namespace Spark.Parser.Syntax
                            new OmitExtraLinesVisitor(context),
                            new TestElseElementVisitor(context),
                            new OnceAttributeVisitor(context),
-                           new UrlAttributeVisitor(context)
+                           new UrlAttributeVisitor(context),
+                           new BindingExpansionVisitor(context)
                        };
         }
     }
