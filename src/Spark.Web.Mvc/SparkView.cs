@@ -144,8 +144,8 @@ namespace Spark.Web.Mvc
                 viewContext.ViewData,
                 viewContext.TempData);
 
-            ViewContext = wrappedViewContext;
             ViewData = wrappedViewContext.ViewData;
+            ViewContext = wrappedViewContext;
 
             var outerView = ViewContext.View as SparkView;
             var isNestedView = outerView != null && ReferenceEquals(this, outerView) == false;
