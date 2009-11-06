@@ -1,0 +1,6 @@
+<use namespace="System.Linq"/>
+<var names="new [] { 'Morten', 'Maxild' }"/>
+<ul>
+  <li each="var s in names.Select(x => x.ToUpper())">Hello ${s}</li>
+</ul>
+<p>${this.FooFor<FailureController>(x => x.Index())}</p>
