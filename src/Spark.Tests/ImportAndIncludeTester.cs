@@ -29,8 +29,6 @@ namespace Spark.Tests
     {
         private ISparkView CreateView(IViewFolder viewFolder, string template)
         {
-            CompiledViewHolder.Current = new CompiledViewHolder();
-
             var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
 
             var engine = new SparkViewEngine(settings)

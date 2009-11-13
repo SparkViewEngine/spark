@@ -32,8 +32,6 @@ namespace Spark.Tests.Compiler
         [SetUp]
         public void Init()
         {
-            CompiledViewHolder.Current = new CompiledViewHolder();
-
             var settings = new SparkSettings()
                 .SetPageBaseType(typeof(StubSparkView));
             var container = new SparkServiceContainer(settings);

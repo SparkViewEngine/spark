@@ -41,8 +41,6 @@ namespace Spark.Tests.Parser
 
         public void Init(bool automaticEncoding)
         {
-            CompiledViewHolder.Current = new CompiledViewHolder();
-
             _settings = new SparkSettings()
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetAutomaticEncoding(automaticEncoding);

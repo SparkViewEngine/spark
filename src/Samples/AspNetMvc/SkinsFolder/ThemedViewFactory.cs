@@ -17,20 +17,11 @@ namespace SkinsFolder
         private readonly IViewEngine _defaultEngine;
         private readonly Dictionary<string, IViewEngine> _themedEngines = new Dictionary<string, IViewEngine>();
 
-        // workaround
-        private readonly CompiledViewHolder _defaultViews;
-        private readonly Dictionary<string, CompiledViewHolder> _themedViews = new Dictionary<string, CompiledViewHolder>();
-        // end-workaround
-
         public ThemedViewFactory()
         {
             var container = SparkEngineStarter.CreateContainer();
             _defaultViewFolder = container.GetService<IViewFolder>();
             _defaultEngine = container.GetService<IViewEngine>();
-            
-            // workaround
-            _defaultViews = CompiledViewHolder.Current;
-            // end-workaround
         }
 
         public void AddTheme(string name)
@@ -41,10 +32,6 @@ namespace SkinsFolder
             var container = SparkEngineStarter.CreateContainer();
             container.SetService(themeFolder);
             _themedEngines.Add(name, container.GetService<IViewEngine>());
-
-            // workaround
-            _themedViews.Add(name, new CompiledViewHolder());
-            // end-workaround
         }
 
         IViewEngine Associate(RequestContext context)
@@ -56,16 +43,9 @@ namespace SkinsFolder
                 IViewEngine engine;
                 if (_themedEngines.TryGetValue(name, out engine))
                 {
-                    // workaround
-                    CompiledViewHolder.Current = _themedViews[name];
-                    // end-workaround
                     return engine;
                 }
             }
-
-            // workaround
-            CompiledViewHolder.Current = _defaultViews;
-            // end-workaround
 
             return _defaultEngine;
         }

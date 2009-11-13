@@ -37,10 +37,6 @@ namespace Spark.Tests
         [SetUp]
         public void Init()
         {
-            // clears cache
-            CompiledViewHolder.Current = null;
-
-
             settings = new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
             engine = new SparkViewEngine(settings) { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             factory = new StubViewFactory { Engine = engine };

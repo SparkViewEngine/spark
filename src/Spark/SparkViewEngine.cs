@@ -193,6 +193,18 @@ namespace Spark
             set { _templateLocator = value; }
         }
 
+        private CompiledViewHolder _compiledViewHolder;
+        public CompiledViewHolder CompiledViewHolder
+        {
+            get
+            {
+                if (_compiledViewHolder == null)
+                    _compiledViewHolder = new CompiledViewHolder();
+                return _compiledViewHolder;
+            }
+            set { _compiledViewHolder = value; }
+        }
+
         public ISparkSyntaxProvider SyntaxProvider { get; set; }
 
         public ISparkSettings Settings { get; set; }

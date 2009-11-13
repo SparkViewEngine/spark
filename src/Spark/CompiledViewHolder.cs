@@ -21,11 +21,11 @@ namespace Spark
 {
     public class CompiledViewHolder
     {
-        static private CompiledViewHolder _current;
+        private CompiledViewHolder _current;
 
         readonly Dictionary<SparkViewDescriptor, ISparkViewEntry> _cache = new Dictionary<SparkViewDescriptor, ISparkViewEntry>();
 
-        public static CompiledViewHolder Current
+        public CompiledViewHolder Current
         {
             get
             {

@@ -37,9 +37,6 @@ namespace Spark.Web.Mvc.Tests
         [SetUp]
         public void Init()
         {
-            // clears cache
-            CompiledViewHolder.Current = null;
-
             // reset routes
             RouteTable.Routes.Clear();
             RouteTable.Routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
