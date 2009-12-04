@@ -43,6 +43,11 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
 
         protected override void Visit(SendExpressionChunk chunk)
         {
+            if (chunk.SilentNulls)
+                _source.Append("if(typeof(")
+                       .Append(chunk.Code)
+                       .Append(") != 'undefined') ");
+
             _source.Append("Output.Write(").Append(chunk.Code).AppendLine(");");
         }
 
