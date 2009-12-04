@@ -38,6 +38,17 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
                 .AppendLine(";");
         }
 
+        protected override void Visit(DefaultVariableChunk chunk)
+        {
+            _source.Append("if (typeof(")
+                .Append(chunk.Name)
+                .Append(") === 'undefined') ")
+                .Append(chunk.Name)
+                .Append(" = ")
+                .Append(chunk.Value)
+                .AppendLine(";");
+        }  
+
         protected override void Visit(ViewDataChunk chunk)
         {
             _source
