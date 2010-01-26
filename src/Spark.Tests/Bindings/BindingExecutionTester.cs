@@ -144,5 +144,21 @@ namespace Spark.Tests.Bindings
             // default to anon object's ToString() style
             Assert.That(contents, Is.EqualTo(@"<p>[one]{ }, [nada]{ bar = two }, [-/TestApp-]{ bar = four }</p>"));
         }
+
+        [Test]
+        public void WildcardReferencesWillNotUseElementsMatchedByLongerPrefix()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>Callback('@foo', new{'@*'}, new{'@route.*'})</element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello foo='one'/>, <hello foo='one' bar='two'/>, <hello foo='one' bar='${2}' route.id='three' /></p><viewdata Callback='System.Func[[string,object,object,string]]'/>");
+
+            Func<string, object, object, string> cb = (a, x, y) => '[' + a + ']' + x.ToString() + y.ToString();
+            var contents = Render("index", new StubViewData { { "Callback", cb } });
+
+            // default to anon object's ToString() style
+            Assert.That(contents, Is.EqualTo(@"<p>[one]{ }{ }, [one]{ bar = two }{ }, [one]{ bar = 2 }{ id = three }</p>"));
+        }
     }
 }
