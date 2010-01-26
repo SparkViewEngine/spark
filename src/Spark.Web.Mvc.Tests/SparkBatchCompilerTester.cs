@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Tests.Controllers;
@@ -52,6 +56,45 @@ namespace Spark.Web.Mvc.Tests
             Assert.AreEqual(3, assembly.GetTypes().Length);
         }
 
+        [Test]
+        public void CanHandleCSharpV3SyntaxWhenLoadedInAppDomainWithoutConfig()
+        {
+            AppDomainSetup setup = new AppDomainSetup
+                                    {
+                                        ApplicationBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                                    };
+            AppDomain sandbox = null;
+            try
+            {
+                sandbox = AppDomain.CreateDomain("sandbox", null, setup);
+                var remoteRunner = (PrecompileRunner) sandbox.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                                                             typeof(PrecompileRunner).FullName);
+                remoteRunner.Precompile();
+            }
+            finally
+            {
+                if (sandbox != null)
+                {
+                    AppDomain.Unload(sandbox);
+                }
+            }
+        }
+
+        public class PrecompileRunner : MarshalByRefObject
+        {
+            public void Precompile()
+            {
+                var settings = new SparkSettings();
+
+                var factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
+
+                var batch = new SparkBatchDescriptor();
+
+                batch.For<FailureController>();
+
+                factory.Precompile(batch);
+            }
+        }
 
         [Test]
         public void DefaultMatchingRules()
@@ -145,5 +188,13 @@ namespace Spark.Web.Mvc.Tests
             Assert.AreEqual("Layouts\\Stub.spark", descriptors[0].Templates[1]);
         }
 
+    }
+
+    public static class FooExtensions
+    {
+        public static string FooFor<T>(this SparkView view, Expression<Action<T>> action)
+        {
+            return string.Format("Foo on lambda expression {0}", action);
+        }
     }
 }

@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ComplexPrecompileController.cs" />
+    <Compile Include="Controllers\FailureController.cs" />
     <Compile Include="Controllers\SimplePrecompileController.cs" />
     <Compile Include="Controllers\StubController.cs" />
     <Compile Include="DescriptorBuildingTester.cs" />
@@ -99,6 +100,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="AspNetMvc.Tests.Views\Admin\Layouts\speciallayout.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Failure\Show.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Failure\_Failure.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="AspNetMvc.Tests.Views\Home\childview.spark">
