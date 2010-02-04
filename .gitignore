@@ -45,3 +45,5 @@ bin/mvccontrib/MvcContrib.pdb
 bin/mvccontrib/MvcContrib.xml
 bin/mvccontrib/MvcContrib.Castle.pdb
 bin/mvccontrib/MvcContrib.Castle.xml
+*.pidb
+*.userprefs
