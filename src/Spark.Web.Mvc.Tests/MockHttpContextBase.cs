@@ -32,11 +32,13 @@ namespace Spark.Web.Mvc.Tests
             var responseBase = MockRepository.GenerateStub<HttpResponseBase>();
             var sessionStateBase = MockRepository.GenerateStub<HttpSessionStateBase>();
             var serverUtilityBase = MockRepository.GenerateStub<HttpServerUtilityBase>();
+            var items = new Dictionary<object, object>();
 
             contextBase.Stub(x => x.Request).Return(requestBase);
             contextBase.Stub(x => x.Response).Return(responseBase);
             contextBase.Stub(x => x.Session).Return(sessionStateBase);
             contextBase.Stub(x => x.Server).Return(serverUtilityBase);
+            contextBase.Stub(x => x.Items).Return(items);
 
             responseBase.Stub(x => x.Output).Return(output);
             responseBase.Stub(x => x.OutputStream).Return(outputStream);

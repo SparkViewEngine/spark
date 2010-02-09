@@ -644,7 +644,7 @@ namespace Spark.Web.Mvc.Tests
             }
 
             public void ReleaseController(IController controller)
-            {                
+            {
             }
         }
 
@@ -654,6 +654,24 @@ namespace Spark.Web.Mvc.Tests
             {
                 return View("FuturesRenderActionCanRunThroughItsProcess_Header");
             }
+        }
+
+        [Test]
+        public void ViewContextWriterWillFollowOutputScope()
+        {
+            FindViewAndRender("ViewContextWriterWillFollowOutputScope");
+
+            var content = output.ToString();
+            ContainsInOrder(content,
+                            "[alpha]",
+                            "[1]",
+                            "[4]",
+                            "[beta]",
+                            "[2]",
+                            "<form",
+                            "[gamma]",
+                            "</form",
+                            "[3]");
         }
     }
 }

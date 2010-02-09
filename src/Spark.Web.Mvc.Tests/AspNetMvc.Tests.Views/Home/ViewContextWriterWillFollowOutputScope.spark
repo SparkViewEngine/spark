@@ -1,0 +1,12 @@
+[alpha]
+#ViewContext.Writer.Write("[1]");
+<content name="foo">
+	#ViewContext.Writer.Write("[2]");
+	#using (Html.BeginForm()) {
+		#Html.RenderPartial("ViewContextWriterWillFollowOutputScopePartial");
+	#}
+	#ViewContext.Writer.Write("[3]");
+</content>
+#ViewContext.Writer.Write("[4]");
+[beta]
+<use content="foo"/>

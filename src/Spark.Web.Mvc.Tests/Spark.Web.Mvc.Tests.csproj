@@ -111,6 +111,12 @@
     <None Include="AspNetMvc.Tests.Views\Home\childview.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="AspNetMvc.Tests.Views\Home\ViewContextWriterWillFollowOutputScopePartial.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Home\ViewContextWriterWillFollowOutputScope.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="AspNetMvc.Tests.Views\Home\FuturesRenderActionCanRunThroughItsProcess_Header.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
