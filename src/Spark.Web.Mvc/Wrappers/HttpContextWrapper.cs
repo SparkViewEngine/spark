@@ -29,21 +29,21 @@ namespace Spark.Web.Mvc.Wrappers
     {
         // Fields
         private readonly HttpContextBase _context;
-        private readonly SparkViewBase _view;
+        private readonly ITextWriterContainer _textWriterContainer;
 
         // Methods
-        public HttpContextWrapper(HttpContextBase httpContext, SparkViewBase view)
+        public HttpContextWrapper(HttpContextBase httpContext, ITextWriterContainer textWriterContainer)
         {
             if (httpContext == null)
             {
                 throw new ArgumentNullException("httpContext");
             }
-            if (view == null)
+            if (textWriterContainer == null)
             {
-                throw new ArgumentNullException("view");
+                throw new ArgumentNullException("textWriterContainer");
             }
             _context = httpContext;
-            _view = view;
+            _textWriterContainer = textWriterContainer;
         }
 
         // Properties
@@ -126,7 +126,7 @@ namespace Spark.Web.Mvc.Wrappers
 
         public override HttpResponseBase Response
         {
-            get { return new HttpResponseWrapper(_context.Response, _view); }
+            get { return new HttpResponseWrapper(_context.Response, _textWriterContainer); }
         }
 
         public override HttpServerUtilityBase Server

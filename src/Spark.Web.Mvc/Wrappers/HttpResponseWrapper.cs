@@ -26,17 +26,17 @@ namespace Spark.Web.Mvc.Wrappers
     {
         // Fields
         private readonly HttpResponseBase _httpResponse;
-        private readonly SparkViewBase _view;
+        private readonly ITextWriterContainer _textWriterContainer;
 
         // Methods
-        public HttpResponseWrapper(HttpResponseBase httpResponse, SparkViewBase view)
+        public HttpResponseWrapper(HttpResponseBase httpResponse, ITextWriterContainer textWriterContainer)
         {
             if (httpResponse == null)
             {
                 throw new ArgumentNullException("httpResponse");
             }
             _httpResponse = httpResponse;
-            _view = view;
+            _textWriterContainer = textWriterContainer;
         }
 
         public override bool Buffer
@@ -126,7 +126,7 @@ namespace Spark.Web.Mvc.Wrappers
 
         public override TextWriter Output
         {
-            get { return _view.Output; }
+            get { return _textWriterContainer.Output; }
         }
 
         public override Stream OutputStream
@@ -176,7 +176,7 @@ namespace Spark.Web.Mvc.Wrappers
             set { _httpResponse.TrySkipIisCustomErrors = value; }
         }
 
-        public override void AddCacheDependency(CacheDependency[] dependencies)
+        public override void AddCacheDependency(params CacheDependency[] dependencies)
         {
             _httpResponse.AddCacheDependency(dependencies);
         }

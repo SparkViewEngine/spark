@@ -112,7 +112,7 @@ namespace Spark.Web.Mvc.Tests
         private ViewContext MakeViewContext(string viewName)
         {
             var result = factory.FindView(controllerContext, viewName, null);
-            return new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
+            return new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
         }
 
         private void FindViewAndRender(string viewName)
@@ -133,7 +133,7 @@ namespace Spark.Web.Mvc.Tests
         private void FindViewAndRender(string viewName, string masterName, object viewData)
         {
             var result = factory.FindView(controllerContext, viewName, masterName);
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(viewData), new TempDataDictionary());
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(viewData), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
         }
 
@@ -231,13 +231,10 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void HtmlHelperWorksOnItsOwn()
         {
-
-
-
             var viewContext = MakeViewContext("helpers");
 
             var html = new HtmlHelper(viewContext, new ViewDataContainer { ViewData = viewContext.ViewData });
-            var link = html.ActionLink("hello", "world");
+            var link = html.ActionLink("hello", "world").ToHtmlString();
             response.Write(link);
 
             //mocks.VerifyAll();
@@ -574,7 +571,7 @@ namespace Spark.Web.Mvc.Tests
 
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindView(controllerContext, "index", null);
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
             //mocks.VerifyAll();
 
@@ -587,7 +584,7 @@ namespace Spark.Web.Mvc.Tests
 
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindView(controllerContext, "index", "layout");
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
             //mocks.VerifyAll();
 
@@ -603,7 +600,7 @@ namespace Spark.Web.Mvc.Tests
 
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindView(controllerContext, "index", "speciallayout");
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
             //mocks.VerifyAll();
 
@@ -616,10 +613,9 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanLocatePartialViewInArea()
         {
-
             controllerContext.RouteData.Values.Add("area", "admin");
             var result = factory.FindPartialView(controllerContext, "index");
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
             //mocks.VerifyAll();
 
@@ -631,9 +627,9 @@ namespace Spark.Web.Mvc.Tests
         {
             ControllerBuilder.Current.SetControllerFactory(new RenderActionControllerFactory());
 
-            System.Reflection.Assembly.Load("Microsoft.Web.Mvc");
+            //System.Reflection.Assembly.Load("Microsoft.Web.Mvc");
             var result = factory.FindPartialView(controllerContext, "FuturesRenderActionCanRunThroughItsProcess");
-            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary());
+            var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
 
             Assert.That(output.ToString().Replace("\r\n", ""),

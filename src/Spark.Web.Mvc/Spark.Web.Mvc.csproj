@@ -91,7 +91,9 @@
     <Compile Include="ViewFolderExtensions.cs" />
     <Compile Include="Wrappers\HttpContextWrapper.cs" />
     <Compile Include="Wrappers\HttpResponseWrapper.cs" />
+    <Compile Include="Wrappers\ITextWriterContainer.cs" />
     <Compile Include="Wrappers\IViewFolderContainer.cs" />
+    <Compile Include="Wrappers\ViewContextWrapper.cs" />
     <Compile Include="Wrappers\ViewFolderWrapper.cs" />
   </ItemGroup>
   <ItemGroup>

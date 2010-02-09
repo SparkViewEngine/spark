@@ -15,13 +15,11 @@
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using HttpContextWrapper = Spark.Web.Mvc.Wrappers.HttpContextWrapper;
-
-using System.Web.Mvc.Html;
+using Spark.Web.Mvc.Wrappers;
 
 namespace Spark.Web.Mvc
 {
-    public abstract class SparkView : SparkViewBase, IViewDataContainer, IView
+    public abstract class SparkView : SparkViewBase, IViewDataContainer, ITextWriterContainer, IView
     {
         private string _siteRoot;
         private ViewDataDictionary _viewData;
@@ -136,13 +134,7 @@ namespace Spark.Web.Mvc
 
         public void Render(ViewContext viewContext, TextWriter writer)
         {
-            var wrappedHttpContext = new HttpContextWrapper(viewContext.HttpContext, this);
-
-            var wrappedViewContext = new ViewContext(
-                new ControllerContext(wrappedHttpContext, viewContext.RouteData, viewContext.Controller),
-                viewContext.View,
-                viewContext.ViewData,
-                viewContext.TempData);
+            var wrappedViewContext = new ViewContextWrapper(viewContext, this);
 
             ViewData = wrappedViewContext.ViewData;
             ViewContext = wrappedViewContext;
