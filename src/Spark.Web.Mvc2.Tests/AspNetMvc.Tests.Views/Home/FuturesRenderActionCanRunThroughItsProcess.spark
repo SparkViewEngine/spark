@@ -1,4 +1,0 @@
-﻿<p>alpha</p>
-<use namespace="Microsoft.Web.Mvc"/>
-#Html.RenderAction("Header");
-<p>beta</p>

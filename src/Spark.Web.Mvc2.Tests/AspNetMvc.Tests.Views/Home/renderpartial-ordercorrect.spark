@@ -1,3 +1,0 @@
-<p>one</p>
-#Html.RenderPartial("partial-two");
-<p>three</p>
