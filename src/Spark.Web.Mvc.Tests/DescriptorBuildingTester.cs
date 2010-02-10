@@ -40,8 +40,6 @@ namespace Spark.Web.Mvc.Tests
         [SetUp]
         public void Init()
         {
-            CompiledViewHolder.Current = null;
-
             _factory = new SparkViewFactory();
             _viewFolder = new InMemoryViewFolder();
             _factory.ViewFolder = _viewFolder;

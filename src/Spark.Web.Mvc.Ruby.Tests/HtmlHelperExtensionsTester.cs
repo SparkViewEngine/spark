@@ -52,8 +52,6 @@ namespace Spark.Web.Mvc.Ruby.Tests
 
         private static ViewContext CompileView(string viewContents)
         {
-            CompiledViewHolder.Current = new CompiledViewHolder();
-
             var settings = new SparkSettings();
             var container = SparkRubyEngineStarter.CreateContainer(settings);
 

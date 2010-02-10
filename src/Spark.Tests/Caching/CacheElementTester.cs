@@ -20,7 +20,6 @@ namespace Spark.Tests.Caching
         [SetUp]
         public void Init()
         {
-            CompiledViewHolder.Current = new CompiledViewHolder();
             _viewFolder = new InMemoryViewFolder();
             _cacheService = new StubCacheService();
             _factory = new StubViewFactory

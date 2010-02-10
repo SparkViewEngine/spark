@@ -110,8 +110,6 @@ namespace Spark.Tests
         [Test]
         public void LoadCompiledViews()
         {
-            CompiledViewHolder.Current = new CompiledViewHolder();
-
             var descriptors = engine.LoadBatchCompilation(GetType().Assembly);
             Assert.AreEqual(2, descriptors.Count);
 

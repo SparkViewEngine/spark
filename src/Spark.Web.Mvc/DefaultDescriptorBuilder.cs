@@ -70,7 +70,7 @@ namespace Spark.Web.Mvc
                     return null;
                 }
             }
-            else if (buildDescriptorParams.FindDefaultMaster && string.IsNullOrEmpty(TrailingUseMasterName(descriptor)))
+            else if (buildDescriptorParams.FindDefaultMaster && TrailingUseMasterName(descriptor) == null /*empty is a valid value*/)
             {
                 LocatePotentialTemplate(
                     PotentialDefaultMasterLocations(buildDescriptorParams.ControllerName,

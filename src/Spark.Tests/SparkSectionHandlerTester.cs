@@ -27,12 +27,6 @@ namespace Spark.Tests
     [TestFixture]
     public class SparkSectionHandlerTester
     {
-        [SetUp]
-        public void Init()
-        {
-            CompiledViewHolder.Current = new CompiledViewHolder();
-        }
-
         [Test]
         public void CanLoadFromAppConfig()
         {
