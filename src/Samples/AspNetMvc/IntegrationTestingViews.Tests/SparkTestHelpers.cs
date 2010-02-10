@@ -101,13 +101,14 @@ namespace IntegrationTestingViews.Tests
             var view = (SparkView)findView(viewEngine, controllerContext).View;
             try
             {
+                var writer = new StringWriter();
                 var viewContext = new ViewContext(
                     controllerContext,
                     view,
                     viewData ?? new ViewDataDictionary(),
-                    tempData ?? new TempDataDictionary());
+                    tempData ?? new TempDataDictionary(),
+                    writer);
 
-                var writer = new StringWriter();
                 view.Render(viewContext, writer);
                 return writer.ToString();
             }

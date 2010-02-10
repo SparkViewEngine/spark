@@ -21,7 +21,7 @@ Public Class MvcApplication
     End Sub
 
     Shared Sub RegisterViewEngines(ByVal engines As ViewEngineCollection)
-        SparkEngineStarter.RegisterViewEngine(engines)
+        SparkEngineStarter.RegisterViewEngine()
 
     End Sub
 
