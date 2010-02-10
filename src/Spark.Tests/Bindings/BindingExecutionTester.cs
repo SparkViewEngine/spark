@@ -19,7 +19,6 @@ namespace Spark.Tests.Bindings
         [SetUp]
         public void Init()
         {
-            CompiledViewHolder.Current = new CompiledViewHolder();
             _viewFolder = new InMemoryViewFolder();
 
             _factory = new StubViewFactory
