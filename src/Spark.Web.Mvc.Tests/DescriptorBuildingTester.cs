@@ -145,7 +145,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void RouteAreaPresentDefaultsToNormalLocation()
         {
-            _routeData.Values.Add("area", "Admin");
+            _routeData.DataTokens.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
             _viewFolder.Add(@"Layouts\Application.spark", "");
@@ -161,6 +161,22 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void AreaFolderMayContainControllerFolder()
         {
+            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.spark", "");
+            _viewFolder.Add(@"Layouts\Application.spark", "");
+            _viewFolder.Add(@"Admin\Home\Index.spark", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Admin\Home\Index.spark",
+                @"Layouts\Application.spark");
+        }
+
+        [Test]
+        public void AreaRouteValueAlsoRecognizedForBackCompatWithEarlierAssumptions() {
             _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
@@ -178,7 +194,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void AreaFolderMayContainLayoutsFolder()
         {
-            _routeData.Values.Add("area", "Admin");
+            _routeData.DataTokens.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
             _viewFolder.Add(@"Layouts\Application.spark", "");
@@ -196,7 +212,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void AreaContainsNamedLayout()
         {
-            _routeData.Values.Add("area", "Admin");
+            _routeData.DataTokens.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
             _viewFolder.Add(@"Layouts\Application.spark", "");
@@ -215,7 +231,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void PartialViewFromAreaIgnoresLayout()
         {
-            _routeData.Values.Add("area", "Admin");
+            _routeData.DataTokens.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
             _viewFolder.Add(@"Admin\Home\Index.spark", "");

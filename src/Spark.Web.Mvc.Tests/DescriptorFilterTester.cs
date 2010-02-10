@@ -28,8 +28,19 @@ namespace Spark.Web.Mvc.Tests
         }
 
         [Test]
-        public void AreaFilterUsesRouteDataByDefault()
+        public void AreaFilterUsesRouteDataTokensByDefault()
         {
+            var filter = new AreaDescriptorFilter();
+
+            _context.RouteData.DataTokens.Add("area", "foo");
+            filter.ExtraParameters(_context, _extra);
+
+            Assert.That(_extra["area"], Is.EqualTo("foo"));
+        }
+
+
+        [Test]
+        public void AreaFilterUsesRouteValuesForBackCompat() {
             var filter = new AreaDescriptorFilter();
 
             _context.RouteData.Values.Add("area", "foo");
