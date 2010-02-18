@@ -167,7 +167,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
         protected override void Visit(MacroChunk chunk)
         {
-            _source.Write(string.Format("\r\n    string {0}(", chunk.Name));
+            _source.Write(string.Format("\r\n    object {0}(", chunk.Name));
             string delimiter = "";
             foreach (var parameter in chunk.Parameters)
             {
@@ -190,7 +190,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             generator.Accept(chunk.Body);
 
             CodeHidden();
-            _source.WriteLine("            return Output.ToString();");
+            _source.WriteLine("            return HTML(Output);");
             _source.WriteLine("        }");
             _source.WriteLine("    }");
             CodeDefault();

@@ -78,7 +78,7 @@ namespace Spark.Web.Mvc.Tests
 
             controllerContext = new ControllerContext(httpContext, routeData, controller);
 
-            var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html");
+            var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html").SetAutomaticEncoding(true);
             factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
 
             ControllerBuilder.Current.SetControllerFactory(new DefaultControllerFactory());
@@ -669,6 +669,31 @@ namespace Spark.Web.Mvc.Tests
                             "[gamma]",
                             "</form",
                             "[3]");
+        }
+        
+        [Test]
+        public void AutoencodeIgnoresHtmlHelpers()
+        {
+             FindViewAndRender("AutoencodeIgnoresHtmlHelpers");
+
+            var content = output.ToString();
+            ContainsInOrder(content,
+                            "[1:&lt;p&gt;foo&lt;/p&gt;]",
+                            "[2:<p>foo</p>]",
+                            "[3:<a ",
+                            "[4:<a ");
+
+        }
+
+        [Test]
+        public void AutoencodeIgnoresMacros()
+        {
+            FindViewAndRender("AutoencodeIgnoresMacros");
+
+            var content = output.ToString();
+            ContainsInOrder(content,
+                            "[1:<p>foo</p>]",
+                            "[2:<p>foo</p>]");
         }
     }
 }

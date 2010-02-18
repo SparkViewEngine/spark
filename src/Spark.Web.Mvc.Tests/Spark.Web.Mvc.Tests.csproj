@@ -111,6 +111,12 @@
     <None Include="AspNetMvc.Tests.Views\Home\childview.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="AspNetMvc.Tests.Views\Home\AutoencodeIgnoresHtmlHelpers.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AspNetMvc.Tests.Views\Home\AutoencodeIgnoresMacros.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="AspNetMvc.Tests.Views\Home\ViewContextWriterWillFollowOutputScopePartial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

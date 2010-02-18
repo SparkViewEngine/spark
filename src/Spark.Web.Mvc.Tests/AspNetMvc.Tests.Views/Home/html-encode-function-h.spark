@@ -1,4 +1,4 @@
-<p>${H(SomeHtml())}</p>
+<p>${H(SomeHtml().ToString())}</p>
 
 <macro name="SomeHtml">
   <p>&lt;&gt;</p>

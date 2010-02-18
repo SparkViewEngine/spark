@@ -108,7 +108,21 @@ namespace Castle.MonoRail.Views.Spark
 
         public string H(object value)
         {
+            if (value is HtmlString)
+                return value.ToString();
             return Server.HtmlEncode(Convert.ToString(value));
+        }
+        
+        public object HTML(object value)
+        {
+            return new HtmlString(Convert.ToString(value));
+        }
+
+        class HtmlString
+        {
+            private readonly string _value;
+            public HtmlString(string value) {_value = value;}
+            public override string ToString() {return _value;}
         }
 
         public void RenderComponent(

@@ -46,6 +46,11 @@ namespace Spark.Tests.Stubs
             return HttpUtility.HtmlEncode(Convert.ToString(content));
         }
 
+        public object HTML(object value)
+        {
+            return value;
+        }
+
         public object Eval(string expression)
         {
             return ViewData.Eval(expression);

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
@@ -181,11 +182,21 @@ namespace Spark.Web.Mvc
         }
 
 
-
-
         public string H(object value)
         {
+            if (value is MvcHtmlString)
+                return H((MvcHtmlString)value);
             return Html.Encode(value);
+        }
+
+        public string H(MvcHtmlString value)
+        {
+            return value.ToString();
+        }
+
+        public MvcHtmlString HTML(object value)
+        {
+            return MvcHtmlString.Create(Convert.ToString(value));
         }
 
         public object Eval(string expression)

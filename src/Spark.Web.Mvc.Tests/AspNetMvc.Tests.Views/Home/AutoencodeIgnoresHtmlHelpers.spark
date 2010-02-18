@@ -1,0 +1,5 @@
+
+[1:${"<p>foo</p>"}]
+[2:!{"<p>foo</p>"}]
+[3:${Html.ActionLink("foo","bar")}]
+[4:!{Html.ActionLink("foo","bar")}]
