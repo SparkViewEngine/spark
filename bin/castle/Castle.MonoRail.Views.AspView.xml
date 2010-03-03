@@ -115,7 +115,7 @@
         <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.TemporarySourceFilesDirectory">
             <summary>
             Location of the generated concrete classes, if saved.
-            Note that the user who runs the application must have Modify permissions on this path.
+            Important: the user who runs the application must have Modify permissions on this path.
             </summary>
         </member>
         <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.References">
@@ -125,7 +125,7 @@
         </member>
         <member name="P:Castle.MonoRail.Views.AspView.Compiler.AspViewCompilerOptions.CustomProviders">
             <summary>
-            Gets list of assemblies that'll be referenced during the compile process by CompiledViews.dll
+            Gets list of custom providers, implementing IPreCompilationStepsProvider and IMarkupTransformersProvider
             </summary>
         </member>
         <member name="P:Castle.MonoRail.Views.AspView.Compiler.SourceFile.EmbededScriptBlocks">
@@ -141,6 +141,124 @@
             <param name="viewPathRoot">The view path root.</param>
             <param name="siteRoot">The site root.</param>
             <param name="temporarySourceFilesDirectory">The temporary source files directory.</param>
+        </member>
+        <member name="P:Castle.MonoRail.Views.AspView.Configuration.AspViewEngineOptions.CompilerOptions">
+            <summary>
+            The compiler's options object
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.AddReferences(Castle.MonoRail.Views.AspView.ReferencedAssembly[])">
+            <summary>
+            Add references used by the views
+            </summary>
+            <param name="referencesToAdd">One (or more) assemblies to reference</param>
+            <returns>Options Builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.MarkupTransformersProviderIs``1">
+            <summary>
+            Set IMarkupTransformersProvider
+            </summary>
+            <typeparam name="T">IMarkupTransformersProvider implementation</typeparam>
+            <returns>OptionsBuilder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.MarkupTransformersProviderIs(System.Type)">
+            <summary>
+            Set IMarkupTransformersProvider
+            </summary>
+            <param name="type">IMarkupTransformersProvider implementation</param>
+            <returns>OptionsBuilder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.PreCompilationStepsProviderIs``1">
+            <summary>
+            Set IPreCompilationStepsProvider
+            </summary>
+            <typeparam name="T">IPreCompilationStepsProvider implementation</typeparam>
+            <returns>OptionsBuilder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.PreCompilationStepsProviderIs(System.Type)">
+            <summary>
+            Set IPreCompilationStepsProvider
+            </summary>
+            <param name="type">IPreCompilationStepsProvider implementation</param>
+            <returns>OptionsBuilder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.AllowPartiallyTrustedCallers">
+            <summary>
+            Set the CompiledViews assembly with APTCA
+            </summary>
+            <returns>Options builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.AllowPartiallyTrustedCallers(System.Boolean)">
+            <summary>
+            Set the CompiledViews assembly with APTCA
+            </summary>
+            <param name="value">Defaults to false</param>
+            <returns>Options builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.AutoRecompilation">
+            <summary>
+            Autorecompilation mode (detect view template changes)
+            </summary>
+            <returns>Options builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.AutoRecompilation(System.Boolean)">
+            <summary>
+            Autorecompilation mode (detect view template changes)
+            </summary>
+            <param name="value">Defaults to false</param>
+            <returns>Options builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.KeepTemporarySourceFiles">
+            <summary>
+            Keep the intermediate c# version of the views
+            </summary>
+            <returns>Options builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.KeepTemporarySourceFiles(System.Boolean)">
+            <summary>
+            Keep the intermediate c# version of the views
+            </summary>
+            <param name="value">Defaults to false</param>
+            <returns>Options builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.CompileForDebugging">
+            <summary>
+            Set the compiler to DEBUG
+            </summary>
+            <returns>Options builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.CompileForDebugging(System.Boolean)">
+            <summary>
+            Set the compiler to DEBUG
+            </summary>
+            <param name="value">Defaults to false</param>
+            <returns>Options builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.UsingTemporarySourceFilesDirectory(System.String)">
+            <summary>
+            A directory on the computer for storing the views c# sources
+            </summary>
+            <param name="directory">Where to store the files</param>
+            <returns>Options builder</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder.ApplyConfigurableOverrides(Castle.MonoRail.Views.AspView.Configuration.AspViewConfigurationSection.Model)">
+            <summary>
+            Apply configuration overrides from web.config (or vcompile.exe.config)
+            </summary>
+            <param name="config">The settings from config file</param>
+            <returns>The builder</returns>
+        </member>
+        <member name="T:Castle.MonoRail.Views.AspView.Configuration.IAspViewConfigurationEvents">
+            <summary>
+            When applied on a HttpApplication instance, gives
+            an opportunity to configure AspView programmatically
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.AspView.Configuration.IAspViewConfigurationEvents.Configure(Castle.MonoRail.Views.AspView.Configuration.CompilerOptionsBuilder)">
+            <summary>
+            Configure AspView options
+            </summary>
+            <param name="options">The options to configure</param>
         </member>
         <member name="T:Castle.MonoRail.Views.AspView.Internal.ParametersDictionary">
             <summary>
@@ -495,11 +613,6 @@
             </summary>
             
         </member>
-        <member name="P:Castle.MonoRail.Views.AspView.AspViewEngineOptions.CompilerOptions">
-            <summary>
-            The compiler's options object
-            </summary>
-        </member>
         <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Ajax">
             <summary>
             Gets the AjaxHelper instance
@@ -530,11 +643,6 @@
             Gets the FormHelper instance
             </summary>
         </member>
-        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Html">
-            <summary>
-            Gets the HtmlHelper instance
-            </summary>
-        </member>
         <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Pagination">
             <summary>
             Gets the PaginationHelper instance
@@ -548,11 +656,6 @@
         <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Url">
             <summary>
             Gets the UrlHelper instance
-            </summary>
-        </member>
-        <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Validation">
-            <summary>
-            Gets the ValidationHelper instance
             </summary>
         </member>
         <member name="P:Castle.MonoRail.Views.AspView.IHelpersAccesor.Wizard">

@@ -4,6 +4,30 @@
         <name>Castle.Components.Binder</name>
     </assembly>
     <members>
+        <member name="T:Castle.Components.Binder.TypeConverterBase">
+            <summary>
+            The Type Converter base class.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Binder.IConverter">
+            <summary>
+            Depicts the contract for implementations able to convert an object
+            -- usually a string -- to the specified desired type.
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Binder.ConverterUtil">
+            <summary>
+            Utility for converting an array of values into valid strings.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.ConverterUtil.FixInputForMonoIfNeeded(System.Type,System.Object)">
+            <summary>
+            Fix for mod_mono issue where array values are passed as a comma seperated String.
+            </summary>
+            <param name="elemType"></param>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
         <member name="T:Castle.Components.Binder.DataBinder">
             <summary>
             </summary>
@@ -104,11 +128,6 @@
         </member>
         <member name="F:Castle.Components.Binder.DataBinder.allowedPropertyList">
             <summary>Holds a sorted array of properties names that are on the white list</summary>
-        </member>
-        <member name="M:Castle.Components.Binder.DataBinder.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Components.Binder.DataBinder"/> class.
-            </summary>
         </member>
         <member name="M:Castle.Components.Binder.DataBinder.GetValidationSummary(System.Object)">
             <summary>
@@ -248,11 +267,59 @@
             for the binder.
             </remarks>
         </member>
-        <member name="T:Castle.Components.Binder.IConverter">
+        <member name="T:Castle.Components.Binder.DateTimeConverter">
             <summary>
-            Depicts the contract for implementations able to convert an object
-            -- usually a string -- to the specified desired type.
+            Converts to <see cref="T:System.DateTime"/>.
             </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.DateTimeConverter.Convert(System.Type,System.Type,System.Object,System.Boolean@)">
+            <summary>
+            Converts the specified desired type.
+            </summary>
+            <param name="desiredType">Type of the desired.</param>
+            <param name="inputType">Type of the input.</param>
+            <param name="input">The input.</param>
+            <param name="conversionSucceeded">if set to <c>true</c> [conversion succeeded].</param>
+            <returns><see cref="T:System.DateTime"/> if conversion successful, <c>null</c> otherwise.</returns>
+        </member>
+        <member name="M:Castle.Components.Binder.DateTimeConverter.CanConvert(System.Type,System.Type,System.Object,System.Boolean@)">
+            <summary>
+            Determines whether this instance can convert the specified desired type.
+            </summary>
+            <param name="desiredType">Type of the desired.</param>
+            <param name="inputType">Type of the input.</param>
+            <param name="input">The input.</param>
+            <param name="exactMatch">if set to <c>true</c> [exact match].</param>
+            <returns>
+            	<c>true</c> if this instance can convert the specified desired type; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Castle.Components.Binder.DateTimeOffsetConverter">
+            <summary>
+            The <see cref="T:System.DateTimeOffset"/> converter.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Binder.DateTimeOffsetConverter.Convert(System.Type,System.Type,System.Object,System.Boolean@)">
+            <summary>
+            Converts the specified desired type.
+            </summary>
+            <param name="desiredType">Type of the desired.</param>
+            <param name="inputType">Type of the input.</param>
+            <param name="input">The input.</param>
+            <param name="conversionSucceeded">if set to <c>true</c> [conversion succeeded].</param>
+            <returns><see cref="T:System.DateTimeOffset"/> if conversion is successful, <c>null</c> otherwise.</returns>
+        </member>
+        <member name="M:Castle.Components.Binder.DateTimeOffsetConverter.CanConvert(System.Type,System.Type,System.Object,System.Boolean@)">
+            <summary>
+            Determines whether this instance can convert the specified desired type.
+            </summary>
+            <param name="desiredType">Type of the desired.</param>
+            <param name="inputType">Type of the input.</param>
+            <param name="input">The input.</param>
+            <param name="exactMatch">if set to <c>true</c> [exact match].</param>
+            <returns>
+            	<c>true</c> if this instance can convert the specified desired type; otherwise, <c>false</c>.
+            </returns>
         </member>
         <member name="M:Castle.Components.Binder.DefaultConverter.Convert(System.Type,System.Object,System.Boolean@)">
             <summary>
@@ -270,20 +337,6 @@
             3) Has input data and can convert to particular type
             	 Return input converted to desired type and set <c>conversionSucceeded = true</c>
             </remarks>
-        </member>
-        <member name="M:Castle.Components.Binder.DefaultConverter.FixInputForMonoIfNeeded(System.Type,System.Object)">
-            <summary>
-            Fix for mod_mono issue where array values are passed as a comma seperated String.
-            </summary>
-            <param name="elemType"></param>
-            <param name="input"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Components.Binder.DefaultConverter.ConvertUsingTypeConverter(System.Type,System.Object,System.Boolean@)">
-            <summary>
-            Support for types that specify a TypeConverter, 
-            i.e.: NullableTypes
-            </summary>
         </member>
         <member name="T:Castle.Components.Binder.ErrorList">
             <summary>

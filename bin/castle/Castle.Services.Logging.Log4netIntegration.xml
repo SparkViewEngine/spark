@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Castle.Services.Logging.Log4netIntegration</name>
+        <name>Castle.Services.Logging.log4netIntegration</name>
     </assembly>
     <members>
         <member name="M:Castle.Services.Logging.Log4netIntegration.ExtendedLog4netFactory.Create(System.String)">

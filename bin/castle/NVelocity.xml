@@ -2863,7 +2863,8 @@
             <param name="message">complete error message</param>
         </member>
         <member name="T:NVelocity.Runtime.Parser.Node.AbstractExecutor">
-            <summary> Abstract class that is used to execute an arbitrary
+            <summary>
+            Abstract class that is used to execute an arbitrary
             method that is in introspected. This is the superclass
             for the GetExecutor and PropertyExecutor.
             </summary>
@@ -2871,6 +2872,11 @@
         <member name="F:NVelocity.Runtime.Parser.Node.AbstractExecutor.method">
             <summary>
             Method to be executed.
+            </summary>
+        </member>
+        <member name="F:NVelocity.Runtime.Parser.Node.AbstractExecutor.value">
+            <summary>
+            Value (probably from enum).
             </summary>
         </member>
         <member name="M:NVelocity.Runtime.Parser.Node.AbstractExecutor.Execute(System.Object)">
@@ -3010,7 +3016,8 @@
             </summary>
         </member>
         <member name="T:NVelocity.Runtime.Parser.Node.ASTDivNode">
-            <summary> Handles integer division of nodes
+            <summary>
+            Handles integer division of nodes
             
             Please look at the Parser.jjt file which is
             what controls the generation of this class.
@@ -3557,6 +3564,16 @@
             </summary>
         </member>
         <member name="M:NVelocity.Runtime.Parser.Node.PropertyExecutor.Execute(System.Object)">
+            <summary>
+            Execute property against context.
+            </summary>
+        </member>
+        <member name="T:NVelocity.Runtime.Parser.Node.EnumValueExecutor">
+            <summary>
+            Returned the value of object property when executed.
+            </summary>
+        </member>
+        <member name="M:NVelocity.Runtime.Parser.Node.EnumValueExecutor.Execute(System.Object)">
             <summary>
             Execute property against context.
             </summary>
@@ -4299,15 +4316,13 @@
         </member>
         <member name="M:NVelocity.Runtime.Resource.Loader.AssemblyResourceLoader.Init(Commons.Collections.ExtendedProperties)">
             <summary> 
-            Initialize the template loader with a
-            a resources class.
+            Initialize the template loader with a resources class.
             </summary>
         </member>
         <member name="M:NVelocity.Runtime.Resource.Loader.AssemblyResourceLoader.GetResourceStream(System.String)">
-            
-             <summary> Get the InputStream that the Runtime will parse
-             to create a template.
-             </summary>
+            <summary> Get the InputStream that the Runtime will parse
+            to create a template.
+            </summary>
         </member>
         <member name="M:NVelocity.Runtime.Resource.Loader.AssemblyResourceLoader.IsSourceModified(NVelocity.Runtime.Resource.Resource)">
             <summary> Given a template, check to see if the source of InputStream
@@ -6611,7 +6626,8 @@
             </summary>
         </member>
         <member name="T:NVelocity.Util.Introspection.Introspector">
-             <summary> This basic function of this class is to return a Method
+             <summary>
+             This basic function of this class is to return a Method
              object for a particular class given the name of a method
              and the parameters to the method in the form of an Object[]
             
@@ -7018,11 +7034,12 @@
         </member>
         <member name="M:NVelocity.Util.Introspection.UberspectImpl.GetPropertyGet(System.Object,System.String,NVelocity.Util.Introspection.Info)">
             <summary>
-            Property  getter
+            Property getter.
             </summary>
         </member>
         <member name="M:NVelocity.Util.Introspection.UberspectImpl.GetPropertySet(System.Object,System.String,System.Object,NVelocity.Util.Introspection.Info)">
-            <summary> Property setter
+            <summary>
+            Property setter.
             </summary>
         </member>
         <member name="P:NVelocity.Util.Introspection.UberspectImpl.RuntimeLogger">

@@ -22,7 +22,9 @@
             first param can either be the literal string 'with' which means the user
             is using the syntax #blockcomponent(ComponentName with "param1=value1" "param2=value2")
             or it could be a dictionary string like: 
-            #blockcomponent(ComponentName "#{ param1='value1', param2='value2' }")
+            #blockcomponent(ComponentName "%{ param1='value1', param2='value2' }")
+            or it could be reference to a IDictionary like:
+            #blockcomponent(ComponentName $dictionaryParam)
             anything different than that will throw an exception
             </summary>
             <param name="node">The node.</param>
@@ -317,6 +319,12 @@
             <summary>
             Resolves the layout template name into a velocity template file name.
             </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewEngine.SetViewSourceLoader(Castle.MonoRail.Framework.IViewSourceLoader)">
+            <summary>
+            For internal testing use only!
+            </summary>
+            <param name="loader"></param>
         </member>
         <member name="P:Castle.MonoRail.Framework.Views.NVelocity.NVelocityViewEngine.SupportsJSGeneration">
             <summary>

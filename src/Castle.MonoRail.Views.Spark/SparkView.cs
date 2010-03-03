@@ -67,8 +67,6 @@ namespace Castle.MonoRail.Views.Spark
         public EffectsFatHelper EffectsFat { get { return Helper<EffectsFatHelper>(); } }
         public ScriptaculousHelper Scriptaculous { get { return Helper<ScriptaculousHelper>(); } }
         public DateFormatHelper DateFormat { get { return Helper<DateFormatHelper>(); } }
-        public HtmlHelper Html { get { return Helper<HtmlHelper>(); } }
-        public ValidationHelper Validation { get { return Helper<ValidationHelper>(); } }
         public DictHelper Dict { get { return Helper<DictHelper>(); } }
         public PaginationHelper Pagination { get { return Helper<PaginationHelper>(); } }
         public FormHelper Form { get { return Helper<FormHelper>(); } }
