@@ -13,11 +13,11 @@ using System.Runtime.InteropServices;
 //------------------------------------------------------------------------------
 
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("1.0")]
-[assembly: AssemblyFileVersionAttribute("1.0.1.0")]
-[assembly: AssemblyCopyrightAttribute("Copyright (c) Louis DeJardin 2008-2009")]
+[assembly: AssemblyVersionAttribute("1.1")]
+[assembly: AssemblyFileVersionAttribute("1.1.0.0")]
+[assembly: AssemblyCopyrightAttribute("Copyright (c) Louis DeJardin 2008-2010")]
 [assembly: AssemblyProductAttribute("Spark")]
 [assembly: AssemblyCompanyAttribute("Louis DeJardin")]
 [assembly: AssemblyConfigurationAttribute("release")]
-[assembly: AssemblyInformationalVersionAttribute("1.0.1.0")]
+[assembly: AssemblyInformationalVersionAttribute("1.1.0.0")]
 
