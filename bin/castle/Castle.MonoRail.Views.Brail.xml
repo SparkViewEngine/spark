@@ -322,6 +322,36 @@
             <param name="args">The method arguments.</param>
             <returns>value back to the template</returns>
         </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailPreProcessor.EscapeNullPropagationsInOutputExpression(System.String)">
+            <summary>
+            Given a brail output expression: ${...}
+            replace any null propagations, while respecting quoted strings and escaped characters such as ("\"\"").
+            </summary>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailPreProcessor.FindPositionAfterClosingQuote(System.String,System.Int32)">
+            <summary>
+            Find the position after the end of the closing quote token for the quoted 
+            substring that started at the specified position        
+            
+            for example, given the following string x:
+             "abc" blah 
+            01234567890
+            FindPositionAfterClosingQuote(x, 1) will return 6
+            
+            handles triple-double-quotes, double, and single quotes, and escaped quotes within the string
+            </summary>
+            <param name="code">code fragment</param>
+            <param name="openingQuotePosition">index of opening quote within the code fragment</param>
+            <returns>position after closing quote, or -1 if not found</returns>
+        </member>
+        <member name="M:Castle.MonoRail.Views.Brail.BrailPreProcessor.FindStartOfNextQuotedString(System.String,System.Int32)">
+            <summary>
+            Returns the character position of the next instance of any boo string-quoting tokens: ', ", """
+            Note that this returns the position of the beginning of the quote token, not the text inside the quote       
+            </summary>
+            <param name="code"></param>
+            <param name="position">position to start search</param>        
+        </member>
         <member name="M:Castle.MonoRail.Views.Brail.BrailPreProcessor.GetExpressionsPositions(System.String)">
             <summary>
             Will find all the (outer most ${} expressions in the code, and return their positions).

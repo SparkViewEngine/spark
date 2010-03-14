@@ -489,6 +489,14 @@
             </summary>
             <value>The expect collections names, in a csv fashion.</value>
         </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARDataBindAttribute.TreatEmptyGuidAsNull">
+            <summary>
+            Determines if an empty Guid (<see cref="F:System.Guid.Empty"/>) should be treated as a Guid or as <c>null</c>
+            Defaults to <c>true</c>, in which case an empty Guid is not a valid
+            value for a primary key.
+            If this property is <c>false</c> an empty Guid is a valid value for a primary key.
+            </summary>
+        </member>
         <member name="T:Castle.MonoRail.ActiveRecordSupport.ARDataBinder">
             <summary>
             Extends <see cref="T:Castle.Components.Binder.DataBinder"/> class with some 
@@ -529,6 +537,14 @@
             Gets or sets the <see cref="T:Castle.MonoRail.ActiveRecordSupport.AutoLoadBehavior"/>.
             </summary>
             <value>The auto load behavior.</value>
+        </member>
+        <member name="P:Castle.MonoRail.ActiveRecordSupport.ARDataBinder.TreatEmptyGuidAsNull">
+            <summary>
+            Determines if an empty Guid (<see cref="F:System.Guid.Empty"/>) should be treated as a Guid or as <c>null</c>
+            Defaults to <c>true</c>, in which case an empty Guid is not a valid
+            value for a primary key.
+            If this property is <c>false</c> an empty Guid is a valid value for a primary key.
+            </summary>
         </member>
         <member name="P:Castle.MonoRail.ActiveRecordSupport.ARDataBinder.CurrentARModel">
             <summary>

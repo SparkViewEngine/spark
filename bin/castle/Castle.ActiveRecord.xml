@@ -224,11 +224,98 @@
             are located and the namespace they are declared in.
             </summary>
         </member>
+        <member name="P:Castle.ActiveRecord.ActiveRecordAttribute.Tuplizer">
+            <summary>
+            From NHibernate documentation:
+            A tuplizer defines the contract for things which know how to manage
+            a particular representation of a piece of data, given that
+            representation's <see cref="T:NHibernate.EntityMode"/> (the entity-mode
+            essentially defining which representation).
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.ActiveRecordAttribute.SchemaAction">
+            <summary>
+            Determines the action of CreateSchema, DropSchema or UpdateSchema for this table.
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordSkipAttribute">
             <summary>
             Denotes that the specific class - 
             which is an <see cref="T:Castle.ActiveRecord.ActiveRecordBase"/> subclass
             should not be processed by the framework
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Attributes.AddEventListenerAttribute">
+            <summary>
+            Instructs <see cref="T:Castle.ActiveRecord.ActiveRecordStarter"/> to add the specified type
+            or assembly to the event listeners
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Attributes.EventListenerAssemblyAttribute">
+            <summary>
+            Base class for <see cref="T:Castle.ActiveRecord.Attributes.AddEventListenerAttribute"/> and <see cref="T:Castle.ActiveRecord.Attributes.IgnoreEventListenerAttribute"/>
+            to hold common attributes and helpers.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.EventListenerAssemblyAttribute.ParseStringExpression(System.String)">
+            <summary>
+            Parses the constructor argument and sets the specified object
+            </summary>
+            <param name="expression">the constructor arg</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.EventListenerAssemblyAttribute.Assembly">
+            <summary>
+            The assembly to scan for event listeners or to ignore listeners from.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.EventListenerAssemblyAttribute.Type">
+            <summary>
+            The event listener type to add or ignore
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.#ctor(System.String)">
+            <summary>
+            Adds an assembly to the event listener list. All types that implement
+            at least one IXxxEventListener interface (<see cref="N:NHibernate.Event"/>)
+            are used as event listeners.
+            </summary>
+            <param name="assemblyName">The name of the assembly. A partial name is sufficient.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.#ctor(System.Type)">
+            <summary>
+            Adds the specified type as an event listener.
+            </summary>
+            <param name="type">A type that implements at least one event listener inzterface.</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.Exclude">
+            <summary>
+            Holds connections to exclude the listener from
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.Include">
+            <summary>
+            Holds connections that the listener will be exclusively added to.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.ExcludeEvent">
+            <summary>
+            Holds events to exclude the listener from
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.IncludeEvent">
+            <summary>
+            Holds events that the listener will be exclusively added to.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.Singleton">
+            <summary>
+            Specifies that all events for all configurations should be served by a single instance
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.ReplaceExisting">
+            <summary>
+            If <c>true</c>, any existing listeners for that Event will be replaced.
+            Otherwise the listener will be added without removing the existing listeners.
             </summary>
         </member>
         <member name="T:Castle.ActiveRecord.AnyAttribute">
@@ -360,6 +447,30 @@
             <param name="value">The value.</param>
             <param name="clazz">The clazz.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Any.MetaValueAttribute.#ctor(System.Byte,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Any.MetaValueAttribute"/> class.
+            Allows a byte to be used as a meta-value
+            </summary>
+            <param name="value">The value.</param>
+            <param name="clazz">The clazz.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Any.MetaValueAttribute.#ctor(System.Int16,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Any.MetaValueAttribute"/> class.
+            Allows a short to be used as a meta-value
+            </summary>
+            <param name="value">The value.</param>
+            <param name="clazz">The clazz.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Any.MetaValueAttribute.#ctor(System.Int32,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Any.MetaValueAttribute"/> class.
+            Allows a int to be used as a meta-value
+            </summary>
+            <param name="value">The value.</param>
+            <param name="clazz">The clazz.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.Any.MetaValueAttribute.System#IComparable#CompareTo(System.Object)">
             <summary>
             This is here so the XmlGenerationVisitor will always
@@ -466,6 +577,11 @@
             or sequential select fetching.
             </summary>
         </member>
+        <member name="P:Castle.ActiveRecord.BelongsToAttribute.Lazy">
+            <summary>
+            Chooses between proxy or eager fetching.
+            </summary>
+        </member>
         <member name="P:Castle.ActiveRecord.BelongsToAttribute.PropertyRef">
             <summary>
             From NHibernate docs: The name of a property of the 
@@ -513,6 +629,13 @@
             used to name the constraint, only to group the columns 
             in the mapping file.
             </remarks>
+        </member>
+        <member name="P:Castle.ActiveRecord.BelongsToAttribute.Index">
+            <summary>
+            From NHibernate documentation:
+            specifies the name of a (multi-column) index
+            </summary>
+            <value>index name</value>
         </member>
         <member name="P:Castle.ActiveRecord.BelongsToAttribute.ForeignKey">
             <summary>
@@ -820,6 +943,22 @@
             Use a seperate SELECT statement to load the data, re-running the original query in a subselect
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.FetchWhen">
+            <summary>
+            Defines the possible lazy option values.
+            See http://nhforge.org/doc/nh/en/index.html#performance-fetching
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.FetchWhen.OnInvoke">
+            <summary>
+            Specifies that the property should be fetched lazily when the instance variable is first accessed.
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.FetchWhen.Immediate">
+            <summary>
+            Specifies that the association will always be eagerly fetched.
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.CascadeEnum">
             <summary>
             Defines the cascading behaviour of this association.
@@ -902,6 +1041,44 @@
             When an object is saved, updated or deleted, the associations will be checked and all objects found
             will be saved, updated or deleted as well.
             In additional to that, when an object is removed from the association and not associated with another object (orphaned), it will also be deleted.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.EventListenerAttribute">
+            <summary>
+            Marks an NHibernate 2.0 event listener. The decorated class must implement
+            at least one of the I...EventListener-interfaces at NHibernate.Event
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.ReplaceExisting">
+            <summary>
+            If <c>true</c>, any existing listeners for that Event will be replaced.
+            Otherwise the listener will be added without removing the existing listeners.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.Ignore">
+            <summary>
+            If <c>true</c>, the listener won't be registered at all.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.SkipEvent">
+            <summary>
+            Defines that a single event should be skipped although it is defined in the
+            listener
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.Singleton">
+            <summary>
+            Specifies that all events for all configurations should be served by a single instance
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.Include">
+            <summary>
+            Defines the base types for which the listener will be added.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.Exclude">
+            <summary>
+            Defines the base types for which the listener will not be added.
             </summary>
         </member>
         <member name="T:Castle.ActiveRecord.FieldAttribute">
@@ -1428,6 +1605,24 @@
             <summary>
             The query itself
             </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Attributes.IgnoreEventListenerAttribute">
+            <summary>
+             Instructs <see cref="T:Castle.ActiveRecord.ActiveRecordStarter"/> to ignore the event listeners 
+             of the specified type or assembly. 
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.IgnoreEventListenerAttribute.#ctor(System.String)">
+            <summary>
+            Adds an assembly which event listeners should be ignored when added per <see cref="T:Castle.ActiveRecord.EventListenerAttribute"/>.
+            </summary>
+            <param name="assemblyName">The name of the assembly. A partial name is sufficient.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.IgnoreEventListenerAttribute.#ctor(System.Type)">
+            <summary>
+            Ignores the specified event listener.
+            </summary>
+            <param name="type">A type that implements at least one event listener interface.</param>
         </member>
         <member name="T:Castle.ActiveRecord.ImportAttribute">
             <summary>
@@ -2237,6 +2432,28 @@
             </code>
             </example>
         </member>
+        <member name="F:Castle.ActiveRecord.PropertyAccess.AutomaticProperty">
+            <summary>
+            Use the backing field of this property to get/set the value. (Only valid when specified on automatic property)
+            </summary>
+            <example>
+            <code>
+            [Property(Access=PropertyAccess.AutomaticProperty)]
+            public string UserName { get; set; } // notice this is automatic property
+            </code>
+            </example>
+        </member>
+        <member name="F:Castle.ActiveRecord.PropertyAccess.ReadOnly">
+            <summary>
+            Use the property get method to get the value of this property. Property will be only read, never written.
+            </summary>
+            <example>
+            <code>
+            [Property(Access=PropertyAccess.ReadOnly)]
+            public string SumOfAllOrders { get { orders.Sum( o => o.Value ); }
+            </code>
+            </example>
+        </member>
         <member name="F:Castle.ActiveRecord.PropertyAccess.FieldCamelcase">
             <summary>
             Use the field that is the backing store for this property to get/set the value of this property.
@@ -2437,6 +2654,30 @@
             A list of items - position in the list has meaning
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.SqlNamedQueryAttribute">
+            <summary>
+            This is used to define a named SQL query.
+            It represents the &lt;query&gt; element.
+            </summary>
+            <example>
+            [assembly: SqlNamedQuery("allAdultUsers", "select * from User where Age > 21")]
+            </example>
+        </member>
+        <member name="M:Castle.ActiveRecord.SqlNamedQueryAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Create a new instance
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.SqlNamedQueryAttribute.Name">
+            <summary>
+            The name of the query
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.SqlNamedQueryAttribute.Query">
+            <summary>
+            The query itself
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.TimestampAttribute">
             <summary>
             Specify that this property is used for timestamping this entity
@@ -2571,6 +2812,16 @@
             	<c>true</c> if models should be verified; otherwise, <c>false</c>.
             </value>
         </member>
+        <member name="P:Castle.ActiveRecord.Framework.IConfigurationSource.DefaultFlushType">
+            <summary>
+            Determines the default flushing behaviour of scopes.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.IConfigurationSource.Searchable">
+            <summary>
+            When <c>true</c>, NHibernate.Search event listeners are added. 
+            </summary>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource"/> class.
@@ -2603,9 +2854,9 @@
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.Build(Castle.ActiveRecord.Framework.Config.DatabaseType,System.String)">
             <summary>
-            Builds an InPlaceConfiguratioSource for the specified database.
+            Builds an <see cref="T:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource"/> for the specified database.
             </summary>
-            <param name="database">The database.</param>
+            <param name="database">The database type.</param>
             <param name="connectionString">The connection string.</param>
             <returns></returns>
         </member>
@@ -2627,8 +2878,8 @@
             <summary>
             Sets the type of the thread info.
             </summary>
-            <param name="isWeb">if we run in a web context or not</param>
-            <param name="customType">Type of the custom implementation</param>
+            <param name="isWeb">If we are running in a web context.</param>
+            <param name="customType">The type of the custom implementation.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetUpSessionFactoryHolderType(System.String)">
             <summary>
@@ -2640,13 +2891,13 @@
             <summary>
             Sets the type of the naming strategy.
             </summary>
-            <param name="customType">Custom implementation type name</param>
+            <param name="customType">Custom implementation type name.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetDebugFlag(System.Boolean)">
             <summary>
             Sets the debug flag.
             </summary>
-            <param name="isDebug">if set to <c>true</c> Active Record will produce debug information.</param>
+            <param name="isDebug">If set to <c>true</c> ActiveRecord will produce debug information.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetIsLazyByDefault(System.Boolean)">
             <summary>
@@ -2655,21 +2906,35 @@
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetVerifyModelsAgainstDBSchema(System.Boolean)">
             <summary>
-            Sets the debug flag.
+            Sets the flag to indicate if ActiveRecord should verify models against the database schema on startup.
             </summary>
-            <param name="verifyModelsAgainstDBSchema">if set to <c>true</c> Active Record will verify the models against the db schema on startup.</param>
+            <param name="verifyModelsAgainstDBSchema">If set to <c>true</c> ActiveRecord will verify the models against the db schema on startup.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetPluralizeTableNames(System.Boolean)">
             <summary>
             Sets the pluralizeTableNames flag.
             </summary>
-            <param name="pluralize">if set to <c>true</c> Active Record will pluralize inferred table names.</param>
+            <param name="pluralize">If set to <c>true</c> ActiveRecord will pluralize inferred table names.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetDefaultFlushType(Castle.ActiveRecord.Framework.DefaultFlushType)">
+            <summary>
+            Sets the value indicating the default flush behaviour.
+            </summary>
+            <param name="flushType">The chosen default behaviour.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetDefaultFlushType(System.String)">
+            <summary>
+            Sets the default flushing behaviour using the string value from the configuration
+            XML. This method has been moved from XmlConfigurationSource to avoid code
+            duplication in ActiveRecordIntegrationFacility.
+            </summary>
+            <param name="configurationValue">The configuration value.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.ProcessConfiguration(Castle.Core.Configuration.IConfiguration)">
             <summary>
             Processes the configuration applying any substitutions.
             </summary>
-            <param name="config">The configuration</param>
+            <param name="config">The configuration to process.</param>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.ThreadScopeInfoImplementation">
             <summary>
@@ -2694,7 +2959,7 @@
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.Debug">
             <summary>
-            Gets a value indicating whether this <see cref="T:Castle.ActiveRecord.Framework.IConfigurationSource"/> produce debug information
+            Gets a value indicating whether this <see cref="T:Castle.ActiveRecord.Framework.IConfigurationSource"/> produces debug information.
             </summary>
             <value><c>true</c> if debug; otherwise, <c>false</c>.</value>
         </member>
@@ -2716,11 +2981,21 @@
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.VerifyModelsAgainstDBSchema">
             <summary>
-            Gets or Sets a value indicating whether the models should be verified against the db schema on Initialisation.
+            Gets or sets a value indicating whether the models should be verified against the db schema on initialisation.
             </summary>
             <value>
             	<c>true</c> if models should be verified; otherwise, <c>false</c>.
             </value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.DefaultFlushType">
+            <summary>
+            Determines the default flushing behaviour of scopes.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.Searchable">
+            <summary>
+            When <c>true</c>, NHibernate.Search event listeners are added.
+            </summary>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.IsRunningInWebApp">
             <summary>
@@ -2758,11 +3033,20 @@
             Populate this instance with values from the given XML node
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Config.XmlConfigurationSource.BuildProperties(System.Xml.XmlNode)">
+        <member name="M:Castle.ActiveRecord.Framework.Config.XmlConfigurationSource.SetDefaults(System.String,System.String)">
+            <summary>
+            Sets the default configuration for database specifiend by <paramref name="name"/>.
+            </summary>
+            <param name="name">Name of the database type.</param>
+            <param name="connectionStringName">name of the connection string specified in connectionStrings configuration section</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.XmlConfigurationSource.BuildProperties(System.Xml.XmlNode,System.Collections.Generic.IDictionary{System.String,System.String})">
             <summary>
             Builds the configuration properties.
             </summary>
             <param name="node">The node.</param>
+            <param name="defaults"></param>
             <returns></returns>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.ActiveRecordSectionHandler.Create(System.Object,System.Object,System.Xml.XmlNode)">
@@ -2773,6 +3057,13 @@
             <param name="configContext">Configuration context object.</param>
             <param name="section"></param>
             <returns>The created section handler object.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.ActiveRecordSectionHandler.GetInstance">
+            <summary>
+            Returns the sole instance through a factory method for use with 
+            Spring.Net (see AR-ISSUE-213)
+            </summary>
+            <returns>the sole instance</returns>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Config.ActiveRecordSectionHandler.Instance">
             <summary>
@@ -2786,14 +3077,298 @@
             Not to be confused by databases supported by ActiveRecord
             </summary>
         </member>
-        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MSSQLServer2005">
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MsSqlServer2000">
+            <summary>
+            Microsoft SQL Server 2000
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MsSqlServer2005">
             <summary>
             Microsoft SQL Server 2005
             </summary>
         </member>
-        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MSSQLServer2000">
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MsSqlServer2008">
             <summary>
-            Microsoft SQL Server 2000
+            Microsoft SQL Server 2008
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.SQLite">
+            <summary>
+            SQLite
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MySql">
+            <summary>
+            MySQL 3 or 4
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MySql5">
+            <summary>
+            MySQL 5
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.Firebird">
+            <summary>
+            Firebird
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.PostgreSQL">
+            <summary>
+            PostgreSQL
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.PostgreSQL81">
+            <summary>
+            PostgreSQL 8.1
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.PostgreSQL82">
+            <summary>
+            PostgreSQL 8.2
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MsSqlCe">
+            <summary>
+            Microsoft SQL Server 2005 Compact Edition
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.Oracle8i">
+            <summary>
+            Oracle 
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.Oracle9i">
+            <summary>
+            Oracle 9
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.Oracle10g">
+            <summary>
+            Oracle 10g
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.Config.DefaultDatabaseConfiguration">
+            <summary>
+            Exposes default configuration properties for common databases defined in <see cref="T:Castle.ActiveRecord.Framework.Config.DatabaseType"/> enum.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.DefaultDatabaseConfiguration.For(Castle.ActiveRecord.Framework.Config.DatabaseType)">
+            <summary>
+            Returns dictionary of common properties pre populated with default values for given <paramref name="databaseType"/>.
+            </summary>
+            <param name="databaseType">Database type for which we want default properties.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.DefaultFlushType">
+            <summary>
+            Determines the default flushing behaviour of <see cref="T:Castle.ActiveRecord.SessionScope"/>
+            and <see cref="T:Castle.ActiveRecord.TransactionScope"/>
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.DefaultFlushType.Classic">
+            <summary>
+            Classic flushing behaviour like in RC3 and before. <see cref="T:Castle.ActiveRecord.SessionScope"/>
+            flushes automatically, <see cref="T:Castle.ActiveRecord.TransactionScope"/> flushes on Disposal if
+            the transaction was committed.
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.DefaultFlushType.Auto">
+            <summary>
+            New recommended behaviour. Both types of scope flush automatically, consolidating behaviour between
+            scoped and non-scoped code.
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.DefaultFlushType.Leave">
+            <summary>
+            Both scope types do only flush on disposal.
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.DefaultFlushType.Transaction">
+            <summary>
+            NH2.0-alike behaviour. The <see cref="T:Castle.ActiveRecord.SessionScope"/> won't flush at all unless
+            called manually. <see cref="T:Castle.ActiveRecord.TransactionScope"/> flushes automatically. This
+            allows to use the scopes like the NH-ISession-ITransaction-block.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig">
+            <summary>
+            A configuration class for event listeners
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.#ctor(System.Type)">
+            <summary>
+            Creates an instance for the given type
+            </summary>
+            <param name="listenerType">The listener type to use</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.#ctor(System.Object)">
+            <summary>
+            Creates an instance for the given instance
+            </summary>
+            <param name="listenerInstance">The listener object to use</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.CreateSingletonInstance">
+            <summary>
+            Creates the singleton instance. If the instance is already set, the method does not replace it.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.SetSingletonInstance(System.Object)">
+            <summary>
+            Sets the singleton instance. If the instance is already set, the method does not replace it.
+            </summary>
+            <param name="instance">the instance to set</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Equals(System.Object)">
+            <summary>
+            Compares the instance with another one for equality.
+            </summary>
+            <param name="obj">The config to compare with</param>
+            <returns>true if the obj is for the same <see cref="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ListenerType"/></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.GetHashCode">
+            <summary>
+            Object infrastructure
+            </summary>
+            <returns>The hashcode</returns>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ReplaceExisting">
+            <summary>
+            Whether to replace existing listeners 
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Ignore">
+            <summary>
+            Whether to ignore the listener completely
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.SkipEvent">
+            <summary>
+            Defines that a single event should be skipped although it is defined in the
+            listener
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Singleton">
+            <summary>
+            Specifies that all events for all configurations should be served by a single instance
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Include">
+            <summary>
+            Defines the base types for which the listener will be added.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Exclude">
+            <summary>
+            Defines the base types for which the listener will not be added.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ListenerType">
+            <summary>
+            The type of the listener
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ListenerInstance">
+            <summary>
+            The specific instance to use. If <code>null</code> then a new instance of the
+            configured <see cref="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ListenerType"/> will be created.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor">
+            <summary>
+            This contributor supports the complex configuration of event listeners.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.AbstractNHContributor">
+            <summary>
+            Defines an abstract base class for <see cref="T:Castle.ActiveRecord.Framework.INHContributor"/> which applies
+            to all root types by default.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.INHContributor">
+            <summary>
+            <para>
+            Contributors are an extension point of ActiveRecord. Instances of INHContributor
+            are registered at <see cref="T:Castle.ActiveRecord.ActiveRecordStarter"/> before the framework is
+            initialized. They are called before the session factory is created and can therefore
+            contribute to NHibernate's configuration of the session factory.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.INHContributor.Contribute(NHibernate.Cfg.Configuration)">
+            <summary>
+            Called to modify the configuration before the session factory is called.
+            </summary>
+            <remarks>
+            The order in which multiple contributors are called is not determined. The method
+            must not assume any fixed order and must therefore not be used to counter 
+            modifications by other contributors. 
+            </remarks>
+            <param name="configuration">The NH configuration to modify.</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.INHContributor.AppliesToRootType">
+            <summary>
+            This predicate can be set per instance and will be called by the framework to
+            determine whether the contributor should add to the actual root type.
+            </summary>
+            <example><![CDATA[
+            public class SampleContributor : INHContributor
+            {
+            	public Predicate<Type> AppliesToRootType
+            	{
+            		get { return _appliesToRootType; }
+            		set { _appliesToRootType = value; }
+            	}
+            	
+            	// Applies to default root type only by default
+            	private Predicate<Type>_appliesToRootType = ( (type) => type.Equals(typeof(ActiveRecordBase)));
+            	
+            	public void Contribute(Configuration c) {}
+            }
+            ]]></example>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.AbstractNHContributor.Contribute(NHibernate.Cfg.Configuration)">
+            <summary>
+            The actual contribution method.
+            </summary>
+            <param name="configuration">The configuration to be modified.</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.AbstractNHContributor.AppliesToRootType">
+            <summary>
+            Implements <see cref="P:Castle.ActiveRecord.Framework.INHContributor.AppliesToRootType"/>
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.Add(Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig)">
+            <summary>
+            Adds an event listener configuration
+            </summary>
+            <param name="config">the configuration to add</param>
+            <returns>the added configuration</returns>
+            <exception cref="T:System.ArgumentNullException">When the configuration is null</exception>
+            <exception cref="T:System.ArgumentException">When the configuration is already present.</exception>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.Get(System.Type)">
+            <summary>
+            Returns the listener config for a specified listener type.
+            </summary>
+            <param name="listenerType">the type to look for</param>
+            <returns>the listener config or null if it does not exist</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.Remove(System.Type)">
+            <summary>
+            Gets and removes the configuration for the type.
+            </summary>
+            <param name="listenerType">the type to look for</param>
+            <returns>the configuration for the type</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.Contribute(NHibernate.Cfg.Configuration)">
+            <summary>
+            Configures the configuration with the registered listeners according the config
+            </summary>
+            <param name="configuration">the configuration object to add the listeners to</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.#ctor">
+            <summary>
+            Creates a listener
             </summary>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel">
@@ -3399,12 +3974,13 @@
             Model to represent a HasMany ( one to many ) association
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Internal.HasManyModel.#ctor(System.Reflection.PropertyInfo,Castle.ActiveRecord.HasManyAttribute)">
+        <member name="M:Castle.ActiveRecord.Framework.Internal.HasManyModel.#ctor(System.Reflection.PropertyInfo,Castle.ActiveRecord.HasManyAttribute,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Internal.HasManyModel"/> class.
             </summary>
             <param name="propInfo">The prop info.</param>
             <param name="hasManyAtt">The has many att.</param>
+            <param name="containingTypeModel">The model for the type that contains the HasMany reference.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.HasManyModel.Accept(Castle.ActiveRecord.Framework.Internal.IVisitor)">
             <summary>
@@ -3423,6 +3999,11 @@
             Gets the has many attribute
             </summary>
             <value>The has many att.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.HasManyModel.ContainingTypeModel">
+            <summary>
+            This is a reference to the model (the ActiveRecord type) that defined the HasMany relationship.
+            </summary>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Internal.HasManyModel.DependentObjectModel">
             <summary>
@@ -5923,6 +6504,42 @@
             </summary>
             <param name="session">The <c>NHibernate</c>'s <see cref="T:NHibernate.ISession"/></param>
         </member>
+        <member name="T:Castle.ActiveRecord.Queries.ValueAndTypeTuple">
+            <summary>
+            Represents a query parameter value and type. Can be used to override the 
+            standard mechanism of determing parameter types.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.ValueAndTypeTuple.#ctor(System.Object)">
+            <summary>
+            Creates a new instance of ValueAndTypeTuple with no specific Type
+            </summary>
+            <param name="value">The value of the parameter</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.ValueAndTypeTuple.#ctor(NHibernate.Type.IType,System.Object)">
+            <summary>
+            Creates a new instance of ValueAndTypeTuple with a specific Type
+            </summary>
+            <param name="type">The type of the parameter</param>
+            <param name="value">The value of the parameter</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.ValueAndTypeTuple.Wrap(System.Object)">
+            <summary>
+            Creates a new ValueAndTypeTuple using the argument as the value
+            unless the argument is already a ValueAndTypeTuple, in which case
+            that is returned unmodified.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Queries.ValueAndTypeTuple.Type">
+            <summary>
+            The parameter type
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Queries.ValueAndTypeTuple.Value">
+            <summary>
+            The parameter value
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.Framework.Scopes.AbstractScope">
             <summary>
             Abstract <seealso cref="T:Castle.ActiveRecord.ISessionScope"/> implementation
@@ -6137,6 +6754,12 @@
             </summary>
             <param name="session">The session.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.ResetFlushMode">
+            <summary>
+            Notifies the scope that an inner scope that changed the flush mode, was
+            disposed. The scope should reset the flush mode to its default.
+            </summary>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.GetSessions">
             <summary>
             Gets the sessions.
@@ -6346,6 +6969,11 @@
             for readonly operations
             </summary>
         </member>
+        <member name="F:Castle.ActiveRecord.FlushAction.Config">
+            <summary>
+            Determine the flushing behaviour from configuration.
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.Framework.Scopes.HybridWebThreadScopeInfo">
             <summary>
             This <see cref="T:Castle.ActiveRecord.Framework.IThreadScopeInfo"/> implementation will first try to get the current scope from the current 
@@ -6475,6 +7103,28 @@
             Gets the current scope
             </summary>
             <value>The current.</value>
+        </member>
+        <member name="T:Castle.ActiveRecord.StatelessSessionScope">
+            <summary>
+            Implementation of <see cref="T:Castle.ActiveRecord.ISessionScope"/> with
+            an IStatelessSession to improve performance 
+            by caching a session without a first-level-cache.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.StatelessSessionScope.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.StatelessSessionScope"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.StatelessSessionScope.OpenSession(NHibernate.ISessionFactory,NHibernate.IInterceptor)">
+            <summary>
+            If the <see cref="P:Castle.ActiveRecord.Framework.Scopes.AbstractScope.WantsToCreateTheSession"/> returned
+            <c>true</c> then this method is invoked to allow
+            the scope to create a properly configured session
+            </summary>
+            <param name="sessionFactory">From where to open the session</param>
+            <param name="interceptor">the NHibernate interceptor</param>
+            <returns>the newly created session</returns>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Scopes.ThreadScopeAccessor">
             <summary>
@@ -7199,6 +7849,14 @@
             <param name="detachedCriteria">The criteria expression</param>		
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Exists(System.Type,NHibernate.IDetachedQuery)">
+            <summary>
+            Check if there is any records in the db for the target type
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="detachedQuery"></param>
+            <returns><c>true</c> if there's at least one row</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.Order[])">
             <summary>
             Returns all instances found for the specified type according to the criteria
@@ -7232,6 +7890,14 @@
             </summary>
             <param name="targetType">The target type.</param>
             <param name="criteria">The criteria expression</param>
+            <returns>The <see cref="T:System.Array"/> of results.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.IDetachedQuery)">
+            <summary>
+            Returns all instances found for the specified type according to the criteria
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="detachedQuery">The query expression</param>
             <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAllByProperty(System.Type,System.String,System.Object)">
@@ -7299,6 +7965,14 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindFirst(System.Type,NHibernate.IDetachedQuery)">
+            <summary>
+            Searches and returns the first row.
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="detachedQuery">The expression query.</param>
+            <returns>A <c>targetType</c> instance or <c>null.</c></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindOne(System.Type,NHibernate.Criterion.ICriterion[])">
             <summary>
             Searches and returns a row. If more than one is found, 
@@ -7315,6 +7989,15 @@
             </summary>
             <param name="targetType">The target type</param>
             <param name="criteria">The criteria</param>
+            <returns>A <c>targetType</c> instance or <c>null</c></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindOne(System.Type,NHibernate.IDetachedQuery)">
+            <summary>
+            Searches and returns a row. If more than one is found,
+            throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
+            </summary>
+            <param name="targetType">The target type</param>
+            <param name="detachedQuery">The query expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
@@ -7357,6 +8040,16 @@
             <param name="firstResult">The number of the first row to retrieve.</param>
             <param name="maxResults">The maximum number of results retrieved.</param>
             <param name="criteria">The criteria expression</param>
+            <returns>The sliced query results.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.IDetachedQuery)">
+            <summary>
+            Returns a portion of the query results (sliced)
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="detachedQuery">The query expression</param>
             <returns>The sliced query results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Execute(Castle.ActiveRecord.NHibernateDelegate)">
@@ -7701,6 +8394,13 @@
             <param name="detachedCriteria">The criteria expression</param>		
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Exists(NHibernate.IDetachedQuery)">
+            <summary>
+            Check if any instance matching the query exists in the database.
+            </summary>
+            <param name="detachedQuery">The query expression</param>
+            <returns>true if an instance is found; otherwise false.</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.Order[])">
             <summary>
             Returns all the instances that match the detached criteria.
@@ -7740,6 +8440,13 @@
             </summary>
             <param name="criteria"></param>
             <returns>An <see cref="T:System.Array"/> of <typeparamref name="T"/></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.IDetachedQuery)">
+            <summary>
+            Returns all instances found for the specified type according to the criteria
+            </summary>
+            <param name="detachedQuery">The query expression.</param>
+            <returns>All entities that match the query</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAllByProperty(System.String,System.Object)">
             <summary>
@@ -7823,6 +8530,13 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.IDetachedQuery)">
+            <summary>
+            Searches and returns the first row. 
+            </summary>
+            <param name="detachedQuery">The query expression</param>
+            <returns>A <c>targetType</c> instance or <c>null.</c></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindOne(NHibernate.Criterion.ICriterion[])">
             <summary>
             Searches and returns a row. If more than one is found, 
@@ -7837,6 +8551,14 @@
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
             </summary>
             <param name="criteria">The criteria</param>
+            <returns>A <c>targetType</c> instance or <c>null</c></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindOne(NHibernate.IDetachedQuery)">
+            <summary>
+            Searches and returns a row. If more than one is found, 
+            throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
+            <param name="detachedQuery">The query expression</param>
+            </summary>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
@@ -7867,6 +8589,15 @@
             <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Criterion.Order"/> objects.</param>
             <param name="criteria">The criteria expression</param>
             <returns>The sliced query results.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.IDetachedQuery)">
+            <summary>
+            Returns a portion of the query results (sliced)
+            </summary>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <returns>The sliced query results.</returns>
+            <param name="detachedQuery">The query expression</param>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.ActiveRecordException">
             <summary>
@@ -8067,14 +8798,14 @@
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordMediator">
             <summary>
-            Allow programmers to use the 
+            Allow programmers to use the
             ActiveRecord functionality without direct reference
             to <see cref="T:Castle.ActiveRecord.ActiveRecordBase"/>
             </summary>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Execute(System.Type,Castle.ActiveRecord.NHibernateDelegate,System.Object)">
             <summary>
-            Invokes the specified delegate passing a valid 
+            Invokes the specified delegate passing a valid
             NHibernate session. Used for custom NHibernate queries.
             </summary>
             <param name="targetType">The target ActiveRecordType</param>
@@ -8090,7 +8821,7 @@
             <param name="id">ID value</param>
             <param name="throwOnNotFound"><c>true</c> if you want an exception to be thrown
             if the object is not found</param>
-            <exception cref="T:NHibernate.ObjectNotFoundException">if <c>throwOnNotFound</c> is set to 
+            <exception cref="T:NHibernate.ObjectNotFoundException">if <c>throwOnNotFound</c> is set to
             <c>true</c> and the row is not found</exception>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindByPrimaryKey(System.Type,System.Object)">
@@ -8134,9 +8865,17 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.IDetachedQuery)">
+            <summary>
+            Searches and returns the first row.
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="detachedQuery">The expression query.</param>
+            <returns>A <c>targetType</c> instance or <c>null.</c></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindOne(System.Type,NHibernate.Criterion.ICriterion[])">
             <summary>
-            Searches and returns the a row. If more than one is found, 
+            Searches and returns the a row. If more than one is found,
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
             </summary>
             <param name="targetType">The target type</param>
@@ -8145,11 +8884,20 @@
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindOne(System.Type,NHibernate.Criterion.DetachedCriteria)">
             <summary>
-            Searches and returns a row. If more than one is found, 
+            Searches and returns a row. If more than one is found,
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
             </summary>
             <param name="targetType">The target type</param>
             <param name="criteria">The criteria</param>
+            <returns>A <c>targetType</c> instance or <c>null</c></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindOne(System.Type,NHibernate.IDetachedQuery)">
+            <summary>
+            Searches and returns a row. If more than one is found,
+            throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
+            </summary>
+            <param name="targetType">The target type</param>
+            <param name="detachedQuery">The query expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
@@ -8172,6 +8920,16 @@
             Returns a portion of the query results (sliced)
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.IDetachedQuery)">
+            <summary>
+            Returns a portion of the query results (sliced)
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="detachedQuery">The query expression</param>
+            <returns>The sliced query results.</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type)">
             <summary>
             Returns all instances found for the specified type.
@@ -8181,7 +8939,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
             <summary>
-            Returns all instances found for the specified type 
+            Returns all instances found for the specified type
             using sort orders and criterias.
             </summary>
             <param name="targetType"></param>
@@ -8191,7 +8949,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type,NHibernate.Criterion.ICriterion[])">
             <summary>
-            Returns all instances found for the specified type 
+            Returns all instances found for the specified type
             using criterias.
             </summary>
             <param name="targetType"></param>
@@ -8203,9 +8961,17 @@
             Returns all instances found for the specified type according to the criteria
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type,NHibernate.IDetachedQuery)">
+            <summary>
+            Returns all instances found for the specified type according to the criteria
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="detachedQuery">The query expression</param>
+            <returns>The <see cref="T:System.Array"/> of results.</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAllByProperty(System.Type,System.String,System.Object)">
             <summary>
-            Finds records based on a property value - automatically converts null values to IS NULL style queries. 
+            Finds records based on a property value - automatically converts null values to IS NULL style queries.
             </summary>
             <param name="targetType">The target type</param>
             <param name="property">A property name (not a column name)</param>
@@ -8214,7 +8980,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAllByProperty(System.Type,System.String,System.String,System.Object)">
             <summary>
-            Finds records based on a property value - automatically converts null values to IS NULL style queries. 
+            Finds records based on a property value - automatically converts null values to IS NULL style queries.
             </summary>
             <param name="targetType">The target type</param>
             <param name="orderByColumn">The column name to be ordered ASC</param>
@@ -8260,54 +9026,54 @@
             <returns></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type)">
-            <summary>
-            Returns the number of records of the specified 
-            type in the database
-            </summary>
-            <example>
-            <code>
-            [ActiveRecord]
-            public class User : ActiveRecordBase
-            {
-              ...
-              
-              public static int CountUsers()
-              {
-                return Count(typeof(User));
-              }
-            }
-            </code>
-            </example>
-            <param name="targetType">Type of the target.</param>
-            <returns>The count result</returns>
+             <summary>
+             Returns the number of records of the specified
+             type in the database
+             </summary>
+             <example>
+             <code>
+             [ActiveRecord]
+             public class User : ActiveRecordBase
+             {
+               ...
+            
+               public static int CountUsers()
+               {
+                 return Count(typeof(User));
+               }
+             }
+             </code>
+             </example>
+             <param name="targetType">Type of the target.</param>
+             <returns>The count result</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,System.String,System.Object[])">
-            <summary>
-            Returns the number of records of the specified 
-            type in the database
-            </summary>
-            <example>
-            <code>
-            [ActiveRecord]
-            public class User : ActiveRecordBase
-            {
-              ...
-              
-              public static int CountUsersLocked()
-              {
-                return Count(typeof(User), "IsLocked = ?", true);
-              }
-            }
-            </code>
-            </example>
-            <param name="targetType">Type of the target.</param>
-            <param name="filter">A sql where string i.e. Person=? and DOB &gt; ?</param>
-            <param name="args">Positional parameters for the filter string</param>
-            <returns>The count result</returns>
+             <summary>
+             Returns the number of records of the specified
+             type in the database
+             </summary>
+             <example>
+             <code>
+             [ActiveRecord]
+             public class User : ActiveRecordBase
+             {
+               ...
+            
+               public static int CountUsersLocked()
+               {
+                 return Count(typeof(User), "IsLocked = ?", true);
+               }
+             }
+             </code>
+             </example>
+             <param name="targetType">Type of the target.</param>
+             <param name="filter">A sql where string i.e. Person=? and DOB &gt; ?</param>
+             <param name="args">Positional parameters for the filter string</param>
+             <returns>The count result</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,NHibernate.Criterion.ICriterion[])">
             <summary>
-            Returns the number of records of the specified 
+            Returns the number of records of the specified
             type in the database
             </summary>
             <param name="targetType">The target type.</param>
@@ -8316,7 +9082,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,NHibernate.Criterion.DetachedCriteria)">
             <summary>
-            Returns the number of records of the specified 
+            Returns the number of records of the specified
             type in the database
             </summary>
             <param name="targetType">The target type.</param>
@@ -8358,7 +9124,15 @@
             Check if any instance matching the criteria exists in the database.
             </summary>
             <param name="targetType">The target type.</param>
-            <param name="detachedCriteria">The criteria expression</param>		
+            <param name="detachedCriteria">The criteria expression</param>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Exists(System.Type,NHibernate.IDetachedQuery)">
+            <summary>
+            Check if any instance matches the query.
+            </summary>
+            <param name="targetType">target Type</param>
+            <param name="detachedQuery">The query expression</param>
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Save(System.Object)">
@@ -8448,8 +9222,8 @@
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Replicate(System.Object,NHibernate.ReplicationMode)">
             <summary>
-            From NHibernate documentation: 
-            Persist all reachable transient objects, reusing the current identifier 
+            From NHibernate documentation:
+            Persist all reachable transient objects, reusing the current identifier
             values. Note that this will not trigger the Interceptor of the Session.
             </summary>
             <param name="instance">The instance.</param>
@@ -8565,6 +9339,13 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.IDetachedQuery)">
+            <summary>
+            Searches and returns the first row.
+            </summary>
+            <param name="detachedQuery">The expression query.</param>
+            <returns>A <c>targetType</c> instance or <c>null.</c></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindOne(NHibernate.Criterion.ICriterion[])">
             <summary>
             Searches and returns the first row.
@@ -8578,6 +9359,14 @@
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
             </summary>
             <param name="criteria">The criteria</param>
+            <returns>A <c>targetType</c> instance or <c>null</c></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindOne(NHibernate.IDetachedQuery)">
+            <summary>
+            Searches and returns a row. If more than one is found,
+            throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
+            </summary>
+            <param name="detachedQuery">The query expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAllByProperty(System.String,System.Object)">
@@ -8625,6 +9414,13 @@
             Returns all instances found for the specified type according to the criteria
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll(NHibernate.IDetachedQuery)">
+            <summary>
+            Returns all instances found for the specified type according to the criteria
+            </summary>
+            <param name="detachedQuery">The query expression</param>
+            <returns>The <see cref="T:System.Array"/> of results.</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
@@ -8639,6 +9435,15 @@
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.IDetachedQuery)">
+            <summary>
+            Returns a portion of the query results (sliced)
+            </summary>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="detachedQuery">The query expression</param>
+            <returns>The sliced query results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.DeleteAll">
             <summary>
@@ -8702,6 +9507,13 @@
             <typeparam name="PkType">The <c>System.Type</c> of the PrimaryKey</typeparam>
             <param name="id">The id to check on</param>
             <returns><c>true</c> if the ID exists; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Exists(NHibernate.IDetachedQuery)">
+            <summary>
+            Check if any instance matches the query.
+            </summary>
+            <param name="detachedQuery">The query expression</param>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count">
             <summary>
@@ -8785,6 +9597,12 @@
             Delegate for use in <see cref="E:Castle.ActiveRecord.ActiveRecordStarter.ModelCreated"/>
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.EventListenerRegistrationDelegate">
+            <summary>
+            Delegate for AR Facility registration hooks.
+            </summary>
+            <param name="contributor"></param>
+        </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordStarter">
             <summary>
             Performs the framework initialization.
@@ -8823,7 +9641,7 @@
             checking all the types on the specified <c>Assembly</c>
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.Initialize(System.Reflection.Assembly[],Castle.ActiveRecord.Framework.IConfigurationSource)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.Initialize(System.Reflection.Assembly[],Castle.ActiveRecord.Framework.IConfigurationSource,System.Type[])">
             <summary>
             Initialize the mappings using the configuration and 
             checking all the types on the specified Assemblies
@@ -8973,6 +9791,18 @@
             <param name="fileCount"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.AddContributor(Castle.ActiveRecord.Framework.INHContributor)">
+            <summary>
+            Adds a contributor instance that will be called when a configuration is
+            prepared for creating a session factory 
+            </summary>
+            <param name="contributor">The contributor to add.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.ClearContributors">
+            <summary>
+            Clears the contributor registry. Mainly used for tests.
+            </summary>
+        </member>
         <member name="E:Castle.ActiveRecord.ActiveRecordStarter.SessionFactoryHolderCreated">
             <summary>
             So others frameworks can intercept the 
@@ -9014,6 +9844,16 @@
             before the generation of the NHibernate XML configuration.
             </summary>
         </member>
+        <member name="E:Castle.ActiveRecord.ActiveRecordStarter.EventListenerComponentRegistrationHook">
+            <summary>
+            Allows the ActiveRecordFacility to register components as event listeners;
+            </summary>
+        </member>
+        <member name="E:Castle.ActiveRecord.ActiveRecordStarter.EventListenerFacilityConfigurationHook">
+            <summary>
+            Allows the ActiveRecordFacility to reconfigure registered listeners.
+            </summary>
+        </member>
         <member name="P:Castle.ActiveRecord.ActiveRecordStarter.IsInitialized">
             <summary>
             Gets a value indicating whether ActiveRecord was initialized properly (see the Initialize method).
@@ -9021,6 +9861,11 @@
             <value>
             	<c>true</c> if it is initialized; otherwise, <c>false</c>.
             </value>
+        </member>
+        <member name="P:Castle.ActiveRecord.ActiveRecordStarter.ConfigurationSource">
+            <summary>
+            The current <see cref="T:Castle.ActiveRecord.Framework.IConfigurationSource"/>.
+            </summary>
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordValidationBase">
             <summary>
@@ -9791,6 +10636,86 @@
             Gets or sets the implementation of <see cref="T:Castle.ActiveRecord.Framework.IThreadScopeInfo"/>
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.Framework.NHEventListeners">
+            <summary>
+            This contributor allows easy adding of NHibernate event listeners to
+            configurations. It implements a kind of multiple-strongly-typed collection
+            for all event listener types. Those types will be added to all
+            <see cref="T:NHibernate.Cfg.Configuration"/>-objects that are not filtered
+            by the <see cref="P:Castle.ActiveRecord.Framework.INHContributor.AppliesToRootType"/> double dispatch filter.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Add``1(``0)">
+            <summary>
+            Adds an event listener that will be added to all configurations served.
+            </summary>
+            <typeparam name="TListener">the event listener type to add</typeparam>
+            <param name="listenerInstance">the listener instance to add</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Remove``1(``0)">
+            <summary>
+            Removes a previously added listener instance
+            </summary>
+            <typeparam name="TListener">the type of the instance</typeparam>
+            <param name="listenerInstance">the instance to remove</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Contains``1(``0)">
+            <summary>
+            Tests if a listener instance has been added
+            </summary>
+            <typeparam name="TListener">the instance's type</typeparam>
+            <param name="listenerInstance">the instance to test for</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Enumerate``1">
+            <summary>
+            Enumerates all listener instances of the given type
+            </summary>
+            <typeparam name="TEventType">the requested event type</typeparam>
+            <returns>all listeners of the requested type</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Contribute(NHibernate.Cfg.Configuration)">
+            <summary>
+            Configures the configuration with all registered listeners
+            </summary>
+            <param name="configuration">the configuration object to add the listeners to</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.ConfigureListenerType(NHibernate.Cfg.Configuration,System.Type)">
+            <summary>
+            Configures the configures with the registered listeners of the given type
+            </summary>
+            <param name="configuration">the configuration object to add the listeners to</param>
+            <param name="listenerType">the listener type to use</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.GetEventListenerTypes">
+            <summary>
+            Returns all event listener interfaces defined by NHibernate
+            </summary>
+            <returns>event listener interface types</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.GetProperty(System.Type)">
+            <summary>
+            Returns the PropertyInfo of the <see cref="T:NHibernate.Event.EventListeners"/>-class for
+            a given EventListener-interface.
+            </summary>
+            <param name="listenerType">The listener interface</param>
+            <returns>the property info object</returns>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.NHEventListeners.ReplaceExistingListeners">
+            <summary>
+            Replaces existing listeners instead of adding them if set to <code>true</code>.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.NHSearchContributor">
+            <summary>
+            Contributor to add the NHSearch event listeners
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHSearchContributor.Contribute(NHibernate.Cfg.Configuration)">
+            <summary>
+            The actual contribution method.
+            </summary>
+            <param name="configuration">The configuration to be modified.</param>
+        </member>
         <member name="T:Castle.ActiveRecord.NotFoundException">
             <summary>
             This exception is thrown when loading an entity by its PK failed because the entity did not exist.
@@ -9954,6 +10879,34 @@
             <param name="sender">The sender.</param>
             <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
         </member>
+        <member name="T:Castle.ActiveRecord.Framework.StatelessSessionWrapper">
+            <summary>
+            Wraps a NHibernate.IStatelessSession and provides an interface of type
+            <see cref="T:NHibernate.ISession"/> for it.
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.StatelessSessionWrapper.statelessSession">
+            <summary>
+            The stateless session to delegate to.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.StatelessSessionWrapper.#ctor(NHibernate.IStatelessSession)">
+            <summary>
+            Builds a StatelessSessionWrapper.
+            </summary>
+            <param name="statelessSession">The stateless session to delegate to.</param>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.NotWrappedException">
+            <summary>
+            Wraps a NotImplementedException with a preconfigured Catle-like
+            excweption message.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NotWrappedException.#ctor">
+            <summary>
+            Calls the base class' constructor with the preconfigured message.
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.Framework.SupportingUtils">
             <summary>
             Contains utility methods for dealing with ActiveRecord objects
@@ -10090,6 +11043,86 @@
             <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
             <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
             <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
+        </member>
+        <member name="T:Castle.ActiveRecord.Testing.InMemoryConnectionProvider">
+            <summary>
+            ConnectionProvider for Sqlite in memory tests, that suppresses closing
+            the connection to keep the data until the test is finished.
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Testing.InMemoryConnectionProvider.Connection">
+            <summary>
+            The connection to the database
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryConnectionProvider.GetConnection">
+            <summary>
+            Called by the framework.
+            </summary>
+            <returns>A connection to the database</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryConnectionProvider.CloseConnection(System.Data.IDbConnection)">
+            <summary>
+            No-Op.
+            </summary>
+            <param name="conn">The connection to close.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryConnectionProvider.Restart">
+            <summary>
+            Closes the connection after the tests.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Testing.InMemoryTest">
+            <summary>
+            Base class for in memory unit tests. This class does not contain any
+            attributes specific to a testing framework.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryTest.SetUp">
+            <summary>
+            The common test setup code. To activate it in a specific test framework,
+            it must be called from a framework-specific setup-Method.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryTest.TearDown">
+            <summary>
+            The common test teardown code. To activate it in a specific test framework,
+            it must be called from a framework-specific teardown-Method.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryTest.GetTypes">
+            <summary>
+            Method that must be overridden by the test fixtures to return the types
+            that should be initialized. The stub returns an empty array.
+            </summary>
+            <returns>The types to initialize.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryTest.GetAssemblies">
+            <summary>
+            Method that must be overridden by the test fixtures to return the assemblies
+            that should be initialized. The stub returns an empty array.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryTest.GetAdditionalBaseClasses">
+            <summary>
+            Hook to allow the initialization of additional base classes. <see cref="T:Castle.ActiveRecord.ActiveRecordBase"/> is 
+            added everytime and must not be returned.
+            </summary>
+            <returns>An array of additional base classes for initialization</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryTest.GetProperties">
+            <summary>
+            Hook to add additional properties for each base class' configuration. As an example, "show_sql" can
+            be added to verify the behaviour of NHibernate in specific situations.
+            </summary>
+            <returns>A dictionary of additional or custom properties.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Testing.InMemoryTest.Configure(Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource)">
+            <summary>
+            Hook for modifying the configuration before initialization
+            </summary>
+            <param name="config"></param>
         </member>
     </members>
 </doc>
