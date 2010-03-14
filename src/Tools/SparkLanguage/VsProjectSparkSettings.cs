@@ -110,6 +110,11 @@ namespace SparkLanguage
             set { _defaultBaseType = value; }
         }
 
+        public LanguageType DefaultLanguage
+        {
+            get { return LanguageType.CSharp; }
+        }
+
         public IEnumerable<string> UseNamespaces
         {
             get
