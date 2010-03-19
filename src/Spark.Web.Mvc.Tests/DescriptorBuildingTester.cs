@@ -455,5 +455,26 @@ namespace Spark.Web.Mvc.Tests
             Assert.That(none, Is.Null);
             Assert.That(g.Value, Is.EqualTo("g"));
         }
+
+        [Test]
+        public void SimplifiedUseMasterGrammarWithPrefixDetectsElementCorrectly()
+        {
+            var builder = new DefaultDescriptorBuilder("s");
+
+            var a = builder.ParseUseMaster(new Position(new SourceContext("<s:use master='a'/>")));
+            var b = builder.ParseUseMaster(new Position(new SourceContext("<s:use\r\nmaster \r\n =\r\n'b' />")));
+            var c = builder.ParseUseMaster(new Position(new SourceContext("<s:use master=\"c\"/>")));
+            var def = builder.ParseUseMaster(new Position(new SourceContext("  x <s:use etc=''/> <s:use master=\"def\"/> y ")));
+            var none = builder.ParseUseMaster(new Position(new SourceContext("  x <s:use etc=''/> <using master=\"def\"/> y ")));
+            var g = builder.ParseUseMaster(new Position(new SourceContext("-<s:use master=\"g\"/>-<s:use master=\"h\"/>-")));
+
+
+            Assert.That(a.Value, Is.EqualTo("a"));
+            Assert.That(b.Value, Is.EqualTo("b"));
+            Assert.That(c.Value, Is.EqualTo("c"));
+            Assert.That(def.Value, Is.EqualTo("def"));
+            Assert.That(none, Is.Null);
+            Assert.That(g.Value, Is.EqualTo("g"));
+        }
     }
 }

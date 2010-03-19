@@ -13,23 +13,30 @@ namespace Spark.Web.Mvc
     {
         private ISparkViewEngine _engine;
 
-        public DefaultDescriptorBuilder()
+        public DefaultDescriptorBuilder() : this((string)null)
+        {
+        }
+
+        public DefaultDescriptorBuilder(string _prefix)
         {
             Filters = new List<IDescriptorFilter>
                           {
                               new AreaDescriptorFilter()
                           };
+            _grammar = new UseMasterGrammar(_prefix);
         }
 
         public DefaultDescriptorBuilder(ISparkViewEngine engine)
             : this()
         {
             _engine = engine;
+            _grammar = new UseMasterGrammar(_engine.Settings.Prefix);
         }
 
         public virtual void Initialize(ISparkServiceContainer container)
         {
             _engine = container.GetService<ISparkViewEngine>();
+            _grammar = new UseMasterGrammar(_engine.Settings.Prefix);
         }
 
         public IList<IDescriptorFilter> Filters { get; set; }
@@ -103,12 +110,12 @@ namespace Spark.Web.Mvc
         /// </summary>
         class UseMasterGrammar : CharGrammar
         {
-            public UseMasterGrammar()
+            public UseMasterGrammar(string _prefix)
             {
                 var whiteSpace0 = Rep(Ch(char.IsWhiteSpace));
                 var whiteSpace1 = Rep1(Ch(char.IsWhiteSpace));
-                var startOfElement = Ch("<use");
-                var startOfAttribute = Ch("master").And(whiteSpace0).And(Ch('=')).And(whiteSpace0);
+                var startOfElement = (_prefix != null) ?  Ch("<" + _prefix + ":use"): Ch("<use");
+                var startOfAttribute =  Ch("master").And(whiteSpace0).And(Ch('=')).And(whiteSpace0);
                 var attrValue = Ch('\'').And(Rep(ChNot('\''))).And(Ch('\''))
                     .Or(Ch('\"').And(Rep(ChNot('\"'))).And(Ch('\"')));
 
@@ -138,7 +145,7 @@ namespace Spark.Web.Mvc
             public ParseAction<string> ParseUseMaster { get; set; }
         }
 
-        private readonly UseMasterGrammar _grammar = new UseMasterGrammar();
+        private UseMasterGrammar _grammar;
         public ParseAction<string> ParseUseMaster { get { return _grammar.ParseUseMaster; } }
 
         public string TrailingUseMasterName(SparkViewDescriptor descriptor)
