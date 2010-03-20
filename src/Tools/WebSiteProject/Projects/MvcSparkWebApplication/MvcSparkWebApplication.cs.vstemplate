@@ -1,0 +1,84 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>ASP.NET MVC Spark Web Application</Name>
+    <Description>A project for creating an application using the ASP.NET MVC framework (1.0) (.NET Framework 3.5) and the Spark view engine (1.0)</Description>
+    <Icon Package="{349c5850-65df-11da-9384-00065b846f21}" ID="9001" />
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>Web</ProjectSubType>
+    <TemplateGroupID>Web</TemplateGroupID>
+    <TemplateID>Spark.WAP.CSharp.MvcSparkApplication</TemplateID>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp> 
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>MvcSparkApplication</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <PromptForSaveOnCreation>true</PromptForSaveOnCreation>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+  </TemplateData>
+  <TemplateContent>
+    <CustomParameters>
+      <CustomParameter Name="$language$" Value="C#" />
+      <CustomParameter Name="$languageext$" Value="cs" />
+      <CustomParameter Name="$autoeventwireup$" Value="true" />
+      <CustomParameter Name="$globalclassname$" Value="MvcSparkApplication" />
+      <CustomParameter Name="$sitemasterclassname$" Value="Views.Shared.Site" />
+      <CustomParameter Name="$indexerleft$" Value="[" />
+      <CustomParameter Name="$indexerright$" Value="]" />
+      <CustomParameter Name="$MVCReferences$" Value="System.Web.Mvc.dll"/>
+    </CustomParameters>
+    <Project File="MvcSparkApplication.csproj" ReplaceParameters="true">
+      <Folder Name="App_Data" TargetFolderName="App_Data" />
+      <Folder Name="Controllers" TargetFolderName="Controllers">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AccountController.cs">AccountController.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="HomeController.cs">HomeController.cs</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Default.aspx">Default.aspx</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Default.aspx.cs">Default.aspx.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Global.asax">Global.asax</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Global.asax.cs">Global.asax.cs</ProjectItem>
+      <Folder Name="Models" TargetFolderName="Models" />
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Views" TargetFolderName="Views">
+        <ProjectItem ReplaceParameters="true" TargetFileName="Web.config">Web.config</ProjectItem>
+        <Folder Name="Account" TargetFolderName="Account">
+          <ProjectItem ReplaceParameters="true" TargetFileName="ChangePassword.spark">ChangePassword.spark</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="ChangePasswordSuccess.spark">ChangePasswordSuccess.spark</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="LogOn.spark">LogOn.spark</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="Register.spark">Register.spark</ProjectItem>
+        </Folder>        
+        <Folder Name="Home" TargetFolderName="Home">
+          <ProjectItem ReplaceParameters="true" TargetFileName="About.spark">About.spark</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="Index.spark">Index.spark</ProjectItem>
+        </Folder>
+        <Folder Name="Shared" TargetFolderName="Shared">
+          <ProjectItem ReplaceParameters="true" TargetFileName="_global.spark">_global.spark</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="_LogOnUser.spark">_LogOnUser.spark</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="Application.spark">Application.spark</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="Error.spark">Error.spark</ProjectItem>
+        </Folder>
+      </Folder>
+      <Folder Name="Content" TargetFolderName="Content">
+        <ProjectItem ReplaceParameters="true" TargetFileName="Site.css">Site.css</ProjectItem>
+      </Folder>
+      <Folder Name="Scripts" TargetFolderName="Scripts">
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery-1.3.2.js">jquery-1.3.2.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery-1.3.2.min.js">jquery-1.3.2.min.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery-1.3.2-vsdoc.js">jquery-1.3.2-vsdoc.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="jquery-1.3.2.min-vsdoc.js">jquery-1.3.2.min-vsdoc.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="MicrosoftAjax.js">MicrosoftAjax.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="MicrosoftAjax.debug.js">MicrosoftAjax.debug.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="MicrosoftMvcAjax.js">MicrosoftMvcAjax.js</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="MicrosoftMvcAjax.debug.js">MicrosoftMvcAjax.debug.js</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Web.config">Web.config</ProjectItem>
+    </Project>
+  </TemplateContent>
+  <WizardExtension>
+    <Assembly>Microsoft.VisualStudio.Web.Extensions, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</Assembly>
+    <FullClassName>Microsoft.VisualStudio.Web.Mvc.TemplateWizard</FullClassName>
+  </WizardExtension>
+</VSTemplate>
