@@ -63,6 +63,7 @@
     <Compile Include="Bindings\Binding.cs" />
     <Compile Include="Bindings\BindingGrammar.cs" />
     <Compile Include="Bindings\BindingNode.cs" />
+    <Compile Include="Bindings\BindingPhrase.cs" />
     <Compile Include="Bindings\BindingProvider.cs" />
     <Compile Include="Bindings\IBindingProvider.cs" />
     <Compile Include="Bindings\DefaultBindingProvider.cs" />

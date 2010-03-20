@@ -7,11 +7,18 @@ using Spark.Parser.Markup;
 
 namespace Spark.Compiler.NodeVisitors
 {
-    public class BindingExpansionVisitor : NodeVisitor
+    public class BindingExpansionVisitor : NodeVisitor<BindingExpansionVisitor.Frame>
     {
         public BindingExpansionVisitor(VisitorContext context)
             : base(context)
         {
+        }
+
+        public class Frame
+        {
+            public ElementNode Element { get; set; }
+            public Binding Binding { get; set; }
+            public int RedundantDepth { get; set; }
         }
 
         protected override void Visit(ElementNode element)
@@ -19,15 +26,77 @@ namespace Spark.Compiler.NodeVisitors
             var binding = MatchElementBinding(element);
             if (binding == null)
             {
+                if (!element.IsEmptyElement &&
+                    FrameData.Binding != null &&
+                    FrameData.Binding.ElementName == element.Name)
+                {
+                    ++FrameData.RedundantDepth;
+                }
+
                 base.Visit(element);
                 return;
             }
 
-            var snippets = binding.Nodes.SelectMany(bindingNode => BuildSnippetsForNode(binding, bindingNode, element));
-            var expression = new ExpressionNode(snippets);
-            Accept(expression);
+            BeginBinding(element, binding);
+            if (element.IsEmptyElement)
+                EndBinding();
         }
 
+
+        protected override void Visit(EndElementNode endElement)
+        {
+            if (FrameData.Binding != null && FrameData.Binding.ElementName == endElement.Name)
+            {
+                if (FrameData.RedundantDepth-- == 0)
+                {
+                    EndBinding();
+                    return;
+                }
+            }
+            base.Visit(endElement);
+        }
+
+
+
+        private void BeginBinding(ElementNode element, Binding binding)
+        {
+            var phrase = binding.Phrases.First();
+            ProcessPhrase(binding, phrase, element);
+            PushFrame(Nodes, new Frame { Binding = binding, Element = element });
+        }
+
+        private void EndBinding()
+        {
+            var frame = FrameData;
+            PopFrame();
+            if (frame.Binding.Phrases.Count() == 2)
+            {
+                ProcessPhrase(frame.Binding, frame.Binding.Phrases.Last(), frame.Element);
+            }
+        }
+
+        private void ProcessPhrase(Binding binding, BindingPhrase phrase, ElementNode element)
+        {
+            var snippets = phrase.Nodes.SelectMany(bindingNode => BuildSnippetsForNode(binding, bindingNode, element));
+
+            if (phrase.Type == BindingPhrase.PhraseType.Expression)
+            {
+                Accept(new ExpressionNode(snippets));
+            }
+            else if (phrase.Type == BindingPhrase.PhraseType.Statement)
+            {
+                Accept(new StatementNode(snippets));
+            }
+            else
+            {
+                throw new CompilerException("Unknown binding phrase type " + phrase.Type);
+            }
+        }
+
+        private static IEnumerable<BindingNode> AllNodes(Binding binding)
+        {
+            return binding.Phrases.SelectMany(p => p.Nodes);
+        }
 
 
         private Binding MatchElementBinding(ElementNode node)
@@ -40,7 +109,7 @@ namespace Spark.Compiler.NodeVisitors
         private static bool RequiredAttributesSatisfied(Binding binding, ElementNode element)
         {
             // any xpath targetting a flat name must be present, or the binding doesn't qualify
-            foreach (var reference in binding.Nodes.OfType<BindingNameReference>())
+            foreach (var reference in AllNodes(binding).OfType<BindingNameReference>())
             {
                 var nameReference = reference;
                 if (!element.Attributes.Any(attr => attr.Name == nameReference.Name))
@@ -89,7 +158,7 @@ namespace Spark.Compiler.NodeVisitors
 
             // attributes that are matched by name, or by a longer prefix, no longer remain
             var remaining = candidates
-                .Where(attr => binding.Nodes.Any(compare => TestBetterMatch(attr.Name, prefix.Prefix, compare)) == false);
+                .Where(attr => AllNodes(binding).Any(compare => TestBetterMatch(attr.Name, prefix.Prefix, compare)) == false);
 
             // remaining attributes have a name that doesn't include the prefix characters
             var attrs = remaining

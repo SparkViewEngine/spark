@@ -36,7 +36,7 @@ namespace Spark.Tests.Bindings
 
         static Binding CreateBinding(string name, params BindingNode[] nodes)
         {
-            return new Binding { ElementName = name, Nodes = nodes };
+            return new Binding { ElementName = name, Phrases = new[] { new BindingPhrase { Nodes = nodes } } };
         }
 
         static IList<Node> CreateElement(string name, params AttributeNode[] nodes)
@@ -66,7 +66,7 @@ namespace Spark.Tests.Bindings
         [Test]
         public void ReplacementTakesAttributesByNameAndTextBecomesStringLiteral()
         {
-            _bindings.Add(CreateBinding("hello", new BindingNameReference("foo"){AssumeStringValue = true}));
+            _bindings.Add(CreateBinding("hello", new BindingNameReference("foo") { AssumeStringValue = true }));
 
             var nodes = CreateElement("hello", CreateAttribute("foo", new TextNode("bar")));
             _visitor.Accept(nodes);

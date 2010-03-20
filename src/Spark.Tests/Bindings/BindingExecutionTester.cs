@@ -159,5 +159,29 @@ namespace Spark.Tests.Bindings
             // default to anon object's ToString() style
             Assert.That(contents, Is.EqualTo(@"<p>[one]{ }{ }, [one]{ bar = two }{ }, [one]{ bar = 2 }{ id = three }</p>"));
         }
+        
+        [Test]
+        public void StatementPhraseWillBeExecutedInsteadOfOutput()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>#Output.Write(4+5);</element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello/></p>");
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>9</p>"));
+        }
+
+         [Test]
+        public void TwoPhraseBindingMayWrapOtherMaterial()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'><start>@a</start><end>@b</end></element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello a='3' b='5'>world</hello></p>");
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>3world5</p>"));
+        }
     }
 }

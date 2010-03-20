@@ -2,13 +2,10 @@
 using System.Linq;
 using Spark.Parser;
 
-namespace Spark.Bindings
-{
+namespace Spark.Bindings {
     // ReSharper disable InconsistentNaming
-    public class BindingGrammar : CharGrammar
-    {
-        public BindingGrammar()
-        {
+    public class BindingGrammar : CharGrammar {
+        public BindingGrammar() {
             //[4]   	NameChar	   ::=   	 Letter | Digit | '.' | '-' | '_' | ':' | CombiningChar | Extender  
             var NameChar = Ch(char.IsLetterOrDigit).Or(Ch('.', '-', '_', ':'))/*.Or(CombiningChar).Or(Extener)*/;
 
@@ -17,7 +14,7 @@ namespace Spark.Bindings
                 Ch(char.IsLetter).Or(Ch('_', ':')).And(Rep(NameChar))
                 .Build(hit => hit.Left + new string(hit.Down.ToArray()));
 
-            var stringPrefixReference = 
+            var stringPrefixReference =
                 Ch("\"@").And(Opt(Name)).And(Ch("*\""))
                 .Or(Ch("'@").And(Opt(Name)).And(Ch("*'")))
                 .Build(hit => (BindingNode)new BindingPrefixReference(hit.Left.Down) { AssumeStringValue = true });
@@ -40,12 +37,17 @@ namespace Spark.Bindings
                 .Build(hit => (BindingNode)new BindingLiteral(hit));
 
             Nodes = Rep(PrefixReference.Or(NameReference).Or(Literal));
+
+            Phrase =
+                Ch("#").And(Nodes).Build(hit => new BindingPhrase { Type = BindingPhrase.PhraseType.Statement, Nodes = hit.Down })
+                .Or(Nodes.Build(hit => new BindingPhrase { Type = BindingPhrase.PhraseType.Expression, Nodes = hit }));
         }
 
         public ParseAction<BindingNode> PrefixReference { get; set; }
         public ParseAction<BindingNode> NameReference { get; set; }
         public ParseAction<BindingNode> Literal { get; set; }
         public ParseAction<IList<BindingNode>> Nodes { get; set; }
+        public ParseAction<BindingPhrase> Phrase { get; set; }
     }
 
 
