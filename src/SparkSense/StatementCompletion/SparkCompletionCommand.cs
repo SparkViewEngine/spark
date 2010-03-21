@@ -12,15 +12,15 @@ namespace SparkSense.StatementCompletion
     internal class SparkCompletionCommand : IOleCommandTarget
     {
         private readonly ICompletionBroker _completionBroker;
-        private readonly IOleCommandTarget _nextCommand;
         private readonly IWpfTextView _textView;
+        private IOleCommandTarget _nextCommand;
         private ICompletionSession _session;
 
         public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker)
         {
             _textView = textView;
             _completionBroker = completionBroker;
-            textViewAdapter.AddCommandFilter(this, out _nextCommand);
+            ChainTheNextCommand(textViewAdapter);
         }
 
         #region IOleCommandTarget Members
@@ -35,9 +35,9 @@ namespace SparkSense.StatementCompletion
             uint commandId = cmdId;
             char inputCharacter = char.MinValue;
 
-            if (cmdGroup == VSConstants.VSStd2K && cmdId == (uint)VSConstants.VSStd2KCmdID.TYPECHAR)
+            if (cmdGroup == VSConstants.VSStd2K && cmdId == (uint) VSConstants.VSStd2KCmdID.TYPECHAR)
             {
-                inputCharacter = (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
+                inputCharacter = (char) (ushort) Marshal.GetObjectForNativeVariant(pvaIn);
             }
 
             if (IsACommitCharacter(cmdId, inputCharacter))
@@ -56,7 +56,7 @@ namespace SparkSense.StatementCompletion
             int result = _nextCommand.Exec(ref cmdGroup, cmdId, cmdExecOpt, pvaIn, pvaOut);
             bool handled = false;
 
-            if (!inputCharacter.Equals(char.MinValue) && char.IsLetterOrDigit(inputCharacter))
+            if (!inputCharacter.Equals(char.MinValue) && inputCharacter.Equals('<'))
             {
                 if (_session == null || _session.IsDismissed)
                 {
@@ -79,6 +79,11 @@ namespace SparkSense.StatementCompletion
 
         #endregion
 
+        private void ChainTheNextCommand(IVsTextView textViewAdapter)
+        {
+            textViewAdapter.AddCommandFilter(this, out _nextCommand);
+        }
+
         private bool StartCompletion()
         {
             SnapshotPoint? currentPoint = _textView.Caret.Position.Point.GetPoint(match => !match.ContentType.IsOfType("projection"), PositionAffinity.Predecessor);
@@ -99,14 +104,14 @@ namespace SparkSense.StatementCompletion
 
         private static bool IsADeletionCharacter(uint commandId)
         {
-            return commandId == (uint)VSConstants.VSStd2KCmdID.BACKSPACE ||
-                   commandId == (uint)VSConstants.VSStd2KCmdID.DELETE;
+            return commandId == (uint) VSConstants.VSStd2KCmdID.BACKSPACE ||
+                   commandId == (uint) VSConstants.VSStd2KCmdID.DELETE;
         }
 
         private static bool IsACommitCharacter(uint cmdId, char inputCharacter)
         {
-            return cmdId == (uint)VSConstants.VSStd2KCmdID.RETURN ||
-                   cmdId == (uint)VSConstants.VSStd2KCmdID.TAB ||
+            return cmdId == (uint) VSConstants.VSStd2KCmdID.RETURN ||
+                   cmdId == (uint) VSConstants.VSStd2KCmdID.TAB ||
                    char.IsWhiteSpace(inputCharacter) ||
                    char.IsPunctuation(inputCharacter);
         }

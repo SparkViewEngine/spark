@@ -8,19 +8,20 @@ namespace SparkSense.StatementCompletion
 {
     internal class SparkCompletionSource : ICompletionSource
     {
-        private readonly SparkCompletionSourceFactory _sourceFactory;
+        private readonly SparkCompletionSourceProvider _sourceProvider;
         private readonly ITextBuffer _textBuffer;
         private bool _isDisposed;
         private readonly IEnumerable<Completion> _completionList;
 
-        public SparkCompletionSource(SparkCompletionSourceFactory sourceFactory, ITextBuffer textBuffer)
+        public SparkCompletionSource(SparkCompletionSourceProvider sourceProvider, ITextBuffer textBuffer)
         {
-            _sourceFactory = sourceFactory;
+            _sourceProvider = sourceProvider;
             _textBuffer = textBuffer;
 
             _completionList = new List<Completion>
                                   {
-                                      new Completion("Spark 'Use' Tag", "<use robWoz='ere' />", "Spark 'Use' Tag for stuffs and things", null, null)
+                                      new Completion("<content", "<content", "Spark 'content' tag for spooling output to various text writers", null, null),
+                                      new Completion("<default", "<default", "Spark 'default' tag for declaring local variables if a symbol of a given name is not known to be in scope", null, null),
                                   };
         }
 
@@ -29,7 +30,7 @@ namespace SparkSense.StatementCompletion
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
             SnapshotPoint currentPosition = session.TextView.Caret.Position.BufferPosition - 1;
-            ITextStructureNavigator navigator = _sourceFactory.NavigatorService.GetTextStructureNavigator(_textBuffer);
+            ITextStructureNavigator navigator = _sourceProvider.NavigatorService.GetTextStructureNavigator(_textBuffer);
             TextExtent extent = navigator.GetExtentOfWord(currentPosition);
             ITrackingSpan applicableTo = currentPosition.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
 

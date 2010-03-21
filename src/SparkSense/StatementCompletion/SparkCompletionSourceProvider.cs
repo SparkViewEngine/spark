@@ -9,7 +9,7 @@ namespace SparkSense.StatementCompletion
     [Export(typeof (ICompletionSourceProvider))]
     [ContentType("spark")]
     [Name("Spark Tag Completion")]
-    internal class SparkCompletionSourceFactory : ICompletionSourceProvider
+    internal class SparkCompletionSourceProvider : ICompletionSourceProvider
     {
         [Import]
         internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
