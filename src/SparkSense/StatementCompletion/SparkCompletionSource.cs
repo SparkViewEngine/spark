@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
@@ -12,6 +16,7 @@ namespace SparkSense.StatementCompletion
         private readonly ITextBuffer _textBuffer;
         private bool _isDisposed;
         private readonly IEnumerable<Completion> _completionList;
+        private ImageSource _sparkIcon;
 
         public SparkCompletionSource(SparkCompletionSourceProvider sourceProvider, ITextBuffer textBuffer)
         {
@@ -20,9 +25,14 @@ namespace SparkSense.StatementCompletion
 
             _completionList = new List<Completion>
                                   {
-                                      new Completion("<content", "<content", "Spark 'content' tag for spooling output to various text writers", null, null),
-                                      new Completion("<default", "<default", "Spark 'default' tag for declaring local variables if a symbol of a given name is not known to be in scope", null, null),
+                                      new Completion("<content", "<content", "Spark 'content' tag for spooling output to various text writers", SparkIcon, null),
+                                      new Completion("<default", "<default", "Spark 'default' tag for declaring local variables if a symbol of a given name is not known to be in scope", SparkIcon, null),
                                   };
+        }
+
+        protected ImageSource SparkIcon
+        {
+            get { return _sparkIcon ?? (_sparkIcon = new BitmapImage(new Uri(("Resources/SparkTag.png"), UriKind.Relative))); }
         }
 
         #region ICompletionSource Members
