@@ -31,12 +31,17 @@ namespace Spark.Bindings {
             var rawNameReference = Ch('@').And(Name)
                 .Build(hit => (BindingNode)new BindingNameReference(hit.Down));
 
+            var childReference = Ch("child::*").Or(Ch("'child::*'")).Or(Ch("\"child::*\""))
+                .Build(hit => (BindingNode)new BindingChildReference());
+
             NameReference = stringNameReference.Or(rawNameReference);
 
-            Literal = Rep1(Ch(ch => true).Unless(PrefixReference.Or(NameReference)))
+            var anyReference = PrefixReference.Or(NameReference).Or(childReference);
+
+            Literal = Rep1(Ch(ch => true).Unless(anyReference))
                 .Build(hit => (BindingNode)new BindingLiteral(hit));
 
-            Nodes = Rep(PrefixReference.Or(NameReference).Or(Literal));
+            Nodes = Rep(anyReference.Or(Literal));
 
             Phrase =
                 Ch("#").And(Nodes).Build(hit => new BindingPhrase { Type = BindingPhrase.PhraseType.Statement, Nodes = hit.Down })

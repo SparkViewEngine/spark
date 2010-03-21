@@ -40,4 +40,8 @@ namespace Spark.Bindings
         public bool AssumeStringValue { get; set; }
     }
 
+    public class BindingChildReference : BindingNode
+    {
+    }
+
 }

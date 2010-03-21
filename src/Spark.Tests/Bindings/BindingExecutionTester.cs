@@ -159,7 +159,7 @@ namespace Spark.Tests.Bindings
             // default to anon object's ToString() style
             Assert.That(contents, Is.EqualTo(@"<p>[one]{ }{ }, [one]{ bar = two }{ }, [one]{ bar = 2 }{ id = three }</p>"));
         }
-        
+
         [Test]
         public void StatementPhraseWillBeExecutedInsteadOfOutput()
         {
@@ -172,7 +172,7 @@ namespace Spark.Tests.Bindings
             Assert.That(contents, Is.EqualTo(@"<p>9</p>"));
         }
 
-         [Test]
+        [Test]
         public void TwoPhraseBindingMayWrapOtherMaterial()
         {
             _viewFolder.Add("bindings.xml", @"<bindings>
@@ -182,6 +182,33 @@ namespace Spark.Tests.Bindings
             _viewFolder.Add("home\\index.spark", @"<p><hello a='3' b='5'>world</hello></p>");
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>3world5</p>"));
+        }
+
+        [Test]
+        public void ChildReferenceWillSpoolAndProvideContentAsString()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>'@a' + 'child::*' + '@b'</element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello a='3' b='5'>world</hello></p>");
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>3world5</p>"));
+        }
+        
+        [Test]
+        public void ChildReferenceWillNotMatchSelfClosingElements()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>'@a' + 'child::*' + '@b'</element>
+<element name='hello'>'@a' + ""no text"" + '@b'</element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello a='1' b='2'>world</hello><hello a='3' b='4'></hello><hello a='5' b='6'/></p>");
+
+            var contents = Render("index");
+
+            Assert.That(contents, Is.EqualTo(@"<p>1world2345no text6</p>"));
         }
     }
 }

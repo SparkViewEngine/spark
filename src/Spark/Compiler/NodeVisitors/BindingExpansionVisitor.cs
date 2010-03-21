@@ -19,6 +19,7 @@ namespace Spark.Compiler.NodeVisitors
             public ElementNode Element { get; set; }
             public Binding Binding { get; set; }
             public int RedundantDepth { get; set; }
+            public int NestingLevel { get; set; }
         }
 
         protected override void Visit(ElementNode element)
@@ -60,18 +61,36 @@ namespace Spark.Compiler.NodeVisitors
 
         private void BeginBinding(ElementNode element, Binding binding)
         {
-            var phrase = binding.Phrases.First();
-            ProcessPhrase(binding, phrase, element);
-            PushFrame(Nodes, new Frame { Binding = binding, Element = element });
+            if (binding.HasChildReference)
+            {
+                var stmt =
+                    string.Format("{{var __bindingWriter{0} = new System.IO.StringWriter(); using(OutputScope(__bindingWriter{0})) {{",
+                                  FrameData.NestingLevel);
+                Accept(new StatementNode(stmt));
+            }
+            else
+            {
+                var phrase = binding.Phrases.First();
+                ProcessPhrase(binding, phrase, element);
+            }
+            PushFrame(Nodes, new Frame { Binding = binding, Element = element, NestingLevel = FrameData.NestingLevel + 1 });
         }
 
         private void EndBinding()
         {
-            var frame = FrameData;
+            var element = FrameData.Element;
+            var binding = FrameData.Binding;
             PopFrame();
-            if (frame.Binding.Phrases.Count() == 2)
+
+            if (binding.HasChildReference || binding.Phrases.Count() == 2)
             {
-                ProcessPhrase(frame.Binding, frame.Binding.Phrases.Last(), frame.Element);
+                if (binding.HasChildReference)
+                    Accept(new StatementNode("}"));
+
+                ProcessPhrase(binding, binding.Phrases.Last(), element);
+
+                if (binding.HasChildReference)
+                    Accept(new StatementNode("}"));
             }
         }
 
@@ -102,11 +121,11 @@ namespace Spark.Compiler.NodeVisitors
         private Binding MatchElementBinding(ElementNode node)
         {
             var bindingsForName = Context.Bindings.Where(binding => binding.ElementName == node.Name);
-            var withAttributesSatisfied = bindingsForName.Where(binding => RequiredAttributesSatisfied(binding, node));
+            var withAttributesSatisfied = bindingsForName.Where(binding => RequiredReferencesSatisfied(binding, node));
             return withAttributesSatisfied.FirstOrDefault();
         }
 
-        private static bool RequiredAttributesSatisfied(Binding binding, ElementNode element)
+        private static bool RequiredReferencesSatisfied(Binding binding, ElementNode element)
         {
             // any xpath targetting a flat name must be present, or the binding doesn't qualify
             foreach (var reference in AllNodes(binding).OfType<BindingNameReference>())
@@ -115,11 +134,16 @@ namespace Spark.Compiler.NodeVisitors
                 if (!element.Attributes.Any(attr => attr.Name == nameReference.Name))
                     return false;
             }
+
+            // a binding with child::* mapping won't match self-closing elements
+            if (binding.HasChildReference && element.IsEmptyElement)
+                return false;
+
             return true;
         }
 
 
-        private static IEnumerable<Snippet> BuildSnippetsForNode(Binding binding, BindingNode node, ElementNode element)
+        private IEnumerable<Snippet> BuildSnippetsForNode(Binding binding, BindingNode node, ElementNode element)
         {
             if (node is BindingLiteral)
                 return BuildSnippets(node as BindingLiteral);
@@ -127,6 +151,8 @@ namespace Spark.Compiler.NodeVisitors
                 return BuildSnippets(node as BindingNameReference, element);
             if (node is BindingPrefixReference)
                 return BuildSnippets(binding, node as BindingPrefixReference, element);
+            if (node is BindingChildReference)
+                return BuildSnippets(node as BindingChildReference);
 
             throw new CompilerException("Binding node type " + node.GetType() + " not understood");
         }
@@ -134,6 +160,11 @@ namespace Spark.Compiler.NodeVisitors
         private static IEnumerable<Snippet> BuildSnippets(BindingLiteral literal)
         {
             return new[] { new Snippet { Value = literal.Text } };
+        }
+
+        private IEnumerable<Snippet> BuildSnippets(BindingChildReference literal)
+        {
+            return new[] { new Snippet { Value = "__bindingWriter" + FrameData.NestingLevel + ".ToString()" } };
         }
 
         private static IEnumerable<Snippet> BuildSnippets(BindingNameReference reference, ElementNode element)
