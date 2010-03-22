@@ -2,10 +2,13 @@
 using System.Linq;
 using Spark.Parser;
 
-namespace Spark.Bindings {
+namespace Spark.Bindings
+{
     // ReSharper disable InconsistentNaming
-    public class BindingGrammar : CharGrammar {
-        public BindingGrammar() {
+    public class BindingGrammar : CharGrammar
+    {
+        public BindingGrammar()
+        {
             //[4]   	NameChar	   ::=   	 Letter | Digit | '.' | '-' | '_' | ':' | CombiningChar | Extender  
             var NameChar = Ch(char.IsLetterOrDigit).Or(Ch('.', '-', '_', ':'))/*.Or(CombiningChar).Or(Extener)*/;
 
@@ -17,12 +20,22 @@ namespace Spark.Bindings {
             var stringPrefixReference =
                 Ch("\"@").And(Opt(Name)).And(Ch("*\""))
                 .Or(Ch("'@").And(Opt(Name)).And(Ch("*'")))
-                .Build(hit => (BindingNode)new BindingPrefixReference(hit.Left.Down) { AssumeStringValue = true });
+                .Build(hit => new BindingPrefixReference(hit.Left.Down) { AssumeStringValue = true });
 
             var rawPrefixReference = Ch('@').And(Opt(Name)).And(Ch('*'))
-                .Build(hit => (BindingNode)new BindingPrefixReference(hit.Left.Down));
+                .Build(hit => new BindingPrefixReference(hit.Left.Down));
 
-            PrefixReference = stringPrefixReference.Or(rawPrefixReference);
+            var dictionaryPrefixReference = Ch("{{").And(stringPrefixReference.Or(rawPrefixReference)).And(Ch("}}"))
+                .Build(hit =>
+                       {
+                           hit.Left.Down.AssumeDictionarySyntax = true;
+                           return hit.Left.Down;
+                       });
+
+
+            PrefixReference = stringPrefixReference.Or(rawPrefixReference).Or(dictionaryPrefixReference)
+                .Build(hit => (BindingNode)hit);
+
 
             var stringNameReference = Ch("\"@").And(Name).And(Ch('\"'))
                 .Or(Ch("'@").And(Name).And(Ch('\'')))

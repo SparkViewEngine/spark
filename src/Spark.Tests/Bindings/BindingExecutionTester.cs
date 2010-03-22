@@ -210,5 +210,19 @@ namespace Spark.Tests.Bindings
 
             Assert.That(contents, Is.EqualTo(@"<p>1world2345no text6</p>"));
         }
+        
+        [Test]
+        public void CurleyBracesExpandAsDictionaryInitialization()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>new System.Collections.Generic.Dictionary&lt;string,object&gt;{{'@*'}}.Count</element>
+</bindings>");
+            
+            _viewFolder.Add("home\\index.spark", @"<p><hello a='foo' b='bar'/><hello/><hello></hello><hello x1='' x2='' x3='' x4='' x5=''/></p>");
+
+            var contents = Render("index");
+
+            Assert.That(contents, Is.EqualTo(@"<p>2005</p>"));
+        }
     }
 }

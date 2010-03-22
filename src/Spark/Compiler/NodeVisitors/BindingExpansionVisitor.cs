@@ -197,15 +197,26 @@ namespace Spark.Compiler.NodeVisitors
 
             var results = new List<Snippet>();
 
+            if (prefix.AssumeDictionarySyntax)
+                results.Add(new Snippet { Value = "{" });
+
             var first = true;
             foreach (var attr in attrs)
             {
                 if (first)
+                {
                     first = false;
+                }
                 else
+                {
                     results.Add(new Snippet { Value = "," });
+                }
 
-                results.Add(new Snippet { Value = attr.PropertyName + "=" });
+                if (prefix.AssumeDictionarySyntax)
+                    results.Add(new Snippet { Value = "{\"" + attr.PropertyName + "\"," });
+                else
+                    results.Add(new Snippet { Value = attr.PropertyName + "=" });
+
                 if (prefix.AssumeStringValue)
                 {
                     var builder = new ExpressionBuilder();
@@ -216,7 +227,13 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     results.AddRange(attr.Attribute.AsCode());
                 }
+
+                if (prefix.AssumeDictionarySyntax)
+                    results.Add(new Snippet { Value = "}" });
             }
+
+            if (prefix.AssumeDictionarySyntax)
+                results.Add(new Snippet { Value = "}" });
 
             return results;
         }

@@ -38,6 +38,7 @@ namespace Spark.Bindings
 
         public string Prefix { get; set; }
         public bool AssumeStringValue { get; set; }
+        public bool AssumeDictionarySyntax { get; set; }
     }
 
     public class BindingChildReference : BindingNode
