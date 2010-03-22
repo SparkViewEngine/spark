@@ -1,0 +1,42 @@
+﻿
+<content name="title">Log On</content>
+<viewdata model="$safeprojectname$.Models.LogOnModel" />
+
+<h2>Log On</h2>
+<p>
+    Please enter your username and password. <a action="Register">Register</a> if you don't have an account.
+</p>
+
+<Form style="background:#ffd;" route-foo="bar">
+    <ValidationSummary Message="Login was unsuccessful. Please correct the errors and try again." ExcludePropertyErrors="true" />
+    <div>
+        <fieldset>
+            <legend>Account Information</legend>
+            
+            <div class="editor-label">
+                <Label For="UserName" />
+            </div>
+            <div class="editor-field">
+                <TextBox For="UserName" />
+                <ValidationMessage For="UserName" />                
+            </div>
+            
+            <div class="editor-label">
+                <Label For="Password" />
+            </div>
+            <div class="editor-field">
+                <Password For="Password" />
+                <ValidationMessage For="Password" />
+            </div>
+            
+            <div class="editor-label">
+                <CheckBox For="RememberMe" />
+                <Label For="RememberMe" />
+            </div>
+            
+            <p>
+                <input type="submit" value="Log On" />
+            </p>
+        </fieldset>
+    </div>
+</Form>

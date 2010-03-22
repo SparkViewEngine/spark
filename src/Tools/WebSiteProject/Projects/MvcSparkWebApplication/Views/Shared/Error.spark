@@ -1,8 +1,0 @@
-﻿
-<content name="title">Error</content>
-
-<content name="main">
-    <h2>
-        Sorry, an error occurred while processing your request.
-    </h2>
-</content>
