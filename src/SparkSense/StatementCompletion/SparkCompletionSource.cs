@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
+using SparkSense.StatementCompletion.CompletionSets;
 
 namespace SparkSense.StatementCompletion
 {
@@ -16,36 +17,46 @@ namespace SparkSense.StatementCompletion
         private readonly ITextBuffer _textBuffer;
         private bool _isDisposed;
         private readonly IEnumerable<Completion> _completionList;
-        private ImageSource _sparkIcon;
+        private ImageSource _sparkTagIcon;
 
         public SparkCompletionSource(SparkCompletionSourceProvider sourceProvider, ITextBuffer textBuffer)
         {
             _sourceProvider = sourceProvider;
             _textBuffer = textBuffer;
-
-            _completionList = new List<Completion>
-                                  {
-                                      new Completion("<content", "<content", "Spark 'content' tag for spooling output to various text writers", SparkIcon, null),
-                                      new Completion("<default", "<default", "Spark 'default' tag for declaring local variables if a symbol of a given name is not known to be in scope", SparkIcon, null),
-                                  };
-        }
-
-        protected ImageSource SparkIcon
-        {
-            get { return _sparkIcon ?? (_sparkIcon = new BitmapImage(new Uri(("Resources/SparkTag.png"), UriKind.Relative))); }
         }
 
         #region ICompletionSource Members
 
+        protected SparkCompletionTypes CompletionType { get; private set; }
+
+        protected ICompletionSession CurrentSession { get; private set; }
+
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
-            SnapshotPoint currentPosition = session.TextView.Caret.Position.BufferPosition - 1;
-            ITextStructureNavigator navigator = _sourceProvider.NavigatorService.GetTextStructureNavigator(_textBuffer);
-            TextExtent extent = navigator.GetExtentOfWord(currentPosition);
-            ITrackingSpan applicableTo = currentPosition.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
+            SparkCompletionTypes completionType;
+            if (!session.Properties.TryGetProperty(typeof(SparkCompletionTypes), out completionType))
+                return;
+            CompletionType = completionType;
+            CurrentSession = session;
 
-            IEnumerable<Completion> completionBuilders = null;
-            completionSets.Add(new CompletionSet("SparkTags", "Spark Tags", applicableTo, _completionList, completionBuilders));
+            //SnapshotPoint currentPosition = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
+            SnapshotPoint currentPosition = session.TextView.Caret.Position.BufferPosition - 1;
+            CompletionSet sparkCompletions = GetCompletionSetFor(currentPosition);
+            completionSets.Add(sparkCompletions);
+        }
+
+        private CompletionSet GetCompletionSetFor(SnapshotPoint currentPosition)
+        {
+            switch (CompletionType)
+            {
+                case SparkCompletionTypes.Tag:
+                    return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_sourceProvider, _textBuffer, currentPosition);
+                case SparkCompletionTypes.Variable:
+                    return SparkCompletionSetFactory.Create<SparkVariableCompletionSet>(_sourceProvider, _textBuffer, currentPosition);
+                case SparkCompletionTypes.None:
+                default:
+                    return null;
+            }
         }
 
         public void Dispose()

@@ -1,14 +1,16 @@
 ﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
 
 namespace SparkSense.StatementCompletion
 {
     [Export(typeof (ICompletionSourceProvider))]
-    [ContentType("spark")]
+    [ContentType("HTML")]
     [Name("Spark Tag Completion")]
+    [Order(Before = Priority.Default)]
     internal class SparkCompletionSourceProvider : ICompletionSourceProvider
     {
         [Import]

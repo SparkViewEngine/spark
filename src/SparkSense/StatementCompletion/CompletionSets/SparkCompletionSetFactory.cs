@@ -1,0 +1,30 @@
+﻿using System;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Operations;
+
+namespace SparkSense.StatementCompletion.CompletionSets
+{
+    internal abstract class SparkCompletionSetFactory : CompletionSet
+    {
+        internal static ImageSource SparkTagIcon = new BitmapImage(new Uri(("Resources/SparkTag.png"), UriKind.Relative));
+
+        internal SparkCompletionSetFactory() : base("Spark Elements", "Spark Elements", null, null, null)
+        {
+        }
+
+        public static CompletionSet Create<T>(SparkCompletionSourceProvider sourceProvider, ITextBuffer textBuffer, SnapshotPoint currentPosition) where T : SparkCompletionSetFactory, new()
+        {
+            var completionSet = new T();
+
+            ITextStructureNavigator navigator = sourceProvider.NavigatorService.GetTextStructureNavigator(textBuffer);
+            TextExtent extent = navigator.GetExtentOfWord(currentPosition);
+            //SnapshotSpan span = new SnapshotSpan(currentPosition, 0);
+            completionSet.ApplicableTo = currentPosition.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
+
+            return completionSet;
+        }
+    }
+}

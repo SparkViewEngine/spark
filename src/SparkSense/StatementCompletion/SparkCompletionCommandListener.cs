@@ -8,13 +8,15 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace SparkSense.StatementCompletion
 {
-    [Export(typeof (IVsTextViewCreationListener))]
+    [Export(typeof(IVsTextViewCreationListener))]
     [Name("Spark Tag Completion Listener")]
-    [ContentType("spark")]
+    [ContentType("text")]
+    [ContentType("HTML")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
     internal class SparkCompletionCommandListener : IVsTextViewCreationListener
     {
-        [Import] internal IVsEditorAdaptersFactoryService AdaptersFactoryService;
+        [Import]
+        internal IVsEditorAdaptersFactoryService AdaptersFactoryService;
 
         [Import]
         internal ICompletionBroker CompletionBroker { get; set; }
