@@ -83,8 +83,6 @@
     <Compile Include="SignatureRecognition\SparkTagSignature.cs" />
     <Compile Include="StatementCompletion\SparkCompletionType.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkTagCompletionSet.cs" />
-    <Compile Include="StatementCompletion\SparkIntellisenseController.cs" />
-    <Compile Include="StatementCompletion\SparkIntellisenseControllerProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">

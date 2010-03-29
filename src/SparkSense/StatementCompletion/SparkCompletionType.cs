@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Input;
 using Microsoft.VisualStudio.Text;
 
 namespace SparkSense.StatementCompletion
@@ -13,15 +12,15 @@ namespace SparkSense.StatementCompletion
 
     public class SparkCompletionType
     {
-        public static SparkCompletionTypes GetCompletionType(Key key, ITextBuffer textBuffer, int position)
+        public static SparkCompletionTypes GetCompletionType(char key, ITextBuffer textBuffer, int position)
         {
-            switch(key.ToString())
+            switch (key)
             {
-                case "<":
+                case '<':
                     return SparkCompletionTypes.Tag;
                 default:
-                    //if (Char.IsLetterOrDigit(key.ToString(),0))
-                    //    return SparkCompletionTypes.Variable;
+                    if (Char.IsLetterOrDigit(key.ToString(), 0))
+                        return SparkCompletionTypes.Variable;
                     return SparkCompletionTypes.None;
             }
         }

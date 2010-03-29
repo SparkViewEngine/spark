@@ -15,14 +15,13 @@ namespace SparkSense.StatementCompletion.CompletionSets
         {
         }
 
-        public static CompletionSet Create<T>(SparkCompletionSourceProvider sourceProvider, ITextBuffer textBuffer, SnapshotPoint currentPosition) where T : SparkCompletionSetFactory, new()
+        public static CompletionSet Create<T>(SparkCompletionSourceProvider sourceProvider, ITextBuffer textBuffer, SnapshotPoint completionStartPoint) where T : SparkCompletionSetFactory, new()
         {
             var completionSet = new T();
 
             ITextStructureNavigator navigator = sourceProvider.NavigatorService.GetTextStructureNavigator(textBuffer);
-            TextExtent extent = navigator.GetExtentOfWord(currentPosition);
-            //SnapshotSpan span = new SnapshotSpan(currentPosition, 0);
-            completionSet.ApplicableTo = currentPosition.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
+            TextExtent extent = navigator.GetExtentOfWord(completionStartPoint);
+            completionSet.ApplicableTo = completionStartPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
 
             return completionSet;
         }
