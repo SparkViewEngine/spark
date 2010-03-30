@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwindDemo", "NorthwindDemo\NorthwindDemo.csproj", "{07F4E162-51E9-478D-979A-D3B0B635AFBC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwindDemo", "NorthwindDemo.csproj", "{07F4E162-51E9-478D-979A-D3B0B635AFBC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CE1561D7-8859-43AA-BE39-35ADEBF94FB1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{AE77D94F-C509-41BC-9723-079115698C80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwindDemo.UnitTests", "..\NorthwindDemo.UnitTests\NorthwindDemo.UnitTests.csproj", "{AE77D94F-C509-41BC-9723-079115698C80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
