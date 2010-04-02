@@ -478,6 +478,14 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                 .RemoveIndent().WriteLine("}")
                 .RemoveIndent().WriteLine("}");
         }
+        protected override void Visit(MarkdownChunk chunk)
+        {
+            CodeIndent(chunk).WriteLine("using(MarkdownOutputScope())");
+            CodeDefault();
+            AppendOpenBrace();
+            Accept(chunk.Body);
+            AppendCloseBrace();
+        }
 
         
     }

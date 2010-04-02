@@ -87,6 +87,11 @@ namespace Spark
             return new OutputScopeImpl(this, new SpoolWriter());
         }
 
+        public IDisposable MarkdownOutputScope()
+        {
+            return new MarkdownOutputScopeImpl(this, new SpoolWriter());
+        }
+
 
         public bool Once(object flag)
         {
@@ -114,6 +119,29 @@ namespace Spark
             public void Dispose()
             {
                 view.Output = previous;
+            }
+        }
+
+        public class MarkdownOutputScopeImpl : IDisposable
+        {
+            private readonly SparkViewBase view;
+            private readonly TextWriter previous;
+
+            public MarkdownOutputScopeImpl(SparkViewBase view, TextWriter writer)
+            {
+                this.view = view;
+                previous = view.Output;
+                view.Output = writer;
+            }
+
+            public void Dispose()
+            {
+                var source = view.Output.ToString();
+                view.Output = previous;
+
+                var markdown = new Markdown();
+
+                view.Output.Write(markdown.Transform(source));
             }
         }
 

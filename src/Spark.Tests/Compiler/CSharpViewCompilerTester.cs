@@ -325,5 +325,26 @@ namespace Spark.Tests.Compiler
             Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2<Comment>)));
             Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView3<Comment, string>)));
         }
+
+        [Test]
+        public void Markdown()
+        {
+          var compiler = new CSharpViewCompiler { BaseClass = "Spark.SparkViewBase" };
+
+          var innerChunks = new Chunk[] { new SendLiteralChunk { Text = "*test*" } };
+
+          DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new MarkdownChunk {Body = innerChunks}
+                                    });
+
+          Assert.That(compiler.SourceCode, Text.Contains("using(MarkdownOutputScope())"));
+          Assert.That(compiler.SourceCode, Text.Contains("Output.Write(\"*test*\");"));
+
+          var instance = compiler.CreateInstance();
+          var contents = instance.RenderView().Trim();
+
+          Assert.That(contents, Is.EqualTo("<p><em>test</em></p>"));
+        }
     }
 }

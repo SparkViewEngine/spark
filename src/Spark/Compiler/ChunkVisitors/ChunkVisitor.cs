@@ -131,5 +131,10 @@ namespace Spark.Compiler.ChunkVisitors
         {
             Accept(chunk.Body);
         }
+
+        protected override void Visit(MarkdownChunk chunk)
+        {
+            Accept(chunk.Body);
+        }
     }
 }

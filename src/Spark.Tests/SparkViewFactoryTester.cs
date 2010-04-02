@@ -1035,5 +1035,27 @@ namespace Spark.Tests
                 "[103][104]" +
                 "[005]"));
         }
+
+        [Test]
+        public void Markdown()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("markdown", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+
+            ContainsInOrder(content,
+                            "<pre><code>", "code block on the first line", "</code></pre>",
+                            "<p>", "Regular text.", "</p>",
+                            "<pre><code>", "code block indented by spaces", "</code></pre>",
+                            "<p>", "Regular text.", "</p>",
+                            "<pre><code>", "the lines in this block",
+                            "all contain trailing spaces", "</code></pre>",
+                            "<p>", "Regular Text.", "</p>",
+                            "<pre><code>", "code block on the last line", "</code></pre>"
+              );
+        }
     }
 }

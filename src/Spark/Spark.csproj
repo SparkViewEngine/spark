@@ -208,6 +208,7 @@
     <Compile Include="Spool\SpoolWriter.cs" />
     <Compile Include="Spool\TextWriterExtensions.cs" />
     <Compile Include="Utilities\CacheUtilities.cs" />
+    <Compile Include="Utilities\Markdown.cs" />
     <Compile Include="ValueHolder.cs" />
   </ItemGroup>
   <ItemGroup>
