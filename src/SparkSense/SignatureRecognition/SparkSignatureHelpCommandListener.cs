@@ -13,6 +13,7 @@ namespace SparkSense.SignatureRecognition
     [Name("Spark Tag Signature Help Listener")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
     [ContentType("spark")]
+    [ContentType("HTML")]
     internal class SparkSignatureHelpCommandListener : IVsTextViewCreationListener
     {
         [Import] internal IVsEditorAdaptersFactoryService AdapterService;
@@ -29,8 +30,8 @@ namespace SparkSense.SignatureRecognition
             if (textView == null) return;
             ITextStructureNavigator navigator = NavigatorService.GetTextStructureNavigator(textView.TextBuffer);
 
-            //Func<SparkSignatureHelpCommand> createCommand = () => new SparkSignatureHelpCommand(textViewAdapter, textView, navigator, Broker);
-            //textView.Properties.GetOrCreateSingletonProperty(createCommand);
+            Func<SparkSignatureHelpCommand> createCommand = () => new SparkSignatureHelpCommand(textViewAdapter, textView, navigator, Broker);
+            textView.Properties.GetOrCreateSingletonProperty(createCommand);
         }
 
         #endregion

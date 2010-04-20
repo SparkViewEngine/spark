@@ -8,8 +8,8 @@ namespace SparkSense.SignatureRecognition
 {
     [Export(typeof (ISignatureHelpSourceProvider))]
     [Name("Spark Tag Signature Help Source")]
-    [Order(Before = Priority.Default)]
     [ContentType("spark")]
+    [ContentType("HTML")]
     internal class SparkSignatureHelpSourceProvider : ISignatureHelpSourceProvider
     {
         #region ISignatureHelpSourceProvider Members
@@ -17,7 +17,7 @@ namespace SparkSense.SignatureRecognition
         public ISignatureHelpSource TryCreateSignatureHelpSource(ITextBuffer textBuffer)
         {
             return null;
-            //return new SparkSignatureHelpSource(textBuffer);
+            return new SparkSignatureHelpSource(textBuffer);
         }
 
         #endregion

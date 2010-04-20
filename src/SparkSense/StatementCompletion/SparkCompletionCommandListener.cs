@@ -10,7 +10,7 @@ namespace SparkSense.StatementCompletion
 {
     [Export(typeof(IVsTextViewCreationListener))]
     [Name("Spark Tag Completion Listener")]
-    [ContentType("text")]
+    [ContentType("spark")]
     [ContentType("HTML")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
     internal class SparkCompletionCommandListener : IVsTextViewCreationListener
