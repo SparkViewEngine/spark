@@ -3,7 +3,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Operations;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
@@ -18,10 +17,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
         public static CompletionSet Create<T>(SparkCompletionSourceProvider sourceProvider, ITextBuffer textBuffer, SnapshotPoint completionStartPoint) where T : SparkCompletionSetFactory, new()
         {
             var completionSet = new T();
-
-            ITextStructureNavigator navigator = sourceProvider.NavigatorService.GetTextStructureNavigator(textBuffer);
-            TextExtent extent = navigator.GetExtentOfWord(completionStartPoint);
-            completionSet.ApplicableTo = completionStartPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
+            completionSet.ApplicableTo = completionStartPoint.Snapshot.CreateTrackingSpan(new Span(completionStartPoint, 0), SpanTrackingMode.EdgeInclusive);
 
             return completionSet;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using SparkSense.StatementCompletion.CompletionSets;
+using System.Collections;
 
 namespace SparkSense.StatementCompletion
 {
@@ -11,6 +12,7 @@ namespace SparkSense.StatementCompletion
         private readonly SparkCompletionSourceProvider _sourceProvider;
         private bool _isDisposed;
         private ITextBuffer _textBuffer;
+        private List<CompletionSet> _completionSetsToInclude = new List<CompletionSet>();
 
         public SparkCompletionSource(SparkCompletionSourceProvider sourceProvider, ITextBuffer textBuffer)
         {
@@ -27,15 +29,35 @@ namespace SparkSense.StatementCompletion
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
             SparkCompletionTypes completionType;
-            if (!session.Properties.TryGetProperty(typeof (SparkCompletionTypes), out completionType))
+            if (!session.Properties.TryGetProperty(typeof(SparkCompletionTypes), out completionType))
+            {
+                _completionSetsToInclude.AddRange(completionSets);
+                completionSets.Clear();
                 return;
+            }
             CompletionType = completionType;
             CurrentSession = session;
 
-            _textBuffer = session.TextView.TextBuffer; //TODO: Rob G - Figure out why the session text buffer is different from the ctor text buffer
             SnapshotPoint completionStartPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
             CompletionSet sparkCompletions = GetCompletionSetFor(completionStartPoint);
+            CombineCompletionSets(sparkCompletions);
             completionSets.Add(sparkCompletions);
+        }
+
+        private void CombineCompletionSets(CompletionSet sparkCompletions)
+        {
+            var combinedCompletions = new List<Completion>();
+
+            _completionSetsToInclude.ForEach(cs => combinedCompletions.AddRange(cs.Completions));
+            combinedCompletions.AddRange(sparkCompletions.Completions);
+
+            combinedCompletions.Sort((cm1, cm2) => cm1.DisplayText.CompareTo(cm2.DisplayText));
+
+            sparkCompletions.Completions.Clear();
+
+            combinedCompletions.ForEach(completion => sparkCompletions.Completions.Add(completion));
+
+            _completionSetsToInclude.Clear();
         }
 
         public void Dispose()
