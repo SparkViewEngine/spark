@@ -3,16 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkSense", "SparkSense.csproj", "{6E9BC746-755B-460E-8556-A73985E32BAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark", "..\Spark\Spark.csproj", "{31929D34-1A68-4A6B-9D8A-B93037163A5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Retail|Any CPU = Retail|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6E9BC746-755B-460E-8556-A73985E32BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E9BC746-755B-460E-8556-A73985E32BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E9BC746-755B-460E-8556-A73985E32BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E9BC746-755B-460E-8556-A73985E32BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E9BC746-755B-460E-8556-A73985E32BAE}.Retail|Any CPU.ActiveCfg = Release|Any CPU
+		{6E9BC746-755B-460E-8556-A73985E32BAE}.Retail|Any CPU.Build.0 = Release|Any CPU
+		{31929D34-1A68-4A6B-9D8A-B93037163A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31929D34-1A68-4A6B-9D8A-B93037163A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31929D34-1A68-4A6B-9D8A-B93037163A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31929D34-1A68-4A6B-9D8A-B93037163A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31929D34-1A68-4A6B-9D8A-B93037163A5A}.Retail|Any CPU.ActiveCfg = Retail|Any CPU
+		{31929D34-1A68-4A6B-9D8A-B93037163A5A}.Retail|Any CPU.Build.0 = Retail|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
