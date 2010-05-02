@@ -379,16 +379,15 @@ foo
 </for>");
 
             var contents = Render("index");
-            Assert.That(contents, Is.EqualTo(@"
-<p>1:1</p>
-<p>3:2</p>
-<p>5:3</p>
-<p>2:4</p>
-<p>3:2</p>
-<p>3:2</p>
-<p>5:3</p>
-<p>7:5</p>
-".Replace("\r\n", "")));
+            Assert.That(contents, Contains.InOrder(
+                "<p>1:1</p>",
+                "<p>3:2</p>",
+                "<p>5:3</p>",
+                "<p>2:4</p>",
+                "<p>3:2</p>",
+                "<p>3:2</p>",
+                "<p>5:3</p>",
+                "<p>7:5</p>"));
         }
 
         [Test]
@@ -411,47 +410,47 @@ foo
             };
 
             var contents = Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
-<p>1:1</p>
-<p>2:2</p>
-<p>3:3</p>
-<p>1:1</p>
-<p>2:2</p>
-<p>3:3</p><p>last:4</p>
-"));
+            Assert.That(contents, Contains.InOrder(
+                "<p>1:1</p>",
+                "<p>2:2</p>",
+                "<p>3:3</p>",
+                "<p>1:1</p>",
+                "<p>2:2</p>",
+                "<p>3:3</p>",
+                "<p>last:4</p>"));
 
             _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(25);
             contents = Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
-<p>1:1</p>
-<p>2:2</p>
-<p>3:3</p>
-<p>1:1</p>
-<p>2:2</p>
-<p>3:3</p><p>last:4</p>
-"));
+            Assert.That(contents, Contains.InOrder(
+                "<p>1:1</p>",
+                "<p>2:2</p>",
+                "<p>3:3</p>",
+                "<p>1:1</p>",
+                "<p>2:2</p>",
+                "<p>3:3</p>",
+                "<p>last:4</p>"));
 
             _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(10);
             contents = Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
-<p>1:5</p>
-<p>2:6</p>
-<p>3:7</p>
-<p>1:5</p>
-<p>2:6</p>
-<p>3:7</p><p>last:4</p>
-"));
+            Assert.That(contents, Contains.InOrder(
+                "<p>1:5</p>",
+                "<p>2:6</p>",
+                "<p>3:7</p>",
+                "<p>1:5</p>",
+                "<p>2:6</p>",
+                "<p>3:7</p>",
+                "<p>last:4</p>"));
 
             _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(10);
             contents = Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
-<p>1:5</p>
-<p>2:6</p>
-<p>3:7</p>
-<p>1:5</p>
-<p>2:6</p>
-<p>3:7</p><p>last:8</p>
-"));
+            Assert.That(contents, Contains.InOrder(
+                "<p>1:5</p>",
+                "<p>2:6</p>",
+                "<p>3:7</p>",
+                "<p>1:5</p>",
+                "<p>2:6</p>",
+                "<p>3:7</p>",
+                "<p>last:8</p>"));
         }
 
         [Test]
@@ -471,13 +470,13 @@ foo
                        };
 
             var contents = Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
-<p>1:1</p>
-<p>2:2</p>
-<p>3:3</p>
-<p>1:4</p>
-<p>2:5</p>
-<p>3:6</p>".Replace("\r\n","")));
+            Assert.That(contents, Contains.InOrder(
+                "<p>1:1</p>",
+                "<p>2:2</p>",
+                "<p>3:3</p>",
+                "<p>1:4</p>",
+                "<p>2:5</p>",
+                "<p>3:6</p>"));
 
             Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f0"), Is.EqualTo(1));
             Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f1"), Is.EqualTo(1));

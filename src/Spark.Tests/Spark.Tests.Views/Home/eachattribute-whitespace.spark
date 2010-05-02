@@ -1,0 +1,14 @@
+<div>
+  <use namespace="Spark.Tests.Models" />
+
+  <var bob='new UserInfo{Name="Bob", UserType=UserType.Registered}' />
+  <var special='new UserInfo{Name="SpecialName", UserType=UserType.Registered}' />
+  <var anon='new UserInfo{Name="anon", UserType=UserType.Anonymous}' />
+  <var james='new UserInfo{Name="James", UserType=UserType.Administrator}' />
+  
+  <var users='new[] {bob,james,special,anon}'/>
+
+  <ul>
+    <li each='var user in users'>${user.Name}</li>
+  </ul>
+</div>

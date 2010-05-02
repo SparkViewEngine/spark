@@ -128,11 +128,12 @@ namespace Spark.Parser.Markup
             //[40]   	STag	   ::=   	'<' Name (S  Attribute)* S? '>'
             //[44]   	EmptyElemTag	   ::=   	'<' Name (S  Attribute)* S? '/>'
             Element =
-                TkTagDelim(Lt).And(TkEleNam(Name)).And(Rep(Whitespace.And(Attribute).Down())).And(Opt(Whitespace)).And(Opt(TkTagDelim(Ch('/')))).And(TkTagDelim(Gt))
+                StringOf(Ch(char.IsWhiteSpace)).And(TkTagDelim(Lt)).And(TkEleNam(Name)).And(Rep(Whitespace.And(Attribute).Down())).And(Opt(Whitespace)).And(Opt(TkTagDelim(Ch('/')))).And(TkTagDelim(Gt))
                 .Build(hit => new ElementNode(
                     hit.Left.Left.Left.Left.Down,
                     hit.Left.Left.Left.Down,
-                    hit.Left.Down != default(char)));
+                    hit.Left.Down != default(char),
+                    hit.Left.Left.Left.Left.Left.Left));
 
             //[42]   	ETag	   ::=   	'</' Name  S? '>'
             EndElement =
@@ -214,11 +215,11 @@ namespace Spark.Parser.Markup
                 .Build(hit => new ProcessingInstructionNode { Name = hit.Left.Left.Left.Down, Body = new string(hit.Left.Down.ToArray()) });
 
 
-            AnyNode = AsNode(Text).Paint()
+            AnyNode = AsNode(Element).Paint()
+                .Or(AsNode(EndElement).Paint())
+                .Or(AsNode(Text).Paint())
                 .Or(EntityRefOrAmpersand.Paint())
                 .Or(AsNode(Statement))
-                .Or(AsNode(Element).Paint())
-                .Or(AsNode(EndElement).Paint())
                 .Or(AsNode(Code).Paint())
                 .Or(AsNode(DoctypeDecl).Paint())
                 .Or(AsNode(Comment).Paint())

@@ -18,23 +18,49 @@ namespace Spark.Parser
 {
     public abstract class Grammar
     {
+        /// <summary>
+        /// Indicates a conjunction (logical and) between two matches.
+        /// </summary>
+        /// <typeparam name="TValue1">The type of the first match.</typeparam>
+        /// <typeparam name="TValue2">The type of the second match.</typeparam>
+        /// <param name="p1">The first requirement in the conjunction.</param>
+        /// <param name="p2">The second requirement in the conjunction.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<Chain<TValue1, TValue2>> And<TValue1, TValue2>(
             ParseAction<TValue1> p1,
             ParseAction<TValue2> p2)
         {
             return delegate(Position input)
-                       {
-                           var r1 = p1(input);
-                           if (r1 == null) return null;
-                           var r2 = p2(r1.Rest);
-                           if (r2 == null) return null;
+            {
+                var r1 = p1(input);
+                if (r1 == null)
+                {
+                    return null;
+                }
 
-                           return new ParseResult<Chain<TValue1, TValue2>>(r2.Rest,
-                                                                           new Chain<TValue1, TValue2>(r1.Value,
-                                                                                                       r2.Value));
-                       };
+                var r2 = p2(r1.Rest);
+                if (r2 == null)
+                {
+                    return null;
+                }
+
+                var chain = new Chain<TValue1, TValue2>(
+                    r1.Value,
+                    r2.Value);
+
+                return new ParseResult<Chain<TValue1, TValue2>>(
+                    r2.Rest,
+                    chain);
+            };
         }
 
+        /// <summary>
+        /// Indicates a disjunction (logical or) between two matches.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the matches.</typeparam>
+        /// <param name="p1">The first option in the disjunction.</param>
+        /// <param name="p2">The second option in the disjunction.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<TValue> Or<TValue>(
             ParseAction<TValue> p1,
             ParseAction<TValue> p2)
@@ -42,18 +68,34 @@ namespace Spark.Parser
             return input => p1(input) ?? p2(input);
         }
 
+        /// <summary>
+        /// Uses the first match, unless the second match is possible at the same location.
+        /// </summary>
+        /// <typeparam name="TValue1">The type of the first match.</typeparam>
+        /// <typeparam name="TValue2">The type of the second match.</typeparam>
+        /// <param name="p1">The first match.</param>
+        /// <param name="p2">The second match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<TValue1> Unless<TValue1, TValue2>(
             ParseAction<TValue1> p1,
             ParseAction<TValue2> p2)
         {
             return delegate(Position input)
-                       {
-                           var r1 = p1(input);
-                           if (r1 == null) return null;
-                           var r2 = p2(input);
-                           if (r2 != null) return null;
-                           return r1;
-                       };
+            {
+                var r1 = p1(input);
+                if (r1 == null)
+                {
+                    return null;
+                }
+
+                var r2 = p2(input);
+                if (r2 != null)
+                {
+                    return null;
+                }
+
+                return r1;
+            };
         }
 
         public static ParseAction<TValue> Opt<TValue>(ParseAction<TValue> parse)
@@ -66,7 +108,11 @@ namespace Spark.Parser
             return delegate(Position input)
                        {
                            var result = parse(input);
-                           if (result == null || cond(result.Rest) == null) return null;
+                           if (result == null || cond(result.Rest) == null)
+                           {
+                               return null;
+                           }
+
                            return result;
                        };
         }
@@ -76,7 +122,11 @@ namespace Spark.Parser
             return delegate(Position input)
                        {
                            var result = parse(input);
-                           if (result == null || cond(result.Rest) != null) return null;
+                           if (result == null || cond(result.Rest) != null)
+                           {
+                               return null;
+                           }
+
                            return result;
                        };
         }

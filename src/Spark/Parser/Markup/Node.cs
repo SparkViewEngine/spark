@@ -200,17 +200,24 @@ namespace Spark.Parser.Markup
     public class ElementNode : Node
     {
         public ElementNode(string name, IList<AttributeNode> attributeNodes, bool isEmptyElement)
+            : this(name, attributeNodes, isEmptyElement, string.Empty)
+        {
+        }
+
+        public ElementNode(string name, IList<AttributeNode> attributeNodes, bool isEmptyElement, string preceedingWhitespace)
         {
             Name = name;
             Namespace = "";
             IsEmptyElement = isEmptyElement;
             Attributes = attributeNodes;
+            PreceedingWhitespace = preceedingWhitespace;
         }
 
-        public string Name;
+        public string Name { get; private set; }
         public string Namespace { get; set; }
         public readonly IList<AttributeNode> Attributes;
-        public bool IsEmptyElement;
+        public bool IsEmptyElement { get; private set; }
+        public string PreceedingWhitespace { get; private set; }
     }
 
     public class EndElementNode : Node
