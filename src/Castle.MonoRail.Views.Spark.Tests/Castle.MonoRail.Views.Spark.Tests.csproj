@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Caching\HybridCacheServiceProviderTests.cs" />
+    <Compile Include="Constraints.cs" />
     <Compile Include="HelperExtensionMethodsTests.cs" />
     <None Include="MonoRail.Tests.Views\Stub\Helper.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

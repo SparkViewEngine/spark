@@ -213,22 +213,29 @@ namespace Spark.Parser.Markup
             PreceedingWhitespace = preceedingWhitespace;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public string Namespace { get; set; }
         public readonly IList<AttributeNode> Attributes;
-        public bool IsEmptyElement { get; private set; }
-        public string PreceedingWhitespace { get; private set; }
+        public bool IsEmptyElement { get; set; }
+        public string PreceedingWhitespace { get; set; }
     }
 
     public class EndElementNode : Node
     {
         public EndElementNode(string name)
+            : this(name, string.Empty)
+        {
+        }
+
+        public EndElementNode(string name, string preceedingWhitespace)
         {
             Name = name;
+            PreceedingWhitespace = preceedingWhitespace;
         }
 
         public string Name { get; set; }
         public string Namespace { get; set; }
+        public string PreceedingWhitespace { get; set; }
     }
 
     public class SpecialNode : Node

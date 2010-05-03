@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Spark.Parser.Code;
+using System;
 
 namespace Spark.Parser.Markup
 {
@@ -97,10 +98,6 @@ namespace Spark.Parser.Markup
             var Condition = TkCode(Ch("?{")).And(Expression).And(TkCode(Ch('}')))
                 .Build(hit => new ConditionNode(hit.Left.Down));
 
-            Text =
-                Rep1(ChNot('&', '<').Unless(Statement).Unless(Code))
-                .Build(hit => new TextNode(hit));
-
             var LessThanTextNode = Ch('<')
                 .Build(hit => (Node)new TextNode("<"));
 
@@ -128,17 +125,21 @@ namespace Spark.Parser.Markup
             //[40]   	STag	   ::=   	'<' Name (S  Attribute)* S? '>'
             //[44]   	EmptyElemTag	   ::=   	'<' Name (S  Attribute)* S? '/>'
             Element =
-                StringOf(Ch(char.IsWhiteSpace)).And(TkTagDelim(Lt)).And(TkEleNam(Name)).And(Rep(Whitespace.And(Attribute).Down())).And(Opt(Whitespace)).And(Opt(TkTagDelim(Ch('/')))).And(TkTagDelim(Gt))
+                Opt(Ch(Environment.NewLine).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt)).And(TkEleNam(Name)).And(Rep(Whitespace.And(Attribute).Down())).And(Opt(Whitespace)).And(Opt(TkTagDelim(Ch('/')))).And(TkTagDelim(Gt))
                 .Build(hit => new ElementNode(
                     hit.Left.Left.Left.Left.Down,
                     hit.Left.Left.Left.Down,
                     hit.Left.Down != default(char),
-                    hit.Left.Left.Left.Left.Left.Left));
+                    hit.Left.Left.Left.Left.Left.Left == null ? string.Empty : hit.Left.Left.Left.Left.Left.Left.Left + hit.Left.Left.Left.Left.Left.Left.Down));
 
             //[42]   	ETag	   ::=   	'</' Name  S? '>'
             EndElement =
-                TkTagDelim(Lt.And(Ch('/'))).And(TkEleNam(Name)).And(Opt(Whitespace)).And(TkTagDelim(Gt))
-                .Build(hit => new EndElementNode(hit.Left.Left.Down));
+                Opt(Ch(Environment.NewLine).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt.And(Ch('/')))).And(TkEleNam(Name)).And(Opt(Whitespace)).And(TkTagDelim(Gt))
+                .Build(hit => new EndElementNode(hit.Left.Left.Down, hit.Left.Left.Left.Left == null ? string.Empty : hit.Left.Left.Left.Left.Left + hit.Left.Left.Left.Left.Down));
+
+            Text =
+                Rep1(ChNot('&', '<').Unless(Statement).Unless(Code).Unless(Element).Unless(EndElement))
+                .Build(hit => new TextNode(hit));
 
             //[15]   	Comment	   ::=   	'<!--' ((Char - '-') | ('-' (Char - '-')))* '-->'
             Comment =

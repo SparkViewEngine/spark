@@ -77,6 +77,7 @@
     <Compile Include="Caching\TextWriterOriginator.cs" />
     <Compile Include="Compiler\NodeVisitors\CacheAttributeVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\SpecialAttributeVisitorBase.cs" />
+    <Compile Include="Compiler\NodeVisitors\WhitespaceCleanerVisitor.cs" />
     <Compile Include="CompositeViewEntry.cs" />
     <Compile Include="AbstractSparkView.cs" />
     <Compile Include="ICacheService.cs" />
@@ -127,7 +128,6 @@
     <Compile Include="Compiler\NodeVisitors\NamespaceVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\NameUtility.cs" />
     <Compile Include="Compiler\NodeVisitors\NodeVisitor.cs" />
-    <Compile Include="Compiler\NodeVisitors\OmitExtraLinesVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\PrefixExpandingVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\TestElseElementVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\ForEachAttributeVisitor.cs" />

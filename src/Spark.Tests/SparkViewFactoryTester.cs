@@ -337,12 +337,58 @@ namespace Spark.Tests
             var viewContext = MakeViewContext("eachattribute-whitespace", null);
             factory.RenderView(viewContext);
             mocks.VerifyAll();
-            string content = sb.ToString();
-            Assert.That(content, Contains.InOrder(
-                Environment.NewLine + "    <li>Bob</li>",
-                Environment.NewLine + "    <li>James</li>",
-                Environment.NewLine + "    <li>SpecialName</li>",
-                Environment.NewLine + "    <li>anon</li>"));
+            var content = sb.ToString();
+            var expected = @"<ul>
+  <li>1</li>
+  <li>2</li>
+  <li>3</li>
+</ul>
+
+<ul>
+</ul>
+
+<p>
+  1,2,3,
+</p>
+
+<p>
+</p>
+
+<p>
+  <span>1</span>
+  <span>2</span>
+  <span>3</span>
+</p>
+
+<p>
+ ?: <img src=""1.jpg""/><img src=""2.jpg""/><img src=""3.jpg""/>
+</p>
+
+<p><img src=""1.jpg""/><img src=""2.jpg""/><img src=""3.jpg""/></p>
+
+<p>
+  <span>abc</span>
+</p>
+
+<p>
+</p>
+
+<p>
+  abc
+</p>
+
+<p>
+</p>
+
+<p>
+  <div>abc</div>
+</p>
+
+<p>
+  <div>def</div>
+</p>
+";
+            Assert.That(content, Is.EqualTo(expected));
         }
 
         [Test]

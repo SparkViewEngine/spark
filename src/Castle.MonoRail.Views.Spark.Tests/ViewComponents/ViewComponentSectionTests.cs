@@ -68,8 +68,11 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             factory.Process("Home\\ComponentWithComplexSections.spark", writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
-            Assert.IsTrue(output.Contains("1,2,3,"));
-            Assert.IsTrue(output.Contains("<span>10</span><span>9</span><span>8</span>"));
+            Assert.That(output, Contains.InOrder(
+                "1,2,3,",
+                "<span>10</span>",
+                "<span>9</span>",
+                "<span>8</span>"));
             Assert.IsFalse(output.Contains("for each"));
             Assert.IsFalse(output.Contains("span each"));
         }

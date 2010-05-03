@@ -380,11 +380,11 @@ namespace Spark.Tests.Parser
         {
             var nodes1 = grammar.Nodes(Source("<script>\r\n$(\"#diff\").hide();\r\n</script>"));
             Assert.AreEqual(3, nodes1.Value.Count);
-            Assert.AreEqual("\r\n$(\"#diff\").hide();\r\n", ((TextNode)nodes1.Value[1]).Text);
+            Assert.That(((TextNode)nodes1.Value[1]).Text, Contains.InOrder("$(\"#diff\").hide();"));
 
             var nodes2 = grammar.Nodes(Source("<script>\r\n$('#diff').hide();\r\n</script>"));
             Assert.AreEqual(3, nodes2.Value.Count);
-            Assert.AreEqual("\r\n$('#diff').hide();\r\n", ((TextNode)nodes2.Value[1]).Text);
+            Assert.That(((TextNode)nodes2.Value[1]).Text, Contains.InOrder("$('#diff').hide();"));
         }
 
 

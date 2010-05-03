@@ -381,7 +381,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(EndElementNode node)
         {
-            AddLiteral("</" + node.Name + ">");
+            AddLiteral(node.PreceedingWhitespace + "</" + node.Name + ">");
         }
 
 
