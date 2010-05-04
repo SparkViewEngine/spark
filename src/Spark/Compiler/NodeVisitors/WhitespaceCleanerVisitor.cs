@@ -1,13 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Spark.Parser.Markup;
-using Spark.Parser.Code;
-using Spark.Parser;
+//-------------------------------------------------------------------------
+// <copyright file="Node.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Compiler.NodeVisitors
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Spark.Parser;
+    using Spark.Parser.Code;
+    using Spark.Parser.Markup;
+
     public class WhitespaceCleanerVisitor : NodeVisitor<WhitespaceCleanerVisitor.Frame>
     {
         private readonly IDictionary<Node, Paint<Node>> nodePaint;
@@ -94,7 +112,8 @@ namespace Spark.Compiler.NodeVisitors
             var textNode = firstChild as TextNode;
             if (textNode != null)
             {
-                return textNode.Text.IndexOf(Environment.NewLine) == 0;
+                return textNode.Text.IndexOf("\r\n") == 0 ||
+                    textNode.Text.IndexOf("\n") == 0;
             }
 
             var elementNode = firstChild as ElementNode;
@@ -109,7 +128,8 @@ namespace Spark.Compiler.NodeVisitors
 
             if (elementNode != null)
             {
-                return elementNode.PreceedingWhitespace.IndexOf(Environment.NewLine) == 0;
+                return elementNode.PreceedingWhitespace.IndexOf("\r\n") == 0 ||
+                    elementNode.PreceedingWhitespace.IndexOf("\n") == 0;
             }
 
             return false;

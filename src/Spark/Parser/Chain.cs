@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="Chain.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,28 +13,61 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
+
 namespace Spark.Parser
 {
+    /// <summary>
+    /// Encapsulates a chain of parse results.
+    /// </summary>
+    /// <typeparam name="TLeft">The type of the preceding result in the chain.</typeparam>
+    /// <typeparam name="TDown">The type of the current result in the chain.</typeparam>
     public class Chain<TLeft, TDown>
     {
-        private readonly TLeft _left;
-        private readonly TDown _down;
+        /// <summary>
+        /// Holds the preceding result.
+        /// </summary>
+        private readonly TLeft left;
 
+        /// <summary>
+        /// Holds the current result.
+        /// </summary>
+        private readonly TDown down;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Chain&lt;TLeft, TDown&gt;" /> class.
+        /// </summary>
+        /// <param name="left">The preceding result.</param>
+        /// <param name="down">The current result.</param>
         public Chain(TLeft left, TDown down)
         {
-            _left = left;
-            _down = down;
+            this.left = left;
+            this.down = down;
         }
 
+        /// <summary>
+        /// Gets the preceding result.
+        /// </summary>
         public TLeft Left
         {
-            get { return _left; }
+            get
+            {
+                return this.left;
+            }
         }
 
+        /// <summary>
+        /// Gets the current result.
+        /// </summary>
         public TDown Down
         {
-            get { return _down; }
+            get
+            {
+                return this.down;
+            }
         }
     }
 }

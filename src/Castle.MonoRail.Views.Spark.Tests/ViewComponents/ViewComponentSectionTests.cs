@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="Constraints.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,17 +13,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System.IO;
-using Castle.MonoRail.Framework;
-using Castle.MonoRail.Framework.Services;
-using Castle.MonoRail.Framework.Test;
-using Castle.MonoRail.Views.Spark.Tests.Stubs;
-using NUnit.Framework;
-using Rhino.Mocks;
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 {
+    using System;
+    using System.IO;
+    using Castle.MonoRail.Framework;
+    using NUnit.Framework;
+
     [TestFixture]
     public class ViewComponentSectionTests : BaseViewComponentTests
     {

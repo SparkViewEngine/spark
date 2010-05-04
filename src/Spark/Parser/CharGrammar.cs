@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="CharGrammar.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,6 +13,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Parser
 {
@@ -117,7 +123,7 @@ namespace Spark.Parser
         /// <summary>
         /// Matches a string of characters.
         /// </summary>
-        /// <param name="allowed">The list of characters to match.</param>
+        /// <param name="parse">The predicate of each character to match.</param>
         /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<string> StringOf(ParseAction<char> parse)
         {
@@ -133,6 +139,7 @@ namespace Spark.Parser
                     rest = result.Rest;
                     result = parse(rest);
                 }
+
                 return new ParseResult<string>(rest, sb.ToString());
             };
         }

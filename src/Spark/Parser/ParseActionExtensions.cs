@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="ParseActionExtensions.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,18 +13,32 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System;
-using System.Collections.Generic;
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Parser
 {
+    using System;
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// Contains extension methods to give the ParseAction class a fluent syntax.
+    /// </summary>
     public static class ParseActionExtensions
     {
+        /// <summary>
+        /// Repeats a match zero or more times.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the match.</typeparam>
+        /// <param name="parse">The match predicate to be repeated.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<IList<TValue>> Rep<TValue>(this ParseAction<TValue> parse)
         {
             return Grammar.Rep(parse);
         }
+
         public static ParseAction<IList<TValue>> Rep1<TValue>(this ParseAction<TValue> parse)
         {
             return Grammar.Rep1(parse);
@@ -34,6 +50,7 @@ namespace Spark.Parser
         {
             return Grammar.And(p1, p2);
         }
+
         public static ParseAction<TValue> Or<TValue>(
             this ParseAction<TValue> p1,
             ParseAction<TValue> p2)
@@ -54,6 +71,7 @@ namespace Spark.Parser
         {
             return Grammar.NotNext(p1, p2);
         }
+
         public static ParseAction<TValue1> Unless<TValue1, TValue2>(
             this ParseAction<TValue1> p1,
             ParseAction<TValue2> p2)
@@ -66,12 +84,17 @@ namespace Spark.Parser
             Func<TValue1, TValue2> builder)
         {
             return input =>
-                       {
-                           var result = parser(input);
-                           if (result == null) return null;
-                           return new ParseResult<TValue2>(result.Rest, builder(result.Value));
-                       };
+            {
+                var result = parser(input);
+                if (result == null)
+                {
+                    return null;
+                }
+
+                return new ParseResult<TValue2>(result.Rest, builder(result.Value));
+            };
         }
+
         public static ParseAction<TValue> Opt<TValue>(ParseAction<TValue> parse)
         {
             return Grammar.Opt(parse);
@@ -82,7 +105,11 @@ namespace Spark.Parser
             return input =>
             {
                 var result = parse(input);
-                if (result == null) return null;
+                if (result == null)
+                {
+                    return null;
+                }
+
                 return new ParseResult<TLeft>(result.Rest, result.Value.Left);
             };
         }
@@ -92,7 +119,11 @@ namespace Spark.Parser
             return input =>
             {
                 var result = parse(input);
-                if (result == null) return null;
+                if (result == null)
+                {
+                    return null;
+                }
+
                 return new ParseResult<TDown>(result.Rest, result.Value.Down);
             };
         }
@@ -111,27 +142,5 @@ namespace Spark.Parser
         {
             return Grammar.Paint(value, parser);
         }
-
-        //public static ParseAction<TValue> TokenText<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.Text); }
-        //public static ParseAction<TValue> TokenKeyword<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.Keyword); }
-        //public static ParseAction<TValue> TokenIdentifier<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.Identifier); }
-        //public static ParseAction<TValue> TokenString<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.String); }
-        //public static ParseAction<TValue> TokenLiteral<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.Literal); }
-        //public static ParseAction<TValue> TokenOperator<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.Operator); }
-        //public static ParseAction<TValue> TokenDelimiter<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.Delimiter); }
-        //public static ParseAction<TValue> TokenWhiteSpace<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.WhiteSpace); }
-        //public static ParseAction<TValue> TokenLineComment<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.LineComment); }
-        //public static ParseAction<TValue> TokenComment<TValue>(this ParseAction<TValue> parser)
-        //{ return parser.Paint(SparkTokenType.Comment); }
     }
-
 }

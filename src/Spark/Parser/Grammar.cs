@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="Grammar.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,11 +13,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System.Collections.Generic;
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Parser
 {
+    using System.Collections.Generic;
+
     public abstract class Grammar
     {
         /// <summary>
@@ -26,6 +32,10 @@ namespace Spark.Parser
         /// <param name="p1">The first requirement in the conjunction.</param>
         /// <param name="p2">The second requirement in the conjunction.</param>
         /// <returns>The corresponding ParseAction for this match.</returns>
+        /// <remarks>
+        /// When a match is found, the two results are chained together.
+        /// The first match corresponds to Chain.Left, and the second to Chain.Down.
+        /// </remarks>
         public static ParseAction<Chain<TValue1, TValue2>> And<TValue1, TValue2>(
             ParseAction<TValue1> p1,
             ParseAction<TValue2> p2)
@@ -73,8 +83,8 @@ namespace Spark.Parser
         /// </summary>
         /// <typeparam name="TValue1">The type of the first match.</typeparam>
         /// <typeparam name="TValue2">The type of the second match.</typeparam>
-        /// <param name="p1">The first match.</param>
-        /// <param name="p2">The second match.</param>
+        /// <param name="p1">The first match predicate.</param>
+        /// <param name="p2">The second match predicate.</param>
         /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<TValue1> Unless<TValue1, TValue2>(
             ParseAction<TValue1> p1,
@@ -131,7 +141,12 @@ namespace Spark.Parser
                        };
         }
 
-
+        /// <summary>
+        /// Repeats a match zero or more times.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the match.</typeparam>
+        /// <param name="parse">The match predicate to be repeated.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<IList<TValue>> Rep<TValue>(ParseAction<TValue> parse)
         {
             return delegate(Position input)
@@ -146,10 +161,20 @@ namespace Spark.Parser
                     rest = result.Rest;
                     result = parse(rest);
                 }
+
                 return new ParseResult<IList<TValue>>(rest, list);
             };
         }
 
+        /// <summary>
+        /// Repeats a match one or more times.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the match.</typeparam>
+        /// <param name="parse">The match predicate to be repeated.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
+        /// <remarks>
+        /// If no matches of the match predicate can be found, the entire match fails.
+        /// </remarks>
         public static ParseAction<IList<TValue>> Rep1<TValue>(ParseAction<TValue> parse)
         {
             return delegate(Position input)
@@ -157,8 +182,9 @@ namespace Spark.Parser
                 var rest = input;
                 var result = parse(rest);
                 if (result == null)
+                {
                     return null;
-
+                }
 
                 var list = new List<TValue>();
                 while (result != null)
@@ -167,6 +193,7 @@ namespace Spark.Parser
                     list.Add(result.Value);
                     result = parse(rest);
                 }
+
                 return new ParseResult<IList<TValue>>(rest, list);
             };
         }
@@ -176,7 +203,11 @@ namespace Spark.Parser
             return position =>
             {
                 var result = parser(position);
-                if (result == null) return null;
+                if (result == null)
+                {
+                    return null;
+                }
+
                 return new ParseResult<TValue>(result.Rest.Paint(position, result.Value), result.Value);
             };
 
@@ -191,7 +222,11 @@ namespace Spark.Parser
             return position =>
             {
                 var result = parser(position);
-                if (result == null) return null;
+                if (result == null)
+                {
+                    return null;
+                }
+
                 return new ParseResult<TValue>(result.Rest.Paint<TPaintValue>(position, result.Value), result.Value);
             };
         }
@@ -201,7 +236,11 @@ namespace Spark.Parser
             return position =>
             {
                 var result = parser(position);
-                if (result == null) return null;
+                if (result == null)
+                {
+                    return null;
+                }
+
                 return new ParseResult<TValue>(result.Rest.Paint(position, value), result.Value);
             };
         }

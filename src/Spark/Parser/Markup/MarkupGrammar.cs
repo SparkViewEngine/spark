@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="Node.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,14 +13,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System.Collections.Generic;
-using System.Linq;
-using Spark.Parser.Code;
-using System;
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Parser.Markup
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Spark.Parser.Code;
+
     public class MarkupGrammar : CodeGrammar
     {
         public MarkupGrammar()
@@ -125,7 +131,7 @@ namespace Spark.Parser.Markup
             //[40]   	STag	   ::=   	'<' Name (S  Attribute)* S? '>'
             //[44]   	EmptyElemTag	   ::=   	'<' Name (S  Attribute)* S? '/>'
             Element =
-                Opt(Ch(Environment.NewLine).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt)).And(TkEleNam(Name)).And(Rep(Whitespace.And(Attribute).Down())).And(Opt(Whitespace)).And(Opt(TkTagDelim(Ch('/')))).And(TkTagDelim(Gt))
+                Opt(Ch("\r\n").Or(Ch("\n")).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt)).And(TkEleNam(Name)).And(Rep(Whitespace.And(Attribute).Down())).And(Opt(Whitespace)).And(Opt(TkTagDelim(Ch('/')))).And(TkTagDelim(Gt))
                 .Build(hit => new ElementNode(
                     hit.Left.Left.Left.Left.Down,
                     hit.Left.Left.Left.Down,
@@ -134,7 +140,7 @@ namespace Spark.Parser.Markup
 
             //[42]   	ETag	   ::=   	'</' Name  S? '>'
             EndElement =
-                Opt(Ch(Environment.NewLine).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt.And(Ch('/')))).And(TkEleNam(Name)).And(Opt(Whitespace)).And(TkTagDelim(Gt))
+                Opt(Ch("\r\n").Or(Ch("\n")).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt.And(Ch('/')))).And(TkEleNam(Name)).And(Opt(Whitespace)).And(TkTagDelim(Gt))
                 .Build(hit => new EndElementNode(hit.Left.Left.Down, hit.Left.Left.Left.Left == null ? string.Empty : hit.Left.Left.Left.Left.Left + hit.Left.Left.Left.Left.Down));
 
             Text =
