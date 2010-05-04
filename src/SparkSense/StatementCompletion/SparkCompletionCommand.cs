@@ -2,10 +2,12 @@
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
+using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.OLE.Interop;
 
 namespace SparkSense.StatementCompletion
 {
@@ -18,12 +20,15 @@ namespace SparkSense.StatementCompletion
         private ITrackingSpan _completionSpan;
         private IOleCommandTarget _nextCommand;
         private ICompletionSession _session;
+        private DTE _vsEnvironment;
+        private Project _activeProject;
 
-        public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker)
+        public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, DTE vsEnvironment)
         {
             _textViewAdapter = textViewAdapter;
             _textView = textView;
             _completionBroker = completionBroker;
+            _vsEnvironment = vsEnvironment;
             TryChainTheNextCommand();
         }
 
@@ -89,8 +94,18 @@ namespace SparkSense.StatementCompletion
             SnapshotPoint caretPoint;
             if (!TryGetCurrentCaretPoint(out caretPoint)) return false;
 
+            if (!IsCurrentDocumentASparkFile()) return false;
+
             completionType = SparkCompletionType.GetCompletionType(inputCharacter, caretPoint.Snapshot.TextBuffer, caretPoint.Position);
             return SparkCompletionTypes.None != completionType;
+        }
+
+        private bool IsCurrentDocumentASparkFile()
+        {
+            return
+                _vsEnvironment != null && 
+                _vsEnvironment.ActiveDocument != null && 
+                _vsEnvironment.ActiveDocument.Name.EndsWith(".spark");
         }
 
         private bool TryGetCurrentCaretPoint(out SnapshotPoint caretPoint)
@@ -192,7 +207,8 @@ namespace SparkSense.StatementCompletion
             ITrackingPoint trackingPoint = currentPoint.Snapshot.CreateTrackingPoint(currentPoint.Position, PointTrackingMode.Positive);
             _session = _completionBroker.CreateCompletionSession(_textView, trackingPoint, true);
             _session.Properties.AddProperty(typeof (SparkCompletionTypes), sparkCompletionType);
-            _session.Properties.AddProperty(typeof (ITrackingSpan), _completionSpan);
+            _session.Properties.AddProperty(typeof(ITrackingSpan), _completionSpan);
+            _session.Properties.AddProperty(typeof(Document), _vsEnvironment.ActiveDocument);
             _session.Dismissed += OnSessionDismissed;
             _session.Committed += OnSessionCommitted;
             _session.Start();

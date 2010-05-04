@@ -5,6 +5,9 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
+using Microsoft.VisualStudio.Shell;
+using EnvDTE;
+using System.Collections.Generic;
 
 namespace SparkSense.StatementCompletion
 {
@@ -18,6 +21,9 @@ namespace SparkSense.StatementCompletion
         [Import]
         internal IVsEditorAdaptersFactoryService AdaptersFactoryService;
 
+        [Import(typeof(SVsServiceProvider))]
+        private IServiceProvider ServiceProvider { get; set; }
+
         [Import]
         internal ICompletionBroker CompletionBroker { get; set; }
 
@@ -25,14 +31,16 @@ namespace SparkSense.StatementCompletion
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
-            if (AdaptersFactoryService == null) return;
+            if (AdaptersFactoryService == null || ServiceProvider == null) return;
+            
             IWpfTextView textView = AdaptersFactoryService.GetWpfTextView(textViewAdapter);
             if (textView == null) return;
 
-            Func<SparkCompletionCommand> createCommand = () => new SparkCompletionCommand(textViewAdapter, textView, CompletionBroker);
+            var vsEnvironment = (DTE)ServiceProvider.GetService(typeof(DTE));
+
+            Func<SparkCompletionCommand> createCommand = () => new SparkCompletionCommand(textViewAdapter, textView, CompletionBroker, vsEnvironment);
             textView.Properties.GetOrCreateSingletonProperty(createCommand);
         }
-
         #endregion
     }
 }
