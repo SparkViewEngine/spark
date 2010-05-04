@@ -11,7 +11,7 @@ namespace SparkSense.StatementCompletion
     [ContentType("spark")]
     [ContentType("HTML")]
     [Name("Spark Tag Completion")]
-    internal class SparkCompletionSourceProvider : ICompletionSourceProvider
+    public class SparkCompletionSourceProvider : ICompletionSourceProvider
     {
         private ITextStructureNavigatorSelectorService _navigatorService;
         [Import]

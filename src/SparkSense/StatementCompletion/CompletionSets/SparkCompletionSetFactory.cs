@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Text;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
-    internal abstract class SparkCompletionSetFactory : CompletionSet
+    public abstract class SparkCompletionSetFactory : CompletionSet
     {
         internal static ImageSource SparkTagIcon = new BitmapImage(new Uri(("Resources/SparkTag.png"), UriKind.Relative));
         internal static SparkCompletionSourceProvider _sourceProvider;

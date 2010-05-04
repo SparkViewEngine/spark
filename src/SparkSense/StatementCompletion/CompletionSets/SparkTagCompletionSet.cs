@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
-    internal class SparkTagCompletionSet : SparkCompletionSetFactory
+    public class SparkTagCompletionSet : SparkCompletionSetFactory
     {
         private List<Completion> _completionList;
 

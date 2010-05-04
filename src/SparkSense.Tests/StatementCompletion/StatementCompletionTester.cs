@@ -49,10 +49,10 @@ namespace SparkSense.Tests
         public void ShouldRecogniseVariablesDeclaredInTheSameFile()
         {
             var viewFolder = new InMemoryViewFolder{
-                {"test\\ContainsTwoVars.spark", "<var x"}
+                {"test\\ContainsTwoVars.spark", "<var x=\"5\" y=\"3\" />"}
             };
 
-            var analyzer = new SparkViewAnalyzer(viewFolder, "Variables\\ContainsTwoVars.spark");
+            var analyzer = new SparkViewAnalyzer(viewFolder, "test\\ContainsTwoVars.spark");
             IList<string> vars = analyzer.GetLocalVariables();
             Assert.AreEqual(2, vars.Count);
             Assert.AreEqual("x", vars[0]);

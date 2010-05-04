@@ -79,7 +79,7 @@
     <Compile Include="SignatureRecognition\SparkSignatureHelpSource.cs" />
     <Compile Include="SignatureRecognition\SparkSignatureHelpSourceProvider.cs" />
     <Compile Include="SignatureRecognition\SparkTagParameter.cs" />
-    <Compile Include="SparkFileAnalyzer.cs" />
+    <Compile Include="SparkViewAnalyzer.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkVariableCompletionSet.cs" />
     <Compile Include="StatementCompletion\SparkCompletionCommand.cs" />
     <Compile Include="StatementCompletion\SparkCompletionCommandListener.cs" />
