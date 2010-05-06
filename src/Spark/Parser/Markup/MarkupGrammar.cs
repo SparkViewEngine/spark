@@ -237,9 +237,6 @@ namespace Spark.Parser.Markup
             Nodes = Rep(AnyNode);
         }
 
-
-
-
         public ParseAction<IList<char>> Whitespace;
 
         public ParseAction<IList<Node>> Nodes;
@@ -262,11 +259,15 @@ namespace Spark.Parser.Markup
         public ParseAction<Node> AsNode<TValue>(ParseAction<TValue> parser) where TValue : Node
         {
             return delegate(Position input)
-                       {
-                           var result = parser(input);
-                           if (result == null) return null;
-                           return new ParseResult<Node>(result.Rest, result.Value);
-                       };
+            {
+                var result = parser(input);
+                if (result == null)
+                {
+                    return null;
+                }
+
+                return new ParseResult<Node>(result.Rest, result.Value);
+            };
         }
     }
 }

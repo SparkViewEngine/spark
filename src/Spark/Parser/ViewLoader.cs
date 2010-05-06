@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="ViewLoader.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,35 +13,33 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Spark.Bindings;
-using Spark.Compiler;
-using Spark.Compiler.CSharp.ChunkVisitors;
-using Spark.Compiler.NodeVisitors;
-using Spark.Parser.Markup;
-using Spark.FileSystem;
-using Spark.Parser.Syntax;
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Parser
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using Spark.Bindings;
+    using Spark.Compiler;
+    using Spark.Compiler.CSharp.ChunkVisitors;
+    using Spark.Compiler.NodeVisitors;
+    using Spark.FileSystem;
+    using Spark.Parser.Markup;
+
     public class ViewLoader
     {
-        private const string templateFileExtension = ".spark";
+        private const string TemplateFileExtension = ".spark";
 
-        private IViewFolder _viewFolder;
+        private readonly Dictionary<string, Entry> entries = new Dictionary<string, Entry>();
 
-        readonly Dictionary<string, Entry> _entries = new Dictionary<string, Entry>();
-        readonly List<string> _pending = new List<string>();
+        private readonly List<string> pending = new List<string>();
 
-        public IViewFolder ViewFolder
-        {
-            get { return _viewFolder; }
-            set { _viewFolder = value; }
-        }
+        public IViewFolder ViewFolder { get; set; }
 
         public ParseAction<IList<Node>> Parser { get; set; }
 
@@ -51,76 +51,50 @@ namespace Spark.Parser
 
         public IBindingProvider BindingProvider { get; set; }
 
-        private class Entry
-        {
-            private readonly FileContext _fileContext = new FileContext();
-
-            public string ViewPath
-            {
-                get { return FileContext.ViewSourcePath; }
-                set { FileContext.ViewSourcePath = value; }
-            }
-
-            public long LastModified { get; set; }
-
-            public IViewFile ViewFile { get; set; }
-
-            public IList<Chunk> Chunks
-            {
-                get { return FileContext.Contents; }
-                set { FileContext.Contents = value; }
-            }
-
-            public FileContext FileContext
-            {
-                get { return _fileContext; }
-            }
-        }
-
-        Entry BindEntry(string referencePath)
-        {
-            if (_entries.ContainsKey(referencePath))
-                return _entries[referencePath];
-
-            var viewSource = _viewFolder.GetViewSource(referencePath);
-
-            var newEntry = new Entry { ViewPath = referencePath, ViewFile = viewSource, LastModified = viewSource.LastModified };
-            _entries.Add(referencePath, newEntry);
-            _pending.Add(referencePath);
-            return newEntry;
-        }
-
+        /// <summary>
+        /// Returns a value indicating whether this view loader is current.
+        /// </summary>
+        /// <returns>
+        /// True, if all entries' files' last modified values are the same as when this
+        /// view loader was created; false, otherwise.
+        /// </returns>
         public virtual bool IsCurrent()
         {
-            // The view is current if all entries' last modified value is the
-            // same as when it was created. 
-            return _entries.All(entry => entry.Value.ViewFile.LastModified == entry.Value.LastModified);
+            return this.entries.All(
+                entry => entry.Value.ViewFile.LastModified == entry.Value.LastModified);
         }
 
         public IList<Chunk> Load(string viewPath)
         {
             if (string.IsNullOrEmpty(viewPath))
+            {
                 return null;
+            }
 
-            var entry = BindEntry(viewPath);
+            var entry = this.BindEntry(viewPath);
             if (entry == null)
+            {
                 return null;
+            }
 
             // import _global.spark files from template path and shared path
-
-            var perFolderGlobal = Path.GetDirectoryName(viewPath) + "\\_global.spark";
-            if (ViewFolder.HasView(perFolderGlobal))
-                BindEntry(perFolderGlobal);
-
-            const string sharedGlobal = "Shared\\_global.spark";
-            if (ViewFolder.HasView(sharedGlobal))
-                BindEntry(sharedGlobal);
-
-            while (_pending.Count != 0)
+            var perFolderGlobal = Path.Combine(Path.GetDirectoryName(viewPath), "_global.spark");
+            if (this.ViewFolder.HasView(perFolderGlobal))
             {
-                string nextPath = _pending.First();
-                _pending.Remove(nextPath);
-                LoadInternal(nextPath);
+                this.BindEntry(perFolderGlobal);
+            }
+
+            var sharedGlobal = Path.Combine("Shared", "_global.spark");
+            if (this.ViewFolder.HasView(sharedGlobal))
+            {
+                this.BindEntry(sharedGlobal);
+            }
+
+            while (this.pending.Count != 0)
+            {
+                string nextPath = this.pending.First();
+                this.pending.Remove(nextPath);
+                this.LoadInternal(nextPath);
             }
 
             return entry.Chunks;
@@ -128,90 +102,148 @@ namespace Spark.Parser
 
         public IEnumerable<IList<Chunk>> GetEverythingLoaded()
         {
-            return _entries.Values.Select(e => e.Chunks);
+            return this.entries.Values.Select(e => e.Chunks);
         }
 
-        void LoadInternal(string viewPath)
+        /// <summary>
+        /// Returns all partial files available based on the location of a view.
+        /// </summary>
+        /// <param name="viewPath">The location of the view used for reference.</param>
+        /// <returns>All partial files available.</returns>
+        public IList<string> FindPartialFiles(string viewPath)
+        {
+            var folderPaths = PartialViewFolderPaths(viewPath);
+            var partialNames = this.FindAllPartialFiles(folderPaths);
+            return partialNames.Distinct().ToList().AsReadOnly();
+        }
+
+        /// <summary>
+        /// Walks up the passed <paramref name="viewName">view name</paramref>'s directory sturcture, returning all possible directories that could contain partial views.
+        /// </summary>
+        /// <param name="viewPath">The view path for which to return partial view paths.</param>
+        /// <returns>The full list of possible partial view paths.</returns>
+        private static IEnumerable<string> PartialViewFolderPaths(string viewPath)
+        {
+            do
+            {
+                viewPath = Path.GetDirectoryName(viewPath);
+
+                yield return viewPath;
+                yield return Path.Combine(viewPath, "Shared");
+            }
+            while (!string.IsNullOrEmpty(viewPath));
+        }
+
+        /// <summary>
+        /// Appends the propper extenstion to the passed <paramref name="viewName">view name</paramref>, if it does not already have it.
+        /// </summary>
+        /// <param name="viewName">The name of the view to which to append the extension.</param>
+        /// <returns>The view name with the proper Spark extenstion.</returns>
+        private static string EnsureSparkExtension(string viewName)
+        {
+            var needsSparkExtension = string.Equals(
+                Path.GetExtension(viewName),
+                TemplateFileExtension,
+                StringComparison.OrdinalIgnoreCase) == false;
+
+            return needsSparkExtension
+                ? viewName + TemplateFileExtension
+                : viewName;
+        }
+
+        private Entry BindEntry(string referencePath)
+        {
+            if (this.entries.ContainsKey(referencePath))
+            {
+                return this.entries[referencePath];
+            }
+
+            var viewSource = this.ViewFolder.GetViewSource(referencePath);
+
+            var newEntry = new Entry
+            {
+                ViewPath = referencePath,
+                ViewFile = viewSource,
+                LastModified = viewSource.LastModified
+            };
+            this.entries.Add(referencePath, newEntry);
+            this.pending.Add(referencePath);
+            return newEntry;
+        }
+
+        private void LoadInternal(string viewPath)
         {
             if (string.IsNullOrEmpty(viewPath))
+            {
                 return;
+            }
 
-            var newEntry = BindEntry(viewPath);
+            var newEntry = this.BindEntry(viewPath);
 
             var context = new VisitorContext
-                                         {
-                                             ViewFolder = ViewFolder,
-                                             Prefix = Prefix,
-                                             ExtensionFactory = ExtensionFactory,
-                                             PartialFileNames = FindPartialFiles(viewPath),
-                                             Bindings = FindBindings()
-                                         };
-            newEntry.Chunks = SyntaxProvider.GetChunks(context, viewPath);
+            {
+                ViewFolder = this.ViewFolder,
+                Prefix = this.Prefix,
+                ExtensionFactory = this.ExtensionFactory,
+                PartialFileNames = this.FindPartialFiles(viewPath),
+                Bindings = this.FindBindings()
+            };
+            newEntry.Chunks = this.SyntaxProvider.GetChunks(context, viewPath);
 
             var fileReferenceVisitor = new FileReferenceVisitor();
             fileReferenceVisitor.Accept(newEntry.Chunks);
 
             foreach (var useFile in fileReferenceVisitor.References)
             {
-                var referencePath = ResolveReference(viewPath, useFile.Name);
+                var referencePath = this.ResolveReference(viewPath, useFile.Name);
 
                 if (!string.IsNullOrEmpty(referencePath))
                 {
-                    useFile.FileContext = BindEntry(referencePath).FileContext;
+                    useFile.FileContext = this.BindEntry(referencePath).FileContext;
                 }
             }
         }
 
-
-        private static IEnumerable<string> PartialViewFolderPaths(string viewPath)
-        {
-            var folderPath = Path.GetDirectoryName(viewPath);
-            for(;;)
-            {
-                yield return folderPath;
-                yield return Path.Combine(folderPath, "Shared");
-
-                if (string.IsNullOrEmpty(folderPath))
-                    yield break;
-
-                folderPath = Path.GetDirectoryName(folderPath);
-            }
-        }
-
+        /// <summary>
+        /// Finds all files in an enumerable list of possible locations that are named in the format of a partial file.
+        /// </summary>
+        /// <param name="folderPaths">The paths in which to search.</param>
+        /// <returns>All files in the given paths that match the format of a partial file.</returns>
+        /// <remarks>
+        /// Partial files are files that begin with an underscore.
+        /// </remarks>
         private IEnumerable<string> FindAllPartialFiles(IEnumerable<string> folderPaths)
         {
-            foreach(var folderPath in folderPaths.Distinct())
+            foreach (var folderPath in folderPaths.Distinct())
             {
-                foreach(var view in ViewFolder.ListViews(folderPath))
+                foreach (var view in this.ViewFolder.ListViews(folderPath))
                 {
                     var baseName = Path.GetFileNameWithoutExtension(view);
                     if (baseName.StartsWith("_"))
+                    {
                         yield return baseName.Substring(1);
+                    }
                 }
             }
-        }
-
-        public IList<string> FindPartialFiles(string viewPath)
-        {
-            var folderPaths = PartialViewFolderPaths(viewPath);
-            var partialNames = FindAllPartialFiles(folderPaths);
-            return partialNames.Distinct().ToArray();
         }
 
         private IEnumerable<Binding> FindBindings()
         {
-            if (BindingProvider == null)
+            if (this.BindingProvider == null)
+            {
                 return new Binding[0];
-            return BindingProvider.GetBindings(ViewFolder);
+            }
+
+            return this.BindingProvider.GetBindings(this.ViewFolder);
         }
 
-        string ResolveReference(string existingViewPath, string viewName)
+        private string ResolveReference(string existingViewPath, string viewName)
         {
             var viewNameWithExtension = EnsureSparkExtension(viewName);
             var folderPaths = PartialViewFolderPaths(existingViewPath);
             
             var partialPaths = folderPaths.Select(x => Path.Combine(x, viewNameWithExtension));
-            var partialViewLocation = partialPaths.FirstOrDefault(x => ViewFolder.HasView(x));
+            var partialViewLocation = partialPaths.FirstOrDefault(x => this.ViewFolder.HasView(x));
 
             if (partialViewLocation == null)
             {
@@ -222,16 +254,47 @@ namespace Spark.Parser
             return partialViewLocation;
         }
 
-        static string EnsureSparkExtension(string viewName)
+        private class Entry
         {
-            var needsSparkExtension = string.Equals(
-                Path.GetExtension(viewName),
-                templateFileExtension,
-                StringComparison.OrdinalIgnoreCase) == false;
+            private readonly FileContext fileContext = new FileContext();
 
-            return needsSparkExtension
-                ? viewName + templateFileExtension
-                : viewName;
+            public string ViewPath
+            {
+                get
+                {
+                    return this.fileContext.ViewSourcePath;
+                }
+
+                set
+                {
+                    this.fileContext.ViewSourcePath = value;
+                }
+            }
+
+            public IList<Chunk> Chunks
+            {
+                get
+                {
+                    return this.fileContext.Contents;
+                }
+
+                set
+                {
+                    this.fileContext.Contents = value;
+                }
+            }
+
+            public FileContext FileContext
+            {
+                get
+                {
+                    return this.fileContext;
+                }
+            }
+
+            public long LastModified { get; set; }
+
+            public IViewFile ViewFile { get; set; }
         }
     }
 }

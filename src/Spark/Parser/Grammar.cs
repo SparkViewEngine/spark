@@ -22,6 +22,9 @@ namespace Spark.Parser
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Contains parse actions shared accross all grammars.
+    /// </summary>
     public abstract class Grammar
     {
         /// <summary>
@@ -108,37 +111,63 @@ namespace Spark.Parser
             };
         }
 
+        /// <summary>
+        /// Matches a predicate one or zero times.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the match.</typeparam>
+        /// <param name="parse">The match predicate to be used.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
+        /// <remarks>
+        /// If the match cannot be performed, the match succeeds and returns the default value of the match type.
+        /// The position of the parse subject is not changed when the match fails.
+        /// </remarks>
         public static ParseAction<TValue> Opt<TValue>(ParseAction<TValue> parse)
         {
             return input => parse(input) ?? new ParseResult<TValue>(input, default(TValue));
         }
 
+        /// <summary>
+        /// Uses the first match, as long as the second match succeeds immediately after the first.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the first match.</typeparam>
+        /// <typeparam name="TValue2">The type of the second match.</typeparam>
+        /// <param name="parse">The match predicate to be used.</param>
+        /// <param name="cond">The match predicate that must match immediately after <paramref name="parse"/>.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<TValue> IfNext<TValue, TValue2>(ParseAction<TValue> parse, ParseAction<TValue2> cond)
         {
             return delegate(Position input)
-                       {
-                           var result = parse(input);
-                           if (result == null || cond(result.Rest) == null)
-                           {
-                               return null;
-                           }
+            {
+                var result = parse(input);
+                if (result == null || cond(result.Rest) == null)
+                {
+                    return null;
+                }
 
-                           return result;
-                       };
+                return result;
+            };
         }
 
+        /// <summary>
+        /// Uses the first match, as long as the second match does not succeed immediately after the first.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the first match.</typeparam>
+        /// <typeparam name="TValue2">The type of the second match.</typeparam>
+        /// <param name="parse">The match predicate to be used.</param>
+        /// <param name="cond">The match predicate that must not match immediately after <paramref name="parse"/>.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<TValue> NotNext<TValue, TValue2>(ParseAction<TValue> parse, ParseAction<TValue2> cond)
         {
             return delegate(Position input)
-                       {
-                           var result = parse(input);
-                           if (result == null || cond(result.Rest) != null)
-                           {
-                               return null;
-                           }
+            {
+                var result = parse(input);
+                if (result == null || cond(result.Rest) != null)
+                {
+                    return null;
+                }
 
-                           return result;
-                       };
+                return result;
+            };
         }
 
         /// <summary>
@@ -173,7 +202,7 @@ namespace Spark.Parser
         /// <param name="parse">The match predicate to be repeated.</param>
         /// <returns>The corresponding ParseAction for this match.</returns>
         /// <remarks>
-        /// If no matches of the match predicate can be found, the entire match fails.
+        /// If the match cannot be performed at least once, the entire match fails.
         /// </remarks>
         public static ParseAction<IList<TValue>> Rep1<TValue>(ParseAction<TValue> parse)
         {
