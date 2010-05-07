@@ -20,15 +20,14 @@ namespace SparkSense.StatementCompletion
         private ITrackingSpan _completionSpan;
         private IOleCommandTarget _nextCommand;
         private ICompletionSession _session;
-        private DTE _vsEnvironment;
-        private Project _activeProject;
+        private SparkFileAnalyzer _sparkFileAnalyzer;
 
-        public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, DTE vsEnvironment)
+        public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, SparkFileAnalyzer sparkFileAnalyzer)
         {
             _textViewAdapter = textViewAdapter;
             _textView = textView;
             _completionBroker = completionBroker;
-            _vsEnvironment = vsEnvironment;
+            _sparkFileAnalyzer = sparkFileAnalyzer;
             TryChainTheNextCommand();
         }
 
@@ -94,19 +93,11 @@ namespace SparkSense.StatementCompletion
             SnapshotPoint caretPoint;
             if (!TryGetCurrentCaretPoint(out caretPoint)) return false;
 
-            if (!IsCurrentDocumentASparkFile()) return false;
+            if (!_sparkFileAnalyzer.IsCurrentDocumentASparkFile()) return false;
 
-            var sparkCompletionType = new SparkCompletionType(_vsEnvironment.ActiveDocument, caretPoint.Snapshot.TextBuffer, caretPoint.Position);
+            var sparkCompletionType = new SparkCompletionType(_sparkFileAnalyzer, caretPoint.Snapshot.TextBuffer, caretPoint.Position);
             completionType = sparkCompletionType.GetCompletionType(inputCharacter);
             return SparkCompletionTypes.None != completionType;
-        }
-
-        private bool IsCurrentDocumentASparkFile()
-        {
-            return
-                _vsEnvironment != null && 
-                _vsEnvironment.ActiveDocument != null && 
-                _vsEnvironment.ActiveDocument.Name.EndsWith(".spark");
         }
 
         private bool TryGetCurrentCaretPoint(out SnapshotPoint caretPoint)
@@ -209,7 +200,6 @@ namespace SparkSense.StatementCompletion
             _session = _completionBroker.CreateCompletionSession(_textView, trackingPoint, true);
             _session.Properties.AddProperty(typeof (SparkCompletionTypes), sparkCompletionType);
             _session.Properties.AddProperty(typeof(ITrackingSpan), _completionSpan);
-            _session.Properties.AddProperty(typeof(Document), _vsEnvironment.ActiveDocument);
             _session.Dismissed += OnSessionDismissed;
             _session.Committed += OnSessionCommitted;
             _session.Start();

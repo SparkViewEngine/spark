@@ -32,13 +32,14 @@ namespace SparkSense.StatementCompletion
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             if (AdaptersFactoryService == null || ServiceProvider == null) return;
-            
+
             IWpfTextView textView = AdaptersFactoryService.GetWpfTextView(textViewAdapter);
             if (textView == null) return;
 
             var vsEnvironment = (DTE)ServiceProvider.GetService(typeof(DTE));
+            SparkFileAnalyzer sparkFileAnalyzer = new SparkFileAnalyzer(vsEnvironment);
 
-            Func<SparkCompletionCommand> createCommand = () => new SparkCompletionCommand(textViewAdapter, textView, CompletionBroker, vsEnvironment);
+            Func<SparkCompletionCommand> createCommand = () => new SparkCompletionCommand(textViewAdapter, textView, CompletionBroker, sparkFileAnalyzer);
             textView.Properties.GetOrCreateSingletonProperty(createCommand);
         }
         #endregion

@@ -92,6 +92,7 @@
     <Compile Include="StatementCompletion\SparkCompletionType.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkTagCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkInvalidCompletionSet.cs" />
+    <Compile Include="SparkFileAnalyzer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
