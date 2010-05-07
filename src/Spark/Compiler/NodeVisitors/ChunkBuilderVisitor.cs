@@ -31,6 +31,13 @@ namespace Spark.Compiler.NodeVisitors
         private IDictionary<string, IList<Chunk>> SectionChunks { get; set; }
 
 
+        public IDictionary<string, Action<SpecialNode, SpecialNodeInspector>> SpecialNodeMap
+        {
+            get
+            {
+                return _specialNodeMap;
+            }
+        }
         class Frame : IDisposable
         {
             private readonly ChunkBuilderVisitor _visitor;
@@ -393,13 +400,13 @@ namespace Spark.Compiler.NodeVisitors
         protected override void Visit(SpecialNode specialNode)
         {
             string nqName = NameUtility.GetName(specialNode.Element.Name);
-            if (!_specialNodeMap.ContainsKey(nqName))
+            if (!SpecialNodeMap.ContainsKey(nqName))
             {
                 throw new CompilerException(string.Format("Unknown special node {0}", specialNode.Element.Name));
             }
 
 
-            var action = _specialNodeMap[nqName];
+            var action = SpecialNodeMap[nqName];
             action(specialNode, new SpecialNodeInspector(specialNode));
         }
 

@@ -96,7 +96,8 @@ namespace SparkSense.StatementCompletion
 
             if (!IsCurrentDocumentASparkFile()) return false;
 
-            completionType = SparkCompletionType.GetCompletionType(inputCharacter, caretPoint.Snapshot.TextBuffer, caretPoint.Position);
+            var sparkCompletionType = new SparkCompletionType(_vsEnvironment.ActiveDocument, caretPoint.Snapshot.TextBuffer, caretPoint.Position);
+            completionType = sparkCompletionType.GetCompletionType(inputCharacter);
             return SparkCompletionTypes.None != completionType;
         }
 

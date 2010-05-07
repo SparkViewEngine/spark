@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EnvDTE;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using SparkSense.StatementCompletion.CompletionSets;
-using System.Collections;
-using EnvDTE;
+using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Syntax;
-using Spark.FileSystem;
+using System;
+using System.Collections.Generic;
+using SparkSense.StatementCompletion.CompletionSets;
 
 namespace SparkSense.StatementCompletion
 {
@@ -35,24 +34,23 @@ namespace SparkSense.StatementCompletion
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
             SparkCompletionTypes completionType;
+            //Document activeDocument;
+            //if(!session.Properties.TryGetProperty(typeof(Document), out activeDocument)) return;
 
-            Document activeDocument;
-            if(!session.Properties.TryGetProperty(typeof(Document), out activeDocument)) return;
-
-            if (!session.Properties.TryGetProperty(typeof(SparkCompletionTypes), out completionType))
-            {
-                _completionSetsToInclude.AddRange(completionSets);
-                completionSets.Clear();
-                return;
-            }
-            CompletionType = completionType;
+            //if (!session.Properties.TryGetProperty(typeof(SparkCompletionTypes), out completionType))   
+            //{
+            //    _completionSetsToInclude.AddRange(completionSets);
+            //    completionSets.Clear();
+            //    return;
+            //}
+            CompletionType = session.Properties.TryGetProperty(typeof(SparkCompletionTypes), out completionType) ? completionType : SparkCompletionTypes.None;
             CurrentSession = session;
-            CurrentDocument = activeDocument;
+            //CurrentDocument = activeDocument;
 
             SnapshotPoint completionStartPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
             CompletionSet sparkCompletions = GetCompletionSetFor(completionStartPoint);
-            CombineCompletionSets(sparkCompletions);
-            completionSets.Add(sparkCompletions);
+            //CombineCompletionSets(sparkCompletions);
+            if (sparkCompletions != null) completionSets.Add(sparkCompletions);
         }
 
         private void CombineCompletionSets(CompletionSet sparkCompletions)
@@ -82,20 +80,14 @@ namespace SparkSense.StatementCompletion
 
         private CompletionSet GetCompletionSetFor(SnapshotPoint completionStartPoint)
         {
-            var viewRoot = CurrentDocument.FullName.Substring(0, CurrentDocument.FullName.LastIndexOf("Views") + 5);
-            var currentView = CurrentDocument.FullName.Replace(viewRoot, string.Empty).TrimStart('\\');
-
-            var syntaxProvider = new DefaultSyntaxProvider(new ParserSettings());
-            var viewLoader = new ViewLoader { ViewFolder = new FileSystemViewFolder(viewRoot), SyntaxProvider = syntaxProvider };
-            viewLoader.Load(currentView);
-            var partials = viewLoader.FindPartialFiles(currentView);
-
             switch (CompletionType)
             {
                 case SparkCompletionTypes.Tag:
                     return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_sourceProvider, _textBuffer, completionStartPoint);
                 case SparkCompletionTypes.Variable:
                     return SparkCompletionSetFactory.Create<SparkVariableCompletionSet>(_sourceProvider, _textBuffer, completionStartPoint);
+                case SparkCompletionTypes.Invalid:
+                    return SparkCompletionSetFactory.Create<SparkInvalidCompletionSet>(_sourceProvider, _textBuffer, completionStartPoint);
                 case SparkCompletionTypes.None:
                 default:
                     return null;

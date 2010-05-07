@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark;
@@ -31,13 +30,12 @@ namespace SparkSense.Tests
         [Test]
         public void ShouldRecogniseOtherViewsInTheProject()
         {
-            var engine = new SparkViewEngine();
-            engine.ViewFolder = new FileSystemViewFolder("SparkSense.Tests.Views");
+            var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder("SparkSense.Tests.Views") };
 
             var shared = engine.ViewFolder.ListViews("Home");
 
             shared.ToList().ForEach(s => Console.WriteLine(s));
-
+            
         }
 
         [Test]
