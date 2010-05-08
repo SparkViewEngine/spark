@@ -4,33 +4,24 @@ src/CommonAssemblyInfo.cs
 src/CommonVersionInfo.h
 
 src/*.user
-src/*/*.user
-src/*/*/*.user
-src/*/*/*/*.user
+src/**/*.user
 
-src/*/bin
-src/*/*/bin
-src/*/*/*/bin
+src/**/bin/*
+src/**/bin/**/*
 
-src/*/obj
-src/*/*/obj
-src/*/*/*/obj
+src/**/obj/*
+src/**/obj/**/*
 
 src/_ReSharper.*
-src/*/_ReSharper.*
-src/*/*/_ReSharper.*
-src/*/*/*/_ReSharper.*
+src/**/_ReSharper.*
 
 src/*.suo
-src/*/*.suo
-src/*/*/*.suo
-src/*/*/*/*.suo
+src/**/*.suo
 
-src/*.sln.cache
-src/*/*.sln.cache
-src/*/*/*.sln.cache
-src/*/*/*/*.sln.cache
-
+src/*.cache
+src/*.Cache
+src/**/*.cache
+src/**/*.Cache
 
 src/Tools/Tools.ncb
 
@@ -45,5 +36,8 @@ bin/mvccontrib/MvcContrib.pdb
 bin/mvccontrib/MvcContrib.xml
 bin/mvccontrib/MvcContrib.Castle.pdb
 bin/mvccontrib/MvcContrib.Castle.xml
+*.orig
 *.pidb
 *.userprefs
+TestResult.xml
+*.VisualState.xml
