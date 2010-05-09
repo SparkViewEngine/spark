@@ -3,14 +3,14 @@ using System;
 
 namespace SparkSense
 {
-    public class SparkFileAnalyzer
+    public class SparkProjectExplorer
     {
         private string _activeDocumentPath;
         private DTE _projectEnvironment;
-        public SparkFileAnalyzer(DTE projectEnvironment)
+        public SparkProjectExplorer(DTE projectEnvironment)
         {
             if (projectEnvironment == null)
-                throw new ArgumentNullException("projectEnvironment", "SparkFileAnalyzer requires a hook into the current visual studio enviroment.");
+                throw new ArgumentNullException("projectEnvironment", "Spark Project Explorer requires a hook into the current visual studio enviroment.");
 
             _projectEnvironment = projectEnvironment;
         }

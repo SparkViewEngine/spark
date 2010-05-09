@@ -20,9 +20,9 @@ namespace SparkSense.StatementCompletion
         private ITrackingSpan _completionSpan;
         private IOleCommandTarget _nextCommand;
         private ICompletionSession _session;
-        private SparkFileAnalyzer _sparkFileAnalyzer;
+        private SparkProjectExplorer _sparkFileAnalyzer;
 
-        public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, SparkFileAnalyzer sparkFileAnalyzer)
+        public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, SparkProjectExplorer sparkFileAnalyzer)
         {
             _textViewAdapter = textViewAdapter;
             _textView = textView;

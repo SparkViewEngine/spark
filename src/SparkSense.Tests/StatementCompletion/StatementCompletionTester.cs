@@ -15,22 +15,18 @@ namespace SparkSense.Tests
         private const string ROOT_VIEW_PATH = "SparkSense.Tests.Views";
         private DefaultSyntaxProvider _syntaxProvider;
         private ViewLoader _viewLoader;
-        public void SparkTagCompletionTests()
-        {
-
-        }
 
         [SetUp]
         public void Setup()
         {
             _syntaxProvider = new DefaultSyntaxProvider(new ParserSettings());
-            _viewLoader = new ViewLoader { ViewFolder = new FileSystemViewFolder("SparkSense.Tests.Views"), SyntaxProvider = _syntaxProvider };
+            _viewLoader = new ViewLoader { ViewFolder = new FileSystemViewFolder(ROOT_VIEW_PATH), SyntaxProvider = _syntaxProvider };
         }
 
         [Test]
         public void ShouldRecogniseOtherViewsInTheProject()
         {
-            var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder("SparkSense.Tests.Views") };
+            var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder(ROOT_VIEW_PATH) };
 
             var shared = engine.ViewFolder.ListViews("Home");
 
@@ -47,10 +43,10 @@ namespace SparkSense.Tests
         public void ShouldRecogniseVariablesDeclaredInTheSameFile()
         {
             var viewFolder = new InMemoryViewFolder{
-                {"test\\ContainsTwoVars.spark", "<var x=\"5\" y=\"3\" />"}
+                {"test\\TwoVars.spark", "<var x=\"5\" y=\"3\" />"}
             };
 
-            var analyzer = new SparkViewAnalyzer(viewFolder, "test\\ContainsTwoVars.spark");
+            var analyzer = new SparkViewExplorer(viewFolder, "test\\TwoVars.spark");
             IList<string> vars = analyzer.GetLocalVariables();
             Assert.AreEqual(2, vars.Count);
             Assert.AreEqual("x", vars[0]);

@@ -9,12 +9,12 @@ using Spark.FileSystem;
 
 namespace SparkSense
 {
-    public class SparkViewAnalyzer
+    public class SparkViewExplorer
     {
         private ViewLoader _viewLoader;
         private string _viewPath;
 
-        public SparkViewAnalyzer(IViewFolder viewRoot, string viewPath)
+        public SparkViewExplorer(IViewFolder viewRoot, string viewPath)
         {
             _viewLoader = new ViewLoader { ViewFolder = viewRoot, SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
             _viewPath = viewPath;

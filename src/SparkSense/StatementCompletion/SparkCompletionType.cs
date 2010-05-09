@@ -19,9 +19,9 @@ namespace SparkSense.StatementCompletion
     {
         private ITextBuffer _textBuffer;
         private int _cursorPosition;
-        private SparkFileAnalyzer _sparkFileAnalyzer;
+        private SparkProjectExplorer _sparkFileAnalyzer;
 
-        public SparkCompletionType(SparkFileAnalyzer sparkFileAnalyzer, ITextBuffer textBuffer, int cursorPosition)
+        public SparkCompletionType(SparkProjectExplorer sparkFileAnalyzer, ITextBuffer textBuffer, int cursorPosition)
         {
             _sparkFileAnalyzer = sparkFileAnalyzer;
             _textBuffer = textBuffer;

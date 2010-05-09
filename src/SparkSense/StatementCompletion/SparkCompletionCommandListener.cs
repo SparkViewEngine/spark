@@ -37,7 +37,7 @@ namespace SparkSense.StatementCompletion
             if (textView == null) return;
 
             var vsEnvironment = (DTE)ServiceProvider.GetService(typeof(DTE));
-            SparkFileAnalyzer sparkFileAnalyzer = new SparkFileAnalyzer(vsEnvironment);
+            SparkProjectExplorer sparkFileAnalyzer = new SparkProjectExplorer(vsEnvironment);
 
             Func<SparkCompletionCommand> createCommand = () => new SparkCompletionCommand(textViewAdapter, textView, CompletionBroker, sparkFileAnalyzer);
             textView.Properties.GetOrCreateSingletonProperty(createCommand);

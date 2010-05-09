@@ -14,25 +14,25 @@ namespace SparkSense.Tests.StatementCompletion
         public void ShouldReturnSparkSpecialNodes()
         {
             var tag = new SparkTagCompletionSet();
-            List<Completion> tagCompletionsList = tag.Completions.ToList();
+            List<Completion> tagList = tag.Completions.ToList();
 
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "var"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "def"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "default"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "global"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "viewdata"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "set"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "for"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "test"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "if"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "else"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "elseif"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "content"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "use"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "macro"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "render"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "section"));
-            Assert.IsTrue(tagCompletionsList.Exists(c => c.DisplayText == "cache"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "var"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "def"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "default"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "global"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "viewdata"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "set"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "for"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "test"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "if"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "else"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "elseif"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "content"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "use"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "macro"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "render"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "section"));
+            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "cache"));
         }
     }
 }
