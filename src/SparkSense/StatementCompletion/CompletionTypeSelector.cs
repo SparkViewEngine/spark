@@ -15,22 +15,22 @@ namespace SparkSense.StatementCompletion
         Invalid,
     }
 
-    public class SparkCompletionType
+    public class CompletionTypeSelector
     {
         private ITextBuffer _textBuffer;
-        private int _cursorPosition;
-        private SparkProjectExplorer _sparkFileAnalyzer;
+        private int _caretPosition;
+        private SparkProjectExplorer _projectExplorer;
 
-        public SparkCompletionType(SparkProjectExplorer sparkFileAnalyzer, ITextBuffer textBuffer, int cursorPosition)
+        public CompletionTypeSelector(SparkProjectExplorer projectExplorer, ITextBuffer textBuffer, int caretPosition)
         {
-            _sparkFileAnalyzer = sparkFileAnalyzer;
+            _projectExplorer = projectExplorer;
             _textBuffer = textBuffer;
-            _cursorPosition = cursorPosition;
+            _caretPosition = caretPosition;
         }
 
         public SparkCompletionTypes GetCompletionType(char key)
         {
-            if (!_sparkFileAnalyzer.ViewFolderExists())
+            if (!_projectExplorer.ViewFolderExists())
                 return SparkCompletionTypes.Invalid;
 
             switch (key)

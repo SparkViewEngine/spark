@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Shell;
 using EnvDTE;
 using System.Collections.Generic;
+using EnvDTE80;
 
 namespace SparkSense.StatementCompletion
 {
@@ -37,9 +38,9 @@ namespace SparkSense.StatementCompletion
             if (textView == null) return;
 
             var vsEnvironment = (DTE)ServiceProvider.GetService(typeof(DTE));
-            SparkProjectExplorer sparkFileAnalyzer = new SparkProjectExplorer(vsEnvironment);
+            SparkProjectExplorer projectExplorer = new SparkProjectExplorer(vsEnvironment);
 
-            Func<SparkCompletionCommand> createCommand = () => new SparkCompletionCommand(textViewAdapter, textView, CompletionBroker, sparkFileAnalyzer);
+            Func<SparkCompletionCommand> createCommand = () => new SparkCompletionCommand(textViewAdapter, textView, CompletionBroker, projectExplorer);
             textView.Properties.GetOrCreateSingletonProperty(createCommand);
         }
         #endregion

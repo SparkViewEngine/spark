@@ -20,14 +20,14 @@ namespace SparkSense.StatementCompletion
         private ITrackingSpan _completionSpan;
         private IOleCommandTarget _nextCommand;
         private ICompletionSession _session;
-        private SparkProjectExplorer _sparkFileAnalyzer;
+        private SparkProjectExplorer _projectExplorer;
 
-        public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, SparkProjectExplorer sparkFileAnalyzer)
+        public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, SparkProjectExplorer projectExplorer)
         {
             _textViewAdapter = textViewAdapter;
             _textView = textView;
             _completionBroker = completionBroker;
-            _sparkFileAnalyzer = sparkFileAnalyzer;
+            _projectExplorer = projectExplorer;
             TryChainTheNextCommand();
         }
 
@@ -40,8 +40,8 @@ namespace SparkSense.StatementCompletion
 
         public int Exec(ref Guid cmdGroup, uint key, uint cmdExecOpt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            char inputCharacter = GetInputCharacter(cmdGroup, key, pvaIn);
-            if (IsACommitCharacter(key, inputCharacter))
+            char inputCharacter = key.GetInputCharacter(cmdGroup, pvaIn);
+            if (key.IsACommitCharacter(inputCharacter))
             {
                 if (IsSessionActive())
                 {
@@ -69,13 +69,13 @@ namespace SparkSense.StatementCompletion
                     _session.Filter();
                 handled = true;
             }
-            else if (IsADeletionCharacter(key))
+            else if (key.IsADeletionCharacter())
             {
                 if (IsSessionActive())
                     _session.Filter();
                 handled = true;
             }
-            else if (IsAMovementCharacter(key))
+            else if (key.IsAMovementCharacter())
                 if (IsSessionActive() && HasMovedOutOfIntellisenseRange(key))
                     _session.Dismiss();
 
@@ -93,9 +93,9 @@ namespace SparkSense.StatementCompletion
             SnapshotPoint caretPoint;
             if (!TryGetCurrentCaretPoint(out caretPoint)) return false;
 
-            if (!_sparkFileAnalyzer.IsCurrentDocumentASparkFile()) return false;
+            if (!_projectExplorer.IsCurrentDocumentASparkFile()) return false;
 
-            var sparkCompletionType = new SparkCompletionType(_sparkFileAnalyzer, caretPoint.Snapshot.TextBuffer, caretPoint.Position);
+            var sparkCompletionType = new CompletionTypeSelector(_projectExplorer, caretPoint.Snapshot.TextBuffer, caretPoint.Position);
             completionType = sparkCompletionType.GetCompletionType(inputCharacter);
             return SparkCompletionTypes.None != completionType;
         }
@@ -123,26 +123,6 @@ namespace SparkSense.StatementCompletion
             return _session != null && !_session.IsDismissed;
         }
 
-        private static bool IsACommitCharacter(uint key, char inputCharacter)
-        {
-            return key == (uint) VSConstants.VSStd2KCmdID.RETURN ||
-                   key == (uint) VSConstants.VSStd2KCmdID.TAB ||
-                   char.IsWhiteSpace(inputCharacter) ||
-                   char.IsPunctuation(inputCharacter);
-        }
-
-        private static bool IsADeletionCharacter(uint key)
-        {
-            return key == (uint) VSConstants.VSStd2KCmdID.BACKSPACE ||
-                   key == (uint) VSConstants.VSStd2KCmdID.DELETE;
-        }
-
-        private static bool IsAMovementCharacter(uint key)
-        {
-            return key == (uint) VSConstants.VSStd2KCmdID.LEFT ||
-                   key == (uint) VSConstants.VSStd2KCmdID.RIGHT;
-        }
-
         private bool HasMovedOutOfIntellisenseRange(uint key)
         {
             int currentPosition = _textView.Caret.Position.BufferPosition.Position;
@@ -156,15 +136,6 @@ namespace SparkSense.StatementCompletion
                     return currentPosition > _completionCaretStartPosition + _completionSpan.GetSpan(currentSnapshot).Length;
             }
             return false;
-        }
-
-        private static char GetInputCharacter(Guid cmdGroup, uint key, IntPtr pvaIn)
-        {
-            char inputCharacter = char.MinValue;
-
-            if (cmdGroup == VSConstants.VSStd2K && key == (uint) VSConstants.VSStd2KCmdID.TYPECHAR)
-                inputCharacter = (char) (ushort) Marshal.GetObjectForNativeVariant(pvaIn);
-            return inputCharacter;
         }
 
         private void OnSessionCommitted(object sender, EventArgs e)

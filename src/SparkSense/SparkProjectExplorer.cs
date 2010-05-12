@@ -1,5 +1,6 @@
 using EnvDTE;
 using System;
+using System.Collections.Generic;
 
 namespace SparkSense
 {
@@ -27,6 +28,49 @@ namespace SparkSense
                 }
                 return _activeDocumentPath;
             }
+        }
+        private List<string> _viewMap;
+        public List<string> ViewMap
+        {
+            get
+            {
+                if (_viewMap == null)
+                     _viewMap = BuildViewMapFromProjectEnvironment();
+                return _viewMap;
+            }
+        }
+
+        private List<string> BuildViewMapFromProjectEnvironment()
+        {
+            var viewMap = new List<string>();
+            Solution solution = (Solution)_projectEnvironment.Solution;
+
+            foreach (Project project in solution.Projects)
+                foreach (ProjectItem projectItem in project.ProjectItems)
+                    ScanProjectItemForViews(projectItem, viewMap);
+
+            return viewMap;
+        }
+
+        private static void ScanProjectItemForViews(ProjectItem projectItem, List<string> viewMap)
+        {
+            if (projectItem.Name.EndsWith(".spark"))
+                viewMap.Add(GetProjectItemMap(projectItem));
+
+            if (projectItem.ProjectItems != null)
+                foreach (ProjectItem child in projectItem.ProjectItems)
+                    ScanProjectItemForViews(child, viewMap);
+        }
+
+        private static string GetProjectItemMap(ProjectItem projectItem)
+        {
+            string fullPath = projectItem.Properties.Item("FullPath").Value.ToString();
+
+            int viewsLocationStart = fullPath.LastIndexOf("Views");
+            var viewRoot = fullPath.Substring(0, viewsLocationStart + 5);
+            var foundView = fullPath.Replace(viewRoot, string.Empty).TrimStart('\\');
+            
+            return foundView;
         }
         public bool ViewFolderExists()
         {
