@@ -86,7 +86,7 @@
     <Compile Include="StatementCompletion\CompletionSets\SparkVariableCompletionSet.cs" />
     <Compile Include="StatementCompletion\KeyPressExtensions.cs" />
     <Compile Include="StatementCompletion\SparkCompletionCommand.cs" />
-    <Compile Include="StatementCompletion\SparkCompletionCommandListener.cs" />
+    <Compile Include="StatementCompletion\ViewCreationListener.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkCompletionSetFactory.cs" />
     <Compile Include="StatementCompletion\SparkCompletionSource.cs" />
     <Compile Include="StatementCompletion\SparkCompletionSourceProvider.cs" />

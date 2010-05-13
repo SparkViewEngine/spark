@@ -8,7 +8,7 @@ using System.Linq;
 namespace SparkSense.Tests.StatementCompletion
 {
     [TestFixture]
-    public class SparkTagCompletionSetTester
+    public class TagCompletionSetTester
     {
         [Test]
         public void ShouldReturnSparkSpecialNodes()
