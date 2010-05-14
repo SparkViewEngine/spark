@@ -38,10 +38,10 @@ namespace SparkSense.StatementCompletion
 
             var projectExplorer = new SparkProjectExplorer(vsEnvironment);
 
-            Func<SparkCompletionCommand> createCommand = 
-                () => new SparkCompletionCommand(textViewAdapter, textView, CompletionBroker, projectExplorer);
+            Func<KeyPressInterceptor> interceptionCreator = 
+                () => new KeyPressInterceptor(textViewAdapter, textView, CompletionBroker, projectExplorer);
 
-            textView.Properties.GetOrCreateSingletonProperty(createCommand);
+            textView.Properties.GetOrCreateSingletonProperty(interceptionCreator);
         }
         
         private bool TryGetEnvironmentAndView(IVsTextView textViewAdapter, out IWpfTextView textView, out DTE vsEnvironment)

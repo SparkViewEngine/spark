@@ -36,7 +36,7 @@ namespace SparkSense.StatementCompletion
             CurrentSession = session;
 
             SnapshotPoint completionStartPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
-            CompletionSet sparkCompletions = GetCompletionSetFor(completionStartPoint);
+            CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(_textBuffer, completionStartPoint, completionType);
             if (sparkCompletions != null) completionSets.Add(sparkCompletions);
         }
 
@@ -48,22 +48,5 @@ namespace SparkSense.StatementCompletion
         }
 
         #endregion
-
-        private CompletionSet GetCompletionSetFor(SnapshotPoint completionStartPoint)
-        {
-            switch (CompletionType)
-            {
-                case SparkCompletionTypes.Tag:
-                    return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_sourceProvider, _textBuffer, completionStartPoint);
-                case SparkCompletionTypes.Variable:
-                    return SparkCompletionSetFactory.Create<SparkVariableCompletionSet>(_sourceProvider, _textBuffer, completionStartPoint);
-                case SparkCompletionTypes.Invalid:
-                    return SparkCompletionSetFactory.Create<SparkInvalidCompletionSet>(_sourceProvider, _textBuffer, completionStartPoint);
-                case SparkCompletionTypes.None:
-                default:
-                    return null;
-            }
-        }
-
     }
 }

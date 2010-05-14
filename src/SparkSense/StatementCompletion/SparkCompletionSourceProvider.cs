@@ -13,19 +13,8 @@ namespace SparkSense.StatementCompletion
     [Name("Spark Tag Completion")]
     public class SparkCompletionSourceProvider : ICompletionSourceProvider
     {
-        private ITextStructureNavigatorSelectorService _navigatorService;
         [Import]
-        internal ITextStructureNavigatorSelectorService NavigatorService
-        {
-            get
-            {
-                return _navigatorService;
-            }
-            set
-            {
-                _navigatorService = value;
-            }
-        }
+        internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
 
         #region ICompletionSourceProvider Members
 

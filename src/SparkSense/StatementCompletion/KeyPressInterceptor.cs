@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 
 namespace SparkSense.StatementCompletion
 {
-    internal class SparkCompletionCommand : IOleCommandTarget
+    internal class KeyPressInterceptor : IOleCommandTarget
     {
         private readonly ICompletionBroker _completionBroker;
         private readonly IWpfTextView _textView;
@@ -22,7 +22,7 @@ namespace SparkSense.StatementCompletion
         private ICompletionSession _session;
         private SparkProjectExplorer _projectExplorer;
 
-        public SparkCompletionCommand(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, SparkProjectExplorer projectExplorer)
+        public KeyPressInterceptor(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, SparkProjectExplorer projectExplorer)
         {
             _textViewAdapter = textViewAdapter;
             _textView = textView;
@@ -41,49 +41,61 @@ namespace SparkSense.StatementCompletion
         public int Exec(ref Guid cmdGroup, uint key, uint cmdExecOpt, IntPtr pvaIn, IntPtr pvaOut)
         {
             char inputCharacter = key.GetInputCharacter(cmdGroup, pvaIn);
-            if (key.IsACommitCharacter(inputCharacter))
-            {
-                if (IsSessionActive())
-                {
-                    if (_session.SelectedCompletionSet.SelectionStatus.IsSelected)
-                    {
-                        _session.Commit();
-                        return VSConstants.S_OK;
-                    }
-                    _session.Dismiss();
-                }
-            }
 
-            int result = _nextCommand.Exec(ref cmdGroup, key, cmdExecOpt, pvaIn, pvaOut);
-            bool handled = false;
-            SparkCompletionTypes completionType;
+            if (CheckForCompletionCommit(key, inputCharacter)) return VSConstants.S_OK;
 
-            if (IsSparkSyntax(inputCharacter, out completionType))
-            {
-                if (!IsSessionActive())
-                {
-                    if (StartCompletion(completionType))
-                        _session.Filter();
-                }
-                else
-                    _session.Filter();
-                handled = true;
-            }
-            else if (key.IsADeletionCharacter())
-            {
-                if (IsSessionActive())
-                    _session.Filter();
-                handled = true;
-            }
-            else if (key.IsAMovementCharacter())
-                if (IsSessionActive() && HasMovedOutOfIntellisenseRange(key))
-                    _session.Dismiss();
-
-
-            return handled ? VSConstants.S_OK : result;
+            int keyPressResult = _nextCommand.Exec(ref cmdGroup, key, cmdExecOpt, pvaIn, pvaOut);
+            return CheckForCompletionStart(key, inputCharacter) ? VSConstants.S_OK : keyPressResult;
         }
 
         #endregion
+
+        private bool CheckForCompletionStart(uint key, char inputCharacter)
+        {
+            SparkCompletionTypes completionType;
+
+            if (!IsSparkSyntax(inputCharacter, out completionType))
+                return IsMovementOrDeletionHandled(key);
+
+            if (IsSessionActive() || StartCompletion(completionType))
+                _session.Filter();
+            return true;
+        }
+
+        private bool IsMovementOrDeletionHandled(uint key)
+        {
+            if (ShouldDismissCompletion(key))
+                _session.Dismiss();
+
+            if (!key.IsADeletionCharacter()) return false;
+
+            if (!IsSessionActive()) return true;
+
+            _session.Filter();
+            return true;
+        }
+
+        private bool ShouldDismissCompletion(uint key)
+        {
+            return
+                IsSessionActive() &&
+                key.IsAMovementCharacter() && 
+                key.HasMovedOutOfIntelliSenseRange(_textView, _completionSpan, _completionCaretStartPosition);
+        }
+
+        private bool CheckForCompletionCommit(uint key, char inputCharacter)
+        {
+            if (!(key.IsACommitCharacter(inputCharacter) && IsSessionActive()))
+                return false;
+
+            if (_session.SelectedCompletionSet.SelectionStatus.IsSelected)
+            {
+                _session.Commit();
+                return true;
+            }
+            _session.Dismiss();
+            return false;
+        }
 
         private bool IsSparkSyntax(char inputCharacter, out SparkCompletionTypes completionType)
         {
@@ -123,21 +135,6 @@ namespace SparkSense.StatementCompletion
             return _session != null && !_session.IsDismissed;
         }
 
-        private bool HasMovedOutOfIntellisenseRange(uint key)
-        {
-            int currentPosition = _textView.Caret.Position.BufferPosition.Position;
-            ITextSnapshot currentSnapshot = _completionSpan.TextBuffer.CurrentSnapshot;
-
-            switch (key)
-            {
-                case (uint) VSConstants.VSStd2KCmdID.LEFT:
-                    return currentPosition < _completionCaretStartPosition;
-                case (uint) VSConstants.VSStd2KCmdID.RIGHT:
-                    return currentPosition > _completionCaretStartPosition + _completionSpan.GetSpan(currentSnapshot).Length;
-            }
-            return false;
-        }
-
         private void OnSessionCommitted(object sender, EventArgs e)
         {
             //TODO: Rob G - Reposition Caret Correctly
@@ -169,7 +166,7 @@ namespace SparkSense.StatementCompletion
         {
             ITrackingPoint trackingPoint = currentPoint.Snapshot.CreateTrackingPoint(currentPoint.Position, PointTrackingMode.Positive);
             _session = _completionBroker.CreateCompletionSession(_textView, trackingPoint, true);
-            _session.Properties.AddProperty(typeof (SparkCompletionTypes), sparkCompletionType);
+            _session.Properties.AddProperty(typeof(SparkCompletionTypes), sparkCompletionType);
             _session.Properties.AddProperty(typeof(ITrackingSpan), _completionSpan);
             _session.Dismissed += OnSessionDismissed;
             _session.Committed += OnSessionCommitted;
