@@ -16,8 +16,8 @@ namespace SparkSense.SignatureRecognition
 
         public ISignatureHelpSource TryCreateSignatureHelpSource(ITextBuffer textBuffer)
         {
-            return null;
-            return new SparkSignatureHelpSource(textBuffer);
+            return null; //temporary
+            //return new SparkSignatureHelpSource(textBuffer);
         }
 
         #endregion

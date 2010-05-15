@@ -2,16 +2,18 @@ using EnvDTE;
 using System;
 using System.Collections.Generic;
 
-namespace SparkSense
+namespace SparkSense.Parsing
 {
-    public class SparkProjectExplorer
+    public class ProjectExplorer : IProjectExplorer
     {
         private string _activeDocumentPath;
         private DTE _projectEnvironment;
-        public SparkProjectExplorer(DTE projectEnvironment)
+        private List<string> _viewMap;
+
+        public ProjectExplorer(DTE projectEnvironment)
         {
             if (projectEnvironment == null)
-                throw new ArgumentNullException("projectEnvironment", "Spark Project Explorer requires a hook into the current visual studio enviroment.");
+                throw new ArgumentNullException("projectEnvironment", "Project Explorer requires a hook into the current visual studio enviroment.");
 
             _projectEnvironment = projectEnvironment;
         }
@@ -23,19 +25,19 @@ namespace SparkSense
                 if (string.IsNullOrEmpty(_activeDocumentPath))
                 {
                     _activeDocumentPath = _projectEnvironment.ActiveDocument != null
-                        ? _projectEnvironment.ActiveDocument.FullName 
+                        ? _projectEnvironment.ActiveDocument.FullName
                         : string.Empty;
                 }
                 return _activeDocumentPath;
             }
         }
-        private List<string> _viewMap;
+
         public List<string> ViewMap
         {
             get
             {
                 if (_viewMap == null)
-                     _viewMap = BuildViewMapFromProjectEnvironment();
+                    _viewMap = BuildViewMapFromProjectEnvironment();
                 return _viewMap;
             }
         }
@@ -69,7 +71,7 @@ namespace SparkSense
             int viewsLocationStart = fullPath.LastIndexOf("Views");
             var viewRoot = fullPath.Substring(0, viewsLocationStart + 5);
             var foundView = fullPath.Replace(viewRoot, string.Empty).TrimStart('\\');
-            
+
             return foundView;
         }
         public bool ViewFolderExists()

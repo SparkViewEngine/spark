@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Spark.Parser;
 using Spark.Compiler;
 using Spark.Parser.Syntax;
 using Spark.FileSystem;
 
-namespace SparkSense
+namespace SparkSense.Parsing
 {
-    public class SparkViewExplorer
+    public class ViewExplorer : IViewExplorer
     {
         private ViewLoader _viewLoader;
         private string _viewPath;
 
-        public SparkViewExplorer(IViewFolder viewRoot, string viewPath)
+        public ViewExplorer(IViewFolder viewRoot, string viewPath)
         {
             _viewLoader = new ViewLoader { ViewFolder = viewRoot, SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
             _viewPath = viewPath;

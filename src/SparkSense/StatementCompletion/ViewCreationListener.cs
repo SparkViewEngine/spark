@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Shell;
 using EnvDTE;
+using System.Runtime.InteropServices;
 
 namespace SparkSense.StatementCompletion
 {
@@ -36,7 +37,7 @@ namespace SparkSense.StatementCompletion
             if (AdaptersFactoryService == null || ServiceProvider == null) return;
             if (!TryGetEnvironmentAndView(textViewAdapter, out textView, out vsEnvironment)) return;
 
-            var projectExplorer = new SparkProjectExplorer(vsEnvironment);
+            var projectExplorer = new SparkSense.Parsing.ProjectExplorer(vsEnvironment);
 
             Func<KeyPressInterceptor> interceptionCreator = 
                 () => new KeyPressInterceptor(textViewAdapter, textView, CompletionBroker, projectExplorer);
@@ -47,7 +48,16 @@ namespace SparkSense.StatementCompletion
         private bool TryGetEnvironmentAndView(IVsTextView textViewAdapter, out IWpfTextView textView, out DTE vsEnvironment)
         {
             textView = AdaptersFactoryService.GetWpfTextView(textViewAdapter);
-            vsEnvironment = (DTE)ServiceProvider.GetService(typeof(DTE));
+            try
+            {
+                vsEnvironment = (DTE)ServiceProvider.GetService(typeof(DTE));
+            }
+            catch (COMException ex)
+            {
+                //TODO: Log the COM Exception
+                //Unable to load the visual studio environment
+                vsEnvironment = null;
+            }
 
             return textView != null && vsEnvironment != null;
         }

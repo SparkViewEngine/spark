@@ -15,28 +15,28 @@ namespace SparkSense.StatementCompletion.CompletionSets
         {
         }
 
-        public static CompletionSet Create<T>(ITextBuffer textBuffer, SnapshotPoint completionStartPoint) where T : SparkCompletionSetFactory, new()
+        public static CompletionSet Create<T>(ITextBuffer textBuffer, SnapshotPoint triggerPoint) where T : SparkCompletionSetFactory, new()
         {
             _textBuffer = textBuffer;
 
             var completionSet = new T
             {
-                ApplicableTo = completionStartPoint.Snapshot.CreateTrackingSpan(new Span(completionStartPoint, 0), SpanTrackingMode.EdgeInclusive)
+                ApplicableTo = triggerPoint.Snapshot.CreateTrackingSpan(new Span(triggerPoint, 0), SpanTrackingMode.EdgeInclusive)
             };
 
             return completionSet;
         }
 
-        public static CompletionSet GetCompletionSetFor(ITextBuffer textBuffer, SnapshotPoint completionStartPoint, SparkCompletionTypes completionType)
+        public static CompletionSet GetCompletionSetFor(ITextBuffer textBuffer, SnapshotPoint triggerPoint, SparkCompletionTypes completionType)
         {
             switch (completionType)
             {
                 case SparkCompletionTypes.Tag:
-                    return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(textBuffer, completionStartPoint);
+                    return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(textBuffer, triggerPoint);
                 case SparkCompletionTypes.Variable:
-                    return SparkCompletionSetFactory.Create<SparkVariableCompletionSet>(textBuffer, completionStartPoint);
+                    return SparkCompletionSetFactory.Create<SparkVariableCompletionSet>(textBuffer, triggerPoint);
                 case SparkCompletionTypes.Invalid:
-                    return SparkCompletionSetFactory.Create<SparkInvalidCompletionSet>(textBuffer, completionStartPoint);
+                    return SparkCompletionSetFactory.Create<SparkInvalidCompletionSet>(textBuffer, triggerPoint);
                 case SparkCompletionTypes.None:
                 default:
                     return null;

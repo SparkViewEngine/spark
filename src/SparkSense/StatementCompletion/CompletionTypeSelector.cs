@@ -19,9 +19,9 @@ namespace SparkSense.StatementCompletion
     {
         private ITextBuffer _textBuffer;
         private int _caretPosition;
-        private SparkProjectExplorer _projectExplorer;
+        private SparkSense.Parsing.IProjectExplorer _projectExplorer;
 
-        public CompletionTypeSelector(SparkProjectExplorer projectExplorer, ITextBuffer textBuffer, int caretPosition)
+        public CompletionTypeSelector(SparkSense.Parsing.IProjectExplorer projectExplorer, ITextBuffer textBuffer, int caretPosition)
         {
             _projectExplorer = projectExplorer;
             _textBuffer = textBuffer;

@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.Language.Intellisense;
 using NUnit.Framework;
-using SparkSense.StatementCompletion.CompletionSets;
 using System.Collections.Generic;
 using System.Linq;
+using SparkSense.StatementCompletion.CompletionSets;
 
 
 namespace SparkSense.Tests.StatementCompletion

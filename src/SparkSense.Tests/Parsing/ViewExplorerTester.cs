@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Spark.FileSystem;
 using NUnit.Framework.SyntaxHelpers;
 
-namespace SparkSense.Tests
+namespace SparkSense.Tests.Parsing
 {
     [TestFixture]
     public class ViewExplorerTester
@@ -16,7 +16,7 @@ namespace SparkSense.Tests
             var fileContent = "<var theNumberFive=\"5\" theNumberThree=\"3\" />";
             var viewFolder = new InMemoryViewFolder { { filePath, fileContent } };
 
-            var viewExplorer = new SparkViewExplorer(viewFolder, filePath);
+            var viewExplorer = new SparkSense.Parsing.ViewExplorer(viewFolder, filePath);
             IList<string> vars = viewExplorer.GetLocalVariables();
 
             Assert.That(vars.Count, Is.EqualTo(2));

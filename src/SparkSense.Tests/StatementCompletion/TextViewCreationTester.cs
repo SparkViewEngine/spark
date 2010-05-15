@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using SparkSense.StatementCompletion;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Editor;
 using Rhino.Mocks;
-using EnvDTE;
 using Microsoft.VisualStudio.Text.Editor;
 using NUnit.Framework.SyntaxHelpers;
+using SparkSense.StatementCompletion;
 
 namespace SparkSense.Tests.StatementCompletion
 {
@@ -59,6 +55,5 @@ namespace SparkSense.Tests.StatementCompletion
                 return null;
             }
         }
-
     }
 }

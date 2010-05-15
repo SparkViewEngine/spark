@@ -16,11 +16,9 @@ namespace SparkSense.SignatureRecognition
     [ContentType("HTML")]
     internal class SparkSignatureHelpCommandListener : IVsTextViewCreationListener
     {
-        [Import] internal IVsEditorAdaptersFactoryService AdapterService;
-        [Import] internal ISignatureHelpBroker Broker;
-
-        [Import]
-        internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
+        [Import] internal IVsEditorAdaptersFactoryService AdapterService = null;
+        [Import] internal ISignatureHelpBroker Broker = null;
+        [Import] internal ITextStructureNavigatorSelectorService NavigatorService = null;
 
         #region IVsTextViewCreationListener Members
 

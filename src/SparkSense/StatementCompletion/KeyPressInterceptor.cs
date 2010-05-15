@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using EnvDTE;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.OLE.Interop;
 
 namespace SparkSense.StatementCompletion
@@ -20,9 +17,9 @@ namespace SparkSense.StatementCompletion
         private ITrackingSpan _completionSpan;
         private IOleCommandTarget _nextCommand;
         private ICompletionSession _session;
-        private SparkProjectExplorer _projectExplorer;
+        private SparkSense.Parsing.IProjectExplorer _projectExplorer;
 
-        public KeyPressInterceptor(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, SparkProjectExplorer projectExplorer)
+        public KeyPressInterceptor(IVsTextView textViewAdapter, IWpfTextView textView, ICompletionBroker completionBroker, SparkSense.Parsing.IProjectExplorer projectExplorer)
         {
             _textViewAdapter = textViewAdapter;
             _textView = textView;

@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 using Spark.FileSystem;
-using Spark;
 using Spark.Parser;
 using Spark.Parser.Syntax;
-using NUnit.Framework.SyntaxHelpers;
 using EnvDTE;
-using Microsoft.VisualStudio.Shell;
-using EnvDTE80;
 using System.Runtime.InteropServices;
 
-namespace SparkSense.Tests
+namespace SparkSense.Tests.Parsing
 {
     [TestFixture]
     public class ProjectExplorerTester
@@ -33,15 +27,15 @@ namespace SparkSense.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void ShouldThrowIfTheProjectEnvironmentIsNull()
         {
-            new SparkProjectExplorer(null);
+            new SparkSense.Parsing.ProjectExplorer(null);
         }
 
-        [Test]
+        [Test, Ignore("Need to abstract the DTE away somewhere")]
         public void ShouldBuildAMapOfAllViewsInTheSolution()
         {
             var projectEnvironment = (DTE)Marshal.GetActiveObject("VisualStudio.DTE.10.0");
 
-            var projectExplorer = new SparkProjectExplorer(projectEnvironment);
+            var projectExplorer = new SparkSense.Parsing.ProjectExplorer(projectEnvironment);
             var viewMap = projectExplorer.ViewMap;
 
             viewMap.ForEach(s => Console.WriteLine(s));

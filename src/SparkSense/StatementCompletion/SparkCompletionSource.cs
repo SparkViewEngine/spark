@@ -1,12 +1,9 @@
-﻿using EnvDTE;
-using Microsoft.VisualStudio.Language.Intellisense;
+﻿using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using Spark.FileSystem;
-using Spark.Parser;
-using Spark.Parser.Syntax;
 using System;
 using System.Collections.Generic;
 using SparkSense.StatementCompletion.CompletionSets;
+
 
 
 namespace SparkSense.StatementCompletion
@@ -35,8 +32,8 @@ namespace SparkSense.StatementCompletion
             CompletionType = session.Properties.TryGetProperty(typeof(SparkCompletionTypes), out completionType) ? completionType : SparkCompletionTypes.None;
             CurrentSession = session;
 
-            SnapshotPoint completionStartPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
-            CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(_textBuffer, completionStartPoint, completionType);
+            SnapshotPoint triggerPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
+            CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(_textBuffer, triggerPoint, completionType);
             if (sparkCompletions != null) completionSets.Add(sparkCompletions);
         }
 
