@@ -5,10 +5,10 @@ using EnvDTE;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
+using SparkSense.Parsing;
 
 namespace SparkSense.StatementCompletion
 {
@@ -22,47 +22,46 @@ namespace SparkSense.StatementCompletion
         [Import]
         public IVsEditorAdaptersFactoryService AdaptersFactoryService;
 
-        public IVsHierarchy VsHierarchy;
-
         [Import(typeof(SVsServiceProvider))]
         public IServiceProvider ServiceProvider;
 
         [Import]
         public ICompletionBroker CompletionBroker;
 
+        public IVsTextView TextViewAdapter { get; private set; }
+        public IWpfTextView TextView { get; private set; }
+        public DTE VsEnvironment { get; private set; }
+        public IProjectExplorer ProjectExplorer { get; private set; }
+
         #region IVsTextViewCreationListener Members
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
-            DTE vsEnvironment;
-            IWpfTextView textView;
+            TextViewAdapter = textViewAdapter;
+            if (AdaptersFactoryService == null || ServiceProvider == null || !TryGetEnvironmentAndView()) return;
 
-            if (AdaptersFactoryService == null || ServiceProvider == null) return;
-            if (!TryGetEnvironmentAndView(textViewAdapter, out textView, out vsEnvironment)) return;
+            Func<KeyPressInterceptor> interceptionCreator = () => new KeyPressInterceptor(this);
 
-            var projectExplorer = new SparkSense.Parsing.ProjectExplorer(vsEnvironment);
-
-            Func<KeyPressInterceptor> interceptionCreator = 
-                () => new KeyPressInterceptor(textViewAdapter, textView, CompletionBroker, projectExplorer);
-
-            textView.Properties.GetOrCreateSingletonProperty(interceptionCreator);
+            TextView.Properties.GetOrCreateSingletonProperty(interceptionCreator);
         }
         
-        private bool TryGetEnvironmentAndView(IVsTextView textViewAdapter, out IWpfTextView textView, out DTE vsEnvironment)
+        private bool TryGetEnvironmentAndView()
         {
-            textView = AdaptersFactoryService.GetWpfTextView(textViewAdapter);
+            TextView = AdaptersFactoryService.GetWpfTextView(TextViewAdapter);
             try
             {
-                vsEnvironment = (DTE)ServiceProvider.GetService(typeof(DTE));
+                VsEnvironment = (DTE)ServiceProvider.GetService(typeof(DTE));
+                if (VsEnvironment != null)
+                    ProjectExplorer = new ProjectExplorer(VsEnvironment);
             }
             catch (COMException ex)
             {
-                //TODO: Log the COM Exception
-                //Unable to load the visual studio environment
-                vsEnvironment = null;
+                //TODO: Log the COM Exception somewhere
+                //Unable to attach to the current visual studio environment
+                VsEnvironment = null;
             }
 
-            return textView != null && vsEnvironment != null;
+            return TextView != null && VsEnvironment != null;
         }
         #endregion
     }

@@ -1,42 +1,35 @@
 ﻿using System;
 using Microsoft.VisualStudio.Text;
+using SparkSense.Parsing;
 
 namespace SparkSense.StatementCompletion
 {
-    public enum CompletionTypes
-    {
-        None,
-        Tag,
-        Variable,
-        Invalid,
-    }
-
     public class CompletionTypeSelector
     {
         private ITextBuffer _textBuffer;
         private int _caretPosition;
-        private SparkSense.Parsing.IProjectExplorer _projectExplorer;
+        private IProjectExplorer _projectExplorer;
 
-        public CompletionTypeSelector(SparkSense.Parsing.IProjectExplorer projectExplorer, ITextBuffer textBuffer, int caretPosition)
+        public CompletionTypeSelector(IProjectExplorer projectExplorer, ITextBuffer textBuffer, int caretPosition)
         {
             _projectExplorer = projectExplorer;
             _textBuffer = textBuffer;
             _caretPosition = caretPosition;
         }
 
-        public CompletionTypes GetCompletionType(char key)
+        public SparkSyntaxTypes GetsyntaxType(char key)
         {
             if (!_projectExplorer.ViewFolderExists())
-                return CompletionTypes.Invalid;
+                return SparkSyntaxTypes.Invalid;
 
             switch (key)
             {
                 case '<':
-                    return CompletionTypes.Tag;
+                    return SparkSyntaxTypes.Tag;
                 default:
                     if (Char.IsLetterOrDigit(key.ToString(), 0))
-                        return CompletionTypes.Variable;
-                    return CompletionTypes.None;
+                        return SparkSyntaxTypes.Variable;
+                    return SparkSyntaxTypes.None;
             }
         }
 

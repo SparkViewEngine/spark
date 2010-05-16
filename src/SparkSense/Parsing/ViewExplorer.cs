@@ -12,9 +12,9 @@ namespace SparkSense.Parsing
         private ViewLoader _viewLoader;
         private string _viewPath;
 
-        public ViewExplorer(IViewFolder viewRoot, string viewPath)
+        public ViewExplorer(IViewFolder viewFolder, string viewPath)
         {
-            _viewLoader = new ViewLoader { ViewFolder = viewRoot, SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
+            _viewLoader = new ViewLoader { ViewFolder = viewFolder, SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
             _viewPath = viewPath;
         }
 
@@ -31,5 +31,16 @@ namespace SparkSense.Parsing
             locals.ToList().ForEach(local => localVariables.Add(((LocalVariableChunk)local).Name));
             return localVariables;
         }
+
+        public static IViewExplorer CreateFromActiveDocumentPath(string activeDocumentPath)
+        {
+            int viewsLocationStart = activeDocumentPath.LastIndexOf("Views");
+            var viewRoot = activeDocumentPath.Substring(0, viewsLocationStart + 5);
+            var currentView = activeDocumentPath.Replace(viewRoot, string.Empty).TrimStart('\\');
+            var viewFolder = new FileSystemViewFolder(viewRoot);
+
+            return new ViewExplorer(viewFolder, currentView);
+        }
+
     }
 }

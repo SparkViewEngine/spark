@@ -6,10 +6,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using SparkSense.Parsing;
 using SparkSense.StatementCompletion.CompletionSets;
-using Spark.FileSystem;
-using SparkSense.Parsing;
-using Rhino.Mocks;
-using Microsoft.VisualStudio.Text;
 
 
 namespace SparkSense.Tests.StatementCompletion

@@ -20,19 +20,17 @@ namespace SparkSense.StatementCompletion
             _textBuffer = textBuffer;
         }
 
-        protected CompletionTypes CompletionType { get; private set; }
-
         #region ICompletionSource Members
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
-            CompletionTypes completionType;
+            SparkSyntaxTypes syntaxType;
             IViewExplorer viewExplorer;
 
-            session.Properties.TryGetProperty(typeof(CompletionTypes), out completionType);
+            session.Properties.TryGetProperty(typeof(SparkSyntaxTypes), out syntaxType);
             session.Properties.TryGetProperty(typeof(IViewExplorer), out viewExplorer);
 
-            CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(session, _textBuffer, viewExplorer, completionType);
+            CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(session, _textBuffer, viewExplorer, syntaxType);
             if (sparkCompletions != null) completionSets.Add(sparkCompletions);
         }
 
