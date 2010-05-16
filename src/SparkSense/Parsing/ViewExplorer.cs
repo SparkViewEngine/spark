@@ -19,6 +19,11 @@ namespace SparkSense.Parsing
             _viewPath = viewPath;
         }
 
+        public IList<string> GetRelatedPartials()
+        {
+            return _viewLoader.FindPartialFiles(_viewPath);
+        }
+
         public IList<string> GetLocalVariables()
         {
             var localVariables = new List<string>();

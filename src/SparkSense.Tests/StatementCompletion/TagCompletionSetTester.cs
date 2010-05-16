@@ -3,6 +3,10 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using SparkSense.StatementCompletion.CompletionSets;
+using Spark.FileSystem;
+using SparkSense.Parsing;
+using Rhino.Mocks;
+using Microsoft.VisualStudio.Text;
 
 
 namespace SparkSense.Tests.StatementCompletion
@@ -10,10 +14,31 @@ namespace SparkSense.Tests.StatementCompletion
     [TestFixture]
     public class TagCompletionSetTester
     {
+        private ICompletionSession _stubSession;
+        private ITextBuffer _stubTextBuffer;
+        private IViewExplorer _stubViewExplorer;
+        private ITrackingPoint _stubTrackingPoint;
+        private ITextSnapshot _stubSnapshot;
+
+        [SetUp]
+        public void Setup()
+        {
+            _stubSession = MockRepository.GenerateStub<ICompletionSession>();
+            _stubTextBuffer = MockRepository.GenerateStub<ITextBuffer>();
+            _stubViewExplorer = MockRepository.GenerateStub<IViewExplorer>();
+            _stubTrackingPoint = MockRepository.GenerateStub<ITrackingPoint>();
+            _stubSnapshot = MockRepository.GenerateStub<ITextSnapshot>();
+
+            _stubTextBuffer.Stub(x => x.CurrentSnapshot).Return(_stubSnapshot);
+            _stubSession.Stub(x => x.GetTriggerPoint(_stubTextBuffer)).Return(_stubTrackingPoint);
+            _stubTrackingPoint.Stub(x => x.GetPoint(_stubSnapshot)).Return(new SnapshotPoint(_stubSnapshot, 0));
+            _stubViewExplorer.Stub(x => x.GetRelatedPartials()).Return(new List<string>());
+        }
+
         [Test]
         public void ShouldReturnSparkSpecialNodes()
         {
-            var tag = new SparkTagCompletionSet();
+            var tag = SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_stubSession, _stubTextBuffer, _stubViewExplorer);
             List<Completion> tagList = tag.Completions.ToList();
 
             Assert.IsTrue(tagList.Exists(c => c.DisplayText == "var"));
@@ -33,6 +58,21 @@ namespace SparkSense.Tests.StatementCompletion
             Assert.IsTrue(tagList.Exists(c => c.DisplayText == "render"));
             Assert.IsTrue(tagList.Exists(c => c.DisplayText == "section"));
             Assert.IsTrue(tagList.Exists(c => c.DisplayText == "cache"));
+        }
+
+        [Test]
+        public void ShouldLookForRelatedPartials()
+        {
+            var mockViewExplorer = MockRepository.GenerateMock<IViewExplorer>();
+
+            mockViewExplorer.Expect(x => x.GetRelatedPartials()).Return(new List<string> { "partial1", "partial2" });
+
+            var tag = SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_stubSession, _stubTextBuffer, mockViewExplorer);
+            var tagList = tag.Completions.ToList();
+            Assert.That(tagList.Exists(c => c.DisplayText == "partial1"));
+            Assert.That(tagList.Exists(c => c.DisplayText == "partial2"));
+
+            mockViewExplorer.VerifyAllExpectations();
         }
     }
 }

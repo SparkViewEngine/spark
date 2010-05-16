@@ -11,7 +11,6 @@ namespace SparkSense.Tests.Parsing
     [TestFixture]
     public class ProjectExplorerTester
     {
-        private const string IRRELEVANT_FILE_CONTENT = "Irrelevant content";
         private const string ROOT_VIEW_PATH = "SparkSense.Tests.Views";
         private DefaultSyntaxProvider _syntaxProvider;
         private ViewLoader _viewLoader;
@@ -30,7 +29,7 @@ namespace SparkSense.Tests.Parsing
             new SparkSense.Parsing.ProjectExplorer(null);
         }
 
-        [Test, Ignore("Need to abstract the DTE away somewhere")]
+        [Test, Ignore("This test fails if run outside VS (i.e. NUnit) but passes inside because it can attach to the DTE. Need to find a better way of testing this")]
         public void ShouldBuildAMapOfAllViewsInTheSolution()
         {
             var projectEnvironment = (DTE)Marshal.GetActiveObject("VisualStudio.DTE.10.0");

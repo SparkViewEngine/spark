@@ -49,7 +49,7 @@ namespace SparkSense.StatementCompletion
 
         private bool CheckForCompletionStart(uint key, char inputCharacter)
         {
-            SparkCompletionTypes completionType;
+            CompletionTypes completionType;
 
             if (!IsSparkSyntax(inputCharacter, out completionType))
                 return IsMovementOrDeletionHandled(key);
@@ -94,9 +94,9 @@ namespace SparkSense.StatementCompletion
             return false;
         }
 
-        private bool IsSparkSyntax(char inputCharacter, out SparkCompletionTypes completionType)
+        private bool IsSparkSyntax(char inputCharacter, out CompletionTypes completionType)
         {
-            completionType = SparkCompletionTypes.None;
+            completionType = CompletionTypes.None;
             if (inputCharacter.Equals(char.MinValue)) return false;
 
             SnapshotPoint caretPoint;
@@ -106,7 +106,7 @@ namespace SparkSense.StatementCompletion
 
             var sparkCompletionType = new CompletionTypeSelector(_projectExplorer, caretPoint.Snapshot.TextBuffer, caretPoint.Position);
             completionType = sparkCompletionType.GetCompletionType(inputCharacter);
-            return SparkCompletionTypes.None != completionType;
+            return CompletionTypes.None != completionType;
         }
 
         private bool TryGetCurrentCaretPoint(out SnapshotPoint caretPoint)
@@ -143,7 +143,7 @@ namespace SparkSense.StatementCompletion
             _session = null;
         }
 
-        private bool StartCompletion(SparkCompletionTypes sparkCompletionType)
+        private bool StartCompletion(CompletionTypes sparkCompletionType)
         {
             SnapshotPoint? currentPoint = _textView.Caret.Position.Point.GetPoint(match => !match.ContentType.IsOfType("projection"), PositionAffinity.Predecessor);
             if (!currentPoint.HasValue) return false;
@@ -159,11 +159,11 @@ namespace SparkSense.StatementCompletion
             _completionSpan = currentPoint.Snapshot.CreateTrackingSpan(currentPoint.Position, 0, SpanTrackingMode.EdgeInclusive);
         }
 
-        private void ConfigureCompletionSession(SnapshotPoint currentPoint, SparkCompletionTypes sparkCompletionType)
+        private void ConfigureCompletionSession(SnapshotPoint currentPoint, CompletionTypes sparkCompletionType)
         {
             ITrackingPoint trackingPoint = currentPoint.Snapshot.CreateTrackingPoint(currentPoint.Position, PointTrackingMode.Positive);
             _session = _completionBroker.CreateCompletionSession(_textView, trackingPoint, true);
-            _session.Properties.AddProperty(typeof(SparkCompletionTypes), sparkCompletionType);
+            _session.Properties.AddProperty(typeof(CompletionTypes), sparkCompletionType);
             _session.Properties.AddProperty(typeof(ITrackingSpan), _completionSpan);
             _session.Dismissed += OnSessionDismissed;
             _session.Committed += OnSessionCommitted;

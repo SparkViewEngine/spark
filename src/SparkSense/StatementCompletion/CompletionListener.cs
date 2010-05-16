@@ -11,16 +11,16 @@ namespace SparkSense.StatementCompletion
     [ContentType("spark")]
     [ContentType("HTML")]
     [Name("Spark Tag Completion")]
-    public class SparkCompletionSourceProvider : ICompletionSourceProvider
+    public class CompletionListener : ICompletionSourceProvider
     {
         [Import]
-        internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
+        internal ITextStructureNavigatorSelectorService TextNavigator { get; set; }
 
         #region ICompletionSourceProvider Members
 
         public ICompletionSource TryCreateCompletionSource(ITextBuffer textBuffer)
         {
-            return new SparkCompletionSource(this, textBuffer);
+            return new CompletionSource(TextNavigator, textBuffer);
         }
 
         #endregion

@@ -5,6 +5,7 @@ namespace SparkSense.Parsing
 {
     public interface IViewExplorer
     {
+        IList<string> GetRelatedPartials();
         IList<string> GetLocalVariables();
     }
 }

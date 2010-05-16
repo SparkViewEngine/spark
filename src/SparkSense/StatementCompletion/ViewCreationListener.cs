@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Shell;
 using EnvDTE;
 using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace SparkSense.StatementCompletion
 {
@@ -20,6 +21,8 @@ namespace SparkSense.StatementCompletion
     {
         [Import]
         public IVsEditorAdaptersFactoryService AdaptersFactoryService;
+
+        public IVsHierarchy VsHierarchy;
 
         [Import(typeof(SVsServiceProvider))]
         public IServiceProvider ServiceProvider;
