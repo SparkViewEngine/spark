@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace SparkSense.StatementCompletion
 {
-    public static class KeyPressExtensions
+    public static class CompletionExtensions
     {
         public static char GetInputCharacter(this uint key, Guid cmdGroup, IntPtr pvaIn)
         {

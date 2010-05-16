@@ -74,19 +74,13 @@ namespace SparkSense.Parsing
 
             return foundView;
         }
+
         public bool ViewFolderExists()
         {
             int viewsLocationStart = ActiveDocumentPath.LastIndexOf("Views");
             return viewsLocationStart != -1;
-
-            //var viewRoot = CurrentDocument.FullName.Substring(0, viewsLocationStart + 5);
-            //var currentView = CurrentDocument.FullName.Replace(viewRoot, string.Empty).TrimStart('\\');
-
-            //var syntaxProvider = new DefaultSyntaxProvider(new ParserSettings());
-            //var viewLoader = new ViewLoader { ViewFolder = new FileSystemViewFolder(viewRoot), SyntaxProvider = syntaxProvider };
-            //viewLoader.Load(currentView);
-            //var partials = viewLoader.FindPartialFiles(currentView);
         }
+
         public bool IsCurrentDocumentASparkFile()
         {
             return ActiveDocumentPath.EndsWith(".spark");

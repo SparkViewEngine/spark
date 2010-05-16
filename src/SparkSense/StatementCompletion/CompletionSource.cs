@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Text;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using SparkSense.StatementCompletion.CompletionSets;
-using SparkSense.Parsing;
+using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
+using SparkSense.Parsing;
+using SparkSense.StatementCompletion.CompletionSets;
 
 namespace SparkSense.StatementCompletion
 {
@@ -20,19 +20,17 @@ namespace SparkSense.StatementCompletion
             _textBuffer = textBuffer;
         }
 
-        protected CompletionTypes CompletionType { get; private set; }
-
         #region ICompletionSource Members
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
-            CompletionTypes completionType;
+            SparkSyntaxTypes syntaxType;
             IViewExplorer viewExplorer;
 
-            session.Properties.TryGetProperty(typeof(CompletionTypes), out completionType);
+            session.Properties.TryGetProperty(typeof(SparkSyntaxTypes), out syntaxType);
             session.Properties.TryGetProperty(typeof(IViewExplorer), out viewExplorer);
 
-            CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(session, _textBuffer, viewExplorer, completionType);
+            CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(session, _textBuffer, viewExplorer, syntaxType);
             if (sparkCompletions != null) completionSets.Add(sparkCompletions);
         }
 

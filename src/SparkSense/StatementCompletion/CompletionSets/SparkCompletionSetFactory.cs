@@ -31,17 +31,17 @@ namespace SparkSense.StatementCompletion.CompletionSets
             return completionSet;
         }
 
-        public static CompletionSet GetCompletionSetFor(ICompletionSession session, ITextBuffer textBuffer, IViewExplorer viewExplorer, CompletionTypes completionType)
+        public static CompletionSet GetCompletionSetFor(ICompletionSession session, ITextBuffer textBuffer, IViewExplorer viewExplorer, SparkSyntaxTypes syntaxType)
         {
-            switch (completionType)
+            switch (syntaxType)
             {
-                case CompletionTypes.Tag:
+                case SparkSyntaxTypes.Tag:
                     return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(session, textBuffer, viewExplorer);
-                case CompletionTypes.Variable:
+                case SparkSyntaxTypes.Variable:
                     return SparkCompletionSetFactory.Create<SparkVariableCompletionSet>(session, textBuffer, viewExplorer);
-                case CompletionTypes.Invalid:
+                case SparkSyntaxTypes.Invalid:
                     return SparkCompletionSetFactory.Create<SparkInvalidCompletionSet>(session,  textBuffer, viewExplorer);
-                case CompletionTypes.None:
+                case SparkSyntaxTypes.None:
                 default:
                     return null;
             }

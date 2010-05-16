@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Spark.FileSystem;
 using NUnit.Framework.SyntaxHelpers;
+using Spark.FileSystem;
 using SparkSense.Parsing;
 
 namespace SparkSense.Tests.Parsing
