@@ -1,5 +1,5 @@
-using Microsoft.VisualStudio.Language.Intellisense;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.Language.Intellisense;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {

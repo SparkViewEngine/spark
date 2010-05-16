@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Spark.Parser;
 using Spark.Compiler;
-using Spark.Parser.Syntax;
 using Spark.FileSystem;
+using Spark.Parser;
+using Spark.Parser.Syntax;
 
 namespace SparkSense.Parsing
 {
@@ -17,6 +16,11 @@ namespace SparkSense.Parsing
         {
             _viewLoader = new ViewLoader { ViewFolder = viewRoot, SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
             _viewPath = viewPath;
+        }
+
+        public IList<string> GetRelatedPartials()
+        {
+            return _viewLoader.FindPartialFiles(_viewPath);
         }
 
         public IList<string> GetLocalVariables()

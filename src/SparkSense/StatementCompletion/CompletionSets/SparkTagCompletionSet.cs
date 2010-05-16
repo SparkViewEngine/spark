@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Spark.Compiler.NodeVisitors;
-using System;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
@@ -18,6 +18,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
                 _completionList = new List<Completion>();
                 _completionList.AddRange(GetSpecialNodes());
+                _completionList.AddRange(GetRelatedPartials());
 
                 return _completionList;
             }
@@ -35,6 +36,14 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 _specialNodeCompletions.Add(new Completion(nodeName, nodeName, String.Format("Spark '{0}' tag", nodeName), SparkTagIcon, null));
 
             return _specialNodeCompletions;
+        }
+        private IEnumerable<Completion> GetRelatedPartials()
+        {
+            var relatedPartials = new List<Completion>();
+            foreach (var partial in _viewExplorer.GetRelatedPartials())
+                relatedPartials.Add(new Completion(partial, partial, string.Format("Partial found: '{0}'", partial), SparkTagIcon, null));
+
+            return relatedPartials;
         }
 
     }

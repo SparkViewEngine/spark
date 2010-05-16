@@ -1,13 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.Text;
-using Spark.Parser;
-using Spark.Parser.Syntax;
-using Spark.FileSystem;
-using EnvDTE;
 
 namespace SparkSense.StatementCompletion
 {
-    public enum SparkCompletionTypes
+    public enum CompletionTypes
     {
         None,
         Tag,
@@ -28,19 +24,19 @@ namespace SparkSense.StatementCompletion
             _caretPosition = caretPosition;
         }
 
-        public SparkCompletionTypes GetCompletionType(char key)
+        public CompletionTypes GetCompletionType(char key)
         {
             if (!_projectExplorer.ViewFolderExists())
-                return SparkCompletionTypes.Invalid;
+                return CompletionTypes.Invalid;
 
             switch (key)
             {
                 case '<':
-                    return SparkCompletionTypes.Tag;
+                    return CompletionTypes.Tag;
                 default:
                     if (Char.IsLetterOrDigit(key.ToString(), 0))
-                        return SparkCompletionTypes.Variable;
-                    return SparkCompletionTypes.None;
+                        return CompletionTypes.Variable;
+                    return CompletionTypes.None;
             }
         }
 

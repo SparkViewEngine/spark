@@ -3,6 +3,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using SparkSense.Parsing;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
@@ -10,15 +11,18 @@ namespace SparkSense.StatementCompletion.CompletionSets
     {
         internal static ImageSource SparkTagIcon = new BitmapImage(new Uri(("Resources/SparkTag.png"), UriKind.Relative));
         internal static ITextBuffer _textBuffer;
+        internal static IViewExplorer _viewExplorer;
 
         internal SparkCompletionSetFactory() : base("Spark Elements", "Spark Elements", null, null, null)
         {
         }
 
-        public static CompletionSet Create<T>(ITextBuffer textBuffer, SnapshotPoint triggerPoint) where T : SparkCompletionSetFactory, new()
+        public static CompletionSet Create<T>(ICompletionSession session, ITextBuffer textBuffer, IViewExplorer viewExplorer) where T : SparkCompletionSetFactory, new()
         {
+            _viewExplorer = viewExplorer;
             _textBuffer = textBuffer;
 
+            var triggerPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
             var completionSet = new T
             {
                 ApplicableTo = triggerPoint.Snapshot.CreateTrackingSpan(new Span(triggerPoint, 0), SpanTrackingMode.EdgeInclusive)
@@ -27,17 +31,17 @@ namespace SparkSense.StatementCompletion.CompletionSets
             return completionSet;
         }
 
-        public static CompletionSet GetCompletionSetFor(ITextBuffer textBuffer, SnapshotPoint triggerPoint, SparkCompletionTypes completionType)
+        public static CompletionSet GetCompletionSetFor(ICompletionSession session, ITextBuffer textBuffer, IViewExplorer viewExplorer, CompletionTypes completionType)
         {
             switch (completionType)
             {
-                case SparkCompletionTypes.Tag:
-                    return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(textBuffer, triggerPoint);
-                case SparkCompletionTypes.Variable:
-                    return SparkCompletionSetFactory.Create<SparkVariableCompletionSet>(textBuffer, triggerPoint);
-                case SparkCompletionTypes.Invalid:
-                    return SparkCompletionSetFactory.Create<SparkInvalidCompletionSet>(textBuffer, triggerPoint);
-                case SparkCompletionTypes.None:
+                case CompletionTypes.Tag:
+                    return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(session, textBuffer, viewExplorer);
+                case CompletionTypes.Variable:
+                    return SparkCompletionSetFactory.Create<SparkVariableCompletionSet>(session, textBuffer, viewExplorer);
+                case CompletionTypes.Invalid:
+                    return SparkCompletionSetFactory.Create<SparkInvalidCompletionSet>(session,  textBuffer, viewExplorer);
+                case CompletionTypes.None:
                 default:
                     return null;
             }

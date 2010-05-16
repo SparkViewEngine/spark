@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Runtime.InteropServices;
+using EnvDTE;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
-using Microsoft.VisualStudio.Shell;
-using EnvDTE;
-using System.Runtime.InteropServices;
 
 namespace SparkSense.StatementCompletion
 {
@@ -20,6 +21,8 @@ namespace SparkSense.StatementCompletion
     {
         [Import]
         public IVsEditorAdaptersFactoryService AdaptersFactoryService;
+
+        public IVsHierarchy VsHierarchy;
 
         [Import(typeof(SVsServiceProvider))]
         public IServiceProvider ServiceProvider;

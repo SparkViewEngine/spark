@@ -4,7 +4,7 @@
     <Name>SparkSense</Name>
     <Author>Robert Greyling</Author>
     <Version>0.1</Version>
-    <Description xml:space="preserve">This is a Spark classifier extension to the Visual Studio Editor.</Description>
+    <Description xml:space="preserve">This is a Spark extension to the Visual Studio Editor.</Description>
     <Locale>1033</Locale>
     <SupportedProducts>
       <VisualStudio Version="10.0">
