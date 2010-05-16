@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Spark.Parser;
 using Spark.Compiler;
-using Spark.Parser.Syntax;
 using Spark.FileSystem;
+using Spark.Parser;
+using Spark.Parser.Syntax;
 
 namespace SparkSense.Parsing
 {
