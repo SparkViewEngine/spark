@@ -1,7 +1,10 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
+using NUnit.Framework;
+using Rhino.Mocks;
+using SparkSense.Parsing;
 using SparkSense.StatementCompletion.CompletionSets;
 using Spark.FileSystem;
 using SparkSense.Parsing;

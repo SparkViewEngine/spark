@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using EnvDTE;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Syntax;
-using EnvDTE;
-using System.Runtime.InteropServices;
 
 namespace SparkSense.Tests.Parsing
 {

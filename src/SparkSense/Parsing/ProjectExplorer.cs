@@ -1,6 +1,6 @@
-using EnvDTE;
 using System;
 using System.Collections.Generic;
+using EnvDTE;
 
 namespace SparkSense.Parsing
 {

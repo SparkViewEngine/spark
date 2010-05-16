@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Spark.Compiler.NodeVisitors;
-using System;
-using SparkSense.Parsing;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {

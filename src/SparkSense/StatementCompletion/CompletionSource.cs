@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Text;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using SparkSense.StatementCompletion.CompletionSets;
-using SparkSense.Parsing;
+using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
+using SparkSense.Parsing;
+using SparkSense.StatementCompletion.CompletionSets;
 
 namespace SparkSense.StatementCompletion
 {

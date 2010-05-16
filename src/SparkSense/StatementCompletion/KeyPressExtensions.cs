@@ -1,6 +1,6 @@
 using System;
-using Microsoft.VisualStudio;
 using System.Runtime.InteropServices;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
