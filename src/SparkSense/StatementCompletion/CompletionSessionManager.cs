@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using SparkSense.Parsing;
+using System.Collections.Generic;
 
 namespace SparkSense.StatementCompletion
 {
@@ -77,11 +78,14 @@ namespace SparkSense.StatementCompletion
 
         public bool StartCompletionSession(SparkSyntaxTypes syntaxType)
         {
-            SnapshotPoint? currentPoint = _textView.Caret.Position.BufferPosition;
-            if (!currentPoint.HasValue) return false;
+            SnapshotPoint? caretPoint = _textView.Caret.Position.BufferPosition;
+            if (!caretPoint.HasValue) return false;
 
-            if(ConfigureCompletionSession(currentPoint.Value, syntaxType))
-                _session.Start();
+            if (!ConfigureCompletionSession(caretPoint.Value, syntaxType)) return false;
+
+            _session.Dismissed += OnSessionDismissed;
+            _session.Committed += OnSessionCommitted;
+            _session.Start();
             return IsSessionActive(); //Rob G: Depending on the content type - the session can sometimes be dismissed automatically
         }
 
@@ -103,18 +107,14 @@ namespace SparkSense.StatementCompletion
 
             IViewExplorer viewExplorer = ViewExplorer.CreateFromActiveDocumentPath(_projectExplorer.ActiveDocumentPath);
             ITrackingPoint trackingPoint = currentPoint.Snapshot.CreateTrackingPoint(currentPoint.Position, PointTrackingMode.Positive);
-            
-            _session = _completionBroker.CreateCompletionSession(_textView, trackingPoint, true);
+
+            var sessionConfiguration = new CompletionSessionConfiguration(_completionBroker);
+
+            //TODO: change this to use the config class instead
+            _session =   _completionBroker.CreateCompletionSession(_textView, trackingPoint, true);
             if (_session == null) return false;
 
-            //TODO: Replace with the new configuration class
-            _session.Properties.AddProperty(typeof(SparkSyntaxTypes), sparksyntaxType);
-            _session.Properties.AddProperty(typeof(IViewExplorer), viewExplorer);
-            _session.Properties.AddProperty(typeof(ITrackingSpan), _completionSpan);
-
-
-            _session.Dismissed += OnSessionDismissed;
-            _session.Committed += OnSessionCommitted;
+            sessionConfiguration.AddCompletionSourceProperties(new List<object> { sparksyntaxType, viewExplorer, _completionSpan });
 
             return true;
         }

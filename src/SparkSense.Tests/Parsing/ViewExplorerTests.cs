@@ -7,7 +7,7 @@ using SparkSense.Parsing;
 namespace SparkSense.Tests.Parsing
 {
     [TestFixture]
-    public class ViewExplorerTester
+    public class ViewExplorerTests
     {
         [Test]
         public void ShouldRecogniseVariablesDeclaredInTheSameFile()

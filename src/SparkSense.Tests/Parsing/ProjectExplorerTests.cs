@@ -9,7 +9,7 @@ using Spark.Parser.Syntax;
 namespace SparkSense.Tests.Parsing
 {
     [TestFixture]
-    public class ProjectExplorerTester
+    public class ProjectExplorerTests
     {
         private const string ROOT_VIEW_PATH = "SparkSense.Tests.Views";
         private DefaultSyntaxProvider _syntaxProvider;

@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text.Operations;
 using SparkSense.Parsing;
 using SparkSense.StatementCompletion.CompletionSets;
 
+
 namespace SparkSense.StatementCompletion
 {
     internal class CompletionSource : ICompletionSource
@@ -28,7 +29,7 @@ namespace SparkSense.StatementCompletion
             IViewExplorer viewExplorer;
 
             session.Properties.TryGetProperty(typeof(SparkSyntaxTypes), out syntaxType);
-            session.Properties.TryGetProperty(typeof(IViewExplorer), out viewExplorer);
+            session.Properties.TryGetProperty(typeof(ViewExplorer), out viewExplorer);
 
             CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(session, _textBuffer, viewExplorer, syntaxType);
             if (sparkCompletions != null) completionSets.Add(sparkCompletions);

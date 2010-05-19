@@ -7,11 +7,10 @@ using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using SparkSense.StatementCompletion;
 
-
 namespace SparkSense.Tests.StatementCompletion
 {
     [TestFixture]
-    public class TextViewCreationTester
+    public class TextViewCreationTests
     {
         private ViewCreationListener _listener;
         private IVsEditorAdaptersFactoryService _mockAdapterFactoryService;

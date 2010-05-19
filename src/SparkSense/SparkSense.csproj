@@ -120,6 +120,7 @@
     <Compile Include="StatementCompletion\CompletionSessionManager.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkVariableCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionExtensions.cs" />
+    <Compile Include="Parsing\ITextExplorer.cs" />
     <Compile Include="StatementCompletion\KeyPressInterceptor.cs" />
     <Compile Include="StatementCompletion\ViewCreationListener.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkCompletionSetFactory.cs" />

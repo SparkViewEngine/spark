@@ -7,11 +7,10 @@ using Rhino.Mocks;
 using SparkSense.Parsing;
 using SparkSense.StatementCompletion.CompletionSets;
 
-
 namespace SparkSense.Tests.StatementCompletion
 {
     [TestFixture]
-    public class TagCompletionSetTester
+    public class TagCompletionSetTests
     {
         private ICompletionSession _stubSession;
         private ITextBuffer _stubTextBuffer;

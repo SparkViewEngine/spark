@@ -1,8 +1,9 @@
 ﻿
 using Microsoft.VisualStudio.Text;
-using SparkSense.StatementCompletion;
+
 using Microsoft.VisualStudio.Text.Editor;
 using System;
+using SparkSense.StatementCompletion;
 namespace SparkSense.Parsing
 {
     public enum SparkSyntaxTypes
