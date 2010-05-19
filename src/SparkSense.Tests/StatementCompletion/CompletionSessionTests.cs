@@ -23,9 +23,11 @@ namespace SparkSense.Tests.StatementCompletion
 
             var mappingPoint = MockRepository.GenerateStub<IMappingPoint>();
             var stubSnapshot = MockRepository.GenerateStub<ITextSnapshot>();
-            var bufferPosition = new VirtualSnapshotPoint(stubSnapshot, 1);
+            var bufferPosition = new VirtualSnapshotPoint(stubSnapshot, 0);
+            var stubTextBuffer = MockRepository.GenerateStub<ITextBuffer>();
 
             stubTextView.Stub(x => x.Caret).Return(stubCaret);
+            stubTextView.Stub(x => x.TextBuffer).Return(stubTextBuffer);
             stubCaret.Stub(x => x.Position).Return(new CaretPosition(bufferPosition, mappingPoint, PositionAffinity.Predecessor));
             stubProjectExplorer.Stub(x => x.ActiveDocumentPath).Return(PATH_CONTAINING_A_VIEWS_FOLDER);
 

@@ -10,10 +10,11 @@ namespace SparkSense.StatementCompletion
     public class CompletionSessionManager
     {
         private ICompletionBroker _completionBroker;
+        private CompletionSessionConfiguration _config;
         private IProjectExplorer _projectExplorer;
         private IWpfTextView _textView;
-        private int _completionCaretStartPosition;
-        private ITrackingSpan _completionSpan;
+        private int _startPosition;
+        private ITrackingSpan _trackingSpan;
         private ICompletionSession _session;
 
         public CompletionSessionManager(ICompletionBroker completionBroker, IProjectExplorer projectExplorer, IWpfTextView textView)
@@ -21,6 +22,8 @@ namespace SparkSense.StatementCompletion
             _completionBroker = completionBroker;
             _projectExplorer = projectExplorer;
             _textView = textView;
+
+            _config = new CompletionSessionConfiguration(_completionBroker);
         }
 
         public bool IsSessionActive()
@@ -73,7 +76,7 @@ namespace SparkSense.StatementCompletion
             return
                 IsSessionActive() &&
                 key.IsAMovementCharacter() &&
-                key.HasMovedOutOfIntelliSenseRange(_textView, _completionSpan, _completionCaretStartPosition);
+                key.HasMovedOutOfIntelliSenseRange(_textView, _trackingSpan, _startPosition);
         }
 
         public bool StartCompletionSession(SparkSyntaxTypes syntaxType)
@@ -81,12 +84,24 @@ namespace SparkSense.StatementCompletion
             SnapshotPoint? caretPoint = _textView.Caret.Position.BufferPosition;
             if (!caretPoint.HasValue) return false;
 
-            if (!ConfigureCompletionSession(caretPoint.Value, syntaxType)) return false;
+            ITextExplorer textExplorer = GetTextExplorer(caretPoint.Value);
+            if (!_config.TryCreateCompletionSession(textExplorer, out _session)) return false;
 
+            var viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
+            _config.AddCompletionSourceProperties(new List<object> { syntaxType, viewExplorer, _trackingSpan });
+            
             _session.Dismissed += OnSessionDismissed;
             _session.Committed += OnSessionCommitted;
             _session.Start();
             return IsSessionActive(); //Rob G: Depending on the content type - the session can sometimes be dismissed automatically
+        }
+
+        private ITextExplorer GetTextExplorer(SnapshotPoint caretPoint)
+        {
+            _startPosition = caretPoint.Position;
+            _trackingSpan = caretPoint.Snapshot.CreateTrackingSpan(caretPoint.Position, 0, SpanTrackingMode.EdgeInclusive);
+            var trackingPoint = caretPoint.Snapshot.CreateTrackingPoint(caretPoint.Position, PointTrackingMode.Positive);
+            return new TextExplorer(_textView, trackingPoint);
         }
 
         private void OnSessionCommitted(object sender, EventArgs e)
@@ -98,25 +113,6 @@ namespace SparkSense.StatementCompletion
         {
             _session.Dismissed -= OnSessionDismissed;
             _session = null;
-        }
-
-        private bool ConfigureCompletionSession(SnapshotPoint currentPoint, SparkSyntaxTypes sparksyntaxType)
-        {
-            _completionCaretStartPosition = currentPoint.Position;
-            _completionSpan = currentPoint.Snapshot.CreateTrackingSpan(currentPoint.Position, 0, SpanTrackingMode.EdgeInclusive);
-
-            IViewExplorer viewExplorer = ViewExplorer.CreateFromActiveDocumentPath(_projectExplorer.ActiveDocumentPath);
-            ITrackingPoint trackingPoint = currentPoint.Snapshot.CreateTrackingPoint(currentPoint.Position, PointTrackingMode.Positive);
-
-            var sessionConfiguration = new CompletionSessionConfiguration(_completionBroker);
-
-            //TODO: change this to use the config class instead
-            _session =   _completionBroker.CreateCompletionSession(_textView, trackingPoint, true);
-            if (_session == null) return false;
-
-            sessionConfiguration.AddCompletionSourceProperties(new List<object> { sparksyntaxType, viewExplorer, _completionSpan });
-
-            return true;
         }
     }
 }

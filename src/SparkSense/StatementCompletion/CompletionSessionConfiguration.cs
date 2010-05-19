@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.Language.Intellisense;
-using System.Collections.Generic;
-using System;
 using SparkSense.Parsing;
+using System.Collections.Generic;
 
 namespace SparkSense.StatementCompletion
 {

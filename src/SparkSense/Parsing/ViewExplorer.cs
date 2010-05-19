@@ -32,8 +32,11 @@ namespace SparkSense.Parsing
             return localVariables;
         }
 
-        public static IViewExplorer CreateFromActiveDocumentPath(string activeDocumentPath)
+        public static IViewExplorer CreateFromActiveDocument(IProjectExplorer projectExplorer)
         {
+            if (projectExplorer == null || string.IsNullOrEmpty(projectExplorer.ActiveDocumentPath)) return null;
+            var activeDocumentPath = projectExplorer.ActiveDocumentPath;
+
             int viewsLocationStart = activeDocumentPath.LastIndexOf("Views");
             var viewRoot = activeDocumentPath.Substring(0, viewsLocationStart + 5);
             var currentView = activeDocumentPath.Replace(viewRoot, string.Empty).TrimStart('\\');
