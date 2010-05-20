@@ -16,7 +16,8 @@ namespace SparkSense.StatementCompletion
         {
             _createdView = createdView;
             _textViewAdapter = createdView.TextViewAdapter;
-            _sessionManager = new CompletionSessionManager(_createdView.CompletionBroker, _createdView.ProjectExplorer, _createdView.TextView);
+            _sessionManager = new CompletionSessionManager(new CompletionSessionConfiguration(_createdView.CompletionBroker), _createdView.ProjectExplorer, _createdView.TextView);
+
             TryChainTheNextCommand();
         }
 

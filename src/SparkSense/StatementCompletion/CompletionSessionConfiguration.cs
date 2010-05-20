@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SparkSense.StatementCompletion
 {
-    public class CompletionSessionConfiguration
+    public class CompletionSessionConfiguration : ICompletionSessionConfiguration
     {
         private ICompletionSession _session;
         private ICompletionBroker _completionBroker;
@@ -16,7 +16,7 @@ namespace SparkSense.StatementCompletion
         
         public bool TryCreateCompletionSession(ITextExplorer textExplorer, out ICompletionSession completionSession)
         {
-            _session = _completionBroker.CreateCompletionSession(textExplorer.TextView, textExplorer.TriggerPoint, true);
+            _session = _completionBroker.CreateCompletionSession(textExplorer.TextView, textExplorer.GetTrackingPoint(), true);
             completionSession = _session;
             return completionSession != null;
         }

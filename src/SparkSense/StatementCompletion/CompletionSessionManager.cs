@@ -9,21 +9,22 @@ namespace SparkSense.StatementCompletion
 {
     public class CompletionSessionManager
     {
-        private ICompletionBroker _completionBroker;
-        private CompletionSessionConfiguration _config;
+        private ICompletionSessionConfiguration _config;
         private IProjectExplorer _projectExplorer;
         private IWpfTextView _textView;
-        private int _startPosition;
-        private ITrackingSpan _trackingSpan;
         private ICompletionSession _session;
+        private IViewExplorer _viewExplorer;
+        private ITextExplorer _textExplorer;
 
-        public CompletionSessionManager(ICompletionBroker completionBroker, IProjectExplorer projectExplorer, IWpfTextView textView)
+        public CompletionSessionManager(ICompletionSessionConfiguration config, IProjectExplorer projectExplorer, IWpfTextView textView)
         {
-            _completionBroker = completionBroker;
+            if (config == null) throw new ArgumentNullException("config", "Session Config is null.");
+            if (projectExplorer == null) throw new ArgumentNullException("projectExplorer", "Project Explorer is null.");
+            if (textView == null) throw new ArgumentNullException("textView", "Text View is null.");
+
+            _config = config;
             _projectExplorer = projectExplorer;
             _textView = textView;
-
-            _config = new CompletionSessionConfiguration(_completionBroker);
         }
 
         public bool IsSessionActive()
@@ -76,32 +77,21 @@ namespace SparkSense.StatementCompletion
             return
                 IsSessionActive() &&
                 key.IsAMovementCharacter() &&
-                key.HasMovedOutOfIntelliSenseRange(_textView, _trackingSpan, _startPosition);
+                key.HasMovedOutOfIntelliSenseRange(_textExplorer);
         }
 
         public bool StartCompletionSession(SparkSyntaxTypes syntaxType)
         {
-            SnapshotPoint? caretPoint = _textView.Caret.Position.BufferPosition;
-            if (!caretPoint.HasValue) return false;
+            _viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
+            _textExplorer = new TextExplorer(_textView);
 
-            ITextExplorer textExplorer = GetTextExplorer(caretPoint.Value);
-            if (!_config.TryCreateCompletionSession(textExplorer, out _session)) return false;
-
-            var viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
-            _config.AddCompletionSourceProperties(new List<object> { syntaxType, viewExplorer, _trackingSpan });
+            if (!_config.TryCreateCompletionSession(_textExplorer, out _session)) return false;
+            _config.AddCompletionSourceProperties(new List<object> { syntaxType, _viewExplorer, _textExplorer.GetTrackingSpan() });
             
             _session.Dismissed += OnSessionDismissed;
             _session.Committed += OnSessionCommitted;
             _session.Start();
             return IsSessionActive(); //Rob G: Depending on the content type - the session can sometimes be dismissed automatically
-        }
-
-        private ITextExplorer GetTextExplorer(SnapshotPoint caretPoint)
-        {
-            _startPosition = caretPoint.Position;
-            _trackingSpan = caretPoint.Snapshot.CreateTrackingSpan(caretPoint.Position, 0, SpanTrackingMode.EdgeInclusive);
-            var trackingPoint = caretPoint.Snapshot.CreateTrackingPoint(caretPoint.Position, PointTrackingMode.Positive);
-            return new TextExplorer(_textView, trackingPoint);
         }
 
         private void OnSessionCommitted(object sender, EventArgs e)

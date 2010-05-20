@@ -5,37 +5,65 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using SparkSense.Parsing;
 using SparkSense.StatementCompletion;
+using System;
 
 namespace SparkSense.Tests.StatementCompletion
 {
     [TestFixture]
     public class CompletionSessionTests
     {
-        private const string PATH_CONTAINING_A_VIEWS_FOLDER = "C:\\Views\\Home\\index.spark";
-        [Test, Ignore("Way too complex - gotta strip out a few classes, too many responsibilities going on here.")]
+        [Test]
         public void ShouldStartACompletionSessionForTag()
         {
-            var stubCompletionBroker = MockRepository.GenerateStub<ICompletionBroker>();
-            var stubProjectExplorer = MockRepository.GenerateStub<IProjectExplorer>();
-            var stubTextView = MockRepository.GenerateStub<IWpfTextView>();
-            var stubTriggerPoint = MockRepository.GenerateStub<ITrackingPoint>();
-            var stubCaret = MockRepository.GenerateStub<ITextCaret>();
+            var mockConfig = MockRepository.GenerateMock<ICompletionSessionConfiguration>();
+            var mockSession = MockRepository.GenerateMock<ICompletionSession>();
+            var stubTextExplorer = MockRepository.GenerateStub<ITextExplorer>();
 
-            var mappingPoint = MockRepository.GenerateStub<IMappingPoint>();
-            var stubSnapshot = MockRepository.GenerateStub<ITextSnapshot>();
-            var bufferPosition = new VirtualSnapshotPoint(stubSnapshot, 0);
-            var stubTextBuffer = MockRepository.GenerateStub<ITextBuffer>();
+            ICompletionSession session;
+            mockConfig.Expect(x => x.TryCreateCompletionSession(stubTextExplorer, out session))
+                .OutRef(new object[] { mockSession })
+                .IgnoreArguments()
+                .Return(true);
 
-            stubTextView.Stub(x => x.Caret).Return(stubCaret);
-            stubTextView.Stub(x => x.TextBuffer).Return(stubTextBuffer);
-            stubCaret.Stub(x => x.Position).Return(new CaretPosition(bufferPosition, mappingPoint, PositionAffinity.Predecessor));
-            stubProjectExplorer.Stub(x => x.ActiveDocumentPath).Return(PATH_CONTAINING_A_VIEWS_FOLDER);
+            mockSession.Expect(x => x.Start());
+            mockSession.Expect(x => x.IsDismissed).Return(false);
 
-            stubCompletionBroker.Expect(x => x.CreateCompletionSession(stubTextView, stubTriggerPoint, true));
-
-            var completionSession = new CompletionSessionManager(stubCompletionBroker, stubProjectExplorer, stubTextView);
+            var completionSession = new CompletionSessionManager(mockConfig, MockRepository.GenerateStub<IProjectExplorer>(), MockRepository.GenerateStub<IWpfTextView>());
 
             Assert.That(completionSession.StartCompletionSession(SparkSyntaxTypes.Tag));
+
+            mockConfig.VerifyAllExpectations();
+            mockSession.VerifyAllExpectations();
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ShouldThrowIfConfigIsNull()
+        {
+            var stubProjectExplorer = MockRepository.GenerateStub<IProjectExplorer>();
+            var stubTextView = MockRepository.GenerateStub<IWpfTextView>();
+
+            new CompletionSessionManager(null, stubProjectExplorer, stubTextView);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ShouldThrowIfProjectExplorerIsNull()
+        {
+            var stubConfig = MockRepository.GenerateStub<ICompletionSessionConfiguration>();
+            var stubTextView = MockRepository.GenerateStub<IWpfTextView>();
+
+            new CompletionSessionManager(stubConfig, null, stubTextView);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ShouldThrowIfTextViewIsNull()
+        {
+            var stubConfig = MockRepository.GenerateStub<ICompletionSessionConfiguration>();
+            var stubProjectExplorer = MockRepository.GenerateStub<IProjectExplorer>();
+
+            new CompletionSessionManager(stubConfig, stubProjectExplorer, null);
         }
     }
 }

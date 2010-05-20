@@ -25,7 +25,7 @@ namespace SparkSense.Tests.StatementCompletion
             var stubSession = MockRepository.GenerateStub<ICompletionSession>();
 
             mockTextExplorer.Expect(x => x.TextView).Return(stubTextView);
-            mockTextExplorer.Expect(x => x.TriggerPoint).Return(stubTrackingPoint);
+            mockTextExplorer.Expect(x => x.GetTrackingPoint()).Return(stubTrackingPoint);
             mockBroker.Expect(x => x.CreateCompletionSession(stubTextView, stubTrackingPoint, true)).Return(stubSession);
 
             var config = new CompletionSessionConfiguration(mockBroker);
