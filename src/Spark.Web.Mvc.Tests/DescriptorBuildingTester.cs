@@ -476,5 +476,17 @@ namespace Spark.Web.Mvc.Tests
             Assert.That(none, Is.Null);
             Assert.That(g.Value, Is.EqualTo("g"));
         }
+
+        [Test]
+        public void EmptyPrefixIsConsideredNoPrefixAtAll()
+        {
+          var builder = new DefaultDescriptorBuilder(string.Empty);
+
+          var a = builder.ParseUseMaster(new Position(new SourceContext("<use master='a'/>")));
+
+          Assert.That(a, Is.Not.Null);
+          Assert.That(a.Value, Is.EqualTo("a"));
+        }
+
     }
 }
