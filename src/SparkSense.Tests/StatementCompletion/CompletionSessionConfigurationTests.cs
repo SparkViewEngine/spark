@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -6,7 +7,6 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using SparkSense.Parsing;
-using System.Collections.Generic;
 using SparkSense.StatementCompletion;
 
 namespace SparkSense.Tests.StatementCompletion

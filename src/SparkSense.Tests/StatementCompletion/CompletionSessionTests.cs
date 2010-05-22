@@ -1,11 +1,10 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Text;
+﻿using System;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text.Editor;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SparkSense.Parsing;
 using SparkSense.StatementCompletion;
-using System;
 
 namespace SparkSense.Tests.StatementCompletion
 {
