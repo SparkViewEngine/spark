@@ -44,5 +44,16 @@ namespace SparkSense.Parsing
             caretPoint = TextView.Caret.Position.BufferPosition;
             return true;
         }
+
+        public bool IsCaretContainedWithinTag()
+        {
+            SnapshotPoint? caretPoint;
+            if (!TryGetCaretPoint(out caretPoint)) return false;
+
+            var currentLine = TextView.GetTextViewLineContainingBufferPosition(caretPoint.Value);
+            currentLine.Extent.GetText();
+
+            return true;
+        }
     }
 }

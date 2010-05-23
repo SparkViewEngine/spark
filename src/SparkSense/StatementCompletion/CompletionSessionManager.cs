@@ -1,9 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using SparkSense.Parsing;
-using System.Collections.Generic;
 
 namespace SparkSense.StatementCompletion
 {
@@ -48,10 +47,10 @@ namespace SparkSense.StatementCompletion
 
         public bool CheckForCompletionStart(uint key, char inputCharacter)
         {
-            var sparkSyntax = new SparkSyntax(_projectExplorer, _textView);
+            var sparkSyntax = new SparkSyntax(_textExplorer);
             SparkSyntaxTypes syntaxType;
 
-            if (!sparkSyntax.IsSparkSyntax(inputCharacter, out syntaxType))
+            if (!TryEvaluateSparkSyntax(inputCharacter, sparkSyntax, out syntaxType))
                 return IsMovementOrDeletionHandled(key);
 
             if (IsSessionActive() || StartCompletionSession(syntaxType))
@@ -59,7 +58,16 @@ namespace SparkSense.StatementCompletion
             return true;
         }
 
-        public bool IsMovementOrDeletionHandled(uint key)
+        private bool TryEvaluateSparkSyntax(char inputCharacter, SparkSyntax sparkSyntax, out SparkSyntaxTypes syntaxType)
+        {
+            syntaxType = !_projectExplorer.ViewFolderExists() ? SparkSyntaxTypes.Invalid : SparkSyntaxTypes.None;
+
+            return !_projectExplorer.IsCurrentDocumentASparkFile() 
+                ? false 
+                : sparkSyntax.IsSparkSyntax(inputCharacter, out syntaxType);
+        }
+
+        private bool IsMovementOrDeletionHandled(uint key)
         {
             if (ShouldDismissCompletion(key))
                 _session.Dismiss();

@@ -131,7 +131,6 @@
     <Compile Include="ContentType\SparkFileAndContentTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignatureRecognition\SparkTagSignature.cs" />
-    <Compile Include="StatementCompletion\CompletionTypeSelector.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkTagCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkInvalidCompletionSet.cs" />
     <Compile Include="Parsing\ProjectExplorer.cs" />

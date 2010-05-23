@@ -9,5 +9,6 @@ namespace SparkSense.Parsing
         ITrackingPoint GetTrackingPoint();
         int GetStartPosition();
         ITrackingSpan GetTrackingSpan();
+        bool IsCaretContainedWithinTag();
     }
 }
