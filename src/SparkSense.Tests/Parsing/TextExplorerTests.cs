@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.Text.Editor;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SparkSense.Parsing;
+using NUnit.Framework.SyntaxHelpers;
+using Spark.Parser.Markup;
 
 namespace SparkSense.Tests.Parsing
 {
@@ -61,7 +63,61 @@ namespace SparkSense.Tests.Parsing
             mockTextView.VerifyAllExpectations();
             mockSnapShot.VerifyAllExpectations();
             mockCaret.VerifyAllExpectations();
+        }
 
+        [Test]
+        public void ShouldGetNodesInCurrentDocument()
+        {
+            var mockTextView = MockRepository.GenerateMock<ITextView>();
+            var mockSnapShot = MockRepository.GenerateMock<ITextSnapshot>();
+
+            mockTextView.Expect(x => x.TextSnapshot).Return(mockSnapShot).Repeat.Any();
+            mockSnapShot.Expect(x => x.GetText()).Return("<html><body><use content=\"main\" /></body></html>");
+
+            var textExplorer = new TextExplorer(mockTextView);
+            var nodes = textExplorer.GetParsedNodes();
+
+            mockTextView.VerifyAllExpectations();
+            mockSnapShot.VerifyAllExpectations();
+            Assert.That(nodes.Count, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void ShouldGetNodeInWhichTheCaretIsPositioned()
+        {
+            var mockTextView = MockRepository.GenerateMock<ITextView>();
+            var mockSnapShot = MockRepository.GenerateMock<ITextSnapshot>();
+
+            mockTextView.Expect(x => x.TextSnapshot).Return(mockSnapShot).Repeat.Any();
+            mockSnapShot.Expect(x => x.GetText()).Return("<html><body><use content=\"main\" /></body></html>").Repeat.Any();
+
+            var textExplorer = new TextExplorer(mockTextView);
+            Node node = textExplorer.GetNodeAtPosition(17);
+
+            mockTextView.VerifyAllExpectations();
+            mockSnapShot.VerifyAllExpectations();
+
+            Assert.That(node is ElementNode);
+            Assert.That(((ElementNode)node).Name, Is.EqualTo("use"));
+        }
+
+        [Test]
+        public void ShouldGetNodeInWhichTheCaretIsPositionedIfTagIsNotClosed()
+        {
+            var mockTextView = MockRepository.GenerateMock<ITextView>();
+            var mockSnapShot = MockRepository.GenerateMock<ITextSnapshot>();
+
+            mockTextView.Expect(x => x.TextSnapshot).Return(mockSnapShot).Repeat.Any();
+            mockSnapShot.Expect(x => x.GetText()).Return("<html><body><use </body></html>").Repeat.Any();
+
+            var textExplorer = new TextExplorer(mockTextView);
+            Node node = textExplorer.GetNodeAtPosition(17);
+
+            mockTextView.VerifyAllExpectations();
+            mockSnapShot.VerifyAllExpectations();
+
+            Assert.That(node is ElementNode);
+            Assert.That(((ElementNode)node).Name, Is.EqualTo("use"));
         }
     }
 }

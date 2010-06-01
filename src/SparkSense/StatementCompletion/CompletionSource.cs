@@ -9,15 +9,13 @@ using SparkSense.StatementCompletion.CompletionSets;
 
 namespace SparkSense.StatementCompletion
 {
-    internal class CompletionSource : ICompletionSource
+    public class CompletionSource : ICompletionSource
     {
-        private readonly ITextStructureNavigatorSelectorService _textNavigator;
         private bool _isDisposed;
         private ITextBuffer _textBuffer;
 
-        public CompletionSource(ITextStructureNavigatorSelectorService textNavigator, ITextBuffer textBuffer)
+        public CompletionSource(ITextBuffer textBuffer)
         {
-            _textNavigator = textNavigator;
             _textBuffer = textBuffer;
         }
 
