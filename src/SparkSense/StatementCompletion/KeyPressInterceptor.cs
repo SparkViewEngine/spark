@@ -37,10 +37,10 @@ namespace SparkSense.StatementCompletion
         {
             char inputCharacter = key.GetInputCharacter(cmdGroup, pvaIn);
 
-            if (_sessionManager.CheckForCompletionCommit(key, inputCharacter)) return VSConstants.S_OK;
+            if (_sessionManager.CompletionCommitted(key, inputCharacter)) return VSConstants.S_OK;
 
             int keyPressResult = _nextCommand.Exec(ref cmdGroup, key, cmdExecOpt, pvaIn, pvaOut);
-            return _sessionManager.CheckForCompletionStart(key, inputCharacter) ? VSConstants.S_OK : keyPressResult;
+            return _sessionManager.CompletionStarted(key, inputCharacter) ? VSConstants.S_OK : keyPressResult;
         }
 
         #endregion

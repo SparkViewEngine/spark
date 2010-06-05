@@ -119,6 +119,7 @@
     <Compile Include="Parsing\ViewExplorer.cs" />
     <Compile Include="StatementCompletion\CompletionSessionConfiguration.cs" />
     <Compile Include="StatementCompletion\CompletionSessionManager.cs" />
+    <Compile Include="StatementCompletion\CompletionSets\SparkAttributeCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkVariableCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionExtensions.cs" />
     <Compile Include="Parsing\ITextExplorer.cs" />

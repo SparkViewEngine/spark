@@ -37,16 +37,18 @@ namespace SparkSense.StatementCompletion
             if (textExplorer == null) return true;
 
             ITextView textView = textExplorer.TextView;
-            int currentPosition = textView.Caret.Position.BufferPosition.Position;
+            int caretPosition = textView.Caret.Position.BufferPosition.Position;
             ITrackingSpan completionSpan = textExplorer.GetTrackingSpan();
             ITextSnapshot currentSnapshot = completionSpan.TextBuffer.CurrentSnapshot;
-            var completionCaretStartPosition = textExplorer.GetStartPosition();
+            var triggerPosition = textExplorer.GetStartPosition();
+            int completionSpanLength = completionSpan.GetSpan(currentSnapshot).Length;
+
             switch (key)
             {
                 case (uint)VSConstants.VSStd2KCmdID.LEFT:
-                    return currentPosition < completionCaretStartPosition;
+                    return caretPosition < triggerPosition;
                 case (uint)VSConstants.VSStd2KCmdID.RIGHT:
-                    return currentPosition > completionCaretStartPosition + completionSpan.GetSpan(currentSnapshot).Length;
+                    return caretPosition > triggerPosition + completionSpanLength;
                 default:
                     return false;
             }

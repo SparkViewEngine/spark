@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+using Spark.Parser.Markup;
 
 namespace SparkSense.Parsing
 {
@@ -25,9 +25,9 @@ namespace SparkSense.Parsing
         {
             syntaxType = SparkSyntaxTypes.None;
             if (inputCharacter.Equals(char.MinValue)) return false;
-
             syntaxType = GetSyntaxType(inputCharacter);
-            return SparkSyntaxTypes.None != syntaxType;
+
+            return syntaxType != SparkSyntaxTypes.None;
         }
 
         public SparkSyntaxTypes GetSyntaxType(char key)
@@ -46,7 +46,8 @@ namespace SparkSense.Parsing
         }
         private SparkSyntaxTypes CheckForAttribute()
         {
-            return _textExplorer.IsCaretContainedWithinTag() ? SparkSyntaxTypes.Attribute : SparkSyntaxTypes.None;
+            var node = _textExplorer.GetNodeAtPosition(_textExplorer.GetStartPosition());
+            return node is ElementNode ? SparkSyntaxTypes.Attribute : SparkSyntaxTypes.None;
         }
     }
 }

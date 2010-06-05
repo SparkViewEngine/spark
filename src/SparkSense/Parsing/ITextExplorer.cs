@@ -12,7 +12,8 @@ namespace SparkSense.Parsing
         int GetStartPosition();
         ITrackingSpan GetTrackingSpan();
         IList<Node> GetParsedNodes();
-        bool IsCaretContainedWithinTag();
+        IList<Node> GetParsedNodes(string content);
         Node GetNodeAtPosition(int position);
+        string GetTagAtPosition(int position);
     }
 }

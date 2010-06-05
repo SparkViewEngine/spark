@@ -31,7 +31,7 @@ namespace SparkSense.StatementCompletion
             return _session != null && !_session.IsDismissed;
         }
 
-        public bool CheckForCompletionCommit(uint key, char inputCharacter)
+        public bool CompletionCommitted(uint key, char inputCharacter)
         {
             if (!(key.IsACommitCharacter(inputCharacter) && IsSessionActive()))
                 return false;
@@ -45,12 +45,10 @@ namespace SparkSense.StatementCompletion
             return false;
         }
 
-        public bool CheckForCompletionStart(uint key, char inputCharacter)
+        public bool CompletionStarted(uint key, char inputCharacter)
         {
-            var sparkSyntax = new SparkSyntax(_textExplorer);
             SparkSyntaxTypes syntaxType;
-
-            if (!TryEvaluateSparkSyntax(inputCharacter, sparkSyntax, out syntaxType))
+            if (!TryEvaluateSparkSyntax(inputCharacter, out syntaxType))
                 return IsMovementOrDeletionHandled(key);
 
             if (IsSessionActive() || StartCompletionSession(syntaxType))
@@ -58,13 +56,16 @@ namespace SparkSense.StatementCompletion
             return true;
         }
 
-        private bool TryEvaluateSparkSyntax(char inputCharacter, SparkSyntax sparkSyntax, out SparkSyntaxTypes syntaxType)
+        private bool TryEvaluateSparkSyntax(char inputCharacter, out SparkSyntaxTypes syntaxType)
         {
-            syntaxType = !_projectExplorer.ViewFolderExists() ? SparkSyntaxTypes.Invalid : SparkSyntaxTypes.None;
+            var sparkSyntax = new SparkSyntax(_textExplorer);
+            syntaxType = _projectExplorer.ViewFolderExists() 
+                ? SparkSyntaxTypes.None 
+                : SparkSyntaxTypes.Invalid;
 
-            return !_projectExplorer.IsCurrentDocumentASparkFile() 
-                ? false 
-                : sparkSyntax.IsSparkSyntax(inputCharacter, out syntaxType);
+            return _projectExplorer.IsCurrentDocumentASparkFile() 
+                ? sparkSyntax.IsSparkSyntax(inputCharacter, out syntaxType) 
+                : false;
         }
 
         private bool IsMovementOrDeletionHandled(uint key)
@@ -94,7 +95,7 @@ namespace SparkSense.StatementCompletion
             _textExplorer = new TextExplorer(_textView);
 
             if (!_config.TryCreateCompletionSession(_textExplorer, out _session)) return false;
-            _config.AddCompletionSourceProperties(new List<object> { syntaxType, _viewExplorer, _textExplorer.GetTrackingSpan() });
+            _config.AddCompletionSourceProperties(new List<object> { syntaxType, _viewExplorer, _textExplorer, _textExplorer.GetTrackingSpan() });
             
             _session.Dismissed += OnSessionDismissed;
             _session.Committed += OnSessionCommitted;
@@ -104,7 +105,10 @@ namespace SparkSense.StatementCompletion
 
         private void OnSessionCommitted(object sender, EventArgs e)
         {
-            //TODO: Rob G - Reposition Caret Correctly
+            var point = _session.TextView.Caret.Position.BufferPosition;
+            if (point.Position > 1 && (point - 1).GetChar() == '"')
+                _session.TextView.Caret.MoveToPreviousCaretPosition();
+            _session.Dismiss();
         }
 
         private void OnSessionDismissed(object sender, EventArgs e)

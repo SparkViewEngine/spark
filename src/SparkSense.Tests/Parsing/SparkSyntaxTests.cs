@@ -2,6 +2,7 @@
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using SparkSense.Parsing;
+using Spark.Parser.Markup;
 
 namespace SparkSense.Tests.Parsing
 {
@@ -20,12 +21,14 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
-        public void ShouldTriggerAtributeCompletionWhenInsideATag()
+        public void ShouldTriggerAttributeCompletionWhenInsideATag()
         {
             var mockExplorer = MockRepository.GenerateMock<ITextExplorer>();
 
-            mockExplorer.Expect(x => x.IsCaretContainedWithinTag()).Return(true);
-
+            Node mockNode = new ElementNode("someTag", null, true);
+            mockExplorer.Expect(x => x.GetStartPosition()).Return(17);
+            mockExplorer.Expect(x => x.GetNodeAtPosition(17)).Return(mockNode);
+            
             var sparkSyntax = new SparkSyntax(mockExplorer);
             SparkSyntaxTypes syntaxType;
             sparkSyntax.IsSparkSyntax(' ', out syntaxType);
@@ -34,11 +37,13 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
-        public void ShouldNotTriggerAtributeCompletionWhenOutsideATag()
+        public void ShouldNotTriggerAttributeCompletionWhenOutsideATag()
         {
             var mockExplorer = MockRepository.GenerateMock<ITextExplorer>();
-            
-            mockExplorer.Expect(x => x.IsCaretContainedWithinTag()).Return(false);
+
+            Node mockNode = new TextNode("some text");
+            mockExplorer.Expect(x => x.GetStartPosition()).Return(17);
+            mockExplorer.Expect(x => x.GetNodeAtPosition(17)).Return(mockNode);
             
             var sparkSyntax = new SparkSyntax(mockExplorer);
             SparkSyntaxTypes syntaxType;
