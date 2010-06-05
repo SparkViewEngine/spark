@@ -14,9 +14,10 @@ namespace SparkSense.Parsing
     {
         private ITextStructureNavigator _textNavigator;
 
-        public TextExplorer(ITextView textView)
+        public TextExplorer(ITextView textView, ITextStructureNavigator textNavigator)
         {
             TextView = textView;
+            _textNavigator = textNavigator;
         }
 
         public ITextView TextView { get; private set; }

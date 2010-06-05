@@ -92,7 +92,7 @@ namespace SparkSense.StatementCompletion
         public bool StartCompletionSession(SparkSyntaxTypes syntaxType)
         {
             _viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
-            _textExplorer = new TextExplorer(_textView);
+            _textExplorer = new TextExplorer(_textView, null);
 
             if (!_config.TryCreateCompletionSession(_textExplorer, out _session)) return false;
             _config.AddCompletionSourceProperties(new List<object> { syntaxType, _viewExplorer, _textExplorer, _textExplorer.GetTrackingSpan() });

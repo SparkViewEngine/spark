@@ -20,7 +20,7 @@ namespace SparkSense.Tests.Parsing
             mockCaret.Expect(x => x.Position).Return(new CaretPosition());
             mockTextView.Expect(x => x.Caret).Return(mockCaret).Repeat.Any();
 
-            var textExplorer = new TextExplorer(mockTextView);
+            var textExplorer = new TextExplorer(mockTextView, null);
             textExplorer.GetStartPosition();
 
             mockCaret.VerifyAllExpectations();
@@ -38,7 +38,7 @@ namespace SparkSense.Tests.Parsing
             mockTextView.Expect(x => x.Caret).Return(mockCaret).Repeat.Any();
             mockSnapShot.Expect(x => x.CreateTrackingPoint(0, PointTrackingMode.Positive)).Return(null);
 
-            var textExplorer = new TextExplorer(mockTextView);
+            var textExplorer = new TextExplorer(mockTextView, null);
             textExplorer.GetTrackingPoint();
 
             mockTextView.VerifyAllExpectations();
@@ -57,7 +57,7 @@ namespace SparkSense.Tests.Parsing
             mockTextView.Expect(x => x.Caret).Return(mockCaret).Repeat.Any();
             mockSnapShot.Expect(x => x.CreateTrackingSpan(0, 0, SpanTrackingMode.EdgeInclusive)).Return(null);
 
-            var textExplorer = new TextExplorer(mockTextView);
+            var textExplorer = new TextExplorer(mockTextView, null);
             textExplorer.GetTrackingSpan();
 
             mockTextView.VerifyAllExpectations();
@@ -74,7 +74,7 @@ namespace SparkSense.Tests.Parsing
             mockTextView.Expect(x => x.TextSnapshot).Return(mockSnapShot).Repeat.Any();
             mockSnapShot.Expect(x => x.GetText()).Return("<html><body><use content=\"main\" /></body></html>");
 
-            var textExplorer = new TextExplorer(mockTextView);
+            var textExplorer = new TextExplorer(mockTextView, null);
             var nodes = textExplorer.GetParsedNodes();
 
             mockTextView.VerifyAllExpectations();
@@ -91,7 +91,7 @@ namespace SparkSense.Tests.Parsing
             mockTextView.Expect(x => x.TextSnapshot).Return(mockSnapShot).Repeat.Any();
             mockSnapShot.Expect(x => x.GetText()).Return("<html><body><use content=\"main\" /></body></html>").Repeat.Any();
 
-            var textExplorer = new TextExplorer(mockTextView);
+            var textExplorer = new TextExplorer(mockTextView, null);
             Node node = textExplorer.GetNodeAtPosition(17);
 
             mockTextView.VerifyAllExpectations();
@@ -110,7 +110,7 @@ namespace SparkSense.Tests.Parsing
             mockTextView.Expect(x => x.TextSnapshot).Return(mockSnapShot).Repeat.Any();
             mockSnapShot.Expect(x => x.GetText()).Return("<html><body><use </body></html>").Repeat.Any();
 
-            var textExplorer = new TextExplorer(mockTextView);
+            var textExplorer = new TextExplorer(mockTextView, null);
             Node node = textExplorer.GetNodeAtPosition(17);
 
             mockTextView.VerifyAllExpectations();

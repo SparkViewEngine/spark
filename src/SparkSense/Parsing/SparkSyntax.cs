@@ -8,6 +8,7 @@ namespace SparkSense.Parsing
         None,
         Tag,
         Attribute,
+        AttributeValue,
         Variable,
         Invalid,
     }
@@ -38,12 +39,22 @@ namespace SparkSense.Parsing
                     return SparkSyntaxTypes.Tag;
                 case ' ':
                     return CheckForAttribute();
+                case '{': //TODO: Check for preceeding $
+                    return SparkSyntaxTypes.Variable;
+                case '"': //TODO Check for preceeding =
+                    return SparkSyntaxTypes.AttributeValue;
                 default:
                     if (Char.IsLetterOrDigit(key.ToString(), 0))
-                        return SparkSyntaxTypes.Variable;
+                        return CheckWord();
                     return SparkSyntaxTypes.None;
             }
         }
+        
+        private SparkSyntaxTypes CheckWord()
+        {
+            return SparkSyntaxTypes.Tag;
+        }
+
         private SparkSyntaxTypes CheckForAttribute()
         {
             var node = _textExplorer.GetNodeAtPosition(_textExplorer.GetStartPosition());
