@@ -37,7 +37,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
         {
             switch (syntaxType)
             {
-                case SparkSyntaxTypes.Tag:
+                case SparkSyntaxTypes.Element:
                     return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(session, textBuffer, viewExplorer, textExplorer);
                 case SparkSyntaxTypes.Attribute:
                     return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(session, textBuffer, viewExplorer, textExplorer);

@@ -87,7 +87,7 @@ namespace SparkSense.Parsing
             int tagClose = content.IndexOf('>', tagStart);
             var nextTag = content.IndexOf('<', tagStart + 1);
 
-            var tagIsClosed = tagClose < nextTag && nextTag != -1;
+            var tagIsClosed = nextTag != -1 && tagClose != -1 && tagClose < nextTag;
             var tag = content.Substring(tagStart, tagIsClosed ? tagClose - tagStart + 1 : nextTag - tagStart);
             if (!tagIsClosed)
                 tag += "/>";
@@ -101,6 +101,17 @@ namespace SparkSense.Parsing
             var node = grammar.AnyNode(Source(tag)).Value;
 
             return node;
+        }
+
+        public bool IsCurrentWordAnElement()
+        {
+            var currentWord = _textNavigator.GetExtentOfWord(TextView.Caret.Position.BufferPosition - 1);
+            if (currentWord.IsSignificant)
+            {
+                var start = currentWord.Span.Start;
+                return (start - 1).GetChar() == '<';
+            }
+            return false;
         }
 
         public string GetCurrentWord()

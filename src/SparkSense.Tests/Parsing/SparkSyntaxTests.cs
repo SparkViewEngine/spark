@@ -17,7 +17,7 @@ namespace SparkSense.Tests.Parsing
             SparkSyntaxTypes syntaxType;
             sparkSyntax.IsSparkSyntax('<', out syntaxType);
 
-            Assert.That(syntaxType, Is.EqualTo(SparkSyntaxTypes.Tag)); 
+            Assert.That(syntaxType, Is.EqualTo(SparkSyntaxTypes.Element)); 
         }
 
         [Test]

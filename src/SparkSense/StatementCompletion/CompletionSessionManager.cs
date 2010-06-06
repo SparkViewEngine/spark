@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text.Editor;
 using SparkSense.Parsing;
+using Microsoft.VisualStudio.Text.Operations;
 
 namespace SparkSense.StatementCompletion
 {
@@ -14,16 +15,19 @@ namespace SparkSense.StatementCompletion
         private ICompletionSession _session;
         private IViewExplorer _viewExplorer;
         private ITextExplorer _textExplorer;
+        private ITextStructureNavigator _textNavigator;
 
-        public CompletionSessionManager(ICompletionSessionConfiguration config, IProjectExplorer projectExplorer, IWpfTextView textView)
+        public CompletionSessionManager(ICompletionSessionConfiguration config, IProjectExplorer projectExplorer, IWpfTextView textView, ITextStructureNavigator textNavigator)
         {
             if (config == null) throw new ArgumentNullException("config", "Session Config is null.");
             if (projectExplorer == null) throw new ArgumentNullException("projectExplorer", "Project Explorer is null.");
             if (textView == null) throw new ArgumentNullException("textView", "Text View is null.");
+            if (textNavigator == null) throw new ArgumentNullException("textNavigator", "textNavigator is null.");
 
             _config = config;
             _projectExplorer = projectExplorer;
             _textView = textView;
+            _textNavigator = textNavigator;
         }
 
         public bool IsSessionActive()
@@ -92,7 +96,7 @@ namespace SparkSense.StatementCompletion
         public bool StartCompletionSession(SparkSyntaxTypes syntaxType)
         {
             _viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
-            _textExplorer = new TextExplorer(_textView, null);
+            _textExplorer = new TextExplorer(_textView, _textNavigator);
 
             if (!_config.TryCreateCompletionSession(_textExplorer, out _session)) return false;
             _config.AddCompletionSourceProperties(new List<object> { syntaxType, _viewExplorer, _textExplorer, _textExplorer.GetTrackingSpan() });

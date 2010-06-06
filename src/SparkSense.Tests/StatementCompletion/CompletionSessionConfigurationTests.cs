@@ -47,7 +47,7 @@ namespace SparkSense.Tests.StatementCompletion
 
             var propertyTrackingSpan = MockRepository.GenerateStub<ITrackingSpan>();
             var propertyViewVolder = MockRepository.GenerateStub<IViewExplorer>();
-            var propertySyntaxType = SparkSyntaxTypes.Tag;
+            var propertySyntaxType = SparkSyntaxTypes.Element;
 
             var mockProperties = new PropertyCollection();
             var properties = new List<object> { propertyTrackingSpan, propertyViewVolder, propertySyntaxType };

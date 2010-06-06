@@ -2,21 +2,23 @@
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
+using Microsoft.VisualStudio.Text.Operations;
 
 namespace SparkSense.StatementCompletion
 {
     internal class KeyPressInterceptor : IOleCommandTarget
     {
-        private ViewCreationListener _createdView;
         private readonly IVsTextView _textViewAdapter;
+        private readonly CompletionSessionManager _sessionManager;
         private IOleCommandTarget _nextCommand;
-        private CompletionSessionManager _sessionManager;
 
         public KeyPressInterceptor(ViewCreationListener createdView)
         {
-            _createdView = createdView;
             _textViewAdapter = createdView.TextViewAdapter;
-            _sessionManager = new CompletionSessionManager(new CompletionSessionConfiguration(_createdView.CompletionBroker), _createdView.ProjectExplorer, _createdView.TextView);
+            var textNavigator = createdView.TextNavigator.GetTextStructureNavigator(createdView.TextView.TextBuffer);
+            var config = new CompletionSessionConfiguration(createdView.CompletionBroker);
+
+            _sessionManager = new CompletionSessionManager(config, createdView.ProjectExplorer, createdView.TextView, textNavigator);
 
             TryChainTheNextCommand();
         }

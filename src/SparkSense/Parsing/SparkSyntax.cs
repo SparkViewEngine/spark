@@ -6,7 +6,7 @@ namespace SparkSense.Parsing
     public enum SparkSyntaxTypes
     {
         None,
-        Tag,
+        Element,
         Attribute,
         AttributeValue,
         Variable,
@@ -36,7 +36,7 @@ namespace SparkSense.Parsing
             switch (key)
             {
                 case '<':
-                    return SparkSyntaxTypes.Tag;
+                    return SparkSyntaxTypes.Element;
                 case ' ':
                     return CheckForAttribute();
                 case '{': //TODO: Check for preceeding $
@@ -49,10 +49,12 @@ namespace SparkSense.Parsing
                     return SparkSyntaxTypes.None;
             }
         }
-        
+
         private SparkSyntaxTypes CheckWord()
         {
-            return SparkSyntaxTypes.Tag;
+            if (_textExplorer.IsCurrentWordAnElement())
+                return SparkSyntaxTypes.Element;
+            return SparkSyntaxTypes.None;
         }
 
         private SparkSyntaxTypes CheckForAttribute()
