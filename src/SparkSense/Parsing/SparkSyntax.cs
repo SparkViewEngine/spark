@@ -1,55 +1,64 @@
-﻿
-using Microsoft.VisualStudio.Text;
-using SparkSense.StatementCompletion;
-using Microsoft.VisualStudio.Text.Editor;
-using System;
+﻿using System;
+using Spark.Parser.Markup;
+
 namespace SparkSense.Parsing
 {
     public enum SparkSyntaxTypes
     {
         None,
         Tag,
+        Attribute,
+        AttributeValue,
         Variable,
         Invalid,
     }
 
     public class SparkSyntax
     {
-        private readonly IProjectExplorer _projectExplorer;
-        private readonly IWpfTextView _textView;
+        private ITextExplorer _textExplorer;
 
-        public SparkSyntax(IProjectExplorer projectExplorer, IWpfTextView textView)
+        public SparkSyntax(ITextExplorer textExplorer)
         {
-            _textView = textView;
-            _projectExplorer = projectExplorer;
+            _textExplorer = textExplorer;
         }
 
         public bool IsSparkSyntax(char inputCharacter, out SparkSyntaxTypes syntaxType)
         {
             syntaxType = SparkSyntaxTypes.None;
             if (inputCharacter.Equals(char.MinValue)) return false;
+            syntaxType = GetSyntaxType(inputCharacter);
 
-            SnapshotPoint caretPoint;
-            if (!TryGetCurrentCaretPoint(out caretPoint)) return false;
-
-            if (!_projectExplorer.IsCurrentDocumentASparkFile()) return false;
-
-            var sparksyntaxType = new CompletionTypeSelector(_projectExplorer, caretPoint.Snapshot.TextBuffer, caretPoint.Position);
-            syntaxType = sparksyntaxType.GetsyntaxType(inputCharacter);
-            return SparkSyntaxTypes.None != syntaxType;
+            return syntaxType != SparkSyntaxTypes.None;
         }
 
-        private bool TryGetCurrentCaretPoint(out SnapshotPoint caretPoint)
+        public SparkSyntaxTypes GetSyntaxType(char key)
         {
-            caretPoint = new SnapshotPoint();
-            SnapshotPoint? caret = _textView.Caret.Position.Point.GetPoint
-                (textBuffer => _textView.TextBuffer == textBuffer, PositionAffinity.Predecessor);
+            switch (key)
+            {
+                case '<':
+                    return SparkSyntaxTypes.Tag;
+                case ' ':
+                    return CheckForAttribute();
+                case '{': //TODO: Check for preceeding $
+                    return SparkSyntaxTypes.Variable;
+                case '"': //TODO Check for preceeding =
+                    return SparkSyntaxTypes.AttributeValue;
+                default:
+                    if (Char.IsLetterOrDigit(key.ToString(), 0))
+                        return CheckWord();
+                    return SparkSyntaxTypes.None;
+            }
+        }
+        
+        private SparkSyntaxTypes CheckWord()
+        {
+            return SparkSyntaxTypes.Tag;
+        }
 
-            if (!caret.HasValue)
-                return false;
-
-            caretPoint = caret.Value;
-            return true;
+        private SparkSyntaxTypes CheckForAttribute()
+        {
+            var node = _textExplorer.GetNodeAtPosition(_textExplorer.GetStartPosition());
+            return node is ElementNode ? SparkSyntaxTypes.Attribute : SparkSyntaxTypes.None;
         }
     }
 }

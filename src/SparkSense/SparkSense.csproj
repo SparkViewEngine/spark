@@ -110,6 +110,7 @@
     <Compile Include="Parsing\IProjectExplorer.cs" />
     <Compile Include="Parsing\IViewExplorer.cs" />
     <Compile Include="Parsing\SparkSyntax.cs" />
+    <Compile Include="Parsing\TextExplorer.cs" />
     <Compile Include="SignatureRecognition\SparkSignatureHelpCommand.cs" />
     <Compile Include="SignatureRecognition\SparkSignatureHelpCommandListener.cs" />
     <Compile Include="SignatureRecognition\SparkSignatureHelpSource.cs" />
@@ -118,8 +119,11 @@
     <Compile Include="Parsing\ViewExplorer.cs" />
     <Compile Include="StatementCompletion\CompletionSessionConfiguration.cs" />
     <Compile Include="StatementCompletion\CompletionSessionManager.cs" />
+    <Compile Include="StatementCompletion\CompletionSets\SparkAttributeCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkVariableCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionExtensions.cs" />
+    <Compile Include="Parsing\ITextExplorer.cs" />
+    <Compile Include="StatementCompletion\ICompletionSessionConfiguration.cs" />
     <Compile Include="StatementCompletion\KeyPressInterceptor.cs" />
     <Compile Include="StatementCompletion\ViewCreationListener.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkCompletionSetFactory.cs" />
@@ -128,7 +132,6 @@
     <Compile Include="ContentType\SparkFileAndContentTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignatureRecognition\SparkTagSignature.cs" />
-    <Compile Include="StatementCompletion\CompletionTypeSelector.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkTagCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkInvalidCompletionSet.cs" />
     <Compile Include="Parsing\ProjectExplorer.cs" />

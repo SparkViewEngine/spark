@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using SparkSense.Parsing;
 
 
 namespace SparkSense.StatementCompletion
@@ -31,16 +32,23 @@ namespace SparkSense.StatementCompletion
             return key == (uint)VSConstants.VSStd2KCmdID.LEFT || key == (uint)VSConstants.VSStd2KCmdID.RIGHT;
         }
 
-        public static bool HasMovedOutOfIntelliSenseRange(this uint key, IWpfTextView textView, ITrackingSpan completionSpan, int completionCaretStartPosition)
+        public static bool HasMovedOutOfIntelliSenseRange(this uint key, ITextExplorer textExplorer)
         {
-            int currentPosition = textView.Caret.Position.BufferPosition.Position;
+            if (textExplorer == null) return true;
+
+            ITextView textView = textExplorer.TextView;
+            int caretPosition = textView.Caret.Position.BufferPosition.Position;
+            ITrackingSpan completionSpan = textExplorer.GetTrackingSpan();
             ITextSnapshot currentSnapshot = completionSpan.TextBuffer.CurrentSnapshot;
+            var triggerPosition = textExplorer.GetStartPosition();
+            int completionSpanLength = completionSpan.GetSpan(currentSnapshot).Length;
+
             switch (key)
             {
                 case (uint)VSConstants.VSStd2KCmdID.LEFT:
-                    return currentPosition < completionCaretStartPosition;
+                    return caretPosition < triggerPosition;
                 case (uint)VSConstants.VSStd2KCmdID.RIGHT:
-                    return currentPosition > completionCaretStartPosition + completionSpan.GetSpan(currentSnapshot).Length;
+                    return caretPosition > triggerPosition + completionSpanLength;
                 default:
                     return false;
             }

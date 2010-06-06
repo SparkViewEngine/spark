@@ -7,11 +7,10 @@ using Rhino.Mocks;
 using SparkSense.Parsing;
 using SparkSense.StatementCompletion.CompletionSets;
 
-
 namespace SparkSense.Tests.StatementCompletion
 {
     [TestFixture]
-    public class TagCompletionSetTester
+    public class TagCompletionSetTests
     {
         private ICompletionSession _stubSession;
         private ITextBuffer _stubTextBuffer;
@@ -37,7 +36,7 @@ namespace SparkSense.Tests.StatementCompletion
         [Test]
         public void ShouldReturnSparkSpecialNodes()
         {
-            var tag = SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_stubSession, _stubTextBuffer, _stubViewExplorer);
+            var tag = SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_stubSession, _stubTextBuffer, _stubViewExplorer ,null);
             List<Completion> tagList = tag.Completions.ToList();
 
             Assert.IsTrue(tagList.Exists(c => c.DisplayText == "var"));
@@ -66,7 +65,7 @@ namespace SparkSense.Tests.StatementCompletion
 
             mockViewExplorer.Expect(x => x.GetRelatedPartials()).Return(new List<string> { "partial1", "partial2" });
 
-            var tag = SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_stubSession, _stubTextBuffer, mockViewExplorer);
+            var tag = SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_stubSession, _stubTextBuffer, mockViewExplorer, null);
             var tagList = tag.Completions.ToList();
             Assert.That(tagList.Exists(c => c.DisplayText == "partial1"));
             Assert.That(tagList.Exists(c => c.DisplayText == "partial2"));

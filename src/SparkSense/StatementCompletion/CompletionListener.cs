@@ -19,7 +19,9 @@ namespace SparkSense.StatementCompletion
 
         public ICompletionSource TryCreateCompletionSource(ITextBuffer textBuffer)
         {
-            return new CompletionSource(TextNavigator, textBuffer);
+            var textNavigator = TextNavigator.GetTextStructureNavigator(textBuffer);
+            
+            return new CompletionSource(textBuffer, textNavigator);
         }
 
         #endregion

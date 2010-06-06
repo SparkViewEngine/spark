@@ -9,7 +9,7 @@ using Spark.Parser.Syntax;
 namespace SparkSense.Tests.Parsing
 {
     [TestFixture]
-    public class ProjectExplorerTester
+    public class ProjectExplorerTests
     {
         private const string ROOT_VIEW_PATH = "SparkSense.Tests.Views";
         private DefaultSyntaxProvider _syntaxProvider;
@@ -29,16 +29,16 @@ namespace SparkSense.Tests.Parsing
             new SparkSense.Parsing.ProjectExplorer(null);
         }
 
-        [Test, Ignore("This test fails if run outside VS (i.e. NUnit) but passes inside because it can attach to the DTE. Need to find a better way of testing this")]
+        [Test] //, Ignore("This test fails if run without an instance of VS running. It passes if it can attach to the DTE. Need to find a better way of testing this")]
         public void ShouldBuildAMapOfAllViewsInTheSolution()
         {
+            Console.WriteLine("This test fails if run without an instance of VS running. It passes if it can attach to the DTE. Need to find a better way of testing this");
             var projectEnvironment = (DTE)Marshal.GetActiveObject("VisualStudio.DTE.10.0");
 
             var projectExplorer = new SparkSense.Parsing.ProjectExplorer(projectEnvironment);
             var viewMap = projectExplorer.ViewMap;
 
-            viewMap.ForEach(s => Console.WriteLine(s));
-
+            Assert.Contains("Shared\\_SharedPartial.spark", viewMap);
             Assert.Contains("Shared\\Application.spark", viewMap);
         }
     }

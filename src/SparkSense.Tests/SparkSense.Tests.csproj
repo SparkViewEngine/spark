@@ -95,16 +95,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsing\TextExplorerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StatementCompletion\CompletionTypeTester.cs" />
-    <Compile Include="StatementCompletion\CompletionSessionTester.cs" />
-    <Compile Include="StatementCompletion\TagCompletionSetTester.cs" />
-    <Compile Include="StatementCompletion\TextViewCreationTester.cs" />
-    <Compile Include="Parsing\ViewExplorerTester.cs" />
-    <Compile Include="Parsing\ProjectExplorerTester.cs" />
+    <Compile Include="StatementCompletion\CompletionSessionConfigurationTests.cs" />
+    <Compile Include="Parsing\SparkSyntaxTests.cs" />
+    <Compile Include="StatementCompletion\CompletionSessionTests.cs" />
+    <Compile Include="StatementCompletion\TagCompletionSetTests.cs" />
+    <Compile Include="StatementCompletion\TextViewCreationTests.cs" />
+    <Compile Include="Parsing\ViewExplorerTests.cs" />
+    <Compile Include="Parsing\ProjectExplorerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SparkSense.Tests.Views\Shared\Application.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SparkSense.Tests.Views\Shared\_SharedPartial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

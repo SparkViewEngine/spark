@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
 using SparkSense.Parsing;
+using Microsoft.VisualStudio.Text.Operations;
 
 namespace SparkSense.StatementCompletion
 {
@@ -27,6 +28,9 @@ namespace SparkSense.StatementCompletion
 
         [Import]
         public ICompletionBroker CompletionBroker;
+
+        [Import]
+        internal ITextStructureNavigatorSelectorService TextNavigator { get; set; }
 
         public IVsTextView TextViewAdapter { get; private set; }
         public IWpfTextView TextView { get; private set; }

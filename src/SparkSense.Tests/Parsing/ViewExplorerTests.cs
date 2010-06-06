@@ -7,7 +7,7 @@ using SparkSense.Parsing;
 namespace SparkSense.Tests.Parsing
 {
     [TestFixture]
-    public class ViewExplorerTester
+    public class ViewExplorerTests
     {
         [Test]
         public void ShouldRecogniseVariablesDeclaredInTheSameFile()
@@ -29,7 +29,7 @@ namespace SparkSense.Tests.Parsing
         {
             var viewFolder = new InMemoryViewFolder
             {
-                    {"Shared\\Application.spark","<html><body><use content=\"main\"></body></html>"},
+                    {"Shared\\Application.spark","<html><body><use content=\"main\" /></body></html>"},
                     {"Shared\\_PartialMustBeFound.spark","This partial should always be found"},
                     {"Home\\index.spark","Home Page"},
                     {"Home\\_HomePartial.spark","This Partial should only be found from Home"},

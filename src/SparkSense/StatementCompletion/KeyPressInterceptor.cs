@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio;
+﻿using System;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
-using System;
 
 namespace SparkSense.StatementCompletion
 {
@@ -16,7 +16,8 @@ namespace SparkSense.StatementCompletion
         {
             _createdView = createdView;
             _textViewAdapter = createdView.TextViewAdapter;
-            _sessionManager = new CompletionSessionManager(_createdView.CompletionBroker, _createdView.ProjectExplorer, _createdView.TextView);
+            _sessionManager = new CompletionSessionManager(new CompletionSessionConfiguration(_createdView.CompletionBroker), _createdView.ProjectExplorer, _createdView.TextView);
+
             TryChainTheNextCommand();
         }
 
@@ -36,10 +37,10 @@ namespace SparkSense.StatementCompletion
         {
             char inputCharacter = key.GetInputCharacter(cmdGroup, pvaIn);
 
-            if (_sessionManager.CheckForCompletionCommit(key, inputCharacter)) return VSConstants.S_OK;
+            if (_sessionManager.CompletionCommitted(key, inputCharacter)) return VSConstants.S_OK;
 
             int keyPressResult = _nextCommand.Exec(ref cmdGroup, key, cmdExecOpt, pvaIn, pvaOut);
-            return _sessionManager.CheckForCompletionStart(key, inputCharacter) ? VSConstants.S_OK : keyPressResult;
+            return _sessionManager.CompletionStarted(key, inputCharacter) ? VSConstants.S_OK : keyPressResult;
         }
 
         #endregion
