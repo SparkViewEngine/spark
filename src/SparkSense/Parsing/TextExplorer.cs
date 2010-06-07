@@ -86,9 +86,12 @@ namespace SparkSense.Parsing
             int tagStart = content.LastIndexOf('<', position - 1);
             int tagClose = content.IndexOf('>', tagStart);
             var nextTag = content.IndexOf('<', tagStart + 1);
+            var nextLineEnding = content.IndexOf(Environment.NewLine, tagStart + 1);
+            if (nextLineEnding == -1) nextLineEnding = content.Length;
 
             var tagIsClosed = nextTag != -1 && tagClose != -1 && tagClose < nextTag;
-            var tag = content.Substring(tagStart, tagIsClosed ? tagClose - tagStart + 1 : nextTag - tagStart);
+            int tagEnd = tagIsClosed ? nextTag - tagStart : nextLineEnding - tagStart;
+            var tag = content.Substring(tagStart, tagIsClosed ? tagClose - tagStart + 1 : tagEnd);
             if (!tagIsClosed)
                 tag += "/>";
             return tag;
