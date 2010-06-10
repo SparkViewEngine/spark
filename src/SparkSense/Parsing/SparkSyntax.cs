@@ -59,6 +59,8 @@ namespace SparkSense.Parsing
 
         private SparkSyntaxTypes CheckForAttribute()
         {
+            if (_textExplorer.IsPositionedInsideAnElement(_textExplorer.GetStartPosition())) return SparkSyntaxTypes.None;
+
             var node = _textExplorer.GetNodeAtPosition(_textExplorer.GetStartPosition());
             return node is ElementNode ? SparkSyntaxTypes.Attribute : SparkSyntaxTypes.None;
         }

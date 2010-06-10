@@ -13,7 +13,6 @@ namespace SparkSense.StatementCompletion
         private IProjectExplorer _projectExplorer;
         private IWpfTextView _textView;
         private ICompletionSession _session;
-        private IViewExplorer _viewExplorer;
         private ITextExplorer _textExplorer;
         private ITextStructureNavigator _textNavigator;
 
@@ -28,6 +27,7 @@ namespace SparkSense.StatementCompletion
             _projectExplorer = projectExplorer;
             _textView = textView;
             _textNavigator = textNavigator;
+            _textExplorer = new TextExplorer(_textView, _textNavigator);
         }
 
         public bool IsSessionActive()
@@ -95,11 +95,9 @@ namespace SparkSense.StatementCompletion
 
         public bool StartCompletionSession(SparkSyntaxTypes syntaxType)
         {
-            _viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
-            _textExplorer = new TextExplorer(_textView, _textNavigator);
-
             if (!_config.TryCreateCompletionSession(_textExplorer, out _session)) return false;
-            _config.AddCompletionSourceProperties(new List<object> { syntaxType, _viewExplorer, _textExplorer, _textExplorer.GetTrackingSpan() });
+            var viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
+            _config.AddCompletionSourceProperties(new List<object> { syntaxType, viewExplorer, _textExplorer, _textExplorer.GetTrackingSpan() });
             
             _session.Dismissed += OnSessionDismissed;
             _session.Committed += OnSessionCommitted;

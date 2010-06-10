@@ -17,5 +17,6 @@ namespace SparkSense.Parsing
         string GetTagAtPosition(int position);
         string GetCurrentWord();
         bool IsCurrentWordAnElement();
+        bool IsPositionedInsideAnElement(int position);
     }
 }

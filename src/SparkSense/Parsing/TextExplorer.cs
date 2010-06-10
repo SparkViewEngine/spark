@@ -85,6 +85,8 @@ namespace SparkSense.Parsing
             var content = TextView.TextSnapshot.GetText();
             int tagStart = content.LastIndexOf('<', position - 1);
             int tagClose = content.IndexOf('>', tagStart);
+            if (tagClose < position) return string.Empty;
+
             var nextTag = content.IndexOf('<', tagStart + 1);
             var nextLineEnding = content.IndexOf(Environment.NewLine, tagStart + 1);
             if (nextLineEnding == -1) nextLineEnding = content.Length;
@@ -95,6 +97,15 @@ namespace SparkSense.Parsing
             if (!tagIsClosed)
                 tag += "/>";
             return tag;
+        }
+
+
+        public bool IsPositionedInsideAnElement(int position)
+        {
+            var content = TextView.TextSnapshot.GetText();
+            int tagStart = content.LastIndexOf('<', position - 1);
+            int tagClose = content.IndexOf('>', tagStart);
+            return tagClose == -1 || tagClose < position;
         }
 
         public Node GetNodeAtPosition(int position)
