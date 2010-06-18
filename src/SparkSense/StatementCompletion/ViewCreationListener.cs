@@ -46,7 +46,7 @@ namespace SparkSense.StatementCompletion
 
             Func<KeyPressInterceptor> interceptionCreator = () => new KeyPressInterceptor(this);
 
-            TextView.Properties.GetOrCreateSingletonProperty(interceptionCreator);
+            //TextView.Properties.GetOrCreateSingletonProperty(interceptionCreator);
         }
         
         private bool TryGetEnvironmentAndView()

@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text.Editor;
 using SparkSense.Parsing;
 using Microsoft.VisualStudio.Text.Operations;
+using Microsoft.VisualStudio.Text;
 
 namespace SparkSense.StatementCompletion
 {
@@ -63,12 +64,12 @@ namespace SparkSense.StatementCompletion
         private bool TryEvaluateSparkSyntax(char inputCharacter, out SparkSyntaxTypes syntaxType)
         {
             var sparkSyntax = new SparkSyntax(_textExplorer);
-            syntaxType = _projectExplorer.ViewFolderExists() 
-                ? SparkSyntaxTypes.None 
+            syntaxType = _projectExplorer.ViewFolderExists()
+                ? SparkSyntaxTypes.None
                 : SparkSyntaxTypes.Invalid;
 
-            return _projectExplorer.IsCurrentDocumentASparkFile() 
-                ? sparkSyntax.IsSparkSyntax(inputCharacter, out syntaxType) 
+            return _projectExplorer.IsCurrentDocumentASparkFile()
+                ? sparkSyntax.IsSparkSyntax(inputCharacter, out syntaxType)
                 : false;
         }
 
@@ -97,8 +98,15 @@ namespace SparkSense.StatementCompletion
         {
             if (!_config.TryCreateCompletionSession(_textExplorer, out _session)) return false;
             var viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
-            _config.AddCompletionSourceProperties(new List<object> { syntaxType, viewExplorer, _textExplorer, _textExplorer.GetTrackingSpan() });
-            
+            _config.AddCompletionSourceProperties(
+                new Dictionary<object, object> 
+                {
+                    {typeof(SparkSyntaxTypes), syntaxType},
+                    {typeof(IViewExplorer), viewExplorer},
+                    {typeof(ITextExplorer), _textExplorer},
+                    {typeof(ITrackingSpan), _textExplorer.GetTrackingSpan()} 
+                });
+
             _session.Dismissed += OnSessionDismissed;
             _session.Committed += OnSessionCommitted;
             _session.Start();

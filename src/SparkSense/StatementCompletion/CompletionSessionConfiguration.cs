@@ -21,10 +21,11 @@ namespace SparkSense.StatementCompletion
             return completionSession != null;
         }
 
-        public void AddCompletionSourceProperties(List<object> properties)
+        public void AddCompletionSourceProperties(Dictionary<object, object> properties)
         {
             if (properties == null) return;
-            properties.ForEach(property => _session.Properties.AddProperty(property.GetType(), property));
+            foreach (var property in properties)
+                _session.Properties.AddProperty(property.Key, property.Value);
         }
     }
 }

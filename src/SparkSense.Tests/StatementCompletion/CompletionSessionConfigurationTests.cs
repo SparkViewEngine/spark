@@ -50,7 +50,12 @@ namespace SparkSense.Tests.StatementCompletion
             var propertySyntaxType = SparkSyntaxTypes.Element;
 
             var mockProperties = new PropertyCollection();
-            var properties = new List<object> { propertyTrackingSpan, propertyViewVolder, propertySyntaxType };
+            var properties =
+                new Dictionary<object, object> {
+                    { propertyTrackingSpan, propertyTrackingSpan },
+                    { propertyViewVolder, propertyViewVolder }, 
+                    { propertySyntaxType, propertySyntaxType } 
+                };
 
             stubBroker.Stub(x => x.CreateCompletionSession(null, null, true)).IgnoreArguments().Return(mockSession);
 
