@@ -41,35 +41,31 @@ namespace SparkSense.Tests.StatementCompletion
         [Test]
         public void ConfigurationShouldAddPropertiesRequiredForCompletionSourceToSession()
         {
-            var mockSession = MockRepository.GenerateMock<ICompletionSession>();
-            var stubBroker = MockRepository.GenerateMock<ICompletionBroker>();
-            var stubTextExplorer = MockRepository.GenerateMock<ITextExplorer>();
+            var stubSession = MockRepository.GenerateStub<ICompletionSession>();
+            var stubBroker = MockRepository.GenerateStub<ICompletionBroker>();
+            var stubTextExplorer = MockRepository.GenerateStub<ITextExplorer>();
 
-            var propertyTrackingSpan = MockRepository.GenerateStub<ITrackingSpan>();
-            var propertyViewVolder = MockRepository.GenerateStub<IViewExplorer>();
-            var propertySyntaxType = SparkSyntaxTypes.Element;
+            var mockProperties = MockRepository.GenerateMock<PropertyCollection>();
 
-            var mockProperties = new PropertyCollection();
-            var properties =
+            var propertiesToAdd =
                 new Dictionary<object, object> {
-                    { propertyTrackingSpan, propertyTrackingSpan },
-                    { propertyViewVolder, propertyViewVolder }, 
-                    { propertySyntaxType, propertySyntaxType } 
+                    { typeof(ITrackingSpan), "SomeObject" },
+                    { typeof(IViewExplorer), "SomeObject" }, 
+                    { typeof(SparkSyntaxTypes), "SomeObject" } 
                 };
 
-            stubBroker.Stub(x => x.CreateCompletionSession(null, null, true)).IgnoreArguments().Return(mockSession);
-
-            mockSession.Expect(x => x.Properties).Return(mockProperties).Repeat.Times(3);
+            stubBroker.Stub(x => x.CreateCompletionSession(null, null, true)).IgnoreArguments().Return(stubSession);
+            stubSession.Stub(x => x.Properties).Return(mockProperties);
 
             var config = new CompletionSessionConfiguration(stubBroker);
             ICompletionSession session;
             config.TryCreateCompletionSession(stubTextExplorer, out session);
-            config.AddCompletionSourceProperties(properties);
+            config.AddCompletionSourceProperties(propertiesToAdd);
 
-            Assert.That(mockProperties.ContainsProperty(propertyTrackingSpan.GetType()));
-            Assert.That(mockProperties.ContainsProperty(propertyViewVolder.GetType()));
+            Assert.That(mockProperties.ContainsProperty(typeof(ITrackingSpan)));
+            Assert.That(mockProperties.ContainsProperty(typeof(IViewExplorer)));
             Assert.That(mockProperties.ContainsProperty(typeof(SparkSyntaxTypes)));
-            mockSession.VerifyAllExpectations();
+            mockProperties.VerifyAllExpectations();
         }
     }
 }
