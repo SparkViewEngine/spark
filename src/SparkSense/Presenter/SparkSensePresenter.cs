@@ -9,6 +9,8 @@ using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text;
 using System.Windows;
 using System.Windows.Data;
+using System.Collections.Specialized;
+using System.Diagnostics;
 
 namespace SparkSense.Presenter
 {
@@ -19,15 +21,95 @@ namespace SparkSense.Presenter
         private SparkSenseView _view;
         public SparkSensePresenter(ICompletionSession completionSession)
         {
-            _completionSession = completionSession;
-
             _view = new SparkSenseView(this);
-            Items = new CollectionViewSource();
-            Items.Source = _completionSession.SelectedCompletionSet.Completions;
+            InitCompletionSession(completionSession);
+            InitCompletionItems();
         }
 
+        public CollectionViewSource Items { get; private set; }
+
+        private void InitCompletionSession(ICompletionSession completionSession)
+        {
+            _completionSession = completionSession;
+            if (_completionSession == null) return;
+            _completionSession.SelectedCompletionSet.SelectionStatusChanged += SelectedCompletionSet_SelectionStatusChanged;
+            _completionSession.Dismissed += CompletionSession_Dismissed;
+        }
+        private void InitCompletionItems()
+        {
+            Items = new CollectionViewSource();
+            Items.Source = _completionSession.SelectedCompletionSet.Completions;
+
+            if (!IsCompletionListValid()) return;
+            Items.View.MoveCurrentToPrevious();
+        }
+
+        private void SelectedCompletionSet_SelectionStatusChanged(object sender, ValueChangedEventArgs<CompletionSelectionStatus> e)
+        {
+            if (!IsCompletionListValid()) return;
+
+            if (e.NewValue.IsSelected && e.NewValue.Completion != Items.View.CurrentItem)
+                Items.View.MoveCurrentTo(e.NewValue.Completion);
+        }
+
+        private void CompletionSession_Dismissed(object sender, EventArgs e)
+        {
+            if (_completionSession == null) return;
+            _completionSession.SelectedCompletionSet.SelectionStatusChanged -= SelectedCompletionSet_SelectionStatusChanged;
+            _completionSession.Dismissed -= CompletionSession_Dismissed;
+        }
+
+        private ITrackingSpan GetPresentationSpan()
+        {
+            SnapshotSpan span = _completionSession.SelectedCompletionSet.ApplicableTo.GetSpan(_completionSession.TextView.TextSnapshot);
+            NormalizedSnapshotSpanCollection spans = _completionSession.TextView.BufferGraph.MapUpToBuffer(span, _completionSession.SelectedCompletionSet.ApplicableTo.TrackingMode, _completionSession.TextView.TextBuffer);
+            if (spans.Count <= 0)
+            {
+                throw new InvalidOperationException("Completion Session Applicable-To Span is invalid.  It doesn't map to a span in the session's text view.");
+            }
+            SnapshotSpan span2 = spans[0];
+            return _completionSession.TextView.TextBuffer.CurrentSnapshot.CreateTrackingSpan(span2.Span, SpanTrackingMode.EdgeInclusive);
+        }
+
+        private void Move(int offset)
+        {
+            if (!IsCompletionListValid()) return;
+
+            var newPosition = Items.View.CurrentPosition + offset;
+            if (PositionIsInBounds(newPosition))
+                Items.View.MoveCurrentToPosition(newPosition);
+            else
+                MoveToFirstOrLast(newPosition);
+
+            _completionSession.SelectedCompletionSet.SelectionStatus = new CompletionSelectionStatus((Completion)Items.View.CurrentItem, true, true);
+        }
+
+        private void MoveToFirstOrLast(int newPosition)
+        {
+            if (newPosition < 0)
+                Items.View.MoveCurrentToFirst();
+            else
+                Items.View.MoveCurrentToLast();
+
+            if (Items.View.IsCurrentBeforeFirst) Items.View.MoveCurrentToFirst();
+            if (Items.View.IsCurrentAfterLast) Items.View.MoveCurrentToLast();
+        }
+
+        private bool IsCompletionListValid()
+        {
+            return Items != null && Items.View != null && _completionSession != null;
+        }
+
+        private bool PositionIsInBounds(int newPosition)
+        {
+            return newPosition < ((ListCollectionView)Items.View).Count && newPosition > -1;
+        }
 
         #region IPopupIntellisensePresenter Members
+
+        public event EventHandler<ValueChangedEventArgs<PopupStyles>> PopupStylesChanged;
+        public event EventHandler SurfaceElementChanged;
+        public event EventHandler PresentationSpanChanged;
 
         public double Opacity
         {
@@ -46,8 +128,6 @@ namespace SparkSense.Presenter
             get { return PopupStyles.PositionClosest; }
         }
 
-        public event EventHandler<ValueChangedEventArgs<PopupStyles>> PopupStylesChanged;
-
         public ITrackingSpan PresentationSpan
         {
             get
@@ -58,19 +138,6 @@ namespace SparkSense.Presenter
             }
         }
 
-        private ITrackingSpan GetPresentationSpan()
-        {
-            SnapshotSpan span = _completionSession.SelectedCompletionSet.ApplicableTo.GetSpan(_completionSession.TextView.TextSnapshot);
-            NormalizedSnapshotSpanCollection spans = _completionSession.TextView.BufferGraph.MapUpToBuffer(span, _completionSession.SelectedCompletionSet.ApplicableTo.TrackingMode, _completionSession.TextView.TextBuffer);
-            if (spans.Count <= 0)
-            {
-                throw new InvalidOperationException("Completion Session Applicable-To Span is invalid.  It doesn't map to a span in the session's text view.");
-            }
-            SnapshotSpan span2 = spans[0];
-            return _completionSession.TextView.TextBuffer.CurrentSnapshot.CreateTrackingSpan(span2.Span, SpanTrackingMode.EdgeInclusive);
-        }
-        public event EventHandler PresentationSpanChanged;
-
         public string SpaceReservationManagerName
         {
             get { return "completion"; }
@@ -80,9 +147,6 @@ namespace SparkSense.Presenter
         {
             get { return _view; }
         }
-
-        public event EventHandler SurfaceElementChanged;
-
         #endregion
 
         #region IIntellisensePresenter Members
@@ -93,7 +157,6 @@ namespace SparkSense.Presenter
         }
 
         #endregion
-
 
         #region IIntellisenseCommandTarget Members
 
@@ -119,6 +182,7 @@ namespace SparkSense.Presenter
                 case IntellisenseKeyboardCommand.Escape:
                     _completionSession.Dismiss();
                     return true;
+                //Maybe one day we'll do something with these below
                 case IntellisenseKeyboardCommand.End:
                 case IntellisenseKeyboardCommand.Home:
                 case IntellisenseKeyboardCommand.DecreaseFilterLevel:
@@ -132,26 +196,5 @@ namespace SparkSense.Presenter
 
         #endregion
 
-        public CollectionViewSource Items { get; private set; }
-
-        private void Move(int offset)
-        {
-            if (Items == null || Items.View == null || _completionSession == null) return;
-
-            var newPosition = Items.View.CurrentPosition + offset;
-            if (PositionIsInBounds(newPosition))
-                Items.View.MoveCurrentToPosition(newPosition);
-            else if (newPosition < 0)
-                Items.View.MoveCurrentToFirst();
-            else
-                Items.View.MoveCurrentToLast();
-
-            if (Items.View.IsCurrentBeforeFirst) Items.View.MoveCurrentToFirst();
-            if (Items.View.IsCurrentAfterLast) Items.View.MoveCurrentToLast();
-        }
-        private bool PositionIsInBounds(int newPosition)
-        {
-            return newPosition < ((ListCollectionView)Items.View).Count && newPosition > -1;
-        }
     }
 }

@@ -22,12 +22,7 @@ namespace SparkSense.Presenter
             InitializeComponent();
             _presenter = presenter;
             DataContext = _presenter;
-            listViewCompletions.SelectionChanged += new SelectionChangedEventHandler(listViewCompletions_SelectionChanged);
-        }
-
-        void listViewCompletions_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            listViewCompletions.ScrollIntoView(listViewCompletions.SelectedItem);
+            listViewCompletions.SelectionChanged += (s, e) => listViewCompletions.ScrollIntoView(listViewCompletions.SelectedItem);
         }
     }
 }
