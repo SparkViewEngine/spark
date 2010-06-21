@@ -1,16 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.Language.Intellisense;
-using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text;
 using System.Windows;
 using System.Windows.Data;
-using System.Collections.Specialized;
-using System.Diagnostics;
 
 namespace SparkSense.Presenter
 {
@@ -19,6 +12,7 @@ namespace SparkSense.Presenter
         private ICompletionSession _completionSession;
         private ITrackingSpan _presentationSpan;
         private SparkSenseView _view;
+       
         public SparkSensePresenter(ICompletionSession completionSession)
         {
             _view = new SparkSenseView(this);
@@ -35,6 +29,7 @@ namespace SparkSense.Presenter
             _completionSession.SelectedCompletionSet.SelectionStatusChanged += SelectedCompletionSet_SelectionStatusChanged;
             _completionSession.Dismissed += CompletionSession_Dismissed;
         }
+
         private void InitCompletionItems()
         {
             Items = new CollectionViewSource();
@@ -57,18 +52,6 @@ namespace SparkSense.Presenter
             if (_completionSession == null) return;
             _completionSession.SelectedCompletionSet.SelectionStatusChanged -= SelectedCompletionSet_SelectionStatusChanged;
             _completionSession.Dismissed -= CompletionSession_Dismissed;
-        }
-
-        private ITrackingSpan GetPresentationSpan()
-        {
-            SnapshotSpan span = _completionSession.SelectedCompletionSet.ApplicableTo.GetSpan(_completionSession.TextView.TextSnapshot);
-            NormalizedSnapshotSpanCollection spans = _completionSession.TextView.BufferGraph.MapUpToBuffer(span, _completionSession.SelectedCompletionSet.ApplicableTo.TrackingMode, _completionSession.TextView.TextBuffer);
-            if (spans.Count <= 0)
-            {
-                throw new InvalidOperationException("Completion Session Applicable-To Span is invalid.  It doesn't map to a span in the session's text view.");
-            }
-            SnapshotSpan span2 = spans[0];
-            return _completionSession.TextView.TextBuffer.CurrentSnapshot.CreateTrackingSpan(span2.Span, SpanTrackingMode.EdgeInclusive);
         }
 
         private void Move(int offset)
@@ -103,6 +86,18 @@ namespace SparkSense.Presenter
         private bool PositionIsInBounds(int newPosition)
         {
             return newPosition < ((ListCollectionView)Items.View).Count && newPosition > -1;
+        }
+
+        private ITrackingSpan GetPresentationSpan()
+        {
+            SnapshotSpan span = _completionSession.SelectedCompletionSet.ApplicableTo.GetSpan(_completionSession.TextView.TextSnapshot);
+            NormalizedSnapshotSpanCollection spans = _completionSession.TextView.BufferGraph.MapUpToBuffer(span, _completionSession.SelectedCompletionSet.ApplicableTo.TrackingMode, _completionSession.TextView.TextBuffer);
+            if (spans.Count <= 0)
+            {
+                throw new InvalidOperationException("Completion Session Applicable-To Span is invalid.  It doesn't map to a span in the session's text view.");
+            }
+            SnapshotSpan span2 = spans[0];
+            return _completionSession.TextView.TextBuffer.CurrentSnapshot.CreateTrackingSpan(span2.Span, SpanTrackingMode.EdgeInclusive);
         }
 
         #region IPopupIntellisensePresenter Members

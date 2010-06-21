@@ -5,12 +5,12 @@
 
     <Image Source="/SparkSense;component/Resources/SparkTag.png" x:Key="SparkTagImage" />
 
-    <SolidColorBrush x:Key="SelectedItemBorder" Color="Goldenrod" />
+    <SolidColorBrush x:Key="SelectedItemBorder" Color="#3C7FB1" />
     <LinearGradientBrush x:Key="SelectedItemBackground" EndPoint="0.5,1" StartPoint="0.5,0">
-        <GradientStop Color="#FFFFFFE2" Offset="0.005" />
-        <GradientStop Color="#FFFFFDA7" Offset="1" />
-        <GradientStop Color="#EFFCE747" Offset="0.754" />
-        <GradientStop Color="#72FCFC6E" Offset="0.447" />
+        <GradientStop Color="#DCEBFC" Offset="0.005" />
+        <GradientStop Color="#DBEAFD" Offset="1" />
+        <GradientStop Color="#C4DDFC" Offset="0.754" />
+        <GradientStop Color="#74CDE2FC" Offset="0.447" />
     </LinearGradientBrush>
 
     <Style TargetType="{x:Type ListBoxItem}">
@@ -39,7 +39,7 @@
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
-                <TextBlock HorizontalAlignment="Stretch" Padding="0,2" Text="{Binding Path=DisplayText}" Background="{x:Null}" />
+                <TextBlock HorizontalAlignment="Stretch" Padding="0,2" Foreground="Black" Text="{Binding Path=DisplayText}" Background="{x:Null}" />
             </Border>
         </Grid>
     </DataTemplate>

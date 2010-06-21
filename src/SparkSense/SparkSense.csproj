@@ -158,7 +158,9 @@
       <Name>Spark</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Completion\" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Presenter\SparkSenseView.xaml">
       <SubType>Designer</SubType>

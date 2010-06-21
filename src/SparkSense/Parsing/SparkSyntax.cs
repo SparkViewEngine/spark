@@ -35,7 +35,7 @@ namespace SparkSense.Parsing
         {
             switch (key)
             {
-                case '>':
+                case '<':
                     return SparkSyntaxTypes.Element;
                 case ' ':
                     return CheckForAttribute();

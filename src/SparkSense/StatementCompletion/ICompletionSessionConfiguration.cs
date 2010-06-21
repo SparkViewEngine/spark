@@ -6,6 +6,7 @@ namespace SparkSense.StatementCompletion
 {
     public interface ICompletionSessionConfiguration
     {
+        bool IsCompletionSessionActive();
         bool TryCreateCompletionSession(ITextExplorer textExplorer, out ICompletionSession completionSession);
         void AddCompletionSourceProperties(Dictionary<object, object> properties);
     }

@@ -4,6 +4,7 @@ using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using SparkSense.Parsing;
+using Microsoft.VisualStudio.Text.Operations;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
@@ -14,8 +15,14 @@ namespace SparkSense.StatementCompletion.CompletionSets
         internal static IViewExplorer _viewExplorer;
         internal static ITextExplorer _textExplorer;
 
-        internal SparkCompletionSetFactory() : base("Spark Elements", "Spark Elements", null, null, null)
+        internal SparkCompletionSetFactory() : base("Spark", "Spark", null, null, null)
         {
+        }
+
+        public static CompletionSet Create<T>(ICompletionSession session, ITextBuffer textBuffer, ITrackingSpan trackingSpan) where T : SparkCompletionSetFactory, new()
+        {
+            _textBuffer = textBuffer;
+            return new T { ApplicableTo = trackingSpan };
         }
 
         public static CompletionSet Create<T>(ICompletionSession session, ITextBuffer textBuffer, IViewExplorer viewExplorer, ITextExplorer textExplorer) where T : SparkCompletionSetFactory, new()

@@ -14,7 +14,6 @@ namespace SparkSense.Tests.StatementCompletion
     [TestFixture]
     public class CompletionSessionConfigurationTests
     {
-
         [Test]
         public void ConfigurationShouldCreateASessionFromCompletionBroker()
         {
@@ -28,7 +27,7 @@ namespace SparkSense.Tests.StatementCompletion
             mockTextExplorer.Expect(x => x.GetTrackingPoint()).Return(stubTrackingPoint);
             mockBroker.Expect(x => x.CreateCompletionSession(stubTextView, stubTrackingPoint, true)).Return(stubSession);
 
-            var config = new CompletionSessionConfiguration(mockBroker);
+            var config = new CompletionSessionConfiguration(mockBroker, stubTextView);
 
             ICompletionSession session;
             Assert.That(config.TryCreateCompletionSession(mockTextExplorer, out session));
@@ -57,7 +56,7 @@ namespace SparkSense.Tests.StatementCompletion
             stubBroker.Stub(x => x.CreateCompletionSession(null, null, true)).IgnoreArguments().Return(stubSession);
             stubSession.Stub(x => x.Properties).Return(mockProperties);
 
-            var config = new CompletionSessionConfiguration(stubBroker);
+            var config = new CompletionSessionConfiguration(stubBroker, null);
             ICompletionSession session;
             config.TryCreateCompletionSession(stubTextExplorer, out session);
             config.AddCompletionSourceProperties(propertiesToAdd);

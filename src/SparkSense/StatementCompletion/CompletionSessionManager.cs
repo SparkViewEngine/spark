@@ -13,7 +13,7 @@ namespace SparkSense.StatementCompletion
         private ICompletionSessionConfiguration _config;
         private IProjectExplorer _projectExplorer;
         private IWpfTextView _textView;
-        private ICompletionSession _session;
+        private ICompletionSession _sparkOnlySession;
         private ITextExplorer _textExplorer;
         private ITextStructureNavigator _textNavigator;
 
@@ -31,33 +31,37 @@ namespace SparkSense.StatementCompletion
             _textExplorer = new TextExplorer(_textView, _textNavigator);
         }
 
-        public bool IsSessionActive()
+        public bool IsSparkOnlySessionActive()
         {
-            return _session != null && !_session.IsDismissed;
+            return _sparkOnlySession != null && !_sparkOnlySession.IsDismissed;
         }
 
-        public bool CompletionCommitted(uint key, char inputCharacter)
+        public bool IsCompletionCommitted(uint key, char inputCharacter)
         {
-            if (!(key.IsACommitCharacter(inputCharacter) && IsSessionActive()))
+            if (!(key.IsACommitCharacter(inputCharacter) && IsSparkOnlySessionActive()))
                 return false;
 
-            if (_session.SelectedCompletionSet.SelectionStatus.IsSelected)
+            if (_sparkOnlySession.SelectedCompletionSet.SelectionStatus.IsSelected)
             {
-                _session.Commit();
+                _sparkOnlySession.Commit();
                 return true;
             }
-            _session.Dismiss();
+            _sparkOnlySession.Dismiss();
             return false;
         }
 
-        public bool CompletionStarted(uint key, char inputCharacter)
+        public bool IsCompletionStarted(uint key, char inputCharacter)
         {
+            bool active = _config.IsCompletionSessionActive();
+
+            if (active) return true;
+
             SparkSyntaxTypes syntaxType;
             if (!TryEvaluateSparkSyntax(inputCharacter, out syntaxType))
                 return IsMovementOrDeletionHandled(key);
 
-            if (IsSessionActive() || StartCompletionSession(syntaxType))
-                _session.Filter();
+            if (IsSparkOnlySessionActive() || StartCompletionSession(syntaxType))
+                _sparkOnlySession.Filter();
             return true;
         }
 
@@ -76,27 +80,27 @@ namespace SparkSense.StatementCompletion
         private bool IsMovementOrDeletionHandled(uint key)
         {
             if (ShouldDismissCompletion(key))
-                _session.Dismiss();
+                _sparkOnlySession.Dismiss();
 
             if (!key.IsADeletionCharacter()) return false;
 
-            if (!IsSessionActive()) return true;
+            if (!IsSparkOnlySessionActive()) return true;
 
-            _session.Filter();
+            _sparkOnlySession.Filter();
             return true;
         }
 
         private bool ShouldDismissCompletion(uint key)
         {
             return
-                IsSessionActive() &&
+                IsSparkOnlySessionActive() &&
                 key.IsAMovementCharacter() &&
                 key.HasMovedOutOfIntelliSenseRange(_textExplorer);
         }
 
         public bool StartCompletionSession(SparkSyntaxTypes syntaxType)
         {
-            if (!_config.TryCreateCompletionSession(_textExplorer, out _session)) return false;
+            if (!_config.TryCreateCompletionSession(_textExplorer, out _sparkOnlySession)) return false;
             var viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
             _config.AddCompletionSourceProperties(
                 new Dictionary<object, object> 
@@ -107,24 +111,24 @@ namespace SparkSense.StatementCompletion
                     {typeof(ITrackingSpan), _textExplorer.GetTrackingSpan()} 
                 });
 
-            _session.Dismissed += OnSessionDismissed;
-            _session.Committed += OnSessionCommitted;
-            _session.Start();
-            return IsSessionActive(); //Rob G: Depending on the content type - the session can sometimes be dismissed automatically
+            _sparkOnlySession.Dismissed += OnSessionDismissed;
+            _sparkOnlySession.Committed += OnSessionCommitted;
+            _sparkOnlySession.Start();
+            return IsSparkOnlySessionActive(); //Rob G: Depending on the content type - the session can sometimes be dismissed automatically
         }
 
         private void OnSessionCommitted(object sender, EventArgs e)
         {
-            var point = _session.TextView.Caret.Position.BufferPosition;
+            var point = _sparkOnlySession.TextView.Caret.Position.BufferPosition;
             if (point.Position > 1 && (point - 1).GetChar() == '"')
-                _session.TextView.Caret.MoveToPreviousCaretPosition();
-            _session.Dismiss();
+                _sparkOnlySession.TextView.Caret.MoveToPreviousCaretPosition();
+            _sparkOnlySession.Dismiss();
         }
 
         private void OnSessionDismissed(object sender, EventArgs e)
         {
-            _session.Dismissed -= OnSessionDismissed;
-            _session = null;
+            _sparkOnlySession.Dismissed -= OnSessionDismissed;
+            _sparkOnlySession = null;
         }
     }
 }
