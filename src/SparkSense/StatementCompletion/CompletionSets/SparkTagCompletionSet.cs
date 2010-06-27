@@ -33,7 +33,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             _specialNodeCompletions = new List<Completion>();
 
             foreach (var nodeName in specialNodes)
-                _specialNodeCompletions.Add(new Completion(nodeName, nodeName, String.Format("Spark '{0}' tag", nodeName), SparkTagIcon, null));
+                _specialNodeCompletions.Add(new Completion(nodeName, nodeName, String.Format("Spark '{0}' tag", nodeName), SparkElementIcon, null));
 
             return _specialNodeCompletions;
         }
@@ -43,7 +43,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             var relatedPartials = new List<Completion>();
             if (_viewExplorer != null)
                 foreach (var partial in _viewExplorer.GetRelatedPartials())
-                    relatedPartials.Add(new Completion(partial, partial, string.Format("Partial found: '{0}'", partial), SparkTagIcon, null));
+                    relatedPartials.Add(new Completion(partial, partial, string.Format("Partial found: '{0}'", partial), SparkPartialIcon, null));
 
             return relatedPartials;
         }

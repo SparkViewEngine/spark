@@ -35,7 +35,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
                         attribute, 
                         String.Format("{0}=\"\"", attribute), 
                         String.Format("'{0}' attribute for '{1}' element", attribute, ((SpecialNode)node).Element.Name), 
-                        null, null)));
+                        SparkAttributeIcon, null)));
             }
 
             return attributesForSpecialNode;

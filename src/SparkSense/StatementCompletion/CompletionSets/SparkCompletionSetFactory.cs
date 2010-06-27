@@ -4,20 +4,19 @@ using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using SparkSense.Parsing;
-using Microsoft.VisualStudio.Text.Operations;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
     public abstract class SparkCompletionSetFactory : CompletionSet
     {
-        internal static ImageSource SparkTagIcon = new BitmapImage(new Uri(("Resources/SparkTag.png"), UriKind.Relative));
+        internal static ImageSource SparkElementIcon = new BitmapImage(new Uri("pack://application:,,,/SparkSense;component/Resources/SparkElement.png", UriKind.Absolute));
+        internal static ImageSource SparkPartialIcon = new BitmapImage(new Uri("pack://application:,,,/SparkSense;component/Resources/SparkPartial.png", UriKind.Absolute));
+        internal static ImageSource SparkAttributeIcon = new BitmapImage(new Uri("pack://application:,,,/SparkSense;component/Resources/SparkAttribute.png", UriKind.Absolute));
         internal static ITextBuffer _textBuffer;
         internal static IViewExplorer _viewExplorer;
         internal static ITextExplorer _textExplorer;
 
-        internal SparkCompletionSetFactory() : base("Spark", "Spark", null, null, null)
-        {
-        }
+        internal SparkCompletionSetFactory() : base("Spark", "Spark", null, null, null) { }
 
         public static CompletionSet Create<T>(ICompletionSession session, ITextBuffer textBuffer, ITrackingSpan trackingSpan) where T : SparkCompletionSetFactory, new()
         {

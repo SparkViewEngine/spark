@@ -29,11 +29,11 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
             _viewExplorer.GetGlobalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Global Variable found: '{0}'", variable), SparkTagIcon, null)));
+                    new Completion(variable, variable, string.Format("Global Variable found: '{0}'", variable), SparkElementIcon, null)));
 
             _viewExplorer.GetLocalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Local Variable found: '{0}'", variable), SparkTagIcon, null)));
+                    new Completion(variable, variable, string.Format("Local Variable found: '{0}'", variable), SparkElementIcon, null)));
 
             variables.Sort((c1, c2) => c1.DisplayText.CompareTo(c2.DisplayText));
             return variables;
