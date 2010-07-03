@@ -5,7 +5,7 @@ using Spark.Compiler.NodeVisitors;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
-    public class SparkTagCompletionSet : SparkCompletionSetFactory
+    public class SparkElementCompletionSet : SparkCompletionSetFactory
     {
         private static List<Completion> _specialNodeCompletions;
         private List<Completion> _completionList;
@@ -24,7 +24,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             }
         }
 
-        private static List<Completion> GetSpecialNodes()
+        private List<Completion> GetSpecialNodes()
         {
             if (_specialNodeCompletions != null) return _specialNodeCompletions;
 
@@ -38,7 +38,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             return _specialNodeCompletions;
         }
 
-        private static IEnumerable<Completion> GetRelatedPartials()
+        private IEnumerable<Completion> GetRelatedPartials()
         {
             var relatedPartials = new List<Completion>();
             if (_viewExplorer != null)

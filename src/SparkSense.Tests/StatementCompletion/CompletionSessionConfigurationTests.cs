@@ -49,8 +49,7 @@ namespace SparkSense.Tests.StatementCompletion
             var propertiesToAdd =
                 new Dictionary<object, object> {
                     { typeof(ITrackingSpan), "SomeObject" },
-                    { typeof(IViewExplorer), "SomeObject" }, 
-                    { typeof(SparkSyntaxTypes), "SomeObject" } 
+                    { typeof(IViewExplorer), "SomeObject" } 
                 };
 
             stubBroker.Stub(x => x.CreateCompletionSession(null, null, true)).IgnoreArguments().Return(stubSession);
@@ -63,7 +62,6 @@ namespace SparkSense.Tests.StatementCompletion
 
             Assert.That(mockProperties.ContainsProperty(typeof(ITrackingSpan)));
             Assert.That(mockProperties.ContainsProperty(typeof(IViewExplorer)));
-            Assert.That(mockProperties.ContainsProperty(typeof(SparkSyntaxTypes)));
             mockProperties.VerifyAllExpectations();
         }
     }

@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using SparkSense.Parsing;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Text;
+using Spark.Parser.Markup;
 
 namespace SparkSense.StatementCompletion
 {
@@ -28,7 +29,7 @@ namespace SparkSense.StatementCompletion
             _projectExplorer = projectExplorer;
             _textView = textView;
             _textNavigator = textNavigator;
-            _textExplorer = new TextExplorer(_textView, _textNavigator);
+            //_textExplorer = new TextExplorer(_textView, _textNavigator);
         }
 
         public bool IsSparkOnlySessionActive()
@@ -52,28 +53,26 @@ namespace SparkSense.StatementCompletion
 
         public bool IsCompletionStarted(uint key, char inputCharacter)
         {
+            Node syntaxType;
             bool active = _config.IsCompletionSessionActive();
 
             if (active) return true;
 
-            SparkSyntaxTypes syntaxType;
             if (!TryEvaluateSparkSyntax(inputCharacter, out syntaxType))
                 return IsMovementOrDeletionHandled(key);
 
-            if (IsSparkOnlySessionActive() || StartCompletionSession(syntaxType))
+            if (IsSparkOnlySessionActive() || StartCompletionSession())
                 _sparkOnlySession.Filter();
             return true;
         }
 
-        private bool TryEvaluateSparkSyntax(char inputCharacter, out SparkSyntaxTypes syntaxType)
+        private bool TryEvaluateSparkSyntax(char inputCharacter, out Node sparkNode)
         {
-            var sparkSyntax = new SparkSyntax(_textExplorer);
-            syntaxType = _projectExplorer.ViewFolderExists()
-                ? SparkSyntaxTypes.None
-                : SparkSyntaxTypes.Invalid;
+            var sparkSyntax = new SparkSyntax();
+            sparkNode = sparkSyntax.ParseNode(_textView.TextBuffer.ToString(), _textView.Caret.Position.BufferPosition.Position);
 
             return _projectExplorer.IsCurrentDocumentASparkFile()
-                ? sparkSyntax.IsSparkSyntax(inputCharacter, out syntaxType)
+                ? sparkSyntax.IsSparkSyntax(sparkNode, out sparkNode)
                 : false;
         }
 
@@ -98,14 +97,13 @@ namespace SparkSense.StatementCompletion
                 key.HasMovedOutOfIntelliSenseRange(_textExplorer);
         }
 
-        public bool StartCompletionSession(SparkSyntaxTypes syntaxType)
+        public bool StartCompletionSession()
         {
             if (!_config.TryCreateCompletionSession(_textExplorer, out _sparkOnlySession)) return false;
             var viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
             _config.AddCompletionSourceProperties(
                 new Dictionary<object, object> 
                 {
-                    {typeof(SparkSyntaxTypes), syntaxType},
                     {typeof(IViewExplorer), viewExplorer},
                     {typeof(ITextExplorer), _textExplorer},
                     {typeof(ITrackingSpan), _textExplorer.GetTrackingSpan()} 

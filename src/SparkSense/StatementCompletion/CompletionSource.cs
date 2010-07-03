@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Text.Operations;
 using System.Diagnostics;
+using Spark.Parser.Markup;
 
 
 namespace SparkSense.StatementCompletion
@@ -41,7 +42,16 @@ namespace SparkSense.StatementCompletion
             //session.Properties.TryGetProperty(typeof(ViewExplorer), out viewExplorer);
             //session.Properties.TryGetProperty(typeof(TextExplorer), out textExplorer);
 
-            CompletionSet sparkCompletions = GetCompletionSetFor(session);
+            var triggerPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
+            var trackingSpan = triggerPoint.Snapshot.CreateTrackingSpan(new Span(triggerPoint, 0), SpanTrackingMode.EdgeInclusive);
+            char currentCharacter = _textBuffer.CurrentSnapshot[triggerPoint - 1];
+
+            var syntax = new SparkSyntax();
+
+
+
+            Node node = null;
+            CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(node, trackingSpan);
             if (sparkCompletions == null) return;
 
             MergeSparkWithAllCompletionsSet(completionSets, sparkCompletions);
@@ -95,33 +105,6 @@ namespace SparkSense.StatementCompletion
             return combinedList;
         }
 
-        public CompletionSet GetCompletionSetFor(ICompletionSession session)
-        {
-            var triggerPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
-            var trackingSpan = triggerPoint.Snapshot.CreateTrackingSpan(new Span(triggerPoint, 0), SpanTrackingMode.EdgeInclusive);
-
-            var syntax = new SparkSyntax(new TextExplorer(session.TextView, _textNavigator));
-            var syntaxType = syntax.GetSyntaxType(_textBuffer.CurrentSnapshot[triggerPoint - 1]);
-
-            Debug.WriteLine(string.Format("char '{0}' interpreted as '{1}'", _textBuffer.CurrentSnapshot[triggerPoint - 1], syntaxType));
-
-            switch (syntaxType)
-            {
-                case SparkSyntaxTypes.Element:
-                    return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(session, _textBuffer, trackingSpan);
-                case SparkSyntaxTypes.Attribute:
-                    return null;
-                case SparkSyntaxTypes.AttributeValue:
-                    return null;
-                case SparkSyntaxTypes.Variable:
-                    return null;
-                case SparkSyntaxTypes.Invalid:
-                    return null;
-                case SparkSyntaxTypes.None:
-                default:
-                    return null;
-            }
-        }
 
     }
 }

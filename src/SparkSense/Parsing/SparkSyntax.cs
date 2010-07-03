@@ -1,68 +1,116 @@
 ﻿using System;
 using Spark.Parser.Markup;
+using Spark.Parser;
+using System.Collections.Generic;
+using Spark.Compiler.NodeVisitors;
 
 namespace SparkSense.Parsing
 {
-    public enum SparkSyntaxTypes
-    {
-        None,
-        Element,
-        Attribute,
-        AttributeValue,
-        Variable,
-        Invalid,
-    }
-
     public class SparkSyntax
     {
-        private ITextExplorer _textExplorer;
-
-        public SparkSyntax(ITextExplorer textExplorer)
+        public SparkSyntax()
         {
-            _textExplorer = textExplorer;
+
         }
 
-        public bool IsSparkSyntax(char inputCharacter, out SparkSyntaxTypes syntaxType)
+        public IList<Node> ParseNodes(string content)
         {
-            syntaxType = SparkSyntaxTypes.None;
-            if (inputCharacter.Equals(char.MinValue)) return false;
-            syntaxType = GetSyntaxType(inputCharacter);
-
-            return syntaxType != SparkSyntaxTypes.None;
+            var grammar = new MarkupGrammar();
+            var result = grammar.Nodes(Source(content));
+            return result.Value;
         }
 
-        public SparkSyntaxTypes GetSyntaxType(char key)
+        public Node ParseNode(string content, int position)
         {
-            switch (key)
+            var start = content.LastIndexOf('<', position - 1);
+            var nextStart = content.IndexOf('<', position);
+
+            var fullElement = nextStart != -1
+                ? content.Substring(start, nextStart - start)
+                : content.Substring(start);
+            if (!fullElement.Contains(">")) fullElement += ">";
+
+            var nodes = ParseNodes(fullElement);
+
+            if (nodes.Count > 1 && nodes[0] is TextNode)
             {
-                case '<':
-                    return SparkSyntaxTypes.Element;
-                case ' ':
-                    return CheckForAttribute();
-                case '{': //TODO: Check for preceeding $
-                    return SparkSyntaxTypes.Variable;
-                case '"': //TODO Check for preceeding =
-                    return SparkSyntaxTypes.AttributeValue;
-                default:
-                    if (Char.IsLetterOrDigit(key.ToString(), 0))
-                        return CheckWord();
-                    return SparkSyntaxTypes.None;
+                var firstSpaceAfterStart = content.IndexOf(' ', start) - start;
+                var elementWithoutAttributes = content.Substring(start, firstSpaceAfterStart) + ">";
+                nodes = ParseNodes(elementWithoutAttributes);
             }
+
+            return ((ElementNode)nodes[0]);
         }
 
-        private SparkSyntaxTypes CheckWord()
+        public bool IsSparkSyntax(Node inputNode, out Node sparkNode)
         {
-            if (_textExplorer.IsCurrentWordAnElement())
-                return SparkSyntaxTypes.Element;
-            return SparkSyntaxTypes.None;
+            sparkNode = null;
+            IList<Node> nodes = null;
+            foreach (var visitor in BuildNodeVisitors(new VisitorContext()))
+            {
+                visitor.Accept(inputNode);
+                nodes = visitor.Nodes;
+            }
+            return nodes != null && nodes.Count == 1;
         }
 
-        private SparkSyntaxTypes CheckForAttribute()
+        //public SparkSyntaxTypes GetSyntaxType(char key)
+        //{
+        //    switch (key)
+        //    {
+        //        case '<':
+        //            return SparkSyntaxTypes.Element;
+        //        case ' ':
+        //            return CheckForAttribute();
+        //        case '{': //TODO: Check for preceeding $
+        //            return SparkSyntaxTypes.Variable;
+        //        case '"': //TODO Check for preceeding =
+        //            return SparkSyntaxTypes.AttributeValue;
+        //        default:
+        //            if (Char.IsLetterOrDigit(key.ToString(), 0))
+        //                return CheckWord();
+        //            return SparkSyntaxTypes.None;
+        //    }
+        //}
+
+        //private SparkSyntaxTypes CheckWord()
+        //{
+        //    if (_textExplorer.IsCurrentWordAnElement())
+        //        return SparkSyntaxTypes.Element;
+        //    return SparkSyntaxTypes.None;
+        //}
+
+        //private SparkSyntaxTypes CheckForAttribute()
+        //{
+        //    if (_textExplorer.IsPositionedInsideAnElement(_textExplorer.GetStartPosition())) return SparkSyntaxTypes.None;
+
+        //    var node = _textExplorer.GetNodeAtPosition(_textExplorer.GetStartPosition());
+        //    return node is ElementNode ? SparkSyntaxTypes.Attribute : SparkSyntaxTypes.None;
+        //}
+
+        private static Position Source(string content)
         {
-            if (_textExplorer.IsPositionedInsideAnElement(_textExplorer.GetStartPosition())) return SparkSyntaxTypes.None;
-
-            var node = _textExplorer.GetNodeAtPosition(_textExplorer.GetStartPosition());
-            return node is ElementNode ? SparkSyntaxTypes.Attribute : SparkSyntaxTypes.None;
+            return new Position(new SourceContext(content));
         }
+
+        private IList<INodeVisitor> BuildNodeVisitors(VisitorContext context)
+        {
+            return new INodeVisitor[]
+                       {
+                           new NamespaceVisitor(context),
+                           new IncludeVisitor(context),
+                           new PrefixExpandingVisitor(context),
+                           new SpecialNodeVisitor(context),
+                           new CacheAttributeVisitor(context),
+                           new ForEachAttributeVisitor(context),
+                           new ConditionalAttributeVisitor(context),
+                           new OmitExtraLinesVisitor(context),
+                           new TestElseElementVisitor(context),
+                           new OnceAttributeVisitor(context),
+                           new UrlAttributeVisitor(context),
+                           //new BindingExpansionVisitor(context)
+                       };
+        }
+
     }
 }

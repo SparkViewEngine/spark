@@ -25,17 +25,17 @@ namespace SparkSense.StatementCompletion.CompletionSets
         private static IEnumerable<Completion> GetVariables()
         {
             var variables = new List<Completion>();
-            if (_viewExplorer == null) return variables;
+            //if (_viewExplorer == null) return variables;
 
-            _viewExplorer.GetGlobalVariables().ToList().ForEach(
-                variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Global Variable found: '{0}'", variable), SparkElementIcon, null)));
+            //_viewExplorer.GetGlobalVariables().ToList().ForEach(
+            //    variable => variables.Add(
+            //        new Completion(variable, variable, string.Format("Global Variable found: '{0}'", variable), SparkElementIcon, null)));
 
-            _viewExplorer.GetLocalVariables().ToList().ForEach(
-                variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Local Variable found: '{0}'", variable), SparkElementIcon, null)));
+            //_viewExplorer.GetLocalVariables().ToList().ForEach(
+            //    variable => variables.Add(
+            //        new Completion(variable, variable, string.Format("Local Variable found: '{0}'", variable), SparkElementIcon, null)));
 
-            variables.Sort((c1, c2) => c1.DisplayText.CompareTo(c2.DisplayText));
+            //variables.Sort((c1, c2) => c1.DisplayText.CompareTo(c2.DisplayText));
             return variables;
         }
     }
