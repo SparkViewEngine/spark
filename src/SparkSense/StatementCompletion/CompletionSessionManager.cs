@@ -72,7 +72,7 @@ namespace SparkSense.StatementCompletion
             sparkNode = sparkSyntax.ParseNode(_textView.TextBuffer.ToString(), _textView.Caret.Position.BufferPosition.Position);
 
             return _projectExplorer.IsCurrentDocumentASparkFile()
-                ? sparkSyntax.IsSparkSyntax(sparkNode, out sparkNode)
+                ? sparkSyntax.IsSparkNode(sparkNode, out sparkNode)
                 : false;
         }
 

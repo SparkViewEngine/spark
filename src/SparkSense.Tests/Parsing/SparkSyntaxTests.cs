@@ -14,6 +14,34 @@ namespace SparkSense.Tests.Parsing
     public class SparkSyntaxTests
     {
         [Test]
+        public void IsSparkNodeShouldReturnASpecialNode()
+        {
+            var sparkSyntax = new SparkSyntax();
+            var node = sparkSyntax.ParseNode("<use content='main'/>", position: 1);
+
+            Node sparkNode;
+            var isSparkNode = sparkSyntax.IsSparkNode(node, out sparkNode);
+
+            Assert.That(isSparkNode);
+            Assert.IsNotNull(sparkNode);
+            Assert.That(sparkNode, Is.InstanceOfType(typeof(SpecialNode)));
+        }
+
+        [Test]
+        public void IsSparkNodeShouldReturnAnElementNodeIfNotSparkSyntax()
+        {
+            var sparkSyntax = new SparkSyntax();
+            var node = sparkSyntax.ParseNode("<div id='prodcuts'/>", position: 1);
+
+            Node elementNode;
+            var isSparkNode = sparkSyntax.IsSparkNode(node, out elementNode);
+
+            Assert.That(!isSparkNode);
+            Assert.IsNotNull(elementNode);
+            Assert.That(elementNode, Is.InstanceOfType(typeof(ElementNode)));
+        }
+
+        [Test]
         public void ParseNodesShouldParseIntoMultipleNodes()
         {
             var sparkSyntax = new SparkSyntax();

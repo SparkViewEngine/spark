@@ -42,16 +42,12 @@ namespace SparkSense.Parsing
             return ((ElementNode)nodes[0]);
         }
 
-        public bool IsSparkSyntax(Node inputNode, out Node sparkNode)
+        public bool IsSparkNode(Node inputNode, out Node sparkNode)
         {
-            sparkNode = null;
-            IList<Node> nodes = null;
-            foreach (var visitor in BuildNodeVisitors(new VisitorContext()))
-            {
-                visitor.Accept(inputNode);
-                nodes = visitor.Nodes;
-            }
-            return nodes != null && nodes.Count == 1;
+            var visitor = new SpecialNodeVisitor(new VisitorContext());
+            visitor.Accept(inputNode);
+            sparkNode = visitor.Nodes != null ? visitor.Nodes[0] : null;
+            return sparkNode != null && sparkNode is SpecialNode;
         }
 
         //public SparkSyntaxTypes GetSyntaxType(char key)
