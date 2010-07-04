@@ -5,7 +5,7 @@ using Spark.Compiler.NodeVisitors;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
-    public class SparkTagCompletionSet : SparkCompletionSetFactory
+    public class SparkElementCompletionSet : SparkCompletionSetFactory
     {
         private static List<Completion> _specialNodeCompletions;
         private List<Completion> _completionList;
@@ -24,7 +24,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             }
         }
 
-        private static List<Completion> GetSpecialNodes()
+        private List<Completion> GetSpecialNodes()
         {
             if (_specialNodeCompletions != null) return _specialNodeCompletions;
 
@@ -33,17 +33,17 @@ namespace SparkSense.StatementCompletion.CompletionSets
             _specialNodeCompletions = new List<Completion>();
 
             foreach (var nodeName in specialNodes)
-                _specialNodeCompletions.Add(new Completion(nodeName, nodeName, String.Format("Spark '{0}' tag", nodeName), SparkTagIcon, null));
+                _specialNodeCompletions.Add(new Completion(nodeName, nodeName, String.Format("Spark '{0}' element", nodeName), SparkElementIcon, null));
 
             return _specialNodeCompletions;
         }
 
-        private static IEnumerable<Completion> GetRelatedPartials()
+        private IEnumerable<Completion> GetRelatedPartials()
         {
             var relatedPartials = new List<Completion>();
             if (_viewExplorer != null)
                 foreach (var partial in _viewExplorer.GetRelatedPartials())
-                    relatedPartials.Add(new Completion(partial, partial, string.Format("Partial found: '{0}'", partial), SparkTagIcon, null));
+                    relatedPartials.Add(new Completion(partial, partial, string.Format("Partial found: '{0}'", partial), SparkPartialIcon, null));
 
             return relatedPartials;
         }

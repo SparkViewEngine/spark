@@ -7,16 +7,15 @@ namespace SparkSense.StatementCompletion
 {
     internal class KeyPressInterceptor : IOleCommandTarget
     {
-        private ViewCreationListener _createdView;
         private readonly IVsTextView _textViewAdapter;
+        private readonly CompletionSessionManager _sessionManager;
         private IOleCommandTarget _nextCommand;
-        private CompletionSessionManager _sessionManager;
 
         public KeyPressInterceptor(ViewCreationListener createdView)
         {
-            _createdView = createdView;
             _textViewAdapter = createdView.TextViewAdapter;
-            _sessionManager = new CompletionSessionManager(new CompletionSessionConfiguration(_createdView.CompletionBroker), _createdView.ProjectExplorer, _createdView.TextView);
+            var textNavigator = createdView.TextNavigator.GetTextStructureNavigator(createdView.TextView.TextBuffer);
+            _sessionManager = new CompletionSessionManager(createdView.CompletionBroker, createdView.ProjectExplorer, createdView.TextView, textNavigator);
 
             TryChainTheNextCommand();
         }
@@ -37,10 +36,10 @@ namespace SparkSense.StatementCompletion
         {
             char inputCharacter = key.GetInputCharacter(cmdGroup, pvaIn);
 
-            if (_sessionManager.CompletionCommitted(key, inputCharacter)) return VSConstants.S_OK;
+            if (_sessionManager.IsCompletionCommitted(key, inputCharacter)) return VSConstants.S_OK;
 
             int keyPressResult = _nextCommand.Exec(ref cmdGroup, key, cmdExecOpt, pvaIn, pvaOut);
-            return _sessionManager.CompletionStarted(key, inputCharacter) ? VSConstants.S_OK : keyPressResult;
+            return _sessionManager.IsCompletionStarted(key, inputCharacter) ? VSConstants.S_OK : keyPressResult;
         }
 
         #endregion

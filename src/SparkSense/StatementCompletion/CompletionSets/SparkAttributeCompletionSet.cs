@@ -23,8 +23,14 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
         private List<Completion> CheckForSpecialNodes()
         {
-            var tag = _textExplorer.GetTagAtPosition(_textExplorer.GetStartPosition());
-            var node = _textExplorer.GetParsedNodes(tag)[0];
+            var tag = ApplicableTo;// _textExplorer.GetTagAtPosition(_textExplorer.GetStartPosition());
+
+            var startingPoint = 1;// ApplicableTo.GetStartPoint(_textBuffer.CurrentSnapshot);
+            //var line = startingPoint.GetContainingLine();
+            //var extent = line.Extent;
+
+            var grammar = new MarkupGrammar();
+            SpecialNode node = null;//grammar.AnyNode(Source(extent.GetText())).Value;
 
             var attributesForSpecialNode = new List<Completion>();
             if (node is SpecialNode)
@@ -32,10 +38,10 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 var knownAttributesForNode = GetKnownAttributesForSpecialNode((SpecialNode)node);
                 knownAttributesForNode.ForEach(attribute => attributesForSpecialNode.Add(
                     new Completion(
-                        attribute, 
-                        String.Format("{0}=\"\"", attribute), 
-                        String.Format("'{0}' attribute for '{1}' element", attribute, ((SpecialNode)node).Element.Name), 
-                        null, null)));
+                        attribute,
+                        String.Format("{0}=\"\"", attribute),
+                        String.Format("'{0}' attribute for '{1}' element", attribute, ((SpecialNode)node).Element.Name),
+                        SparkAttributeIcon, null)));
             }
 
             return attributesForSpecialNode;

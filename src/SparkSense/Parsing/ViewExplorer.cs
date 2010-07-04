@@ -37,11 +37,10 @@ namespace SparkSense.Parsing
 
         public IList<string> GetGlobalVariables()
         {
-            var controllerName = Path.GetDirectoryName(_viewPath);
             var masterFiles = new List<string>();
 
-            GetMasterFilesForController(controllerName, masterFiles, MasterFolderTypes.Shared);
-            GetMasterFilesForController(controllerName, masterFiles, MasterFolderTypes.Layouts);
+            GetMasterFiles(MasterFolderTypes.Shared, masterFiles);
+            GetMasterFiles(MasterFolderTypes.Layouts, masterFiles);
 
             _viewLoader.Load(_viewPath);
             masterFiles.ToList().ForEach(filePath =>
@@ -62,15 +61,16 @@ namespace SparkSense.Parsing
             return globalVariables;
         }
 
-        private void GetMasterFilesForController(string controllerName, List<string> masterFiles, MasterFolderTypes masterFolderType)
+        private void GetMasterFiles(MasterFolderTypes masterFolderType, List<string> masterFiles)
         {
             var masterFilePath = String.Format("{0}\\{1}", BasePath, masterFolderType);
             var masterFilePaths = Directory.Exists(masterFilePath) ? Directory.GetFiles(masterFilePath).Where(filePath => IsNonPartialSparkFile(filePath)) : new List<string>();
-            masterFiles.AddRange(masterFilePaths.Where(filePath => IsValidMasterFile(filePath, controllerName)));
+            masterFiles.AddRange(masterFilePaths.Where(filePath => IsValidMasterFile(filePath)));
         }
 
-        private static bool IsValidMasterFile(string filePath, string controllerName)
+        private bool IsValidMasterFile(string filePath)
         {
+            var controllerName = Path.GetDirectoryName(_viewPath);
             return 
                 Path.GetFileName(filePath).Equals("Application.spark") || 
                 filePath.EndsWith(String.Format("{0}.spark", controllerName));

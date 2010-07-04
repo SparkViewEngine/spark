@@ -1,0 +1,44 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SparkSense.Presenter">
+
+    <SolidColorBrush x:Key="SelectedItemBorder" Color="#3C7FB1" />
+    <LinearGradientBrush x:Key="SelectedItemBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#DCEBFC" Offset="0.005" />
+        <GradientStop Color="#DBEAFD" Offset="1" />
+        <GradientStop Color="#C4DDFC" Offset="0.754" />
+        <GradientStop Color="#74CDE2FC" Offset="0.447" />
+    </LinearGradientBrush>
+
+    <Style TargetType="{x:Type ListBoxItem}">
+        <Style.Resources>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+        </Style.Resources>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    </Style>
+
+    <DataTemplate x:Key="ItemDataTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image HorizontalAlignment="Left" Width="16" Height="16" Source="{Binding Path=IconSource}" />
+            <Border Grid.Column="1" BorderThickness="1" Margin="3,0,0,0">
+                <Border.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="true">
+                                <Setter Property="Border.Background" Value="{StaticResource SelectedItemBackground}" />
+                                <Setter Property="Border.BorderBrush" Value="{StaticResource SelectedItemBorder}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock HorizontalAlignment="Stretch" Padding="0,2" Foreground="Black" Text="{Binding Path=DisplayText}" Background="{x:Null}" />
+            </Border>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

@@ -97,7 +97,6 @@
   <ItemGroup>
     <Compile Include="Parsing\TextExplorerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StatementCompletion\CompletionSessionConfigurationTests.cs" />
     <Compile Include="Parsing\SparkSyntaxTests.cs" />
     <Compile Include="StatementCompletion\CompletionSessionTests.cs" />
     <Compile Include="StatementCompletion\TagCompletionSetTests.cs" />

@@ -4,52 +4,68 @@ using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using SparkSense.Parsing;
+using Spark.Parser;
+using System.Diagnostics;
+using Microsoft.VisualStudio.Text.Operations;
+using Spark.Parser.Markup;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
     public abstract class SparkCompletionSetFactory : CompletionSet
     {
-        internal static ImageSource SparkTagIcon = new BitmapImage(new Uri(("Resources/SparkTag.png"), UriKind.Relative));
-        internal static ITextBuffer _textBuffer;
-        internal static IViewExplorer _viewExplorer;
-        internal static ITextExplorer _textExplorer;
+        private ImageSource _sparkElementIcon;
+        private ImageSource _sparkPartialIcon;
+        private ImageSource _sparkAttributeIcon;
+        protected static IViewExplorer _viewExplorer;
 
-        internal SparkCompletionSetFactory() : base("Spark Elements", "Spark Elements", null, null, null)
+        internal SparkCompletionSetFactory() : base("Spark", "Spark", null, null, null) { }
+
+        public ImageSource SparkElementIcon
         {
-        }
-
-        public static CompletionSet Create<T>(ICompletionSession session, ITextBuffer textBuffer, IViewExplorer viewExplorer, ITextExplorer textExplorer) where T : SparkCompletionSetFactory, new()
-        {
-            _viewExplorer = viewExplorer;
-            _textBuffer = textBuffer;
-            _textExplorer = textExplorer;
-
-            var triggerPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
-            var completionSet = new T
+            get
             {
-                ApplicableTo = triggerPoint.Snapshot.CreateTrackingSpan(new Span(triggerPoint, 0), SpanTrackingMode.EdgeInclusive)
-            };
-
-            return completionSet;
+                if (_sparkElementIcon == null)
+                    _sparkElementIcon = GetIcon("SparkElement");
+                return _sparkElementIcon;
+            }
         }
-
-        public static CompletionSet GetCompletionSetFor(ICompletionSession session, ITextBuffer textBuffer, IViewExplorer viewExplorer, SparkSyntaxTypes syntaxType, ITextExplorer textExplorer)
+        public ImageSource SparkPartialIcon
         {
-            switch (syntaxType)
+            get
             {
-                case SparkSyntaxTypes.Tag:
-                    return SparkCompletionSetFactory.Create<SparkTagCompletionSet>(session, textBuffer, viewExplorer, textExplorer);
-                case SparkSyntaxTypes.Attribute:
-                    return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(session, textBuffer, viewExplorer, textExplorer);
-                case SparkSyntaxTypes.Variable:
-                    return SparkCompletionSetFactory.Create<SparkVariableCompletionSet>(session, textBuffer, viewExplorer, textExplorer);
-                case SparkSyntaxTypes.Invalid:
-                    return SparkCompletionSetFactory.Create<SparkInvalidCompletionSet>(session, textBuffer, viewExplorer, textExplorer);
-                case SparkSyntaxTypes.None:
-                default:
-                    return null;
+                if (_sparkPartialIcon == null)
+                    _sparkPartialIcon = GetIcon("SparkPartial");
+                return _sparkPartialIcon;
+            }
+        }
+        public ImageSource SparkAttributeIcon
+        {
+            get
+            {
+                if (_sparkAttributeIcon == null)
+                    _sparkAttributeIcon = GetIcon("SparkAttribute");
+                return _sparkAttributeIcon;
             }
         }
 
+        public static CompletionSet Create<T>(IViewExplorer viewExplorer, ITrackingSpan trackingSpan) where T : SparkCompletionSetFactory, new()
+        {
+            _viewExplorer = viewExplorer;
+            return new T { ApplicableTo = trackingSpan };
+        }
+
+        private static BitmapImage GetIcon(string iconName)
+        {
+            BitmapImage icon;
+            try
+            {
+                icon = new BitmapImage(new Uri(String.Format("pack://application:,,,/SparkSense;component/Resources/{0}.png", iconName), UriKind.Absolute));
+            }
+            catch (UriFormatException ex)
+            {
+                icon = new BitmapImage();
+            }
+            return icon;
+        }
     }
 }

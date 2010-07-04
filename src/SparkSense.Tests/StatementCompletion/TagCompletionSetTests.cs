@@ -14,6 +14,7 @@ namespace SparkSense.Tests.StatementCompletion
     {
         private ICompletionSession _stubSession;
         private ITextBuffer _stubTextBuffer;
+        private ITrackingSpan _stubTrackingSpan;
         private IViewExplorer _stubViewExplorer;
         private ITrackingPoint _stubTrackingPoint;
         private ITextSnapshot _stubSnapshot;
@@ -25,6 +26,7 @@ namespace SparkSense.Tests.StatementCompletion
             _stubTextBuffer = MockRepository.GenerateStub<ITextBuffer>();
             _stubViewExplorer = MockRepository.GenerateStub<IViewExplorer>();
             _stubTrackingPoint = MockRepository.GenerateStub<ITrackingPoint>();
+            _stubTrackingSpan = MockRepository.GenerateStub<ITrackingSpan>();
             _stubSnapshot = MockRepository.GenerateStub<ITextSnapshot>();
 
             _stubTextBuffer.Stub(x => x.CurrentSnapshot).Return(_stubSnapshot);
@@ -36,7 +38,7 @@ namespace SparkSense.Tests.StatementCompletion
         [Test]
         public void ShouldReturnSparkSpecialNodes()
         {
-            var tag = SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_stubSession, _stubTextBuffer, _stubViewExplorer ,null);
+            var tag = SparkCompletionSetFactory.Create<SparkElementCompletionSet>(null, _stubTrackingSpan);
             List<Completion> tagList = tag.Completions.ToList();
 
             Assert.IsTrue(tagList.Exists(c => c.DisplayText == "var"));
@@ -65,7 +67,7 @@ namespace SparkSense.Tests.StatementCompletion
 
             mockViewExplorer.Expect(x => x.GetRelatedPartials()).Return(new List<string> { "partial1", "partial2" });
 
-            var tag = SparkCompletionSetFactory.Create<SparkTagCompletionSet>(_stubSession, _stubTextBuffer, mockViewExplorer, null);
+            var tag = SparkCompletionSetFactory.Create<SparkElementCompletionSet>(mockViewExplorer, null);
             var tagList = tag.Completions.ToList();
             Assert.That(tagList.Exists(c => c.DisplayText == "partial1"));
             Assert.That(tagList.Exists(c => c.DisplayText == "partial2"));

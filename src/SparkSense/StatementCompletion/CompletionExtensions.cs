@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using SparkSense.Parsing;
+using Microsoft.VisualStudio.Language.Intellisense;
 
 
 namespace SparkSense.StatementCompletion
@@ -32,23 +32,22 @@ namespace SparkSense.StatementCompletion
             return key == (uint)VSConstants.VSStd2KCmdID.LEFT || key == (uint)VSConstants.VSStd2KCmdID.RIGHT;
         }
 
-        public static bool HasMovedOutOfIntelliSenseRange(this uint key, ITextExplorer textExplorer)
+        public static bool HasMovedOutOfIntelliSenseRange(this uint key, ITextView textView, ICompletionSession session)
         {
-            if (textExplorer == null) return true;
+            if (textView == null) return true;
 
-            ITextView textView = textExplorer.TextView;
-            int caretPosition = textView.Caret.Position.BufferPosition.Position;
-            ITrackingSpan completionSpan = textExplorer.GetTrackingSpan();
-            ITextSnapshot currentSnapshot = completionSpan.TextBuffer.CurrentSnapshot;
-            var triggerPosition = textExplorer.GetStartPosition();
-            int completionSpanLength = completionSpan.GetSpan(currentSnapshot).Length;
+            var textBuffer = textView.TextBuffer;
+            var caretPosition = textView.Caret.Position.BufferPosition.Position;
+            var triggerPoint = session.GetTriggerPoint(textBuffer).GetPoint(textBuffer.CurrentSnapshot);
+            ITrackingSpan completionSpan = triggerPoint.Snapshot.CreateTrackingSpan(new Span(triggerPoint, 0), SpanTrackingMode.EdgeInclusive);
+            int completionSpanLength = completionSpan.GetSpan(textView.TextSnapshot).Length;
 
             switch (key)
             {
                 case (uint)VSConstants.VSStd2KCmdID.LEFT:
-                    return caretPosition < triggerPosition;
+                    return caretPosition < triggerPoint;
                 case (uint)VSConstants.VSStd2KCmdID.RIGHT:
-                    return caretPosition > triggerPosition + completionSpanLength;
+                    return caretPosition > triggerPoint + completionSpanLength;
                 default:
                     return false;
             }
