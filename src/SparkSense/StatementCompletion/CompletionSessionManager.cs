@@ -120,7 +120,7 @@ namespace SparkSense.StatementCompletion
         public bool TryCreateCompletionSession()
         {
             var caret = _textView.Caret.Position.Point.GetPoint(
-                textBuffer => (!textBuffer.ContentType.IsOfType("projection")), PositionAffinity.Predecessor);
+                textBuffer => (textBuffer.ContentType.IsOfType("projection")), PositionAffinity.Predecessor);
             if (!caret.HasValue) return false;
 
             var trackingPoint = caret.Value.Snapshot.CreateTrackingPoint(caret.Value.Position, PointTrackingMode.Positive);

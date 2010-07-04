@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text;
 using System.Windows;
 using System.Windows.Data;
-using System.Diagnostics;
 
 namespace SparkSense.Presenter
 {
@@ -91,15 +90,11 @@ namespace SparkSense.Presenter
 
         private ITrackingSpan GetPresentationSpan()
         {
-            ITrackingSpan trackingSpan;
-            if (_completionSession.Properties.TryGetProperty(typeof(ITrackingSpan), out trackingSpan))
-                return trackingSpan;
-
             SnapshotSpan span = _completionSession.SelectedCompletionSet.ApplicableTo.GetSpan(_completionSession.TextView.TextSnapshot);
             NormalizedSnapshotSpanCollection spans = _completionSession.TextView.BufferGraph.MapUpToBuffer(span, _completionSession.SelectedCompletionSet.ApplicableTo.TrackingMode, _completionSession.TextView.TextBuffer);
             if (spans.Count <= 0)
             {
-                throw new InvalidOperationException("Completion Session Applicable-To Span is invalid.  It doesn't map to a span in the session's text view.");
+                throw new InvalidOperationException("Completion Session Applicable To Span is invalid.  It doesn't map to a span in the session's text view.");
             }
             SnapshotSpan span2 = spans[0];
             return _completionSession.TextView.TextBuffer.CurrentSnapshot.CreateTrackingSpan(span2.Span, SpanTrackingMode.EdgeInclusive);
