@@ -59,7 +59,7 @@ namespace SparkSense.Tests.StatementCompletion
         public void ShouldThrowIfProjectExplorerIsNull()
         {
             new CompletionSessionManager(
-                MockRepository.GenerateStub<ICompletionSessionConfiguration>(), 
+                MockRepository.GenerateStub<ICompletionBroker>(), 
                 null, 
                 MockRepository.GenerateStub<IWpfTextView>(),
                 MockRepository.GenerateStub<ITextStructureNavigator>()
@@ -71,7 +71,7 @@ namespace SparkSense.Tests.StatementCompletion
         public void ShouldThrowIfTextViewIsNull()
         {
             new CompletionSessionManager(
-                MockRepository.GenerateStub<ICompletionSessionConfiguration>(),
+                MockRepository.GenerateStub<ICompletionBroker>(),
                 MockRepository.GenerateStub<IProjectExplorer>(),
                 null,
                 MockRepository.GenerateStub<ITextStructureNavigator>()
@@ -83,7 +83,7 @@ namespace SparkSense.Tests.StatementCompletion
         public void ShouldThrowIfTextNavigatorIsNull()
         {
             new CompletionSessionManager(
-                MockRepository.GenerateStub<ICompletionSessionConfiguration>(),
+                MockRepository.GenerateStub<ICompletionBroker>(),
                 MockRepository.GenerateStub<IProjectExplorer>(),
                 MockRepository.GenerateStub<IWpfTextView>(),
                 null

@@ -53,14 +53,6 @@ namespace SparkSense.StatementCompletion.CompletionSets
             _viewExplorer = viewExplorer;
             return new T { ApplicableTo = trackingSpan };
         }
-        public static CompletionSet GetCompletionSetFor(Node node, ITrackingSpan trackingSpan)
-        {
-            if (node is ElementNode)
-                return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(null, trackingSpan);
-            if (node is AttributeNode)
-                return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(null, trackingSpan);
-            return null;
-        }
 
         private static BitmapImage GetIcon(string iconName)
         {

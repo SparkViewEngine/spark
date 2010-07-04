@@ -14,13 +14,41 @@ namespace SparkSense.Tests.Parsing
     public class SparkSyntaxTests
     {
         [Test]
-        public void IsSparkNodeShouldReturnASpecialNode()
+        public void IsSparkNodeShouldReturnASpecialNodeForFullElement()
         {
             var sparkSyntax = new SparkSyntax();
             var node = sparkSyntax.ParseNode("<use content='main'/>", position: 1);
 
             Node sparkNode;
-            var isSparkNode = sparkSyntax.IsSparkNode(node, out sparkNode);
+            var isSparkNode = sparkSyntax.IsSparkElementNode(node, out sparkNode);
+
+            Assert.That(isSparkNode);
+            Assert.IsNotNull(sparkNode);
+            Assert.That(sparkNode, Is.InstanceOfType(typeof(SpecialNode)));
+        }
+
+        [Test]
+        public void IsSparkNodeShouldReturnASpecialNodeForClosedEmptyElement()
+        {
+            var sparkSyntax = new SparkSyntax();
+            var node = sparkSyntax.ParseNode("<use />", position: 1);
+
+            Node sparkNode;
+            var isSparkNode = sparkSyntax.IsSparkElementNode(node, out sparkNode);
+
+            Assert.That(isSparkNode);
+            Assert.IsNotNull(sparkNode);
+            Assert.That(sparkNode, Is.InstanceOfType(typeof(SpecialNode)));
+        }
+
+        [Test]
+        public void IsSparkNodeShouldReturnASpecialNodeForUnclosedElement()
+        {
+            var sparkSyntax = new SparkSyntax();
+            var node = sparkSyntax.ParseNode("<use >", position: 1);
+
+            Node sparkNode;
+            var isSparkNode = sparkSyntax.IsSparkElementNode(node, out sparkNode);
 
             Assert.That(isSparkNode);
             Assert.IsNotNull(sparkNode);
@@ -31,10 +59,10 @@ namespace SparkSense.Tests.Parsing
         public void IsSparkNodeShouldReturnAnElementNodeIfNotSparkSyntax()
         {
             var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<div id='prodcuts'/>", position: 1);
+            var node = sparkSyntax.ParseNode("<div id='products'/>", position: 1);
 
             Node elementNode;
-            var isSparkNode = sparkSyntax.IsSparkNode(node, out elementNode);
+            var isSparkNode = sparkSyntax.IsSparkElementNode(node, out elementNode);
 
             Assert.That(!isSparkNode);
             Assert.IsNotNull(elementNode);

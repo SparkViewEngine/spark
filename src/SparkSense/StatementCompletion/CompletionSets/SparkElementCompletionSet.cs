@@ -33,7 +33,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             _specialNodeCompletions = new List<Completion>();
 
             foreach (var nodeName in specialNodes)
-                _specialNodeCompletions.Add(new Completion(nodeName, nodeName, String.Format("Spark '{0}' tag", nodeName), SparkElementIcon, null));
+                _specialNodeCompletions.Add(new Completion(nodeName, nodeName, String.Format("Spark '{0}' element", nodeName), SparkElementIcon, null));
 
             return _specialNodeCompletions;
         }

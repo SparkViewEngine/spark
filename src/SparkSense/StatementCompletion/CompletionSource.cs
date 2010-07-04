@@ -17,12 +17,15 @@ namespace SparkSense.StatementCompletion
         private ITextBuffer _textBuffer;
         private IProjectExplorer _projectExplorer;
         private ITextStructureNavigator _textNavigator;
+        private IViewExplorer _viewExplorer;
+        private ITrackingSpan _trackingSpan;
 
         public CompletionSource(ITextBuffer textBuffer, ITextStructureNavigator textNavigator, IProjectExplorer projectExplorer)
         {
             _textBuffer = textBuffer;
             _textNavigator = textNavigator;
             _projectExplorer = projectExplorer;
+            _viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
         }
         public CompletionSource(ITextBuffer textBuffer, ITextStructureNavigator textNavigator)
         {
@@ -35,7 +38,6 @@ namespace SparkSense.StatementCompletion
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
             //SparkSyntaxTypes syntaxType;
-            //IViewExplorer viewExplorer;
             //ITextExplorer textExplorer;
 
             //session.Properties.TryGetProperty(typeof(SparkSyntaxTypes), out syntaxType);
@@ -43,15 +45,14 @@ namespace SparkSense.StatementCompletion
             //session.Properties.TryGetProperty(typeof(TextExplorer), out textExplorer);
 
             var triggerPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
-            var trackingSpan = triggerPoint.Snapshot.CreateTrackingSpan(new Span(triggerPoint, 0), SpanTrackingMode.EdgeInclusive);
+            Debug.WriteLine("Augmenting Session");
+            _trackingSpan = triggerPoint.Snapshot.CreateTrackingSpan(new Span(triggerPoint, 0), SpanTrackingMode.EdgeInclusive);
+
             char currentCharacter = _textBuffer.CurrentSnapshot[triggerPoint - 1];
 
             var syntax = new SparkSyntax();
-
-
-
-            Node node = null;
-            CompletionSet sparkCompletions = SparkCompletionSetFactory.GetCompletionSetFor(node, trackingSpan);
+            Node currentNode = syntax.ParseNode(_textBuffer.CurrentSnapshot.GetText(), triggerPoint);
+            CompletionSet sparkCompletions = GetCompletionSetFor(currentNode);
             if (sparkCompletions == null) return;
 
             MergeSparkWithAllCompletionsSet(completionSets, sparkCompletions);
@@ -66,6 +67,20 @@ namespace SparkSense.StatementCompletion
         }
 
         #endregion
+
+        private CompletionSet GetCompletionSetFor(Node node)
+        {
+            if (node is TextNode)
+            {
+                if (((TextNode)node).Text == "<")
+                    return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan);
+            }
+            if (node is ElementNode)
+                return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan);
+            if (node is AttributeNode)
+                return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(_viewExplorer, _trackingSpan);
+            return null;
+        }
 
         private static void MergeSparkWithAllCompletionsSet(IList<CompletionSet> completionSets, CompletionSet sparkCompletions)
         {

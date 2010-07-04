@@ -11,25 +11,29 @@ namespace SparkSense.StatementCompletion
 {
     public class CompletionSessionManager
     {
-        private ICompletionSessionConfiguration _config;
+        private ICompletionBroker _completionBroker;
         private IProjectExplorer _projectExplorer;
         private IWpfTextView _textView;
         private ICompletionSession _sparkOnlySession;
-        private ITextExplorer _textExplorer;
         private ITextStructureNavigator _textNavigator;
+        private ITrackingSpan _trackingSpan;
 
-        public CompletionSessionManager(ICompletionSessionConfiguration config, IProjectExplorer projectExplorer, IWpfTextView textView, ITextStructureNavigator textNavigator)
+        public CompletionSessionManager(ICompletionBroker broker, IProjectExplorer projectExplorer, IWpfTextView textView, ITextStructureNavigator textNavigator)
         {
-            if (config == null) throw new ArgumentNullException("config", "Session Config is null.");
+            if (broker == null) throw new ArgumentNullException("broker", "Session Config is null.");
             if (projectExplorer == null) throw new ArgumentNullException("projectExplorer", "Project Explorer is null.");
             if (textView == null) throw new ArgumentNullException("textView", "Text View is null.");
             if (textNavigator == null) throw new ArgumentNullException("textNavigator", "textNavigator is null.");
 
-            _config = config;
+            _completionBroker = broker;
             _projectExplorer = projectExplorer;
             _textView = textView;
             _textNavigator = textNavigator;
-            //_textExplorer = new TextExplorer(_textView, _textNavigator);
+        }
+
+        public bool IsCompletionSessionActive()
+        {
+            return _completionBroker.IsCompletionActive(_textView);
         }
 
         public bool IsSparkOnlySessionActive()
@@ -53,12 +57,11 @@ namespace SparkSense.StatementCompletion
 
         public bool IsCompletionStarted(uint key, char inputCharacter)
         {
+            if (inputCharacter == Char.MinValue) return false;
             Node syntaxType;
-            bool active = _config.IsCompletionSessionActive();
+            if (IsCompletionSessionActive()) return true;
 
-            if (active) return true;
-
-            if (!TryEvaluateSparkSyntax(inputCharacter, out syntaxType))
+            if (!TryEvaluateSparkSyntax(_textView.Caret.Position.BufferPosition.Position, out syntaxType))
                 return IsMovementOrDeletionHandled(key);
 
             if (IsSparkOnlySessionActive() || StartCompletionSession())
@@ -66,13 +69,13 @@ namespace SparkSense.StatementCompletion
             return true;
         }
 
-        private bool TryEvaluateSparkSyntax(char inputCharacter, out Node sparkNode)
+        private bool TryEvaluateSparkSyntax(int caretPosition, out Node sparkNode)
         {
             var sparkSyntax = new SparkSyntax();
-            sparkNode = sparkSyntax.ParseNode(_textView.TextBuffer.ToString(), _textView.Caret.Position.BufferPosition.Position);
-
+            var currentNode = sparkSyntax.ParseNode(_textView.TextBuffer.CurrentSnapshot.GetText(), caretPosition);
+            sparkNode = null;
             return _projectExplorer.IsCurrentDocumentASparkFile()
-                ? sparkSyntax.IsSparkNode(sparkNode, out sparkNode)
+                ? sparkSyntax.IsSparkElementNode(currentNode, out sparkNode)
                 : false;
         }
 
@@ -94,25 +97,44 @@ namespace SparkSense.StatementCompletion
             return
                 IsSparkOnlySessionActive() &&
                 key.IsAMovementCharacter() &&
-                key.HasMovedOutOfIntelliSenseRange(_textExplorer);
+                key.HasMovedOutOfIntelliSenseRange(_textView, _sparkOnlySession);
         }
 
         public bool StartCompletionSession()
         {
-            if (!_config.TryCreateCompletionSession(_textExplorer, out _sparkOnlySession)) return false;
+            if (!TryCreateCompletionSession()) return false;
             var viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
-            _config.AddCompletionSourceProperties(
+            AddCompletionSourceProperties(
                 new Dictionary<object, object> 
                 {
                     {typeof(IViewExplorer), viewExplorer},
-                    {typeof(ITextExplorer), _textExplorer},
-                    {typeof(ITrackingSpan), _textExplorer.GetTrackingSpan()} 
+                    {typeof(ITrackingSpan), _trackingSpan}
                 });
 
             _sparkOnlySession.Dismissed += OnSessionDismissed;
             _sparkOnlySession.Committed += OnSessionCommitted;
             _sparkOnlySession.Start();
-            return IsSparkOnlySessionActive(); //Rob G: Depending on the content type - the session can sometimes be dismissed automatically
+            return IsSparkOnlySessionActive();
+        }
+
+        public bool TryCreateCompletionSession()
+        {
+            var caret = _textView.Caret.Position.Point.GetPoint(
+                textBuffer => (!textBuffer.ContentType.IsOfType("projection")), PositionAffinity.Predecessor);
+            if (!caret.HasValue) return false;
+
+            var trackingPoint = caret.Value.Snapshot.CreateTrackingPoint(caret.Value.Position, PointTrackingMode.Positive);
+            _trackingSpan = caret.Value.Snapshot.CreateTrackingSpan(caret.Value.Position, 0, SpanTrackingMode.EdgeInclusive);
+
+            _sparkOnlySession = _completionBroker.CreateCompletionSession(_textView, trackingPoint, true);
+            return _sparkOnlySession != null;
+        }
+
+        public void AddCompletionSourceProperties(Dictionary<object, object> properties)
+        {
+            if (properties == null) return;
+            foreach (var property in properties)
+                _sparkOnlySession.Properties.AddProperty(property.Key, property.Value);
         }
 
         private void OnSessionCommitted(object sender, EventArgs e)
@@ -128,5 +150,6 @@ namespace SparkSense.StatementCompletion
             _sparkOnlySession.Dismissed -= OnSessionDismissed;
             _sparkOnlySession = null;
         }
+
     }
 }

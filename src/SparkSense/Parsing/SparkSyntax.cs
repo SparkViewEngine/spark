@@ -22,31 +22,32 @@ namespace SparkSense.Parsing
 
         public Node ParseNode(string content, int position)
         {
-            var start = content.LastIndexOf('<', position - 1);
+            var start = content.LastIndexOf('<', position > 0 ? position - 1 : 0);
             var nextStart = content.IndexOf('<', position);
 
             var fullElement = nextStart != -1
                 ? content.Substring(start, nextStart - start)
                 : content.Substring(start);
-            if (!fullElement.Contains(">")) fullElement += ">";
+            if (!fullElement.Contains(">")) fullElement += "/>";
+            else if (!fullElement.Contains("/>")) fullElement = fullElement.Replace(">", "/>");
 
             var nodes = ParseNodes(fullElement);
 
             if (nodes.Count > 1 && nodes[0] is TextNode)
             {
                 var firstSpaceAfterStart = content.IndexOf(' ', start) - start;
-                var elementWithoutAttributes = content.Substring(start, firstSpaceAfterStart) + ">";
+                var elementWithoutAttributes = content.Substring(start, firstSpaceAfterStart) + "/>";
                 nodes = ParseNodes(elementWithoutAttributes);
             }
 
-            return ((ElementNode)nodes[0]);
+            return (nodes[0]);
         }
 
-        public bool IsSparkNode(Node inputNode, out Node sparkNode)
+        public bool IsSparkElementNode(Node inputNode, out Node sparkNode)
         {
             var visitor = new SpecialNodeVisitor(new VisitorContext());
             visitor.Accept(inputNode);
-            sparkNode = visitor.Nodes != null ? visitor.Nodes[0] : null;
+            sparkNode = visitor.Nodes.Count > 0 ? visitor.Nodes[0] : null;
             return sparkNode != null && sparkNode is SpecialNode;
         }
 

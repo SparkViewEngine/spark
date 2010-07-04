@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio.Text.Operations;
 
 namespace SparkSense.StatementCompletion
 {
@@ -16,9 +15,7 @@ namespace SparkSense.StatementCompletion
         {
             _textViewAdapter = createdView.TextViewAdapter;
             var textNavigator = createdView.TextNavigator.GetTextStructureNavigator(createdView.TextView.TextBuffer);
-            var config = new CompletionSessionConfiguration(createdView.CompletionBroker, createdView.TextView);
-
-            _sessionManager = new CompletionSessionManager(config, createdView.ProjectExplorer, createdView.TextView, textNavigator);
+            _sessionManager = new CompletionSessionManager(createdView.CompletionBroker, createdView.ProjectExplorer, createdView.TextView, textNavigator);
 
             TryChainTheNextCommand();
         }
