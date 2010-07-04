@@ -17,15 +17,25 @@ namespace Spark.Bindings
                 Ch(char.IsLetter).Or(Ch('_', ':')).And(Rep(NameChar))
                 .Build(hit => hit.Left + new string(hit.Down.ToArray()));
 
-            var stringPrefixReference = 
+            var stringPrefixReference =
                 Ch("\"@").And(Opt(Name)).And(Ch("*\""))
                 .Or(Ch("'@").And(Opt(Name)).And(Ch("*'")))
-                .Build(hit => (BindingNode)new BindingPrefixReference(hit.Left.Down) { AssumeStringValue = true });
+                .Build(hit => new BindingPrefixReference(hit.Left.Down) { AssumeStringValue = true });
 
             var rawPrefixReference = Ch('@').And(Opt(Name)).And(Ch('*'))
-                .Build(hit => (BindingNode)new BindingPrefixReference(hit.Left.Down));
+                .Build(hit => new BindingPrefixReference(hit.Left.Down));
 
-            PrefixReference = stringPrefixReference.Or(rawPrefixReference);
+            var dictionaryPrefixReference = Ch("{{").And(stringPrefixReference.Or(rawPrefixReference)).And(Ch("}}"))
+                .Build(hit =>
+                       {
+                           hit.Left.Down.AssumeDictionarySyntax = true;
+                           return hit.Left.Down;
+                       });
+
+
+            PrefixReference = stringPrefixReference.Or(rawPrefixReference).Or(dictionaryPrefixReference)
+                .Build(hit => (BindingNode)hit);
+
 
             var stringNameReference = Ch("\"@").And(Name).And(Ch('\"'))
                 .Or(Ch("'@").And(Name).And(Ch('\'')))
@@ -34,18 +44,28 @@ namespace Spark.Bindings
             var rawNameReference = Ch('@').And(Name)
                 .Build(hit => (BindingNode)new BindingNameReference(hit.Down));
 
+            var childReference = Ch("child::*").Or(Ch("'child::*'")).Or(Ch("\"child::*\""))
+                .Build(hit => (BindingNode)new BindingChildReference());
+
             NameReference = stringNameReference.Or(rawNameReference);
 
-            Literal = Rep1(Ch(ch => true).Unless(PrefixReference.Or(NameReference)))
+            var anyReference = PrefixReference.Or(NameReference).Or(childReference);
+
+            Literal = Rep1(Ch(ch => true).Unless(anyReference))
                 .Build(hit => (BindingNode)new BindingLiteral(hit));
 
-            Nodes = Rep(PrefixReference.Or(NameReference).Or(Literal));
+            Nodes = Rep(anyReference.Or(Literal));
+
+            Phrase =
+                Ch("#").And(Nodes).Build(hit => new BindingPhrase { Type = BindingPhrase.PhraseType.Statement, Nodes = hit.Down })
+                .Or(Nodes.Build(hit => new BindingPhrase { Type = BindingPhrase.PhraseType.Expression, Nodes = hit }));
         }
 
         public ParseAction<BindingNode> PrefixReference { get; set; }
         public ParseAction<BindingNode> NameReference { get; set; }
         public ParseAction<BindingNode> Literal { get; set; }
         public ParseAction<IList<BindingNode>> Nodes { get; set; }
+        public ParseAction<BindingPhrase> Phrase { get; set; }
     }
 
 

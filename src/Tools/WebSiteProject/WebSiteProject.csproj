@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{90E7E459-A7AC-49C1-BC1E-80A0D40A99D7}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebSiteProject</RootNamespace>
+    <AssemblyName>WebSiteProject</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(MSBuildExtensionsPath)\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Projects\MvcSparkApplication2.0\Content\Site.css" />
+    <Content Include="Projects\MvcSparkApplication2.0\Global.asax" />
+    <Content Include="Projects\MvcSparkApplication2.0\MvcSparkApplication.csproj" />
+    <Content Include="Projects\MvcSparkApplication2.0\MvcSparkWebApplicationProjectTemplate.cs.vstemplate" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\jquery-1.4.1-vsdoc.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\jquery-1.4.1.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\jquery-1.4.1.min-vsdoc.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\jquery-1.4.1.min.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\jquery.validate.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\jquery.validate.min-vsdoc.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\jquery.validate.min.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\MicrosoftAjax.debug.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\MicrosoftAjax.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\MicrosoftMvcAjax.debug.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\MicrosoftMvcAjax.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\MicrosoftMvcValidation.debug.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Scripts\MicrosoftMvcValidation.js" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Bindings.xml" />
+    <Content Include="Projects\MvcSparkApplication2.0\Controllers\AccountController.cs" />
+    <Content Include="Projects\MvcSparkApplication2.0\Controllers\HomeController.cs" />
+    <Content Include="Projects\MvcSparkApplication2.0\Global.asax.cs" />
+    <Content Include="Projects\MvcSparkApplication2.0\Models\AccountModels.cs" />
+    <Content Include="Projects\MvcSparkApplication2.0\Properties\AssemblyInfo.cs" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Account\ChangePassword.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Account\ChangePasswordSuccess.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Account\LogOn.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Account\Register.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Home\About.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Home\Index.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Shared\Application.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Shared\Error.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Shared\_global.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Shared\_LogOnUserControl.spark" />
+    <Content Include="Projects\MvcSparkApplication2.0\Views\Web.config" />
+    <Content Include="Projects\MvcSparkApplication2.0\Web.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
+  <Target Name="CoreBuild">
+    <Message Text="OutputPath:$(OutputPath), OutDir:$(OutDir) - Zipping Content" />
+    <MakeDir Directories="$(OutDir)" />
+    <Zip Files="@(Content)" WorkingDirectory="Projects\MvcSparkApplication2.0" ZipFileName="$(OutDir)\MvcSparkApplication2.0.cs.zip" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

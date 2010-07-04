@@ -159,5 +159,70 @@ namespace Spark.Tests.Bindings
             // default to anon object's ToString() style
             Assert.That(contents, Is.EqualTo(@"<p>[one]{ }{ }, [one]{ bar = two }{ }, [one]{ bar = 2 }{ id = three }</p>"));
         }
+
+        [Test]
+        public void StatementPhraseWillBeExecutedInsteadOfOutput()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>#Output.Write(4+5);</element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello/></p>");
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>9</p>"));
+        }
+
+        [Test]
+        public void TwoPhraseBindingMayWrapOtherMaterial()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'><start>@a</start><end>@b</end></element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello a='3' b='5'>world</hello></p>");
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>3world5</p>"));
+        }
+
+        [Test]
+        public void ChildReferenceWillSpoolAndProvideContentAsString()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>'@a' + 'child::*' + '@b'</element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello a='3' b='5'>world</hello></p>");
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>3world5</p>"));
+        }
+        
+        [Test]
+        public void ChildReferenceWillNotMatchSelfClosingElements()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>'@a' + 'child::*' + '@b'</element>
+<element name='hello'>'@a' + ""no text"" + '@b'</element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello a='1' b='2'>world</hello><hello a='3' b='4'></hello><hello a='5' b='6'/></p>");
+
+            var contents = Render("index");
+
+            Assert.That(contents, Is.EqualTo(@"<p>1world2345no text6</p>"));
+        }
+        
+        [Test]
+        public void CurleyBracesExpandAsDictionaryInitialization()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>new System.Collections.Generic.Dictionary&lt;string,object&gt;{{'@*'}}.Count</element>
+</bindings>");
+            
+            _viewFolder.Add("home\\index.spark", @"<p><hello a='foo' b='bar'/><hello/><hello></hello><hello x1='' x2='' x3='' x4='' x5=''/></p>");
+
+            var contents = Render("index");
+
+            Assert.That(contents, Is.EqualTo(@"<p>2005</p>"));
+        }
     }
 }

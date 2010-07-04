@@ -1,0 +1,6 @@
+﻿<test if="Request.IsAuthenticated">
+    Welcome <b>${Context.User.Identity.Name}</b>!
+    [ <a action="LogOff" controller="Account">Log Off</a> ]
+<else />
+    [ <a action="LogOn" controller="Account">Log On</a> ]
+</test>

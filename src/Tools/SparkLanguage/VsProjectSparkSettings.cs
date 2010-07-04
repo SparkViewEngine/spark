@@ -112,7 +112,7 @@ namespace SparkLanguage
 
         public LanguageType DefaultLanguage
         {
-            get { return LanguageType.CSharp; }
+            get { return (LanguageType)Enum.Parse(typeof(LanguageType), GetSetting("compilation/@defaultLanguage", "Default")); }
         }
 
         public IEnumerable<string> UseNamespaces

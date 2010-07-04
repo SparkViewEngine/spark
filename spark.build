@@ -85,11 +85,12 @@
 
     <if test="${property::exists('tools.solution.file')}">
       <property name="wix-parameters" value="WixTargetsPath=..\..\..\bin\msbuild\Microsoft\WiX\v3.0\wix.targets;WixTasksPath=WixTasks.dll;WixToolPath=..\..\..\bin\wix"/>
+      <property name="communitytasks-parameters" value="MSBuildCommunityTasksPath=..\..\..\bin\msbuild\MSBuildCommunityTasks"/>
 
       <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
-            commandline="${tools.solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters} /v:q" workingdir="." />
+            commandline="${tools.solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters} /v:q" workingdir="." />
       <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
-            commandline="${tools.solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};ProjectFullVersion=${project.fullversion} /v:q" workingdir="." />
+            commandline="${tools.solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters};ProjectFullVersion=${project.fullversion} /v:q" workingdir="." />
     </if>
   </target>
 
