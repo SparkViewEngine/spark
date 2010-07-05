@@ -66,17 +66,17 @@ namespace SparkSense.StatementCompletion
             switch (currentCharacter)
             {
                 case '<':
-                    return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan);
+                    return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan, node);
                 case '"':
-                    return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(_viewExplorer, _trackingSpan);
+                    return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(_viewExplorer, _trackingSpan, node);
                 default:
                     break;
             }
 
             if (node is ElementNode)
-                return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan);
+                return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan, node);
             if (node is AttributeNode)
-                return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(_viewExplorer, _trackingSpan);
+                return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(_viewExplorer, _trackingSpan, node);
             return null;
         }
 

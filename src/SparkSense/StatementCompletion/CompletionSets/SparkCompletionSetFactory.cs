@@ -17,6 +17,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
         private ImageSource _sparkPartialIcon;
         private ImageSource _sparkAttributeIcon;
         protected static IViewExplorer _viewExplorer;
+        protected static Node _currentNode;
 
         internal SparkCompletionSetFactory() : base("Spark", "Spark", null, null, null) { }
 
@@ -48,9 +49,10 @@ namespace SparkSense.StatementCompletion.CompletionSets
             }
         }
 
-        public static CompletionSet Create<T>(IViewExplorer viewExplorer, ITrackingSpan trackingSpan) where T : SparkCompletionSetFactory, new()
+        public static CompletionSet Create<T>(IViewExplorer viewExplorer, ITrackingSpan trackingSpan, Node currentNode) where T : SparkCompletionSetFactory, new()
         {
             _viewExplorer = viewExplorer;
+            _currentNode = currentNode;
             return new T { ApplicableTo = trackingSpan };
         }
 

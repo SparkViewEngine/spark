@@ -10,7 +10,7 @@ using SparkSense.StatementCompletion.CompletionSets;
 namespace SparkSense.Tests.StatementCompletion
 {
     [TestFixture]
-    public class TagCompletionSetTests
+    public class ElementCompletionSetTests
     {
         private ICompletionSession _stubSession;
         private ITextBuffer _stubTextBuffer;
@@ -38,26 +38,26 @@ namespace SparkSense.Tests.StatementCompletion
         [Test]
         public void ShouldReturnSparkSpecialNodes()
         {
-            var tag = SparkCompletionSetFactory.Create<SparkElementCompletionSet>(null, _stubTrackingSpan);
-            List<Completion> tagList = tag.Completions.ToList();
+            var element = SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_stubViewExplorer, _stubTrackingSpan, null);
+            List<Completion> elementList = element.Completions.ToList();
 
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "var"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "def"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "default"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "global"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "viewdata"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "set"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "for"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "test"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "if"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "else"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "elseif"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "content"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "use"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "macro"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "render"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "section"));
-            Assert.IsTrue(tagList.Exists(c => c.DisplayText == "cache"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "var"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "def"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "default"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "global"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "viewdata"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "set"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "for"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "test"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "if"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "else"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "elseif"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "content"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "use"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "macro"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "render"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "section"));
+            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "cache"));
         }
 
         [Test]
@@ -67,10 +67,10 @@ namespace SparkSense.Tests.StatementCompletion
 
             mockViewExplorer.Expect(x => x.GetRelatedPartials()).Return(new List<string> { "partial1", "partial2" });
 
-            var tag = SparkCompletionSetFactory.Create<SparkElementCompletionSet>(mockViewExplorer, null);
-            var tagList = tag.Completions.ToList();
-            Assert.That(tagList.Exists(c => c.DisplayText == "partial1"));
-            Assert.That(tagList.Exists(c => c.DisplayText == "partial2"));
+            var element = SparkCompletionSetFactory.Create<SparkElementCompletionSet>(mockViewExplorer, null, null);
+            var elementList = element.Completions.ToList();
+            Assert.That(elementList.Exists(c => c.DisplayText == "partial1"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "partial2"));
 
             mockViewExplorer.VerifyAllExpectations();
         }
