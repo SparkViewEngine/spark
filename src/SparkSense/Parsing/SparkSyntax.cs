@@ -20,9 +20,8 @@ namespace SparkSense.Parsing
             return result.Value;
         }
 
-        public Node ParseNode(string content, int position)
+        private static string GetFullElement(string content, int position, int start)
         {
-            var start = content.LastIndexOf('<', position > 0 ? position - 1 : 0);
             var nextStart = content.IndexOf('<', position);
 
             var fullElement = nextStart != -1
@@ -30,7 +29,13 @@ namespace SparkSense.Parsing
                 : content.Substring(start);
             if (!fullElement.Contains(">")) fullElement += "/>";
             else if (!fullElement.Contains("/>")) fullElement = fullElement.Replace(">", "/>");
+            return fullElement;
+        }
 
+        public Node ParseNode(string content, int position)
+        {
+            var start = content.LastIndexOf('<', position > 0 ? position - 1 : 0);
+            string fullElement = GetFullElement(content, position, start);
             var nodes = ParseNodes(fullElement);
 
             if (nodes.Count > 1 && nodes[0] is TextNode)
@@ -43,6 +48,14 @@ namespace SparkSense.Parsing
             return (nodes[0]);
         }
 
+        public Type ParseContext(string content, int position)
+        {
+            if (content.Substring(position - 1, 1) == " ")
+                return typeof(AttributeNode);
+
+            return ParseNode(content, position).GetType();
+        }
+
         public bool IsSparkElementNode(Node inputNode, out Node sparkNode)
         {
             var visitor = new SpecialNodeVisitor(new VisitorContext());
@@ -50,40 +63,6 @@ namespace SparkSense.Parsing
             sparkNode = visitor.Nodes.Count > 0 ? visitor.Nodes[0] : null;
             return sparkNode != null && sparkNode is SpecialNode;
         }
-
-        //public SparkSyntaxTypes GetSyntaxType(char key)
-        //{
-        //    switch (key)
-        //    {
-        //        case '<':
-        //            return SparkSyntaxTypes.Element;
-        //        case ' ':
-        //            return CheckForAttribute();
-        //        case '{': //TODO: Check for preceeding $
-        //            return SparkSyntaxTypes.Variable;
-        //        case '"': //TODO Check for preceeding =
-        //            return SparkSyntaxTypes.AttributeValue;
-        //        default:
-        //            if (Char.IsLetterOrDigit(key.ToString(), 0))
-        //                return CheckWord();
-        //            return SparkSyntaxTypes.None;
-        //    }
-        //}
-
-        //private SparkSyntaxTypes CheckWord()
-        //{
-        //    if (_textExplorer.IsCurrentWordAnElement())
-        //        return SparkSyntaxTypes.Element;
-        //    return SparkSyntaxTypes.None;
-        //}
-
-        //private SparkSyntaxTypes CheckForAttribute()
-        //{
-        //    if (_textExplorer.IsPositionedInsideAnElement(_textExplorer.GetStartPosition())) return SparkSyntaxTypes.None;
-
-        //    var node = _textExplorer.GetNodeAtPosition(_textExplorer.GetStartPosition());
-        //    return node is ElementNode ? SparkSyntaxTypes.Attribute : SparkSyntaxTypes.None;
-        //}
 
         private static Position Source(string content)
         {

@@ -14,7 +14,7 @@ namespace SparkSense.Tests.Parsing
     public class SparkSyntaxTests
     {
         [Test]
-        public void IsSparkNodeShouldReturnASpecialNodeForFullElement()
+        public void IsSparkNodeShouldReturnSpecialNodeForFullElementAtPositionOne()
         {
             var sparkSyntax = new SparkSyntax();
             var node = sparkSyntax.ParseNode("<use content='main'/>", position: 1);
@@ -28,7 +28,7 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
-        public void IsSparkNodeShouldReturnASpecialNodeForClosedEmptyElement()
+        public void IsSparkNodeShouldReturnSpecialNodeForClosedEmptyElement()
         {
             var sparkSyntax = new SparkSyntax();
             var node = sparkSyntax.ParseNode("<use />", position: 1);
@@ -42,7 +42,7 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
-        public void IsSparkNodeShouldReturnASpecialNodeForUnclosedElement()
+        public void IsSparkNodeShouldReturnSpecialNodeForUnclosedElement()
         {
             var sparkSyntax = new SparkSyntax();
             var node = sparkSyntax.ParseNode("<use >", position: 1);
@@ -56,7 +56,7 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
-        public void IsSparkNodeShouldReturnAnElementNodeIfNotSparkSyntax()
+        public void IsSparkNodeShouldReturnElementNodeIfNotSparkSyntax()
         {
             var sparkSyntax = new SparkSyntax();
             var node = sparkSyntax.ParseNode("<div id='products'/>", position: 1);
@@ -67,6 +67,24 @@ namespace SparkSense.Tests.Parsing
             Assert.That(!isSparkNode);
             Assert.IsNotNull(elementNode);
             Assert.That(elementNode, Is.InstanceOfType(typeof(ElementNode)));
+        }
+
+        [Test]
+        public void ParseContextShouldReturnAttributeNodeGivenPositionTen()
+        {
+            var sparkSyntax = new SparkSyntax();
+            var nodeType = sparkSyntax.ParseContext("<div><use content='main'/></div>", position: 10);
+
+            Assert.That(nodeType, Is.EqualTo(typeof(AttributeNode)));
+        }
+
+        [Test]
+        public void ParseContextShouldReturnElementNodeGivenPositionSix()
+        {
+            var sparkSyntax = new SparkSyntax();
+            Type nodeType = sparkSyntax.ParseContext("<div><use content='main'/></div>", position: 6);
+
+            Assert.That(nodeType, Is.EqualTo(typeof(ElementNode)));
         }
 
         [Test]
@@ -93,7 +111,7 @@ namespace SparkSense.Tests.Parsing
             Assert.That(((ElementNode)node).Name, Is.EqualTo("div"));
         }
 
-        [Test]  
+        [Test]
         public void ParseNodeShouldReturnElementNodeGivenPositionSix()
         {
             var sparkSyntax = new SparkSyntax();
