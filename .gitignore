@@ -47,3 +47,4 @@ bin/mvccontrib/MvcContrib.Castle.pdb
 bin/mvccontrib/MvcContrib.Castle.xml
 *.pidb
 *.userprefs
+*Thumbs.db
