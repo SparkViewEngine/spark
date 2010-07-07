@@ -20,7 +20,7 @@ namespace SparkSense.Tests.Parsing
             var node = sparkSyntax.ParseNode("<use content='main'/>", position: 1);
 
             Node sparkNode;
-            var isSparkNode = sparkSyntax.IsSparkElementNode(node, out sparkNode);
+            var isSparkNode = SparkSyntax.IsSparkNode(node, out sparkNode);
 
             Assert.That(isSparkNode);
             Assert.IsNotNull(sparkNode);
@@ -34,7 +34,7 @@ namespace SparkSense.Tests.Parsing
             var node = sparkSyntax.ParseNode("<use />", position: 1);
 
             Node sparkNode;
-            var isSparkNode = sparkSyntax.IsSparkElementNode(node, out sparkNode);
+            var isSparkNode = SparkSyntax.IsSparkNode(node, out sparkNode);
 
             Assert.That(isSparkNode);
             Assert.IsNotNull(sparkNode);
@@ -48,7 +48,7 @@ namespace SparkSense.Tests.Parsing
             var node = sparkSyntax.ParseNode("<use >", position: 1);
 
             Node sparkNode;
-            var isSparkNode = sparkSyntax.IsSparkElementNode(node, out sparkNode);
+            var isSparkNode = SparkSyntax.IsSparkNode(node, out sparkNode);
 
             Assert.That(isSparkNode);
             Assert.IsNotNull(sparkNode);
@@ -62,7 +62,7 @@ namespace SparkSense.Tests.Parsing
             var node = sparkSyntax.ParseNode("<div id='products'/>", position: 1);
 
             Node elementNode;
-            var isSparkNode = sparkSyntax.IsSparkElementNode(node, out elementNode);
+            var isSparkNode = SparkSyntax.IsSparkNode(node, out elementNode);
 
             Assert.That(!isSparkNode);
             Assert.IsNotNull(elementNode);
@@ -109,6 +109,42 @@ namespace SparkSense.Tests.Parsing
 
             Assert.That(node, Is.InstanceOfType(typeof(ElementNode)));
             Assert.That(((ElementNode)node).Name, Is.EqualTo("div"));
+        }
+
+        [Test]
+        public void ParseNodeShouldReturnNullGivenPositionAtTheBeginning()
+        {
+            var sparkSyntax = new SparkSyntax();
+            var node = sparkSyntax.ParseNode("<div></div>", position: 0);
+
+            Assert.That(node, Is.Null);
+        }
+
+        [Test]
+        public void ParseNodeShouldReturnNullGivenPositionAtTheEnd()
+        {
+            var sparkSyntax = new SparkSyntax();
+            var node = sparkSyntax.ParseNode("<div></div>", position: 11);
+
+            Assert.That(node, Is.Null);
+        }
+
+        [Test]
+        public void ParseNodeShouldReturnNullGivenPositionInAnEndElement()
+        {
+            var sparkSyntax = new SparkSyntax();
+            var node = sparkSyntax.ParseNode("<div></div>", position: 10);
+
+            Assert.That(node, Is.Null);
+        }
+
+        [Test]
+        public void ParseNodeShouldReturnNullGivenPositionBetweenNodes()
+        {
+            var sparkSyntax = new SparkSyntax();
+            var node = sparkSyntax.ParseNode("<div><use content='main'/></div>", position: 5);
+
+            Assert.That(node, Is.Null);
         }
 
         [Test]

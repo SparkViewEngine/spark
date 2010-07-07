@@ -58,10 +58,9 @@ namespace SparkSense.StatementCompletion
         public bool IsCompletionStarted(uint key, char inputCharacter)
         {
             if (inputCharacter == Char.MinValue) return false;
-            Node syntaxType;
             if (IsCompletionSessionActive()) return true;
 
-            if (!TryEvaluateSparkSyntax(_textView.Caret.Position.BufferPosition.Position, out syntaxType))
+            if (!IsSparkSyntax(_textView.Caret.Position.BufferPosition.Position))
                 return IsMovementOrDeletionHandled(key);
 
             if (IsSparkOnlySessionActive() || StartCompletionSession())
@@ -69,13 +68,13 @@ namespace SparkSense.StatementCompletion
             return true;
         }
 
-        private bool TryEvaluateSparkSyntax(int caretPosition, out Node sparkNode)
+        private bool IsSparkSyntax(int caretPosition)
         {
             var sparkSyntax = new SparkSyntax();
             var currentNode = sparkSyntax.ParseNode(_textView.TextBuffer.CurrentSnapshot.GetText(), caretPosition);
-            sparkNode = null;
+            Node sparkNode;
             return _projectExplorer.IsCurrentDocumentASparkFile()
-                ? sparkSyntax.IsSparkElementNode(currentNode, out sparkNode)
+                ? SparkSyntax.IsSparkNode(currentNode, out sparkNode)
                 : false;
         }
 
