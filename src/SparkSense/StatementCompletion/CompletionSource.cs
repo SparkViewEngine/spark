@@ -41,8 +41,7 @@ namespace SparkSense.StatementCompletion
             if (!session.Properties.TryGetProperty(typeof(ITrackingSpan), out _trackingSpan))
                 _trackingSpan = _triggerPoint.Snapshot.CreateTrackingSpan(new Span(_triggerPoint, 0), SpanTrackingMode.EdgeInclusive);
 
-            var syntax = new SparkSyntax();
-            Node currentNode = syntax.ParseNode(_textBuffer.CurrentSnapshot.GetText(), _triggerPoint);
+            Node currentNode = SparkSyntax.ParseNode(_textBuffer.CurrentSnapshot.GetText(), _triggerPoint);
             Type currentContext = SparkSyntax.ParseContext(_textBuffer.CurrentSnapshot.GetText(), _triggerPoint);
 
             CompletionSet sparkCompletions = GetCompletionSetFor(currentNode, currentContext);

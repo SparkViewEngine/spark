@@ -70,8 +70,7 @@ namespace SparkSense.StatementCompletion
 
         private bool IsSparkSyntax(int caretPosition)
         {
-            var sparkSyntax = new SparkSyntax();
-            var currentNode = sparkSyntax.ParseNode(_textView.TextBuffer.CurrentSnapshot.GetText(), caretPosition);
+            var currentNode = SparkSyntax.ParseNode(_textView.TextBuffer.CurrentSnapshot.GetText(), caretPosition);
             Node sparkNode;
             return _projectExplorer.IsCurrentDocumentASparkFile()
                 ? SparkSyntax.IsSparkNode(currentNode, out sparkNode)

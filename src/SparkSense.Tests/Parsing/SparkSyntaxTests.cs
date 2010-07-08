@@ -16,8 +16,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void IsSparkNodeShouldReturnSpecialNodeForFullElementAtPositionOne()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<use content='main'/>", position: 1);
+            var node = SparkSyntax.ParseNode("<use content='main'/>", position: 1);
 
             Node sparkNode;
             var isSparkNode = SparkSyntax.IsSparkNode(node, out sparkNode);
@@ -30,8 +29,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void IsSparkNodeShouldReturnSpecialNodeForClosedEmptyElement()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<use />", position: 1);
+            var node = SparkSyntax.ParseNode("<use />", position: 1);
 
             Node sparkNode;
             var isSparkNode = SparkSyntax.IsSparkNode(node, out sparkNode);
@@ -44,8 +42,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void IsSparkNodeShouldReturnSpecialNodeForUnclosedElement()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<use >", position: 1);
+            var node = SparkSyntax.ParseNode("<use >", position: 1);
 
             Node sparkNode;
             var isSparkNode = SparkSyntax.IsSparkNode(node, out sparkNode);
@@ -58,8 +55,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void IsSparkNodeShouldReturnElementNodeIfNotSparkSyntax()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<div id='products'/>", position: 1);
+            var node = SparkSyntax.ParseNode("<div id='products'/>", position: 1);
 
             Node elementNode;
             var isSparkNode = SparkSyntax.IsSparkNode(node, out elementNode);
@@ -88,8 +84,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodesShouldParseIntoMultipleNodes()
         {
-            var sparkSyntax = new SparkSyntax();
-            var nodes = sparkSyntax.ParseNodes("<div><use content='main'/></div>");
+            var nodes = SparkSyntax.ParseNodes("<div><use content='main'/></div>");
             var visitor = new SpecialNodeVisitor(new VisitorContext());
             visitor.Accept(nodes);
 
@@ -102,8 +97,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodeShouldReturnElementNodeGivenPositionOne()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<div></div>", position: 1);
+            var node = SparkSyntax.ParseNode("<div></div>", position: 1);
 
             Assert.That(node, Is.InstanceOfType(typeof(ElementNode)));
             Assert.That(((ElementNode)node).Name, Is.EqualTo("div"));
@@ -112,8 +106,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodeShouldReturnNullGivenPositionAtTheBeginning()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<div></div>", position: 0);
+            var node = SparkSyntax.ParseNode("<div></div>", position: 0);
 
             Assert.That(node, Is.Null);
         }
@@ -121,8 +114,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodeShouldReturnNullGivenPositionAtTheEnd()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<div></div>", position: 11);
+            var node = SparkSyntax.ParseNode("<div></div>", position: 11);
 
             Assert.That(node, Is.Null);
         }
@@ -130,8 +122,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodeShouldReturnNullGivenPositionInAnEndElement()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<div></div>", position: 10);
+            var node = SparkSyntax.ParseNode("<div></div>", position: 10);
 
             Assert.That(node, Is.Null);
         }
@@ -139,8 +130,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodeShouldReturnNullGivenPositionBetweenNodes()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<div><use content='main'/></div>", position: 5);
+            var node = SparkSyntax.ParseNode("<div><use content='main'/></div>", position: 5);
 
             Assert.That(node, Is.Null);
         }
@@ -148,8 +138,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodeShouldReturnElementNodeGivenPositionSix()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<div><use content='main'/></div>", position: 6);
+            var node = SparkSyntax.ParseNode("<div><use content='main'/></div>", position: 6);
 
             Assert.That(node, Is.InstanceOfType(typeof(ElementNode)));
             Assert.That(((ElementNode)node).Name, Is.EqualTo("use"));
@@ -161,8 +150,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodeShouldReturnElementNodeGivenAnUnclosedElementWithValidAttributes()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<div><use content='main' </div>", position: 10);
+            var node = SparkSyntax.ParseNode("<div><use content='main' </div>", position: 10);
 
             Assert.That(node, Is.InstanceOfType(typeof(ElementNode)));
             Assert.That(((ElementNode)node).Name, Is.EqualTo("use"));
@@ -174,8 +162,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodeShouldReturnElementNodeGivenAnUnclosedElementAtTheEndOfTheContent()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<use content='main'", position: 10);
+            var node = SparkSyntax.ParseNode("<use content='main'", position: 10);
 
             Assert.That(node, Is.InstanceOfType(typeof(ElementNode)));
             Assert.That(((ElementNode)node).Name, Is.EqualTo("use"));
@@ -187,8 +174,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseNodeShouldReturnElementNodeWithoutAttributesWhenGivenAnUnclosedAttributeValue()
         {
-            var sparkSyntax = new SparkSyntax();
-            var node = sparkSyntax.ParseNode("<use content='main ", position: 10);
+            var node = SparkSyntax.ParseNode("<use content='main ", position: 10);
 
             Assert.That(node, Is.InstanceOfType(typeof(ElementNode)));
             Assert.That(((ElementNode)node).Name, Is.EqualTo("use"));

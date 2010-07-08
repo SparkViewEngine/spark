@@ -9,14 +9,14 @@ namespace SparkSense.Parsing
 {
     public class SparkSyntax
     {
-        public IList<Node> ParseNodes(string content)
+        public static IList<Node> ParseNodes(string content)
         {
             var grammar = new MarkupGrammar();
             var result = grammar.Nodes(Source(content));
             return result.Value;
         }
 
-        public Node ParseNode(string content, int position)
+        public static Node ParseNode(string content, int position)
         {
             int start, end;
             GetElementStartAndEnd(content, position, out start, out end);
