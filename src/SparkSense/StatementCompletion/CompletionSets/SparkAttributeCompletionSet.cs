@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using System.Collections.Generic;
 using Spark.Parser.Markup;
 using System;
+using SparkSense.Parsing;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
@@ -24,20 +25,26 @@ namespace SparkSense.StatementCompletion.CompletionSets
         private List<Completion> CheckForSpecialNodes()
         {
             var attributesForSpecialNode = new List<Completion>();
-            if (_currentNode is SpecialNode)
+            Node specialNode;
+            if (SparkSyntax.IsSparkNode(_currentNode, out specialNode))
             {
-                var knownAttributesForNode = GetKnownAttributesForSpecialNode((SpecialNode)_currentNode);
+                var knownAttributesForNode = GetKnownAttributesForSpecialNode((SpecialNode)specialNode);
+
+                foreach (var attribute in ((SpecialNode)specialNode).Element.Attributes)
+                    if (knownAttributesForNode.Exists(a => a == attribute.Name))
+                        knownAttributesForNode.Remove(attribute.Name);
+
                 knownAttributesForNode.ForEach(attribute => attributesForSpecialNode.Add(
                     new Completion(
                         attribute,
                         String.Format("{0}=\"\"", attribute),
-                        String.Format("'{0}' attribute for '{1}' element", attribute, ((SpecialNode)_currentNode).Element.Name),
+                        String.Format("'{0}' attribute for '{1}' element", attribute, ((SpecialNode)specialNode).Element.Name),
                         SparkAttributeIcon, null)));
             }
 
             return attributesForSpecialNode;
         }
-        private List<string> GetKnownAttributesForSpecialNode(SpecialNode node)
+        private static List<string> GetKnownAttributesForSpecialNode(SpecialNode node)
         {
             var allKnown = new Dictionary<string, List<string>>
             {

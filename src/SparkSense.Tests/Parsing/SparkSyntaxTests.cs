@@ -72,8 +72,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseContextShouldReturnAttributeNodeGivenPositionTen()
         {
-            var sparkSyntax = new SparkSyntax();
-            var nodeType = sparkSyntax.ParseContext("<div><use content='main'/></div>", position: 10);
+            var nodeType = SparkSyntax.ParseContext("<div><use content='main'/></div>", position: 10);
 
             Assert.That(nodeType, Is.EqualTo(typeof(AttributeNode)));
         }
@@ -81,8 +80,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ParseContextShouldReturnElementNodeGivenPositionSix()
         {
-            var sparkSyntax = new SparkSyntax();
-            Type nodeType = sparkSyntax.ParseContext("<div><use content='main'/></div>", position: 6);
+            Type nodeType = SparkSyntax.ParseContext("<div><</div>", position: 6);
 
             Assert.That(nodeType, Is.EqualTo(typeof(ElementNode)));
         }

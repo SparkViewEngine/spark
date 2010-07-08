@@ -3,6 +3,7 @@ using Spark.Parser.Markup;
 using Spark.Parser;
 using System.Collections.Generic;
 using Spark.Compiler.NodeVisitors;
+using System.Collections;
 
 namespace SparkSense.Parsing
 {
@@ -14,11 +15,11 @@ namespace SparkSense.Parsing
             var result = grammar.Nodes(Source(content));
             return result.Value;
         }
-        
+
         public Node ParseNode(string content, int position)
         {
-            var start = content.LastIndexOf('<', position > 0 ? position - 1 : 0);
-            var end = content.LastIndexOf('>', position > 0 ? position - 1 : 0);
+            int start, end;
+            GetElementStartAndEnd(content, position, out start, out end);
             if (PositionIsOutsideANode(position, start, end) || PositionIsInClosingElement(content, start))
                 return null;
 
@@ -35,12 +36,19 @@ namespace SparkSense.Parsing
             return (nodes[0]);
         }
 
-        public Type ParseContext(string content, int position)
+        public static Type ParseContext(string content, int position)
         {
-            if (content.Substring(position - 1, 1) == " ")
-                return typeof(AttributeNode);
-
-            return ParseNode(content, position).GetType();
+            var previousChar = content.ToCharArray()[position - 1];
+            switch (previousChar)
+            {
+                case '<':
+                    return typeof(ElementNode);
+                case ' ':
+                    return typeof(AttributeNode);
+                default:
+                    break;
+            }
+            return typeof(TextNode);
         }
 
         public static bool IsSparkNode(Node currentNode, out Node sparkNode)
@@ -51,6 +59,11 @@ namespace SparkSense.Parsing
             return sparkNode != null && sparkNode is SpecialNode;
         }
 
+        private static void GetElementStartAndEnd(string content, int position, out int start, out int end)
+        {
+            start = content.LastIndexOf('<', position > 0 ? position - 1 : 0);
+            end = content.LastIndexOf('>', position > 0 ? position - 1 : 0);
+        }
         private static string GetOpeningElement(string content, int position, int start)
         {
             var nextStart = content.IndexOf('<', position);
@@ -72,7 +85,7 @@ namespace SparkSense.Parsing
         {
             return content.ToCharArray()[start + 1] == '/';
         }
-        
+
         private static Position Source(string content)
         {
             return new Position(new SourceContext(content));

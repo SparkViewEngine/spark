@@ -43,7 +43,9 @@ namespace SparkSense.StatementCompletion
 
             var syntax = new SparkSyntax();
             Node currentNode = syntax.ParseNode(_textBuffer.CurrentSnapshot.GetText(), _triggerPoint);
-            CompletionSet sparkCompletions = GetCompletionSetFor(currentNode);
+            Type currentContext = SparkSyntax.ParseContext(_textBuffer.CurrentSnapshot.GetText(), _triggerPoint);
+
+            CompletionSet sparkCompletions = GetCompletionSetFor(currentNode, currentContext);
             if (sparkCompletions == null) return;
 
             MergeSparkWithAllCompletionsSet(completionSets, sparkCompletions);
@@ -59,24 +61,12 @@ namespace SparkSense.StatementCompletion
 
         #endregion
 
-        private CompletionSet GetCompletionSetFor(Node node)
+        private CompletionSet GetCompletionSetFor(Node currentNode, Type currentContext)
         {
-            char currentCharacter = _textBuffer.CurrentSnapshot[_triggerPoint - 1];
-
-            switch (currentCharacter)
-            {
-                case '<':
-                    return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan, node);
-                case '"':
-                    return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(_viewExplorer, _trackingSpan, node);
-                default:
-                    break;
-            }
-
-            if (node is ElementNode)
-                return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan, node);
-            if (node is AttributeNode)
-                return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(_viewExplorer, _trackingSpan, node);
+            if (currentContext == typeof(ElementNode))
+                return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan, currentNode);
+            if (currentContext == typeof(AttributeNode))
+                return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(_viewExplorer, _trackingSpan, currentNode);
             return null;
         }
 
