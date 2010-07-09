@@ -19,7 +19,7 @@ namespace SparkSense.Presenter
             ICompletionSession completionSession = session as ICompletionSession;
             if (completionSession == null) return null;
 
-            return new SparkSensePresenter(completionSession);
+            return null; // return new SparkSensePresenter(completionSession);
         }
 
         #endregion

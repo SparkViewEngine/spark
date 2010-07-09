@@ -14,7 +14,7 @@ namespace SparkSense.Tests.Parsing
     public class SparkSyntaxTests
     {
         [Test]
-        public void IsSparkNodeShouldReturnSpecialNodeForFullElementAtPositionOne()
+        public void IsSparkNodeShouldReturnSpecialNodeForFullElementAtPositionInsideASpecialNode()
         {
             var node = SparkSyntax.ParseNode("<use content='main'/>", position: 1);
 
@@ -66,7 +66,7 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
-        public void ParseContextShouldReturnAttributeNodeGivenPositionTen()
+        public void ParseContextShouldReturnAttributeNodeGivenPositionAtStartOfAttribute()
         {
             var nodeType = SparkSyntax.ParseContext("<div><use content='main'/></div>", position: 10);
 
@@ -74,9 +74,17 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
-        public void ParseContextShouldReturnElementNodeGivenPositionSix()
+        public void ParseContextShouldReturnElementNodeGivenPositionAtStartOfNewlyOpenedElement()
         {
             Type nodeType = SparkSyntax.ParseContext("<div><</div>", position: 6);
+
+            Assert.That(nodeType, Is.EqualTo(typeof(ElementNode)));
+        }
+
+        [Test]
+        public void ParseContextShouldReturnElementNodeGivenPositionInNameOfElement()
+        {
+            Type nodeType = SparkSyntax.ParseContext("<div><us</div>", position: 8);
 
             Assert.That(nodeType, Is.EqualTo(typeof(ElementNode)));
         }
@@ -95,7 +103,7 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
-        public void ParseNodeShouldReturnElementNodeGivenPositionOne()
+        public void ParseNodeShouldReturnElementNodeGivenPositionInsideAnyElement()
         {
             var node = SparkSyntax.ParseNode("<div></div>", position: 1);
 
@@ -144,7 +152,7 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
-        public void ParseNodeShouldReturnElementNodeGivenPositionSix()
+        public void ParseNodeShouldReturnElementNodeGivenPositionInsideACompleteElement()
         {
             var node = SparkSyntax.ParseNode("<div><use content='main'/></div>", position: 6);
 

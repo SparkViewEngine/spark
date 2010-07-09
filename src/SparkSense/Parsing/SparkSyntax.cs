@@ -60,6 +60,11 @@ namespace SparkSense.Parsing
                 default:
                     break;
             }
+
+            bool isPositionInElementName = IsPositionInElementName(content, position);
+            if (isPositionInElementName)
+                return typeof(ElementNode);
+
             return typeof(TextNode);
         }
 
@@ -87,6 +92,13 @@ namespace SparkSense.Parsing
             if (!fullElement.Contains(">")) fullElement += "/>";
             else if (!fullElement.Contains("/>")) fullElement = fullElement.Replace(">", "/>");
             return fullElement;
+        }
+
+        private static bool IsPositionInElementName(string content, int position)
+        {
+            int start, end;
+            GetElementStartAndEnd(content, position, out start, out end);
+            return !content.Substring(start, position - start).Contains(" ");
         }
 
         private static bool IsPositionOutsideANode(int position, int start, int end)
