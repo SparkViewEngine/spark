@@ -136,6 +136,14 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
+        public void ParseNodeShouldReturnNullGivenPositionAtEndOfLine()
+        {
+            var node = SparkSyntax.ParseNode(String.Format("<div><use content='main'/>{0}</div>", Environment.NewLine), position: 27);
+
+            Assert.That(node, Is.Null);
+        }
+
+        [Test]
         public void ParseNodeShouldReturnElementNodeGivenPositionSix()
         {
             var node = SparkSyntax.ParseNode("<div><use content='main'/></div>", position: 6);
@@ -179,6 +187,24 @@ namespace SparkSense.Tests.Parsing
             Assert.That(node, Is.InstanceOfType(typeof(ElementNode)));
             Assert.That(((ElementNode)node).Name, Is.EqualTo("use"));
             Assert.That(((ElementNode)node).Attributes.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ParseNodeShouldReturnTextNodeWhenGivenNewlyOpenedElement()
+        {
+            var node = SparkSyntax.ParseNode("<div><</div>", position: 6);
+
+            Assert.That(node, Is.InstanceOfType(typeof(TextNode)));
+            Assert.That(((TextNode)node).Text, Is.EqualTo("<"));
+        }
+
+        [Test]
+        public void ParseNodeShouldReturnTextNodeWhenGivenNewlyOpenedElementAtEndOfLine()
+        {
+            var node = SparkSyntax.ParseNode(String.Format("<div><{0}</div>", Environment.NewLine), position: 7);
+
+            Assert.That(node, Is.InstanceOfType(typeof(TextNode)));
+            Assert.That(((TextNode)node).Text, Is.EqualTo("<"));
         }
 
     }

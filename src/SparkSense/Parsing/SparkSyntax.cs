@@ -20,20 +20,32 @@ namespace SparkSense.Parsing
         {
             int start, end;
             GetElementStartAndEnd(content, position, out start, out end);
-            if (PositionIsOutsideANode(position, start, end) || PositionIsInClosingElement(content, start))
+            if (IsPositionOutsideANode(position, start, end) || IsPositionInClosingElement(content, start))
                 return null;
 
             string openingElement = GetOpeningElement(content, position, start);
             var nodes = ParseNodes(openingElement);
 
-            if (nodes.Count > 1 && nodes[0] is TextNode)
-            {
-                var firstSpaceAfterStart = content.IndexOf(' ', start) - start;
-                var elementWithoutAttributes = content.Substring(start, firstSpaceAfterStart) + "/>";
-                nodes = ParseNodes(elementWithoutAttributes);
-            }
+            if (ElementNodeHasInvalidAttributes(nodes))
+                ReconstructValidElementNode(ref nodes);
 
-            return (nodes[0]);
+            return (nodes.Count > 0 ? nodes[0] : null);
+        }
+
+        private static void ReconstructValidElementNode(ref IList<Node> nodes)
+        {
+            TextNode elementStart = (TextNode)nodes[0];
+            TextNode elementBody = (TextNode)nodes[1];
+            if (!char.IsLetter(elementBody.Text.ToCharArray()[0])) return;
+
+            var firstSpaceAfterStart = elementBody.Text.IndexOf(' ');
+            var elementWithoutAttributes = String.Format("{0}{1}/>", elementStart.Text, elementBody.Text.Substring(0, firstSpaceAfterStart));
+            nodes = ParseNodes(elementWithoutAttributes);
+        }
+
+        private static bool ElementNodeHasInvalidAttributes(IList<Node> nodes)
+        {
+            return nodes.Count == 2 && ((TextNode)nodes[0]).Text == "<";
         }
 
         public static Type ParseContext(string content, int position)
@@ -64,6 +76,7 @@ namespace SparkSense.Parsing
             start = content.LastIndexOf('<', position > 0 ? position - 1 : 0);
             end = content.LastIndexOf('>', position > 0 ? position - 1 : 0);
         }
+
         private static string GetOpeningElement(string content, int position, int start)
         {
             var nextStart = content.IndexOf('<', position);
@@ -76,12 +89,12 @@ namespace SparkSense.Parsing
             return fullElement;
         }
 
-        private static bool PositionIsOutsideANode(int position, int start, int end)
+        private static bool IsPositionOutsideANode(int position, int start, int end)
         {
             return (end > start && end < position) || position == 0;
         }
 
-        private static bool PositionIsInClosingElement(string content, int start)
+        private static bool IsPositionInClosingElement(string content, int start)
         {
             return content.ToCharArray()[start + 1] == '/';
         }
