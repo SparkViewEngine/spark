@@ -110,7 +110,6 @@
     <Compile Include="Parsing\IProjectExplorer.cs" />
     <Compile Include="Parsing\IViewExplorer.cs" />
     <Compile Include="Parsing\SparkSyntax.cs" />
-    <Compile Include="Parsing\TextExplorer.cs" />
     <Compile Include="Presenter\SparkSenseView.xaml.cs">
       <DependentUpon>SparkSenseView.xaml</DependentUpon>
     </Compile>
@@ -126,7 +125,6 @@
     <Compile Include="StatementCompletion\CompletionSets\SparkAttributeCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkVariableCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionExtensions.cs" />
-    <Compile Include="Parsing\ITextExplorer.cs" />
     <Compile Include="StatementCompletion\KeyPressInterceptor.cs" />
     <Compile Include="StatementCompletion\ViewCreationListener.cs" />
     <Compile Include="StatementCompletion\CompletionSets\SparkCompletionSetFactory.cs" />

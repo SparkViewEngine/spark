@@ -32,17 +32,6 @@ namespace SparkSense.Parsing
             return (nodes.Count > 0 ? nodes[0] : null);
         }
 
-        private static void ReconstructValidElementNode(ref IList<Node> nodes)
-        {
-            TextNode elementStart = (TextNode)nodes[0];
-            TextNode elementBody = (TextNode)nodes[1];
-            if (!char.IsLetter(elementBody.Text.ToCharArray()[0])) return;
-
-            var firstSpaceAfterStart = elementBody.Text.IndexOf(' ');
-            var elementWithoutAttributes = String.Format("{0}{1}/>", elementStart.Text, elementBody.Text.Substring(0, firstSpaceAfterStart));
-            nodes = ParseNodes(elementWithoutAttributes);
-        }
-
         private static bool ElementNodeHasInvalidAttributes(IList<Node> nodes)
         {
             return nodes.Count == 2 && ((TextNode)nodes[0]).Text == "<";
@@ -61,8 +50,7 @@ namespace SparkSense.Parsing
                     break;
             }
 
-            bool isPositionInElementName = IsPositionInElementName(content, position);
-            if (isPositionInElementName)
+            if (IsPositionInElementName(content, position))
                 return typeof(ElementNode);
 
             return typeof(TextNode);
@@ -70,10 +58,25 @@ namespace SparkSense.Parsing
 
         public static bool IsSparkNode(Node currentNode, out Node sparkNode)
         {
-            var visitor = new SpecialNodeVisitor(new VisitorContext());
-            visitor.Accept(currentNode);
-            sparkNode = visitor.Nodes.Count > 0 ? visitor.Nodes[0] : null;
+            IList<Node> resultNodes = null;
+            foreach (var visitor in BuildNodeVisitors(new VisitorContext()))
+            {
+                visitor.Accept(currentNode);
+                resultNodes = visitor.Nodes;
+            }
+            sparkNode = resultNodes.Count > 0 ? resultNodes[0] : null;
             return sparkNode != null && sparkNode is SpecialNode;
+        }
+
+        private static void ReconstructValidElementNode(ref IList<Node> nodes)
+        {
+            TextNode elementStart = (TextNode)nodes[0];
+            TextNode elementBody = (TextNode)nodes[1];
+            if (!char.IsLetter(elementBody.Text.ToCharArray()[0])) return;
+
+            var firstSpaceAfterStart = elementBody.Text.IndexOf(' ');
+            var elementWithoutAttributes = String.Format("{0}{1}/>", elementStart.Text, elementBody.Text.Substring(0, firstSpaceAfterStart));
+            nodes = ParseNodes(elementWithoutAttributes);
         }
 
         private static void GetElementStartAndEnd(string content, int position, out int start, out int end)
@@ -116,7 +119,7 @@ namespace SparkSense.Parsing
             return new Position(new SourceContext(content));
         }
 
-        private IList<INodeVisitor> BuildNodeVisitors(VisitorContext context)
+        private static IList<INodeVisitor> BuildNodeVisitors(VisitorContext context)
         {
             return new INodeVisitor[]
                        {
