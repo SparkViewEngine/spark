@@ -57,7 +57,11 @@ namespace SparkSense.Parsing
         private static void ScanProjectItemForViews(ProjectItem projectItem, List<string> viewMap)
         {
             if (projectItem.Name.EndsWith(".spark"))
-                viewMap.Add(GetProjectItemMap(projectItem));
+            {
+                string projectItemMap = GetProjectItemMap(projectItem);
+                if (!string.IsNullOrEmpty(projectItemMap))
+                    viewMap.Add(projectItemMap);
+            }
 
             if (projectItem.ProjectItems != null)
                 foreach (ProjectItem child in projectItem.ProjectItems)
@@ -66,6 +70,8 @@ namespace SparkSense.Parsing
 
         private static string GetProjectItemMap(ProjectItem projectItem)
         {
+            if (projectItem.Properties == null) return null;
+
             string fullPath = projectItem.Properties.Item("FullPath").Value.ToString();
 
             int viewsLocationStart = fullPath.LastIndexOf("Views");

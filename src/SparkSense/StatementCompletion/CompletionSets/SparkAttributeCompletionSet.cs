@@ -46,6 +46,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
             return attributesForSpecialNode;
         }
+
         private static List<string> GetKnownAttributesForSpecialNode(SpecialNode node)
         {
             var allKnown = new Dictionary<string, List<string>>
@@ -83,11 +84,11 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
             _viewExplorer.GetGlobalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Global Variable found: '{0}'", variable), SparkGlobalVariableIcon, null)));
+                    new Completion(variable, String.Format("{0}=\"\"", variable), string.Format("Global Variable found: '{0}'", variable), SparkGlobalVariableIcon, null)));
 
             _viewExplorer.GetLocalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Local Variable found: '{0}'", variable), SparkLocalVariableIcon, null)));
+                    new Completion(variable, String.Format("{0}=\"\"", variable), string.Format("Local Variable found: '{0}'", variable), SparkLocalVariableIcon, null)));
 
             return variables;
         }
