@@ -70,11 +70,10 @@ namespace SparkSense.StatementCompletion
 
         private bool IsSparkSyntax(int caretPosition)
         {
+            if(!_projectExplorer.IsCurrentDocumentASparkFile()) return false;
+
             var currentNode = SparkSyntax.ParseNode(_textView.TextBuffer.CurrentSnapshot.GetText(), caretPosition);
-            Node sparkNode;
-            return _projectExplorer.IsCurrentDocumentASparkFile()
-                ? SparkSyntax.IsSparkNode(currentNode, out sparkNode)
-                : false;
+            return currentNode != null;
         }
 
         private bool IsMovementOrDeletionHandled(uint key)

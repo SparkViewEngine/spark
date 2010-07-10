@@ -167,6 +167,10 @@
     <Resource Include="Resources\SparkAttribute.png" />
     <Resource Include="Resources\SparkPartial.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SparkGlobalVariable.png" />
+    <Resource Include="Resources\SparkLocalVariable.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -59,12 +59,13 @@ namespace SparkSense.Parsing
         public static bool IsSparkNode(Node currentNode, out Node sparkNode)
         {
             IList<Node> resultNodes = null;
-            foreach (var visitor in BuildNodeVisitors(new VisitorContext()))
-            {
-                visitor.Accept(currentNode);
-                resultNodes = visitor.Nodes;
-            }
-            sparkNode = resultNodes.Count > 0 ? resultNodes[0] : null;
+            if (currentNode != null)
+                foreach (var visitor in BuildNodeVisitors(new VisitorContext()))
+                {
+                    visitor.Accept(currentNode);
+                    resultNodes = visitor.Nodes;
+                }
+            sparkNode = resultNodes != null && resultNodes.Count > 0 ? resultNodes[0] : null;
             return sparkNode != null && sparkNode is SpecialNode;
         }
 
@@ -111,7 +112,7 @@ namespace SparkSense.Parsing
 
         private static bool IsPositionInClosingElement(string content, int start)
         {
-            return content.ToCharArray()[start + 1] == '/';
+            return start < content.Length - 1 && content.ToCharArray()[start + 1] == '/';
         }
 
         private static Position Source(string content)

@@ -103,8 +103,7 @@ namespace SparkSense.StatementCompletion
             var combinedList = new List<Completion>();
             combinedList.AddRange(allCompletionsSet.Completions);
             combinedList.AddRange(sparkCompletions.Completions);
-            combinedList.Sort((a, b) => a.DisplayText.CompareTo(b.DisplayText));
-            return combinedList;
+            return combinedList.SortAlphabetically();
         }
 
 

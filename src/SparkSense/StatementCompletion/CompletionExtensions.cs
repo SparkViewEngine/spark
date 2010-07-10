@@ -4,6 +4,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
+using System.Collections.Generic;
 
 
 namespace SparkSense.StatementCompletion
@@ -51,6 +52,11 @@ namespace SparkSense.StatementCompletion
                 default:
                     return false;
             }
+        }
+
+        public static List<Completion> SortAlphabetically(this List<Completion> toSort) {
+            toSort.Sort((c1, c2) => c1.DisplayText.CompareTo(c2.DisplayText));
+            return toSort;
         }
     }
 }

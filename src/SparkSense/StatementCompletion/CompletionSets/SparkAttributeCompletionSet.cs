@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using System.Collections.Generic;
 using Spark.Parser.Markup;
 using System;
+using System.Linq;
 using SparkSense.Parsing;
 
 namespace SparkSense.StatementCompletion.CompletionSets
@@ -16,13 +17,14 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 if (_completionList != null) return _completionList;
 
                 _completionList = new List<Completion>();
-                _completionList.AddRange(CheckForSpecialNodes());
+                _completionList.AddRange(GetForSpecialNodes());
+                _completionList.AddRange(GetVariables());
 
-                return _completionList;
+                return _completionList.SortAlphabetically();
             }
         }
 
-        private List<Completion> CheckForSpecialNodes()
+        private List<Completion> GetForSpecialNodes()
         {
             var attributesForSpecialNode = new List<Completion>();
             Node specialNode;
@@ -73,5 +75,22 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 ? knownAttributes
                 : new List<string>();
         }
+
+        private IEnumerable<Completion> GetVariables()
+        {
+            var variables = new List<Completion>();
+            if (_viewExplorer == null) return variables;
+
+            _viewExplorer.GetGlobalVariables().ToList().ForEach(
+                variable => variables.Add(
+                    new Completion(variable, variable, string.Format("Global Variable found: '{0}'", variable), SparkGlobalVariableIcon, null)));
+
+            _viewExplorer.GetLocalVariables().ToList().ForEach(
+                variable => variables.Add(
+                    new Completion(variable, variable, string.Format("Local Variable found: '{0}'", variable), SparkLocalVariableIcon, null)));
+
+            return variables;
+        }
+
     }
 }

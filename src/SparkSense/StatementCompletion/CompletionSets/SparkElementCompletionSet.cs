@@ -20,7 +20,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 _completionList.AddRange(GetSpecialNodes());
                 _completionList.AddRange(GetRelatedPartials());
 
-                return _completionList;
+                return _completionList.SortAlphabetically();
             }
         }
 

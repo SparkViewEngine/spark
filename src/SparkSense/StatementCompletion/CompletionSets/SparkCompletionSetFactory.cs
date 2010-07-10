@@ -16,6 +16,8 @@ namespace SparkSense.StatementCompletion.CompletionSets
         private ImageSource _sparkElementIcon;
         private ImageSource _sparkPartialIcon;
         private ImageSource _sparkAttributeIcon;
+        private ImageSource _sparkGlobalVariableIcon;
+        private ImageSource _sparkLocalVariableIcon;
         protected static IViewExplorer _viewExplorer;
         protected static Node _currentNode;
 
@@ -46,6 +48,24 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 if (_sparkAttributeIcon == null)
                     _sparkAttributeIcon = GetIcon("SparkAttribute");
                 return _sparkAttributeIcon;
+            }
+        }
+        public ImageSource SparkGlobalVariableIcon
+        {
+            get
+            {
+                if (_sparkGlobalVariableIcon == null)
+                    _sparkGlobalVariableIcon = GetIcon("SparkGlobalVariable");
+                return _sparkGlobalVariableIcon;
+            }
+        }
+        public ImageSource SparkLocalVariableIcon
+        {
+            get
+            {
+                if (_sparkLocalVariableIcon == null)
+                    _sparkLocalVariableIcon = GetIcon("SparkLocalVariable");
+                return _sparkLocalVariableIcon;
             }
         }
 
