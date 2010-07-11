@@ -3,20 +3,39 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Spark.FileSystem;
 using SparkSense.Parsing;
+using Rhino.Mocks;
 
 namespace SparkSense.Tests.Parsing
 {
     [TestFixture]
     public class ViewExplorerTests
     {
+        private IProjectExplorer _mockProjectExplorer;
+        
+        [SetUp]
+        public void Setup() {
+            _mockProjectExplorer = MockRepository.GenerateMock<IProjectExplorer>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _mockProjectExplorer.VerifyAllExpectations();
+            _mockProjectExplorer = null;
+        }
+
         [Test]
         public void ShouldRecogniseVariablesDeclaredInTheSameFile()
         {
+
             var filePath = "test\\TwoVars.spark";
             var fileContent = "<var theNumberFive=\"5\" theNumberThree=\"3\" />";
             var viewFolder = new InMemoryViewFolder { { filePath, fileContent } };
 
-            var viewExplorer = new ViewExplorer(viewFolder, filePath);
+            _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
+            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return(filePath);
+
+            var viewExplorer = new ViewExplorer(_mockProjectExplorer);
             IList<string> vars = viewExplorer.GetLocalVariables();
 
             Assert.That(vars.Count, Is.EqualTo(2));
@@ -37,10 +56,16 @@ namespace SparkSense.Tests.Parsing
                     {"Other\\_OtherPartial.spark","This Partial should only be found from Other"},
             };
 
-            var homeExplorer = new ViewExplorer(viewFolder, "Home\\index.spark");
+            _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
+            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return("Home\\index.spark");
+
+            var homeExplorer = new ViewExplorer(_mockProjectExplorer);
             var homePartials = homeExplorer.GetRelatedPartials();
 
-            var otherExplorer = new ViewExplorer(viewFolder, "Other\\index.spark");
+            _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
+            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return("Other\\index.spark");
+            
+            var otherExplorer = new ViewExplorer(_mockProjectExplorer);
             var otherPartials = otherExplorer.GetRelatedPartials();
 
             Assert.That(homePartials.Count, Is.EqualTo(2));

@@ -100,7 +100,7 @@ namespace SparkSense.StatementCompletion
         public bool StartCompletionSession()
         {
             if (!TryCreateCompletionSession()) return false;
-            var viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
+            var viewExplorer = new ViewExplorer(_projectExplorer);
             AddCompletionSourceProperties(
                 new Dictionary<object, object> 
                 {

@@ -13,13 +13,23 @@ namespace SparkSense.Parsing
 
     public class ViewExplorer : IViewExplorer
     {
+        private IProjectExplorer _projectExplorer;
         private ViewLoader _viewLoader;
         private string _viewPath;
 
-        public ViewExplorer(IViewFolder viewFolder, string viewPath)
+        public ViewExplorer(IProjectExplorer projectExplorer)
         {
-            _viewLoader = new ViewLoader { ViewFolder = viewFolder, SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
-            _viewPath = viewPath;
+            if (projectExplorer == null)
+                throw new ArgumentNullException("projectExplorer", "Project Explorer is null. We need a hook into the VS Environment");
+
+            _projectExplorer = projectExplorer;
+            InitCurrentView();
+        }
+
+        private void InitCurrentView()
+        {
+            _viewLoader = new ViewLoader { ViewFolder = _projectExplorer.GetViewFolder(), SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
+            _viewPath = _projectExplorer.GetCurrentView();
         }
 
         public string BasePath
@@ -61,6 +71,17 @@ namespace SparkSense.Parsing
             return globalVariables;
         }
 
+        public IList<string> GetLocalVariables()
+        {
+            var localVariables = new List<string>();
+            if (_viewLoader == null || _viewPath == null) return localVariables;
+
+            var chunks = _viewLoader.Load(_viewPath);
+            var locals = chunks.Where(chunk => chunk is LocalVariableChunk);
+            locals.ToList().ForEach(local => localVariables.Add(((LocalVariableChunk)local).Name));
+            return localVariables;
+        }
+
         private void GetMasterFiles(MasterFolderTypes masterFolderType, List<string> masterFiles)
         {
             var masterFilePath = String.Format("{0}\\{1}", BasePath, masterFolderType);
@@ -71,38 +92,16 @@ namespace SparkSense.Parsing
         private bool IsValidMasterFile(string filePath)
         {
             var controllerName = Path.GetDirectoryName(_viewPath);
-            return 
-                Path.GetFileName(filePath).Equals("Application.spark") || 
+            return
+                Path.GetFileName(filePath).Equals("Application.spark") ||
                 filePath.EndsWith(String.Format("{0}.spark", controllerName));
         }
+
         private static bool IsNonPartialSparkFile(string filePath)
         {
-            return 
-                filePath.EndsWith(".spark") && 
+            return
+                filePath.EndsWith(".spark") &&
                 !Path.GetFileName(filePath).StartsWith("_");
         }
-
-        public IList<string> GetLocalVariables()
-        {
-            var localVariables = new List<string>();
-            var chunks = _viewLoader.Load(_viewPath);
-            var locals = chunks.Where(chunk => chunk is LocalVariableChunk);
-            locals.ToList().ForEach(local => localVariables.Add(((LocalVariableChunk)local).Name));
-            return localVariables;
-        }
-
-        public static IViewExplorer CreateFromActiveDocument(IProjectExplorer projectExplorer)
-        {
-            if (projectExplorer == null || string.IsNullOrEmpty(projectExplorer.ActiveDocumentPath)) return null;
-            var activeDocumentPath = projectExplorer.ActiveDocumentPath;
-
-            int viewsLocationStart = activeDocumentPath.LastIndexOf("Views");
-            var viewRoot = activeDocumentPath.Substring(0, viewsLocationStart + 5);
-            var currentView = activeDocumentPath.Replace(viewRoot, string.Empty).TrimStart('\\');
-            var viewFolder = new FileSystemViewFolder(viewRoot);
-
-            return new ViewExplorer(viewFolder, currentView);
-        }
-
     }
 }

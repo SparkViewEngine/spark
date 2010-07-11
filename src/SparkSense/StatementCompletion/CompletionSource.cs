@@ -24,7 +24,7 @@ namespace SparkSense.StatementCompletion
             _textBuffer = textBuffer;
             _textNavigator = textNavigator;
             _projectExplorer = projectExplorer;
-            _viewExplorer = ViewExplorer.CreateFromActiveDocument(_projectExplorer);
+            _viewExplorer = new ViewExplorer(_projectExplorer);
         }
         public CompletionSource(ITextBuffer textBuffer, ITextStructureNavigator textNavigator)
         {
