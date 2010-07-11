@@ -72,8 +72,8 @@ namespace SparkSense.StatementCompletion
         {
             if(!_projectExplorer.IsCurrentDocumentASparkFile()) return false;
 
-            var currentNode = SparkSyntax.ParseNode(_textView.TextBuffer.CurrentSnapshot.GetText(), caretPosition);
-            return currentNode != null;
+            var currentContext = SparkSyntax.ParseContext(_textView.TextBuffer.CurrentSnapshot.GetText(), caretPosition);
+            return currentContext != null && currentContext != typeof(TextNode);
         }
 
         private bool IsMovementOrDeletionHandled(uint key)

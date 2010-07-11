@@ -90,6 +90,30 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
+        public void ParseContextShouldReturnExpressionNodeGivenPositionAfterDollarOpeningBrace()
+        {
+            Type nodeType = SparkSyntax.ParseContext("${", position: 2);
+
+            Assert.That(nodeType, Is.EqualTo(typeof(ExpressionNode)));
+        }
+
+        [Test]
+        public void ParseContextShouldReturnExpressionNodeGivenPositionAfterExclamationOpeningBrace()
+        {
+            Type nodeType = SparkSyntax.ParseContext("!{", position: 2);
+
+            Assert.That(nodeType, Is.EqualTo(typeof(ExpressionNode)));
+        }
+
+        [Test]
+        public void ParseContextShouldReturnTextNodeGivenPositionAfterOpeningBrace()
+        {
+            Type nodeType = SparkSyntax.ParseContext("{", position: 1);
+
+            Assert.That(nodeType, Is.EqualTo(typeof(TextNode)));
+        }
+
+        [Test]
         public void ParseNodesShouldParseIntoMultipleNodes()
         {
             var nodes = SparkSyntax.ParseNodes("<div><use content='main'/></div>");
@@ -213,6 +237,24 @@ namespace SparkSense.Tests.Parsing
 
             Assert.That(node, Is.InstanceOfType(typeof(TextNode)));
             Assert.That(((TextNode)node).Text, Is.EqualTo("<"));
+        }
+
+        [Test]
+        public void ParseNodeShouldReturnExpressionNodeGivenAClosedExpression()
+        {
+            var node = SparkSyntax.ParseNode("<div>${item.Text}</div>", position: 7);
+
+            Assert.That(node, Is.InstanceOfType(typeof(ExpressionNode)));
+            Assert.That(((ExpressionNode)node).Code.Count, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void ParseNodeShouldReturnExpressionNodeGivenAnUnclosedExpression()
+        {
+            var node = SparkSyntax.ParseNode("<div>${item</div>", position: 11);
+
+            Assert.That(node, Is.InstanceOfType(typeof(ExpressionNode)));
+            Assert.That(((ExpressionNode)node).Code.Count, Is.EqualTo(1));
         }
 
     }

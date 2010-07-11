@@ -66,6 +66,8 @@ namespace SparkSense.StatementCompletion
                 return SparkCompletionSetFactory.Create<SparkElementCompletionSet>(_viewExplorer, _trackingSpan, currentNode);
             if (currentContext == typeof(AttributeNode))
                 return SparkCompletionSetFactory.Create<SparkAttributeCompletionSet>(_viewExplorer, _trackingSpan, currentNode);
+            if (currentContext == typeof(ExpressionNode))
+                return SparkCompletionSetFactory.Create<SparkExpressionCompletionSet>(_viewExplorer, _trackingSpan, currentNode);
             return null;
         }
 

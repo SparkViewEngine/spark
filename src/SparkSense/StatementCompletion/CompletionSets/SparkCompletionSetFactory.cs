@@ -18,6 +18,8 @@ namespace SparkSense.StatementCompletion.CompletionSets
         private ImageSource _sparkAttributeIcon;
         private ImageSource _sparkGlobalVariableIcon;
         private ImageSource _sparkLocalVariableIcon;
+        private ImageSource _sparkMacroIcon;
+        private ImageSource _sparkMacroParameterIcon;
         protected static IViewExplorer _viewExplorer;
         protected static Node _currentNode;
 
@@ -66,6 +68,24 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 if (_sparkLocalVariableIcon == null)
                     _sparkLocalVariableIcon = GetIcon("SparkLocalVariable");
                 return _sparkLocalVariableIcon;
+            }
+        }
+        public ImageSource SparkSparkMacroIcon
+        {
+            get
+            {
+                if (_sparkMacroIcon == null)
+                    _sparkMacroIcon = GetIcon("SparkMacro");
+                return _sparkMacroIcon;
+            }
+        }
+        public ImageSource SparkMacroParameterIcon
+        {
+            get
+            {
+                if (_sparkMacroParameterIcon == null)
+                    _sparkMacroParameterIcon = GetIcon("SparkMacroParameter");
+                return _sparkMacroParameterIcon;
             }
         }
 

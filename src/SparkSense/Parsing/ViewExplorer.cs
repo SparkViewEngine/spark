@@ -16,6 +16,7 @@ namespace SparkSense.Parsing
         private IProjectExplorer _projectExplorer;
         private ViewLoader _viewLoader;
         private string _viewPath;
+        private IList<Chunk> _viewChunks;
 
         public ViewExplorer(IProjectExplorer projectExplorer)
         {
@@ -30,6 +31,7 @@ namespace SparkSense.Parsing
         {
             _viewLoader = new ViewLoader { ViewFolder = _projectExplorer.GetViewFolder(), SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
             _viewPath = _projectExplorer.GetCurrentView();
+            _viewChunks = _viewLoader != null && _viewPath != null ? _viewLoader.Load(_viewPath) : new List<Chunk>();
         }
 
         public string BasePath
@@ -74,12 +76,39 @@ namespace SparkSense.Parsing
         public IList<string> GetLocalVariables()
         {
             var localVariables = new List<string>();
-            if (_viewLoader == null || _viewPath == null) return localVariables;
-
-            var chunks = _viewLoader.Load(_viewPath);
-            var locals = chunks.Where(chunk => chunk is LocalVariableChunk);
-            locals.ToList().ForEach(local => localVariables.Add(((LocalVariableChunk)local).Name));
+            var locals = _viewChunks.Where(chunk => chunk is LocalVariableChunk || chunk is AssignVariableChunk || chunk is ViewDataChunk);
+            locals.ToList().ForEach(local => localVariables.Add(GetChunkName(local)));
             return localVariables;
+        }
+
+        private static Spark.Parser.Code.Snippets GetChunkName(Chunk chunk)
+        {
+            dynamic returnChunk = string.Empty;
+
+            if (chunk is LocalVariableChunk)
+                returnChunk = (LocalVariableChunk)chunk;
+            if (chunk is AssignVariableChunk)
+                returnChunk = (AssignVariableChunk)chunk;
+            if (chunk is ViewDataChunk)
+                returnChunk = (ViewDataChunk)chunk;
+
+            return returnChunk.Name;
+        }
+        public IList<string> GetLocalMacros()
+        {
+            var localMacros = new List<string>();
+            var locals = _viewChunks.Where(chunk => chunk is MacroChunk);
+            locals.ToList().ForEach(local => localMacros.Add(((MacroChunk)local).Name));
+            return localMacros;
+        }
+
+        public IList<string> GetMacroParameters(string macroName)
+        {
+            var macroParams = new List<string>();
+            var macro = _viewChunks.Where(chunk => chunk is MacroChunk && ((MacroChunk)chunk).Name == macroName).FirstOrDefault();
+            if (macro == null) return macroParams;
+            ((MacroChunk)macro).Parameters.ToList().ForEach(p => macroParams.Add(p.Name));
+            return macroParams;
         }
 
         private void GetMasterFiles(MasterFolderTypes masterFolderType, List<string> masterFiles)

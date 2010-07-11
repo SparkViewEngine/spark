@@ -44,6 +44,44 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
+        public void ShouldRecogniseMacrosDeclaredInTheSameFile()
+        {
+
+            var filePath = "test\\TwoMacros.spark";
+            var fileContent = "<div><macro name=\"Macro1\">one</macro></div><div><macro name=\"Macro2\">two</macro></div>";
+            var viewFolder = new InMemoryViewFolder { { filePath, fileContent } };
+
+            _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
+            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return(filePath);
+
+            var viewExplorer = new ViewExplorer(_mockProjectExplorer);
+            IList<string> macros = viewExplorer.GetLocalMacros();
+
+            Assert.That(macros.Count, Is.EqualTo(2));
+            Assert.That(macros[0], Is.EqualTo("Macro1"));
+            Assert.That(macros[1], Is.EqualTo("Macro2"));
+        }
+
+        [Test]
+        public void ShouldRecogniseMacroParameters()
+        {
+            var filePath = "test\\TwoMacrosSecondWithParam.spark";
+            var fileContent = "<div><macro name=\"Macro1\">one</macro></div><div><macro name=\"Macro2\" param1=\"string\">two</macro></div>";
+            var viewFolder = new InMemoryViewFolder { { filePath, fileContent } };
+
+            _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
+            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return(filePath);
+
+            var viewExplorer = new ViewExplorer(_mockProjectExplorer);
+            IList<string> macroParams = viewExplorer.GetMacroParameters("Macro1");
+            Assert.That(macroParams.Count, Is.EqualTo(0));
+
+            macroParams = viewExplorer.GetMacroParameters("Macro2");
+            Assert.That(macroParams.Count, Is.EqualTo(1));
+            Assert.That(macroParams[0], Is.EqualTo("param1"));
+        }
+
+        [Test]
         public void ShouldReturnNameOfPartialsFound()
         {
             var viewFolder = new InMemoryViewFolder

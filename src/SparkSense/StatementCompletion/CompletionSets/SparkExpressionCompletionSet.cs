@@ -5,7 +5,7 @@ using System;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
-    public class SparkVariableCompletionSet : SparkCompletionSetFactory
+    public class SparkExpressionCompletionSet : SparkCompletionSetFactory
     {
         private List<Completion> _completionList;
 
@@ -29,11 +29,15 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
             _viewExplorer.GetGlobalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Global Variable found: '{0}'", variable), SparkElementIcon, null)));
+                    new Completion(variable, variable, string.Format("Global Variable: '{0}'", variable), SparkGlobalVariableIcon, null)));
 
             _viewExplorer.GetLocalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Local Variable found: '{0}'", variable), SparkElementIcon, null)));
+                    new Completion(variable, variable, string.Format("Local Variable: '{0}'", variable), SparkLocalVariableIcon, null)));
+
+            _viewExplorer.GetLocalMacros().ToList().ForEach(
+                variable => variables.Add(
+                    new Completion(variable, variable, string.Format("Local Macro: '{0}'", variable), SparkSparkMacroIcon, null)));
 
             return variables;
         }

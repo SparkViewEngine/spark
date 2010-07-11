@@ -19,12 +19,12 @@ namespace SparkSense.Parsing
         public static Node ParseNode(string content, int position)
         {
             int start, end;
-            GetElementStartAndEnd(content, position, out start, out end);
+            GetFragmentStartAndEnd(content, position, out start, out end);
             if (IsPositionOutsideANode(position, start, end) || IsPositionInClosingElement(content, start))
                 return null;
 
-            string openingElement = GetOpeningElement(content, position, start);
-            var nodes = ParseNodes(openingElement);
+            string openingFragment = GetOpeningFragment(content, position, start);
+            var nodes = ParseNodes(openingFragment);
 
             if (ElementNodeHasInvalidAttributes(nodes))
                 ReconstructValidElementNode(ref nodes);
@@ -34,18 +34,23 @@ namespace SparkSense.Parsing
 
         private static bool ElementNodeHasInvalidAttributes(IList<Node> nodes)
         {
-            return nodes.Count == 2 && ((TextNode)nodes[0]).Text == "<";
+            return nodes.Count == 2 && nodes[0] is TextNode && ((TextNode)nodes[0]).Text == "<";
         }
 
         public static Type ParseContext(string content, int position)
         {
-            var previousChar = content.ToCharArray()[position - 1];
+            var contentChars = content.ToCharArray();
+            var previousChar = contentChars[position - 1];
             switch (previousChar)
             {
                 case '<':
                     return typeof(ElementNode);
                 case ' ':
                     return typeof(AttributeNode);
+                case '{':
+                    if (IsExpression(content, position))
+                        return typeof(ExpressionNode);
+                    break;
                 default:
                     break;
             }
@@ -69,6 +74,25 @@ namespace SparkSense.Parsing
             return sparkNode != null && sparkNode is SpecialNode;
         }
 
+        private static bool IsElement(string content, int position)
+        {
+            int start, end;
+            GetFragmentStartAndEnd(content, position, out start, out end);
+            return 
+                start > -1 &&
+                !IsPositionOutsideANode(position, start, end) &&
+                content.ToCharArray()[start] == '<';
+        }
+
+        private static bool IsExpression(string content, int position)
+        {
+            int start, end;
+            GetFragmentStartAndEnd(content, position, out start, out end);
+
+            var contentChars = content.ToCharArray();
+            return start > -1 && 
+                (contentChars[start] == '$' || contentChars[start] == '!');
+        }
         private static void ReconstructValidElementNode(ref IList<Node> nodes)
         {
             TextNode elementStart = (TextNode)nodes[0];
@@ -80,29 +104,49 @@ namespace SparkSense.Parsing
             nodes = ParseNodes(elementWithoutAttributes);
         }
 
-        private static void GetElementStartAndEnd(string content, int position, out int start, out int end)
+        private static void GetFragmentStartAndEnd(string content, int position, out int start, out int end)
         {
-            start = content.LastIndexOf('<', position > 0 ? position - 1 : 0);
-            end = content.LastIndexOf('>', position > 0 ? position - 1 : 0);
+            var elementStart = content.LastIndexOf('<', position > 0 ? position - 1 : 0);
+            var expressionStart = content.LastIndexOf('{', position > 0 ? position - 1 : 0);
+            bool isElement = elementStart > expressionStart;
+
+            start = isElement ? elementStart : expressionStart - 1;
+            var endChar = isElement ? '>' : '}';
+            end = content.LastIndexOf(endChar, position > 0 ? position - 1 : 0);
         }
 
-        private static string GetOpeningElement(string content, int position, int start)
+        private static string GetOpeningFragment(string content, int position, int start)
         {
             var nextStart = content.IndexOf('<', position);
 
-            var fullElement = nextStart != -1
+            var fullFragment = nextStart != -1
                 ? content.Substring(start, nextStart - start)
                 : content.Substring(start);
-            if (!fullElement.Contains(">")) fullElement += "/>";
-            else if (!fullElement.Contains("/>")) fullElement = fullElement.Replace(">", "/>");
-            return fullElement;
+
+            CloseFragment(content, position, ref fullFragment);
+
+            return fullFragment;
+        }
+
+        private static void CloseFragment(string content, int position, ref string fullFragment)
+        {
+            if (IsExpression(content, position))
+            {
+                if (!fullFragment.Contains("}")) fullFragment += "}";
+            }
+            else if (!fullFragment.Contains(">")) fullFragment += "/>";
+            else if (!fullFragment.Contains("/>")) fullFragment = fullFragment.Replace(">", "/>");
         }
 
         private static bool IsPositionInElementName(string content, int position)
         {
             int start, end;
-            GetElementStartAndEnd(content, position, out start, out end);
-            return !content.Substring(start, position - start).Contains(" ");
+            if (IsElement(content, position))
+            {
+                GetFragmentStartAndEnd(content, position, out start, out end);
+                return start != -1 && !content.Substring(start, position - start).Contains(" ");
+            }
+            return false;
         }
 
         private static bool IsPositionOutsideANode(int position, int start, int end)
