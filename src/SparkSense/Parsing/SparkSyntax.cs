@@ -4,6 +4,7 @@ using Spark.Parser;
 using System.Collections.Generic;
 using Spark.Compiler.NodeVisitors;
 using System.Collections;
+using Spark.Compiler;
 
 namespace SparkSense.Parsing
 {
@@ -51,6 +52,8 @@ namespace SparkSense.Parsing
                     if (IsExpression(content, position))
                         return typeof(ExpressionNode);
                     break;
+                case ':':
+                    return ParseChunkContext(content, position);
                 default:
                     break;
             }
@@ -93,6 +96,7 @@ namespace SparkSense.Parsing
             return start > -1 && 
                 (contentChars[start] == '$' || contentChars[start] == '!');
         }
+        
         private static void ReconstructValidElementNode(ref IList<Node> nodes)
         {
             TextNode elementStart = (TextNode)nodes[0];
@@ -104,6 +108,38 @@ namespace SparkSense.Parsing
             nodes = ParseNodes(elementWithoutAttributes);
         }
 
+        private static Type ParseChunkContext(string content, int position)
+        {
+            var node = ParseNode(content, position);
+            var contentToParse = node is ElementNode ? String.Format("<{0} />", ((ElementNode)node).Name) : content;
+            
+            var grammar = new MarkupGrammar();
+            var visitorContext = new VisitorContext();
+            var result = grammar.Nodes(Source(contentToParse));
+            var nodes = result.Value;
+            foreach (var visitor in BuildChunkVisitors(visitorContext))
+            {
+                visitor.Accept(nodes);
+                nodes = visitor.Nodes;
+            }
+
+            var chunkBuilder = new ChunkBuilderVisitor(visitorContext);
+            chunkBuilder.Accept(nodes);
+            var chunks = chunkBuilder.Chunks;
+
+            if (chunks.Count == 1)
+            {
+                var chunkTypeToReturn = chunks[0].GetType();
+                if (chunkTypeToReturn == typeof(ScopeChunk))
+                {
+                    chunkTypeToReturn = ((ScopeChunk)chunks[0]).Body[0].GetType();
+                }
+                return chunkTypeToReturn;
+            }
+
+            return typeof(SendLiteralChunk);
+        }
+        
         private static void GetFragmentStartAndEnd(string content, int position, out int start, out int end)
         {
             var elementStart = content.LastIndexOf('<', position > 0 ? position - 1 : 0);
@@ -179,6 +215,25 @@ namespace SparkSense.Parsing
                            //new TestElseElementVisitor(context),
                            //new OnceAttributeVisitor(context),
                            //new UrlAttributeVisitor(context),
+                           //new BindingExpansionVisitor(context)
+                       };
+        }
+
+        private static IList<INodeVisitor> BuildChunkVisitors(VisitorContext context)
+        {
+            return new INodeVisitor[]
+                       {
+                           new NamespaceVisitor(context),
+                           new IncludeVisitor(context),
+                           new PrefixExpandingVisitor(context),
+                           new SpecialNodeVisitor(context),
+                           new CacheAttributeVisitor(context),
+                           new ForEachAttributeVisitor(context),
+                           new ConditionalAttributeVisitor(context),
+                           new OmitExtraLinesVisitor(context),
+                           new TestElseElementVisitor(context),
+                           new OnceAttributeVisitor(context),
+                           new UrlAttributeVisitor(context),
                            //new BindingExpansionVisitor(context)
                        };
         }

@@ -95,6 +95,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsing\ParseContextChunkTests.cs" />
+    <Compile Include="Parsing\ParseContextNodeTests.cs" />
+    <Compile Include="Parsing\ParseMultipleNodeTests.cs" />
+    <Compile Include="Parsing\ParseSingleNodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parsing\SparkSyntaxTests.cs" />
     <Compile Include="StatementCompletion\CompletionSessionTests.cs" />
