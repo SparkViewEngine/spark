@@ -122,18 +122,18 @@
     <Compile Include="SignatureRecognition\SparkTagParameter.cs" />
     <Compile Include="Parsing\ViewExplorer.cs" />
     <Compile Include="StatementCompletion\CompletionSessionManager.cs" />
-    <Compile Include="StatementCompletion\CompletionSets\SparkAttributeCompletionSet.cs" />
-    <Compile Include="StatementCompletion\CompletionSets\SparkExpressionCompletionSet.cs" />
+    <Compile Include="StatementCompletion\CompletionSets\AttributeCompletionSet.cs" />
+    <Compile Include="StatementCompletion\CompletionSets\ExpressionCompletionSet.cs" />
     <Compile Include="StatementCompletion\CompletionExtensions.cs" />
     <Compile Include="StatementCompletion\KeyPressInterceptor.cs" />
     <Compile Include="StatementCompletion\ViewCreationListener.cs" />
-    <Compile Include="StatementCompletion\CompletionSets\SparkCompletionSetFactory.cs" />
+    <Compile Include="StatementCompletion\CompletionSets\CompletionSetFactory.cs" />
     <Compile Include="StatementCompletion\CompletionSource.cs" />
     <Compile Include="StatementCompletion\CompletionListener.cs" />
     <Compile Include="ContentType\SparkFileAndContentTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignatureRecognition\SparkTagSignature.cs" />
-    <Compile Include="StatementCompletion\CompletionSets\SparkElementCompletionSet.cs" />
+    <Compile Include="StatementCompletion\CompletionSets\ElementCompletionSet.cs" />
     <Compile Include="Parsing\ProjectExplorer.cs" />
   </ItemGroup>
   <ItemGroup>

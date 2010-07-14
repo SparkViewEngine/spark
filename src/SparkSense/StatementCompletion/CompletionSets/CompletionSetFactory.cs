@@ -11,7 +11,7 @@ using Spark.Parser.Markup;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
-    public abstract class SparkCompletionSetFactory : CompletionSet
+    public abstract class CompletionSetFactory : CompletionSet
     {
         private ImageSource _sparkElementIcon;
         private ImageSource _sparkPartialIcon;
@@ -23,7 +23,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
         protected static IViewExplorer _viewExplorer;
         protected static Node _currentNode;
 
-        internal SparkCompletionSetFactory() : base("Spark", "Spark", null, null, null) { }
+        internal CompletionSetFactory() : base("Spark", "Spark", null, null, null) { }
 
         public ImageSource SparkElementIcon
         {
@@ -89,7 +89,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             }
         }
 
-        public static CompletionSet Create<T>(IViewExplorer viewExplorer, ITrackingSpan trackingSpan, Node currentNode) where T : SparkCompletionSetFactory, new()
+        public static CompletionSet Create<T>(IViewExplorer viewExplorer, ITrackingSpan trackingSpan, Node currentNode) where T : CompletionSetFactory, new()
         {
             _viewExplorer = viewExplorer;
             _currentNode = currentNode;

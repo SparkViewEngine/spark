@@ -7,7 +7,7 @@ using SparkSense.Parsing;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
-    public class SparkAttributeCompletionSet : SparkCompletionSetFactory
+    public class AttributeCompletionSet : CompletionSetFactory
     {
         private List<Completion> _completionList;
         public override IList<Completion> Completions

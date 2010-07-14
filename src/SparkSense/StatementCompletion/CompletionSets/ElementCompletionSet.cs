@@ -5,7 +5,7 @@ using Spark.Compiler.NodeVisitors;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
-    public class SparkElementCompletionSet : SparkCompletionSetFactory
+    public class ElementCompletionSet : CompletionSetFactory
     {
         private static List<Completion> _specialNodeCompletions;
         private List<Completion> _completionList;

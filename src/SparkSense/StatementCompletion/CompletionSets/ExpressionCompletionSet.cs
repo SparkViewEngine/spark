@@ -5,7 +5,7 @@ using System;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
-    public class SparkExpressionCompletionSet : SparkCompletionSetFactory
+    public class ExpressionCompletionSet : CompletionSetFactory
     {
         private List<Completion> _completionList;
 
