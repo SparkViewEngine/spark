@@ -12,7 +12,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ShouldReturnContentChunkGivenPositionAfterContentElementColon()
         {
-            Type nodeType = SparkSyntax.ParseContext("<div><content:</div>", position: 14);
+            Type nodeType = SparkSyntax.ParseContextChunk("<div><content:</div>", position: 14);
 
             Assert.That(nodeType, Is.EqualTo(typeof(ContentChunk)));
         }
@@ -20,7 +20,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ShouldReturnMacroChunkGivenPositionAfterMacroElementColon()
         {
-            Type nodeType = SparkSyntax.ParseContext("<div><macro:SomeMacro </div>", position: 12);
+            Type nodeType = SparkSyntax.ParseContextChunk("<div><macro:SomeMacro </div>", position: 12);
 
             Assert.That(nodeType, Is.EqualTo(typeof(MacroChunk)));
         }
@@ -28,7 +28,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ShouldReturnRenderChunkGivenPositionAfterRenderElementColon()
         {
-            Type nodeType = SparkSyntax.ParseContext("<div><render:SomePartial </div>", position: 13);
+            Type nodeType = SparkSyntax.ParseContextChunk("<div><render:SomePartial </div>", position: 13);
 
             Assert.That(nodeType, Is.EqualTo(typeof(RenderSectionChunk)));
         }
@@ -45,7 +45,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ShouldReturnUseChunkGivenPositionAfterUseElementColon()
         {
-            Type nodeType = SparkSyntax.ParseContext("<div><use:header /></div>", position: 10);
+            Type nodeType = SparkSyntax.ParseContextChunk("<div><use:header /></div>", position: 10);
 
             Assert.That(nodeType, Is.EqualTo(typeof(UseContentChunk)));
         }

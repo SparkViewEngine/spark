@@ -1,11 +1,11 @@
+using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Operations;
+using Spark.Parser.Markup;
+using SparkSense.Parsing;
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Text.Editor;
-using SparkSense.Parsing;
-using Microsoft.VisualStudio.Text.Operations;
-using Microsoft.VisualStudio.Text;
-using Spark.Parser.Markup;
 
 namespace SparkSense.StatementCompletion
 {
@@ -13,6 +13,7 @@ namespace SparkSense.StatementCompletion
     {
         private ICompletionBroker _completionBroker;
         private IProjectExplorer _projectExplorer;
+        private bool _scanForNewSession;
         private IWpfTextView _textView;
         private ICompletionSession _sparkOnlySession;
         private ITextStructureNavigator _textNavigator;
@@ -57,20 +58,22 @@ namespace SparkSense.StatementCompletion
 
         public bool IsCompletionStarted(uint key, char inputCharacter)
         {
-            if (inputCharacter == Char.MinValue) return false;
+            var caretPoint = _textView.Caret.Position.BufferPosition;
+            if (!_scanForNewSession && inputCharacter == Char.MinValue && !key.IsStartCompletionCharacter()) return false;
             if (IsCompletionSessionActive()) return true;
 
-            if (!IsSparkSyntax(_textView.Caret.Position.BufferPosition.Position))
+            if (!IsSparkSyntax(caretPoint.Position))
                 return IsMovementOrDeletionHandled(key);
 
             if (IsSparkOnlySessionActive() || StartCompletionSession())
                 _sparkOnlySession.Filter();
+            _scanForNewSession = false;
             return true;
         }
 
         private bool IsSparkSyntax(int caretPosition)
         {
-            if(!_projectExplorer.IsCurrentDocumentASparkFile()) return false;
+            if (!_projectExplorer.IsCurrentDocumentASparkFile()) return false;
 
             var currentContext = SparkSyntax.ParseContext(_textView.TextBuffer.CurrentSnapshot.GetText(), caretPosition);
             return currentContext != null && currentContext != typeof(TextNode);
@@ -134,11 +137,22 @@ namespace SparkSense.StatementCompletion
                 _sparkOnlySession.Properties.AddProperty(property.Key, property.Value);
         }
 
-        private void OnSessionCommitted(object sender, EventArgs e)
+        private bool IsCompletionChar(char completionChar)
         {
             var point = _sparkOnlySession.TextView.Caret.Position.BufferPosition;
-            if (point.Position > 1 && (point - 1).GetChar() == '"')
-                _sparkOnlySession.TextView.Caret.MoveToPreviousCaretPosition();
+            return point.Position > 1 && (point - 1).GetChar() == completionChar;
+        }
+        private void ScanForPossibleNewSession()
+        {
+            if (!IsSparkOnlySessionActive()) return;
+            if (!IsCompletionChar('"')) return;
+
+            _scanForNewSession = true;
+            _sparkOnlySession.TextView.Caret.MoveToPreviousCaretPosition();
+        }
+        private void OnSessionCommitted(object sender, EventArgs e)
+        {
+            ScanForPossibleNewSession();
             _sparkOnlySession.Dismiss();
         }
 

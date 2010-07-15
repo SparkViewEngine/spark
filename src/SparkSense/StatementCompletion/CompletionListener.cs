@@ -1,13 +1,12 @@
-﻿using System;
-using EnvDTE;
-using SparkSense.Parsing;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Shell;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Utilities;
-using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Text.Operations;
+﻿using EnvDTE;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Utilities;
+using SparkSense.Parsing;
+using System;
+using System.ComponentModel.Composition;
+using System.Runtime.InteropServices;
 
 namespace SparkSense.StatementCompletion
 {
@@ -17,9 +16,6 @@ namespace SparkSense.StatementCompletion
     [Name("Spark Tag Completion")]
     public class CompletionListener : ICompletionSourceProvider
     {
-        [Import]
-        internal ITextStructureNavigatorSelectorService TextNavigator { get; set; }
-
         [Import(typeof(SVsServiceProvider))]
         public IServiceProvider ServiceProvider;
 
@@ -30,9 +26,7 @@ namespace SparkSense.StatementCompletion
         public ICompletionSource TryCreateCompletionSource(ITextBuffer textBuffer)
         {
             var projectExplorer =  GetFromVsEnvironment();
-            var textNavigator = TextNavigator.GetTextStructureNavigator(textBuffer);
-            
-            return new CompletionSource(textBuffer, textNavigator, projectExplorer);
+            return new CompletionSource(textBuffer, projectExplorer);
         }
 
         #endregion

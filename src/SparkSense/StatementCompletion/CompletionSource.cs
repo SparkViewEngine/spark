@@ -1,11 +1,10 @@
 ﻿using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using Spark.Parser.Markup;
 using SparkSense.Parsing;
 using SparkSense.StatementCompletion.CompletionSets;
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.Text.Operations;
-using Spark.Parser.Markup;
 
 namespace SparkSense.StatementCompletion
 {
@@ -14,24 +13,17 @@ namespace SparkSense.StatementCompletion
         private bool _isDisposed;
         private ITextBuffer _textBuffer;
         private IProjectExplorer _projectExplorer;
-        private ITextStructureNavigator _textNavigator;
         private IViewExplorer _viewExplorer;
         private ITrackingSpan _trackingSpan;
         private SnapshotPoint _triggerPoint;
 
-        public CompletionSource(ITextBuffer textBuffer, ITextStructureNavigator textNavigator, IProjectExplorer projectExplorer)
+        public CompletionSource(ITextBuffer textBuffer, IProjectExplorer projectExplorer)
         {
             _textBuffer = textBuffer;
-            _textNavigator = textNavigator;
             _projectExplorer = projectExplorer;
             _viewExplorer = new ViewExplorer(_projectExplorer);
         }
-        public CompletionSource(ITextBuffer textBuffer, ITextStructureNavigator textNavigator)
-        {
-            _textBuffer = textBuffer;
-            _textNavigator = textNavigator;
-        }
-
+        
         #region ICompletionSource Members
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)

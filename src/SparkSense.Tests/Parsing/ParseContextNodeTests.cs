@@ -12,7 +12,7 @@ namespace SparkSense.Tests.Parsing
         [Test]
         public void ShouldReturnAttributeNodeGivenPositionAtStartOfAttribute()
         {
-            var nodeType = SparkSyntax.ParseContext("<div><use content='main'/></div>", position: 10);
+            var nodeType = SparkSyntax.ParseContext("<div><use content=\"main\"/></div>", position: 10);
 
             Assert.That(nodeType, Is.EqualTo(typeof(AttributeNode)));
         }

@@ -33,6 +33,11 @@ namespace SparkSense.StatementCompletion
             return key == (uint)VSConstants.VSStd2KCmdID.LEFT || key == (uint)VSConstants.VSStd2KCmdID.RIGHT;
         }
 
+        public static bool IsStartCompletionCharacter(this uint key)
+        {
+            return key == (uint)VSConstants.VSStd2KCmdID.COMPLETEWORD;
+        }
+
         public static bool HasMovedOutOfIntelliSenseRange(this uint key, ITextView textView, ICompletionSession session)
         {
             if (textView == null) return true;
