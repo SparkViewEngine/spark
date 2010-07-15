@@ -15,7 +15,6 @@ namespace SparkSense.StatementCompletion
         private IProjectExplorer _projectExplorer;
         private IViewExplorer _viewExplorer;
         private ITrackingSpan _trackingSpan;
-        private SnapshotPoint _triggerPoint;
 
         public CompletionSource(ITextBuffer textBuffer, IProjectExplorer projectExplorer)
         {
@@ -28,15 +27,12 @@ namespace SparkSense.StatementCompletion
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
-            _triggerPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
+            var triggerPoint = session.GetTriggerPoint(_textBuffer).GetPoint(_textBuffer.CurrentSnapshot);
 
             if (!session.Properties.TryGetProperty(typeof(ITrackingSpan), out _trackingSpan))
-                _trackingSpan = _triggerPoint.Snapshot.CreateTrackingSpan(new Span(_triggerPoint, 0), SpanTrackingMode.EdgeInclusive);
+                _trackingSpan = triggerPoint.Snapshot.CreateTrackingSpan(new Span(triggerPoint, 0), SpanTrackingMode.EdgeInclusive);
 
-            Node currentNode = SparkSyntax.ParseNode(_textBuffer.CurrentSnapshot.GetText(), _triggerPoint);
-            Type currentContext = SparkSyntax.ParseContext(_textBuffer.CurrentSnapshot.GetText(), _triggerPoint);
-
-            CompletionSet sparkCompletions = GetCompletionSetFor(currentNode, currentContext);
+            CompletionSet sparkCompletions = CompletionSetFactory.GetCompletionSetFor(triggerPoint, _trackingSpan, _viewExplorer);
             if (sparkCompletions == null) return;
 
             MergeSparkWithAllCompletionsSet(completionSets, sparkCompletions);
@@ -51,17 +47,6 @@ namespace SparkSense.StatementCompletion
         }
 
         #endregion
-
-        private CompletionSet GetCompletionSetFor(Node currentNode, Type currentContext)
-        {
-            if (currentContext == typeof(ElementNode))
-                return CompletionSetFactory.Create<ElementCompletionSet>(_viewExplorer, _trackingSpan, currentNode);
-            if (currentContext == typeof(AttributeNode))
-                return CompletionSetFactory.Create<AttributeCompletionSet>(_viewExplorer, _trackingSpan, currentNode);
-            if (currentContext == typeof(ExpressionNode))
-                return CompletionSetFactory.Create<ExpressionCompletionSet>(_viewExplorer, _trackingSpan, currentNode);
-            return null;
-        }
 
         private static void MergeSparkWithAllCompletionsSet(IList<CompletionSet> completionSets, CompletionSet sparkCompletions)
         {

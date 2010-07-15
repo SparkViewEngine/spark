@@ -38,7 +38,7 @@ namespace SparkSense.Tests.StatementCompletion
         [Test]
         public void ShouldReturnSparkSpecialNodes()
         {
-            var element = CompletionSetFactory.Create<ElementCompletionSet>(_stubViewExplorer, _stubTrackingSpan, null);
+            var element = CompletionSetFactory.Create<ElementCompletionSet>(new SnapshotPoint(), _stubTrackingSpan, _stubViewExplorer);
             List<Completion> elementList = element.Completions.ToList();
 
             Assert.IsTrue(elementList.Exists(c => c.DisplayText == "var"));
@@ -67,7 +67,7 @@ namespace SparkSense.Tests.StatementCompletion
 
             mockViewExplorer.Expect(x => x.GetRelatedPartials()).Return(new List<string> { "partial1", "partial2" });
 
-            var element = CompletionSetFactory.Create<ElementCompletionSet>(mockViewExplorer, null, null);
+            var element = CompletionSetFactory.Create<ElementCompletionSet>(new SnapshotPoint(), null, mockViewExplorer);
             var elementList = element.Completions.ToList();
             Assert.That(elementList.Exists(c => c.DisplayText == "partial1"));
             Assert.That(elementList.Exists(c => c.DisplayText == "partial2"));

@@ -20,8 +20,8 @@ namespace SparkSense.StatementCompletion.CompletionSets
         private ImageSource _sparkLocalVariableIcon;
         private ImageSource _sparkMacroIcon;
         private ImageSource _sparkMacroParameterIcon;
+        private static SnapshotPoint _triggerPoint;
         protected static IViewExplorer _viewExplorer;
-        protected static Node _currentNode;
 
         internal CompletionSetFactory() : base("Spark", "Spark", null, null, null) { }
 
@@ -89,10 +89,20 @@ namespace SparkSense.StatementCompletion.CompletionSets
             }
         }
 
-        public static CompletionSet Create<T>(IViewExplorer viewExplorer, ITrackingSpan trackingSpan, Node currentNode) where T : CompletionSetFactory, new()
+        public static Node CurrentNode
         {
+            get { return _triggerPoint != null ? SparkSyntax.ParseNode(CurrentContent, _triggerPoint) : null; }
+        }
+
+        public static string CurrentContent
+        {
+            get { return _triggerPoint != null ? _triggerPoint.Snapshot.GetText() : string.Empty; }
+        }
+
+        public static CompletionSet Create<T>(SnapshotPoint triggerPoint, ITrackingSpan trackingSpan, IViewExplorer viewExplorer) where T : CompletionSetFactory, new()
+        {
+            _triggerPoint = triggerPoint;
             _viewExplorer = viewExplorer;
-            _currentNode = currentNode;
             return new T { ApplicableTo = trackingSpan };
         }
 
@@ -108,6 +118,19 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 icon = new BitmapImage();
             }
             return icon;
+        }
+        public static CompletionSet GetCompletionSetFor(SnapshotPoint triggerPoint, ITrackingSpan trackingSpan, IViewExplorer viewExplorer)
+        {
+            Type currentContext = SparkSyntax.ParseContext(triggerPoint.Snapshot.GetText(), triggerPoint);
+
+            if (currentContext == typeof(ElementNode))
+                return CompletionSetFactory.Create<ElementCompletionSet>(triggerPoint, trackingSpan, viewExplorer);
+            if (currentContext == typeof(AttributeNode))
+                return CompletionSetFactory.Create<AttributeCompletionSet>(triggerPoint, trackingSpan, viewExplorer);
+            if (currentContext == typeof(ExpressionNode))
+                return CompletionSetFactory.Create<ExpressionCompletionSet>(triggerPoint, trackingSpan, viewExplorer);
+            return null;
+
         }
     }
 }

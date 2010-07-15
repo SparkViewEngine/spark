@@ -28,7 +28,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
         {
             var attributesForSpecialNode = new List<Completion>();
             Node specialNode;
-            if (SparkSyntax.IsSparkNode(_currentNode, out specialNode))
+            if (SparkSyntax.IsSparkNode(CurrentNode, out specialNode))
             {
                 var knownAttributesForNode = GetKnownAttributesForSpecialNode((SpecialNode)specialNode);
 
