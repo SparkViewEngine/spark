@@ -107,6 +107,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsing\Constants.cs" />
     <Compile Include="Parsing\IProjectExplorer.cs" />
     <Compile Include="Parsing\IViewExplorer.cs" />
     <Compile Include="Parsing\SparkSyntax.cs" />
@@ -174,6 +175,9 @@
   <ItemGroup>
     <Resource Include="Resources\SparkMacro.png" />
     <Resource Include="Resources\SparkMacroParameter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SparkContentName.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets" />

@@ -6,11 +6,11 @@ using Spark.Parser;
 using Spark.Parser.Syntax;
 using System.IO;
 using System;
+using Spark.Parser.Code;
+using Spark;
 
 namespace SparkSense.Parsing
 {
-    public enum MasterFolderTypes { Layouts, Shared }
-
     public class ViewExplorer : IViewExplorer
     {
         private IProjectExplorer _projectExplorer;
@@ -27,19 +27,27 @@ namespace SparkSense.Parsing
             InitCurrentView();
         }
 
-        private void InitCurrentView()
-        {
-            _viewLoader = new ViewLoader { ViewFolder = _projectExplorer.GetViewFolder(), SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
-            _viewPath = _projectExplorer.GetCurrentView();
-            _viewChunks = _viewLoader != null && _viewPath != null ? _viewLoader.Load(_viewPath) : new List<Chunk>();
-        }
-
         public string BasePath
         {
             get
             {
                 return ((FileSystemViewFolder)_viewLoader.ViewFolder).BasePath;
             }
+        }
+
+        public IList<Chunk> ViewChunks
+        {
+            get
+            {
+                if (_viewChunks == null)
+                    _viewChunks = _viewLoader != null && _viewPath != null ? _viewLoader.Load(_viewPath) : new List<Chunk>();
+                return _viewChunks;
+            }
+        }
+
+        public IEnumerable<IList<Chunk>> AllChunks
+        {
+            get { return _viewLoader != null ? _viewLoader.GetEverythingLoaded() : new List<IList<Chunk>>(); }
         }
 
         public IList<string> GetRelatedPartials()
@@ -49,18 +57,6 @@ namespace SparkSense.Parsing
 
         public IList<string> GetGlobalVariables()
         {
-            var masterFiles = new List<string>();
-
-            GetMasterFiles(MasterFolderTypes.Shared, masterFiles);
-            GetMasterFiles(MasterFolderTypes.Layouts, masterFiles);
-
-            _viewLoader.Load(_viewPath);
-            masterFiles.ToList().ForEach(filePath =>
-            {
-                var type = filePath.Contains(MasterFolderTypes.Shared.ToString()) ? MasterFolderTypes.Shared : MasterFolderTypes.Layouts;
-                _viewLoader.Load(filePath.Substring(filePath.LastIndexOf(type.ToString())));
-            });
-
             var globalVariables = new List<string>();
             var chunkLists = _viewLoader.GetEverythingLoaded();
 
@@ -75,62 +71,85 @@ namespace SparkSense.Parsing
 
         public IList<string> GetLocalVariables()
         {
-            var localVariables = new List<string>();
-            var locals = _viewChunks.Where(chunk => chunk is LocalVariableChunk || chunk is AssignVariableChunk || chunk is ViewDataChunk);
-            locals.ToList().ForEach(local => localVariables.Add(GetChunkName(local)));
-            return localVariables;
+            var allLocalVariables = new List<string>();
+            var locals = GetViewChunks<LocalVariableChunk>();
+            var assigned = GetViewChunks<AssignVariableChunk>();
+            var viewData = GetViewChunks<ViewDataChunk>();
+
+            locals.ToList().ForEach(x => allLocalVariables.Add(x.Name));
+            assigned.ToList().ForEach(x => allLocalVariables.Add(x.Name));
+            viewData.ToList().ForEach(x => allLocalVariables.Add(x.Name));
+
+            return allLocalVariables;
         }
 
-        private static Spark.Parser.Code.Snippets GetChunkName(Chunk chunk)
+        public IEnumerable<T> GetViewChunks<T>()
         {
-            dynamic returnChunk = string.Empty;
-
-            if (chunk is LocalVariableChunk)
-                returnChunk = (LocalVariableChunk)chunk;
-            if (chunk is AssignVariableChunk)
-                returnChunk = (AssignVariableChunk)chunk;
-            if (chunk is ViewDataChunk)
-                returnChunk = (ViewDataChunk)chunk;
-
-            return returnChunk.Name;
+            var chunks = ViewChunks.Where(chunk => chunk is T).Cast<T>();
+            return chunks;
         }
+
+        public IList<string> GetContentNames()
+        {
+            var contentNames = new List<string>();
+            var contentChunks = GetAllChunks<UseContentChunk>();
+            contentChunks.ToList().ForEach(x => contentNames.Add((x.Name)));
+            return contentNames;
+        }
+
         public IList<string> GetLocalMacros()
         {
             var localMacros = new List<string>();
-            var locals = _viewChunks.Where(chunk => chunk is MacroChunk);
-            locals.ToList().ForEach(local => localMacros.Add(((MacroChunk)local).Name));
+            var locals = GetViewChunks<MacroChunk>();
+            locals.ToList().ForEach(x => localMacros.Add(x.Name));
             return localMacros;
         }
 
         public IList<string> GetMacroParameters(string macroName)
         {
             var macroParams = new List<string>();
-            var macro = _viewChunks.Where(chunk => chunk is MacroChunk && ((MacroChunk)chunk).Name == macroName).FirstOrDefault();
+            var macro = ViewChunks.Where(chunk => chunk is MacroChunk && ((MacroChunk)chunk).Name == macroName).FirstOrDefault();
             if (macro == null) return macroParams;
             ((MacroChunk)macro).Parameters.ToList().ForEach(p => macroParams.Add(p.Name));
             return macroParams;
         }
 
-        private void GetMasterFiles(MasterFolderTypes masterFolderType, List<string> masterFiles)
+        private void InitCurrentView()
         {
-            var masterFilePath = String.Format("{0}\\{1}", BasePath, masterFolderType);
-            var masterFilePaths = Directory.Exists(masterFilePath) ? Directory.GetFiles(masterFilePath).Where(filePath => IsNonPartialSparkFile(filePath)) : new List<string>();
-            masterFiles.AddRange(masterFilePaths.Where(filePath => IsValidMasterFile(filePath)));
+            _viewLoader = new ViewLoader { ViewFolder = _projectExplorer.GetViewFolder(), SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
+            _viewPath = _projectExplorer.GetCurrentView();
+            InitViewChunks();
         }
 
-        private bool IsValidMasterFile(string filePath)
+        private IEnumerable<T> GetAllChunks<T>()
         {
+            var allChunks = AllChunks.SelectMany(list => list).Where(chunk => chunk is T).Cast<T>();
+            return allChunks;
+        }
+
+        private bool TryLoadMaster(string masterFile)
+        {
+            var locator = new DefaultTemplateLocator();
+            var master = locator.LocateMasterFile(_viewLoader.ViewFolder, masterFile);
+            
+            if (master.ViewFile == null) return false;
+            
+            _viewLoader.Load(master.Path);
+            return true;
+        }
+        
+        private void InitViewChunks()
+        {
+            if (_viewLoader == null) return;
+
+            var useMaster = GetViewChunks<UseMasterChunk>().FirstOrDefault();
+            if (useMaster != null && TryLoadMaster(useMaster.Name)) return;
+
             var controllerName = Path.GetDirectoryName(_viewPath);
-            return
-                Path.GetFileName(filePath).Equals("Application.spark") ||
-                filePath.EndsWith(String.Format("{0}.spark", controllerName));
-        }
+            if (TryLoadMaster(controllerName)) return;
 
-        private static bool IsNonPartialSparkFile(string filePath)
-        {
-            return
-                filePath.EndsWith(".spark") &&
-                !Path.GetFileName(filePath).StartsWith("_");
+            TryLoadMaster("Application");
+
         }
     }
 }

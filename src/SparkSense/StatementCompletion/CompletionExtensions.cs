@@ -60,7 +60,8 @@ namespace SparkSense.StatementCompletion
         }
 
         public static List<Completion> SortAlphabetically(this List<Completion> toSort) {
-            toSort.Sort((c1, c2) => c1.DisplayText.CompareTo(c2.DisplayText));
+            if(toSort != null && toSort.Count > 1)
+                toSort.Sort((c1, c2) => c1.DisplayText.CompareTo(c2.DisplayText));
             return toSort;
         }
     }

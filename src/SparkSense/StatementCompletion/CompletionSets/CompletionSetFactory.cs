@@ -4,9 +4,6 @@ using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using SparkSense.Parsing;
-using Spark.Parser;
-using System.Diagnostics;
-using Microsoft.VisualStudio.Text.Operations;
 using Spark.Parser.Markup;
 
 namespace SparkSense.StatementCompletion.CompletionSets
@@ -16,11 +13,12 @@ namespace SparkSense.StatementCompletion.CompletionSets
         private ImageSource _sparkElementIcon;
         private ImageSource _sparkPartialIcon;
         private ImageSource _sparkAttributeIcon;
+        private ImageSource _sparkContentNameIcon;
         private ImageSource _sparkGlobalVariableIcon;
         private ImageSource _sparkLocalVariableIcon;
         private ImageSource _sparkMacroIcon;
         private ImageSource _sparkMacroParameterIcon;
-        private static SnapshotPoint _triggerPoint;
+        protected static SnapshotPoint _triggerPoint;
         protected static IViewExplorer _viewExplorer;
 
         internal CompletionSetFactory() : base("Spark", "Spark", null, null, null) { }
@@ -50,6 +48,15 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 if (_sparkAttributeIcon == null)
                     _sparkAttributeIcon = GetIcon("SparkAttribute");
                 return _sparkAttributeIcon;
+            }
+        }
+        public ImageSource SparkContentNameIcon
+        {
+            get
+            {
+                if (_sparkContentNameIcon == null)
+                    _sparkContentNameIcon = GetIcon("SparkContentName");
+                return _sparkContentNameIcon;
             }
         }
         public ImageSource SparkGlobalVariableIcon
@@ -93,7 +100,13 @@ namespace SparkSense.StatementCompletion.CompletionSets
         {
             get { return _triggerPoint != null ? SparkSyntax.ParseNode(CurrentContent, _triggerPoint) : null; }
         }
-
+        public static ITextSnapshot CurrentSnapShot
+        {
+            get
+            {
+                return _triggerPoint != null ? _triggerPoint.Snapshot : null;
+            }
+        }
         public static string CurrentContent
         {
             get { return _triggerPoint != null ? _triggerPoint.Snapshot.GetText() : string.Empty; }
@@ -119,6 +132,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             }
             return icon;
         }
+
         public static CompletionSet GetCompletionSetFor(SnapshotPoint triggerPoint, ITrackingSpan trackingSpan, IViewExplorer viewExplorer)
         {
             Type currentContext = SparkSyntax.ParseContext(triggerPoint.Snapshot.GetText(), triggerPoint);

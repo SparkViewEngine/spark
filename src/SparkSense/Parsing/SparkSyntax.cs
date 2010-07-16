@@ -1,28 +1,15 @@
-﻿using System;
-using System.Linq;
-using Spark.Parser.Markup;
-using Spark.Parser;
-using System.Collections.Generic;
+﻿using Spark.Compiler;
 using Spark.Compiler.NodeVisitors;
-using System.Collections;
-using Spark.Compiler;
+using Spark.Parser;
+using Spark.Parser.Markup;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SparkSense.Parsing
 {
     public class SparkSyntax
     {
-        private const char COLON = ':';
-        private const char OPEN_ELEMENT = '<';
-        private const char SPACE = ' ';
-        private const char DOUBLE_QUOTE = '"';
-        private const char SINGLE_QUOTE = '\'';
-        private const char OPEN_BRACE = '{';
-        private const char CLOSE_ELEMENT = '>';
-        private const char CLOSE_BRACE = '}';
-        private const string SELF_CLOSE_ELEMENT = "/>";
-        private const char FWD_SLASH = '/';
-        private const char EXCLAMATION = '!';
-        private const char DOLLAR = '$';
 
         public static IList<Node> ParseNodes(string content)
         {
@@ -49,7 +36,7 @@ namespace SparkSense.Parsing
 
         private static bool ElementNodeHasInvalidAttributes(IList<Node> nodes)
         {
-            return nodes.Count == 2 && nodes[0] is TextNode && ((TextNode)nodes[0]).Text == OPEN_ELEMENT.ToString();
+            return nodes.Count == 2 && nodes[0] is TextNode && ((TextNode)nodes[0]).Text == Constants.OPEN_ELEMENT.ToString();
         }
 
         public static Type ParseContext(string content, int position)
@@ -58,14 +45,14 @@ namespace SparkSense.Parsing
             var previousChar = contentChars[position - 1];
             switch (previousChar)
             {
-                case OPEN_ELEMENT:
-                case COLON:
+                case Constants.OPEN_ELEMENT:
+                case Constants.COLON:
                     return typeof(ElementNode);
-                case SPACE:
-                case DOUBLE_QUOTE:
-                case SINGLE_QUOTE:
+                case Constants.SPACE:
+                case Constants.DOUBLE_QUOTE:
+                case Constants.SINGLE_QUOTE:
                     return typeof(AttributeNode);
-                case OPEN_BRACE:
+                case Constants.OPEN_BRACE:
                     if (IsExpression(content, position))
                         return typeof(ExpressionNode);
                     break;
@@ -131,7 +118,7 @@ namespace SparkSense.Parsing
             return
                 start > -1 &&
                 !IsPositionOutsideANode(position, start, end) &&
-                content.ToCharArray()[start] == OPEN_ELEMENT;
+                content.ToCharArray()[start] == Constants.OPEN_ELEMENT;
         }
 
         private static bool IsExpression(string content, int position)
@@ -141,7 +128,7 @@ namespace SparkSense.Parsing
 
             var contentChars = content.ToCharArray();
             return start > -1 &&
-                (contentChars[start] == DOLLAR || contentChars[start] == EXCLAMATION);
+                (contentChars[start] == Constants.DOLLAR || contentChars[start] == Constants.EXCLAMATION);
         }
 
         private static void ReconstructValidElementNode(ref IList<Node> nodes)
@@ -150,7 +137,7 @@ namespace SparkSense.Parsing
             TextNode elementBody = (TextNode)nodes[1];
             if (!char.IsLetter(elementBody.Text.ToCharArray()[0])) return;
 
-            var firstSpaceAfterStart = elementBody.Text.IndexOf(SPACE);
+            var firstSpaceAfterStart = elementBody.Text.IndexOf(Constants.SPACE);
             var elementWithoutAttributes = String.Format("{0}{1}/>", elementStart.Text, elementBody.Text.Substring(0, firstSpaceAfterStart));
             nodes = ParseNodes(elementWithoutAttributes);
         }
@@ -164,18 +151,18 @@ namespace SparkSense.Parsing
         
         private static void GetFragmentStartAndEnd(string content, int position, out int start, out int end)
         {
-            var elementStart = content.LastIndexOf(OPEN_ELEMENT, position > 0 ? position - 1 : 0);
-            var expressionStart = content.LastIndexOf(OPEN_BRACE, position > 0 ? position - 1 : 0);
+            var elementStart = content.LastIndexOf(Constants.OPEN_ELEMENT, position > 0 ? position - 1 : 0);
+            var expressionStart = content.LastIndexOf(Constants.OPEN_BRACE, position > 0 ? position - 1 : 0);
             bool isElement = elementStart > expressionStart;
 
             start = isElement ? elementStart : expressionStart - 1;
-            var endChar = isElement ? CLOSE_ELEMENT : CLOSE_BRACE;
+            var endChar = isElement ? Constants.CLOSE_ELEMENT : Constants.CLOSE_BRACE;
             end = content.LastIndexOf(endChar, position > 0 ? position - 1 : 0);
         }
 
         private static string GetOpeningFragment(string content, int position, int start)
         {
-            var nextStart = content.IndexOf(OPEN_ELEMENT, position);
+            var nextStart = content.IndexOf(Constants.OPEN_ELEMENT, position);
 
             var fullFragment = nextStart != -1
                 ? content.Substring(start, nextStart - start)
@@ -190,10 +177,10 @@ namespace SparkSense.Parsing
         {
             if (IsExpression(content, position))
             {
-                if (!fullFragment.Contains(CLOSE_BRACE)) fullFragment += CLOSE_BRACE;
+                if (!fullFragment.Contains(Constants.CLOSE_BRACE)) fullFragment += Constants.CLOSE_BRACE;
             }
-            else if (!fullFragment.Contains(CLOSE_ELEMENT)) fullFragment += SELF_CLOSE_ELEMENT;
-            else if (!fullFragment.Contains(SELF_CLOSE_ELEMENT)) fullFragment = fullFragment.Replace(CLOSE_ELEMENT.ToString(), SELF_CLOSE_ELEMENT);
+            else if (!fullFragment.Contains(Constants.CLOSE_ELEMENT)) fullFragment += Constants.SELF_CLOSE_ELEMENT;
+            else if (!fullFragment.Contains(Constants.SELF_CLOSE_ELEMENT)) fullFragment = fullFragment.Replace(Constants.CLOSE_ELEMENT.ToString(), Constants.SELF_CLOSE_ELEMENT);
         }
 
         private static bool IsPositionInElementName(string content, int position)
@@ -202,7 +189,7 @@ namespace SparkSense.Parsing
             if (IsElement(content, position))
             {
                 GetFragmentStartAndEnd(content, position, out start, out end);
-                return start != -1 && !content.Substring(start, position - start).Contains(SPACE);
+                return start != -1 && !content.Substring(start, position - start).Contains(Constants.SPACE);
             }
             return false;
         }
@@ -214,7 +201,7 @@ namespace SparkSense.Parsing
 
         private static bool IsPositionInClosingElement(string content, int start)
         {
-            return start < content.Length - 1 && content.ToCharArray()[start + 1] == FWD_SLASH;
+            return start < content.Length - 1 && content.ToCharArray()[start + 1] == Constants.FWD_SLASH;
         }
 
         private static Position Source(string content)

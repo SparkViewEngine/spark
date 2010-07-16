@@ -7,6 +7,8 @@ namespace SparkSense.Parsing
         IList<string> GetRelatedPartials();
         IList<string> GetGlobalVariables();
         IList<string> GetLocalVariables();
+        IList<string> GetContentNames();
         IList<string> GetLocalMacros();
+        IList<string> GetMacroParameters(string macroName);
     }
 }

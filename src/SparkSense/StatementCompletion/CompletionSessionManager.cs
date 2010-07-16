@@ -145,7 +145,8 @@ namespace SparkSense.StatementCompletion
         private void ScanForPossibleNewSession()
         {
             if (!IsSparkOnlySessionActive()) return;
-            if (!IsCompletionChar('"')) return;
+            if (!IsCompletionChar(Constants.DOUBLE_QUOTE) 
+                && !IsCompletionChar(Constants.SINGLE_QUOTE)) return;
 
             _scanForNewSession = true;
             _sparkOnlySession.TextView.Caret.MoveToPreviousCaretPosition();
