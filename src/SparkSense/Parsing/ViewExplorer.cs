@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Spark.Compiler;
-using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Syntax;
 using System.IO;
 using System;
-using Spark.Parser.Code;
 using Spark;
 
 namespace SparkSense.Parsing
@@ -25,14 +23,6 @@ namespace SparkSense.Parsing
 
             _projectExplorer = projectExplorer;
             InitCurrentView();
-        }
-
-        public string BasePath
-        {
-            get
-            {
-                return ((FileSystemViewFolder)_viewLoader.ViewFolder).BasePath;
-            }
         }
 
         public IList<Chunk> ViewChunks
@@ -83,6 +73,14 @@ namespace SparkSense.Parsing
             return allLocalVariables;
         }
 
+        public IList<string> GetPossibleMasterLayouts()
+        {
+            var possibleMasters = new List<string>();
+            possibleMasters.AddRange(GetPossibleMasterFiles("Layouts"));
+            possibleMasters.AddRange(GetPossibleMasterFiles("Shared"));
+            return possibleMasters;
+        }
+
         public IEnumerable<T> GetViewChunks<T>()
         {
             var chunks = ViewChunks.Where(chunk => chunk is T).Cast<T>();
@@ -131,13 +129,13 @@ namespace SparkSense.Parsing
         {
             var locator = new DefaultTemplateLocator();
             var master = locator.LocateMasterFile(_viewLoader.ViewFolder, masterFile);
-            
+
             if (master.ViewFile == null) return false;
-            
+
             _viewLoader.Load(master.Path);
             return true;
         }
-        
+
         private void InitViewChunks()
         {
             if (_viewLoader == null) return;
@@ -151,5 +149,14 @@ namespace SparkSense.Parsing
             TryLoadMaster("Application");
 
         }
+        
+        private IEnumerable<string> GetPossibleMasterFiles(string folder)
+        {
+            var possibleMasters = new List<string>();
+            var masterFilePaths = _viewLoader.ViewFolder.ListViews(folder).Where(filePath => filePath.IsNonPartialSparkFile());
+            masterFilePaths.ToList().ForEach(x => possibleMasters.Add(Path.GetFileNameWithoutExtension(x)));
+            return possibleMasters;
+        }
+
     }
 }

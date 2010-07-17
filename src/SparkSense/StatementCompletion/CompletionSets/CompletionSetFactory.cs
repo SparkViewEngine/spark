@@ -15,18 +15,15 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
         internal CompletionSetFactory() : base("Spark", "Spark", null, null, null) { }
 
-        public static Node CurrentNode
+        protected static Node CurrentNode
         {
             get { return _triggerPoint != null ? SparkSyntax.ParseNode(CurrentContent, _triggerPoint) : null; }
         }
-        public static ITextSnapshot CurrentSnapShot
+        protected static Type CurrentContext
         {
-            get
-            {
-                return _triggerPoint != null ? _triggerPoint.Snapshot : null;
-            }
+            get { return _triggerPoint != null ? SparkSyntax.ParseContext(CurrentContent, _triggerPoint) : null; }
         }
-        public static string CurrentContent
+        protected static string CurrentContent
         {
             get { return _triggerPoint != null ? _triggerPoint.Snapshot.GetText() : string.Empty; }
         }

@@ -29,7 +29,7 @@ namespace SparkSense.Tests.Parsing
             new SparkSense.Parsing.ProjectExplorer(null);
         }
 
-        [Test] //, Ignore("This test fails if run without an instance of VS running. It passes if it can attach to the DTE. Need to find a better way of testing this")]
+        [Test] //TODO Rob G , Ignore("This test fails if run without an instance of VS running. It passes if it can attach to the DTE. Need to find a better way of testing this")]
         public void ShouldBuildAMapOfAllViewsInTheSolution()
         {
             Console.WriteLine("This test fails if run without an instance of VS running. It passes if it can attach to the DTE. Need to find a better way of testing this");

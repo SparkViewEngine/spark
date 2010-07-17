@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -11,9 +12,10 @@ namespace SparkSense.Tests.Parsing
     public class ViewExplorerTests
     {
         private IProjectExplorer _mockProjectExplorer;
-        
+
         [SetUp]
-        public void Setup() {
+        public void Setup()
+        {
             _mockProjectExplorer = MockRepository.GenerateMock<IProjectExplorer>();
         }
 
@@ -102,7 +104,7 @@ namespace SparkSense.Tests.Parsing
 
             _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
             _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return("Other\\index.spark");
-            
+
             var otherExplorer = new ViewExplorer(_mockProjectExplorer);
             var otherPartials = otherExplorer.GetRelatedPartials();
 
@@ -113,6 +115,30 @@ namespace SparkSense.Tests.Parsing
             Assert.That(otherPartials.Count, Is.EqualTo(2));
             Assert.That(otherPartials[0], Is.EqualTo("OtherPartial"));
             Assert.That(otherPartials[1], Is.EqualTo("PartialMustBeFound"));
+        }
+
+        [Test]
+        public void ShouldReturnNameOfPossibleMasterLayoutsFound()
+        {
+            var viewFolder = new InMemoryViewFolder
+            {
+                    {"Shared\\Home.spark","<html><body><use content=\"home\" /></body></html>"},
+                    {"Shared\\Application.spark","<html><body><use content=\"main\" /></body></html>"},
+                    {"Shared\\_PartialMustNotBeMaster.spark","This partial should not be identified as a master layout"},
+                    {"Layouts\\Other.spark","<html><body><use content=\"other\" /></body></html>"},
+                    {"Home\\index.spark","Home Page"},
+            };
+
+            _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
+            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return("Home\\index.spark");
+
+            var viewExplorer = new ViewExplorer(_mockProjectExplorer);
+            var possibleMasters = viewExplorer.GetPossibleMasterLayouts().ToList();
+
+            Assert.That(possibleMasters.Count, Is.EqualTo(3));
+            Assert.Contains("Application", possibleMasters);
+            Assert.Contains("Home", possibleMasters);
+            Assert.Contains("Other", possibleMasters);
         }
     }
 }

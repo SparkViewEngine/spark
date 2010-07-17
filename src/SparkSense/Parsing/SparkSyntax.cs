@@ -5,6 +5,7 @@ using Spark.Parser.Markup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Spark.Parser.Syntax;
 
 namespace SparkSense.Parsing
 {
@@ -42,7 +43,7 @@ namespace SparkSense.Parsing
         public static Type ParseContext(string content, int position)
         {
             var contentChars = content.ToCharArray();
-            var previousChar = contentChars[position - 1];
+            var previousChar = position > 0 ? contentChars[position - 1] : char.MinValue;
             switch (previousChar)
             {
                 case Constants.OPEN_ELEMENT:
@@ -72,7 +73,7 @@ namespace SparkSense.Parsing
             var contentToParse = node is ElementNode ? GetElementNodeAsString((ElementNode)node) : content;
 
             var grammar = new MarkupGrammar();
-            var visitorContext = new VisitorContext();
+            var visitorContext = new VisitorContext { SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
             var result = grammar.Nodes(Source(contentToParse));
             var nodes = result.Value;
             foreach (var visitor in BuildChunkVisitors(visitorContext))

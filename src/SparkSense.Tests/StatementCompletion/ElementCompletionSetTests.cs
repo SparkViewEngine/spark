@@ -38,26 +38,26 @@ namespace SparkSense.Tests.StatementCompletion
         [Test]
         public void ShouldReturnSparkSpecialNodes()
         {
-            var element = CompletionSetFactory.Create<ElementCompletionSet>(new SnapshotPoint(), _stubTrackingSpan, _stubViewExplorer);
-            List<Completion> elementList = element.Completions.ToList();
+            var set = CompletionSetFactory.Create<ElementCompletionSet>(new SnapshotPoint(_stubSnapshot, 0), _stubTrackingSpan, _stubViewExplorer);
+            List<Completion> elementList = set.Completions.ToList();
 
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "var"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "def"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "default"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "global"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "viewdata"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "set"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "for"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "test"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "if"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "else"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "elseif"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "content"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "use"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "macro"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "render"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "section"));
-            Assert.IsTrue(elementList.Exists(c => c.DisplayText == "cache"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "var"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "def"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "default"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "global"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "viewdata"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "set"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "for"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "test"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "if"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "else"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "elseif"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "content"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "use"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "macro"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "render"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "section"));
+            Assert.That(elementList.Exists(c => c.DisplayText == "cache"));
         }
 
         [Test]
@@ -67,8 +67,8 @@ namespace SparkSense.Tests.StatementCompletion
 
             mockViewExplorer.Expect(x => x.GetRelatedPartials()).Return(new List<string> { "partial1", "partial2" });
 
-            var element = CompletionSetFactory.Create<ElementCompletionSet>(new SnapshotPoint(), null, mockViewExplorer);
-            var elementList = element.Completions.ToList();
+            var set = CompletionSetFactory.Create<ElementCompletionSet>(new SnapshotPoint(), null, mockViewExplorer);
+            var elementList = set.Completions.ToList();
             Assert.That(elementList.Exists(c => c.DisplayText == "partial1"));
             Assert.That(elementList.Exists(c => c.DisplayText == "partial2"));
 

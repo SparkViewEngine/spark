@@ -110,6 +110,7 @@
     <Compile Include="Parsing\Constants.cs" />
     <Compile Include="Parsing\IProjectExplorer.cs" />
     <Compile Include="Parsing\IViewExplorer.cs" />
+    <Compile Include="Parsing\ParsingExtensions.cs" />
     <Compile Include="Parsing\SparkSyntax.cs" />
     <Compile Include="Presenter\SparkSenseView.xaml.cs">
       <DependentUpon>SparkSenseView.xaml</DependentUpon>
