@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Spark.Compiler.NodeVisitors;
+using SparkSense.Parsing;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
@@ -10,18 +11,14 @@ namespace SparkSense.StatementCompletion.CompletionSets
         private static List<Completion> _specialNodeCompletions;
         private List<Completion> _completionList;
 
-        public override IList<Completion> Completions
+        protected override IList<Completion> GetCompletionSetForNodeAndContext()
         {
-            get
-            {
-                if (_completionList != null) return _completionList;
-
-                _completionList = new List<Completion>();
-                _completionList.AddRange(GetSpecialNodes());
-                _completionList.AddRange(GetRelatedPartials());
-
-                return _completionList.SortAlphabetically();
-            }
+            if (_completionList != null)
+                return _completionList;
+            _completionList = new List<Completion>();
+            _completionList.AddRange(GetSpecialNodes());
+            _completionList.AddRange(GetRelatedPartials());
+            return _completionList.SortAlphabetically();
         }
 
         private List<Completion> GetSpecialNodes()
@@ -33,7 +30,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             _specialNodeCompletions = new List<Completion>();
 
             foreach (var nodeName in specialNodes)
-                _specialNodeCompletions.Add(new Completion(nodeName, nodeName, String.Format("Spark '{0}' element", nodeName), SparkElementIcon, null));
+                _specialNodeCompletions.Add(new Completion(nodeName, nodeName, String.Format("Spark element: '{0}'", nodeName), GetIcon(Constants.ICON_SparkElement), null));
 
             return _specialNodeCompletions;
         }
@@ -42,8 +39,8 @@ namespace SparkSense.StatementCompletion.CompletionSets
         {
             var relatedPartials = new List<Completion>();
             if (_viewExplorer != null)
-                foreach (var partial in _viewExplorer.GetRelatedPartials())
-                    relatedPartials.Add(new Completion(partial, partial, string.Format("Partial found: '{0}'", partial), SparkPartialIcon, null));
+                foreach (var partialName in _viewExplorer.GetRelatedPartials())
+                    relatedPartials.Add(new Completion(partialName, partialName, string.Format("Related Partial: '{0}'", partialName), GetIcon(Constants.ICON_SparkPartial), null));
 
             return relatedPartials;
         }

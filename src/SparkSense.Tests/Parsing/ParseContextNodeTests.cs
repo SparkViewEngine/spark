@@ -3,6 +3,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Spark.Parser.Markup;
 using SparkSense.Parsing;
 using System;
+using Spark.Compiler;
 
 namespace SparkSense.Tests.Parsing
 {
@@ -15,6 +16,24 @@ namespace SparkSense.Tests.Parsing
             var nodeType = SparkSyntax.ParseContext("<div><use content=\"main\"/></div>", position: 10);
 
             Assert.That(nodeType, Is.EqualTo(typeof(AttributeNode)));
+        }
+
+        [Test]
+        public void ShouldReturnAttributeNodeGivenPositionInQuotes()
+        {
+            var nodeType = SparkSyntax.ParseContext("<div><use content=\"main\"/></div>", position: 19);
+
+            Assert.That(nodeType, Is.EqualTo(typeof(AttributeNode)));
+        }
+
+        [Test]
+        public void ShouldReturnElementNodeGivenPositionAfterColonInElementName()
+        {
+            var nodeType = SparkSyntax.ParseContext("<div><use: </div>", position: 10);
+            var chunkType = SparkSyntax.ParseContextChunk("<div><use: </div>", position: 10);
+
+            Assert.That(nodeType, Is.EqualTo(typeof(ElementNode)));
+            Assert.That(chunkType, Is.EqualTo(typeof(UseContentChunk)));
         }
 
         [Test]

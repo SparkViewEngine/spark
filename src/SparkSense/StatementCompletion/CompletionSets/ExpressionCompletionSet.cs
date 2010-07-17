@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.Language.Intellisense;
 using System;
+using SparkSense.Parsing;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
@@ -9,17 +10,13 @@ namespace SparkSense.StatementCompletion.CompletionSets
     {
         private List<Completion> _completionList;
 
-        public override IList<Completion> Completions
+        protected override IList<Completion> GetCompletionSetForNodeAndContext()
         {
-            get
-            {
-                if (_completionList != null) return _completionList;
-
-                _completionList = new List<Completion>();
-                _completionList.AddRange(GetVariables());
-
+            if (_completionList != null)
                 return _completionList;
-            }
+            _completionList = new List<Completion>();
+            _completionList.AddRange(GetVariables());
+            return _completionList;
         }
 
         private IEnumerable<Completion> GetVariables()
@@ -29,15 +26,15 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
             _viewExplorer.GetGlobalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Global Variable: '{0}'", variable), SparkGlobalVariableIcon, null)));
+                    new Completion(variable, variable, string.Format("Global Variable: '{0}'", variable), GetIcon(Constants.ICON_SparkGlobalVariable), null)));
 
             _viewExplorer.GetLocalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Local Variable: '{0}'", variable), SparkLocalVariableIcon, null)));
+                    new Completion(variable, variable, string.Format("Local Variable: '{0}'", variable), GetIcon(Constants.ICON_SparkLocalVariable), null)));
 
             _viewExplorer.GetLocalMacros().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Local Macro: '{0}'", variable), SparkSparkMacroIcon, null)));
+                    new Completion(variable, variable, string.Format("Local Macro: '{0}'", variable), GetIcon(Constants.ICON_SparkMacro), null)));
 
             return variables;
         }

@@ -11,15 +11,8 @@ namespace SparkSense.StatementCompletion.CompletionSets
     public class AttributeCompletionSet : CompletionSetFactory
     {
         private List<Completion> _completionList;
-        public override IList<Completion> Completions
-        {
-            get
-            {
-                return GetCompletionSetForNodeAndContext();
-            }
-        }
 
-        private IList<Completion> GetCompletionSetForNodeAndContext()
+        protected override IList<Completion> GetCompletionSetForNodeAndContext()
         {
             if (_completionList != null) return _completionList;
             _completionList = new List<Completion>();
@@ -74,7 +67,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
                         attribute,
                         String.Format("{0}=\"\"", attribute),
                         String.Format("'{0}' attribute for '{1}' element", attribute, ((SpecialNode)specialNode).Element.Name),
-                        SparkAttributeIcon, null)));
+                        GetIcon(Constants.ICON_SparkAttribute), null)));
             }
 
             return attributesForSpecialNode;
@@ -117,11 +110,11 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
             _viewExplorer.GetGlobalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, String.Format("{0}=\"\"", variable), string.Format("Global Variable: '{0}'", variable), SparkGlobalVariableIcon, null)));
+                    new Completion(variable, String.Format("{0}=\"\"", variable), string.Format("Global Variable: '{0}'", variable), GetIcon(Constants.ICON_SparkGlobalVariable), null)));
 
             _viewExplorer.GetLocalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, String.Format("{0}=\"\"", variable), string.Format("Local Variable: '{0}'", variable), SparkLocalVariableIcon, null)));
+                    new Completion(variable, String.Format("{0}=\"\"", variable), string.Format("Local Variable: '{0}'", variable), GetIcon(Constants.ICON_SparkLocalVariable), null)));
 
             return variables;
         }
@@ -133,7 +126,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
             _viewExplorer.GetContentNames().ToList().ForEach(
                 contentName => contentNames.Add(
-                    new Completion(contentName, contentName, string.Format("Content Name: '{0}'", contentName), SparkContentNameIcon, null)));
+                    new Completion(contentName, contentName, string.Format("Content Name: '{0}'", contentName), GetIcon(Constants.ICON_SparkContentName), null)));
             return contentNames;
         }
 

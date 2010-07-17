@@ -16,5 +16,14 @@ namespace SparkSense.Parsing
         public const char EXCLAMATION = '!';
         public const char DOLLAR = '$';
 
+        public const string ICON_SparkElement = "SparkElement";
+        public const string ICON_SparkPartial = "SparkPartial";
+        public const string ICON_SparkAttribute = "SparkAttribute";
+        public const string ICON_SparkContentName = "SparkContentName";
+        public const string ICON_SparkGlobalVariable = "SparkGlobalVariable";
+        public const string ICON_SparkLocalVariable = "SparkLocalVariable";
+        public const string ICON_SparkMacro = "SparkMacro";
+        public const string ICON_SparkMacroParameter = "SparkMacroParameter";
+
     }
 }
