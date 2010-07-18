@@ -100,5 +100,59 @@ namespace SparkSense.Tests.StatementCompletion
             Assert.That(completions.Exists(a => a.DisplayText == "html"));
             Assert.That(completions.Exists(a => a.DisplayText == "master"));
         }
+
+        [Test]
+        public void ShouldReturnAttributeNameContextWhenPositionedAfterElementName()
+        {
+            var point = GetSnapShotPoint("<div><set </div>", 10);
+
+            var completionSet = (AttributeCompletionSet)CompletionSetFactory.GetCompletionSetFor(point, _stubTrackingSpan, _stubViewExplorer);
+            Assert.That(completionSet.AttributeContext, Is.EqualTo(AttributeContexts.Name));
+        }
+
+        [Test]
+        public void ShouldReturnAttributeNameContextWhenPositionedAfterPreviousClosedAttribute()
+        {
+            var point = GetSnapShotPoint("<div><set x='5' </div>", 16);
+
+            var completionSet = (AttributeCompletionSet)CompletionSetFactory.GetCompletionSetFor(point, _stubTrackingSpan, _stubViewExplorer);
+            Assert.That(completionSet.AttributeContext, Is.EqualTo(AttributeContexts.Name));
+        }
+
+        [Test]
+        public void ShouldReturnAttributeValueContextWhenPositionedInsideEmptyQuotes()
+        {
+            var point = GetSnapShotPoint("<div><set x=\"\" </div>", 13);
+
+            var completionSet = (AttributeCompletionSet)CompletionSetFactory.GetCompletionSetFor(point, _stubTrackingSpan, _stubViewExplorer);
+            Assert.That(completionSet.AttributeContext, Is.EqualTo(AttributeContexts.Value));
+        }
+
+        [Test]
+        public void ShouldReturnAttributeValueContextWhenPositionedAfterASpaceInsideQuotes()
+        {
+            var point = GetSnapShotPoint("<div><set x='500' y='x + '</div>", 25);
+
+            var completionSet = (AttributeCompletionSet)CompletionSetFactory.GetCompletionSetFor(point, _stubTrackingSpan, _stubViewExplorer);
+            Assert.That(completionSet.AttributeContext, Is.EqualTo(AttributeContexts.Value));
+        }
+
+        [Test]
+        public void ShouldReturnAttributeValueContextWhenPositionedAnywhereInsideQuotes()
+        {
+            var point = GetSnapShotPoint("<div><set x='500' </div>", 16);
+
+            var completionSet = (AttributeCompletionSet)CompletionSetFactory.GetCompletionSetFor(point, _stubTrackingSpan, _stubViewExplorer);
+            Assert.That(completionSet.AttributeContext, Is.EqualTo(AttributeContexts.Value));
+        }
+
+        [Test]
+        public void ShouldReturnAttributeValueContextWhenPositionedOnAnyAttributeInsideQuotes()
+        {
+            var point = GetSnapShotPoint("<div><set x='500' y='60' </div>", 22);
+
+            var completionSet = (AttributeCompletionSet)CompletionSetFactory.GetCompletionSetFor(point, _stubTrackingSpan, _stubViewExplorer);
+            Assert.That(completionSet.AttributeContext, Is.EqualTo(AttributeContexts.Value));
+        }
     }
 }

@@ -8,35 +8,44 @@ using Spark.Compiler;
 
 namespace SparkSense.StatementCompletion.CompletionSets
 {
+    public enum AttributeContexts
+    {
+        Name, Value
+    }
     public class AttributeCompletionSet : CompletionSetFactory
     {
         private List<Completion> _completionList;
 
+        public AttributeContexts AttributeContext
+        {
+            get
+            {
+                if (SparkSyntax.IsPositionInAttributeValue(CurrentContent, _triggerPoint))
+                    return AttributeContexts.Value;
+                return AttributeContexts.Name;
+            }
+        }
+        
         protected override IList<Completion> GetCompletionSetForNodeAndContext()
         {
             if (_completionList != null) return _completionList;
             _completionList = new List<Completion>();
-            if (CaretIsBetweenQuotes())
-            {
-                var chunk = SparkSyntax.ParseContextChunk(CurrentContent, _triggerPoint);
 
-                if (chunk == typeof(ContentChunk))
-                    _completionList.AddRange(GetContentNames());
-                else if (chunk == typeof(ConditionalChunk))
-                    _completionList.AddRange(GetVariables());
-                else if (chunk == typeof(UseMasterChunk))
-                    _completionList.AddRange(GetPossibleMasterNames());
-            }
-            else if (CurrentContent[_triggerPoint - 1] == Constants.SPACE)
+            switch (AttributeContext)
             {
-
-                _completionList = new List<Completion>();
-                _completionList.AddRange(GetForSpecialNodes());
+                case AttributeContexts.Name:
+                    _completionList.AddRange(GetForSpecialNodes());
+                    break;
+                case AttributeContexts.Value:
+                    _completionList.AddRange(GetForAttributeValue());
+                    break;
+                default:
+                    break;
             }
             return _completionList.SortAlphabetically();
         }
 
-        private static bool CaretIsBetweenQuotes()
+        private static bool IsPositionBetweenEmptyQuotes()
         {
             if (CurrentContent.Length == _triggerPoint) return false;
 
@@ -51,7 +60,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             return quoteBeforeCaret && quoteAfterCaret;
         }
 
-        private List<Completion> GetForSpecialNodes()
+        private IEnumerable<Completion> GetForSpecialNodes()
         {
             var attributesForSpecialNode = new List<Completion>();
             Node specialNode;
@@ -74,6 +83,28 @@ namespace SparkSense.StatementCompletion.CompletionSets
             return attributesForSpecialNode;
         }
 
+        private IEnumerable<Completion> GetForAttributeValue()
+        {
+            var attributeValues = new List<Completion>();
+
+            if (IsPositionBetweenEmptyQuotes())
+            {
+                var chunk = SparkSyntax.ParseContextChunk(CurrentContent, _triggerPoint);
+
+                if (chunk == typeof(ContentChunk))
+                    attributeValues.AddRange(GetContentNames());
+                else if (chunk == typeof(ConditionalChunk))
+                    attributeValues.AddRange(GetVariables());
+                else if (chunk == typeof(UseMasterChunk))
+                    attributeValues.AddRange(GetPossibleMasterNames());
+            }
+            else if (CurrentContent[_triggerPoint - 1] == Constants.SPACE)
+            {
+
+            }
+            return attributeValues;
+        }
+     
         private static List<string> GetKnownAttributesForSpecialNode(SpecialNode node)
         {
             var allKnown = new Dictionary<string, List<string>>
@@ -104,6 +135,13 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 : new List<string>();
         }
 
+        private string GetInsertionTextForContext(string item)
+        {
+            if (AttributeContext == AttributeContexts.Name)
+                return String.Format("{0}=\"\"", item);
+            return item;
+        }
+
         private IEnumerable<Completion> GetVariables()
         {
             var variables = new List<Completion>();
@@ -111,11 +149,11 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
             _viewExplorer.GetGlobalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Global Variable: '{0}'", variable), GetIcon(Constants.ICON_SparkGlobalVariable), null)));
+                    new Completion(variable, String.Format("{0}=\"\"", variable), string.Format("Global Variable: '{0}'", variable), GetIcon(Constants.ICON_SparkGlobalVariable), null)));
 
             _viewExplorer.GetLocalVariables().ToList().ForEach(
                 variable => variables.Add(
-                    new Completion(variable, variable, string.Format("Local Variable: '{0}'", variable), GetIcon(Constants.ICON_SparkLocalVariable), null)));
+                    new Completion(variable, GetInsertionTextForContext(variable), string.Format("Local Variable: '{0}'", variable), GetIcon(Constants.ICON_SparkLocalVariable), null)));
 
             return variables;
         }

@@ -60,5 +60,36 @@ namespace SparkSense.Tests.Parsing
             Assert.That(elementNode, Is.InstanceOfType(typeof(ElementNode)));
         }
 
+        [Test]
+        public void ShouldResultInAttributeNameContext()
+        {
+            Assert.IsTrue(SparkSyntax.IsPositionInAttributeName("<div><set x</div>", 11));
+            Assert.IsFalse(SparkSyntax.IsPositionInAttributeValue("<div><set x</div>", 11));
+
+            Assert.IsTrue(SparkSyntax.IsPositionInAttributeName("<div><set x='500' y='x + '</div>", 11));
+            Assert.IsFalse(SparkSyntax.IsPositionInAttributeValue("<div><set x='500' y='x + '</div>", 11));
+
+            Assert.IsTrue(SparkSyntax.IsPositionInAttributeName("<div><set x='500' y</div>", 19));
+            Assert.IsFalse(SparkSyntax.IsPositionInAttributeValue("<div><set x='500' y=</div>", 19));
+
+            Assert.IsTrue(SparkSyntax.IsPositionInAttributeName("<div><set x='500' y='x + '</div>", 19));
+            Assert.IsFalse(SparkSyntax.IsPositionInAttributeValue("<div><set x='500' y='x + '</div>", 19));
+        }
+
+        [Test]
+        public void ShouldResultInAttributeValueContext()
+        {
+            Assert.IsTrue(SparkSyntax.IsPositionInAttributeValue("<div><set x='500' y='x + '</div>", 16));
+            Assert.IsFalse(SparkSyntax.IsPositionInAttributeName("<div><set x='500' y='x + '</div>", 16));
+
+            Assert.IsTrue(SparkSyntax.IsPositionInAttributeValue("<div><set x='500' y='x + '</div>", 25));
+            Assert.IsFalse(SparkSyntax.IsPositionInAttributeName("<div><set x='500' y='x + '</div>", 25));
+
+            Assert.IsTrue(SparkSyntax.IsPositionInAttributeValue("<div><set x='500' y='x + ' z=\"</div>", 30));
+            Assert.IsFalse(SparkSyntax.IsPositionInAttributeName("<div><set x='500' y='x + ' z=\"</div>", 30));
+
+            Assert.IsTrue(SparkSyntax.IsPositionInAttributeValue("<div><test if='x == 5 '</div>", 22));
+            Assert.IsFalse(SparkSyntax.IsPositionInAttributeName("<div><test if='x == 5 '</div>", 22));
+        }
     }
 }

@@ -63,10 +63,12 @@ namespace SparkSense.Parsing
 
             if (IsPositionInElementName(content, position))
                 return typeof(ElementNode);
+            if (IsPositionInAttribute(content, position))
+                return typeof(AttributeNode);
 
             return typeof(TextNode);
         }
-        
+
         public static Type ParseContextChunk(string content, int position)
         {
             var node = ParseNode(content, position);
@@ -112,6 +114,39 @@ namespace SparkSense.Parsing
             return sparkNode != null && sparkNode is SpecialNode;
         }
 
+        public static bool IsPositionInAttributeName(string content, int position)
+        {
+            if (!IsElement(content, position)) return false;
+
+            var startToCaret = GetStartToCaret(content, position);
+            int lastEquals = GetLastEquals(startToCaret);
+            if (lastEquals == -1) return true;
+            var lastSpace = startToCaret.LastIndexOf(Constants.SPACE);
+            var lastOpenQuote = startToCaret.IndexOfAny(new char[] { Constants.DOUBLE_QUOTE, Constants.SINGLE_QUOTE }, lastEquals);
+            var lastQuote = startToCaret.LastIndexOfAny(new char[] { Constants.DOUBLE_QUOTE, Constants.SINGLE_QUOTE });
+
+            if (lastQuote == lastOpenQuote && lastQuote != -1) return false;
+            return lastEquals != -1 && lastSpace != -1 && lastSpace > lastEquals;
+        }
+
+        public static bool IsPositionInAttributeValue(string content, int position)
+        {
+            if (!IsElement(content, position)) return false;
+
+            var startToCaret = GetStartToCaret(content, position);
+            int lastEquals = GetLastEquals(startToCaret);
+            if (lastEquals == -1) return false;
+            var lastOpenQuote = startToCaret.IndexOfAny(new char[] { Constants.DOUBLE_QUOTE, Constants.SINGLE_QUOTE }, lastEquals);
+            var lastQuote = startToCaret.LastIndexOfAny(new char[] { Constants.DOUBLE_QUOTE, Constants.SINGLE_QUOTE });
+            return lastQuote == lastOpenQuote && lastQuote != -1;
+        }
+
+        private static int GetLastEquals(string startToCaret)
+        {
+            var lastEquals = startToCaret.LastIndexOf(Constants.EQUALS.ToString() + Constants.DOUBLE_QUOTE.ToString());
+            return lastEquals == -1 ? startToCaret.LastIndexOf(Constants.EQUALS.ToString() + Constants.SINGLE_QUOTE.ToString()) : lastEquals;
+        }
+
         private static bool IsElement(string content, int position)
         {
             int start, end;
@@ -149,7 +184,7 @@ namespace SparkSense.Parsing
             elementNode.Attributes.ToList().ForEach(a => { attributes += string.Format("{0}=\"{1}\" ", a.Name, a.Value); });
             return String.Format("<{0} {1}/>", (elementNode).Name, attributes);
         }
-        
+
         private static void GetFragmentStartAndEnd(string content, int position, out int start, out int end)
         {
             var elementStart = content.LastIndexOf(Constants.OPEN_ELEMENT, position > 0 ? position - 1 : 0);
@@ -203,6 +238,35 @@ namespace SparkSense.Parsing
         private static bool IsPositionInClosingElement(string content, int start)
         {
             return start < content.Length - 1 && content.ToCharArray()[start + 1] == Constants.FWD_SLASH;
+        }
+
+        private static bool IsPositionInAttribute(string content, int position)
+        {
+            return IsPositionInAttributeName(content, position) || IsPositionInAttributeValue(content, position);
+        }
+
+        private static string GetStartToCaret(string content, int position)
+        {
+            Position startPosition = GetStartPosition(content, position);
+            var caretPosition = startPosition.Advance(position - startPosition.Offset);
+            var attributeBeforeCaret = startPosition.Advance(startPosition.PotentialLength(Constants.SPACE) + 1).Constrain(caretPosition);
+            var startToCaret = attributeBeforeCaret.Peek(attributeBeforeCaret.PotentialLength());
+            return startToCaret;
+        }
+        
+        private static Position GetStartPosition(string content, int position)
+        {
+            var parser = new MarkupGrammar();
+            var startPosition = Source(content);
+            var endPosition = startPosition;
+            ParseResult<Node> currentNode = null;
+            while (endPosition.Offset < position)
+            {
+                currentNode = parser.AnyNode(startPosition);
+                startPosition = currentNode.Rest;
+                endPosition = parser.AnyNode(startPosition).Rest;
+            }
+            return startPosition;
         }
 
         private static Position Source(string content)
