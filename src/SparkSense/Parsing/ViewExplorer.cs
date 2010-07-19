@@ -26,6 +26,14 @@ namespace SparkSense.Parsing
             InitCurrentView();
         }
 
+        // TODO: Rob G Add this back in once I've got the project explorer reading from memory instead of disk
+        //void TextBuffer_Changed(object sender, TextContentChangedEventArgs e)
+        //{
+        //    if (e.After != _textBuffer.CurrentSnapshot)
+        //        return;
+        //    InitCurrentView();
+        //}
+
         public IList<Chunk> ViewChunks
         {
             get
