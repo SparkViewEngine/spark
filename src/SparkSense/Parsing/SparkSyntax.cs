@@ -261,14 +261,14 @@ namespace SparkSense.Parsing
         private static Position GetStartPosition(string content, int position)
         {
             var parser = new MarkupGrammar();
-            var startPosition = Source(content);
-            var endPosition = startPosition;
+            Position startPosition = null;
+            var endPosition = Source(content);
             ParseResult<Node> currentNode = null;
             while (endPosition.Offset < position)
             {
+                startPosition = endPosition;
                 currentNode = parser.AnyNode(startPosition);
-                startPosition = currentNode.Rest;
-                endPosition = parser.AnyNode(startPosition).Rest;
+                endPosition = currentNode.Rest;
             }
             return startPosition;
         }
