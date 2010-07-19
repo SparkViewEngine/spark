@@ -81,6 +81,19 @@ namespace SparkSense.Parsing
             return possibleMasters;
         }
 
+        public IList<string> GetPossiblePartialDefaults(string partialName)
+        {
+            var partialDefaults = new List<string>();
+            var scopeChunks = ViewChunks.Where(c => c is ScopeChunk);
+            var renderPartialChunks = scopeChunks.SelectMany(sc => ((ScopeChunk)sc).Body).Where(c => c is RenderPartialChunk);
+            var partialChunk = renderPartialChunks.Where(pc => ((RenderPartialChunk)pc).Name == String.Format("_{0}", partialName)).FirstOrDefault() as RenderPartialChunk;
+            if (partialChunk == null) return partialDefaults;
+
+            var paramenters = partialChunk.FileContext.Contents.Where(c => c is DefaultVariableChunk);
+            paramenters.ToList().ForEach(p => partialDefaults.Add(((DefaultVariableChunk)p).Name));
+            return partialDefaults;
+        }
+
         public IEnumerable<T> GetViewChunks<T>()
         {
             var chunks = ViewChunks.Where(chunk => chunk is T).Cast<T>();

@@ -37,6 +37,8 @@ namespace SparkSense.StatementCompletion
 
             MergeSparkWithAllCompletionsSet(completionSets, sparkCompletions);
             completionSets.Add(sparkCompletions);
+
+            session.Committed += session_Committed;
         }
 
         public void Dispose()
@@ -85,6 +87,21 @@ namespace SparkSense.StatementCompletion
             return combinedList.SortAlphabetically();
         }
 
+        private bool IsCompletionChar(ICompletionSession session, char completionChar)
+        {
+            var point = session.TextView.Caret.Position.BufferPosition;
+            return point.Position > 1 && (point - 1).GetChar() == completionChar;
+        }
+
+        void session_Committed(object sender, EventArgs e)
+        {
+            var session = sender as ICompletionSession;
+            if (session == null || session.IsDismissed) return;
+            if (!IsCompletionChar(session, Constants.DOUBLE_QUOTE)
+                && !IsCompletionChar(session, Constants.SINGLE_QUOTE)) return;
+
+            session.TextView.Caret.MoveToPreviousCaretPosition();
+        }
 
     }
 }

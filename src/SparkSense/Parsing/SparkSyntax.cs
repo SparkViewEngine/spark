@@ -11,7 +11,6 @@ namespace SparkSense.Parsing
 {
     public class SparkSyntax
     {
-
         public static IList<Node> ParseNodes(string content)
         {
             var grammar = new MarkupGrammar();
@@ -69,7 +68,7 @@ namespace SparkSense.Parsing
             return typeof(TextNode);
         }
 
-        public static Type ParseContextChunk(string content, int position)
+        public static IList<Chunk> ParseElementChunks(string content, int position)
         {
             var node = ParseNode(content, position);
             var contentToParse = node is ElementNode ? GetElementNodeAsString((ElementNode)node) : content;
@@ -87,7 +86,12 @@ namespace SparkSense.Parsing
             var chunkBuilder = new ChunkBuilderVisitor(visitorContext);
             chunkBuilder.Accept(nodes);
             var chunks = chunkBuilder.Chunks;
+            return chunks;
+        }
 
+        public static Type ParseContextChunk(string content, int position)
+        {
+            IList<Chunk> chunks = ParseElementChunks(content, position);
             if (chunks.Count == 1)
             {
                 var chunkTypeToReturn = chunks[0].GetType();
@@ -101,7 +105,7 @@ namespace SparkSense.Parsing
             return typeof(SendLiteralChunk);
         }
 
-        public static bool IsSparkNode(Node currentNode, out Node sparkNode)
+        public static bool IsSpecialNode(Node currentNode, out Node sparkNode)
         {
             IList<Node> resultNodes = null;
             if (currentNode != null)

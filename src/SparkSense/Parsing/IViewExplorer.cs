@@ -6,6 +6,7 @@ namespace SparkSense.Parsing
     {
         IList<string> GetRelatedPartials();
         IList<string> GetPossibleMasterLayouts();
+        IList<string> GetPossiblePartialDefaults(string partialName);
         IList<string> GetGlobalVariables();
         IList<string> GetLocalVariables();
         IList<string> GetContentNames();

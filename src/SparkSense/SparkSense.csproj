@@ -149,7 +149,9 @@
       <Name>Spark</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\SparkPartialParameter.png" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Presenter\SparkSenseView.xaml">
       <SubType>Designer</SubType>

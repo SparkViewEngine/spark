@@ -10,7 +10,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
 {
     public enum AttributeContexts
     {
-        Name, Value
+        None, Name, Value
     }
     public class AttributeCompletionSet : CompletionSetFactory
     {
@@ -22,10 +22,12 @@ namespace SparkSense.StatementCompletion.CompletionSets
             {
                 if (SparkSyntax.IsPositionInAttributeValue(CurrentContent, _triggerPoint))
                     return AttributeContexts.Value;
-                return AttributeContexts.Name;
+                else if (SparkSyntax.IsPositionInAttributeName(CurrentContent, _triggerPoint))
+                    return AttributeContexts.Name;
+                return AttributeContexts.None;
             }
         }
-        
+
         protected override IList<Completion> GetCompletionSetForNodeAndContext()
         {
             if (_completionList != null) return _completionList;
@@ -34,7 +36,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             switch (AttributeContext)
             {
                 case AttributeContexts.Name:
-                    _completionList.AddRange(GetForSpecialNodes());
+                    _completionList.AddRange(GetForElementTypeAndName());
                     break;
                 case AttributeContexts.Value:
                     _completionList.AddRange(GetForAttributeValue());
@@ -45,66 +47,56 @@ namespace SparkSense.StatementCompletion.CompletionSets
             return _completionList.SortAlphabetically();
         }
 
-        private static bool IsPositionBetweenEmptyQuotes()
+        private IEnumerable<Completion> GetForElementTypeAndName()
         {
-            if (CurrentContent.Length == _triggerPoint) return false;
+            var attributesForNode = new List<Completion>();
+            Node specialNode;
+            if (SparkSyntax.IsSpecialNode(CurrentNode, out specialNode))
+                attributesForNode.AddRange(GetForSpecialNode(specialNode));
+            else
+                attributesForNode.AddRange(GetHtmlNodeExtensions());
 
-            var quoteAfterCaret =
-                CurrentContent[_triggerPoint] == Constants.DOUBLE_QUOTE ||
-                CurrentContent[_triggerPoint] == Constants.SINGLE_QUOTE;
+            foreach (var attribute in ((ElementNode)CurrentNode).Attributes)
+                attributesForNode.RemoveAll(c => c.DisplayText == attribute.Name);
 
-            var quoteBeforeCaret =
-                CurrentContent[_triggerPoint - 1] == Constants.DOUBLE_QUOTE ||
-                CurrentContent[_triggerPoint - 1] == Constants.SINGLE_QUOTE;
-
-            return quoteBeforeCaret && quoteAfterCaret;
+            return attributesForNode.Distinct();
         }
 
-        private IEnumerable<Completion> GetForSpecialNodes()
+        private IEnumerable<Completion> GetForSpecialNode(Node specialNode)
         {
-            var attributesForSpecialNode = new List<Completion>();
-            Node specialNode;
-            if (SparkSyntax.IsSparkNode(CurrentNode, out specialNode))
-            {
-                var knownAttributesForNode = GetKnownAttributesForSpecialNode((SpecialNode)specialNode);
-
-                foreach (var attribute in ((SpecialNode)specialNode).Element.Attributes)
-                    if (knownAttributesForNode.Exists(a => a == attribute.Name))
-                        knownAttributesForNode.Remove(attribute.Name);
-
-                knownAttributesForNode.ForEach(attribute => attributesForSpecialNode.Add(
-                    new Completion(
-                        attribute,
-                        String.Format("{0}=\"\"", attribute),
-                        String.Format("'{0}' attribute for '{1}' element", attribute, ((SpecialNode)specialNode).Element.Name),
-                        GetIcon(Constants.ICON_SparkAttribute), null)));
-            }
-
-            return attributesForSpecialNode;
+            var knownCompletions = new List<Completion>();
+            var knownAttributes = GetKnownAttributesForSpecialNode((SpecialNode)specialNode);
+            knownAttributes.ForEach(attribute => knownCompletions.Add(
+                new Completion(
+                    attribute,
+                    GetInsertionTextForContext(attribute),
+                    String.Format("'{0}' attribute for '{1}' element", attribute, ((SpecialNode)specialNode).Element.Name),
+                    GetIcon(Constants.ICON_SparkAttribute), null)));
+            return knownCompletions;
         }
 
         private IEnumerable<Completion> GetForAttributeValue()
         {
             var attributeValues = new List<Completion>();
 
-            if (IsPositionBetweenEmptyQuotes())
-            {
-                var chunk = SparkSyntax.ParseContextChunk(CurrentContent, _triggerPoint);
+            var chunk = SparkSyntax.ParseContextChunk(CurrentContent, _triggerPoint);
 
-                if (chunk == typeof(ContentChunk))
-                    attributeValues.AddRange(GetContentNames());
-                else if (chunk == typeof(ConditionalChunk))
-                    attributeValues.AddRange(GetVariables());
-                else if (chunk == typeof(UseMasterChunk))
-                    attributeValues.AddRange(GetPossibleMasterNames());
-            }
-            else if (CurrentContent[_triggerPoint - 1] == Constants.SPACE)
-            {
+            if (chunk == typeof(ContentChunk))
+                attributeValues.AddRange(GetContentNames());
+            else if (chunk == typeof(ConditionalChunk))
+                attributeValues.AddRange(GetVariables());
+            else if (chunk == typeof(ForEachChunk))
+                attributeValues.AddRange(GetVariables());
+            // TODO: Rob G first?{bool} last?{bool} ?{bool}
+            // TODO: Rob G for "Index", "Count", "IsFirst", and "IsLast"
+            else if (chunk == typeof(UseMasterChunk))
+                attributeValues.AddRange(GetPossibleMasterNames());
+            else if (chunk == typeof(RenderPartialChunk))
+                attributeValues.AddRange(GetPossiblePartialDefaults(((ElementNode)CurrentNode).Name));
 
-            }
             return attributeValues;
         }
-     
+
         private static List<string> GetKnownAttributesForSpecialNode(SpecialNode node)
         {
             var allKnown = new Dictionary<string, List<string>>
@@ -137,9 +129,23 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
         private string GetInsertionTextForContext(string item)
         {
+            if (item == "each")
+                return string.Format("{0}=\"var item in\"", item);
+
             if (AttributeContext == AttributeContexts.Name)
                 return String.Format("{0}=\"\"", item);
+
             return item;
+        }
+
+        private IEnumerable<Completion> GetHtmlNodeExtensions()
+        {
+            var extensions = new List<Completion>();
+            extensions.Add(new Completion("each", GetInsertionTextForContext("each"), "Inline 'each' used to repeat elements in a loop", GetIcon(Constants.ICON_SparkAttribute), null));
+            extensions.Add(new Completion("if", GetInsertionTextForContext("if"), "Inline 'if' used to render elements conditionally", GetIcon(Constants.ICON_SparkAttribute), null));
+            extensions.Add(new Completion("elseif", GetInsertionTextForContext("elseif"), "Inline 'elseif' used to render elements conditionally", GetIcon(Constants.ICON_SparkAttribute), null));
+            extensions.Add(new Completion("once", GetInsertionTextForContext("once"), "Inline 'once' used to ensure elements rendered only once per request ", GetIcon(Constants.ICON_SparkAttribute), null));
+            return extensions;
         }
 
         private IEnumerable<Completion> GetVariables()
@@ -178,6 +184,17 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 possibleMaster => possibleMasters.Add(
                     new Completion(possibleMaster, possibleMaster, string.Format("Possible Master: '{0}'", possibleMaster), GetIcon(Constants.ICON_SparkMacroParameter), null)));
             return possibleMasters;
+        }
+
+        private IEnumerable<Completion> GetPossiblePartialDefaults(string partialName)
+        {
+            var possibleDefaults = new List<Completion>();
+            if (_viewExplorer == null) return possibleDefaults;
+
+            _viewExplorer.GetPossiblePartialDefaults(partialName).ToList().ForEach(
+                possibleDefault => possibleDefaults.Add(
+                    new Completion(possibleDefault, possibleDefault, string.Format("Partial Default Param: '{0}'", possibleDefault), GetIcon(Constants.ICON_SparkPartialParameter), null)));
+            return possibleDefaults;
         }
     }
 }

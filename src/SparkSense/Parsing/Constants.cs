@@ -19,6 +19,7 @@ namespace SparkSense.Parsing
 
         public const string ICON_SparkElement = "SparkElement";
         public const string ICON_SparkPartial = "SparkPartial";
+        public const string ICON_SparkPartialParameter = "SparkPartialParameter";
         public const string ICON_SparkAttribute = "SparkAttribute";
         public const string ICON_SparkContentName = "SparkContentName";
         public const string ICON_SparkGlobalVariable = "SparkGlobalVariable";

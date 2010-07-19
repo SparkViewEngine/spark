@@ -14,7 +14,7 @@ namespace SparkSense.Tests.Parsing
             var node = SparkSyntax.ParseNode("<use content='main'/>", position: 1);
 
             Node sparkNode;
-            var isSparkNode = SparkSyntax.IsSparkNode(node, out sparkNode);
+            var isSparkNode = SparkSyntax.IsSpecialNode(node, out sparkNode);
 
             Assert.That(isSparkNode);
             Assert.IsNotNull(sparkNode);
@@ -27,7 +27,7 @@ namespace SparkSense.Tests.Parsing
             var node = SparkSyntax.ParseNode("<use />", position: 1);
 
             Node sparkNode;
-            var isSparkNode = SparkSyntax.IsSparkNode(node, out sparkNode);
+            var isSparkNode = SparkSyntax.IsSpecialNode(node, out sparkNode);
 
             Assert.That(isSparkNode);
             Assert.IsNotNull(sparkNode);
@@ -40,7 +40,7 @@ namespace SparkSense.Tests.Parsing
             var node = SparkSyntax.ParseNode("<use >", position: 1);
 
             Node sparkNode;
-            var isSparkNode = SparkSyntax.IsSparkNode(node, out sparkNode);
+            var isSparkNode = SparkSyntax.IsSpecialNode(node, out sparkNode);
 
             Assert.That(isSparkNode);
             Assert.IsNotNull(sparkNode);
@@ -53,7 +53,7 @@ namespace SparkSense.Tests.Parsing
             var node = SparkSyntax.ParseNode("<div id='products'/>", position: 1);
 
             Node elementNode;
-            var isSparkNode = SparkSyntax.IsSparkNode(node, out elementNode);
+            var isSparkNode = SparkSyntax.IsSpecialNode(node, out elementNode);
 
             Assert.That(!isSparkNode);
             Assert.IsNotNull(elementNode);

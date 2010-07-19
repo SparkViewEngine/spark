@@ -118,6 +118,32 @@ namespace SparkSense.Tests.Parsing
         }
 
         [Test]
+        public void ShouldReturnDefaultParametersOfPartial()
+        {
+            var viewFolder = new InMemoryViewFolder
+            {
+                    {"Shared\\_SharedPartial.spark","<default sx='5' sy='10' /> This partial is shared"},
+                    {"Home\\_HomePartial.spark","<default hx='8' hy='16' /> This Partial should only be found from Home"},
+                    {"Home\\index.spark","Home Page <SharedPartial /><HomePartial />"},
+            };
+
+            _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
+            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return("Home\\index.spark");
+
+            var homeExplorer = new ViewExplorer(_mockProjectExplorer);
+            var homeParameters = homeExplorer.GetPossiblePartialDefaults("HomePartial");
+            var sharedParameters = homeExplorer.GetPossiblePartialDefaults("SharedPartial");
+
+            Assert.That(homeParameters.Count, Is.EqualTo(2));
+            Assert.That(homeParameters[0], Is.EqualTo("hx"));
+            Assert.That(homeParameters[1], Is.EqualTo("hy"));
+
+            Assert.That(sharedParameters.Count, Is.EqualTo(2));
+            Assert.That(sharedParameters[0], Is.EqualTo("sx"));
+            Assert.That(sharedParameters[1], Is.EqualTo("sy"));
+        }
+
+        [Test]
         public void ShouldReturnNameOfPossibleMasterLayoutsFound()
         {
             var viewFolder = new InMemoryViewFolder
