@@ -6,6 +6,7 @@ using Spark.Parser.Syntax;
 using System.IO;
 using System;
 using Spark;
+using System.Diagnostics;
 
 namespace SparkSense.Parsing
 {
@@ -29,8 +30,21 @@ namespace SparkSense.Parsing
         {
             get
             {
-                if (_viewChunks == null)
-                    _viewChunks = _viewLoader != null && _viewPath != null ? _viewLoader.Load(_viewPath) : new List<Chunk>();
+                try
+                {
+                    if (_viewChunks == null)
+                    {
+                        _viewChunks = _viewLoader != null && _viewPath != null ? _viewLoader.Load(_viewPath) : new List<Chunk>();
+                    }
+                }
+                catch (FileNotFoundException fileNotFound)
+                {
+                    Debug.WriteLine(fileNotFound.Message);
+                    // TODO: Rob G : These are partials/include files being referenced from disk when they don't yet exist. 
+                    // Highly likely to occur when writing new code, but the Spark Compiler complains of course.
+                    // Need to add this to sqigglies notification later but for now just swallow the exceptions.
+                    _viewChunks = new List<Chunk>();
+                }
                 return _viewChunks;
             }
         }

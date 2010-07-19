@@ -54,14 +54,20 @@ namespace SparkSense.StatementCompletion.CompletionSets
             if (SparkSyntax.IsSpecialNode(CurrentNode, out specialNode))
                 attributesForNode.AddRange(GetForSpecialNode(specialNode));
             else
+            {
                 attributesForNode.AddRange(GetHtmlNodeExtensions());
+                attributesForNode.AddRange(GetPossiblePartialDefaults());
+            }
 
-            foreach (var attribute in ((ElementNode)CurrentNode).Attributes)
-                attributesForNode.RemoveAll(c => c.DisplayText == attribute.Name);
-
+            RemoveAttributesAlreadyUsed(attributesForNode);
             return attributesForNode.Distinct();
         }
 
+        private static void RemoveAttributesAlreadyUsed(List<Completion> attributesForNode)
+        {
+            foreach (var attribute in ((ElementNode)CurrentNode).Attributes)
+                attributesForNode.RemoveAll(c => c.DisplayText == attribute.Name);
+        }
         private IEnumerable<Completion> GetForSpecialNode(Node specialNode)
         {
             var knownCompletions = new List<Completion>();
@@ -91,8 +97,6 @@ namespace SparkSense.StatementCompletion.CompletionSets
             // TODO: Rob G for "Index", "Count", "IsFirst", and "IsLast"
             else if (chunk == typeof(UseMasterChunk))
                 attributeValues.AddRange(GetPossibleMasterNames());
-            else if (chunk == typeof(RenderPartialChunk))
-                attributeValues.AddRange(GetPossiblePartialDefaults(((ElementNode)CurrentNode).Name));
 
             return attributeValues;
         }
@@ -186,12 +190,15 @@ namespace SparkSense.StatementCompletion.CompletionSets
             return possibleMasters;
         }
 
-        private IEnumerable<Completion> GetPossiblePartialDefaults(string partialName)
+        private IEnumerable<Completion> GetPossiblePartialDefaults()
         {
             var possibleDefaults = new List<Completion>();
             if (_viewExplorer == null) return possibleDefaults;
 
-            _viewExplorer.GetPossiblePartialDefaults(partialName).ToList().ForEach(
+            var possiblePartial = ((ElementNode)CurrentNode).Name;
+            if (!_viewExplorer.GetRelatedPartials().Contains(possiblePartial)) return possibleDefaults;
+
+            _viewExplorer.GetPossiblePartialDefaults(possiblePartial).ToList().ForEach(
                 possibleDefault => possibleDefaults.Add(
                     new Completion(possibleDefault, possibleDefault, string.Format("Partial Default Param: '{0}'", possibleDefault), GetIcon(Constants.ICON_SparkPartialParameter), null)));
             return possibleDefaults;
