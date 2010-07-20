@@ -1,0 +1,35 @@
+﻿
+<viewdata model="XElement"/>
+<content name="title">Config</content>
+<use namespace="System.Xml"/>
+<use namespace="System.Xml.Linq"/>
+<use namespace="System.Linq"/>
+ 
+<h2>Displaying the current web.config</h2>
+<ul>
+    ${ShowElement(Model)}
+</ul>
+
+<macro name="ShowElement" elt="XElement">
+	<li>
+		<strong>${elt.Name}</strong>
+		
+		<span each="var attr in elt.Attributes()" title="${attr.Value}"> ${attr.Name}</span>
+		<ul if="elt.Nodes().Any()">
+			<for each="var node in elt.Nodes()">${ShowNode(node)}</for>
+		</ul>
+	</li>
+</macro> 
+
+<macro name="ShowNode" node="XNode">
+	<test if="node.NodeType == XmlNodeType.Element">
+		${ShowElement(node as XElement)}
+	<else if="node.NodeType == XmlNodeType.CDATA"/>
+		<var cdata="node as XCData"/>
+		CDATA: ${cdata.Value}
+	<else/>
+		${node.ToString()}
+	</test>
+</macro> 
+
+

@@ -1,0 +1,29 @@
+﻿== Replacing entire section with reusable fragment
+--shared/_navigation.spark
+(exists)
+--application.spark
+<ul id="menu">
+	<Navigation/>
+</ul>
+
+== Attributes offer parameters
+--application.spark
+<NavItem1 caption="'Alpha'" action="'Index'" controller="'Home'"/>
+<NavItem1 caption="'Beta'" action="'About'" controller="'Home'"/>
+
+== Inner content as an alternative
+--application.spark
+<NavItem2 action="'Index'" controller="'Home'">Gamma</NavItem2>
+<NavItem2 action="'Index'" controller="'About'">Delta ${1+4} text</NavItem2>
+
+== Similar contept as sidebar example
+--home/index.spark
+<SideItem1 caption="'Tags'">
+One Two Three Four Five Six
+</SideItem1>
+
+== Named sections as an alternative to attributes
+--home/index.spark
+<SideItem1 caption="'Tags'">
+One Two Three Four Five Six
+</SideItem1>

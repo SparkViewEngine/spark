@@ -1,0 +1,20 @@
+﻿
+<content name="title">Home Page</content>
+
+<h2>${ViewData["Message"]}</h2>
+<p>
+    To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+</p>
+
+<SideItem1 caption="'Tags'">
+One Two Three Four Five Six
+</SideItem1>
+
+<SideItem2>
+<section name="caption">Twitter</section>
+Blah Blah Blah Blah Blah Blah 
+</SideItem2>
+
+<SideItem2>
+Twas brillig
+</SideItem2>

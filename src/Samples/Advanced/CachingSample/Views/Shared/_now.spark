@@ -1,0 +1,1 @@
+﻿<p>DateTime.UtcNow: ${DateTime.UtcNow.ToString('s')}</p>

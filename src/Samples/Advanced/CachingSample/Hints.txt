@@ -1,0 +1,59 @@
+﻿== caching invariant data
+
+--product/index.spark
+<cache>
+...
+<now/>
+</cache>
+<now/>
+
+
+==sliding expiration
+
+--product/index.spark
+<cache expires="TimeSpan.FromSeconds(5)">
+
+
+==absolute expiration
+
+--product/index.spark
+<cache expires="DateTime.UtcNow.AddSeconds(5)">
+<p>Should expire at ${DateTime.UtcNow.AddSeconds(5).ToString("s")}</p>
+
+
+==keyed cache material
+
+--product/show.spark
+<cache key="Model.Id">
+<now/>
+</cache>
+<now/>
+
+
+==lazy loading
+
+--ProductController.cs
+        public ActionResult Show(int id) {
+            var productHolder = ValueHolder.For(id, () => {
+                Response.Write("FETCHING PRODUCT #" + id);
+                return _products.SingleOrDefault(p => p.Id == id);
+            });
+            return View(productHolder);
+        }
+
+--product/show.spark
+<viewdata model="ValueHolder[[int, Product]]"/>
+
+<cache key="Model.Key">
+<content name="title">${Model.Value.Name}</content>
+
+<h2>Viewing ${Model.Value.Name}</h2>
+<p>Product ID #${Model.Value.Id}</p>
+<p>Name ${Model.Value.Name}</p>
+<p>Price ${Model.Value.Price}</p>
+<p>${Html.ActionLink("Return to list", "Index")}</p>
+
+<now/>
+</cache>
+<now/>
+

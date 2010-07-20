@@ -1,0 +1,15 @@
+﻿
+<viewdata model="IEnumerable[[Product]]"/>
+
+<content name="title">Products</content>
+
+<cache expires="DateTime.UtcNow.AddSeconds(3)">
+<h2>Products</h2>
+<ul>
+	<li each="var product in Model">${Html.ActionLink(product.Name, "Show", new { product.Id })}</li>
+</ul>
+
+<now/>
+</cache>
+
+<now/>

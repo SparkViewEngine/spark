@@ -1,0 +1,7 @@
+﻿
+<viewdata model="System.Web.Mvc.HandleErrorInfo"/>
+<content name="title">Error</content>
+
+<h2>
+    Sorry, an error occurred while processing your request.
+</h2>
