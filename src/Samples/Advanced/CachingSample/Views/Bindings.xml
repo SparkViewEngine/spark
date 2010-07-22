@@ -1,0 +1,32 @@
+﻿<bindings>
+  <element name="ValidationSummary">Html.ValidationSummary(@ExcludePropertyErrors, @Message)</element>
+  <element name="ValidationSummary">Html.ValidationSummary("child::*")</element>
+  <element name="ValidationSummary">Html.ValidationSummary(@Message)</element>
+
+  <element name="ValidationMessage">Html.ValidationMessageFor(m => m.@For, "child::*", new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+  <element name="ValidationMessage">Html.ValidationMessageFor(m => m.@For, "@Message", new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+  <element name="ValidationMessage">Html.ValidationMessageFor(m => m.@For, "", new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+
+  <element name="Label">Html.LabelFor(m => m.@For)</element>
+  <element name="Password">Html.PasswordFor(m => m.@For, new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+  <element name="TextBox">Html.TextBoxFor(m => m.@For, new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+  <element name="CheckBox">Html.CheckBoxFor(m => m.@For, new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+
+  <element name="a">Html.ActionLink("child::*", "@action", "@controller", new RouteValueDictionary{{"@route-*"}}, new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+  <element name="a">Html.ActionLink("child::*", "@action", new RouteValueDictionary{{"@route-*"}}, new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+  <element name="a">Html.ActionLink("@text", "@action", "@controller", new RouteValueDictionary{{"@route-*"}}, new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+  <element name="a">Html.ActionLink("@text", "@action", new RouteValueDictionary{{"@route-*"}}, new Dictionary&lt;string,object&gt;{{"@*"}})</element>
+
+  <element name="Form">
+    <start># using (Html.BeginForm("@action", "@controller", new RouteValueDictionary{{"@route-*"}}, FormMethod.@method, new Dictionary&lt;string,object&gt;{{"@*"}} )) {</start>
+    <end># }</end>
+  </element>
+  <element name="Form">
+    <start># using (Html.BeginForm("@action", "@controller", new RouteValueDictionary{{"@route-*"}}, FormMethod.Post, new Dictionary&lt;string,object&gt;{{"@*"}} )) {</start>
+  <end># }</end>
+  </element>
+  <element name="Form">
+    <start># using (Html.BeginForm(ViewContext.RouteData.GetRequiredString("action"),ViewContext.RouteData.GetRequiredString("controller"), new RouteValueDictionary{{"@route-*"}}, FormMethod.Post, new Dictionary&lt;string,object&gt;{{"@*"}} )) {</start>
+  <end># }</end>
+  </element>
+</bindings>

@@ -1,6 +1,8 @@
 ﻿
 <use namespace="System"/>
 <use namespace="System.Collections.Generic"/>
+<use namespace="System.Web.Mvc"/>
 <use namespace="System.Web.Mvc.Html"/>
 <use namespace="Spark"/>
 <use namespace="CachingSample.Models"/>
+<use namespace="System.Web.Routing"/>

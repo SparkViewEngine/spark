@@ -89,6 +89,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Hints.txt" />
+    <Content Include="Views\Bindings.xml" />
     <Content Include="Web.config" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\jquery-1.4.1.js" />
@@ -108,6 +109,7 @@
     <None Include="Views\Account\ChangePassword.spark" />
     <None Include="Views\Account\ChangePasswordSuccess.spark" />
     <None Include="Views\Account\LogOn.spark" />
+    <None Include="Views\Account\LogOnBefore.spark" />
     <None Include="Views\Account\Register.spark" />
     <None Include="Views\Home\About.spark" />
     <None Include="Views\Home\Index.spark">

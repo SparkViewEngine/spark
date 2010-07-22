@@ -1,38 +1,36 @@
-﻿
-<viewdata model="CachingSample.Models.LogOnModel"/>
+﻿<viewdata model="CachingSample.Models.LogOnModel"/>
 <content name="title">Log On</content>
 
 <h2>Log On</h2>
 <p>
-    Please enter your username and password. ${Html.ActionLink("Register", "Register")} if you don't have an account.
+    Please enter your username and password. <a action="Register">Register</a> if you don't have an account.
 </p>
 
-# using (Html.BeginForm())
-# {
-    ${Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")}
+<Form route-Spark="Amazing" style="background:#ccf;">
+    <ValidationSummary Message="'Login was unsuccessful. Please correct the errors and try again.'" />
     <div>
         <fieldset>
             <legend>Account Information</legend>
             
             <div class="editor-label">
-                ${Html.LabelFor(m => m.UserName)}
+                <Label For="UserName" />
             </div>
             <div class="editor-field">
-                ${Html.TextBoxFor(m => m.UserName)}
-                ${Html.ValidationMessageFor(m => m.UserName)}
+                <TextBox For="UserName" />
+                <ValidationMessage For="UserName" />
             </div>
             
             <div class="editor-label">
-                ${Html.LabelFor(m => m.Password)}
+                <Label For="Password" />
             </div>
             <div class="editor-field">
-                ${Html.PasswordFor(m => m.Password)}
-                ${Html.ValidationMessageFor(m => m.Password)}
+                <Password For="Password" />
+                <ValidationMessage For="Password" />
             </div>
             
             <div class="editor-label">
-                ${Html.CheckBoxFor(m => m.RememberMe)}
-                ${Html.LabelFor(m => m.RememberMe)}
+                <CheckBox For="RememberMe" />
+                <Label For="RememberMe" />
             </div>
             
             <p>
@@ -40,4 +38,4 @@
             </p>
         </fieldset>
     </div>
-# }
+</Form>
