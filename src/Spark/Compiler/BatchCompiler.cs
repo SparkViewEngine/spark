@@ -48,23 +48,30 @@ namespace Spark.Compiler
             }
             else
             {
-                if (!language.Equals("c#", StringComparison.OrdinalIgnoreCase) && 
-                    !language.Equals("cs", StringComparison.OrdinalIgnoreCase) && 
+                if (!language.Equals("c#", StringComparison.OrdinalIgnoreCase) &&
+                    !language.Equals("cs", StringComparison.OrdinalIgnoreCase) &&
                     !language.Equals("csharp", StringComparison.OrdinalIgnoreCase))
                 {
                     throw new CompilerException(
-                        string.Format("When running the {0} in an AppDomain without a system.codedom config section only the csharp language is supported. This happens if you are precompiling your views.", 
-                            typeof(BatchCompiler).FullName));
+                        string.Format(
+                            "When running the {0} in an AppDomain without a system.codedom config section only the csharp language is supported. This happens if you are precompiling your views.",
+                            typeof (BatchCompiler).FullName));
                 }
 
-                var providerOptions = new Dictionary<string, string> { { "CompilerVersion", "v3.5" } };
+                // Compile using .NET 3.5 C# compiler (that supports C# 3) for CLR 2, and below,
+                // and compile using .NET 4 C# compiler (that supports C# 4) for CLR 4, and above.
+                // Note: When precompiling views using v2.0.50727\installutil.exe then C# 3 is used, and 
+                //       when using ..\v4.0.30319\istallutil.exe then C# 4 is used.
+                var clrVersion = Environment.Version;
+                string compilerVersion = "v3.5";
+                if (clrVersion.Major >= 4)
+                {
+                    compilerVersion = "v4.0";
+                }
+
+                var providerOptions = new Dictionary<string, string> { { "CompilerVersion", compilerVersion } };
                 codeProvider = new CSharpCodeProvider(providerOptions);
                 compilerParameters = new CompilerParameters();
-
-				// Note: Could make a map of compiler info objects (to support vb) and rewrite the following uncommented code.
-                //compilerParameters = new CompilerParameters { WarningLevel = 4 };
-                //var compilerInfo = GetCompilerInfoWithoutReadingConfig(compilerParameters);
-                //codeProvider = CreateProviderForCSharpV3(compilerInfo);
             }
 
             var extension = codeProvider.FileExtension;
@@ -167,52 +174,5 @@ namespace Spark.Compiler
 
             return compilerResults.CompiledAssembly;
         }
-
-        //private static CodeDomProvider CreateProviderForCSharpV3(CompilerInfo compilerInfo)
-        //{
-        //    CodeDomProvider codeProvider;
-        //    var providerOptions = new Dictionary<string, string> { { "CompilerVersion", "v3.5" } };
-        //    codeProvider = compilerInfo.CreateProvider(providerOptions);
-        //    return codeProvider;
-        //}
-
-        //private static CompilerInfo GetCompilerInfoWithoutReadingConfig(CompilerParameters compilerParameters)
-        //{
-        //    var codeDomProviderTypeName = typeof(CSharpCodeProvider).AssemblyQualifiedName;
-        //    var compilerLanguages = new[] { "c#", "cs", "csharp" };
-        //    var compilerExtensions = new[] { ".cs" };
-        //    var compilerInfo = CompilerInfoExtensions.CreateCompilerInfo(compilerParameters, codeDomProviderTypeName, compilerLanguages, compilerExtensions);
-        //    return compilerInfo;
-        //}
     }
-
-    //public static class CompilerInfoExtensions
-    //{
-    //    public static CompilerInfo CreateCompilerInfo(CompilerParameters compilerParams, string codeDomProviderTypeName, 
-    //        string[] compilerLanguages, string[] compilerExtensions)
-    //    {
-    //        var constructor = typeof (CompilerInfo).GetConstructor(
-    //            BindingFlags.NonPublic, null, new[] { typeof (CompilerParameters), typeof (string), typeof (string[]), typeof (string[]) }, null);
-            
-    //        if (constructor == null)
-    //        {
-    //            return null;
-    //        }
-
-    //        return (CompilerInfo) constructor.Invoke(new object[] {compilerParams, codeDomProviderTypeName, compilerLanguages, compilerExtensions});
-    //    }
-
-    //    public static CodeDomProvider CreateProvider(this CompilerInfo compilerInfo, IDictionary<string, string> providerOptions)
-    //    {
-    //        if (providerOptions.Count > 0)
-    //        {
-    //            ConstructorInfo constructor = compilerInfo.CodeDomProviderType.GetConstructor(new [] { typeof(IDictionary<string, string>) });
-    //            if (constructor != null)
-    //            {
-    //                return (CodeDomProvider)constructor.Invoke(new object[] { providerOptions });
-    //            }
-    //        }
-    //        return (CodeDomProvider)Activator.CreateInstance(compilerInfo.CodeDomProviderType);
-    //    }
-    //}
 }
