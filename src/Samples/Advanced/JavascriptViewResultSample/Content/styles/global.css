@@ -1,0 +1,72 @@
+﻿/*------------------------------------------------------------------------------------
+      Global Styles
+    ------------------------------------------------------------------------------------*/
+* { padding: 0; margin: 0; }
+html { background-color: #111; }
+body { font-family: Candara, Corbel, Verdana, Helvetica, Sans-Serif; color: #dddddd; font-size: 13; font-size-adjust: none; font-style: normal; font-variant: normal; font-weight: normal; line-height: 1.231; }
+h1, h2, h3, h4, h5, h6, p, pre, blockquote, label, ul, ol, dl, fieldset, address { margin: 1em 0; }
+/*li, dd { margin-left: 5%; } */
+fieldset { padding: .5em; }
+select option { padding: 0 5px; }
+
+.hide, .print-logo, .close-button { display: none; }
+.left { float: left; }
+.right { float: right; }
+.clear { clear: both; height: 1px; font-size: 1px; line-height: 1px; }
+.wrapper { margin: 0 auto; width: 980px; }
+.center { text-align: center; }
+.disabled { visibility: hidden; }
+a img { border: none; }
+a:link { color: #37f; text-decoration: none; }
+a:visited { color: #7af; text-decoration: none; }
+a:hover { color: #fc6; text-decoration: underline; }
+
+/*------------------------------------------------------------------------------------
+      Temp Styles
+    ------------------------------------------------------------------------------------*/
+.dashed { border: 1px dashed yellow; }
+
+/*------------------------------------------------------------------------------------
+      Page Styles
+    ------------------------------------------------------------------------------------*/
+
+#page { padding: 20px; height: 1200px; }
+
+/*------------------------------------------------------------------------------------
+      Container Styles
+    ------------------------------------------------------------------------------------*/
+.container { margin: 0px; }
+.container-glass { float: left; height: 520px; max-width: 97%; background: url(/Content/images/ContainerGlassFill.png) 0 0 repeat-x; }
+.container-glass-left { float: left; height: 520px; width: 10px; background: url(/Content/images/ContainerGlassCapLeft.png) 0 0 no-repeat; }
+.container-glass-right { float: left; height: 520px; width: 11px; background: url(/Content/images/ContainerGlassCapRight.png) 0 0 no-repeat; }
+.container-header { margin-top: 10px; }
+.container-body { margin-top: 0px; width: 1000px; }
+
+/*------------------------------------------------------------------------------------
+      Box Styles
+    ------------------------------------------------------------------------------------*/
+.box { border: 1px solid white; }
+.box-glass { border: 1px solid #555; margin: 2px; float: left; }
+.box-metal { border: 1px solid #555; background-color: #ccc; margin: 2px; float: left; }
+
+/*------------------------------------------------------------------------------------
+      Gallery Styles
+    ------------------------------------------------------------------------------------*/
+.gallery { clear: both; }
+.gallery li { float: left; list-style-image: none; list-style-position: outside; list-style-type: none; margin: 5px 10px 5px 0; }
+.avatar { height: 50px; width: 50px; float: left; margin: 3px; overflow: hidden; }
+.avatar img { height: 50px; width: 50px; }
+
+/*------------------------------------------------------------------------------------
+      Scrollable Styles
+    ------------------------------------------------------------------------------------*/
+
+div.scrollable { margin-top: 10px; position: relative; overflow: hidden; width: 950px; height: 460px; }
+div.scrollable div.items { width: 20000em; position: absolute; margin-top: 25px; }
+div.scrollable div.items div.col { float: left; width: 241px; }
+
+/*------------------------------------------------------------------------------------
+      Photographer Styles
+    ------------------------------------------------------------------------------------*/
+div.user-summary { width: 220px; margin-bottom: 15px; cursor: pointer; background: url(/Content/images/h300.png) repeat-x scroll 0px -240px; }
+div.user-summary:hover { background-position: 0px -160px; }
