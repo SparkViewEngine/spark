@@ -1,0 +1,56 @@
+﻿
+<content name="title">Register</content>
+<viewdata PasswordLength="int" model="BindingsSample.Models.RegisterModel" />
+
+<h2>Create a New Account</h2>
+<p>
+    Use the form below to create a new account. 
+</p>
+<p>
+    Passwords are required to be a minimum of ${PasswordLength} characters in length.
+</p>
+
+<Form>
+    <ValidationSummary Message="Account creation was unsuccessful. Please correct the errors and try again." ExcludePropertyErrors="true" />
+    <div>
+        <fieldset>
+            <legend>Account Information</legend>
+            
+            <div class="editor-label">
+                <Label For="UserName" />
+            </div>
+            <div class="editor-field">
+                <TextBox For="UserName" />
+                <ValidationMessage For="UserName" />
+            </div>
+            
+            <div class="editor-label">
+                <Label For="Email" />
+            </div>
+            <div class="editor-field">
+                <TextBox For="Email" />
+                <ValidationMessage For="Email" />
+            </div>
+            
+            <div class="editor-label">
+                <Label For="Password" />
+            </div>
+            <div class="editor-field">
+                <Password For="Password" />
+                <ValidationMessage For="Password" />
+            </div>
+            
+            <div class="editor-label">
+                <Label For="ConfirmPassword" />
+            </div>
+            <div class="editor-field">
+                <Password For="ConfirmPassword" />
+                <ValidationMessage For="ConfirmPassword" />
+            </div>
+            
+            <p>
+                <input type="submit" value="Register" />
+            </p>
+        </fieldset>
+    </div>
+</Form>
