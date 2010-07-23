@@ -22,6 +22,13 @@ namespace Spark.Configuration
 {
     public class SparkSectionHandler : ConfigurationSection, ISparkSettings
     {
+        [ConfigurationProperty("xmlns")]
+        public string XmlNamespace
+        {
+            get { return (string)this["xmlns"]; }
+            set { this["xmlns"] = value; }
+        }
+
         [ConfigurationProperty("compilation")]
         public CompilationElement Compilation
         {
