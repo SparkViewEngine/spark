@@ -100,6 +100,15 @@ namespace Spark.Tests.Bindings
 
 
         [Test]
+        public void BindingRefersToAttributeWithUnescapedCode() {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World(@foo)</element></bindings>");
+            _viewFolder.Add("home\\index.spark", @"<p><hello foo=""'one '+(3+4)+' two '+SiteRoot+' three'""/></p><macro name='World' beta='string'>success ${beta}!</macro>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>success one 7 two /TestApp three!</p>"));
+        }
+
+        [Test]
         public void CorrectBindingUsedBasedOnAttributesPresent()
         {
             _viewFolder.Add("bindings.xml", @"<bindings>
@@ -196,6 +205,17 @@ namespace Spark.Tests.Bindings
             Assert.That(contents, Is.EqualTo(@"<p>3world5</p>"));
         }
         
+        [Test]
+        public void ChildReferenceWillSpoolAndProvideContentAsCode() {
+            _viewFolder.Add("bindings.xml", @"<bindings>
+<element name='hello'>'@a' + child::* + '@b'</element>
+</bindings>");
+
+            _viewFolder.Add("home\\index.spark", @"<p><hello a='3' b='5'>(8+7)+""4""${55}</hello></p>");
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>31545</p>"));
+        }
+
         [Test]
         public void ChildReferenceWillNotMatchSelfClosingElements()
         {

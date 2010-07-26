@@ -51,7 +51,10 @@ namespace Spark.Bindings
 
             var anyReference = PrefixReference.Or(NameReference).Or(childReference);
 
-            Literal = Rep1(Ch(ch => true).Unless(anyReference))
+            var escapedLiteral = Ch("[[").Build(hit => '<').Or(Ch("]]").Build(hit => '>'));
+            var plainLiteral = Ch(ch => true).Unless(anyReference).Unless(escapedLiteral);
+
+            Literal = Rep1(escapedLiteral.Or(plainLiteral))
                 .Build(hit => (BindingNode)new BindingLiteral(hit));
 
             Nodes = Rep(anyReference.Or(Literal));
