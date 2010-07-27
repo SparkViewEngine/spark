@@ -1,0 +1,4 @@
+<viewdata stuff=""/>
+<for each="var item in stuff">
+  <p>${item.prop}</p>
+</for>

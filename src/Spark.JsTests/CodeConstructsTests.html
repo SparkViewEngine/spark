@@ -7,6 +7,7 @@
     <script type="text/javascript" src="Generate.ashx/CodeConstructs/_Conditionals"></script>
     <script type="text/javascript" src="Generate.ashx/CodeConstructs/_Iteration"></script>
     <script type="text/javascript" src="Generate.ashx/CodeConstructs/_ForEachAutovariables"></script>
+    <script type="text/javascript" src="Generate.ashx/CodeConstructs/_IterationOfObjects"></script>
 
 </head>
 <body>
@@ -35,6 +36,18 @@
         assertContains("<p class=\"first\">0/3:alpha</p>", contents);
         assertContains("<p>1/3:beta</p>", contents);
         assertContains("<p class=\" last\">2/3:gamma</p>", contents);
+    }
+
+    function testIterationWithArrayPrototype()
+    {
+    	Array.prototype.customFunc = function() { }
+
+    	var contents = Spark.CodeConstructs._IterationOfObjects.RenderView({ stuff: [{ prop: 'alpha' }, { prop: 'beta' }, { prop: 'gamma'}] });
+    	assertContains("<p>alpha</p>", contents);
+    	assertContains("<p>beta</p>", contents);
+    	assertContains("<p>gamma</p>", contents);
+
+    	delete Array.prototype.customFunc;
     }
 
     </script>
