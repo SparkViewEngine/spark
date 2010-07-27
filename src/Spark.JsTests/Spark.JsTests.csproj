@@ -1,4 +1,4 @@
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -145,6 +145,7 @@
     <None Include="Views\CodeConstructs\_ForEachAutovariables.spark" />
     <None Include="Views\CodeConstructs\_Iteration.spark" />
     <None Include="Views\CodeConstructs\_Conditionals.spark" />
+    <None Include="Views\CodeConstructs\_IterationOfObjects.spark" />
     <None Include="Views\Macros\_SimpleMacros.spark" />
     <None Include="Views\OutputContent\_BeforeAfterAndReplace.spark" />
     <None Include="Views\OutputContent\_CaptureContentAsVariable.spark" />
