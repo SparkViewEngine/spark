@@ -177,8 +177,8 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
 
             	// if(typeof(item)!='function') {
 				_source.Append("if(typeof(")
-            		.Append(inspector.VariableName)
-            		.Append(")!='function') {");
+					.Append(inspector.VariableName)
+					.Append(")!='function') {");
 
                 if (autoIsLast.Detected)
                 {
