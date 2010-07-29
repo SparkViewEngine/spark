@@ -59,8 +59,8 @@
 
 	<xs:complexType name="pages">
 		<xs:all>
-			<xs:element name="namespaces" type="namespaces" />
-			<xs:element name="resources" type="resources" />
+			<xs:element minOccurs="0" name="namespaces" type="namespaces" />
+			<xs:element minOccurs="0" name="resources" type="resources" />
 		</xs:all>
 		<xs:attribute use="optional" name="automaticEncoding" type="xs:boolean" />
 		<xs:attribute use="optional" name="pageBaseType" />
