@@ -5,6 +5,8 @@ using System.Text;
 using NUnit.Framework;
 using SparkSense.Parsing;
 using System.IO;
+using Microsoft.VisualStudio.Text;
+using Rhino.Mocks;
 
 namespace SparkSense.Tests.Parsing
 {
@@ -39,6 +41,27 @@ namespace SparkSense.Tests.Parsing
                 contents = reader.ReadToEnd();
 
             Assert.That(contents.Contains("no header by default"));
+        }
+
+        [Test]
+        public void ShouldAllowCacheContentToBeReplaced()
+        {
+            string path = "Shared\\test.spark";
+            string contents = String.Empty;
+            var cache = new CachingViewFolder(ROOT_VIEW_PATH);
+            cache.Add(path);
+            var mockSnapShot = MockRepository.GenerateMock<ITextSnapshot>();
+            string newContent = "This is new content";
+
+            mockSnapShot.Expect(x => x.GetText()).Return(newContent);
+
+            cache.SetViewSource(path, mockSnapShot);
+            var content = cache.GetViewSource(path);
+            using (TextReader reader = new StreamReader(content.OpenViewStream()))
+                contents = reader.ReadToEnd();
+
+            Assert.That(contents.Contains(newContent));
+            mockSnapShot.VerifyAllExpectations();
         }
     }
 }
