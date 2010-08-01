@@ -3,9 +3,10 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text.Editor;
 using NUnit.Framework;
 using Rhino.Mocks;
-using SparkSense.Parsing;
 using SparkSense.StatementCompletion;
 using Microsoft.VisualStudio.Text.Operations;
+using Microsoft.VisualStudio.Text;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace SparkSense.Tests.StatementCompletion
 {
@@ -17,20 +18,7 @@ namespace SparkSense.Tests.StatementCompletion
         public void ShouldThrowIfConfigIsNull()
         {
             new CompletionSessionManager(
-                null, 
-                MockRepository.GenerateStub<IProjectExplorer>(), 
-                MockRepository.GenerateStub<IWpfTextView>(),
-                MockRepository.GenerateStub<ITextStructureNavigator>()
-                );
-        }
-
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void ShouldThrowIfProjectExplorerIsNull()
-        {
-            new CompletionSessionManager(
-                MockRepository.GenerateStub<ICompletionBroker>(), 
-                null, 
+                null,
                 MockRepository.GenerateStub<IWpfTextView>(),
                 MockRepository.GenerateStub<ITextStructureNavigator>()
                 );
@@ -42,7 +30,6 @@ namespace SparkSense.Tests.StatementCompletion
         {
             new CompletionSessionManager(
                 MockRepository.GenerateStub<ICompletionBroker>(),
-                MockRepository.GenerateStub<IProjectExplorer>(),
                 null,
                 MockRepository.GenerateStub<ITextStructureNavigator>()
                 );
@@ -54,10 +41,32 @@ namespace SparkSense.Tests.StatementCompletion
         {
             new CompletionSessionManager(
                 MockRepository.GenerateStub<ICompletionBroker>(),
-                MockRepository.GenerateStub<IProjectExplorer>(),
                 MockRepository.GenerateStub<IWpfTextView>(),
                 null
                 );
         }
+
+        [Test]
+        public void ListenerShouldAttemptToGetAnInstanceOfTheVisualStudioEnvironment()
+        {
+            IServiceProvider _mockServiceProvider;
+            _mockServiceProvider = new MockServiceProvider();
+
+            var _listener = new CompletionListener();
+            _listener.ServiceProvider = _mockServiceProvider;
+            var _mockTextBuffer = MockRepository.GenerateStub<ITextBuffer>();
+            _listener.TryCreateCompletionSource(_mockTextBuffer);
+            Assert.That(((MockServiceProvider)_mockServiceProvider).ServiceTypeName, Is.EqualTo("DTE"));
+        }
+        public class MockServiceProvider : IServiceProvider
+        {
+            public string ServiceTypeName { get; private set; }
+            public object GetService(Type serviceType)
+            {
+                ServiceTypeName = serviceType.Name;
+                return null;
+            }
+        }
+
     }
 }

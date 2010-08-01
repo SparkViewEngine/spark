@@ -150,7 +150,7 @@ namespace SparkSense.Parsing
         private void InitCurrentView()
         {
             _viewLoader = new ViewLoader { ViewFolder = _projectExplorer.GetViewFolder(), SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
-            _viewPath = _projectExplorer.GetCurrentView();
+            _viewPath = _projectExplorer.GetCurrentViewPath();
             InitViewChunks();
         }
 

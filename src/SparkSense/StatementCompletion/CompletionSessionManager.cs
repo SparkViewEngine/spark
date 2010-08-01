@@ -12,22 +12,19 @@ namespace SparkSense.StatementCompletion
     public class CompletionSessionManager
     {
         private ICompletionBroker _completionBroker;
-        private IProjectExplorer _projectExplorer;
-        private bool _scanForNewSession;
         private IWpfTextView _textView;
         private ICompletionSession _sparkOnlySession;
         private ITextStructureNavigator _textNavigator;
         private ITrackingSpan _trackingSpan;
+        private bool _scanForNewSession;
 
-        public CompletionSessionManager(ICompletionBroker broker, IProjectExplorer projectExplorer, IWpfTextView textView, ITextStructureNavigator textNavigator)
+        public CompletionSessionManager(ICompletionBroker broker, IWpfTextView textView, ITextStructureNavigator textNavigator)
         {
-            if (broker == null) throw new ArgumentNullException("broker", "Session Config is null.");
-            if (projectExplorer == null) throw new ArgumentNullException("projectExplorer", "Project Explorer is null.");
+            if (broker == null) throw new ArgumentNullException("broker", "Completion Broker is null.");
             if (textView == null) throw new ArgumentNullException("textView", "Text View is null.");
-            if (textNavigator == null) throw new ArgumentNullException("textNavigator", "textNavigator is null.");
+            if (textNavigator == null) throw new ArgumentNullException("textNavigator", "Text Navigator is null.");
 
             _completionBroker = broker;
-            _projectExplorer = projectExplorer;
             _textView = textView;
             _textNavigator = textNavigator;
         }
@@ -73,8 +70,6 @@ namespace SparkSense.StatementCompletion
 
         private bool IsSparkSyntax(int caretPosition)
         {
-            if (!_projectExplorer.IsCurrentDocumentASparkFile()) return false;
-
             var currentContext = SparkSyntax.ParseContext(_textView.TextBuffer.CurrentSnapshot.GetText(), caretPosition);
             return currentContext != null && currentContext != typeof(TextNode);
         }
@@ -103,11 +98,9 @@ namespace SparkSense.StatementCompletion
         public bool StartCompletionSession()
         {
             if (!TryCreateCompletionSession()) return false;
-            var viewExplorer = new ViewExplorer(_projectExplorer);
             AddCompletionSourceProperties(
                 new Dictionary<object, object> 
                 {
-                    {typeof(IViewExplorer), viewExplorer},
                     {typeof(ITrackingSpan), _trackingSpan}
                 });
 

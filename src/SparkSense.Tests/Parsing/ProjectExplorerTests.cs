@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Syntax;
+using SparkSense.Parsing;
 
 namespace SparkSense.Tests.Parsing
 {
@@ -26,20 +27,19 @@ namespace SparkSense.Tests.Parsing
         [ExpectedException(typeof(ArgumentNullException))]
         public void ShouldThrowIfTheProjectEnvironmentIsNull()
         {
-            new SparkSense.Parsing.ProjectExplorer(null);
+            new ProjectExplorer(null);
         }
 
         [Test] //TODO Rob G , Ignore("This test fails if run without an instance of VS running. It passes if it can attach to the DTE. Need to find a better way of testing this")]
-        public void ShouldBuildAMapOfAllViewsInTheSolution()
+        public void ShouldBuildAMapOfAllViewsInTheCurrentProject()
         {
             Console.WriteLine("This test fails if run without an instance of VS running. It passes if it can attach to the DTE. Need to find a better way of testing this");
             var projectEnvironment = (DTE)Marshal.GetActiveObject("VisualStudio.DTE.10.0");
 
-            var projectExplorer = new SparkSense.Parsing.ProjectExplorer(projectEnvironment);
-            var viewMap = projectExplorer.ViewMap;
+            var projectExplorer = new ProjectExplorer(projectEnvironment);
 
-            Assert.Contains("Shared\\_SharedPartial.spark", viewMap);
-            Assert.Contains("Shared\\Application.spark", viewMap);
+            Assert.That(projectExplorer.HasView("Shared\\_SharedPartial.spark"));
+            Assert.That(projectExplorer.HasView("Shared\\Application.spark"));
         }
     }
 }

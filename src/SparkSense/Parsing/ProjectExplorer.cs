@@ -8,7 +8,7 @@ namespace SparkSense.Parsing
     public class ProjectExplorer : IProjectExplorer
     {
         private DTE _projectEnvironment;
-        private List<string> _viewMap;
+        private CachingViewFolder _projectViewFolder;
 
         public ProjectExplorer(DTE projectEnvironment)
         {
@@ -18,21 +18,21 @@ namespace SparkSense.Parsing
             _projectEnvironment = projectEnvironment;
         }
 
-
-        public List<string> ViewMap
+        private CachingViewFolder ProjectViewFolder
         {
             get
             {
-                if (_viewMap == null)
-                    _viewMap = BuildViewMapFromProjectEnvironment();
-                return _viewMap;
-            }
-        }
+                if (_projectViewFolder == null)
+                {
+                    string activeDocumentPath;
+                    if (!TryGetActiveDocumentPath(out activeDocumentPath))
+                        return _projectViewFolder;
 
-        public bool TryGetActiveDocumentPath(out string activeDocumentPath)
-        {
-            activeDocumentPath = _projectEnvironment.ActiveDocument != null ? _projectEnvironment.ActiveDocument.FullName : string.Empty;
-            return activeDocumentPath != string.Empty;
+                    _projectViewFolder = new CachingViewFolder(GetViewRoot(activeDocumentPath));
+                    BuildViewMapFromProjectEnvironment();
+                }
+                return _projectViewFolder;
+            }
         }
 
         public bool ViewFolderExists()
@@ -43,52 +43,52 @@ namespace SparkSense.Parsing
             int viewsLocationStart = activeDocumentPath.LastIndexOf("Views");
             return viewsLocationStart != -1;
         }
-     
+
         public IViewFolder GetViewFolder()
         {
             string activeDocumentPath;
             if (!TryGetActiveDocumentPath(out activeDocumentPath)) return null;
-            return new FileSystemViewFolder(GetViewRoot());
+
+            return ProjectViewFolder;
         }
 
-        public string GetCurrentView()
+        public string GetCurrentViewPath()
         {
             string activeDocumentPath;
             if (!TryGetActiveDocumentPath(out activeDocumentPath)) return null;
-            return activeDocumentPath.Replace(GetViewRoot(), string.Empty).TrimStart('\\');
+            return activeDocumentPath.Replace(GetViewRoot(activeDocumentPath), string.Empty).TrimStart('\\');
         }
 
-        public bool IsCurrentDocumentASparkFile()
+        public bool HasView(string viewPath)
         {
-            string activeDocumentPath;
-            if (!TryGetActiveDocumentPath(out activeDocumentPath)) return false;
-            return activeDocumentPath.EndsWith(".spark");
+            return ProjectViewFolder.HasView(viewPath);
         }
 
-        private List<string> BuildViewMapFromProjectEnvironment()
+        private bool TryGetActiveDocumentPath(out string activeDocumentPath)
         {
-            var viewMap = new List<string>();
-            Solution solution = (Solution)_projectEnvironment.Solution;
-
-            foreach (Project project in solution.Projects)
-                foreach (ProjectItem projectItem in project.ProjectItems)
-                    ScanProjectItemForViews(projectItem, viewMap);
-
-            return viewMap;
+            activeDocumentPath = _projectEnvironment.ActiveDocument != null ? _projectEnvironment.ActiveDocument.FullName : string.Empty;
+            return !String.IsNullOrEmpty(activeDocumentPath);
         }
 
-        private static void ScanProjectItemForViews(ProjectItem projectItem, List<string> viewMap)
+        private void BuildViewMapFromProjectEnvironment()
+        {
+            var currentProject = _projectEnvironment.ActiveDocument.ProjectItem.ContainingProject;
+            foreach (ProjectItem projectItem in currentProject.ProjectItems)
+                ScanProjectItemForViews(projectItem);
+        }
+
+        private void ScanProjectItemForViews(ProjectItem projectItem)
         {
             if (projectItem.Name.EndsWith(".spark"))
             {
                 string projectItemMap = GetProjectItemMap(projectItem);
                 if (!string.IsNullOrEmpty(projectItemMap))
-                    viewMap.Add(projectItemMap);
+                    ProjectViewFolder.Add(projectItemMap);
             }
 
             if (projectItem.ProjectItems != null)
                 foreach (ProjectItem child in projectItem.ProjectItems)
-                    ScanProjectItemForViews(child, viewMap);
+                    ScanProjectItemForViews(child);
         }
 
         private static string GetProjectItemMap(ProjectItem projectItem)
@@ -103,11 +103,9 @@ namespace SparkSense.Parsing
 
             return foundView;
         }
-        
-        private string GetViewRoot()
+
+        private static string GetViewRoot(string activeDocumentPath)
         {
-            string activeDocumentPath;
-            if (!TryGetActiveDocumentPath(out activeDocumentPath)) return null;
             int viewsLocationStart = activeDocumentPath.LastIndexOf("Views");
             return viewsLocationStart != -1 ? activeDocumentPath.Substring(0, viewsLocationStart + 5) : null;
         }

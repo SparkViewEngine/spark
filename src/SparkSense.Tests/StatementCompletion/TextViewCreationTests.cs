@@ -3,57 +3,43 @@ using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using SparkSense.StatementCompletion;
+using Microsoft.VisualStudio.Utilities;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Operations;
+using Microsoft.VisualStudio.Language.Intellisense;
 
 namespace SparkSense.Tests.StatementCompletion
 {
     [TestFixture]
     public class TextViewCreationTests
     {
-        private ViewCreationListener _listener;
-        private IVsEditorAdaptersFactoryService _mockAdapterFactoryService;
-        private IServiceProvider _mockServiceProvider;
-        private IVsTextView _mockTextView;
-
-        [SetUp]
-        public void Setup()
-        {
-            _listener = new ViewCreationListener();
-            _mockAdapterFactoryService = MockRepository.GenerateMock<IVsEditorAdaptersFactoryService>();
-            _mockServiceProvider = new MockServiceProvider();
-            _mockTextView = MockRepository.GenerateMock<IVsTextView>();
-            _listener.AdaptersFactoryService = _mockAdapterFactoryService;
-            _listener.ServiceProvider = _mockServiceProvider;
-        }
-
         [Test]
         public void ListenerShouldAttemptToGetAnInstanceOfTheWpfTextView()
         {
+            var listener = new ViewCreationListener();
+            var mockAdapterFactoryService = MockRepository.GenerateMock<IVsEditorAdaptersFactoryService>();
+            var mockTextView = MockRepository.GenerateMock<IVsTextView>();
             var mockWpfTextView = MockRepository.GenerateMock<IWpfTextView>();
-            _mockAdapterFactoryService.Expect(x => x.GetWpfTextView(_mockTextView)).Return(mockWpfTextView);
+            var mockTextNav = MockRepository.GenerateStub<ITextStructureNavigatorSelectorService>();
+            var mockProperties = MockRepository.GenerateStub<PropertyCollection>();
+            var mockBuffer = MockRepository.GenerateStub<ITextBuffer>();
+            var mockBroker = MockRepository.GenerateStub<ICompletionBroker>();
+            var mockTextStructureNav = MockRepository.GenerateStub<ITextStructureNavigator>();
 
-            _listener.VsTextViewCreated(_mockTextView);
+            listener.AdaptersFactoryService = mockAdapterFactoryService;
+            listener.TextNavigator = mockTextNav;
+            listener.CompletionBroker = mockBroker;
+            mockAdapterFactoryService.Expect(x => x.GetWpfTextView(mockTextView)).Return(mockWpfTextView);
+            mockWpfTextView.Stub(x => x.Properties).Return(mockProperties);
+            mockWpfTextView.Stub(x => x.TextBuffer).Return(mockBuffer);
+            mockTextNav.Stub(x => x.GetTextStructureNavigator(mockBuffer)).Return(mockTextStructureNav);
 
-            _mockAdapterFactoryService.VerifyAllExpectations();
+            listener.VsTextViewCreated(mockTextView);
+
+            mockAdapterFactoryService.VerifyAllExpectations();
         }
 
-        [Test]
-        public void ListenerShouldAttemptToGetAnInstanceOfTheVisualStudioEnvironment()
-        {
-            _listener.VsTextViewCreated(_mockTextView);
-            Assert.That(((MockServiceProvider)_mockServiceProvider).ServiceTypeName, Is.EqualTo("DTE"));
-        }
-
-        public class MockServiceProvider : IServiceProvider
-        {
-            public string ServiceTypeName { get; private set; }
-            public object GetService(Type serviceType)
-            {
-                ServiceTypeName = serviceType.Name;
-                return null;
-            }
-        }
     }
 }

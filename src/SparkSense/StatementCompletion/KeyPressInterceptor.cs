@@ -15,7 +15,7 @@ namespace SparkSense.StatementCompletion
         {
             _textViewAdapter = createdView.TextViewAdapter;
             var textNavigator = createdView.TextNavigator.GetTextStructureNavigator(createdView.TextView.TextBuffer);
-            _sessionManager = new CompletionSessionManager(createdView.CompletionBroker, createdView.ProjectExplorer, createdView.TextView, textNavigator);
+            _sessionManager = new CompletionSessionManager(createdView.CompletionBroker, createdView.TextView, textNavigator);
 
             TryChainTheNextCommand();
         }

@@ -77,7 +77,7 @@ namespace SparkSense.StatementCompletion
                 return true;
             }
             return false;
-        }
+        } 
 
         private static List<Completion> GetCombinedSortedList(CompletionSet sparkCompletions, CompletionSet allCompletionsSet)
         {

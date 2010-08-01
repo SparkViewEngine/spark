@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsing\CachingViewFolderTests.cs" />
     <Compile Include="Parsing\ParseContextChunkTests.cs" />
     <Compile Include="Parsing\ParseContextNodeTests.cs" />
     <Compile Include="Parsing\ParseMultipleNodeTests.cs" />

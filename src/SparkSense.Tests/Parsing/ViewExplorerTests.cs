@@ -35,7 +35,7 @@ namespace SparkSense.Tests.Parsing
             var viewFolder = new InMemoryViewFolder { { filePath, fileContent } };
 
             _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
-            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return(filePath);
+            _mockProjectExplorer.Expect(x => x.GetCurrentViewPath()).Return(filePath);
 
             var viewExplorer = new ViewExplorer(_mockProjectExplorer);
             IList<string> vars = viewExplorer.GetLocalVariables();
@@ -54,7 +54,7 @@ namespace SparkSense.Tests.Parsing
             var viewFolder = new InMemoryViewFolder { { filePath, fileContent } };
 
             _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
-            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return(filePath);
+            _mockProjectExplorer.Expect(x => x.GetCurrentViewPath()).Return(filePath);
 
             var viewExplorer = new ViewExplorer(_mockProjectExplorer);
             IList<string> macros = viewExplorer.GetLocalMacros();
@@ -72,7 +72,7 @@ namespace SparkSense.Tests.Parsing
             var viewFolder = new InMemoryViewFolder { { filePath, fileContent } };
 
             _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
-            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return(filePath);
+            _mockProjectExplorer.Expect(x => x.GetCurrentViewPath()).Return(filePath);
 
             var viewExplorer = new ViewExplorer(_mockProjectExplorer);
             IList<string> macroParams = viewExplorer.GetMacroParameters("Macro1");
@@ -97,13 +97,13 @@ namespace SparkSense.Tests.Parsing
             };
 
             _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
-            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return("Home\\index.spark");
+            _mockProjectExplorer.Expect(x => x.GetCurrentViewPath()).Return("Home\\index.spark");
 
             var homeExplorer = new ViewExplorer(_mockProjectExplorer);
             var homePartials = homeExplorer.GetRelatedPartials();
 
             _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
-            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return("Other\\index.spark");
+            _mockProjectExplorer.Expect(x => x.GetCurrentViewPath()).Return("Other\\index.spark");
 
             var otherExplorer = new ViewExplorer(_mockProjectExplorer);
             var otherPartials = otherExplorer.GetRelatedPartials();
@@ -128,7 +128,7 @@ namespace SparkSense.Tests.Parsing
             };
 
             _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
-            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return("Home\\index.spark");
+            _mockProjectExplorer.Expect(x => x.GetCurrentViewPath()).Return("Home\\index.spark");
 
             var homeExplorer = new ViewExplorer(_mockProjectExplorer);
             var homeParameters = homeExplorer.GetPossiblePartialDefaults("HomePartial");
@@ -156,7 +156,7 @@ namespace SparkSense.Tests.Parsing
             };
 
             _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
-            _mockProjectExplorer.Expect(x => x.GetCurrentView()).Return("Home\\index.spark");
+            _mockProjectExplorer.Expect(x => x.GetCurrentViewPath()).Return("Home\\index.spark");
 
             var viewExplorer = new ViewExplorer(_mockProjectExplorer);
             var possibleMasters = viewExplorer.GetPossibleMasterLayouts().ToList();

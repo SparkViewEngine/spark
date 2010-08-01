@@ -26,7 +26,7 @@ namespace SparkSense.StatementCompletion
         public ICompletionSource TryCreateCompletionSource(ITextBuffer textBuffer)
         {
             var projectExplorer =  GetFromVsEnvironment();
-            return new CompletionSource(textBuffer, projectExplorer);
+            return projectExplorer!= null ? new CompletionSource(textBuffer, projectExplorer) : null;
         }
 
         #endregion

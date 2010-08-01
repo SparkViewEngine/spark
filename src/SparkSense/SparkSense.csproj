@@ -107,6 +107,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsing\CachingViewFolder.cs" />
     <Compile Include="Parsing\Constants.cs" />
     <Compile Include="Parsing\IProjectExplorer.cs" />
     <Compile Include="Parsing\IViewExplorer.cs" />
@@ -184,9 +185,6 @@
     <Content Include="license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="lightning.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SparkIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
