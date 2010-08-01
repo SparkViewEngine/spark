@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using EnvDTE;
 using Spark.FileSystem;
+using Microsoft.VisualStudio.Text;
 
 namespace SparkSense.Parsing
 {
@@ -62,6 +63,11 @@ namespace SparkSense.Parsing
         public bool HasView(string viewPath)
         {
             return ProjectViewFolder.HasView(viewPath);
+        }
+
+        public void SetViewContent(string viewPath, ITextSnapshot currentSnapshot)
+        {
+            ProjectViewFolder.SetViewSource(viewPath, currentSnapshot);
         }
 
         private bool TryGetActiveDocumentPath(out string activeDocumentPath)

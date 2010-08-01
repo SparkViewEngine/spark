@@ -1,6 +1,7 @@
 using Spark.FileSystem;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.VisualStudio.Text;
 
 namespace SparkSense.Parsing
 {
@@ -23,6 +24,11 @@ namespace SparkSense.Parsing
                 LoadFromDisk(path);
             }
             return _cache.GetViewSource(path);
+        }
+
+        public void SetViewSource(string path, ITextSnapshot currentSnapshot)
+        {
+            _cache.Set(path, currentSnapshot.GetText());
         }
 
         public IList<string> ListViews(string path)
