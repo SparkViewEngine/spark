@@ -90,6 +90,12 @@ namespace Spark.Parser
             return newEntry;
         }
 
+        public void EvictEntry(string referencePath)
+        {
+            if (_entries.ContainsKey(referencePath))
+                _entries.Remove(referencePath);
+        }
+
         public virtual bool IsCurrent()
         {
             // The view is current if all entries' last modified value is the

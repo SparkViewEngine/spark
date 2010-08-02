@@ -118,7 +118,7 @@ namespace SparkSense.Parsing
 
         public IEnumerable<T> GetViewChunks<T>()
         {
-            var chunks = ViewChunks.Where(chunk => chunk is T).Cast<T>();
+            var chunks = _viewLoader.Load(_viewPath).Where(chunk => chunk is T).Cast<T>();
             return chunks;
         }
 
@@ -147,6 +147,11 @@ namespace SparkSense.Parsing
             return macroParams;
         }
 
+        public void InvalidateView(string viewPath, string newContent)
+        {
+            _projectExplorer.SetViewContent(viewPath, newContent);
+            _viewLoader.EvictEntry(viewPath);
+        }
         private void InitCurrentView()
         {
             _viewLoader = new ViewLoader { ViewFolder = _projectExplorer.GetViewFolder(), SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };

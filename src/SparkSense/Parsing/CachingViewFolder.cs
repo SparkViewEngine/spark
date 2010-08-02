@@ -1,7 +1,6 @@
 using Spark.FileSystem;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.VisualStudio.Text;
 
 namespace SparkSense.Parsing
 {
@@ -9,8 +8,6 @@ namespace SparkSense.Parsing
     {
         private FileSystemViewFolder _disk;
         private InMemoryViewFolder _cache;
-
-        // TODO: Rob G evict cache entry when file on disk changes
 
         public CachingViewFolder(string basePath)
         {
@@ -26,9 +23,9 @@ namespace SparkSense.Parsing
             return _cache.GetViewSource(path);
         }
 
-        public void SetViewSource(string path, ITextSnapshot currentSnapshot)
+        public void SetViewSource(string path, string content)
         {
-            _cache.Set(path, currentSnapshot.GetText());
+            _cache.Set(path, content);
         }
 
         public IList<string> ListViews(string path)

@@ -113,7 +113,9 @@
     <None Include="SparkSense.Tests.Views\Shared\Application.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="SparkSense.Tests.Views\Shared\test.spark" />
+    <None Include="SparkSense.Tests.Views\Shared\test.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="SparkSense.Tests.Views\Shared\_SharedPartial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

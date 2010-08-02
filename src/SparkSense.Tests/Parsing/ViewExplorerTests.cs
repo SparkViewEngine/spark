@@ -5,12 +5,14 @@ using NUnit.Framework.SyntaxHelpers;
 using Spark.FileSystem;
 using SparkSense.Parsing;
 using Rhino.Mocks;
+using System.IO;
 
 namespace SparkSense.Tests.Parsing
 {
     [TestFixture]
     public class ViewExplorerTests
     {
+        private const string ROOT_VIEW_PATH = "SparkSense.Tests.Views";
         private IProjectExplorer _mockProjectExplorer;
 
         [SetUp]
@@ -165,6 +167,29 @@ namespace SparkSense.Tests.Parsing
             Assert.Contains("Application", possibleMasters);
             Assert.Contains("Home", possibleMasters);
             Assert.Contains("Other", possibleMasters);
+        }
+
+        [Test]
+        public void ShouldBeAbleToEvictViewChunksWhenChangedInMemory()
+        {
+            string key = "Shared\\test.spark";
+            string content = "<var x='5'/>";
+            var viewFolder = new CachingViewFolder(Path.GetFullPath(ROOT_VIEW_PATH));
+
+            _mockProjectExplorer.Expect(x => x.GetViewFolder()).Return(viewFolder);
+            _mockProjectExplorer.Expect(x => x.GetCurrentViewPath()).Return(key);
+
+            var viewExplorer = new ViewExplorer(_mockProjectExplorer);
+            var localVars = viewExplorer.GetLocalVariables();
+            Assert.That(localVars.Count, Is.EqualTo(5));
+
+            content += "<var y='25' />";
+            _mockProjectExplorer.Expect(x => x.SetViewContent(key, content))
+                .WhenCalled(x => viewFolder.SetViewSource(key, content));
+
+            viewExplorer.InvalidateView(key, content);
+            localVars = viewExplorer.GetLocalVariables();
+            Assert.That(localVars.Count, Is.EqualTo(2));
         }
     }
 }

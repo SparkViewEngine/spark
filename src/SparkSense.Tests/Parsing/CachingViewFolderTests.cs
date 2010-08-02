@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using SparkSense.Parsing;
 using System.IO;
-using Microsoft.VisualStudio.Text;
-using Rhino.Mocks;
 
 namespace SparkSense.Tests.Parsing
 {
@@ -50,18 +45,14 @@ namespace SparkSense.Tests.Parsing
             string contents = String.Empty;
             var cache = new CachingViewFolder(ROOT_VIEW_PATH);
             cache.Add(path);
-            var mockSnapShot = MockRepository.GenerateMock<ITextSnapshot>();
             string newContent = "This is new content";
 
-            mockSnapShot.Expect(x => x.GetText()).Return(newContent);
-
-            cache.SetViewSource(path, mockSnapShot);
+            cache.SetViewSource(path, newContent);
             var content = cache.GetViewSource(path);
             using (TextReader reader = new StreamReader(content.OpenViewStream()))
                 contents = reader.ReadToEnd();
 
             Assert.That(contents.Contains(newContent));
-            mockSnapShot.VerifyAllExpectations();
         }
     }
 }

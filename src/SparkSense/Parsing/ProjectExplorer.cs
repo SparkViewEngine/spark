@@ -26,10 +26,9 @@ namespace SparkSense.Parsing
                 if (_projectViewFolder == null)
                 {
                     string activeDocumentPath;
-                    if (!TryGetActiveDocumentPath(out activeDocumentPath))
-                        return _projectViewFolder;
+                    if (!TryGetActiveDocumentPath(out activeDocumentPath)) return _projectViewFolder;
 
-                    _projectViewFolder = new CachingViewFolder(GetViewRoot(activeDocumentPath));
+                    _projectViewFolder = new CachingViewFolder(GetViewRoot(activeDocumentPath) ?? string.Empty);
                     BuildViewMapFromProjectEnvironment();
                 }
                 return _projectViewFolder;
@@ -65,9 +64,9 @@ namespace SparkSense.Parsing
             return ProjectViewFolder.HasView(viewPath);
         }
 
-        public void SetViewContent(string viewPath, ITextSnapshot currentSnapshot)
+        public void SetViewContent(string viewPath, string content)
         {
-            ProjectViewFolder.SetViewSource(viewPath, currentSnapshot);
+            ProjectViewFolder.SetViewSource(viewPath, content);
         }
 
         private bool TryGetActiveDocumentPath(out string activeDocumentPath)
