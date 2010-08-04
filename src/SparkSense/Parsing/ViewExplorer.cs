@@ -15,7 +15,6 @@ namespace SparkSense.Parsing
         private IProjectExplorer _projectExplorer;
         private ViewLoader _viewLoader;
         private string _viewPath;
-        private IList<Chunk> _viewChunks;
 
         public ViewExplorer(IProjectExplorer projectExplorer)
         {
@@ -26,42 +25,6 @@ namespace SparkSense.Parsing
             InitCurrentView();
         }
 
-        // TODO: Rob G Add this back in once I've got the project explorer reading from memory instead of disk
-        //void TextBuffer_Changed(object sender, TextContentChangedEventArgs e)
-        //{
-        //    if (e.After != _textBuffer.CurrentSnapshot)
-        //        return;
-        //    InitCurrentView();
-        //}
-
-        public IList<Chunk> ViewChunks
-        {
-            get
-            {
-                try
-                {
-                    if (_viewChunks == null)
-                    {
-                        _viewChunks = _viewLoader != null && _viewPath != null ? _viewLoader.Load(_viewPath) : new List<Chunk>();
-                    }
-                }
-                catch (FileNotFoundException fileNotFound)
-                {
-                    Debug.WriteLine(fileNotFound.Message);
-                    // TODO: Rob G : These are partials/include files being referenced from disk when they don't yet exist. 
-                    // Highly likely to occur when writing new code, but the Spark Compiler complains of course.
-                    // Need to add this to sqigglies notification later but for now just swallow the exceptions.
-                    _viewChunks = new List<Chunk>();
-                }
-                return _viewChunks;
-            }
-        }
-
-        public IEnumerable<IList<Chunk>> AllChunks
-        {
-            get { return _viewLoader != null ? _viewLoader.GetEverythingLoaded() : new List<IList<Chunk>>(); }
-        }
-
         public IList<string> GetRelatedPartials()
         {
             return _viewLoader.FindPartialFiles(_viewPath);
@@ -70,13 +33,10 @@ namespace SparkSense.Parsing
         public IList<string> GetGlobalVariables()
         {
             var globalVariables = new List<string>();
-            var chunkLists = _viewLoader.GetEverythingLoaded();
 
-            chunkLists.ToList().ForEach(list =>
-            {
-                var globals = list.Where(chunk => chunk is GlobalVariableChunk);
-                globals.ToList().ForEach(globalVar => globalVariables.Add(((GlobalVariableChunk)globalVar).Name));
-            });
+            GetAllChunks<GlobalVariableChunk>()
+                .ToList()
+                .ForEach(globalVar => globalVariables.Add(globalVar.Name));
 
             return globalVariables;
         }
@@ -106,7 +66,7 @@ namespace SparkSense.Parsing
         public IList<string> GetPossiblePartialDefaults(string partialName)
         {
             var partialDefaults = new List<string>();
-            var scopeChunks = ViewChunks.Where(c => c is ScopeChunk);
+            var scopeChunks = GetViewChunks<ScopeChunk>();
             var renderPartialChunks = scopeChunks.SelectMany(sc => ((ScopeChunk)sc).Body).Where(c => c is RenderPartialChunk);
             var partialChunk = renderPartialChunks.Where(pc => ((RenderPartialChunk)pc).Name == String.Format("_{0}", partialName)).FirstOrDefault() as RenderPartialChunk;
             if (partialChunk == null) return partialDefaults;
@@ -114,12 +74,6 @@ namespace SparkSense.Parsing
             var paramenters = partialChunk.FileContext.Contents.Where(c => c is DefaultVariableChunk);
             paramenters.ToList().ForEach(p => partialDefaults.Add(((DefaultVariableChunk)p).Name));
             return partialDefaults;
-        }
-
-        public IEnumerable<T> GetViewChunks<T>()
-        {
-            var chunks = _viewLoader.Load(_viewPath).Where(chunk => chunk is T).Cast<T>();
-            return chunks;
         }
 
         public IList<string> GetContentNames()
@@ -141,7 +95,7 @@ namespace SparkSense.Parsing
         public IList<string> GetMacroParameters(string macroName)
         {
             var macroParams = new List<string>();
-            var macro = ViewChunks.Where(chunk => chunk is MacroChunk && ((MacroChunk)chunk).Name == macroName).FirstOrDefault();
+            var macro = GetViewChunks<MacroChunk>().Where(chunk => chunk.Name == macroName).FirstOrDefault();
             if (macro == null) return macroParams;
             ((MacroChunk)macro).Parameters.ToList().ForEach(p => macroParams.Add(p.Name));
             return macroParams;
@@ -152,6 +106,7 @@ namespace SparkSense.Parsing
             _projectExplorer.SetViewContent(viewPath, newContent);
             _viewLoader.EvictEntry(viewPath);
         }
+
         private void InitCurrentView()
         {
             _viewLoader = new ViewLoader { ViewFolder = _projectExplorer.GetViewFolder(), SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
@@ -159,9 +114,21 @@ namespace SparkSense.Parsing
             InitViewChunks();
         }
 
+        private IEnumerable<T> GetViewChunks<T>()
+        {
+            var chunks = 
+                _viewLoader.Load(_viewPath)
+                .Where(chunk => chunk is T).Cast<T>();
+            return chunks;
+        }
+
         private IEnumerable<T> GetAllChunks<T>()
         {
-            var allChunks = AllChunks.SelectMany(list => list).Where(chunk => chunk is T).Cast<T>();
+            _viewLoader.Load(_viewPath);
+            var allChunks = 
+                _viewLoader.GetEverythingLoaded()
+                .SelectMany(list => list)
+                .Where(chunk => chunk is T).Cast<T>();
             return allChunks;
         }
 

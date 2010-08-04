@@ -15,12 +15,22 @@ namespace SparkSense.StatementCompletion
         private IProjectExplorer _projectExplorer;
         private IViewExplorer _viewExplorer;
         private ITrackingSpan _trackingSpan;
+        private string _currentViewPath;
 
         public CompletionSource(ITextBuffer textBuffer, IProjectExplorer projectExplorer)
         {
             _textBuffer = textBuffer;
             _projectExplorer = projectExplorer;
             _viewExplorer = new ViewExplorer(_projectExplorer);
+            _currentViewPath = _projectExplorer.GetCurrentViewPath();
+            _textBuffer.Changed += TextBuffer_Changed;
+        }
+
+        void TextBuffer_Changed(object sender, TextContentChangedEventArgs e)
+        {
+            if (e.After != _textBuffer.CurrentSnapshot)
+                return;
+            _viewExplorer.InvalidateView(_currentViewPath, _textBuffer.CurrentSnapshot.GetText());
         }
         
         #region ICompletionSource Members
