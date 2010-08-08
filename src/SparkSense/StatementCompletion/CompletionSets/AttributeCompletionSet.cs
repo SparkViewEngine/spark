@@ -65,6 +65,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
 
         private static void RemoveAttributesAlreadyUsed(List<Completion> attributesForNode)
         {
+            if (!(CurrentNode is ElementNode)) return;
             foreach (var attribute in ((ElementNode)CurrentNode).Attributes)
                 attributesForNode.RemoveAll(c => c.DisplayText == attribute.Name);
         }
@@ -193,7 +194,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
         private IEnumerable<Completion> GetPossiblePartialDefaults()
         {
             var possibleDefaults = new List<Completion>();
-            if (_viewExplorer == null) return possibleDefaults;
+            if (_viewExplorer == null || !(CurrentNode is ElementNode)) return possibleDefaults;
 
             var possiblePartial = ((ElementNode)CurrentNode).Name;
             if (!_viewExplorer.GetRelatedPartials().Contains(possiblePartial)) return possibleDefaults;

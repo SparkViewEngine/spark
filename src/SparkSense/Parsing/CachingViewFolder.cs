@@ -30,7 +30,7 @@ namespace SparkSense.Parsing
 
         public IList<string> ListViews(string path)
         {
-            return _cache.ListViews(path);
+            return _disk.ListViews(path);
         }
 
         public bool HasView(string path)

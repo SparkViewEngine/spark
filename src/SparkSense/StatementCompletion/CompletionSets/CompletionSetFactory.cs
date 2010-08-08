@@ -29,7 +29,17 @@ namespace SparkSense.StatementCompletion.CompletionSets
         }
         public override IList<Completion> Completions
         {
-            get { return GetCompletionSetForNodeAndContext(); }
+            get
+            {
+                //TODO: Rob G This is a general catch all trap because if something goes wrong during the Beta.                // We don't was Visual Studio to explode, but rather just that intellisense stops working for                 // this particular key press - it'll try again next time. The Beta will drive out most syntax issues.                try
+                {
+                    return GetCompletionSetForNodeAndContext();
+                }
+                catch
+                {
+                    return new List<Completion>();
+                }
+            }
         }
 
         public static CompletionSet Create<T>(SnapshotPoint triggerPoint, ITrackingSpan trackingSpan, IViewExplorer viewExplorer) where T : CompletionSetFactory, new()

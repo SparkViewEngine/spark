@@ -148,7 +148,8 @@ namespace SparkSense.Parsing
         private static int GetLastEquals(string startToCaret)
         {
             var lastEquals = startToCaret.LastIndexOf(Constants.EQUALS.ToString() + Constants.DOUBLE_QUOTE.ToString());
-            return lastEquals == -1 ? startToCaret.LastIndexOf(Constants.EQUALS.ToString() + Constants.SINGLE_QUOTE.ToString()) : lastEquals;
+            lastEquals = lastEquals == -1 ? startToCaret.LastIndexOf(Constants.EQUALS.ToString() + Constants.SINGLE_QUOTE.ToString()) : lastEquals;
+            return lastEquals == -1 ? startToCaret.LastIndexOf(Constants.EQUALS.ToString()) : lastEquals;
         }
 
         private static bool IsElement(string content, int position)
