@@ -40,7 +40,8 @@ namespace SparkSense.Parsing
 
         public void Add(string path)
         {
-            _cache.Add(path, null);
+            if(!_cache.ContainsKey(path))
+                _cache.Add(path, null);
         }
 
         private void LoadFromDisk(string path)
