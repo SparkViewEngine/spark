@@ -118,6 +118,7 @@
     </Compile>
     <Compile Include="Presenter\SparkSensePresenter.cs" />
     <Compile Include="Presenter\SparkSensePresenterListener.cs" />
+    <Compile Include="SparkServiceProvider.cs" />
     <Compile Include="SignatureRecognition\SparkSignatureHelpCommand.cs" />
     <Compile Include="SignatureRecognition\SparkSignatureHelpCommandListener.cs" />
     <Compile Include="SignatureRecognition\SparkSignatureHelpSource.cs" />

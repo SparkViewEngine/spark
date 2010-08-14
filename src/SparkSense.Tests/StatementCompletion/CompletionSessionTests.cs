@@ -6,7 +6,6 @@ using Rhino.Mocks;
 using SparkSense.StatementCompletion;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Text;
-using NUnit.Framework.SyntaxHelpers;
 
 namespace SparkSense.Tests.StatementCompletion
 {
@@ -49,24 +48,14 @@ namespace SparkSense.Tests.StatementCompletion
         [Test]
         public void ListenerShouldAttemptToGetAnInstanceOfTheVisualStudioEnvironment()
         {
-            IServiceProvider _mockServiceProvider;
-            _mockServiceProvider = new MockServiceProvider();
+            var mockServiceProvider = MockRepository.GenerateMock<ISparkServiceProvider>();
+            var stubTextBuffer = MockRepository.GenerateStub<ITextBuffer>();
+            var listener = new CompletionListener { ServiceProvider = mockServiceProvider };
 
-            var _listener = new CompletionListener();
-            _listener.ServiceProvider = _mockServiceProvider;
-            var _mockTextBuffer = MockRepository.GenerateStub<ITextBuffer>();
-            _listener.TryCreateCompletionSource(_mockTextBuffer);
-            Assert.That(((MockServiceProvider)_mockServiceProvider).ServiceTypeName, Is.EqualTo("DTE"));
-        }
-        public class MockServiceProvider : IServiceProvider
-        {
-            public string ServiceTypeName { get; private set; }
-            public object GetService(Type serviceType)
-            {
-                ServiceTypeName = serviceType.Name;
-                return null;
-            }
-        }
+            mockServiceProvider.Expect(x => x.VsEnvironment).Return(null);
+            listener.TryCreateCompletionSource(stubTextBuffer);
 
+            mockServiceProvider.VerifyAllExpectations();
+        }
     }
 }

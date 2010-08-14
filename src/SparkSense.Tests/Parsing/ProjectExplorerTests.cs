@@ -6,6 +6,7 @@ using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Syntax;
 using SparkSense.Parsing;
+using Rhino.Mocks;
 
 namespace SparkSense.Tests.Parsing
 {
@@ -34,12 +35,17 @@ namespace SparkSense.Tests.Parsing
         public void ShouldBuildAMapOfAllViewsInTheCurrentProject()
         {
             Console.WriteLine("This test fails if run without an instance of VS running. It passes if it can attach to the DTE. Need to find a better way of testing this");
-            var projectEnvironment = (DTE)Marshal.GetActiveObject("VisualStudio.DTE.10.0");
+            
+            var mockServices = MockRepository.GenerateMock<ISparkServiceProvider>();
+            var testDTE = (DTE)Marshal.GetActiveObject("VisualStudio.DTE.10.0");
 
-            var projectExplorer = new ProjectExplorer(projectEnvironment);
+            mockServices.Expect(x => x.VsEnvironment).Return(testDTE).Repeat.Any();
+            var projectExplorer = new ProjectExplorer(mockServices);
 
             Assert.That(projectExplorer.HasView("Shared\\_SharedPartial.spark"));
             Assert.That(projectExplorer.HasView("Shared\\Application.spark"));
+
+            mockServices.VerifyAllExpectations();
         }
     }
 }

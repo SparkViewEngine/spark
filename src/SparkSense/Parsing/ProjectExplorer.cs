@@ -1,24 +1,19 @@
 using System;
-using System.Collections.Generic;
 using EnvDTE;
 using Spark.FileSystem;
-using Microsoft.VisualStudio.Text;
 
 namespace SparkSense.Parsing
 {
     public class ProjectExplorer : IProjectExplorer
     {
-        private DTE _projectEnvironment;
         private CachingViewFolder _projectViewFolder;
+        private ISparkServiceProvider _services;
 
-        public ProjectExplorer(DTE projectEnvironment)
+        public ProjectExplorer(ISparkServiceProvider services)
         {
-            if (projectEnvironment == null)
-                throw new ArgumentNullException("projectEnvironment", "Project Explorer requires a hook into the current visual studio enviroment.");
-
-            _projectEnvironment = projectEnvironment;
+            if (services == null) throw new ArgumentNullException("services", "services is null.");
+            _services = services;
         }
-
         private CachingViewFolder ProjectViewFolder
         {
             get
@@ -71,13 +66,15 @@ namespace SparkSense.Parsing
 
         private bool TryGetActiveDocumentPath(out string activeDocumentPath)
         {
-            activeDocumentPath = _projectEnvironment.ActiveDocument != null ? _projectEnvironment.ActiveDocument.FullName : string.Empty;
+            activeDocumentPath = _services.VsEnvironment.ActiveDocument != null
+                ? _services.VsEnvironment.ActiveDocument.FullName
+                : string.Empty;
             return !String.IsNullOrEmpty(activeDocumentPath);
         }
 
         private void BuildViewMapFromProjectEnvironment()
         {
-            var currentProject = _projectEnvironment.ActiveDocument.ProjectItem.ContainingProject;
+            var currentProject = _services.VsEnvironment.ActiveDocument.ProjectItem.ContainingProject;
             foreach (ProjectItem projectItem in currentProject.ProjectItems)
                 ScanProjectItemForViews(projectItem);
         }
