@@ -1,4 +1,5 @@
 using Spark.FileSystem;
+using Microsoft.VisualStudio.Text;
 
 namespace SparkSense.Parsing
 {
@@ -6,7 +7,8 @@ namespace SparkSense.Parsing
     {
         bool ViewFolderExists();
         IViewFolder GetViewFolder();
-        string GetCurrentViewPath();
+        IViewExplorer GetViewExplorer(ITextBuffer textBuffer);
+        string GetCurrentViewPath(ITextBuffer textBuffer);
         void SetViewContent(string viewPath, string content);
     }
 }

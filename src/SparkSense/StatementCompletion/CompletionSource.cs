@@ -15,14 +15,12 @@ namespace SparkSense.StatementCompletion
         private IProjectExplorer _projectExplorer;
         private IViewExplorer _viewExplorer;
         private ITrackingSpan _trackingSpan;
-        private string _currentViewPath;
 
         public CompletionSource(ITextBuffer textBuffer, IProjectExplorer projectExplorer)
         {
             _textBuffer = textBuffer;
             _projectExplorer = projectExplorer;
-            _viewExplorer = new ViewExplorer(_projectExplorer);
-            _currentViewPath = _projectExplorer.GetCurrentViewPath();
+            _viewExplorer = _projectExplorer.GetViewExplorer(textBuffer);
             _textBuffer.Changed += TextBuffer_Changed;
         }
 
@@ -30,7 +28,7 @@ namespace SparkSense.StatementCompletion
         {
             if (e.After != _textBuffer.CurrentSnapshot)
                 return;
-            _viewExplorer.InvalidateView(_currentViewPath, _textBuffer.CurrentSnapshot.GetText());
+            _viewExplorer.InvalidateView(_textBuffer.CurrentSnapshot.GetText());
         }
         
         #region ICompletionSource Members

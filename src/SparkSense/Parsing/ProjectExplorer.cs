@@ -1,6 +1,8 @@
 using System;
 using EnvDTE;
 using Spark.FileSystem;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Text;
 
 namespace SparkSense.Parsing
 {
@@ -45,6 +47,28 @@ namespace SparkSense.Parsing
             if (!TryGetActiveDocumentPath(out activeDocumentPath)) return null;
 
             return ProjectViewFolder;
+        }
+
+        public IViewExplorer GetViewExplorer(ITextBuffer textBuffer)
+        {
+            IViewExplorer viewExplorer;
+            if (textBuffer.Properties.TryGetProperty(typeof(ViewExplorer), out viewExplorer)) 
+                return viewExplorer;
+
+            viewExplorer = new ViewExplorer(this, GetCurrentViewPath(textBuffer));
+            textBuffer.Properties.AddProperty(typeof(ViewExplorer), viewExplorer);
+            return viewExplorer;
+        }
+
+        public string GetCurrentViewPath(ITextBuffer textBuffer)
+        {
+            var adapter = _services.AdaptersFactoryService.GetBufferAdapter(textBuffer) as IPersistFileFormat;
+            if (adapter == null) return string.Empty;
+
+            string filename;
+            uint format;
+            adapter.GetCurFile(out filename, out format);
+            return filename.Replace(GetViewRoot(filename), string.Empty).TrimStart('\\');
         }
 
         public string GetCurrentViewPath()

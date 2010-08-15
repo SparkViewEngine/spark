@@ -14,15 +14,21 @@ namespace SparkSense.Parsing
     {
         private IProjectExplorer _projectExplorer;
         private ViewLoader _viewLoader;
-        private string _viewPath;
+        private readonly string _viewPath;
 
-        public ViewExplorer(IProjectExplorer projectExplorer)
+        public ViewExplorer(IProjectExplorer projectExplorer, string viewPath)
         {
             if (projectExplorer == null)
                 throw new ArgumentNullException("projectExplorer", "Project Explorer is null. We need a hook into the VS Environment");
 
             _projectExplorer = projectExplorer;
-            InitCurrentView();
+            _viewPath = viewPath;
+            _viewLoader = new ViewLoader
+            {
+                ViewFolder = _projectExplorer.GetViewFolder(),
+                SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings())
+            };
+            InitViewChunks();
         }
 
         public IList<string> GetRelatedPartials()
@@ -101,22 +107,15 @@ namespace SparkSense.Parsing
             return macroParams;
         }
 
-        public void InvalidateView(string viewPath, string newContent)
+        public void InvalidateView(string newContent)
         {
-            _projectExplorer.SetViewContent(viewPath, newContent);
-            _viewLoader.EvictEntry(viewPath);
-        }
-
-        private void InitCurrentView()
-        {
-            _viewLoader = new ViewLoader { ViewFolder = _projectExplorer.GetViewFolder(), SyntaxProvider = new DefaultSyntaxProvider(new ParserSettings()) };
-            _viewPath = _projectExplorer.GetCurrentViewPath();
-            InitViewChunks();
+            _projectExplorer.SetViewContent(_viewPath, newContent);
+            _viewLoader.EvictEntry(_viewPath);
         }
 
         private IEnumerable<T> GetViewChunks<T>()
         {
-            var chunks = 
+            var chunks =
                 _viewLoader.Load(_viewPath)
                 .Where(chunk => chunk is T).Cast<T>();
             return chunks;
@@ -125,7 +124,7 @@ namespace SparkSense.Parsing
         private IEnumerable<T> GetAllChunks<T>()
         {
             _viewLoader.Load(_viewPath);
-            var allChunks = 
+            var allChunks =
                 _viewLoader.GetEverythingLoaded()
                 .SelectMany(list => list)
                 .Where(chunk => chunk is T).Cast<T>();
@@ -156,7 +155,7 @@ namespace SparkSense.Parsing
             TryLoadMaster("Application");
 
         }
-        
+
         private IEnumerable<string> GetPossibleMasterFiles(string folder)
         {
             var possibleMasters = new List<string>();

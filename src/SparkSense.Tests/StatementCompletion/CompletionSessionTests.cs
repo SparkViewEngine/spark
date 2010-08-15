@@ -46,13 +46,13 @@ namespace SparkSense.Tests.StatementCompletion
         }
 
         [Test]
-        public void ListenerShouldAttemptToGetAnInstanceOfTheVisualStudioEnvironment()
+        public void ListenerShouldAttemptToGetAnInstanceOfTheProjectExplorer()
         {
             var mockServiceProvider = MockRepository.GenerateMock<ISparkServiceProvider>();
             var stubTextBuffer = MockRepository.GenerateStub<ITextBuffer>();
             var listener = new CompletionListener { ServiceProvider = mockServiceProvider };
 
-            mockServiceProvider.Expect(x => x.VsEnvironment).Return(null);
+            mockServiceProvider.Expect(x => x.ProjectExplorer).Return(null);
             listener.TryCreateCompletionSource(stubTextBuffer);
 
             mockServiceProvider.VerifyAllExpectations();
