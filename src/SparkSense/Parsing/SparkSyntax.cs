@@ -53,6 +53,7 @@ namespace SparkSense.Parsing
                 case Constants.SINGLE_QUOTE:
                     return typeof(AttributeNode);
                 case Constants.OPEN_BRACE:
+                case Constants.PERIOD:
                     if (IsExpression(content, position))
                         return typeof(ExpressionNode);
                     break;
@@ -162,7 +163,7 @@ namespace SparkSense.Parsing
                 content.ToCharArray()[start] == Constants.OPEN_ELEMENT;
         }
 
-        private static bool IsExpression(string content, int position)
+        public static bool IsExpression(string content, int position)
         {
             int start, end;
             GetFragmentStartAndEnd(content, position, out start, out end);
@@ -199,6 +200,7 @@ namespace SparkSense.Parsing
             start = isElement ? elementStart : expressionStart - 1;
             var endChar = isElement ? Constants.CLOSE_ELEMENT : Constants.CLOSE_BRACE;
             end = content.LastIndexOf(endChar, position > 0 ? position - 1 : 0);
+            if (end < start) end = content.Length;
         }
 
         private static string GetOpeningFragment(string content, int position, int start)

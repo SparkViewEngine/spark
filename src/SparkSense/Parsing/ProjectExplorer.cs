@@ -135,5 +135,12 @@ namespace SparkSense.Parsing
             int viewsLocationStart = activeDocumentPath.LastIndexOf("Views");
             return viewsLocationStart != -1 ? activeDocumentPath.Substring(0, viewsLocationStart + 5) : null;
         }
+
+
+        public object GetTypeDiscoveryService()
+        {
+            var discovery = SparkServiceProvider.TypeService.GetTypeDiscoveryService(heir);
+            return discovery;
+        }
     }
 }

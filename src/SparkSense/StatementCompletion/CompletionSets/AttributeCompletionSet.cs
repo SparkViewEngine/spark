@@ -41,6 +41,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
                 case AttributeContexts.Value:
                     _completionList.AddRange(GetForAttributeValue());
                     break;
+                case AttributeContexts.None:
                 default:
                     break;
             }

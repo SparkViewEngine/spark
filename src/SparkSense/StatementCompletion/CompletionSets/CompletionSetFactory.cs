@@ -31,7 +31,10 @@ namespace SparkSense.StatementCompletion.CompletionSets
         {
             get
             {
-                //TODO: Rob G This is a general catch all trap because if something goes wrong during the Beta.                // We don't was Visual Studio to explode, but rather just that intellisense stops working for                 // this particular key press - it'll try again next time. The Beta will drive out most syntax issues.                try
+                //TODO: Rob G This is a general catch all trap because if something goes wrong during the Beta.
+                // We don't was Visual Studio to explode, but rather just that intellisense stops working for 
+                // this particular key press - it'll try again next time. The Beta will drive out most syntax issues.
+                try
                 {
                     return GetCompletionSetForNodeAndContext();
                 }

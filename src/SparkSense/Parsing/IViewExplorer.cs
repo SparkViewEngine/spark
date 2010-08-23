@@ -12,6 +12,8 @@ namespace SparkSense.Parsing
         IList<string> GetContentNames();
         IList<string> GetLocalMacros();
         IList<string> GetMacroParameters(string macroName);
+        IList<string> GetInitialTypes();
+        IList<string> GetMembers();
         void InvalidateView(string newContent);
     }
 }

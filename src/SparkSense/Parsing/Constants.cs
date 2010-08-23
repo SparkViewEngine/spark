@@ -15,6 +15,7 @@ namespace SparkSense.Parsing
         public const char FWD_SLASH = '/';
         public const char EXCLAMATION = '!';
         public const char DOLLAR = '$';
+        public const char PERIOD = '.';
         public const string SELF_CLOSE_ELEMENT = "/>";
 
         public const string ICON_SparkElement = "SparkElement";

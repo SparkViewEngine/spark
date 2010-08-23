@@ -104,6 +104,7 @@
     <Compile Include="Parsing\SparkSyntaxTests.cs" />
     <Compile Include="StatementCompletion\CompletionSessionTests.cs" />
     <Compile Include="StatementCompletion\AttributeCompletionSetTests.cs" />
+    <Compile Include="StatementCompletion\ExpressionCompletionSetTests.cs" />
     <Compile Include="StatementCompletion\ElementCompletionSetTests.cs" />
     <Compile Include="StatementCompletion\TextViewCreationTests.cs" />
     <Compile Include="Parsing\ViewExplorerTests.cs" />

@@ -10,5 +10,7 @@ namespace SparkSense.Parsing
         IViewExplorer GetViewExplorer(ITextBuffer textBuffer);
         string GetCurrentViewPath(ITextBuffer textBuffer);
         void SetViewContent(string viewPath, string content);
+
+        object GetTypeDiscoveryService();
     }
 }

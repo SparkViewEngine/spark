@@ -107,6 +107,19 @@ namespace SparkSense.Parsing
             return macroParams;
         }
 
+        public IList<string> GetInitialTypes()
+        {
+            return null;
+        }
+
+        public IList<string> GetMembers()
+        {
+            var discovery = _projectExplorer.GetTypeDiscoveryService();
+
+
+            return new List<string>() { "Testing", "123" };
+        }
+
         public void InvalidateView(string newContent)
         {
             _projectExplorer.SetViewContent(_viewPath, newContent);
