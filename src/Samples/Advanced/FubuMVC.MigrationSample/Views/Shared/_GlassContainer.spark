@@ -1,0 +1,14 @@
+﻿<div class="container">
+	<div class="container-glass-left"></div>
+	<div class="container-glass">
+		<div class="container-header">
+			<render:header />
+		</div>
+		<div class="container-body">
+			<render:body>
+				<render />
+			</render:body>
+		</div>
+	</div>
+	<div class="container-glass-right"></div>
+</div>

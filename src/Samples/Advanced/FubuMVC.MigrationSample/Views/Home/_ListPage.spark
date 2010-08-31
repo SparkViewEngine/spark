@@ -1,0 +1,11 @@
+﻿<viewdata model="ListViewModel" />
+#var list = Model.UserList;
+
+<for each="var column in list.Columns">
+	<div class="col">
+		<for each="var user in column.Data">
+			<UserBox />
+		</for>
+	</div>
+</for>
+

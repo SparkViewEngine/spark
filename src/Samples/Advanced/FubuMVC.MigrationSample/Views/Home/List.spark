@@ -1,0 +1,39 @@
+﻿<content:title>Our list of users</content:title>
+
+<viewdata model="ListViewModel" />
+<var totalUsers="Model.UserList.PagedInfo.TotalRecords" />
+<var currentPage="Model.UserList.PagedInfo.CurrentPage" />
+<var totalPages="Model.UserList.PagedInfo.TotalPages" />
+
+<content name="head">
+    <script type="text/javascript" src="/Scripts/scrolling.js"></script>
+	<script type="text/javascript" src="/Home/ListPageView"></script>
+	<script type="text/javascript" src="/Home/DetailView"></script>
+	
+	<script type="text/javascript">
+		$(function() {
+			initScrollables("/Home/ListPage", "#userList", 4, ${totalPages});
+		});
+	</script>
+</content>
+
+<GlassContainer>
+	<section:header>
+		<test if="!Model.UserList.HasRecords">
+			Sorry - we don't got no users. Lame, I know!
+		<else/>
+			<ListPageHeader />
+		</test>
+		<div class="clear"></div>
+	</section:header>
+	<section:body>
+		<div id="userList" class="scrollable">
+			<a class="prevPage left">back</a>
+			<a class="load-more right">next</a>
+			<div class="items">			
+				<ListPage />             	
+			</div>
+		</div>
+
+	</section:body>
+</GlassContainer>
