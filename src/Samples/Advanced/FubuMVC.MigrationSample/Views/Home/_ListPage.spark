@@ -1,5 +1,5 @@
-﻿<viewdata model="ListViewModel" />
-#var list = Model.UserList;
+﻿<viewdata model="PagedList[[RegisteredUser]]" />
+<var list="Model" />
 
 <for each="var column in list.Columns">
 	<div class="col">

@@ -33,7 +33,8 @@ function isLastPage(scrollable) {
 
 function getAnotherPage(url, pageToGet, scrollable) {
     $("div#headerLoading").html('&nbsp;<img src="/Content/images/loading.gif"/>');
-    $.getJSON(url + pageToGet, {}, function(data) {
+    $.getJSON(url + pageToGet, {}, function (data) {
+        window.Model = data;
         var contents = Spark.Home._ListPage.RenderView({ list: data });
         $("div#headerLoading").html("loaded");
         scrollable.getItemWrap().append(contents);

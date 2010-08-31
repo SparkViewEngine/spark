@@ -8,28 +8,19 @@ using Spark.Web.FubuMVC.ViewCreation;
 
 namespace JavascriptViewResultSample.Controllers
 {
-    public class ListViewModel
-    {
-        public PagedList<RegisteredUser> UserList { get; set; }
-    }
-    public class ListInputModel
-    {
-        //[QueryString]
-        public int? Page { get; set; }
-    }
     public class HomeController
     {
         public FubuContinuation Index()
         {
             return FubuContinuation.RedirectTo<HomeController>(x =>
-                x.List(new ListInputModel { Page = 1 }));
+                x.List(null));
         }
 
-        public ListViewModel List(ListInputModel input)
+        public PagedList<RegisteredUser> List(ListInputModel input)
         {
-            var pager = new Pager(input.Page, 24, 6);
+            var pager = new Pager(input == null ? input.Page : null, 24, 6);
             PagedList<RegisteredUser> RegisteredUserList = InMemoryDataService.GetAll(pager);
-            return new ListViewModel { UserList = RegisteredUserList };
+            return RegisteredUserList;
         }
 
         public string ListPage(ListInputModel input)
@@ -43,5 +34,11 @@ namespace JavascriptViewResultSample.Controllers
         {
             return new JavaScriptResponse { ViewName = "_ListPage" };
         }
+    }
+    
+    public class ListInputModel
+    {
+        [QueryString]
+        public int? Page { get; set; }
     }
 }
