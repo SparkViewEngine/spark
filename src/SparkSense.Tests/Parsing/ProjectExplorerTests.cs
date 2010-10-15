@@ -47,5 +47,12 @@ namespace SparkSense.Tests.Parsing
 
             mockServices.VerifyAllExpectations();
         }
+
+        [Test]
+        public void ShouldProvideATypeDiscoveryService()
+        {
+            
+
+        }
     }
 }

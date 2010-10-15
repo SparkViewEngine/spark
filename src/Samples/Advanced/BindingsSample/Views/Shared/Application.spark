@@ -27,7 +27,6 @@
 
         <div id="main">
             <use content="view" />
-
             <div id="footer">
 				Powered by ASP.NET MVC 2 and the Spark view engine
             </div>

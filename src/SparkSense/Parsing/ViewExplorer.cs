@@ -7,14 +7,17 @@ using System.IO;
 using System;
 using Spark;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace SparkSense.Parsing
 {
     public class ViewExplorer : IViewExplorer
     {
         private IProjectExplorer _projectExplorer;
+        private Dictionary<string, Type> _sparkViewMembers;
         private ViewLoader _viewLoader;
         private readonly string _viewPath;
+        private Dictionary<string, Type> _referencedTypes;
 
         public ViewExplorer(IProjectExplorer projectExplorer, string viewPath)
         {
@@ -109,13 +112,41 @@ namespace SparkSense.Parsing
 
         public IList<string> GetInitialTypes()
         {
-            return null;
+            var types = new List<string>();
+
+            _referencedTypes = new Dictionary<string, Type>();
+            _sparkViewMembers = new Dictionary<string, Type>();
+            var discovery = _projectExplorer.GetTypeDiscoveryService();
+            foreach (Type type in discovery.GetTypes(typeof(object), true))
+            {
+                if (!type.IsPublic) continue;
+
+                if (!_referencedTypes.ContainsKey(type.FullName))
+                    _referencedTypes.Add(type.FullName, type);
+
+                if (type.Name.EndsWith("SparkView"))
+                {
+                    var members = type.GetMethods();
+                    foreach (var member in members)
+                    {
+                        if(member.IsPublic && !_sparkViewMembers.ContainsKey(member.Name))
+                            _sparkViewMembers.Add(member.Name, member.ReturnType);
+                    }
+                }
+
+            }
+
+            var resolver = _projectExplorer.GetTypeResolverService();
+
+            var view = _referencedTypes["Spark.ISparkView"];
+            var mem = view.GetMembers();
+
+
+            return types;
         }
 
         public IList<string> GetMembers()
         {
-            var discovery = _projectExplorer.GetTypeDiscoveryService();
-
 
             return new List<string>() { "Testing", "123" };
         }

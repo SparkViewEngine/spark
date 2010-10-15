@@ -36,6 +36,7 @@ namespace SparkSense.StatementCompletion.CompletionSets
             {
                 case ExpressionContexts.New:
                     _completionList.AddRange(GetVariables());
+                    _completionList.AddRange(GetMembers());
                     break;
                 case ExpressionContexts.Dig:
                     _completionList.AddRange(GetMembers());
@@ -71,10 +72,19 @@ namespace SparkSense.StatementCompletion.CompletionSets
             var members = new List<Completion>();
             if (_viewExplorer == null) return members;
 
-            _viewExplorer.GetMembers().ToList().ForEach(
-                member => members.Add(
-                    new Completion(member, member, string.Format("Member: '{0}'", member), GetIcon(Constants.ICON_SparkMacroParameter), null)));
-
+            switch (ExpressionContext)
+            {
+                case ExpressionContexts.New:
+                    _viewExplorer.GetInitialTypes().ToList().ForEach(
+                        member => members.Add(
+                            new Completion(member, member, string.Format("Member: '{0}'", member), GetIcon(Constants.ICON_SparkMacroParameter), null)));
+                    break;
+                case ExpressionContexts.Dig:
+                    _viewExplorer.GetMembers().ToList().ForEach(
+                        member => members.Add(
+                            new Completion(member, member, string.Format("Member: '{0}'", member), GetIcon(Constants.ICON_SparkMacroParameter), null)));
+                    break;
+            }
             return members;
         }
     }

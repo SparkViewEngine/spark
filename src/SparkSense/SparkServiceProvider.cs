@@ -5,6 +5,7 @@ using EnvDTE;
 using SparkSense.Parsing;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell.Design;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace SparkSense
 {
@@ -20,14 +21,14 @@ namespace SparkSense
     [Export(typeof(ISparkServiceProvider))]
     public class SparkServiceProvider : ISparkServiceProvider
     {
+        public static readonly DynamicTypeService TypeService = (DynamicTypeService)Package.GetGlobalService(typeof(DynamicTypeService)); 
+
         [Import]
         private IVsEditorAdaptersFactoryService _adaptersFactoryService;
         [Import(typeof(SVsServiceProvider))]
         private IServiceProvider _serviceProvider;
         private IProjectExplorer _projectExplorer;
         private DTE _vsEnvironment;
-
-        public static readonly DynamicTypeService TypeService = (DynamicTypeService)Package.GetGlobalService(typeof(DynamicTypeService)); 
 
         public T GetService<T>()
         {

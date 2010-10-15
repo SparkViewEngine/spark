@@ -3,6 +3,7 @@ using EnvDTE;
 using Spark.FileSystem;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
+using System.ComponentModel.Design;
 
 namespace SparkSense.Parsing
 {
@@ -10,6 +11,9 @@ namespace SparkSense.Parsing
     {
         private CachingViewFolder _projectViewFolder;
         private ISparkServiceProvider _services;
+        private IVsHierarchy _hier;
+        private ITypeResolutionService _resolver;
+        private ITypeDiscoveryService _discovery;
 
         public ProjectExplorer(ISparkServiceProvider services)
         {
@@ -136,11 +140,31 @@ namespace SparkSense.Parsing
             return viewsLocationStart != -1 ? activeDocumentPath.Substring(0, viewsLocationStart + 5) : null;
         }
 
-
-        public object GetTypeDiscoveryService()
+        private IVsHierarchy GetHierarchy()
         {
-            var discovery = SparkServiceProvider.TypeService.GetTypeDiscoveryService(heir);
-            return discovery;
+            if (_hier == null)
+            {
+                var sln = _services.GetService<IVsSolution>();
+                string projectName = _services.VsEnvironment.ActiveDocument.ProjectItem.ContainingProject.UniqueName;
+                sln.GetProjectOfUniqueName(projectName, out _hier);
+            }
+            return _hier;
+        }
+
+        public ITypeDiscoveryService GetTypeDiscoveryService()
+        {
+            if (_discovery == null)
+                _discovery = SparkServiceProvider.TypeService.GetTypeDiscoveryService(GetHierarchy());
+
+            return _discovery;
+        }
+
+        public ITypeResolutionService GetTypeResolverService()
+        {
+            if (_resolver == null)
+                _resolver = SparkServiceProvider.TypeService.GetTypeResolutionService(GetHierarchy());
+
+            return _resolver;
         }
     }
 }
