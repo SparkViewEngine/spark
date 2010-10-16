@@ -94,7 +94,8 @@ namespace Spark.Compiler.NodeVisitors
                                       {"macro", (n,i)=>VisitMacro(i)},
                                       {"render", VisitRender},
                                       {"section", VisitSection},
-                                      {"cache", VisitCache}
+                                      {"cache", VisitCache},
+                                      {"markdown", VisitMarkdown}
                                   };
         }
 
@@ -853,6 +854,17 @@ namespace Spark.Compiler.NodeVisitors
 
             if (frame != null)
                 frame.Dispose();
+        }
+
+        private void VisitMarkdown(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            var markdownChunk = new MarkdownChunk();
+
+            Chunks.Add(markdownChunk);
+            using (new Frame(this, markdownChunk.Body))
+            {
+                Accept(inspector.Body);
+            }
         }
 
         private bool SatisfyElsePrecondition()

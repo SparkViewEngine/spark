@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema id="spark-config" 
+		   elementFormDefault="qualified" 
+		   targetNamespace="http://sparkviewengine.com/v1.1/config" 
+		   xmlns="http://sparkviewengine.com/v1.1/config" 
+		   xmlns:mstns="http://sparkviewengine.com/v1.1/config" 
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		   xmlns:vs='http://schemas.microsoft.com/Visual-Studio-Intellisense' 
+		   vs:ishtmlschema="false" 
+		   vs:isserverschema="true" 
+		   vs:htmlflavor="4.0" 
+		   vs:nonbrowseable="true" 
+		   vs:SuccinctFriendlyName="Spark Configuration" 
+		   vs:defaultns="spark">
+	<xs:element name="spark">
+		<xs:complexType>
+			<xs:all>
+				<xs:element minOccurs="0" name="compilation" type="compilation" />
+				<xs:element minOccurs="0" name="pages" type="pages" />
+				<xs:element minOccurs="0" name="views" type="views" />
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="compilation">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="assemblies" type="assemblies" />
+		</xs:sequence>
+		<xs:attribute use="optional" name="debug" type="xs:boolean" />
+		<xs:attribute use="optional" name="defaultLanguage">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="Default" />
+					<xs:enumeration value="CSharp" />
+					<xs:enumeration value="VisualBasic" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute use="optional" name="nullBehaviour">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="Lenient" />
+					<xs:enumeration value="Strict" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="assemblies">
+		<xs:sequence>
+			<xs:element name="add" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute use="required" name="assembly" />
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="pages">
+		<xs:all>
+			<xs:element minOccurs="0" name="namespaces" type="namespaces" />
+			<xs:element minOccurs="0" name="resources" type="resources" />
+		</xs:all>
+		<xs:attribute use="optional" name="automaticEncoding" type="xs:boolean" />
+		<xs:attribute use="optional" name="pageBaseType" />
+		<xs:attribute use="optional" name="prefix" />
+		<xs:attribute use="optional" name="statementMarker" />
+	</xs:complexType>
+
+	<xs:complexType name="namespaces">
+		<xs:sequence>
+			<xs:element name="add" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute use="required" name="namespace" />
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="resources">
+		<xs:sequence>
+			<xs:element name="add" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute use="required" name="match" />
+					<xs:attribute use="required" name="location" />
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="views">
+		<xs:sequence>
+			<xs:element name="add" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute use="optional" name="name" />
+					<xs:attribute use="required" name="folderType">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="FileSystem" />
+								<xs:enumeration value="VirtualPathProvider" />
+								<xs:enumeration value="EmbeddedResource" />
+								<xs:enumeration value="Custom" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute use="optional" name="subfolder">
+						<xs:annotation>
+							<xs:documentation>
+								The location in the view folder tree where the views are added. If not set, views are added to the root.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute use="optional" name="type">
+						<xs:annotation>
+							<xs:documentation>
+								Type of the IViewFolder implementation (if folderType="Custom")
+							</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute use="optional" name="virtualBaseDir">
+						<xs:annotation>
+							<xs:documentation>
+								The virtual directory containing the views (if folderType="VirtualPathProvider")
+							</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>					
+					<xs:attribute use="optional" name="basePath">						
+						<xs:annotation>
+							<xs:documentation>
+								The path containing the views (if folderType="FileSystem")
+							</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute use="optional" name="assembly">
+						<xs:annotation>
+							<xs:documentation>
+								Name of the assembly containing the view resources (if folderType="EmbeddedResource")
+							</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute use="optional" name="resourcePath">
+						<xs:annotation>
+							<xs:documentation>
+								The resource path containing the views (if folderType="EmbeddedResource")
+							</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

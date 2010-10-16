@@ -12,7 +12,7 @@
     <AssemblyName>Spark</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -215,6 +215,7 @@
     <Compile Include="Spool\SpoolWriter.cs" />
     <Compile Include="Spool\TextWriterExtensions.cs" />
     <Compile Include="Utilities\CacheUtilities.cs" />
+    <Compile Include="Utilities\Markdown.cs" />
     <Compile Include="ValueHolder.cs" />
   </ItemGroup>
   <ItemGroup>
