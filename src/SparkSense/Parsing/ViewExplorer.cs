@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Spark.Compiler;
 using Spark.Parser;
@@ -117,7 +118,10 @@ namespace SparkSense.Parsing
             _referencedTypes = new Dictionary<string, Type>();
             _sparkViewMembers = new Dictionary<string, Type>();
             var discovery = _projectExplorer.GetTypeDiscoveryService();
-            foreach (Type type in discovery.GetTypes(typeof(object), true))
+
+            var allTypes = discovery.GetTypes(typeof(object), true);
+
+            foreach (Type type in allTypes)
             {
                 if (!type.IsPublic) continue;
 
@@ -130,16 +134,19 @@ namespace SparkSense.Parsing
                     foreach (var member in members)
                     {
                         if(member.IsPublic && !_sparkViewMembers.ContainsKey(member.Name))
+                        {
                             _sparkViewMembers.Add(member.Name, member.ReturnType);
+                            types.Add(member.Name);
+                        }
                     }
                 }
 
             }
 
-            var resolver = _projectExplorer.GetTypeResolverService();
+            //var resolver = _projectExplorer.GetTypeResolverService();
 
-            var view = _referencedTypes["Spark.ISparkView"];
-            var mem = view.GetMembers();
+            //var view = _referencedTypes["Spark.ISparkView"];
+            //var mem = view.GetMembers();
 
 
             return types;
