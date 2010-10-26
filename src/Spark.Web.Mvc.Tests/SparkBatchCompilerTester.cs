@@ -59,14 +59,14 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanHandleCSharpV3SyntaxWhenLoadedInAppDomainWithoutConfig()
         {
-            AppDomainSetup setup = new AppDomainSetup
+            var appDomainSetup = new AppDomainSetup
                                     {
-                                        ApplicationBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+										ApplicationBase = Assembly.GetExecutingAssembly().GetCodeBaseDirectory()
                                     };
             AppDomain sandbox = null;
             try
             {
-                sandbox = AppDomain.CreateDomain("sandbox", null, setup);
+                sandbox = AppDomain.CreateDomain("sandbox", null, appDomainSetup);
                 var remoteRunner = (PrecompileRunner) sandbox.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
                                                              typeof(PrecompileRunner).FullName);
                 remoteRunner.Precompile();
@@ -195,6 +195,24 @@ namespace Spark.Web.Mvc.Tests
         public static string FooFor<T>(this SparkView view, Expression<Action<T>> action)
         {
             return string.Format("Foo on lambda expression {0}", action);
+        }
+    }
+
+    public static class AssemblyExtensions
+    {
+        /// <summary>
+        /// Get the directory where the assembly is found.
+        /// </summary>
+        /// <remarks>
+        /// This is often useful when using a runner (NCover, NUnit etc.) that 
+        /// loads assemblies from a temporary <see cref="AppDomain"/>.
+        /// </remarks>
+        public static string GetCodeBaseDirectory(this Assembly assembly)
+        {
+            string codeBaseUriString = assembly.CodeBase;
+            var uri = new UriBuilder(codeBaseUriString);
+            string codeBasePath = Uri.UnescapeDataString(uri.Path);
+            return Path.GetDirectoryName(codeBasePath);
         }
     }
 }
