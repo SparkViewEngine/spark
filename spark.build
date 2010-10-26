@@ -16,7 +16,7 @@
   <property name="version.revision" value="0"/>
   <property name="project.version" value="${version.major}.${version.minor}" dynamic="true" />
   <property name="project.fullversion" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true" />
-  <property name="nant.settings.currentframework" value="net-4.0" />
+  <property name="nant.settings.currentframework" value="net-3.5" />
   <property name="ncover.path" value="${bin.dir}\ncover" />
 
   <property name="project.copyright" value="Copyright (c) ${company.name} 2008-${datetime::get-year(datetime::now())}"/>
@@ -80,18 +80,18 @@
   <target name="compile" depends="init">
     <echo message="Build Directory is ${build.dir}" />
 
-    <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+    <exec program="${framework::get-framework-directory('net-4.0')}\msbuild.exe"
 				  commandline="${solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly} /v:q" workingdir="." />
-    <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+    <exec program="${framework::get-framework-directory('net-4.0')}\msbuild.exe"
 				  commandline="${solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly} /v:q" workingdir="." />
 
     <if test="${property::exists('tools.solution.file')}">
       <property name="wix-parameters" value="WixTargetsPath=..\..\..\bin\msbuild\Microsoft\WiX\v3.0\wix.targets;WixTasksPath=WixTasks.dll;WixToolPath=..\..\..\bin\wix"/>
       <property name="communitytasks-parameters" value="MSBuildCommunityTasksPath=..\..\..\bin\msbuild\MSBuildCommunityTasks"/>
 
-      <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+      <exec program="${framework::get-framework-directory('net-4.0')}\msbuild.exe"
             commandline="${tools.solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters} /v:q" workingdir="." />
-      <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+      <exec program="${framework::get-framework-directory('net-4.0')}\msbuild.exe"
             commandline="${tools.solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters};ProjectFullVersion=${project.fullversion} /v:q" workingdir="." />
     </if>
   </target>
