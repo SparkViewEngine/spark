@@ -69,6 +69,9 @@
     <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Fasterflect">
+      <HintPath>..\..\bin\Fasterflect\4.0\Fasterflect.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Editor, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -102,6 +105,7 @@
     <Compile Include="Parsing\ParseContextNodeTests.cs" />
     <Compile Include="Parsing\ParseMultipleNodeTests.cs" />
     <Compile Include="Parsing\ParseSingleNodeTests.cs" />
+    <Compile Include="Parsing\TypeResolutionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parsing\SparkSyntaxTests.cs" />
     <Compile Include="StatementCompletion\CompletionSessionTests.cs" />
@@ -111,8 +115,6 @@
     <Compile Include="StatementCompletion\TextViewCreationTests.cs" />
     <Compile Include="Parsing\ViewExplorerTests.cs" />
     <Compile Include="Parsing\ProjectExplorerTests.cs" />
-    <Compile Include="TestingContext.cs" />
-    <Compile Include="WhenInsideACodeExpression.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SparkSense.Tests.Views\Shared\Application.spark">

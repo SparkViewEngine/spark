@@ -57,11 +57,11 @@ namespace SparkSense.StatementCompletion.CompletionSets
             Type currentContext = SparkSyntax.ParseContext(triggerPoint.Snapshot.GetText(), triggerPoint);
 
             if (currentContext == typeof(ElementNode))
-                return CompletionSetFactory.Create<ElementCompletionSet>(triggerPoint, trackingSpan, viewExplorer);
+                return Create<ElementCompletionSet>(triggerPoint, trackingSpan, viewExplorer);
             if (currentContext == typeof(AttributeNode))
-                return CompletionSetFactory.Create<AttributeCompletionSet>(triggerPoint, trackingSpan, viewExplorer);
+                return Create<AttributeCompletionSet>(triggerPoint, trackingSpan, viewExplorer);
             if (currentContext == typeof(ExpressionNode))
-                return CompletionSetFactory.Create<ExpressionCompletionSet>(triggerPoint, trackingSpan, viewExplorer);
+                return Create<ExpressionCompletionSet>(triggerPoint, trackingSpan, viewExplorer);
             return null;
         }
 
