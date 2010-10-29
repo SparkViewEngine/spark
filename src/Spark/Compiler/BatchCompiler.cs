@@ -64,6 +64,7 @@ namespace Spark.Compiler
                 compilerParameters = new CompilerParameters();
             }
 
+            compilerParameters.TreatWarningsAsErrors = false;
             var extension = codeProvider.FileExtension;
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -134,7 +135,7 @@ namespace Spark.Compiler
                 compilerResults = codeProvider.CompileAssemblyFromSource(compilerParameters, sourceCode);
             }
 
-            if (compilerResults.Errors.Count != 0)
+            if (compilerResults.Errors.HasErrors)
             {
                 var sb = new StringBuilder();
                 sb.AppendLine("Dynamic view compilation failed.");
