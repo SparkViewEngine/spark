@@ -7,10 +7,6 @@ using Spark.Web.Mvc;
 
 namespace SkinsFolder
 {
-    /// <summary>
-    /// Note! The workaround in here is because of a design flaw in the Spark compiled view
-    /// holder. It should not be a singleton and must be refactored.
-    /// </summary>
     public class ThemedViewFactory : IViewEngine
     {
         private readonly IViewFolder _defaultViewFolder;

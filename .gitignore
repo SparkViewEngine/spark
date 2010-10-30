@@ -5,6 +5,7 @@ build
 *.userprefs
 TestResult.xml
 *.VisualState.xml
+*Thumbs.db
 
 src/**/bin/*
 src/**/bin/**/*

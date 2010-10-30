@@ -38,6 +38,13 @@ namespace Spark.Compiler.NodeVisitors
         private IDictionary<string, IList<Chunk>> SectionChunks { get; set; }
 
 
+        public IDictionary<string, Action<SpecialNode, SpecialNodeInspector>> SpecialNodeMap
+        {
+            get
+            {
+                return _specialNodeMap;
+            }
+        }
         class Frame : IDisposable
         {
             private readonly ChunkBuilderVisitor _visitor;
@@ -94,7 +101,8 @@ namespace Spark.Compiler.NodeVisitors
                                       {"macro", (n,i)=>VisitMacro(i)},
                                       {"render", VisitRender},
                                       {"section", VisitSection},
-                                      {"cache", VisitCache}
+                                      {"cache", VisitCache},
+                                      {"markdown", VisitMarkdown}
                                   };
         }
 
@@ -400,13 +408,13 @@ namespace Spark.Compiler.NodeVisitors
         protected override void Visit(SpecialNode specialNode)
         {
             string nqName = NameUtility.GetName(specialNode.Element.Name);
-            if (!_specialNodeMap.ContainsKey(nqName))
+            if (!SpecialNodeMap.ContainsKey(nqName))
             {
                 throw new CompilerException(string.Format("Unknown special node {0}", specialNode.Element.Name));
             }
 
 
-            var action = _specialNodeMap[nqName];
+            var action = SpecialNodeMap[nqName];
             action(specialNode, new SpecialNodeInspector(specialNode));
         }
 
@@ -853,6 +861,17 @@ namespace Spark.Compiler.NodeVisitors
 
             if (frame != null)
                 frame.Dispose();
+        }
+
+        private void VisitMarkdown(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            var markdownChunk = new MarkdownChunk();
+
+            Chunks.Add(markdownChunk);
+            using (new Frame(this, markdownChunk.Body))
+            {
+                Accept(inspector.Body);
+            }
         }
 
         private bool SatisfyElsePrecondition()

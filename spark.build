@@ -8,6 +8,7 @@
   <property name="company.name" value="Louis DeJardin"/>
   <property name="bin.dir" value="bin" />
   <property name="build.base" value="build"/>
+  <property name="msbuild.dir" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319" />
   <property name="results.dir" value="${build.base}\results" />
   <property name="samples.dir" value="${solution.dir}\samples"/>
   <property name="version.major" value="1"/>
@@ -22,6 +23,8 @@
   <property name="project.copyright" value="Copyright (c) ${company.name} 2008-${datetime::get-year(datetime::now())}"/>
 
   <property name="package.dir" value="${build.base}\package" />
+
+  <property name="project.signassembly" value="true"/>
 
   <!-- default configuration -->
   <property name="project.config" value="release" />
@@ -78,18 +81,18 @@
   <target name="compile" depends="init">
     <echo message="Build Directory is ${build.dir}" />
 
-    <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
-				  commandline="&quot;${solution.file}&quot; /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir}&quot; /v:q" workingdir="." />
-    <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
-				  commandline="&quot;${solution.file}&quot; /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir}&quot; /v:q" workingdir="." />
+    <exec program="${msbuild.dir}\msbuild.exe"
+				  commandline="&quot;${solution.file}&quot; /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
+    <exec program="${msbuild.dir}\msbuild.exe"
+				  commandline="&quot;${solution.file}&quot; /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
 
     <if test="${property::exists('tools.solution.file')}">
       <property name="wix-parameters" value="WixTargetsPath=..\..\..\bin\msbuild\Microsoft\WiX\v3.0\wix.targets;WixTasksPath=WixTasks.dll;WixToolPath=..\..\..\bin\wix"/>
       <property name="communitytasks-parameters" value="MSBuildCommunityTasksPath=..\..\..\bin\msbuild\MSBuildCommunityTasks"/>
 
-      <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+      <exec program="${msbuild.dir}\msbuild.exe"
             commandline="&quot;${tools.solution.file}&quot; /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters}&quot; /v:q" workingdir="." />
-      <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe"
+      <exec program="${msbuild.dir}\msbuild.exe"
             commandline="&quot;${tools.solution.file}&quot; /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters};ProjectFullVersion=${project.fullversion}&quot; /v:q" workingdir="." />
     </if>
   </target>

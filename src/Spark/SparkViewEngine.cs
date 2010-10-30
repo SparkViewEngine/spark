@@ -18,15 +18,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using System.Web.Hosting;
 using Spark.Bindings;
 using Spark.Compiler;
-using Spark.Compiler.ChunkVisitors;
 using Spark.Compiler.CSharp;
-using Spark.Compiler.Javascript;
 using Spark.Parser;
-using Spark;
 using Spark.FileSystem;
 using Spark.Parser.Syntax;
 
@@ -56,6 +52,7 @@ namespace Spark
             BindingProvider = container.GetService<IBindingProvider>();
             ResourcePathManager = container.GetService<IResourcePathManager>();
             TemplateLocator = container.GetService<ITemplateLocator>();
+            CompiledViewHolder = container.GetService<ICompiledViewHolder>();
             SetViewFolder(container.GetService<IViewFolder>());
         }
 
@@ -193,8 +190,8 @@ namespace Spark
             set { _templateLocator = value; }
         }
 
-        private CompiledViewHolder _compiledViewHolder;
-        public CompiledViewHolder CompiledViewHolder
+        private ICompiledViewHolder _compiledViewHolder;
+        public ICompiledViewHolder CompiledViewHolder
         {
             get
             {
@@ -212,7 +209,7 @@ namespace Spark
 
         public ISparkViewEntry GetEntry(SparkViewDescriptor descriptor)
         {
-            return CompiledViewHolder.Current.Lookup(descriptor);
+            return CompiledViewHolder.Lookup(descriptor);
         }
 
         public ISparkView CreateInstance(SparkViewDescriptor descriptor)
@@ -224,7 +221,7 @@ namespace Spark
         {
             if (view == null) throw new ArgumentNullException("view");
 
-            var entry = CompiledViewHolder.Current.Lookup(view.GeneratedViewId);
+            var entry = CompiledViewHolder.Lookup(view.GeneratedViewId);
             if (entry != null)
                 entry.ReleaseInstance(view);
         }
@@ -232,11 +229,11 @@ namespace Spark
 
         public ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor)
         {
-            var entry = CompiledViewHolder.Current.Lookup(descriptor);
+            var entry = CompiledViewHolder.Lookup(descriptor);
             if (entry == null)
             {
                 entry = CreateEntryInternal(descriptor, true);
-                CompiledViewHolder.Current.Store(entry);
+                CompiledViewHolder.Store(entry);
             }
             return entry;
         }
@@ -336,7 +333,7 @@ namespace Spark
             {
                 entry.Compiler.CompiledType = assembly.GetType(entry.Compiler.ViewClassFullName);
                 entry.Activator = ViewActivatorFactory.Register(entry.Compiler.CompiledType);
-                CompiledViewHolder.Current.Store(entry);
+                CompiledViewHolder.Store(entry);
             }
             return assembly;
         }
@@ -363,7 +360,7 @@ namespace Spark
                                     Compiler = new CSharpViewCompiler { CompiledType = type },
                                     Activator = ViewActivatorFactory.Register(type)
                                 };
-                CompiledViewHolder.Current.Store(entry);
+                CompiledViewHolder.Store(entry);
 
                 descriptors.Add(descriptor);
             }

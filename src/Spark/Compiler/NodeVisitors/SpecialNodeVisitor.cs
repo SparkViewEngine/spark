@@ -34,7 +34,7 @@ namespace Spark.Compiler.NodeVisitors
         public SpecialNodeVisitor(VisitorContext context)
             : base(context)
         {
-            _containingNames = new List<string>(new[] { "var", "def", "default", "for", "use", "content", "test", "if", "else", "elseif", "macro", "render", "section", "cache" });
+            _containingNames = new List<string>(new[] { "var", "def", "default", "for", "use", "content", "test", "if", "else", "elseif", "macro", "render", "section", "cache", "markdown" });
             _nonContainingNames = new List<string>(new[] { "global", "set", "viewdata" });
         }
 

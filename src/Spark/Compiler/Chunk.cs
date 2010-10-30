@@ -273,4 +273,13 @@ namespace Spark.Compiler
 
         public IList<Chunk> Body { get; set; }
     }
+
+    public class MarkdownChunk : Chunk
+    {
+        public MarkdownChunk()
+        {
+            Body = new List<Chunk>();
+        }
+        public IList<Chunk> Body { get; set; }
+    }
 }

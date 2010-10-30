@@ -207,5 +207,10 @@ namespace Spark.Compiler.ChunkVisitors
             Examine(chunk.Expires);
             Accept(chunk.Body);
         }
+
+        protected override void Visit(MarkdownChunk chunk)
+        {
+            Accept(chunk.Body);
+        }
     }
 }

@@ -189,6 +189,7 @@ namespace Spark.Tests.Bindings
             Assert.That(match1.AssumeDictionarySyntax, Is.False);
             Assert.That(match2.AssumeDictionarySyntax, Is.False);
         }
+
         [Test]
         public void BracesMayAppearAroundStrings()
         {
@@ -209,6 +210,17 @@ namespace Spark.Tests.Bindings
             Assert.That(match2.AssumeDictionarySyntax, Is.True);
             Assert.That(match1.AssumeStringValue, Is.True);
             Assert.That(match2.AssumeStringValue, Is.True);
+        }
+
+        [Test]
+        public void DoubleSquareBracketIsAliasForAngleBracket() {
+            var grammar = new BindingGrammar();
+            var result = grammar.Nodes(Source("this[[that]]"));
+
+            Assert.That(result.Value.Count(), Is.EqualTo(1));
+            var node = (BindingLiteral)result.Value[0];
+
+            Assert.That(node.Text, Is.EqualTo("this<that>"));
         }
     }
 }

@@ -123,19 +123,26 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
                     autoCount.Detected = true;
                 }
 
+            	string iteratorName = "__iter__" + inspector.VariableName;
+
                 if (autoCount.Detected)
                 {
-                    // var itemCount=0;for(var __iter__item in coll){++itemCount;}
+                    // var itemCount=0;for(var __iter__item in coll){if(typeof(__iter__item)!='function'){++itemCount;}}
                     _source
                         .Append("var ")
                         .Append(inspector.VariableName)
-                        .Append("Count=0;for(var __iter__")
-                        .Append(inspector.VariableName)
+                        .Append("Count=0;for(var ")
+                        .Append(iteratorName)
                         .Append(" in ")
                         .Append(inspector.CollectionCode)
-                        .Append("){++")
+                        .Append("){ if(typeof(")
+						.Append(inspector.CollectionCode)
+						.Append("[")
+						.Append(iteratorName)
+						.Append("])!='function') {")
+						.Append("++")
                         .Append(inspector.VariableName)
-                        .Append("Count;}");
+                        .Append("Count;}}");
                 }
 
                 if (autoIndex.Detected)
@@ -152,8 +159,8 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
 
                 // for(var __iter__item in coll) {
                 _source
-                    .Append("for (var __iter__")
-                    .Append(inspector.VariableName)
+                    .Append("for (var ")
+                    .Append(iteratorName)
                     .Append(" in ")
                     .Append(inspector.CollectionCode)
                     .Append(") {");
@@ -167,6 +174,11 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
                     .Append("[__iter__")
                     .Append(inspector.VariableName)
                     .Append("];");
+
+            	// if(typeof(item)!='function') {
+				_source.Append("if(typeof(")
+					.Append(inspector.VariableName)
+					.Append(")!='function') {");
 
                 if (autoIsLast.Detected)
                 {
@@ -197,7 +209,7 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
                     _source.Append("++").Append(inspector.VariableName).Append("Index;");
                 }
 
-                _source.AppendLine("}");
+                _source.AppendLine("}}");
             }
             else
             {

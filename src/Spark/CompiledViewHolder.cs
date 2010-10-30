@@ -19,22 +19,16 @@ using Spark;
 
 namespace Spark
 {
-    public class CompiledViewHolder
+    public interface ICompiledViewHolder 
     {
-        private CompiledViewHolder _current;
+        ISparkViewEntry Lookup(SparkViewDescriptor descriptor);
+        ISparkViewEntry Lookup(Guid viewId);
+        void Store(ISparkViewEntry entry);
+    }
 
+    public class CompiledViewHolder : ICompiledViewHolder
+    {
         readonly Dictionary<SparkViewDescriptor, ISparkViewEntry> _cache = new Dictionary<SparkViewDescriptor, ISparkViewEntry>();
-
-        public CompiledViewHolder Current
-        {
-            get
-            {
-                if (_current == null)
-                    _current = new CompiledViewHolder();
-                return _current;
-            }
-            set { _current = value; }
-        }
 
         public ISparkViewEntry Lookup(SparkViewDescriptor descriptor)
         {

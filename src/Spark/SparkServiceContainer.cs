@@ -51,7 +51,8 @@ namespace Spark
                     {typeof (IResourcePathManager), c => new DefaultResourcePathManager(c.GetService<ISparkSettings>())},
                     {typeof (ITemplateLocator), c => new DefaultTemplateLocator()},
                     {typeof (IBindingProvider), c => new DefaultBindingProvider()},
-                    {typeof (IViewFolder), CreateDefaultViewFolder}
+                    {typeof (IViewFolder), CreateDefaultViewFolder},
+                    {typeof (ICompiledViewHolder), c => new CompiledViewHolder()},
                 };
 
 

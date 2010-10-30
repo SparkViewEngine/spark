@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="SparkSense.Presenter.SparkSenseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Height="275" Width="300">
+
+    <UserControl.Resources>
+        <ResourceDictionary Source="../Resources/SparkSenseViewResources.xaml" />
+    </UserControl.Resources>
+
+    <Border BorderThickness="1" Padding="1" BorderBrush="Silver">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ListBox 
+                HorizontalAlignment="Stretch" 
+                Name="listViewCompletions" 
+                ItemTemplate="{StaticResource ItemDataTemplate}"
+                ItemsSource="{Binding Path=Items.View}">
+            </ListBox>
+            <Border Grid.Row="1" BorderBrush="Silver" BorderThickness="1" Padding="3" Margin="3">
+                <ToolBar Height="26" Name="toolBar1" />
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 
@@ -135,6 +136,21 @@ namespace Spark.Tests.Compiler
             resultOffset = _entry.SourceMappings[1].OutputBegin;
             resultLength = _entry.SourceMappings[1].OutputEnd - _entry.SourceMappings[1].OutputBegin;
             Assert.AreEqual(" + 5", _entry.SourceCode.Substring(resultOffset, resultLength));
+        }
+
+        [Test]
+        public void WarningsShouldNotCauseCompilationToFail() {
+            _viewFolder.Add("Home\\Index.spark", @"
+<p>
+## warning I am a warning
+Hello
+</p>");
+
+            var contents = RenderView(new SparkViewDescriptor()
+                                          .AddTemplate("Home\\Index.spark"));
+
+            Assert.That(contents, Text.Contains("Hello"));
+            Assert.That(contents, Text.DoesNotContain("warning"));
         }
     }
 }

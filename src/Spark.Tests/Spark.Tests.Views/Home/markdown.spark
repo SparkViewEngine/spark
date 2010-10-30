@@ -1,0 +1,26 @@
+﻿<html>
+  <head>
+    <title>markdown test</title>
+  </head>
+  <body>
+    <h1>markdown test</h1>
+    <p>${System.DateTime.Now}</p>
+    
+    <markdown>
+       	code block on the first line
+	
+Regular text.
+
+    code block indented by spaces
+
+Regular text.
+
+	the lines in this block  
+	all contain trailing spaces  
+
+Regular Text.
+
+	code block on the last line
+    </markdown>
+  </body>
+</html>

@@ -114,7 +114,7 @@ namespace Spark.Web.Mvc
             {
                 var whiteSpace0 = Rep(Ch(char.IsWhiteSpace));
                 var whiteSpace1 = Rep1(Ch(char.IsWhiteSpace));
-                var startOfElement = (_prefix != null) ?  Ch("<" + _prefix + ":use"): Ch("<use");
+                var startOfElement = !string.IsNullOrEmpty(_prefix) ?  Ch("<" + _prefix + ":use"): Ch("<use");
                 var startOfAttribute =  Ch("master").And(whiteSpace0).And(Ch('=')).And(whiteSpace0);
                 var attrValue = Ch('\'').And(Rep(ChNot('\''))).And(Ch('\''))
                     .Or(Ch('\"').And(Rep(ChNot('\"'))).And(Ch('\"')));
