@@ -82,18 +82,18 @@
     <echo message="Build Directory is ${build.dir}" />
 
     <exec program="${msbuild.dir}\msbuild.exe"
-				  commandline="${solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly} /v:q" workingdir="." />
+				  commandline="&quot;${solution.file}&quot; /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
     <exec program="${msbuild.dir}\msbuild.exe"
-				  commandline="${solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly} /v:q" workingdir="." />
+				  commandline="&quot;${solution.file}&quot; /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
 
     <if test="${property::exists('tools.solution.file')}">
       <property name="wix-parameters" value="WixTargetsPath=..\..\..\bin\msbuild\Microsoft\WiX\v3.0\wix.targets;WixTasksPath=WixTasks.dll;WixToolPath=..\..\..\bin\wix"/>
       <property name="communitytasks-parameters" value="MSBuildCommunityTasksPath=..\..\..\bin\msbuild\MSBuildCommunityTasks"/>
 
       <exec program="${msbuild.dir}\msbuild.exe"
-            commandline="${tools.solution.file} /t:Clean /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters} /v:q" workingdir="." />
+            commandline="&quot;${tools.solution.file}&quot; /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters}&quot; /v:q" workingdir="." />
       <exec program="${msbuild.dir}\msbuild.exe"
-            commandline="${tools.solution.file} /t:Rebuild /p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters};ProjectFullVersion=${project.fullversion} /v:q" workingdir="." />
+            commandline="&quot;${tools.solution.file}&quot; /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};${wix-parameters};${communitytasks-parameters};ProjectFullVersion=${project.fullversion}&quot; /v:q" workingdir="." />
     </if>
   </target>
 
