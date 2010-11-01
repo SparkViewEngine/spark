@@ -69,7 +69,7 @@ namespace Spark.Compiler
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (assembly is AssemblyBuilder)
+                if (assembly is AssemblyBuilder || assembly.FullName.StartsWith("mscorlib", StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 string location;

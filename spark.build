@@ -18,18 +18,19 @@
   <property name="project.version" value="${version.major}.${version.minor}" dynamic="true" />
   <property name="project.fullversion" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true" />
   <property name="nant.settings.currentframework" value="net-3.5" />
+  <property name="nunit.path" value="bin\nunit\nunit-console-x86.exe" />
   <property name="ncover.path" value="${bin.dir}\ncover" />
 
   <property name="project.copyright" value="Copyright (c) ${company.name} 2008-${datetime::get-year(datetime::now())}"/>
 
   <property name="package.dir" value="${build.base}\package" />
 
-  <property name="project.signassembly" value="true"/>
+  <property name="project.signassembly" overwrite="false" value="true"/>
 
   <!-- default configuration -->
-  <property name="project.config" value="release" />
+  <property name="project.config" overwrite="false" value="release" />
   <!-- debug|release -->
-  <property name="build.dir" value="${build.base}/${nant.settings.currentframework}.${platform::get-name()}-${project::get-name()}-${project.config}/"/>
+  <property name="build.dir" value="${build.base}/net-4.0.${platform::get-name()}-${project::get-name()}-${project.config}/"/>
   <property name="out.dir" value="${project::get-base-directory()}\${build.dir}" />
 
   <property name="dist.revision" value="${datetime::get-year(datetime::now())*10000+datetime::get-month(datetime::now())*100+ datetime::get-day(datetime::now())}"/>
@@ -143,6 +144,15 @@
       <property name="outputType" value="Plain"/>
     </if>
 
+    <exec program="${nunit.path}" 
+			commandline="${build.dir}/Spark.Tests.dll /exclude:Integration /xml:${results.dir}\CoreTestResult.xml" 
+			workingdir="." />
+    
+		<exec program="${nunit.path}" 
+			commandline="${build.dir}/Spark.Web.Mvc.Tests.dll /exclude:Integration /xml:${results.dir}\MvcTestResult.xml" 
+			workingdir="." />
+    
+    <!--
     <nunit2 failonerror="true" verbose="true">
       <formatter type="Xml" outputdir="${results.dir}" usefile="true" extension=".xml"/>
       <formatter type="${outputType}" />
@@ -177,6 +187,7 @@
         </categories>
       </test>
     </nunit2>
+    -->
   </target>
 
 

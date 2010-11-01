@@ -30,3 +30,4 @@ using System.Security;
 [assembly: Guid("a7c4b15f-ed0e-4fcf-8c5c-26a33205cb8f")]
 
 [assembly: AllowPartiallyTrustedCallers]
+[assembly: SecurityRules(SecurityRuleSet.Level1)]
