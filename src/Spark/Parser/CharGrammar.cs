@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="CharGrammar.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,83 +13,154 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System;
-using System.Collections.Generic;
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Parser
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
+    /// <summary>
+    /// Contains literal character and string matching grammar.
+    /// </summary>
     public class CharGrammar : Grammar
     {
+        /// <summary>
+        /// Matches a character based on a predicate.  If the predicate is a match, the match succeeds.
+        /// </summary>
+        /// <param name="predicate">The function used to test if the character should match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> Ch(Func<char, bool> predicate)
         {
             return delegate(Position input)
-                       {
-                           if (input.PotentialLength() == 0 || !predicate(input.Peek()))
-                               return null;
-                           return new ParseResult<char>(input.Advance(1), input.Peek());
-                       };
+            {
+                if (input.PotentialLength() == 0 || !predicate(input.Peek()))
+                {
+                   return null;
+                }
+
+                return new ParseResult<char>(input.Advance(1), input.Peek());
+            };
         }
 
+        /// <summary>
+        /// Matches a character based on a predicate.  If the predicate is a match, the match fails.
+        /// </summary>
+        /// <param name="predicate">The function used to test if the character should match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> ChNot(Func<char, bool> predicate)
         {
             return delegate(Position input)
-                       {
-                           if (input.PotentialLength() == 0 || predicate(input.Peek()))
-                               return null;
-                           return new ParseResult<char>(input.Advance(1), input.Peek());
-                       };
+            {
+                if (input.PotentialLength() == 0 || predicate(input.Peek()))
+                {
+                    return null;
+                }
+
+                return new ParseResult<char>(input.Advance(1), input.Peek());
+            };
         }
 
+        /// <summary>
+        /// Matches a predefined string of characters.
+        /// </summary>
+        /// <param name="match">The string of characters to match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<string> Ch(string match)
         {
             return delegate(Position input)
-                       {
-                           if (!input.PeekTest(match))
-                               return null;
-                           return new ParseResult<string>(input.Advance(match.Length), match);
-                       };
+            {
+                if (!input.PeekTest(match))
+                {
+                    return null;
+                }
+
+                return new ParseResult<string>(input.Advance(match.Length), match);
+            };
         }
 
+        /// <summary>
+        /// Matches a predefined character.
+        /// </summary>
+        /// <param name="allowed">The character to match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> Ch(char allowed)
         {
             return delegate(Position input)
             {
                 if (input.Peek() != allowed)
+                {
                     return null;
+                }
+
                 return new ParseResult<char>(input.Advance(1), allowed);
             };
         }
 
+        /// <summary>
+        /// Matches a predefined set of characters.
+        /// </summary>
+        /// <param name="allowed">The list of characters to match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> Ch(params char[] allowed)
         {
             return delegate(Position input)
-                       {
-                           if (input.PotentialLength() == 0 || !((IList<char>)allowed).Contains(input.Peek()))
-                               return null;
-                           return new ParseResult<char>(input.Advance(1), input.Peek());
-                       };
+            {
+                var ch = input.Peek();
+                if (input.PotentialLength() == 0 || !((IList<char>)allowed).Contains(ch))
+                {
+                    return null;
+                }
+
+                return new ParseResult<char>(input.Advance(1), ch);
+            };
         }
+        /// <summary>
+        /// Matches any character except a predefined character.
+        /// </summary>
+        /// <param name="disallowed">The character disallowed for the match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> ChNot(char disallowed)
         {
             return delegate(Position input)
             {
                 var ch = input.Peek();
                 if (ch == default(char) || ch == disallowed)
+                {
                     return null;
+                }
+
                 return new ParseResult<char>(input.Advance(1), ch);
             };
         }
+
+        /// <summary>
+        /// Matches any character except a predefined set of characters.
+        /// </summary>
+        /// <param name="disallowed">The characters disallowed for the match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> ChNot(params char[] disallowed)
         {
             return delegate(Position input)
-                       {
-                           if (input.PotentialLength() == 0 || ((IList<char>)disallowed).Contains(input.Peek()))
-                               return null;
-                           return new ParseResult<char>(input.Advance(1), input.Peek());
-                       };
+            {
+                var ch = input.Peek();
+                if (input.PotentialLength() == 0 || ((IList<char>)disallowed).Contains(ch))
+                {
+                    return null;
+                }
+
+                return new ParseResult<char>(input.Advance(1), ch);
+            };
         }
 
+        /// <summary>
+        /// Matches the start or the end of the text.
+        /// </summary>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> ChControl()
         {
             return delegate(Position input)
@@ -104,18 +177,26 @@ namespace Spark.Parser
                        };
         }
 
+        /// <summary>
+        /// Matches the start of text.
+        /// </summary>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> ChSTX()
         {
             var chControl = ChControl();
             return delegate(Position input)
-                       {
-                           var result = chControl(input);
-                           if (result == null || result.Value != '\u0002')
-                               return null;
-                           return result;
-                       };
+            {
+                var result = chControl(input);
+                if (result == null || result.Value != '\u0002')
+                    return null;
+                return result;
+            };
         }
 
+        /// <summary>
+        /// Matches the end of the text.
+        /// </summary>
+        /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> ChETX()
         {
             var chControl = ChControl();

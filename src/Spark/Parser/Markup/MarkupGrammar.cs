@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="Node.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,13 +13,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System.Collections.Generic;
-using System.Linq;
-using Spark.Parser.Code;
+// </copyright>
+// <author>Louis DeJardin</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Parser.Markup
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Spark.Parser.Code;
+
     public class MarkupGrammar : CodeGrammar
     {
         public MarkupGrammar()
@@ -229,9 +235,6 @@ namespace Spark.Parser.Markup
             Nodes = Rep(AnyNode);
         }
 
-
-
-
         public ParseAction<IList<char>> Whitespace;
 
         public ParseAction<IList<Node>> Nodes;
@@ -254,11 +257,15 @@ namespace Spark.Parser.Markup
         public ParseAction<Node> AsNode<TValue>(ParseAction<TValue> parser) where TValue : Node
         {
             return delegate(Position input)
-                       {
-                           var result = parser(input);
-                           if (result == null) return null;
-                           return new ParseResult<Node>(result.Rest, result.Value);
-                       };
+            {
+                var result = parser(input);
+                if (result == null)
+                {
+                    return null;
+                }
+
+                return new ParseResult<Node>(result.Rest, result.Value);
+            };
         }
     }
 }

@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="Node.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,15 +13,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Spark.Parser.Code;
+// </copyright>
+// <author>Louis DeJardin</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Parser.Markup
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Spark.Parser.Code;
+
     public abstract class Node
     {
         public Node OriginalNode { get; set; }
@@ -207,10 +212,10 @@ namespace Spark.Parser.Markup
             Attributes = attributeNodes;
         }
 
-        public string Name;
+        public string Name { get; set; }
         public string Namespace { get; set; }
         public readonly IList<AttributeNode> Attributes;
-        public bool IsEmptyElement;
+        public bool IsEmptyElement { get; set; }
     }
 
     public class EndElementNode : Node
