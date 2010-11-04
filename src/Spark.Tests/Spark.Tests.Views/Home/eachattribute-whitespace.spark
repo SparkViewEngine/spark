@@ -1,0 +1,61 @@
+<ul>
+  <li each="var i in new[] {1,2,3}">${i}</li>
+</ul>
+
+<ul>
+  <li each="var i in new int[] {}">${i}</li>
+</ul>
+
+<p>
+  <for each="var i in new[] {1,2,3}">${i},</for>
+</p>
+
+<p>
+  <for each="var i in new int[] {}">${i},</for>
+</p>
+
+<p>
+  <for each="var i in new int[] {1,2,3}">
+  <span>${i}</span>
+  </for>
+</p>
+
+<p>
+ ?: <img each="var i in new[] {1,2,3}" src="${i}.jpg" />
+</p>
+
+<p><img each="var i in new[] {1,2,3}" src="${i}.jpg" /></p>
+
+<p>
+  <span if="true">abc</span>
+</p>
+
+<p>
+  <span if="false">abc</span>
+</p>
+
+<p>
+  <if condition="true">abc</if>
+</p>
+
+<p>
+  <if condition="false">abc</if>
+</p>
+
+<p>
+  <if condition="true">
+  <div>abc</div>
+  </if>
+  <else>
+  <div>def</div>
+  </else>
+</p>
+
+<p>
+  <if condition="false">
+  <div>abc</div>
+  </if>
+  <else>
+  <div>def</div>
+  </else>
+</p>

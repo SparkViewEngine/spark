@@ -1,0 +1,48 @@
+<StyleCopSettings Version="4.3">
+  <GlobalSettings>
+    <StringProperty Name="MergeSettingsFiles">NoMerge</StringProperty>
+  </GlobalSettings>
+  <Analyzers>
+    <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.NamingRules">
+      <AnalyzerSettings>
+        <CollectionProperty Name="Hungarian">
+          <Value>if</Value>
+          <Value>in</Value>
+          <Value>is</Value>
+          <Value>no</Value>
+          <Value>on</Value>
+          <Value>to</Value>
+        </CollectionProperty>
+      </AnalyzerSettings>
+    </Analyzer>
+    <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.DocumentationRules">
+      <Rules>
+        <Rule Name="DocumentationTextMustBeginWithACapitalLetter">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">True</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+        <Rule Name="DocumentationTextMustEndWithAPeriod">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">True</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+        <Rule Name="FileHeaderMustHaveValidCompanyText">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
+    </Analyzer>
+    <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.ReadabilityRules">
+      <Rules>
+        <Rule Name="DoNotUseRegions">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">True</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
+      <AnalyzerSettings />
+    </Analyzer>
+  </Analyzers>
+</StyleCopSettings>

@@ -288,13 +288,13 @@ namespace Spark
         private ViewLoader CreateViewLoader()
         {
             return new ViewLoader
-                       {
-                           ViewFolder = ViewFolder,
-                           SyntaxProvider = SyntaxProvider,
-                           ExtensionFactory = ExtensionFactory,
-                           Prefix = Settings.Prefix,
-                           BindingProvider = BindingProvider
-                       };
+            {
+                ViewFolder = ViewFolder,
+                SyntaxProvider = SyntaxProvider,
+                ExtensionFactory = ExtensionFactory,
+                Prefix = Settings.Prefix,
+                BindingProvider = BindingProvider
+            };
         }
 
         public Assembly BatchCompilation(IList<SparkViewDescriptor> descriptors)
