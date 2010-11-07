@@ -80,13 +80,16 @@ namespace Spark.Parser.Syntax
 
             var sourceContext = CreateSourceContext(context.ViewPath, context.ViewFolder);
 
-            if (parse == "text")
+            switch (parse)
             {
-                var encoded = sourceContext.Content
-                    .Replace("&", "&amp;")
-                    .Replace("<", "&lt;")
-                    .Replace(">", "&gt;");
-                return new[] { new TextNode(encoded) };
+                case "text":
+                    var encoded = sourceContext.Content
+                        .Replace("&", "&amp;")
+                        .Replace("<", "&lt;")
+                        .Replace(">", "&gt;");
+                    return new[] {new TextNode(encoded)};
+                case "html":
+                    return new[] {new TextNode(sourceContext.Content)};
             }
 
 
