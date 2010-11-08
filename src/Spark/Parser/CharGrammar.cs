@@ -119,6 +119,31 @@ namespace Spark.Parser
                 return new ParseResult<char>(input.Advance(1), ch);
             };
         }
+
+        /// <summary>
+        /// Matches a string of characters.
+        /// </summary>
+        /// <param name="parse">The predicate of each character to match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
+        public static ParseAction<string> StringOf(ParseAction<char> parse)
+        {
+            return delegate(Position input)
+            {
+                var sb = new StringBuilder();
+
+                var rest = input;
+                var result = parse(rest);
+                while (result != null)
+                {
+                    sb.Append(result.Value);
+                    rest = result.Rest;
+                    result = parse(rest);
+                }
+
+                return new ParseResult<string>(rest, sb.ToString());
+            };
+        }
+
         /// <summary>
         /// Matches any character except a predefined character.
         /// </summary>
@@ -163,18 +188,7 @@ namespace Spark.Parser
         /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> ChControl()
         {
-            return delegate(Position input)
-                       {
-                           // STX at start of file
-                           if (input.Offset == 0) 
-                               return new ParseResult<char>(input, '\u0002');
-
-                           // ETX at end of file
-                           if (input.PotentialLength() == 0)
-                               return new ParseResult<char>(input, '\u0003');
-
-                           return null;
-                       };
+            return ChSTX().Or(ChETX());
         }
 
         /// <summary>
@@ -183,13 +197,14 @@ namespace Spark.Parser
         /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> ChSTX()
         {
-            var chControl = ChControl();
             return delegate(Position input)
             {
-                var result = chControl(input);
-                if (result == null || result.Value != '\u0002')
-                    return null;
-                return result;
+                if (input.Offset == 0)
+                {
+                    return new ParseResult<char>(input, '\u0003');
+                }
+
+                return null;
             };
         }
 
@@ -199,13 +214,14 @@ namespace Spark.Parser
         /// <returns>The corresponding ParseAction for this match.</returns>
         public static ParseAction<char> ChETX()
         {
-            var chControl = ChControl();
             return delegate(Position input)
             {
-                var result = chControl(input);
-                if (result == null || result.Value != '\u0003')
-                    return null;
-                return result;
+                if (input.PotentialLength() == 0)
+                {
+                    return new ParseResult<char>(input, '\u0003');
+                }
+
+                return null;
             };
         }
     }

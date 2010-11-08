@@ -15,6 +15,7 @@
 // limitations under the License.
 // </copyright>
 // <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
 namespace Spark.Parser.Markup
@@ -205,28 +206,42 @@ namespace Spark.Parser.Markup
     public class ElementNode : Node
     {
         public ElementNode(string name, IList<AttributeNode> attributeNodes, bool isEmptyElement)
+            : this(name, attributeNodes, isEmptyElement, string.Empty)
+        {
+        }
+
+        public ElementNode(string name, IList<AttributeNode> attributeNodes, bool isEmptyElement, string preceedingWhitespace)
         {
             Name = name;
             Namespace = "";
             IsEmptyElement = isEmptyElement;
             Attributes = attributeNodes;
+            PreceedingWhitespace = preceedingWhitespace;
         }
 
         public string Name { get; set; }
         public string Namespace { get; set; }
         public readonly IList<AttributeNode> Attributes;
         public bool IsEmptyElement { get; set; }
+        public string PreceedingWhitespace { get; set; }
     }
 
     public class EndElementNode : Node
     {
         public EndElementNode(string name)
+            : this(name, string.Empty)
+        {
+        }
+
+        public EndElementNode(string name, string preceedingWhitespace)
         {
             Name = name;
+            PreceedingWhitespace = preceedingWhitespace;
         }
 
         public string Name { get; set; }
         public string Namespace { get; set; }
+        public string PreceedingWhitespace { get; set; }
     }
 
     public class SpecialNode : Node

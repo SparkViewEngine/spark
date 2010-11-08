@@ -15,6 +15,7 @@
 // limitations under the License.
 // </copyright>
 // <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
 namespace Spark.Parser.Syntax
@@ -141,9 +142,9 @@ namespace Spark.Parser.Syntax
                            new PrefixExpandingVisitor(context),
                            new SpecialNodeVisitor(context),
                            new CacheAttributeVisitor(context),
+                           new WhitespaceCleanerVisitor(context),
                            new ForEachAttributeVisitor(context),
                            new ConditionalAttributeVisitor(context),
-                           new OmitExtraLinesVisitor(context),
                            new TestElseElementVisitor(context),
                            new OnceAttributeVisitor(context),
                            new UrlAttributeVisitor(context),

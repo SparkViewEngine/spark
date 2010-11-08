@@ -16,6 +16,7 @@
 // </copyright>
 // <author>Louis DeJardin</author>
 // <author>maxild</author>
+// <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
 namespace Spark.Compiler.NodeVisitors
@@ -266,7 +267,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ElementNode node)
         {
-            AddLiteral("<" + node.Name);
+            AddLiteral(node.PreceedingWhitespace + "<" + node.Name);
 
             foreach (var attribute in node.Attributes)
                 Accept(attribute);
@@ -395,7 +396,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(EndElementNode node)
         {
-            AddLiteral("</" + node.Name + ">");
+            AddLiteral(node.PreceedingWhitespace + "</" + node.Name + ">");
         }
 
 

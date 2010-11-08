@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Castle MonoRail", "Castle M
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B23DD51D-925A-4488-ABE8-F2A9D69E5976}"
 	ProjectSection(SolutionItems) = preProject
+		Settings.StyleCop = Settings.StyleCop
 		..\spark.build = ..\spark.build
 	EndProjectSection
 EndProject
