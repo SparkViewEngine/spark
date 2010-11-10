@@ -127,7 +127,6 @@
     <Compile Include="Parser\MarkupGrammarTester.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\UserInfo.cs" />
-    <Compile Include="Visitors\OmitExtraLinesVisitorTester.cs" />
     <Compile Include="Parser\PaintTester.cs" />
     <Compile Include="Parser\PositionTester.cs" />
     <Compile Include="Parser\TypeInspectorTester.cs" />
@@ -296,6 +295,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\eachattribute-whitespace.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\markdown.spark">

@@ -213,5 +213,17 @@ namespace Spark.Tests
             var contents = view.RenderView();
             Assert.AreEqual("<p>&lt;li&gt;at&amp;t&lt;/li&gt;</p>", contents);
         }
+
+        [Test]
+        public void IncludingAsHtmlWithDollar()
+        {
+            var view = CreateView(new InMemoryViewFolder
+                                      {
+                                          {"including\\index.spark", "<p><include href='jquery.templ.htm' parse='html'/></p>"},
+                                          {"including\\jquery.templ.htm", "<h4>${Title}</h4>"}
+                                      }, "including\\index.spark");
+            var contents = view.RenderView();
+            Assert.AreEqual("<p><h4>${Title}</h4></p>", contents);
+        }
     }
 }

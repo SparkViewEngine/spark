@@ -15,6 +15,7 @@
 // limitations under the License.
 // </copyright>
 // <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
 namespace Spark.Parser.Syntax
@@ -80,13 +81,16 @@ namespace Spark.Parser.Syntax
 
             var sourceContext = CreateSourceContext(context.ViewPath, context.ViewFolder);
 
-            if (parse == "text")
+            switch (parse)
             {
-                var encoded = sourceContext.Content
-                    .Replace("&", "&amp;")
-                    .Replace("<", "&lt;")
-                    .Replace(">", "&gt;");
-                return new[] { new TextNode(encoded) };
+                case "text":
+                    var encoded = sourceContext.Content
+                        .Replace("&", "&amp;")
+                        .Replace("<", "&lt;")
+                        .Replace(">", "&gt;");
+                    return new[] {new TextNode(encoded)};
+                case "html":
+                    return new[] {new TextNode(sourceContext.Content)};
             }
 
 
@@ -138,9 +142,9 @@ namespace Spark.Parser.Syntax
                            new PrefixExpandingVisitor(context),
                            new SpecialNodeVisitor(context),
                            new CacheAttributeVisitor(context),
+                           new WhitespaceCleanerVisitor(context),
                            new ForEachAttributeVisitor(context),
                            new ConditionalAttributeVisitor(context),
-                           new OmitExtraLinesVisitor(context),
                            new TestElseElementVisitor(context),
                            new OnceAttributeVisitor(context),
                            new UrlAttributeVisitor(context),
