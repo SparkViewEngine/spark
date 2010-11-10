@@ -346,7 +346,8 @@ namespace Spark.Tests
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             var content = sb.ToString();
-            var expected = @"<ul>
+            var expected =
+@"<ul>
   <li>1</li>
   <li>2</li>
   <li>3</li>
@@ -396,6 +397,11 @@ namespace Spark.Tests
   <div>def</div>
 </p>
 ";
+
+            // Ignore differences in line-ending style.
+            content = content.Replace("\r\n", "\n").Replace("\r", "\n");
+            expected = expected.Replace("\r\n", "\n").Replace("\r", "\n");
+
             Assert.That(content, Is.EqualTo(expected));
         }
 
