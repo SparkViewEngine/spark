@@ -1,50 +1,35 @@
+# Ignore the output folder.
 build
 
-src/CommonAssemblyInfo.cs
-src/CommonVersionInfo.h
+# Ignore all */bin/ and */obj/ folders...
+bin/
+obj/
 
-src/*.user
-src/*/*.user
-src/*/*/*.user
-src/*/*/*/*.user
+# ...except the root bin folder (used for build tools and etc.).
+!/bin/
 
-src/*/bin
-src/*/*/bin
-src/*/*/*/bin
+# Ignore backup files.
+*.orig
 
-src/*/obj
-src/*/*/obj
-src/*/*/*/obj
+# Ignore all Visual Studio generated files.
+*.suo
+*.user
+*.ncb
+_ReSharper.*
 
-src/_ReSharper.*
-src/*/_ReSharper.*
-src/*/*/_ReSharper.*
-src/*/*/*/_ReSharper.*
+# Ignore all MonoDevelop generated files.
+*.userprefs
+*.pidb
 
-src/*.suo
-src/*/*.suo
-src/*/*/*.suo
-src/*/*/*/*.suo
+# Ignore all Operating System generated files.
+Thumbs.db
 
-src/*.sln.cache
-src/*/*.sln.cache
-src/*/*/*.sln.cache
-src/*/*/*/*.sln.cache
+# Ignore all Test Suite status files.
+TestResult.xml
+*.VisualState.xml
 
-
-src/Tools/Tools.ncb
-
+# Ignore some other things, too.
 src/Tools/SparkLanguagePackage/*_i.c
 src/Tools/SparkLanguagePackage/*_i.h
 src/Tools/SparkLanguagePackage/*_p.c
 src/Tools/SparkLanguagePackage/PackageLoadKey.h
-
-bin/aspnetmvc/System.Web.Mvc.pdb
-bin/aspnetmvc/Microsoft.Web.Mvc.pdb
-bin/mvccontrib/MvcContrib.pdb
-bin/mvccontrib/MvcContrib.xml
-bin/mvccontrib/MvcContrib.Castle.pdb
-bin/mvccontrib/MvcContrib.Castle.xml
-*.pidb
-*.userprefs
-*Thumbs.db

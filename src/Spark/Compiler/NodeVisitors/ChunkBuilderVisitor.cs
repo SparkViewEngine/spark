@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="ChunkBuilderVisitor.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,16 +13,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Spark.Parser;
-using Spark.Parser.Markup;
-using Spark.Parser.Code;
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>maxild</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Compiler.NodeVisitors
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Spark.Parser;
+    using Spark.Parser.Code;
+    using Spark.Parser.Markup;
+
     public class ChunkBuilderVisitor : AbstractNodeVisitor
     {
         private readonly IDictionary<Node, Paint<Node>> _nodePaint;
@@ -260,7 +267,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(ElementNode node)
         {
-            AddLiteral("<" + node.Name);
+            AddLiteral(node.PreceedingWhitespace + "<" + node.Name);
 
             foreach (var attribute in node.Attributes)
                 Accept(attribute);
@@ -389,7 +396,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(EndElementNode node)
         {
-            AddLiteral("</" + node.Name + ">");
+            AddLiteral(node.PreceedingWhitespace + "</" + node.Name + ">");
         }
 
 

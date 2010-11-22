@@ -1,4 +1,6 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+//-------------------------------------------------------------------------
+// <copyright file="Constraints.cs">
+// Copyright 2008-2010 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,20 +13,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Spark.Compiler;
-using Spark.Compiler.NodeVisitors;
-using Spark.FileSystem;
-using Spark.Parser.Code;
-using Spark.Parser.Markup;
+// </copyright>
+// <author>Louis DeJardin</author>
+// <author>John Gietzen</author>
+//-------------------------------------------------------------------------
 
 namespace Spark.Parser.Syntax
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using Spark.Compiler;
+    using Spark.Compiler.NodeVisitors;
+    using Spark.Parser.Code;
+    using Spark.Parser.Markup;
+
     public class DefaultSyntaxProvider : AbstractSyntaxProvider
     {
         private readonly MarkupGrammar _grammar;
@@ -77,13 +81,16 @@ namespace Spark.Parser.Syntax
 
             var sourceContext = CreateSourceContext(context.ViewPath, context.ViewFolder);
 
-            if (parse == "text")
+            switch (parse)
             {
-                var encoded = sourceContext.Content
-                    .Replace("&", "&amp;")
-                    .Replace("<", "&lt;")
-                    .Replace(">", "&gt;");
-                return new[] { new TextNode(encoded) };
+                case "text":
+                    var encoded = sourceContext.Content
+                        .Replace("&", "&amp;")
+                        .Replace("<", "&lt;")
+                        .Replace(">", "&gt;");
+                    return new[] {new TextNode(encoded)};
+                case "html":
+                    return new[] {new TextNode(sourceContext.Content)};
             }
 
 
@@ -135,9 +142,9 @@ namespace Spark.Parser.Syntax
                            new PrefixExpandingVisitor(context),
                            new SpecialNodeVisitor(context),
                            new CacheAttributeVisitor(context),
+                           new WhitespaceCleanerVisitor(context),
                            new ForEachAttributeVisitor(context),
                            new ConditionalAttributeVisitor(context),
-                           new OmitExtraLinesVisitor(context),
                            new TestElseElementVisitor(context),
                            new OnceAttributeVisitor(context),
                            new UrlAttributeVisitor(context),

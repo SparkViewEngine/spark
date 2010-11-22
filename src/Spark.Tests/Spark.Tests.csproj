@@ -89,6 +89,7 @@
     <Compile Include="Compiler\VisualBasicViewCompilerTester.cs" />
     <Compile Include="Compiler\ExpressionBuilderTester.cs" />
     <Compile Include="Compiler\ForEachInspectorTester.cs" />
+    <Compile Include="Constraints.cs" />
     <Compile Include="DefaultResourcePathManagerTester.cs" />
     <Compile Include="FileSystem\CombinedViewFolderTester.cs" />
     <Compile Include="FileSystem\SubViewFolderTester.cs" />
@@ -126,7 +127,6 @@
     <Compile Include="Parser\MarkupGrammarTester.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\UserInfo.cs" />
-    <Compile Include="Visitors\OmitExtraLinesVisitorTester.cs" />
     <Compile Include="Parser\PaintTester.cs" />
     <Compile Include="Parser\PositionTester.cs" />
     <Compile Include="Parser\TypeInspectorTester.cs" />
@@ -295,6 +295,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\eachattribute-whitespace.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\markdown.spark">
