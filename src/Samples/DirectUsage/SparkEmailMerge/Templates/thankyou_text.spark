@@ -1,0 +1,17 @@
+﻿Hello ${#CustomerName},
+
+Thanks for order from SparkStore.
+
+Your order details are:
+
+<for each='var line in (System.Collections.Generic.IEnumerable<SparkEmailMerge.OrderLineDto>)#Lines'>
+${line.Quantity} x ${line.ProductName} @ $${line.UnitPrice.ToString("0.00")}
+</for>
+
+Thanks,
+
+SparkStore
+_____________________________________________________
+
+Order received at ${#OrderDate}
+

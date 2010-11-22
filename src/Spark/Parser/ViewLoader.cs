@@ -126,14 +126,13 @@ namespace Spark.Parser
         /// <returns>The full list of possible partial view paths.</returns>
         private static IEnumerable<string> PartialViewFolderPaths(string viewPath)
         {
-            do
+            while(true) 
             {
                 viewPath = Path.GetDirectoryName(viewPath);
-
+				if (String.IsNullOrEmpty(viewPath)) yield break;
                 yield return viewPath;
                 yield return Path.Combine(viewPath, "Shared");
             }
-            while (!string.IsNullOrEmpty(viewPath));
         }
 
         /// <summary>

@@ -1,0 +1,21 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+	<p>Dear ${#CustomerName},</p>
+	<p>Thanks for ordering from SparkStore.</p>
+	<p>Your order reference is ${#OrderReference}</p>
+	<p>Your order was as follows:</p>
+	<ul>
+		<li each='var line in (System.Collections.Generic.IEnumerable<SparkEmailMerge.OrderLineDto>)#Lines'>
+		${line.Quantity} x ${line.ProductName} @ $${line.UnitPrice.ToString("0.00")}
+		</li>
+	</ul>
+	<p>Thanks,</p>
+	<p><em>SparkStore</em></p>
+	<hr />
+	<p>Order received at ${#OrderDate}</p>
+	</body>
+</html>

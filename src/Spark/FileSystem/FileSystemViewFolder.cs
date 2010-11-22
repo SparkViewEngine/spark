@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System;
 
 namespace Spark.FileSystem
 {
@@ -44,6 +45,7 @@ namespace Spark.FileSystem
 
         public IList<string> ListViews(string path)
         {
+			if (String.IsNullOrEmpty(path)) return (new string[0]);
             if (!Directory.Exists(Path.Combine(_basePath, path)))
                 return new string[0];
 

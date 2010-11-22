@@ -1,0 +1,12 @@
+Hello ${#user.name},
+
+
+Welcome to the site.
+
+Click the following link to confirm your email address ${#user.email}.
+
+${#siteroot}/confirm/${#user.id}
+
+
+Thanks,
+- Spark view engine

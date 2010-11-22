@@ -1,0 +1,27 @@
+Hi ${#user.name},
+
+You opted into our spam at some point, and now that's going to pay off!
+
+Because now you have the option of owning your very 
+own ${#product.name} today for the
+low price of ${#product.price "$#,##0.00"}!
+
+That's a saving of like ${#product.discount "#,##0"} bucks!!
+
+Yeah! I know! How cool is that!?!?
+
+Click the following link to get yourself some of that action.
+
+${#siteroot}/addtocart?id=${#product.price}&offer=${#promo.dist}
+
+<test if="IsInStock((int)#product.id)">
+Yours is in stock and ready to fly!!!
+<else/>
+We can't keep them on the shelves! So get your order in today!!!
+</test>
+
+Regards,
+- Spark view engine
+
+${#siteroot}/unsubscribe/${#user.id}?source=${#promo.dist}
+
