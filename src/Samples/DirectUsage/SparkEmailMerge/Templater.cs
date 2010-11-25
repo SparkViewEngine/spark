@@ -6,15 +6,23 @@ using Spark;
 using System.Reflection;
 using System.Web.Mvc;
 using System.IO;
+using Spark.FileSystem;
 
 namespace SparkEmailMerge {
 	public class Templater {
 
 		private SparkViewEngine engine;
-		
-		public Templater() {
-			var settings = new SparkSettings();
-			settings.SetPageBaseType(typeof(TemplateBase));
+
+		public Templater(string templateFolder)
+		{
+			SparkSettings settings = new SparkSettings()
+				.SetPageBaseType(typeof(TemplateBase))
+				.AddViewFolder(ViewFolderType.FileSystem,
+							   new Dictionary<string, string>
+								   {
+									   {"basePath", templateFolder}
+								   });
+
 			engine = new SparkViewEngine(settings);
 		}
 

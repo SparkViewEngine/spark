@@ -16,13 +16,13 @@ namespace SparkEmailMerge {
 		}
 
 		static void Main(string[] args) {
+			const string htmlBodyTemplate = "thankyou_html.spark";
+			const string textBodyTemplate = "thankyou_text.spark";
 			var templateFolder = Path.Combine(GetLocalDirectory(), "Templates");
-			var htmlBodyTemplate = Path.Combine(templateFolder, "thankyou_html.spark");
-			var textBodyTemplate = Path.Combine(templateFolder, "thankyou_text.spark");
 			var mailDropDirectory = Path.Combine(GetLocalDirectory(), "MailDrop");
 			if (!Directory.Exists(mailDropDirectory)) Directory.CreateDirectory(mailDropDirectory);
 			var smtp = new SmtpMailSender(mailDropDirectory);
-			var templater = new Templater();
+			var templater = new Templater(templateFolder);
 			
 			var mailCount = 0;
 
