@@ -1,0 +1,16 @@
+﻿
+<viewdata model="ValueHolder[[int, Product]]" />
+
+<cache key="Model.Key">
+	<content name="title">${Model.Value.Name}</content>
+
+	<h2>Viewing ${Model.Value.Name}</h2>
+	<p>Product ID #${Model.Value.Id}</p>
+	<p>Name ${Model.Value.Name}</p>
+	<p>Price ${Model.Value.Price}</p>
+	<p>${Html.ActionLink("Return to list", "Index")}</p>
+
+	<now/>
+</cache>
+
+<now/>

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>
+        <use content="title" />
+    </title>
+    <link href="~/Content/styles/global.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/jquery-1.4.1.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.tools.min.js" type="text/javascript"></script>
+    <use content="head" />
+</head>
+<body>
+    <div id="page">
+        <div id="main" class="wrapper">
+            <use content="view" />
+        </div>
+        <div class="clear">
+        </div>
+        <div id="footer" class="wrapper center">
+            &copy;2010 Robert Greyling
+        </div>
+    </div>
+</body>
+</html>

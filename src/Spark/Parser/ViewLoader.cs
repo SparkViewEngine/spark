@@ -107,6 +107,12 @@ namespace Spark.Parser
             return this.entries.Values.Select(e => e.Chunks);
         }
 
+        public void EvictEntry(string referencePath)
+        {
+            if (this.entries.ContainsKey(referencePath))
+                this.entries.Remove(referencePath);
+        }
+
         /// <summary>
         /// Returns all partial files available based on the location of a view.
         /// </summary>
@@ -243,7 +249,7 @@ namespace Spark.Parser
         {
             var viewNameWithExtension = EnsureSparkExtension(viewName);
             var folderPaths = PartialViewFolderPaths(existingViewPath);
-            
+
             var partialPaths = folderPaths.Select(x => Path.Combine(x, viewNameWithExtension));
             var partialViewLocation = partialPaths.FirstOrDefault(x => this.ViewFolder.HasView(x));
 

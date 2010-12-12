@@ -1,0 +1,4 @@
+﻿
+<use namespace="System.Web.Mvc.Html"/>
+<use namespace="MacrosSample.Models"/>
+<use namespace="System.Xml.Linq"/>

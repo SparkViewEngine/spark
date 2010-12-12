@@ -1,0 +1,13 @@
+﻿
+<content name="title">Home Page</content>
+
+<h2>${ViewData["Message"]}</h2>
+<p>
+    To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+${HelloWorld("arg")}
+
+</p>
+
+<macro name="HelloWorld" foo="string">
+	Testing ${1+4} ${foo}
+</macro>

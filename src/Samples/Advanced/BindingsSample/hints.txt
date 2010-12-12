@@ -1,0 +1,43 @@
+﻿== some existing helpers ==
+--logon.spark
+<a action="Register" title="yep" route-id="bar">Register</a>
+<Form style="background:#ffd;" route-foo="bar">
+<ValidationMessage For="UserName" style="border:solid 1px red;" />                
+
+== add binding for render partial ==
+--index.spark
+# Html.RenderPartial("hello", new {foo="asdf"});
+
+--index.spark
+<Partial name="hello" foo="one" />
+
+--bindings.xml
+<element name="Partial">#Html.RenderPartial("@name", new ViewDataDictionary{{"@*"}});</element>
+
+
+
+
+== add binding for custom html helper ==
+--index.spark
+${Html.Colorize("foo", Color.Red, Color.LawnGreen, .2)}
+
+--index.spark
+<p>As inline html <spread value=".8">Player 1</spread> vs <spread value=".5">Player 2</spread>...</p>
+
+--bindings.xml
+<element name="spread">Html.Colorize("child::*", @min, @max, @value)</element>
+<element name="spread">Html.Colorize("child::*", Color.Red, Color.LawnGreen, @value)</element>
+
+--index.spark
+<p>Custom range <spread min="Color.Red" max="Color.Black" value=".3">brownish</spread>?</p>
+
+--index.spark
+<p>Going too far 
+	<spread 
+		min="Color.Purple" 
+		max="Color.Salmon" 
+		each="var x in new[]{.1,.9,.8,.5}"
+		value="x"> [${xIndex + 1} is ${x}] <test if="!xIsLast"> and </test>
+	</spread>
+</p>
+

@@ -1,0 +1,2 @@
+﻿<viewdata foo="string"/>
+<p>Hello, ${foo}</p>

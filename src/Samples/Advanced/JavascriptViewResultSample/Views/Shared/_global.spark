@@ -1,0 +1,9 @@
+﻿<use namespace="System"/>
+<use namespace="System.Linq"/>
+<use namespace="System.Web.Mvc"/>
+<use namespace="System.Web.UI"/>
+<use namespace="System.Web.Mvc.Html"/>
+<use namespace="System.Web.Routing"/>
+
+<use namespace="JavascriptViewResultSample.Models" />
+<use namespace="JavascriptViewResultSample.Components.Paging" />

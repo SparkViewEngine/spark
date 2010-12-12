@@ -1,0 +1,3 @@
+﻿
+<use namespace="System.Web.Mvc.Html"/>
+<use namespace="PartialsSample.Models"/>

@@ -1,0 +1,38 @@
+﻿
+<content name="title">Home Page</content>
+<viewdata Message="string" />
+
+<h2>${Message}</h2>
+<p>
+    To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+</p>
+
+# Html.RenderPartial("hello", new {foo="asdf"});
+
+<Partial name="hello" foo="one"/>
+<!--
+
+${Html.Colorize("foo", Color.Red, Color.LawnGreen, .2)}
+
+<p>As inline html <spread value=".8">Player 1</spread> vs <spread value=".5">Player 2</spread>...</p>
+
+<p>Custom range <spread min="Color.Red" max="Color.Black" value=".3">brownish</spread>?</p>
+
+
+<ul>
+<li 
+	each="var x in new[]{.1,.9,.8,.5}" 
+	style="background:#cce;?{xIndex % 2 == 0}background:#337;?{xIndex % 2 == 1}">
+	${xIndex} of ${xCount} - ${x}
+</li>
+</ul>
+
+<p>Going too far 
+	<spread 
+		min="Color.Purple" 
+		max="Color.Salmon" 
+		each="var x in new[]{.1,.9,.8,.5}"
+		value="x"> [${xIndex + 1} is ${x}] <test if="!xIsLast"> and </test>
+	</spread>
+</p>
+-->

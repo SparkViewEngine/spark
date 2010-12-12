@@ -1,0 +1,10 @@
+﻿<viewdata list="PagedList[[RegisteredUser]]" />
+
+<for each="var column in list.Columns">
+	<div class="col">
+		<for each="var user in column.Data">
+			<UserBox />
+		</for>
+	</div>
+</for>
+

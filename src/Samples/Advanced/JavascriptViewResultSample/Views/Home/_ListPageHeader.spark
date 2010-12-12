@@ -1,0 +1,4 @@
+﻿<div class="left">
+	<span id="totalResults">${totalUsers}</span> results. Page <span id="currentPage">${currentPage}</span> of <span id="totalPages">${totalPages}</span>
+</div>
+<div id="headerLoading" class="right">loaded</div>

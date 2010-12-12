@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title><use content="title">Spark Sample</use></title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="page">
+
+        <div id="header">
+            <div id="title">
+                <h1>My MVC Application</h1>
+            </div>
+              
+            <div id="logindisplay">
+                # Html.RenderPartial("LogOnUserControl");
+            </div> 
+            
+            <div id="menucontainer">
+            
+                <ul id="menu">
+					<Navigation/>
+					
+<NavItem1 caption="'Alpha' + 4" action="'Index'" controller="'Home'"/>
+<NavItem1 caption="'Beta'" action="'About'" controller="'Home'"/>
+
+<NavItem2 action="'Index'" controller="'Home'">Gamma</NavItem2>
+<NavItem2 action="'About'" controller="'Home'">Delta ${1+4} text</NavItem2>
+
+                </ul>
+            
+            </div>
+        </div>
+
+        <div id="main">
+			<div style="float:right; width:300px;">
+				<use content="sidebar"/>				
+			</div>
+			
+            <use content="view"/>
+
+            <div id="footer">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

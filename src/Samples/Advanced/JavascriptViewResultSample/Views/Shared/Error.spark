@@ -1,0 +1,10 @@
+﻿<asp:Content ID="errorTitle" ContentPlaceHolderID="TitleContent" runat="server">
+    What was that noise?!
+</asp:Content>
+
+<asp:Content ID="errorContent" ContentPlaceHolderID="MainContent" runat="server">
+    <h2>
+        Dammit dammit dammit! Can't get good hamsters these days. 
+        Let's see if we can get him back up on his wheel...
+    </h2>
+</asp:Content>

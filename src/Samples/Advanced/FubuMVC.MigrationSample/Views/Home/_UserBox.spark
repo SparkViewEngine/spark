@@ -1,0 +1,9 @@
+﻿#var avatarUrl = "/Content/avatars/" + user.Avatar;
+<div class="box-glass user-summary">
+	<div class="avatar">
+		<img src="${avatarUrl}" alt="${user.Name}" />
+	</div>
+	<div class="user-detail">
+		${user.Name}
+	</div>
+</div>
