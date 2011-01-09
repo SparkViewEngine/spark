@@ -120,6 +120,7 @@ namespace Spark.Compiler.NodeVisitors
 
         private Binding MatchElementBinding(ElementNode node)
         {
+            if (Context.Bindings == null) return null;
             var bindingsForName = Context.Bindings.Where(binding => binding.ElementName == node.Name);
             var withAttributesSatisfied = bindingsForName.Where(binding => RequiredReferencesSatisfied(binding, node));
             return withAttributesSatisfied.FirstOrDefault();
