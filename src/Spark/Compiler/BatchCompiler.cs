@@ -69,21 +69,11 @@ namespace Spark.Compiler
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (assembly is AssemblyBuilder)
+
+                if (assembly.IsDynamic())
                     continue;
 
-                string location;
-                try
-                {
-                    location = assembly.Location;
-                }
-                catch (NotSupportedException)
-                {
-                    continue;
-                }
-
-                if (string.IsNullOrEmpty(location) == false)
-                    compilerParameters.ReferencedAssemblies.Add(location);
+                compilerParameters.ReferencedAssemblies.Add(assembly.Location);
             }
 
             CompilerResults compilerResults;
@@ -179,4 +169,29 @@ namespace Spark.Compiler
            return compilerVersion;
         }
     }
+
+    public static class AssemblyExtentions
+    {
+        public static bool IsDynamic(this Assembly assembly)
+        {
+            return assembly is AssemblyBuilder
+                   || assembly.ManifestModule.GetType().Namespace == "System.Reflection.Emit" //.Net 4 specific
+                   || assembly.HasNoLocation();
+        }
+
+        private static bool HasNoLocation(this Assembly assembly)
+        {
+            bool result;
+            try
+            {
+                result = string.IsNullOrEmpty(assembly.Location);
+            }
+            catch (NotSupportedException)
+            {
+                return true;
+            }
+            return result;
+        }
+    }
+
 }

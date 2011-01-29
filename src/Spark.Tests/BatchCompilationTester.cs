@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using NUnit.Framework;
+using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests.Precompiled;
 
@@ -125,5 +129,21 @@ namespace Spark.Tests
                                       .AddTemplate("Shared\\Default.spark"));
             Assert.AreEqual(typeof(View2), view2.GetType());
         }
+
+        [Test]
+        public void AvoidNotSupportedExceptionForDynamicAssemblies()
+        {
+            var assemblyName = new AssemblyName
+            {
+                Name = "DynamicAssembly",
+            };
+            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndSave);
+            var moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicModule", "DynamicAssembly.dll");
+            var type = moduleBuilder.DefineType("DynamicType", TypeAttributes.Public).CreateType();
+            assemblyBuilder.Save("DynamicAssembly.dll");
+            Assert.IsTrue(type.Assembly.IsDynamic());
+        }
+
+        
     }
 }
