@@ -160,7 +160,7 @@ namespace Spark.Compiler
                         }
                     }
                 }
-                throw new CompilerException(sb.ToString());
+                throw new BatchCompilerException(sb.ToString(), compilerResults);
             }
 
             return compilerResults.CompiledAssembly;
