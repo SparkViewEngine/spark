@@ -14,10 +14,12 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Web.Configuration;
 using NUnit.Framework;
 using Spark.Spool;
 
@@ -211,5 +213,11 @@ namespace Spark.Tests.Spool
             Assert.AreEqual(1, countAfter);
         }
 
+        [Test]
+        public void EncodingShouldBeUtf8ByDefault()
+        {
+            var writer = new SpoolWriter();
+            Assert.AreEqual(65001, writer.Encoding.CodePage);
+        }
     }
 }
