@@ -148,7 +148,7 @@ namespace Spark.Tests.Compiler
         }
 
 
-        [Test, ExpectedException(typeof(CompilerException))]
+        [Test, ExpectedException(typeof(BatchCompilerException))]
         public void ProvideFullException()
         {
             var compiler = new CSharpViewCompiler { BaseClass = "Spark.SparkViewBase" };
