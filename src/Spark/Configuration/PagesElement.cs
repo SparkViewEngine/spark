@@ -66,5 +66,12 @@ namespace Spark.Configuration
             get { return (ResourcePathElementCollection)this["resources"]; }
             set { this["resources"] = value; }
         }
+
+        [ConfigurationProperty("parseSectionTagAsSegment")]
+        public bool ParseSectionTagAsSegment
+        {
+            get { return (bool)this["parseSectionTagAsSegment"]; }
+            set { this["parseSectionTagAsSegment"] = value; }
+        }
     }
 }

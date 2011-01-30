@@ -111,6 +111,11 @@ namespace Spark.Configuration
             get { return Pages.Prefix; }
         }
 
+        bool ISparkSettings.ParseSectionTagAsSegment
+        {
+            get { return Pages.ParseSectionTagAsSegment; }
+        }
+
         string ISparkSettings.PageBaseType
         {
             get { return Pages.PageBaseType; }
@@ -157,5 +162,6 @@ namespace Spark.Configuration
                     yield return viewFolder;
             }
         }
+
     }
 }

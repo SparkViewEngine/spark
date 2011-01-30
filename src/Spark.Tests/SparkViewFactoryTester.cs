@@ -625,10 +625,70 @@ namespace Spark.Tests
         }
 
         [Test]
-        public void RenderPartialWithSectionContent()
+        public void RenderPartialWithSegmentContent()
         {
             mocks.ReplayAll();
-            var viewContext = MakeViewContext("render-partial-with-section-content", null);
+            var viewContext = MakeViewContext("render-partial-with-segment-content", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "xbox",
+                "xtop",
+                "xb1",
+                "xb2",
+                "xb3",
+                "xb4",
+                "xboxcontent",
+                "title=\"My Tooltip\"",
+                "<h3>This is a test</h3>",
+                "Hello World",
+                "xbottom",
+                "xb4",
+                "xb3",
+                "xb2",
+                "xb1"));
+        }
+
+        [Test]
+        public void RenderPartialWithSectionAsHtml5ContentByDefault()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("render-partial-section-or-ignore", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "xbox",
+                "xtop",
+                "xb1",
+                "xb2",
+                "xb3",
+                "xb4",
+                "xboxcontent",
+                "<section name=\"top\">",
+                "<h3>This is a test</h3>",
+                "</section>",
+                "<section name=\"tooltip\">",
+                "My Tooltip",
+                "</section>",
+                "<p>Hello World</p>",
+                "xbottom",
+                "xb4",
+                "xb3",
+                "xb2",
+                "xb1"));
+        }
+
+        [Test]
+        public void RenderPartialWithSectionAsSegmentContentFromSettings()
+        {
+            settings.SetParseSectionTagAsSegment(true);
+
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("render-partial-section-or-ignore", null);
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();
@@ -1086,10 +1146,10 @@ namespace Spark.Tests
         }
 
         [Test]
-        public void SectionRenderingFallbackMayRenderSection()
+        public void SegmentRenderingFallbackMayRenderSegment()
         {
             mocks.ReplayAll();
-            var viewContext = MakeViewContext("SectionRenderingFallbackMayRenderSection", null);
+            var viewContext = MakeViewContext("SegmentRenderingFallbackMayRenderSegment", null);
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();

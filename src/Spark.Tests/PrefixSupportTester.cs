@@ -135,16 +135,46 @@ namespace Spark.Tests
                             "<content:ignored>ignored</content:ignored>",
                             "<use:ignored>ignored</use:ignored>",
                             "<render:ignored>ignored</render:ignored>",
-                            "<section:ignored>ignored</section:ignored>"
+                            "<segment:ignored>ignored</segment:ignored>"
                 );
         }
 
         [Test]
-        public void SectionAndRenderPrefixes()
+        public void SegmentAndRenderPrefixes()
         {
             var view =
                 (StubSparkView)
-                _engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\section-render-prefix.spark"));
+                _engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\segment-render-prefix.spark"));
+            var output = new StringWriter();
+            view.RenderView(output);
+
+            ContainsInOrder(output.ToString(),
+                            "<p>one</p>",
+                            "<p>two</p>",
+                            "<p>three</p>",
+                            "<macro:ignored>ignored</macro:ignored>",
+                            "<content:ignored>ignored</content:ignored>",
+                            "<use:ignored>ignored</use:ignored>",
+                            "<render:ignored>ignored</render:ignored>",
+                            "<segment:ignored>ignored</segment:ignored>"
+                );
+        }
+
+        [Test]
+        public void SectionAsSegmentAndRenderPrefixes()
+        {
+            var settings = new SparkSettings()
+                .SetPageBaseType(typeof (StubSparkView))
+                .SetParseSectionTagAsSegment(true);
+
+            var engine = new SparkViewEngine(settings)
+            {
+                ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")
+            };
+
+            var view =
+                (StubSparkView)
+                engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\section-render-prefix.spark"));
             var output = new StringWriter();
             view.RenderView(output);
 

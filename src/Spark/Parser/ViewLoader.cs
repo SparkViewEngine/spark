@@ -49,6 +49,8 @@ namespace Spark.Parser
 
         public string Prefix { get; set; }
 
+        public bool ParseSectionTagAsSegment { get; set; }
+
         public IBindingProvider BindingProvider { get; set; }
 
         /// <summary>
@@ -194,7 +196,8 @@ namespace Spark.Parser
                 Prefix = this.Prefix,
                 ExtensionFactory = this.ExtensionFactory,
                 PartialFileNames = this.FindPartialFiles(viewPath),
-                Bindings = this.FindBindings()
+                Bindings = this.FindBindings(),
+                ParseSectionTagAsSegment = this.ParseSectionTagAsSegment
             };
             newEntry.Chunks = this.SyntaxProvider.GetChunks(context, viewPath);
 

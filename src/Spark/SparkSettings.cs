@@ -40,6 +40,7 @@ namespace Spark
         public string Prefix { get; set; }
         public string PageBaseType { get; set; }
         public LanguageType DefaultLanguage { get; set; }
+        public bool ParseSectionTagAsSegment { get; set; }
 
         private readonly IList<string> _useNamespaces;
         public IEnumerable<string> UseNamespaces
@@ -128,6 +129,12 @@ namespace Spark
         public SparkSettings SetPrefix(string prefix)
         {
             Prefix = prefix;
+            return this;
+        }
+
+        public SparkSettings SetParseSectionTagAsSegment(bool parseSectionTagAsSegment)
+        {
+            ParseSectionTagAsSegment = parseSectionTagAsSegment;
             return this;
         }
 

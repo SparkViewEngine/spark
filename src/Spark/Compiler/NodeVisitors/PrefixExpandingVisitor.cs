@@ -27,14 +27,17 @@ namespace Spark.Compiler.NodeVisitors
         public PrefixExpandingVisitor(VisitorContext context)
             : base(context)
         {
-            _prefixes = new[]
+            _prefixes = new List<PrefixSpecs>
                             {
-                                new PrefixSpecs("section", Constants.SectionNamespace, "section", "name"),
+                                new PrefixSpecs("segment", Constants.SegmentNamespace, "segment", "name"),
                                 new PrefixSpecs("macro", Constants.MacroNamespace, "macro", "name"),
                                 new PrefixSpecs("content", Constants.ContentNamespace, "content", "name"),
                                 new PrefixSpecs("use", Constants.UseNamespace, "use", "content"),
-                                new PrefixSpecs("render", Constants.RenderNamespace, "render", "section")
+                                new PrefixSpecs("render", Constants.RenderNamespace, "render", "segment")
                             };
+            if (!context.ParseSectionTagAsSegment) return;
+            _prefixes.Add(new PrefixSpecs("render", Constants.RenderNamespace, "render", "section"));
+            _prefixes.Add(new PrefixSpecs("section", Constants.SectionNamespace, "section", "name"));
         }
 
 

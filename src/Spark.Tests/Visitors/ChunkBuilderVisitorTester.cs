@@ -86,14 +86,39 @@ namespace Spark.Tests.Visitors
         }
 
         [Test]
-        public void RenderPartialContainsSections()
+        public void RenderPartialContainsSegments()
         {
             var nodes = ParseNodes(
-                "<foo><section:two>beta</section:two><section:one>alpha</section:one></foo>",
+                "<foo><segment:two>beta</segment:two><segment:one>alpha</segment:one></foo>",
                 new PrefixExpandingVisitor(new VisitorContext()),
                 new SpecialNodeVisitor(new VisitorContext { PartialFileNames = new[] { "foo" } }));
 
             var visitor = new ChunkBuilderVisitor(new VisitorContext());
+            visitor.Accept(nodes);
+            Assert.AreEqual(1, visitor.Chunks.Count);
+            var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];
+            Assert.AreEqual(0, renderPartial.Body.Count);
+            Assert.AreEqual(2, renderPartial.Sections.Count);
+            Assert.That(renderPartial.Sections.ContainsKey("one"));
+            Assert.That(renderPartial.Sections.ContainsKey("two"));
+            var scope = (ScopeChunk)renderPartial.Sections["one"][0];
+            var literal = (SendLiteralChunk)scope.Body[0];
+            Assert.AreEqual("alpha", literal.Text);
+        }
+
+        [Test]
+        public void RenderPartialContainsSectionsAsSegmentsIfAliasedInConfig()
+        {
+            var nodes = ParseNodes(
+                "<foo><section:two>beta</section:two><section:one>alpha</section:one></foo>",
+                new PrefixExpandingVisitor(new VisitorContext {ParseSectionTagAsSegment = true}),
+                new SpecialNodeVisitor(new VisitorContext
+                                           {
+                                               PartialFileNames = new[] { "foo" },
+                                               ParseSectionTagAsSegment = true
+                                           }));
+
+            var visitor = new ChunkBuilderVisitor(new VisitorContext {ParseSectionTagAsSegment = true});
             visitor.Accept(nodes);
             Assert.AreEqual(1, visitor.Chunks.Count);
             var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];

@@ -21,6 +21,6 @@
   <content:ignored>ignored</content:ignored>
   <use:ignored>ignored</use:ignored>
   <render:ignored>ignored</render:ignored>
-  <section:ignored>ignored</section:ignored>
+  <segment:ignored>ignored</segment:ignored>
 
 </div>

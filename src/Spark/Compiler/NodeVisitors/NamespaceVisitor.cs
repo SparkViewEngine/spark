@@ -34,8 +34,10 @@ namespace Spark.Compiler.NodeVisitors
                 FrameData.Nametable["content"] = Constants.ContentNamespace;
                 FrameData.Nametable["use"] = Constants.UseNamespace;
                 FrameData.Nametable["macro"] = Constants.MacroNamespace;
-                FrameData.Nametable["section"] = Constants.SectionNamespace;
+                FrameData.Nametable["segment"] = Constants.SegmentNamespace;
                 FrameData.Nametable["render"] = Constants.RenderNamespace;
+                if (context.ParseSectionTagAsSegment)
+                    FrameData.Nametable["section"] = Constants.SectionNamespace;
             }
         }
 

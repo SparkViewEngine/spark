@@ -100,10 +100,11 @@ namespace Spark.Compiler.NodeVisitors
                                       {"use", VisitUse},
                                       {"macro", (n,i)=>VisitMacro(i)},
                                       {"render", VisitRender},
-                                      {"section", VisitSection},
+                                      {"segment", VisitSection},
                                       {"cache", VisitCache},
                                       {"markdown", VisitMarkdown}
                                   };
+            if(context.ParseSectionTagAsSegment) _specialNodeMap.Add("section", VisitSection);
         }
 
 
@@ -546,7 +547,10 @@ namespace Spark.Compiler.NodeVisitors
             }
             else
             {
-                var sectionAttr = inspector.TakeAttribute("section");
+                var sectionAttr = inspector.TakeAttribute("segment");
+
+                if(Context.ParseSectionTagAsSegment && sectionAttr == null)
+                    sectionAttr = inspector.TakeAttribute("section");
 
                 string sectionName = null;
                 if (sectionAttr != null)

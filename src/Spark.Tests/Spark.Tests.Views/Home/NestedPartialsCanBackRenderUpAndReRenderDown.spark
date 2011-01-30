@@ -1,8 +1,8 @@
 
 [001]
 <NestedPartialsOuter>
-	<section name="beta">
+	<segment name="beta">
 		[002]
-	</section>
+	</segment>
 </NestedPartialsOuter>
 [003]

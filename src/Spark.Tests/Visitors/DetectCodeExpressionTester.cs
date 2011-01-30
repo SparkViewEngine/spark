@@ -99,11 +99,11 @@ namespace Spark.Tests.Visitors
         }
 
         [Test]
-        public void ParametersInNamedSection()
+        public void ParametersInNamedSegment()
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts><section:foo>${xIndex}</section:foo></Guts></for>"},
+                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts><segment:foo>${xIndex}</segment:foo></Guts></for>"},
                                      {"home\\_Guts.spark", "<p><render:foo/></p>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
@@ -124,7 +124,7 @@ namespace Spark.Tests.Visitors
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<Guts items='new[]{1,2,3}'><section:each>${xIndex}</section:each></Guts>"},
+                                     {"home\\index.spark", "<Guts items='new[]{1,2,3}'><segment:each>${xIndex}</segment:each></Guts>"},
                                      {"home\\_Guts.spark", "<for each='var x in items'><render:each/></for>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };

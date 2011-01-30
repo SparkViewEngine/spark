@@ -250,6 +250,12 @@
     <None Include="Spark.Tests.Views\Home\_AddViewDataPartial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\render-partial-section-or-ignore.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Prefix\section-render-prefix.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Shared\layout.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -303,10 +309,10 @@
     <None Include="Spark.Tests.Views\Home\markdown.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Spark.Tests.Views\Home\_NamedSectionFallback.spark">
+    <None Include="Spark.Tests.Views\Home\_NamedSegmentFallback.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Spark.Tests.Views\Home\SectionRenderingFallbackMayRenderSection.spark">
+    <None Include="Spark.Tests.Views\Home\SegmentRenderingFallbackMayRenderSegment.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\render-dotted-partial.spark">
@@ -381,7 +387,7 @@
     <None Include="Spark.Tests.Views\Prefix\macro-content-prefix-from-settings.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Spark.Tests.Views\Prefix\section-render-prefix.spark">
+    <None Include="Spark.Tests.Views\Prefix\segment-render-prefix.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Prefix\macro-content-prefix.spark">
@@ -405,7 +411,7 @@
     <None Include="Spark.Tests.Views\Home\_RoundedEx.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Spark.Tests.Views\Home\render-partial-with-section-content.spark">
+    <None Include="Spark.Tests.Views\Home\render-partial-with-segment-content.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\dynamic-attributes.spark">
@@ -426,7 +432,7 @@
     <None Include="Spark.Tests.Views\Home\_Rounded.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Spark.Tests.Views\Prefix\_PartialWithSections.spark">
+    <None Include="Spark.Tests.Views\Prefix\_PartialWithSegments.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -48,5 +48,6 @@ namespace Spark.Compiler.NodeVisitors
         public IList<string> PartialFileNames { get; set; }
         public ISparkExtensionFactory ExtensionFactory { get; set; }
         public IEnumerable<Binding> Bindings { get; set; }
+        public bool ParseSectionTagAsSegment { get; set; }
     }
 }

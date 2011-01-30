@@ -293,7 +293,8 @@ namespace Spark
                 SyntaxProvider = SyntaxProvider,
                 ExtensionFactory = ExtensionFactory,
                 Prefix = Settings.Prefix,
-                BindingProvider = BindingProvider
+                BindingProvider = BindingProvider,
+                ParseSectionTagAsSegment = Settings.ParseSectionTagAsSegment
             };
         }
 

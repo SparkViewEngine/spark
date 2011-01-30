@@ -40,6 +40,7 @@ namespace Spark
         IEnumerable<string> UseAssemblies { get; }
         IEnumerable<IResourceMapping> ResourceMappings { get; }
         IEnumerable<IViewFolderSettings> ViewFolders { get; }
+        bool ParseSectionTagAsSegment { get; }
     }
 
     public interface IResourceMapping
