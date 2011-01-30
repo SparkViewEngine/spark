@@ -67,15 +67,13 @@
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions">
-      <Private>True</Private>
+      <HintPath> ..\..\bin\aspnetmvc\System.Web.Abstractions.dll"</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\aspnetmvc\System.Web.Mvc.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Web.Mvc">
+      <HintPath> ..\..\bin\aspnetmvc\System.Web.Mvc.dll"</HintPath>
     </Reference>
     <Reference Include="System.Web.Routing">
-      <Private>True</Private>
+      <HintPath> ..\..\bin\aspnetmvc\System.Web.Routing.dll"</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
