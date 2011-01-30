@@ -48,5 +48,5 @@ using System.Security;
 // [assembly: AssemblyVersion("1.0.*")]
 
 
-
+[assembly: SecurityRules(SecurityRuleSet.Level1)]
 [assembly: AllowPartiallyTrustedCallers]
