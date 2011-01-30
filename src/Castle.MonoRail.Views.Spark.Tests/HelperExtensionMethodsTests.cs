@@ -72,7 +72,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
                     missingMethods.Add(neededMethod);
             }
 
-            Assert.IsEmpty(string.Concat(missingMethods.ToArray()), "{0} methods not represented", missingMethods.Count);
+            Assert.IsEmpty(string.Concat<MethodDescriptor>(missingMethods.ToArray()), "{0} methods not represented", missingMethods.Count);
         }
 
         class HelperDescriptor

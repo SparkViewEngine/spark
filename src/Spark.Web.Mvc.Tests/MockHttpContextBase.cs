@@ -40,7 +40,7 @@ namespace Spark.Web.Mvc.Tests
             contextBase.Stub(x => x.Server).Return(serverUtilityBase);
             contextBase.Stub(x => x.Items).Return(items);
 
-            responseBase.Stub(x => x.Output).Return(output);
+            responseBase.Output = output;
             responseBase.Stub(x => x.OutputStream).Return(outputStream);
 
 

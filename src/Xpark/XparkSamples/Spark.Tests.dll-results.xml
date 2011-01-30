@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--This file represents the results of running a test suite-->
-<test-results name="C:\Projects\spark\build\net-3.5.win32-Spark-release\Spark.Tests.dll" total="266" failures="0" not-run="2" date="2009-03-18" time="11:41:26">
+<test-results name="C:\Projects\spark\build\net-4.0.win32-Spark-release\Spark.Tests.dll" total="266" failures="0" not-run="2" date="2009-03-18" time="11:41:26">
   <environment nunit-version="2.2.8.0" clr-version="2.0.50727.3053" os-version="Microsoft Windows NT 5.1.2600 Service Pack 3" platform="Win32NT" cwd="C:\Projects\spark" machine-name="GLIMP-VPC1" user="Louis" user-domain="GLIMP-VPC1" />
   <culture-info current-culture="en-US" current-uiculture="en-US" />
-  <test-suite name="C:\Projects\spark\build\net-3.5.win32-Spark-release\Spark.Tests.dll" success="True" time="28.010" asserts="0">
+  <test-suite name="C:\Projects\spark\build\net-4.0.win32-Spark-release\Spark.Tests.dll" success="True" time="28.010" asserts="0">
     <results>
       <test-suite name="Spark" success="True" time="27.980" asserts="0">
         <results>

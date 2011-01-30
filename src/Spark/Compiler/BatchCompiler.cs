@@ -158,15 +158,7 @@ namespace Spark.Compiler
         
         private static string GetCompilerVersion()
         {
-            var clrVersion = Environment.Version;
-            var compilerVersion = "v3.5";
-            
-            if (clrVersion.Major == 4 && clrVersion.Minor == 0)
-            {
-                compilerVersion = "v4.0";
-            }
-            
-           return compilerVersion;
+            return "v4.0";
         }
     }
 
