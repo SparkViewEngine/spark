@@ -20,6 +20,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using System.Web.SessionState;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Spark.FileSystem;
@@ -638,6 +639,11 @@ namespace Spark.Web.Mvc.Tests
             public IController CreateController(RequestContext requestContext, string controllerName)
             {
                 return new RenderActionController();
+            }
+
+            public SessionStateBehavior GetControllerSessionBehavior(RequestContext requestContext, string controllerName)
+            {
+                return new SessionStateBehavior();
             }
 
             public void ReleaseController(IController controller)
