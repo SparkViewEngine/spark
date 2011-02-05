@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 using System;
+using System.Dynamic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
@@ -110,6 +111,13 @@ namespace Spark.Web.Mvc.Tests
         {
             var view = new ModelViewTest { ViewData = { Model = "asd" } };
             Assert.AreEqual("asd", view.Model);
+        }
+
+        [Test]
+        public void CanAccessViewBagViaView()
+        {
+            var view = new ModelViewTest { ViewBag = { SomeProperty = "dgf" } };
+            Assert.AreEqual("dgf", view.ViewBag.SomeProperty);
         }
     }
 }
