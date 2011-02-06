@@ -39,7 +39,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentBodySimpleHtml.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(string.Format("Home{0}ComponentBodySimpleHtml.spark", Path.DirectorySeparatorChar), writer,
+                            engineContext, controller, controllerContext);
 
             mocks.VerifyAll();
 
@@ -56,7 +57,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentBodyHtmlHasAttributes.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(string.Format("Home{0}ComponentBodyHtmlHasAttributes.spark", Path.DirectorySeparatorChar),
+                            writer, engineContext, controller, controllerContext);
 
             mocks.VerifyAll();
 
@@ -74,7 +76,9 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\RenderingComponentWithBodyAndNoDetailsAttrib.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(
+                string.Format("Home{0}RenderingComponentWithBodyAndNoDetailsAttrib.spark", Path.DirectorySeparatorChar),
+                writer, engineContext, controller, controllerContext);
 
             mocks.VerifyAll();
 

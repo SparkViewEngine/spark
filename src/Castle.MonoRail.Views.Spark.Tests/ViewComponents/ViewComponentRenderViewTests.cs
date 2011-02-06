@@ -37,7 +37,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentCallingRenderView.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(string.Format("Home{0}ComponentCallingRenderView.spark", Path.DirectorySeparatorChar),
+                            writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
             Assert.IsTrue(output.Contains("This is a widget"));
@@ -49,7 +50,9 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentRenderViewWithParameters.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(
+                string.Format("Home{0}ComponentRenderViewWithParameters.spark", Path.DirectorySeparatorChar), writer,
+                engineContext, controller, controllerContext);
 
             var output = writer.ToString();
             Assert.IsTrue(output.Contains("Mode Alpha and 123"));
@@ -62,7 +65,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentRenderViewWithContent.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(string.Format("Home{0}ComponentRenderViewWithContent.spark", Path.DirectorySeparatorChar),
+                            writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
             Assert.IsTrue(output.Contains("Mode Delta and 789"));
@@ -83,7 +87,9 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentRenderViewFromEmbeddedResource.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(
+                string.Format("Home{0}ComponentRenderViewFromEmbeddedResource.spark", Path.DirectorySeparatorChar),
+                writer, engineContext, controller, controllerContext);
 
             mocks.VerifyAll();
 
@@ -99,7 +105,9 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentRenderViewSharesOnceFlags.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(
+                string.Format("Home{0}ComponentRenderViewSharesOnceFlags.spark", Path.DirectorySeparatorChar), writer,
+                engineContext, controller, controllerContext);
 
             mocks.VerifyAll();
 
@@ -117,7 +125,9 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentRenderViewUsesGlobalSpark.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(
+                string.Format("Home{0}ComponentRenderViewUsesGlobalSpark.spark", Path.DirectorySeparatorChar), writer,
+                engineContext, controller, controllerContext);
 
             mocks.VerifyAll();
 

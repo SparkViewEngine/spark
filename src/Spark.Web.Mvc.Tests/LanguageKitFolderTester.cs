@@ -16,7 +16,7 @@ namespace Spark.Web.Mvc.Tests
         {
             _folder = new InMemoryViewFolder
                           {
-                              {"Home\\Index.spark", "alpha"}
+                              {string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar), "alpha"}
                           };
             _adapter = new LanguageKit.Folder(_folder);
         }
@@ -25,15 +25,15 @@ namespace Spark.Web.Mvc.Tests
         public void ViewContentPassesThroughNormally()
         {
             Init();
-            Assert.That(_adapter.HasView("Home\\Index.spark"), Is.True);
-            Assert.That(_adapter.HasView("Home\\Index2.spark"), Is.False);
+            Assert.That(_adapter.HasView(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.True);
+            Assert.That(_adapter.HasView(string.Format("Home{0}Index2.spark", Path.DirectorySeparatorChar)), Is.False);
 
-            var contents = ReadContents(_adapter, "Home\\Index.spark");
+            var contents = ReadContents(_adapter, string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar));
             Assert.That(contents, Is.EqualTo("alpha"));
 
             var items = _adapter.ListViews("Home");
             Assert.That(items.Count, Is.EqualTo(1));
-            Assert.That(items[0], Is.EqualTo("Home\\Index.spark"));
+            Assert.That(items[0], Is.EqualTo(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar)));
         }
 
         private static string ReadContents(IViewFolder adapter, string path)
@@ -50,20 +50,20 @@ namespace Spark.Web.Mvc.Tests
         {
             LanguageKit.LanguagePath path;
 
-            path = _adapter.ParseLanguagePath("language\\en\\foo\\bar.spark");
+            path = _adapter.ParseLanguagePath(string.Format("language{0}en{0}foo{0}bar.spark", Path.DirectorySeparatorChar));
             Assert.That(path, Is.Not.Null);
             Assert.That(path.Language, Is.EqualTo("en"));
-            Assert.That(path.Path, Is.EqualTo("foo\\bar.spark"));
+            Assert.That(path.Path, Is.EqualTo(string.Format("foo{0}bar.spark", Path.DirectorySeparatorChar)));
 
-            path = _adapter.ParseLanguagePath("Language\\en-us\\foo\\bar.spark");
+            path = _adapter.ParseLanguagePath(string.Format("Language{0}en-us{0}foo{0}bar.spark", Path.DirectorySeparatorChar));
             Assert.That(path, Is.Not.Null);
             Assert.That(path.Language, Is.EqualTo("en-us"));
-            Assert.That(path.Path, Is.EqualTo("foo\\bar.spark"));
+            Assert.That(path.Path, Is.EqualTo(string.Format("foo{0}bar.spark", Path.DirectorySeparatorChar)));
 
-            path = _adapter.ParseLanguagePath("notLanguage\\en-us\\foo\\bar.spark");
+            path = _adapter.ParseLanguagePath(string.Format("notLanguage{0}en-us{0}foo{0}bar.spark", Path.DirectorySeparatorChar));
             Assert.That(path, Is.Null);
 
-            path = _adapter.ParseLanguagePath("Languages\\en-us\\foo\\bar.spark");
+            path = _adapter.ParseLanguagePath(string.Format("Languages{0}en-us{0}foo{0}bar.spark", Path.DirectorySeparatorChar));
             Assert.That(path, Is.Null);
         }
 
@@ -72,13 +72,13 @@ namespace Spark.Web.Mvc.Tests
         {
             LanguageKit.LanguagePath path;
 
-            path = _adapter.ParseLanguagePath("language\\en\\");
+            path = _adapter.ParseLanguagePath(string.Format("language{0}en{0}", Path.DirectorySeparatorChar));
             Assert.That(path, Is.Not.Null);
 
-            path = _adapter.ParseLanguagePath("language\\en");
+            path = _adapter.ParseLanguagePath(string.Format("language{0}en", Path.DirectorySeparatorChar));
             Assert.That(path, Is.Null);
 
-            path = _adapter.ParseLanguagePath("language\\");
+            path = _adapter.ParseLanguagePath(string.Format("language{0}", Path.DirectorySeparatorChar));
             Assert.That(path, Is.Null);
 
             path = _adapter.ParseLanguagePath("languages");
@@ -94,14 +94,14 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void HasViewForLanguageFolderPathsWillHitNativeFiles()
         {
-            Assert.That(_adapter.HasView("language\\en\\Home\\Index.spark"), Is.True);
-            Assert.That(_adapter.HasView("language\\en-us\\Home\\Index.spark"), Is.True);
-            Assert.That(_adapter.HasView("Language\\en\\Home\\Index.spark"), Is.True);
-            Assert.That(_adapter.HasView("Language\\en-us\\Home\\Index.spark"), Is.True);
-            Assert.That(_adapter.HasView("language\\en\\Home\\NoSuchFile.spark"), Is.False);
-            Assert.That(_adapter.HasView("language\\en-us\\Home\\NoSuchFile.spark"), Is.False);
-            Assert.That(_adapter.HasView("Language\\en\\Home\\NoSuchFile.spark"), Is.False);
-            Assert.That(_adapter.HasView("Language\\en-us\\Home\\NoSuchFile.spark"), Is.False);
+            Assert.That(_adapter.HasView(string.Format("language{0}en{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.True);
+            Assert.That(_adapter.HasView(string.Format("language{0}en-us{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.True);
+            Assert.That(_adapter.HasView(string.Format("Language{0}en{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.True);
+            Assert.That(_adapter.HasView(string.Format("Language{0}en-us{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.True);
+            Assert.That(_adapter.HasView(string.Format("language{0}en{0}Home{0}NoSuchFile.spark", Path.DirectorySeparatorChar)), Is.False);
+            Assert.That(_adapter.HasView(string.Format("language{0}en-us{0}Home{0}NoSuchFile.spark", Path.DirectorySeparatorChar)), Is.False);
+            Assert.That(_adapter.HasView(string.Format("Language{0}en{0}Home{0}NoSuchFile.spark", Path.DirectorySeparatorChar)), Is.False);
+            Assert.That(_adapter.HasView(string.Format("Language{0}en-us{0}Home{0}NoSuchFile.spark", Path.DirectorySeparatorChar)), Is.False);
         }
 
         [Test]
@@ -109,10 +109,10 @@ namespace Spark.Web.Mvc.Tests
         {
             Init();
 
-            Assert.That(ReadContents(_adapter, "language\\en\\Home\\Index.spark"), Is.EqualTo("alpha"));
-            Assert.That(ReadContents(_adapter, "language\\en-us\\Home\\Index.spark"), Is.EqualTo("alpha"));
-            Assert.That(ReadContents(_adapter, "Language\\en\\Home\\Index.spark"), Is.EqualTo("alpha"));
-            Assert.That(ReadContents(_adapter, "Language\\en-us\\Home\\Index.spark"), Is.EqualTo("alpha"));
+            Assert.That(ReadContents(_adapter, string.Format("language{0}en{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.EqualTo("alpha"));
+            Assert.That(ReadContents(_adapter, string.Format("language{0}en-us{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.EqualTo("alpha"));
+            Assert.That(ReadContents(_adapter, string.Format("Language{0}en{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.EqualTo("alpha"));
+            Assert.That(ReadContents(_adapter, string.Format("Language{0}en-us{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.EqualTo("alpha"));
         }
 
         [Test]
@@ -120,15 +120,15 @@ namespace Spark.Web.Mvc.Tests
         {
             Init();
 
-            _folder.Add("Home\\Index.fr.spark", "beta");
-            _folder.Add("Home\\Index.en.spark", "gamma");
-            _folder.Add("Home\\Index.en-us.spark", "delta");
+            _folder.Add(string.Format("Home{0}Index.fr.spark", Path.DirectorySeparatorChar), "beta");
+            _folder.Add(string.Format("Home{0}Index.en.spark", Path.DirectorySeparatorChar), "gamma");
+            _folder.Add(string.Format("Home{0}Index.en-us.spark", Path.DirectorySeparatorChar), "delta");
 
-            Assert.That(ReadContents(_adapter, "language\\fr\\Home\\Index.spark"), Is.EqualTo("beta"));
-            Assert.That(ReadContents(_adapter, "language\\es\\Home\\Index.spark"), Is.EqualTo("alpha"));
-            Assert.That(ReadContents(_adapter, "language\\en\\Home\\Index.spark"), Is.EqualTo("gamma"));
-            Assert.That(ReadContents(_adapter, "language\\en-us\\Home\\Index.spark"), Is.EqualTo("delta"));
-            Assert.That(ReadContents(_adapter, "language\\en-uk\\Home\\Index.spark"), Is.EqualTo("gamma"));
+            Assert.That(ReadContents(_adapter, string.Format("language{0}fr{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.EqualTo("beta"));
+            Assert.That(ReadContents(_adapter, string.Format("language{0}es{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.EqualTo("alpha"));
+            Assert.That(ReadContents(_adapter, string.Format("language{0}en{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.EqualTo("gamma"));
+            Assert.That(ReadContents(_adapter, string.Format("language{0}en-us{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.EqualTo("delta"));
+            Assert.That(ReadContents(_adapter, string.Format("language{0}en-uk{0}Home{0}Index.spark", Path.DirectorySeparatorChar)), Is.EqualTo("gamma"));
         }
 
         [Test]
@@ -137,21 +137,21 @@ namespace Spark.Web.Mvc.Tests
             Init();
             AddShared();
 
-            var items = _adapter.ListViews("Home\\Shared");
+            var items = _adapter.ListViews(string.Format("Home{0}Shared", Path.DirectorySeparatorChar));
             Assert.That(items.Count, Is.EqualTo(5));
-            Assert.That(items, Has.Member("Home\\Shared\\_foo.spark"));
-            Assert.That(items, Has.Member("Home\\Shared\\_foo.en.spark"));
-            Assert.That(items, Has.Member("Home\\Shared\\_foo.en-uk.spark"));
-            Assert.That(items, Has.Member("Home\\Shared\\_bar.spark"));
+            Assert.That(items, Has.Member(string.Format("Home{0}Shared{0}_foo.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.Member(string.Format("Home{0}Shared{0}_foo.en.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.Member(string.Format("Home{0}Shared{0}_foo.en-uk.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.Member(string.Format("Home{0}Shared{0}_bar.spark", Path.DirectorySeparatorChar)));
         }
 
         private void AddShared()
         {
-            _folder.Add("Home\\Shared\\_foo.spark", "1");
-            _folder.Add("Home\\Shared\\_foo.en.spark", "2");
-            _folder.Add("Home\\Shared\\_foo.en-uk.spark", "3");
-            _folder.Add("Home\\Shared\\_bar.spark", "4");
-            _folder.Add("Home\\Shared\\_quux.es.spark", "4");
+            _folder.Add(string.Format("Home{0}Shared{0}_foo.spark", Path.DirectorySeparatorChar), "1");
+            _folder.Add(string.Format("Home{0}Shared{0}_foo.en.spark", Path.DirectorySeparatorChar), "2");
+            _folder.Add(string.Format("Home{0}Shared{0}_foo.en-uk.spark", Path.DirectorySeparatorChar), "3");
+            _folder.Add(string.Format("Home{0}Shared{0}_bar.spark", Path.DirectorySeparatorChar), "4");
+            _folder.Add(string.Format("Home{0}Shared{0}_quux.es.spark", Path.DirectorySeparatorChar), "4");
         }
 
         [Test]
@@ -160,22 +160,22 @@ namespace Spark.Web.Mvc.Tests
             Init();
             AddShared();
 
-            var items = _adapter.ListViews("language\\en\\Home\\Shared");
-            Assert.That(items, Has.Member("language\\en\\Home\\Shared\\_foo.spark"));
-            Assert.That(items, Has.Member("language\\en\\Home\\Shared\\_bar.spark"));
-            Assert.That(items, Has.No.Member("language\\es\\Home\\Shared\\_quux.spark"));
-            Assert.That(items, Has.No.Member("Language\\es\\Home\\Shared\\_quux.spark"));
+            var items = _adapter.ListViews(string.Format("language{0}en{0}Home{0}Shared", Path.DirectorySeparatorChar));
+            Assert.That(items, Has.Member(string.Format("language{0}en{0}Home{0}Shared{0}_foo.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.Member(string.Format("language{0}en{0}Home{0}Shared{0}_bar.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.No.Member(string.Format("language{0}es{0}Home{0}Shared{0}_quux.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.No.Member(string.Format("Language{0}es{0}Home{0}Shared{0}_quux.spark", Path.DirectorySeparatorChar)));
 
-            items = _adapter.ListViews("language\\en-uk\\Home\\Shared");
-            Assert.That(items, Has.Member("language\\en-uk\\Home\\Shared\\_foo.spark"));
-            Assert.That(items, Has.Member("language\\en-uk\\Home\\Shared\\_bar.spark"));
-            Assert.That(items, Has.No.Member("language\\es\\Home\\Shared\\_quux.spark"));
-            Assert.That(items, Has.No.Member("Language\\es\\Home\\Shared\\_quux.spark"));
+            items = _adapter.ListViews(string.Format("language{0}en-uk{0}Home{0}Shared", Path.DirectorySeparatorChar));
+            Assert.That(items, Has.Member(string.Format("language{0}en-uk{0}Home{0}Shared{0}_foo.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.Member(string.Format("language{0}en-uk{0}Home{0}Shared{0}_bar.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.No.Member(string.Format("language{0}es{0}Home{0}Shared{0}_quux.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.No.Member(string.Format("Language{0}es{0}Home{0}Shared{0}_quux.spark", Path.DirectorySeparatorChar)));
 
-            items = _adapter.ListViews("Language\\es\\Home\\Shared");
-            Assert.That(items, Has.Member("Language\\es\\Home\\Shared\\_foo.spark"));
-            Assert.That(items, Has.Member("Language\\es\\Home\\Shared\\_bar.spark"));
-            Assert.That(items, Has.Member("Language\\es\\Home\\Shared\\_quux.spark"));
+            items = _adapter.ListViews(string.Format("Language{0}es{0}Home{0}Shared", Path.DirectorySeparatorChar));
+            Assert.That(items, Has.Member(string.Format("Language{0}es{0}Home{0}Shared{0}_foo.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.Member(string.Format("Language{0}es{0}Home{0}Shared{0}_bar.spark", Path.DirectorySeparatorChar)));
+            Assert.That(items, Has.Member(string.Format("Language{0}es{0}Home{0}Shared{0}_quux.spark", Path.DirectorySeparatorChar)));
         }
     }
 }

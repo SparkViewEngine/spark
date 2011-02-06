@@ -14,6 +14,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace Spark.Tests.FileSystem
         public void SharingExtraFolders()
         {
             var normal = new FileSystemViewFolder("Spark.Tests.Views");
-            var otherLocation = new FileSystemViewFolder("Spark.Tests.Views\\Prefix");
+            var otherLocation = new FileSystemViewFolder(string.Format("Spark.Tests.Views{0}Prefix", Path.DirectorySeparatorChar));
 
             var viewFolder = new CombinedViewFolder(normal, new SubViewFolder(otherLocation, "Shared"));
 

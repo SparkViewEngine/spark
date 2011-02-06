@@ -19,6 +19,8 @@
 // <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
+using System.IO;
+
 namespace Spark.Tests.Caching
 {
     using System;
@@ -72,7 +74,7 @@ namespace Spark.Tests.Caching
         [Test]
         public void TemplateRunsNormallyThroughCacheMiss()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <viewdata model=""System.Func<string>""/>
 <div>
 <cache key='string.Empty'>
@@ -94,7 +96,7 @@ namespace Spark.Tests.Caching
         [Test]
         public void TemplateDoesNotRunThroughCacheHit()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <viewdata model=""System.Func<string>""/>
 <div>
 <cache key='string.Empty'>
@@ -126,7 +128,7 @@ namespace Spark.Tests.Caching
         [Test]
         public void CacheInMacroShouldActAsSameSite()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <viewdata model=""System.Func<string>""/>
 <macro name=""foo"">
 <cache><p>${ViewData.Model()}</p></cache>
@@ -160,7 +162,7 @@ ${foo()}
         [Test]
         public void MultipleCachesShouldActAsDifferentSite()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <viewdata model=""System.Func<string>""/>
 <div>
 <cache>
@@ -198,7 +200,7 @@ ${foo()}
         [Test]
         public void NamedContentShouldIndividuallySpoolAndCache()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <viewdata model=""System.Func<string>""/>
 <div>
 <content name='foo'>
@@ -270,7 +272,7 @@ placed
         public void OutputWhileNamedContentActiveShouldAppearOnceAtCorrectTarget()
         {
 
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <viewdata model=""System.Func<string>""/>
 <ul>
 <content name='foo'>
@@ -331,7 +333,7 @@ hana
         [Test]
         public void OnceFlagsSetWhenCacheRecordedShouldBeSetWhenCacheReplayed()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <viewdata model=""System.Func<string>""/>
 <ul>
 <li once='foo'>${ViewData.Model()}[1]</li>
@@ -373,7 +375,7 @@ hana
         [Test, ExpectedException(typeof(ApplicationException))]
         public void CacheFinallyShouldNotThrowExceptionWhenKeyIsBad()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <macro name='boom'>
 #throw new System.ApplicationException();
 </macro>
@@ -388,7 +390,7 @@ foo
         [Test]
         public void CacheAttributeUsedAsKey()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <var stuff='new[]{1,3,5,2,3,3,5,7}' count='0'/>
 <for each='var x in stuff'>
 <p cache='x'>${x}:${++count}</p>
@@ -409,7 +411,7 @@ foo
         [Test]
         public void CacheExpiresTakesOutContentAfterTime()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <viewdata model=""System.Func<string>""/>
 <for each='var x in new[]{1,2,3,1,2,3}'>
 <cache key='x' expires='System.TimeSpan.FromSeconds(30)'>
@@ -472,7 +474,7 @@ foo
         [Test]
         public void CommaCreatesMultiPartKey()
         {
-            _viewFolder.Add("home\\index.spark",
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar),
                             @"
 <viewdata model=""System.Func<string>""/>
 <for each='var x in new[]{1,2,3,1,2,3}'>
@@ -506,7 +508,7 @@ foo
         [Test]
         public void SignalWillExpireOutputCachingEntry()
         {
-            _viewFolder.Add("home\\index.spark", @"
+            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), @"
 <viewdata model=""System.Func<string>"" datasignal='Spark.ICacheSignal'/>
 <div>
 <cache key='string.Empty' signal='datasignal'>

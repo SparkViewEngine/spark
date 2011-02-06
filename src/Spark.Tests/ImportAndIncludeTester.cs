@@ -44,9 +44,9 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                  {
-                                     {"importing\\index.spark", "<p><use import='extra.spark'/>hello ${name}</p>"},
-                                     {"importing\\extra.spark", "this is imported <global name='\"world\"'/>"}
-                                 }, "importing\\index.spark");
+                                     {string.Format("importing{0}index.spark", Path.DirectorySeparatorChar), "<p><use import='extra.spark'/>hello ${name}</p>"},
+                                     {string.Format("importing{0}extra.spark", Path.DirectorySeparatorChar), "this is imported <global name='\"world\"'/>"}
+                                 }, string.Format("importing{0}index.spark", Path.DirectorySeparatorChar));
 
             var contents = view.RenderView();
             Assert.AreEqual("<p>hello world</p>", contents);
@@ -58,9 +58,9 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                  {
-                                     {"importing\\index.spark", "<p><use import='extra.spark'/>hello ${name}</p>"},
-                                     {"shared\\extra.spark", "this is imported <global name='\"world\"'/>"}
-                                 }, "importing\\index.spark");
+                                     {string.Format("importing{0}index.spark", Path.DirectorySeparatorChar), "<p><use import='extra.spark'/>hello ${name}</p>"},
+                                     {string.Format("shared{0}extra.spark", Path.DirectorySeparatorChar), "this is imported <global name='\"world\"'/>"}
+                                 }, string.Format("importing{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p>hello world</p>", contents);
             Assert.IsFalse(contents.Contains("import"));
@@ -71,10 +71,10 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                  {
-                                     {"importing\\index.spark", "<p>${foo()} ${name}</p><use import='extra'/><use import='another'/>"},
-                                     {"importing\\another.spark", "<macro name='foo'>hello</macro>"},
-                                     {"shared\\extra.spark", "this is imported <global name='\"world\"'/>"}
-                                 }, "importing\\index.spark");
+                                     {string.Format("importing{0}index.spark", Path.DirectorySeparatorChar), "<p>${foo()} ${name}</p><use import='extra'/><use import='another'/>"},
+                                     {string.Format("importing{0}another.spark", Path.DirectorySeparatorChar), "<macro name='foo'>hello</macro>"},
+                                     {string.Format("shared{0}extra.spark", Path.DirectorySeparatorChar), "this is imported <global name='\"world\"'/>"}
+                                 }, string.Format("importing{0}index.spark", Path.DirectorySeparatorChar));
 
             var contents = view.RenderView();
             Assert.AreEqual("<p>hello world</p>", contents);
@@ -86,10 +86,10 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"importing\\index.spark", "<p>${foo()} ${name}</p>"},
-                                          {"importing\\_global.spark", "<macro name='foo'>hello</macro>"},
-                                          {"shared\\_global.spark", "this is imported <global name='\"world\"'/>"}
-                                      }, "importing\\index.spark");
+                                          {string.Format("importing{0}index.spark", Path.DirectorySeparatorChar), "<p>${foo()} ${name}</p>"},
+                                          {string.Format("importing{0}_global.spark", Path.DirectorySeparatorChar), "<macro name='foo'>hello</macro>"},
+                                          {string.Format("shared{0}_global.spark", Path.DirectorySeparatorChar), "this is imported <global name='\"world\"'/>"}
+                                      }, string.Format("importing{0}index.spark", Path.DirectorySeparatorChar));
 
             var contents = view.RenderView();
             Assert.AreEqual("<p>hello world</p>", contents);
@@ -102,9 +102,9 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='stuff.spark'/></p>"},
-                                          {"including\\stuff.spark", "hello world"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='stuff.spark'/></p>"},
+                                          {string.Format("including{0}stuff.spark", Path.DirectorySeparatorChar), "hello world"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p>hello world</p>", contents);
         }
@@ -114,8 +114,8 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='stuff.spark'/></p>"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='stuff.spark'/></p>"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             view.RenderView();
         }
 
@@ -125,8 +125,8 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='stuff.spark'><fallback/></include></p>"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='stuff.spark'><fallback/></include></p>"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p></p>", contents);
         }
@@ -136,8 +136,8 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p>hello world</p>", contents);
         }
@@ -147,9 +147,9 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"},
-                                          {"including\\stuff.spark", "another file"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"},
+                                          {string.Format("including{0}stuff.spark", Path.DirectorySeparatorChar), "another file"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p>another file</p>", contents);
         }
@@ -159,9 +159,9 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='stuff.spark'><fallback><include href='other.spark'/></fallback></include></p>"},
-                                          {"including\\other.spark", "other file"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='stuff.spark'><fallback><include href='other.spark'/></fallback></include></p>"},
+                                          {string.Format("including{0}other.spark", Path.DirectorySeparatorChar), "other file"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p>other file</p>", contents);
         }
@@ -171,9 +171,9 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='../lib/other.spark'/></p>"},
-                                          {"lib\\other.spark", "other file"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='../lib/other.spark'/></p>"},
+                                          {string.Format("lib{0}other.spark", Path.DirectorySeparatorChar), "other file"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p>other file</p>", contents);
         }
@@ -182,10 +182,10 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='../lib/other.spark'/></p>"},
-                                          {"lib\\other.spark", "other <include href='third.spark'/> file"},
-                                          {"lib\\third.spark", "third file"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='../lib/other.spark'/></p>"},
+                                          {string.Format("lib{0}other.spark", Path.DirectorySeparatorChar), "other <include href='third.spark'/> file"},
+                                          {string.Format("lib{0}third.spark", Path.DirectorySeparatorChar), "third file"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p>other third file file</p>", contents);
         }
@@ -195,9 +195,9 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p xmlns:x='http://www.w3.org/2001/XInclude'><include/><x:include href='../lib/other.spark'/></p>"},
-                                          {"lib\\other.spark", "other file"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p xmlns:x='http://www.w3.org/2001/XInclude'><include/><x:include href='../lib/other.spark'/></p>"},
+                                          {string.Format("lib{0}other.spark", Path.DirectorySeparatorChar), "other file"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p xmlns:x=\"http://www.w3.org/2001/XInclude\"><include/>other file</p>", contents);
         }
@@ -207,9 +207,9 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='item.spark' parse='text'/></p>"},
-                                          {"including\\item.spark", "<li>at&t</li>"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='item.spark' parse='text'/></p>"},
+                                          {string.Format("including{0}item.spark", Path.DirectorySeparatorChar), "<li>at&t</li>"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p>&lt;li&gt;at&amp;t&lt;/li&gt;</p>", contents);
         }
@@ -219,9 +219,9 @@ namespace Spark.Tests
         {
             var view = CreateView(new InMemoryViewFolder
                                       {
-                                          {"including\\index.spark", "<p><include href='jquery.templ.htm' parse='html'/></p>"},
-                                          {"including\\jquery.templ.htm", "<h4>${Title}</h4>"}
-                                      }, "including\\index.spark");
+                                          {string.Format("including{0}index.spark", Path.DirectorySeparatorChar), "<p><include href='jquery.templ.htm' parse='html'/></p>"},
+                                          {string.Format("including{0}jquery.templ.htm", Path.DirectorySeparatorChar), "<h4>${Title}</h4>"}
+                                      }, string.Format("including{0}index.spark", Path.DirectorySeparatorChar));
             var contents = view.RenderView();
             Assert.AreEqual("<p><h4>${Title}</h4></p>", contents);
         }

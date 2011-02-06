@@ -64,7 +64,11 @@ namespace Spark.Tests
                                  ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")
                              };
 
-            var view = (StubSparkView)engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\prefix-from-settings.spark"));
+            var view =
+                (StubSparkView)
+                engine.CreateInstance(
+                    new SparkViewDescriptor().AddTemplate(string.Format("Prefix{0}prefix-from-settings.spark",
+                                                                        Path.DirectorySeparatorChar)));
             view.ViewData["Names"] = new[] { "alpha", "beta", "gamma" };
 
             var output = new StringWriter();
@@ -83,7 +87,11 @@ namespace Spark.Tests
         [Test]
         public void PrefixFromXmlns()
         {
-            var view = (StubSparkView)_engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\prefix-from-xmlns.spark"));
+            var view =
+                (StubSparkView)
+                _engine.CreateInstance(
+                    new SparkViewDescriptor().AddTemplate(string.Format("Prefix{0}prefix-from-xmlns.spark",
+                                                                        Path.DirectorySeparatorChar)));
             view.ViewData["Names"] = new[] { "alpha", "beta", "gamma" };
 
             var output = new StringWriter();
@@ -101,7 +109,11 @@ namespace Spark.Tests
         [Test]
         public void ConditionalAttributes()
         {
-            var view = (StubSparkView)_engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\conditional-attributes.spark"));
+            var view =
+                (StubSparkView)
+                _engine.CreateInstance(
+                    new SparkViewDescriptor().AddTemplate(string.Format("Prefix{0}conditional-attributes.spark",
+                                                                        Path.DirectorySeparatorChar)));
             var output = new StringWriter();
             view.RenderView(output);
 
@@ -121,7 +133,9 @@ namespace Spark.Tests
         {
             var view =
                 (StubSparkView)
-                _engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\macro-content-prefix.spark"));
+                _engine.CreateInstance(
+                    new SparkViewDescriptor().AddTemplate(string.Format("Prefix{0}macro-content-prefix.spark",
+                                                                        Path.DirectorySeparatorChar)));
             var output = new StringWriter();
             view.RenderView(output);
 
@@ -144,7 +158,9 @@ namespace Spark.Tests
         {
             var view =
                 (StubSparkView)
-                _engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\segment-render-prefix.spark"));
+                _engine.CreateInstance(
+                    new SparkViewDescriptor().AddTemplate(string.Format("Prefix{0}segment-render-prefix.spark",
+                                                                        Path.DirectorySeparatorChar)));
             var output = new StringWriter();
             view.RenderView(output);
 
@@ -174,7 +190,9 @@ namespace Spark.Tests
 
             var view =
                 (StubSparkView)
-                engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\section-render-prefix.spark"));
+                engine.CreateInstance(
+                    new SparkViewDescriptor().AddTemplate(string.Format("Prefix{0}section-render-prefix.spark",
+                                                                        Path.DirectorySeparatorChar)));
             var output = new StringWriter();
             view.RenderView(output);
 
@@ -199,7 +217,9 @@ namespace Spark.Tests
 
             var view =
                 (StubSparkView)
-                _engine.CreateInstance(new SparkViewDescriptor().AddTemplate("Prefix\\macro-content-prefix-from-settings.spark"));
+                _engine.CreateInstance(
+                    new SparkViewDescriptor().AddTemplate(
+                        string.Format("Prefix{0}macro-content-prefix-from-settings.spark", Path.DirectorySeparatorChar)));
             var output = new StringWriter();
             view.RenderView(output);
 

@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -81,12 +82,12 @@ namespace Spark.Tests
                 .SetPageBaseType(typeof(StubSparkView));
 
             var views = new InMemoryViewFolder();
-            views.Add("Home\\Index.spark", "<div>${ProcessStatus.Alive}</div>");
+            views.Add(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar), "<div>${ProcessStatus.Alive}</div>");
 
             var engine = new SparkViewEngine(settings) {ViewFolder = views};
 
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("home\\index.spark");
+            descriptor.Templates.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar));
 
             var contents = engine.CreateInstance(descriptor).RenderView();
             Assert.AreEqual("<div>Alive</div>", contents);

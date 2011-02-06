@@ -85,15 +85,23 @@ namespace Spark.Tests.FileSystem
         [Test]
         public void ListFilesWithDedupe()
         {
-            var first = new InMemoryViewFolder { { "home\\three.txt", "three" }, { "home\\one.txt", "one" } };
-            var second = new InMemoryViewFolder { { "home\\two.txt", "two" }, { "home\\three.txt", "three" } };
+            var first = new InMemoryViewFolder
+                            {
+                                {string.Format("home{0}three.txt", Path.DirectorySeparatorChar), "three"},
+                                {string.Format("home{0}one.txt", Path.DirectorySeparatorChar), "one"}
+                            };
+            var second = new InMemoryViewFolder
+                             {
+                                 {string.Format("home{0}two.txt", Path.DirectorySeparatorChar), "two"},
+                                 {string.Format("home{0}three.txt", Path.DirectorySeparatorChar), "three"}
+                             };
             var viewFolder = new CombinedViewFolder(first, second);
 
             var views = viewFolder.ListViews("home");
             Assert.AreEqual(3, views.Count);
-            Assert.Contains("home\\one.txt", views.ToArray());
-            Assert.Contains("home\\two.txt", views.ToArray());
-            Assert.Contains("home\\three.txt", views.ToArray());
+            Assert.Contains(string.Format("home{0}one.txt", Path.DirectorySeparatorChar), views.ToArray());
+            Assert.Contains(string.Format("home{0}two.txt", Path.DirectorySeparatorChar), views.ToArray());
+            Assert.Contains(string.Format("home{0}three.txt", Path.DirectorySeparatorChar), views.ToArray());
         }
 
     }

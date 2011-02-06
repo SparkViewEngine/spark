@@ -12,44 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using Spark.FileSystem;
 
 namespace Spark
 {
     public class DefaultTemplateLocator : ITemplateLocator
     {
+        #region ITemplateLocator Members
+
         public LocateResult LocateMasterFile(IViewFolder viewFolder, string masterName)
         {
-            if (viewFolder.HasView("Layouts\\" + masterName + ".spark"))
+            if (viewFolder.HasView(string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, masterName)))
             {
-                return Result(viewFolder, "Layouts\\" + masterName + ".spark");
+                return Result(viewFolder, string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, masterName));
             }
-            if (viewFolder.HasView("Shared\\" + masterName + ".spark"))
+            if (viewFolder.HasView(string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, masterName)))
             {
-                return Result(viewFolder, "Shared\\" + masterName + ".spark");
+                return Result(viewFolder, string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, masterName));
             }
             return new LocateResult
-                   {
-                       SearchedLocations = new[]
-                                           {
-                                               "Layouts\\" + masterName + ".spark", 
-                                               "Shared\\" + masterName + ".spark"
-                                           }
-                   };
+                       {
+                           SearchedLocations =
+                               new[]
+                                   {
+                                       string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, masterName),
+                                       string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, masterName)
+                                   }
+                       };
         }
 
+        #endregion
 
         private static LocateResult Result(IViewFolder viewFolder, string path)
         {
             return new LocateResult
-            {
-                Path = path,
-                ViewFile = viewFolder.GetViewSource(path)
-            };
+                       {
+                           Path = path,
+                           ViewFile = viewFolder.GetViewSource(path)
+                       };
         }
     }
 }

@@ -40,7 +40,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentWithSimpleSections.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(string.Format("Home{0}ComponentWithSimpleSections.spark", Path.DirectorySeparatorChar),
+                            writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
             Assert.IsTrue(output.Contains("this-is-a-header"));
@@ -54,7 +55,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentWithComplexSections.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(string.Format("Home{0}ComponentWithComplexSections.spark", Path.DirectorySeparatorChar),
+                            writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
             Assert.IsTrue(output.Contains("this-should-show-up"));
@@ -68,7 +70,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.ReplayAll();
 
             var writer = new StringWriter();
-            factory.Process("Home\\ComponentWithComplexSections.spark", writer, engineContext, controller, controllerContext);
+            factory.Process(string.Format("Home{0}ComponentWithComplexSections.spark", Path.DirectorySeparatorChar),
+                            writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
             Assert.That(output, Contains.InOrder(
@@ -86,7 +89,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 			mocks.ReplayAll();
 
 			var writer = new StringWriter();
-			factory.Process("Home\\ComponentWithPartialsInSection.spark", writer, engineContext, controller, controllerContext);
+		    factory.Process(string.Format("Home{0}ComponentWithPartialsInSection.spark", Path.DirectorySeparatorChar), writer,
+		                    engineContext, controller, controllerContext);
 
 			var output = writer.ToString();
 			Assert.IsTrue(output.Contains("this is some text: test123"));
@@ -98,7 +102,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 			mocks.ReplayAll();
 
 			var writer = new StringWriter();
-			factory.Process("Home\\NestedComponentInSection.spark", writer, engineContext, controller, controllerContext);
+		    factory.Process(string.Format("Home{0}NestedComponentInSection.spark", Path.DirectorySeparatorChar), writer,
+		                    engineContext, controller, controllerContext);
 
 			var output = writer.ToString();
 			Assert.IsTrue(output.Contains("header1"));
