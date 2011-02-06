@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System.IO;
 using NUnit.Framework;
 using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
@@ -29,7 +30,7 @@ namespace Spark.Tests.Parser
         public void CanParseSimpleFile()
         {
             var context = new VisitorContext { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
-            var result = _syntax.GetChunks(context, "Home\\childview.spark");
+            var result = _syntax.GetChunks(context, string.Format("Home{0}childview.spark", Path.DirectorySeparatorChar));
             Assert.IsNotNull(result);
         }
 
@@ -38,11 +39,12 @@ namespace Spark.Tests.Parser
         {
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
-                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView")) { SyntaxProvider = _syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
+                             {SyntaxProvider = _syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")};
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("Code\\simplecode.spark");
+            descriptor.Templates.Add(string.Format("Code{0}simplecode.spark", Path.DirectorySeparatorChar));
             var view = (StubSparkView)engine.CreateInstance(descriptor);
 
             // provide data and render
@@ -58,11 +60,12 @@ namespace Spark.Tests.Parser
         {
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
-                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView")) { SyntaxProvider = _syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
+                             {SyntaxProvider = _syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")};
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("Code\\foreach.spark");
+            descriptor.Templates.Add(string.Format("Code{0}foreach.spark", Path.DirectorySeparatorChar));
             var view = (StubSparkView)engine.CreateInstance(descriptor);
 
             // provide data and render

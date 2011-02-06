@@ -122,12 +122,12 @@ namespace Spark.Web.Mvc
 
                 if (path.Length < language.Length + 1 ||
                     path.StartsWith(language, StringComparison.InvariantCultureIgnoreCase) == false ||
-                    (path[language.Length] != '/' && path[language.Length] != '\\'))
+                    (path[language.Length] != '/' && path[language.Length] != Path.DirectorySeparatorChar))
                 {
                     return null;
                 }
 
-                var slashPos = path.IndexOfAny(new[] { '/', '\\' }, language.Length + 1);
+                var slashPos = path.IndexOfAny(new[] { '/', Path.DirectorySeparatorChar }, language.Length + 1);
                 if (slashPos == -1)
                     return null;
 

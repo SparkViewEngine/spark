@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System.IO;
+
 namespace Castle.MonoRail.Views.Spark.Tests
 {
     using System.Linq;
@@ -72,8 +74,16 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.AreEqual(2, descriptors.Count);
             Assert.AreEqual(2, descriptors[0].Templates.Count);
             Assert.AreEqual(2, descriptors[1].Templates.Count);
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\Index.spark") && d.Templates.Contains("Shared\\default.spark")));
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\List.spark") && d.Templates.Contains("Shared\\default.spark")));
+            Assert.That(
+                descriptors.Any(
+                    d =>
+                    d.Templates.Contains(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar)) &&
+                    d.Templates.Contains(string.Format("Shared{0}default.spark", Path.DirectorySeparatorChar))));
+            Assert.That(
+                descriptors.Any(
+                    d =>
+                    d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar)) &&
+                    d.Templates.Contains(string.Format("Shared{0}default.spark", Path.DirectorySeparatorChar))));
         }
 
         [Test]
@@ -101,9 +111,21 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
             var descriptors = _factory.CreateDescriptors(batch);
             Assert.AreEqual(3, descriptors.Count);
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\Index.spark") && d.Templates.Contains("Shared\\default.spark")));
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\List.spark") && d.Templates.Contains("Shared\\default.spark")));
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\_Widget.spark") && d.Templates.Contains("Shared\\ajax.spark")));
+            Assert.That(
+                descriptors.Any(
+                    d =>
+                    d.Templates.Contains(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar)) &&
+                    d.Templates.Contains(string.Format("Shared{0}default.spark", Path.DirectorySeparatorChar))));
+            Assert.That(
+                descriptors.Any(
+                    d =>
+                    d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar)) &&
+                    d.Templates.Contains(string.Format("Shared{0}default.spark", Path.DirectorySeparatorChar))));
+            Assert.That(
+                descriptors.Any(
+                    d =>
+                    d.Templates.Contains(string.Format("Stub{0}_Widget.spark", Path.DirectorySeparatorChar)) &&
+                    d.Templates.Contains(string.Format("Shared{0}ajax.spark", Path.DirectorySeparatorChar))));
 
             var assembly = _factory.Precompile(batch);
 
@@ -123,8 +145,16 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.AreEqual(2, descriptors.Count);
             Assert.AreEqual(2, descriptors[0].Templates.Count);
             Assert.AreEqual(2, descriptors[1].Templates.Count);
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\_Widget.spark") && d.Templates.Contains("Shared\\ajax.spark")));
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\List.spark") && d.Templates.Contains("Shared\\default.spark")));
+            Assert.That(
+                descriptors.Any(
+                    d =>
+                    d.Templates.Contains(string.Format("Stub{0}_Widget.spark", Path.DirectorySeparatorChar)) &&
+                    d.Templates.Contains(string.Format("Shared{0}ajax.spark", Path.DirectorySeparatorChar))));
+            Assert.That(
+                descriptors.Any(
+                    d =>
+                    d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar)) &&
+                    d.Templates.Contains(string.Format("Shared{0}default.spark", Path.DirectorySeparatorChar))));
         }
 
         [Test]
@@ -143,7 +173,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             var batch = new SparkBatchDescriptor();
             batch.For<FooController>().Include("index");
-            _factory.Engine.ViewFolder = new InMemoryViewFolder {{"foo\\index.spark", "<p>foo</p>"}};
+            _factory.Engine.ViewFolder = new InMemoryViewFolder { { string.Format("foo{0}index.spark", Path.DirectorySeparatorChar), "<p>foo</p>" } };
             var descriptors = _factory.CreateDescriptors(batch);
             Assert.AreEqual(1, descriptors.Count);
             Assert.AreEqual(1, descriptors[0].Accessors.Count);

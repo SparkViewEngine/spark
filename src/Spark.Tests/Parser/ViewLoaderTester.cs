@@ -65,11 +65,11 @@ namespace Spark.Tests.Parser
         [Test]
         public void LoadSimpleFile()
         {
-            ExpectGetChunks("home\\simple.spark", new SendLiteralChunk());
-            viewFolder.Stub(x => x.HasView("home\\_global.spark")).Return(false);
-            viewFolder.Stub(x => x.HasView("Shared\\_global.spark")).Return(false);
+            ExpectGetChunks(string.Format("home{0}simple.spark", Path.DirectorySeparatorChar), new SendLiteralChunk());
+            viewFolder.Stub(x => x.HasView(string.Format("home{0}_global.spark", Path.DirectorySeparatorChar))).Return(false);
+            viewFolder.Stub(x => x.HasView(string.Format("Shared{0}_global.spark", Path.DirectorySeparatorChar))).Return(false);
 
-            var chunks = loader.Load("home\\simple.spark");
+            var chunks = loader.Load(string.Format("home{0}simple.spark", Path.DirectorySeparatorChar));
             viewFolder.VerifyAllExpectations();
             syntaxProvider.VerifyAllExpectations();
 
@@ -80,13 +80,13 @@ namespace Spark.Tests.Parser
         [Test]
         public void LoadUsedFile()
         {
-            ExpectGetChunks("Home\\usefile.spark", new RenderPartialChunk { Name = "mypartial" });
-            viewFolder.Expect(x => x.HasView("Home\\mypartial.spark")).Return(true);
-            ExpectGetChunks("Home\\mypartial.spark", new SendLiteralChunk { Text = "Hello world" });
-            viewFolder.Stub(x => x.HasView("Home\\_global.spark")).Return(false);
-            viewFolder.Stub(x => x.HasView("Shared\\_global.spark")).Return(false);
+            ExpectGetChunks(string.Format("Home{0}usefile.spark", Path.DirectorySeparatorChar), new RenderPartialChunk { Name = "mypartial" });
+            viewFolder.Expect(x => x.HasView(string.Format("Home{0}mypartial.spark", Path.DirectorySeparatorChar))).Return(true);
+            ExpectGetChunks(string.Format("Home{0}mypartial.spark", Path.DirectorySeparatorChar), new SendLiteralChunk { Text = "Hello world" });
+            viewFolder.Stub(x => x.HasView(string.Format("Home{0}_global.spark", Path.DirectorySeparatorChar))).Return(false);
+            viewFolder.Stub(x => x.HasView(string.Format("Shared{0}_global.spark", Path.DirectorySeparatorChar))).Return(false);
 
-            loader.Load("Home\\usefile.spark");
+            loader.Load(string.Format("Home{0}usefile.spark", Path.DirectorySeparatorChar));
             viewFolder.VerifyAllExpectations();
             syntaxProvider.VerifyAllExpectations();
 
@@ -97,15 +97,15 @@ namespace Spark.Tests.Parser
         [Test]
         public void LoadSharedFile()
         {
-            ExpectGetChunks("Home\\usefile.spark", new RenderPartialChunk { Name = "mypartial" });
-            viewFolder.Expect(x => x.HasView("Home\\mypartial.spark")).Return(false);
-            viewFolder.Expect(x => x.HasView("Shared\\mypartial.spark")).Return(true);
-            ExpectGetChunks("Shared\\mypartial.spark", new SendLiteralChunk { Text = "Hello world" });
+            ExpectGetChunks(string.Format("Home{0}usefile.spark", Path.DirectorySeparatorChar), new RenderPartialChunk { Name = "mypartial" });
+            viewFolder.Expect(x => x.HasView(string.Format("Home{0}mypartial.spark", Path.DirectorySeparatorChar))).Return(false);
+            viewFolder.Expect(x => x.HasView(string.Format("Shared{0}mypartial.spark", Path.DirectorySeparatorChar))).Return(true);
+            ExpectGetChunks(string.Format("Shared{0}mypartial.spark", Path.DirectorySeparatorChar), new SendLiteralChunk { Text = "Hello world" });
 
-            viewFolder.Stub(x => x.HasView("Home\\_global.spark")).Return(false);
-            viewFolder.Stub(x => x.HasView("Shared\\_global.spark")).Return(false);
+            viewFolder.Stub(x => x.HasView(string.Format("Home{0}_global.spark", Path.DirectorySeparatorChar))).Return(false);
+            viewFolder.Stub(x => x.HasView(string.Format("Shared{0}_global.spark", Path.DirectorySeparatorChar))).Return(false);
 
-            loader.Load("Home\\usefile.spark");
+            loader.Load(string.Format("Home{0}usefile.spark", Path.DirectorySeparatorChar));
             viewFolder.VerifyAllExpectations();
             syntaxProvider.VerifyAllExpectations();
         }
@@ -113,8 +113,8 @@ namespace Spark.Tests.Parser
         [Test, Ignore("This test is invalidated. Mocks are hard to keep 'current'.")]
         public void FindPartialFiles()
         {
-            var partials3 = loader.FindPartialFiles("Home\\other.spark");
-            var partials2 = loader.FindPartialFiles("Account\\index.spark");
+            var partials3 = loader.FindPartialFiles(string.Format("Home{0}other.spark", Path.DirectorySeparatorChar));
+            var partials2 = loader.FindPartialFiles(string.Format("Account{0}index.spark", Path.DirectorySeparatorChar));
             viewFolder.VerifyAllExpectations();
             syntaxProvider.VerifyAllExpectations();
 
@@ -132,9 +132,9 @@ namespace Spark.Tests.Parser
         [Test, ExpectedException(typeof(FileNotFoundException))]
         public void FileNotFoundException()
         {
-            viewFolder.Expect(x => x.GetViewSource("Home\\nosuchfile.spark")).Throw(new FileNotFoundException());
+            viewFolder.Expect(x => x.GetViewSource(string.Format("Home{0}nosuchfile.spark", Path.DirectorySeparatorChar))).Throw(new FileNotFoundException());
 
-            loader.Load("Home\\nosuchfile.spark");
+            loader.Load(string.Format("Home{0}nosuchfile.spark", Path.DirectorySeparatorChar));
             viewFolder.VerifyAllExpectations();
             syntaxProvider.VerifyAllExpectations();
         }
@@ -144,7 +144,7 @@ namespace Spark.Tests.Parser
         [Test]
         public void ExpiresWhenFilesChange()
         {
-            var viewFolder = new StubViewFolder { Path = "home\\changing.spark", LastModified = 4 };
+            var viewFolder = new StubViewFolder { Path = string.Format("home{0}changing.spark", Path.DirectorySeparatorChar), LastModified = 4 };
 
             var viewLoader = new ViewLoader
                              {
@@ -156,7 +156,7 @@ namespace Spark.Tests.Parser
                 .IgnoreArguments()
                 .Return(new Chunk[0]);
 
-            viewLoader.Load("home\\changing.spark");
+            viewLoader.Load(string.Format("home{0}changing.spark", Path.DirectorySeparatorChar));
 
             Assert.That(viewLoader.IsCurrent());
 
@@ -201,12 +201,12 @@ namespace Spark.Tests.Parser
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts><section:foo><Another/></section:foo></Guts></for>"},
-                                     {"home\\_Guts.spark", "<div><render:foo/></div>"},
-                                     {"home\\_Another.spark", "<p>hello world</p>"}
+                                     {string.Format("home{0}index.spark", Path.DirectorySeparatorChar), "<for each='var x in new[]{1,2,3}'><Guts><section:foo><Another/></section:foo></Guts></for>"},
+                                     {string.Format("home{0}_Guts.spark", Path.DirectorySeparatorChar), "<div><render:foo/></div>"},
+                                     {string.Format("home{0}_Another.spark", Path.DirectorySeparatorChar), "<p>hello world</p>"}
                                  };
             var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
-            var chunks = viewLoader.Load("home\\index.spark");
+            var chunks = viewLoader.Load(string.Format("home{0}index.spark", Path.DirectorySeparatorChar));
             var everything = viewLoader.GetEverythingLoaded();
             Assert.AreEqual(3, everything.Count());
         }
@@ -216,18 +216,18 @@ namespace Spark.Tests.Parser
         {
             var viewFolder = new InMemoryViewFolder
                              {
-                                 {"home\\zero.spark", ""},
-                                 {"home\\_one.spark", ""},
-                                 {"product\\two.spark", ""},
-                                 {"product\\_three.spark", ""},
-                                 {"product\\_four.spark", ""},
-                                 {"invoice\\five.spark", ""},
+                                 {string.Format("home{0}zero.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("home{0}_one.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("product{0}two.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("product{0}_three.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("product{0}_four.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("invoice{0}five.spark", Path.DirectorySeparatorChar), ""},
                              };
 
             var viewLoader = new ViewLoader { ViewFolder = viewFolder };
-            var zero = viewLoader.FindPartialFiles("home\\zero.spark");
-            var product = viewLoader.FindPartialFiles("product\\two.spark");
-            var invoice = viewLoader.FindPartialFiles("invoice\\five.spark");
+            var zero = viewLoader.FindPartialFiles(string.Format("home{0}zero.spark", Path.DirectorySeparatorChar));
+            var product = viewLoader.FindPartialFiles(string.Format("product{0}two.spark", Path.DirectorySeparatorChar));
+            var invoice = viewLoader.FindPartialFiles(string.Format("invoice{0}five.spark", Path.DirectorySeparatorChar));
 
             Assert.That(zero.Count(), Is.EqualTo(1));
             Assert.That(zero, Has.Some.EqualTo("one"));
@@ -257,21 +257,21 @@ namespace Spark.Tests.Parser
         {
             var viewFolder = new InMemoryViewFolder
                              {
-                                 {"area1\\controller2\\view3.spark", ""},
-                                 {"area1\\controller2\\Shared\\_alpha.spark", ""},
-                                 {"area1\\Shared\\_beta.spark", ""},
-                                 {"Shared\\_gamma.spark", ""},
-                                 {"area1\\controller2\\_epsilon.spark", ""},
-                                 {"area1\\_zeta.spark", ""},
+                                 {string.Format("area1{0}controller2{0}view3.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area1{0}controller2{0}Shared{0}_alpha.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area1{0}Shared{0}_beta.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("Shared{0}_gamma.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area1{0}controller2{0}_epsilon.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area1{0}_zeta.spark", Path.DirectorySeparatorChar), ""},
                                  {"_eta.spark", ""},
-                                 {"area1\\controller4\\_dontfind1.spark", ""},
-                                 {"area1\\controller4\\Shared\\_dontfind2.spark", ""},
-                                 {"area2\\Shared\\_dontfind3.spark", ""},
+                                 {string.Format("area1{0}controller4{0}_dontfind1.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area1{0}controller4{0}Shared{0}_dontfind2.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area2{0}Shared{0}_dontfind3.spark", Path.DirectorySeparatorChar), ""},
                              };
 
             var viewLoader = new ViewLoader { ViewFolder = viewFolder };
 
-            var partials = viewLoader.FindPartialFiles("area1\\controller2\\view3.spark");
+            var partials = viewLoader.FindPartialFiles(string.Format("area1{0}controller2{0}view3.spark", Path.DirectorySeparatorChar));
             Assert.That(partials, Has.Some.EqualTo("alpha"));
             Assert.That(partials, Has.Some.EqualTo("beta"));
             Assert.That(partials, Has.Some.EqualTo("gamma"));

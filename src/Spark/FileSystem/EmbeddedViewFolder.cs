@@ -14,6 +14,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -47,8 +48,8 @@ namespace Spark.FileSystem
                     stream.Read(contents, 0, contents.Length);
 
                     var relativePath = resourceName.Substring(path.Length + 1);
-                    relativePath = relativePath.Replace('.', '\\');
-                    var lastDelimiter = relativePath.LastIndexOf('\\');
+                    relativePath = relativePath.Replace('.', Path.DirectorySeparatorChar);
+                    var lastDelimiter = relativePath.LastIndexOf(Path.DirectorySeparatorChar);
                     if (lastDelimiter >= 0)
                     {
                         relativePath = relativePath.Substring(0, lastDelimiter) + "." +

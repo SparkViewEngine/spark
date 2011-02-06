@@ -57,7 +57,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         public void ProcessBasicTemplate()
         {
             mocks.ReplayAll();
-            manager.Process("Home\\Index", output, engineContext, controller, controllerContext);
+            manager.Process(string.Format("Home{0}Index", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
             Assert.That(output.ToString().Contains("<h1>Simple test</h1>"));
         }
 
@@ -65,11 +65,11 @@ namespace Castle.MonoRail.Views.Spark.Tests
         public void ContextAndControllerContextAvailable()
         {
             mocks.ReplayAll();
-            manager.Process("Home\\Index", output, engineContext, controller, controllerContext);
+            manager.Process(string.Format("Home{0}Index", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
             
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("Home\\Index.spark");
-            descriptor.Templates.Add("Shared\\default.spark");
+            descriptor.Templates.Add(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar));
+            descriptor.Templates.Add(string.Format("Shared{0}default.spark", Path.DirectorySeparatorChar));
             var entry = factory.Engine.GetEntry(descriptor);
             var view = (SparkView)entry.CreateInstance();
             view.Contextualize(engineContext, controllerContext, factory, null);
@@ -90,7 +90,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             controllerContext.Helpers.Add("FormHelper", new FormHelper(engineContext));
             var urlHelper = new UrlHelper(engineContext);
             controllerContext.Helpers.Add("UrlHelper", urlHelper);
-            manager.Process("Home\\HelperModelDictionaries", output, engineContext, controller, controllerContext);
+            manager.Process(string.Format("Home{0}HelperModelDictionaries", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
             ContainsInOrder(output.ToString(),
                             "Home/foo.castle",
                             "<form", "action='/Home/save.castle'", "method='get'",
@@ -105,7 +105,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             mocks.ReplayAll();
             propertyBag["foo"] = "baaz";
             propertyBag["bar"] = 7;
-            manager.Process("Home\\PropertyBagViewdata", output, engineContext, controller, controllerContext);
+            manager.Process(string.Format("Home{0}PropertyBagViewdata", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
             ContainsInOrder(output.ToString(),
                             "<p>foo:baaz</p>",
                             "<p>bar:7</p>",
@@ -116,7 +116,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 		public void NullBehaviourConfiguredToLenient()
 		{
 			mocks.ReplayAll();
-            manager.Process("Home\\NullBehaviourConfiguredToLenient", output, engineContext, controller, controllerContext);
+            manager.Process(string.Format("Home{0}NullBehaviourConfiguredToLenient", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
 			var content = output.ToString();
 			Assert.IsFalse(content.Contains("default"));
 
@@ -130,7 +130,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         public void TerseHtmlEncode()
         {
             mocks.ReplayAll();
-            manager.Process("Home\\TerseHtmlEncode", output, engineContext, controller, controllerContext);
+            manager.Process(string.Format("Home{0}TerseHtmlEncode", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
             ContainsInOrder(output.ToString(),
                 "<p>This &lt;contains/&gt; html</p>");
         }
@@ -139,7 +139,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         public void IncludingStatementsDirectly()
         {
             mocks.ReplayAll();
-            manager.Process("Home\\CodeStatements", output, engineContext, controller, controllerContext);
+            manager.Process(string.Format("Home{0}CodeStatements", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
             ContainsInOrder(output.ToString(),
                 "<p>was true</p>");
 
@@ -167,7 +167,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             controllerContext.ControllerDescriptor = serviceProvider.ControllerDescriptorProvider.BuildDescriptor(controller);
             controllerContext.Helpers.Add("bar", new Helpers.TestingHelper());
             mocks.ReplayAll();
-            manager.Process("Home\\ControllerHelperAttributeCanBeUsed", output, engineContext, controller, controllerContext);
+            manager.Process(string.Format("Home{0}ControllerHelperAttributeCanBeUsed", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
             Assert.That(output.ToString().Contains("<p>Hello</p>"));            
         }
 
@@ -178,7 +178,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 			controllerContext.ControllerDescriptor = serviceProvider.ControllerDescriptorProvider.BuildDescriptor(controller);
 			controllerContext.Helpers.Add("bar", new Helpers.TestingHelper());
 			mocks.ReplayAll();
-			manager.Process("Home\\ControllerHelperAttributeCanBeUsed", null, output, null);
+            manager.Process(string.Format("Home{0}ControllerHelperAttributeCanBeUsed", Path.DirectorySeparatorChar), null, output, null);
 			Assert.That(output.ToString().Contains("<p>Hello</p>"));
 		}
 
@@ -190,7 +190,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             propertyBag["foo"] = 1005.3;
 			using (new CurrentCultureScope(""))
 			{
-				manager.Process("Home\\LateBoundExpressionShouldCallEval", output, engineContext, controller, controllerContext);
+                manager.Process(string.Format("Home{0}LateBoundExpressionShouldCallEval", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
 				Assert.That(output.ToString(), Text.Contains(string.Format("<p>world {0:#,##0.00}</p>", 1005.3)));
 			}
         }

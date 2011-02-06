@@ -41,7 +41,7 @@ namespace Spark.JsTests
                              };
             var entry = engine.CreateEntry(new SparkViewDescriptor()
                                                .SetLanguage(LanguageType.Javascript)
-                                               .AddTemplate(context.Request.PathInfo.TrimStart('/', '\\') + ".spark"));
+                                               .AddTemplate(context.Request.PathInfo.TrimStart('/', Path.DirectorySeparatorChar) + ".spark"));
 
             //Spark.Simple._LiteralHtml({foo:'asoi'})
             context.Response.ContentType = "text/javascript";
