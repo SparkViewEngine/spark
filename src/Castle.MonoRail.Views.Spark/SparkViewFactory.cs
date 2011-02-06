@@ -119,15 +119,15 @@ namespace Castle.MonoRail.Views.Spark
             if (HasTemplate(layoutName))
                 return layoutName;
 
-            if (HasTemplate("Layouts\\" + layoutName))
-                return "Layouts\\" + layoutName;
+            if (HasTemplate(string.Format("Layouts{0}{1}", Path.DirectorySeparatorChar, layoutName)))
+                return string.Format("Layouts{0}{1}", Path.DirectorySeparatorChar, layoutName);
 
-            if (HasTemplate("Shared\\" + layoutName))
-                return "Shared\\" + layoutName;
+            if (HasTemplate(string.Format("Shared{0}{1}", Path.DirectorySeparatorChar, layoutName)))
+                return string.Format("Shared{0}{1}", Path.DirectorySeparatorChar, layoutName);
 
             throw new CompilerException(string.Format(
-                                            "Unable to find templates {0} or layouts\\{0} or shared\\{0}",
-                                            layoutName));
+                                            "Unable to find templates {0} or layouts{1}{0} or shared{1}{0}",
+                                            layoutName, Path.DirectorySeparatorChar));
         }
 
         public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller,
@@ -291,7 +291,7 @@ namespace Castle.MonoRail.Views.Spark
             var controllerName = metaDesc.ControllerDescriptor.Name;
             var controllerPath = controllerName;
             if (!string.IsNullOrEmpty(metaDesc.ControllerDescriptor.Area))
-                controllerPath = metaDesc.ControllerDescriptor.Area + "\\" + controllerName;
+                controllerPath = string.Format("{0}{1}{2}", metaDesc.ControllerDescriptor.Area, Path.DirectorySeparatorChar, controllerName);
 
             var viewNames = new List<string>();
             var includeViews = entry.IncludeViews;
@@ -392,30 +392,30 @@ namespace Castle.MonoRail.Views.Spark
                 TargetNamespace = targetNamespace
             };
 
-            if (HasTemplate(controllerPath + "\\" + viewName + ".spark"))
+            if (HasTemplate(string.Format("{0}{1}{2}.spark", controllerPath, Path.DirectorySeparatorChar, viewName)))
             {
-                descriptor.Templates.Add(controllerPath + "\\" + viewName + ".spark");
+                descriptor.Templates.Add(string.Format("{0}{1}{2}.spark", controllerPath, Path.DirectorySeparatorChar, viewName));
             }
             else
             {
-                throw new CompilerException(string.Format("Unable to find templates {0}\\{1}.spark", controllerPath, viewName));
+                throw new CompilerException(string.Format("Unable to find templates {0}{1}{2}.spark", controllerPath, Path.DirectorySeparatorChar, viewName));
             }
 
             foreach (var layoutName in (layouts ?? new string[0]).Reverse())
             {
-                if (HasTemplate("Layouts\\" + layoutName))
+                if (HasTemplate(string.Format("Layouts{0}{1}", Path.DirectorySeparatorChar, layoutName)))
                 {
-                    descriptor.Templates.Add(Path.ChangeExtension("Layouts\\" + layoutName, ViewFileExtension));
+                    descriptor.Templates.Add(Path.ChangeExtension(string.Format("Layouts{0}{1}", Path.DirectorySeparatorChar, layoutName), ViewFileExtension));
                 }
-                else if (HasTemplate("Shared\\" + layoutName))
+                else if (HasTemplate(string.Format("Shared{0}{1}", Path.DirectorySeparatorChar, layoutName)))
                 {
-                    descriptor.Templates.Add(Path.ChangeExtension("Shared\\" + layoutName, ViewFileExtension));
+                    descriptor.Templates.Add(Path.ChangeExtension(string.Format("Shared{0}{1}", Path.DirectorySeparatorChar, layoutName), ViewFileExtension));
                 }
                 else
                 {
                     throw new CompilerException(string.Format(
-                                                    "Unable to find templates layouts\\{0}.spark or shared\\{0}.spark",
-                                                    layoutName));
+                                                    "Unable to find templates layouts{0}{1}.spark or shared{0}{1}.spark",
+                                                    Path.DirectorySeparatorChar, layoutName));
                 }
             }
 

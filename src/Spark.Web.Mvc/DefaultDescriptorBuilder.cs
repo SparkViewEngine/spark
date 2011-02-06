@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Spark.Compiler;
@@ -13,7 +14,8 @@ namespace Spark.Web.Mvc
     {
         private ISparkViewEngine _engine;
 
-        public DefaultDescriptorBuilder() : this((string)null)
+        public DefaultDescriptorBuilder()
+            : this((string)null)
         {
         }
 
@@ -114,8 +116,8 @@ namespace Spark.Web.Mvc
             {
                 var whiteSpace0 = Rep(Ch(char.IsWhiteSpace));
                 var whiteSpace1 = Rep1(Ch(char.IsWhiteSpace));
-                var startOfElement = !string.IsNullOrEmpty(_prefix) ?  Ch("<" + _prefix + ":use"): Ch("<use");
-                var startOfAttribute =  Ch("master").And(whiteSpace0).And(Ch('=')).And(whiteSpace0);
+                var startOfElement = !string.IsNullOrEmpty(_prefix) ? Ch("<" + _prefix + ":use") : Ch("<use");
+                var startOfAttribute = Ch("master").And(whiteSpace0).And(Ch('=')).And(whiteSpace0);
                 var attrValue = Ch('\'').And(Rep(ChNot('\''))).And(Ch('\''))
                     .Or(Ch('\"').And(Rep(ChNot('\"'))).And(Ch('\"')));
 
@@ -131,15 +133,15 @@ namespace Spark.Web.Mvc
 
                 ParseUseMaster =
                     pos =>
+                    {
+                        for (var scan = pos; scan.PotentialLength() != 0; scan = scan.Advance(1))
                         {
-                            for (var scan = pos; scan.PotentialLength() != 0; scan = scan.Advance(1))
-                            {
-                                var result = useMaster(scan);
-                                if (result != null)
-                                    return result;
-                            }
-                            return null;
-                        };
+                            var result = useMaster(scan);
+                            if (result != null)
+                                return result;
+                        }
+                        return null;
+                    };
             }
 
             public ParseAction<string> ParseUseMaster { get; set; }
@@ -189,8 +191,8 @@ namespace Spark.Web.Mvc
         {
             return ApplyFilters(new[]
                                     {
-                                        controllerName + "\\" + viewName + ".spark",
-                                        "Shared\\" + viewName + ".spark"
+                                        string.Format("{0}{1}{2}.spark", controllerName,Path.DirectorySeparatorChar, viewName),
+                                        string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,viewName)
                                     }, extra);
         }
 
@@ -198,8 +200,8 @@ namespace Spark.Web.Mvc
         {
             return ApplyFilters(new[]
                                     {
-                                        "Layouts\\" + masterName + ".spark",
-                                        "Shared\\" + masterName + ".spark"
+                                        string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar,masterName),
+                                        string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,masterName)
                                     }, extra);
         }
 
@@ -207,10 +209,10 @@ namespace Spark.Web.Mvc
         {
             return ApplyFilters(new[]
                                     {
-                                        "Layouts\\" + controllerName + ".spark",
-                                        "Shared\\" + controllerName + ".spark",
-                                        "Layouts\\Application.spark",
-                                        "Shared\\Application.spark"
+                                        string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, controllerName),
+                                        string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, controllerName),
+                                        string.Format("Layouts{0}Application.spark", Path.DirectorySeparatorChar),
+                                        string.Format("Shared{0}Application.spark", Path.DirectorySeparatorChar)
                                     }, extra);
         }
     }

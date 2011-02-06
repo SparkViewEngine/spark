@@ -245,8 +245,8 @@ namespace Spark.Web.Mvc.Tests
         {
             factory.ViewFolder = new InMemoryViewFolder
                              {
-                                 {"Foo\\Baaz.spark", ""},
-                                 {"Shared\\Application.spark", ""}
+                                 {string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("Shared{0}Application.spark", Path.DirectorySeparatorChar), ""}
                              };
 
 
@@ -260,8 +260,8 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
 
             Assert.AreEqual(2, descriptor.Templates.Count);
-            Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
-            Assert.AreEqual("Shared\\Application.spark", descriptor.Templates[1]);
+            Assert.AreEqual(string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), descriptor.Templates[0]);
+            Assert.AreEqual(string.Format("Shared{0}Application.spark", Path.DirectorySeparatorChar), descriptor.Templates[1]);
         }
 
         [Test]
@@ -269,7 +269,7 @@ namespace Spark.Web.Mvc.Tests
         {
             factory.ViewFolder = new InMemoryViewFolder
                              {
-                                 {"Foo\\Baaz.spark", ""}
+                                 {string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), ""}
                              };
 
             routeData.Values["controller"] = "Foo";
@@ -280,7 +280,7 @@ namespace Spark.Web.Mvc.Tests
 
 
             Assert.AreEqual(1, descriptor.Templates.Count);
-            Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
+            Assert.AreEqual(string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), descriptor.Templates[0]);
         }
 
         [Test]
@@ -288,8 +288,8 @@ namespace Spark.Web.Mvc.Tests
         {
             factory.ViewFolder = new InMemoryViewFolder
                              {
-                                 {"Foo\\Baaz.spark", ""},
-                                 {"Shared\\Foo.spark",""}
+                                 {string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("Shared{0}Foo.spark", Path.DirectorySeparatorChar),""}
                              };
 
 
@@ -301,8 +301,8 @@ namespace Spark.Web.Mvc.Tests
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
             Assert.AreEqual(2, descriptor.Templates.Count);
-            Assert.AreEqual("Foo\\Baaz.spark", descriptor.Templates[0]);
-            Assert.AreEqual("Shared\\Foo.spark", descriptor.Templates[1]);
+            Assert.AreEqual(string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), descriptor.Templates[0]);
+            Assert.AreEqual(string.Format("Shared{0}Foo.spark", Path.DirectorySeparatorChar), descriptor.Templates[1]);
         }
 
         [Test]
@@ -362,8 +362,8 @@ namespace Spark.Web.Mvc.Tests
         {
             factory.ViewFolder = new InMemoryViewFolder
                              {
-                                 {"Home\\Baaz.spark", ""},
-                                 {"Layouts\\Home.spark",""}
+                                 {string.Format("Home{0}Baaz.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("Layouts{0}Home.spark", Path.DirectorySeparatorChar),""}
                              };
 
             controller = new StubController();

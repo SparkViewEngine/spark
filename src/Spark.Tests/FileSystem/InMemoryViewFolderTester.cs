@@ -28,12 +28,12 @@ namespace Spark.Tests.FileSystem
         public void HasViewCaseInsensitive()
         {
             var folder = new InMemoryViewFolder();
-            Assert.IsFalse(folder.HasView("Home\\Index.spark"));
-            folder.Add("Home\\Index.spark", "stuff");
-            Assert.IsTrue(folder.HasView("Home\\Index.spark"));
-            Assert.IsFalse(folder.HasView("Home\\Index"));
-            Assert.IsTrue(folder.HasView("Home\\index.spark"));
-            Assert.IsTrue(folder.HasView("home\\INDEX.SPARK"));
+            Assert.IsFalse(folder.HasView(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar)));
+            folder.Add(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar), "stuff");
+            Assert.IsTrue(folder.HasView(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar)));
+            Assert.IsFalse(folder.HasView(string.Format("Home{0}Index", Path.DirectorySeparatorChar)));
+            Assert.IsTrue(folder.HasView(string.Format("Home{0}index.spark", Path.DirectorySeparatorChar)));
+            Assert.IsTrue(folder.HasView(string.Format("home{0}INDEX.SPARK", Path.DirectorySeparatorChar)));
         }
 
         [Test]
@@ -41,11 +41,11 @@ namespace Spark.Tests.FileSystem
         {
             var folder = new InMemoryViewFolder
                              {
-                                 {"Home\\Alpha.spark", "stuff"},
-                                 {"Home\\Beta.spark", "stuff"},
-                                 {"Home2\\Gamma.spark", "stuff"},
-                                 {"home\\Delta.spark", "stuff"},
-                                 {"Home\\Something\\else.spark", "stuff"}
+                                 {string.Format("Home{0}Alpha.spark", Path.DirectorySeparatorChar), "stuff"},
+                                 {string.Format("Home{0}Beta.spark", Path.DirectorySeparatorChar), "stuff"},
+                                 {string.Format("Home2{0}Gamma.spark", Path.DirectorySeparatorChar), "stuff"},
+                                 {string.Format("home{0}Delta.spark", Path.DirectorySeparatorChar), "stuff"},
+                                 {string.Format("Home{0}Something{0}else.spark", Path.DirectorySeparatorChar), "stuff"}
                              };
 
             var views = folder.ListViews("Home");
@@ -61,16 +61,16 @@ namespace Spark.Tests.FileSystem
         public void FileNotFoundException()
         {
             var folder = new InMemoryViewFolder();
-            folder.Add("Home\\Index.spark", "stuff");
-            folder.GetViewSource("Home\\List.spark");            
+            folder.Add(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar), "stuff");
+            folder.GetViewSource(string.Format("Home{0}List.spark", Path.DirectorySeparatorChar));            
         }
 
         [Test]
         public void ReadFileContents()
         {
             var folder = new InMemoryViewFolder();
-            folder.Add("Home\\Index.spark", "this is the file contents");
-            var source = folder.GetViewSource("Home\\Index.spark");
+            folder.Add(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar), "this is the file contents");
+            var source = folder.GetViewSource(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar));
             using (var stream = source.OpenViewStream())
             {
                 using(var reader = new StreamReader(stream))
@@ -85,12 +85,12 @@ namespace Spark.Tests.FileSystem
         public void LastModifiedChanges()
         {
             var folder = new InMemoryViewFolder();
-            folder.Add("Home\\Index.spark", "this is the file contents");
-            var source1 = folder.GetViewSource("Home\\Index.spark");
+            folder.Add(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar), "this is the file contents");
+            var source1 = folder.GetViewSource(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar));
             var lastModified1 = source1.LastModified;
-            
-            folder.Set("Home\\Index.spark", "this is the file contents");
-            var source2 = folder.GetViewSource("Home\\Index.spark");
+
+            folder.Set(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar), "this is the file contents");
+            var source2 = folder.GetViewSource(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar));
             var lastModified2 = source2.LastModified;
 
             Assert.AreNotEqual(lastModified1, lastModified2);
@@ -107,11 +107,11 @@ namespace Spark.Tests.FileSystem
         public void InMemoryViewFolderUsedByEngine()
         {
             var folder = new InMemoryViewFolder();
-            folder.Add("home\\index.spark", "<p>Hello world</p>");
+            folder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), "<p>Hello world</p>");
             var engine = new SparkViewEngine(new SparkSettings().SetPageBaseType(typeof (StubSparkView))){ViewFolder = folder};
 
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("home\\index.spark");
+            descriptor.Templates.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar));
             var view = engine.CreateInstance(descriptor);
             var contents = view.RenderView();
             Assert.AreEqual("<p>Hello world</p>", contents);
@@ -142,19 +142,19 @@ namespace Spark.Tests.FileSystem
         public void UnicodeCharactersSurviveConversionToByteArrayAndBack()
         {
             var folder = new InMemoryViewFolder();
-            folder.Add("Home\\fr.spark", "Fran\u00E7ais");
-            folder.Add("Home\\ru.spark", "\u0420\u0443\u0441\u0441\u043A\u0438\u0439");
-            folder.Add("Home\\ja.spark", "\u65E5\u672C\u8A9E");
+            folder.Add(string.Format("Home{0}fr.spark", Path.DirectorySeparatorChar), "Fran\u00E7ais");
+            folder.Add(string.Format("Home{0}ru.spark", Path.DirectorySeparatorChar), "\u0420\u0443\u0441\u0441\u043A\u0438\u0439");
+            folder.Add(string.Format("Home{0}ja.spark", Path.DirectorySeparatorChar), "\u65E5\u672C\u8A9E");
 
-            Assert.That(ReadToEnd(folder, "Home\\fr.spark"), Is.EqualTo("Français"));
-            Assert.That(ReadToEnd(folder, "Home\\ru.spark"), Is.EqualTo("Русский"));
-            Assert.That(ReadToEnd(folder, "Home\\ja.spark"), Is.EqualTo("日本語"));
+            Assert.That(ReadToEnd(folder, string.Format("Home{0}fr.spark", Path.DirectorySeparatorChar)), Is.EqualTo("Français"));
+            Assert.That(ReadToEnd(folder, string.Format("Home{0}ru.spark", Path.DirectorySeparatorChar)), Is.EqualTo("Русский"));
+            Assert.That(ReadToEnd(folder, string.Format("Home{0}ja.spark", Path.DirectorySeparatorChar)), Is.EqualTo("日本語"));
             
             var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
             var engine = new SparkViewEngine(settings) { ViewFolder = folder };
-            Assert.That(RenderView(engine, "Home\\fr.spark"), Is.EqualTo("Français"));
-            Assert.That(RenderView(engine, "Home\\ru.spark"), Is.EqualTo("Русский"));
-            Assert.That(RenderView(engine, "Home\\ja.spark"), Is.EqualTo("日本語"));
+            Assert.That(RenderView(engine, string.Format("Home{0}fr.spark", Path.DirectorySeparatorChar)), Is.EqualTo("Français"));
+            Assert.That(RenderView(engine, string.Format("Home{0}ru.spark", Path.DirectorySeparatorChar)), Is.EqualTo("Русский"));
+            Assert.That(RenderView(engine, string.Format("Home{0}ja.spark", Path.DirectorySeparatorChar)), Is.EqualTo("日本語"));
         }
     }
 }

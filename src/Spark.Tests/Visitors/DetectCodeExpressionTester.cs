@@ -14,6 +14,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -60,12 +61,12 @@ namespace Spark.Tests.Visitors
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts/></for>"},
-                                     {"home\\_Guts.spark", "<p>${xIndex}</p>"}
+                                     {string.Format("home{0}index.spark", Path.DirectorySeparatorChar), "<for each='var x in new[]{1,2,3}'><Guts/></for>"},
+                                     {string.Format("home{0}_Guts.spark", Path.DirectorySeparatorChar), "<p>${xIndex}</p>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
-            var chunks = loader.Load("home\\index.spark");
+            var chunks = loader.Load(string.Format("home{0}index.spark", Path.DirectorySeparatorChar));
 
             var detectCode = new DetectCodeExpressionVisitor(null);
             var index = detectCode.Add("xIndex");
@@ -82,12 +83,12 @@ namespace Spark.Tests.Visitors
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts>${xIndex}</Guts></for>"},
-                                     {"home\\_Guts.spark", "<p><render/></p>"}
+                                     {string.Format("home{0}index.spark", Path.DirectorySeparatorChar), "<for each='var x in new[]{1,2,3}'><Guts>${xIndex}</Guts></for>"},
+                                     {string.Format("home{0}_Guts.spark", Path.DirectorySeparatorChar), "<p><render/></p>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
-            var chunks = loader.Load("home\\index.spark");
+            var chunks = loader.Load(string.Format("home{0}index.spark", Path.DirectorySeparatorChar));
 
             var detectCode = new DetectCodeExpressionVisitor(null);
             var index = detectCode.Add("xIndex");
@@ -103,12 +104,12 @@ namespace Spark.Tests.Visitors
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<for each='var x in new[]{1,2,3}'><Guts><segment:foo>${xIndex}</segment:foo></Guts></for>"},
-                                     {"home\\_Guts.spark", "<p><render:foo/></p>"}
+                                     {string.Format("home{0}index.spark", Path.DirectorySeparatorChar), "<for each='var x in new[]{1,2,3}'><Guts><segment:foo>${xIndex}</segment:foo></Guts></for>"},
+                                     {string.Format("home{0}_Guts.spark", Path.DirectorySeparatorChar), "<p><render:foo/></p>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
-            var chunks = loader.Load("home\\index.spark");
+            var chunks = loader.Load(string.Format("home{0}index.spark", Path.DirectorySeparatorChar));
 
             var detectCode = new DetectCodeExpressionVisitor(null);
             var index = detectCode.Add("xIndex");
@@ -124,12 +125,12 @@ namespace Spark.Tests.Visitors
         {
             var viewFolder = new InMemoryViewFolder
                                  {
-                                     {"home\\index.spark", "<Guts items='new[]{1,2,3}'><segment:each>${xIndex}</segment:each></Guts>"},
-                                     {"home\\_Guts.spark", "<for each='var x in items'><render:each/></for>"}
+                                     {string.Format("home{0}index.spark", Path.DirectorySeparatorChar), "<Guts items='new[]{1,2,3}'><segment:each>${xIndex}</segment:each></Guts>"},
+                                     {string.Format("home{0}_Guts.spark", Path.DirectorySeparatorChar), "<for each='var x in items'><render:each/></for>"}
                                  };
             var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
 
-            var chunks = loader.Load("home\\index.spark");
+            var chunks = loader.Load(string.Format("home{0}index.spark", Path.DirectorySeparatorChar));
 
             var detectCode = new DetectCodeExpressionVisitor(null);
             var index = detectCode.Add("xIndex");

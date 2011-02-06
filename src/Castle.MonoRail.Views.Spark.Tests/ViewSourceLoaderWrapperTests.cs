@@ -13,34 +13,36 @@
 // limitations under the License.
 // 
 using System.IO;
-using System.Linq;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Views.Spark.Wrappers;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Spark.FileSystem;
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
-  [TestFixture]
-  public class ViewSourceLoaderWrapperTests
-  {
-    ViewSourceLoaderWrapper _viewFolder;
-    const string NonExistingView = "Home\\IDoNotExist";
-
-    [SetUp]
-    public void Init()
+    [TestFixture]
+    public class ViewSourceLoaderWrapperTests
     {
-      var container = MockRepository.GenerateStub<IViewSourceLoaderContainer>();
-      container.ViewSourceLoader = MockRepository.GenerateStub<IViewSourceLoader>();
-      container.ViewSourceLoader.Stub(x => x.GetViewSource(NonExistingView)).Return(null);
-      _viewFolder = new ViewSourceLoaderWrapper(container);
-    }
+        #region Setup/Teardown
 
-    [Test, ExpectedException(typeof(FileNotFoundException))]
-    public void GetSourceNotFound()
-    {
-       _viewFolder.GetViewSource(NonExistingView);
+        [SetUp]
+        public void Init()
+        {
+            var container = MockRepository.GenerateStub<IViewSourceLoaderContainer>();
+            container.ViewSourceLoader = MockRepository.GenerateStub<IViewSourceLoader>();
+            container.ViewSourceLoader.Stub(x => x.GetViewSource(NonExistingView)).Return(null);
+            _viewFolder = new ViewSourceLoaderWrapper(container);
+        }
+
+        #endregion
+
+        private ViewSourceLoaderWrapper _viewFolder;
+        private readonly string NonExistingView = string.Format("Home{0}IDoNotExist", Path.DirectorySeparatorChar);
+
+        [Test, ExpectedException(typeof (FileNotFoundException))]
+        public void GetSourceNotFound()
+        {
+            _viewFolder.GetViewSource(NonExistingView);
+        }
     }
-  }
 }
