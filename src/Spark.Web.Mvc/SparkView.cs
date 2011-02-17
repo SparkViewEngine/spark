@@ -227,7 +227,7 @@ namespace Spark.Web.Mvc
 
     }
 
-    public abstract class SparkView<TModel> : SparkView where TModel : class
+    public abstract class SparkView<TModel> : SparkView
     {
         private ViewDataDictionary<TModel> _viewData;
         private HtmlHelper<TModel> _htmlHelper;
