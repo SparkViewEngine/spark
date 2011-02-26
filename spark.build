@@ -13,7 +13,7 @@
   <property name="samples.dir" value="${solution.dir}\samples"/>
   <property name="version.major" value="1"/>
   <property name="version.minor" value="5"/>
-  <property name="version.build" value="0"/>
+  <property name="version.build" value="1"/>
   <property name="version.revision" value="0"/>
   <property name="project.version" value="${version.major}.${version.minor}" dynamic="true" />
   <property name="project.fullversion" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true" />
