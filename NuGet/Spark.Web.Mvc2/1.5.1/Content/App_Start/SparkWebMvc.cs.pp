@@ -2,10 +2,10 @@
 using Spark;
 using Spark.Web.Mvc;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof($rootnamespace$.AppStart_SparkWebMvc), "Start")]
+[assembly: WebActivator.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.SparkWebMvc), "Start")]
 
-namespace $rootnamespace$ {
-    public static class AppStart_SparkWebMvc {
+namespace $rootnamespace$.App_Start {
+    public static class SparkWebMvc {
         public static void Start() {
             var settings = new SparkSettings();
             settings.SetAutomaticEncoding(true); 

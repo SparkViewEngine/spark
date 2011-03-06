@@ -10,7 +10,7 @@
     <language>en-US</language>
     <dependencies>
       <dependency id="Spark" version="1.5.1" />
-      <dependency id="WebActivator" version="1.0.0.0" />
+      <dependency id="WebActivator" version="1.4" />
     </dependencies>
   </metadata>
 </package>
