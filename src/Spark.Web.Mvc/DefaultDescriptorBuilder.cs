@@ -177,7 +177,7 @@ namespace Spark.Web.Mvc
             return false;
         }
 
-        private IEnumerable<string> ApplyFilters(IEnumerable<string> locations, IDictionary<string, object> extra)
+        protected IEnumerable<string> ApplyFilters(IEnumerable<string> locations, IDictionary<string, object> extra)
         {
             // apply all of the filters PotentialLocations in order
             return Filters.Aggregate(
@@ -189,9 +189,15 @@ namespace Spark.Web.Mvc
         {
 			if (extra.ContainsKey("area") && !string.IsNullOrEmpty(extra["area"] as string))
 			{
-				return this.ApplyFilters(new string[] { controllerName + @"\" + viewName + ".spark", @"Shared\" + viewName + ".spark", string.Concat(new object[] { @"~\Areas\", extra["area"], @"\Views\Shared\", viewName, ".spark" }), string.Concat(new object[] { @"~\Areas\", extra["area"], @"\Views\", controllerName, @"\", viewName, ".spark" }) }, extra);
+				return this.ApplyFilters(new[]
+				                             {
+				                                controllerName + @"\" + viewName + ".spark", 
+                                                @"Shared\" + viewName + ".spark", 
+                                                string.Concat(new[] { @"~\Areas\", extra["area"], @"\Views\Shared\", viewName, ".spark" }), 
+                                                string.Concat(new[] { @"~\Areas\", extra["area"], @"\Views\", controllerName, @"\", viewName, ".spark" })
+				                             }, extra);
 			}
-			return this.ApplyFilters(new string[] { controllerName + @"\" + viewName + ".spark", @"Shared\" + viewName + ".spark" }, extra);
+			return this.ApplyFilters(new[] { controllerName + @"\" + viewName + ".spark", @"Shared\" + viewName + ".spark" }, extra);
         }
 
         protected virtual IEnumerable<string> PotentialMasterLocations(string masterName, IDictionary<string, object> extra)
