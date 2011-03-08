@@ -187,11 +187,11 @@ namespace Spark.Web.Mvc
 
         protected virtual IEnumerable<string> PotentialViewLocations(string controllerName, string viewName, IDictionary<string, object> extra)
         {
-            return ApplyFilters(new[]
-                                    {
-                                        controllerName + "\\" + viewName + ".spark",
-                                        "Shared\\" + viewName + ".spark"
-                                    }, extra);
+			if (extra.ContainsKey("area") && !string.IsNullOrEmpty(extra["area"] as string))
+			{
+				return this.ApplyFilters(new string[] { controllerName + @"\" + viewName + ".spark", @"Shared\" + viewName + ".spark", string.Concat(new object[] { @"~\Areas\", extra["area"], @"\Views\Shared\", viewName, ".spark" }), string.Concat(new object[] { @"~\Areas\", extra["area"], @"\Views\", controllerName, @"\", viewName, ".spark" }) }, extra);
+			}
+			return this.ApplyFilters(new string[] { controllerName + @"\" + viewName + ".spark", @"Shared\" + viewName + ".spark" }, extra);
         }
 
         protected virtual IEnumerable<string> PotentialMasterLocations(string masterName, IDictionary<string, object> extra)
