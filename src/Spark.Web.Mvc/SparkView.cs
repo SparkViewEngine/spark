@@ -25,6 +25,7 @@ namespace Spark.Web.Mvc
         private string _siteRoot;
         private ViewDataDictionary _viewData;
         private ViewContext _viewContext;
+    	private dynamic _viewBag;
 
 
         public TempDataDictionary TempData
@@ -64,6 +65,16 @@ namespace Spark.Web.Mvc
             set { SetViewData(value); }
         }
 
+    	public dynamic ViewBag
+    	{
+			get
+			{
+				if( _viewBag == null )
+					SetViewBag( new DynamicViewDataDictionary(ViewData) );
+				return _viewBag;
+			}
+    	}
+
         public ViewContext ViewContext
         {
             get { return _viewContext; }
@@ -74,6 +85,11 @@ namespace Spark.Web.Mvc
         {
             _viewData = viewData;
         }
+
+		protected virtual void SetViewBag( DynamicViewDataDictionary viewBag )
+		{
+			_viewBag = viewBag;
+		}
 
         protected virtual void SetViewContext(ViewContext viewContext)
         {
@@ -211,7 +227,7 @@ namespace Spark.Web.Mvc
 
     }
 
-    public abstract class SparkView<TModel> : SparkView where TModel : class
+    public abstract class SparkView<TModel> : SparkView
     {
         private ViewDataDictionary<TModel> _viewData;
         private HtmlHelper<TModel> _htmlHelper;
