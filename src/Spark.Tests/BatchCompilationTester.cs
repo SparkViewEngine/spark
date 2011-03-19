@@ -13,7 +13,6 @@
 // limitations under the License.
 // 
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -21,6 +20,7 @@ using NUnit.Framework;
 using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests.Precompiled;
+using System.IO;
 
 namespace Spark.Tests
 {
@@ -39,8 +39,8 @@ namespace Spark.Tests
                          {
                              ViewFolder = new InMemoryViewFolder
                                               {
-                                                  {string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar), "<p>Hello world</p>"},
-                                                  {string.Format("Home{0}List.spark", Path.DirectorySeparatorChar), "<ol><li>one</li><li>two</li></ol>"}
+                                                  {Path.Combine("Home","Index.spark"), "<p>Hello world</p>"},
+                                                  {Path.Combine("Home","List.spark"), "<ol><li>one</li><li>two</li></ol>"}
                                               }
                          };
         }
@@ -50,8 +50,8 @@ namespace Spark.Tests
         {
             var descriptors = new[]
                                   {
-                                      new SparkViewDescriptor().AddTemplate(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar)),
-                                      new SparkViewDescriptor().AddTemplate(string.Format("Home{0}List.spark", Path.DirectorySeparatorChar))
+                                      new SparkViewDescriptor().AddTemplate(Path.Combine("Home","Index.spark")),
+                                      new SparkViewDescriptor().AddTemplate(Path.Combine("Home","List.spark"))
                                   };
 
             var assembly = engine.BatchCompilation(descriptors);
@@ -77,7 +77,7 @@ namespace Spark.Tests
         {
             var descriptor = new SparkViewDescriptor()
                 .SetTargetNamespace("Foo")
-                .AddTemplate(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar));
+                .AddTemplate(Path.Combine("Home","Index.spark"));
 
             var assembly = engine.BatchCompilation(new[] { descriptor });
 
@@ -96,7 +96,7 @@ namespace Spark.Tests
         [Test]
         public void DescriptorsWithNoTargetNamespace()
         {
-            var descriptor = new SparkViewDescriptor().AddTemplate(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar));
+            var descriptor = new SparkViewDescriptor().AddTemplate(Path.Combine("Home","Index.spark"));
 
             var assembly = engine.BatchCompilation(new[] { descriptor });
 
@@ -120,14 +120,14 @@ namespace Spark.Tests
 
             var view1 = engine.CreateInstance(new SparkViewDescriptor()
                                       .SetTargetNamespace("Spark.Tests.Precompiled")
-                                      .AddTemplate(string.Format("Foo{0}Bar.spark", Path.DirectorySeparatorChar))
-                                      .AddTemplate(string.Format("Shared{0}Quux.spark", Path.DirectorySeparatorChar)));
+                                      .AddTemplate(Path.Combine("Foo","Bar.spark"))
+                                      .AddTemplate(Path.Combine("Shared","Quux.spark")));
             Assert.AreEqual(typeof(View1), view1.GetType());
 
             var view2 = engine.CreateInstance(new SparkViewDescriptor()
                                       .SetTargetNamespace("Spark.Tests.Precompiled")
-                                      .AddTemplate(string.Format("Hello{0}World.spark", Path.DirectorySeparatorChar))
-                                      .AddTemplate(string.Format("Shared{0}Default.spark", Path.DirectorySeparatorChar)));
+                                      .AddTemplate(Path.Combine("Hello","World.spark"))
+                                      .AddTemplate(Path.Combine("Shared","Default.spark")));
             Assert.AreEqual(typeof(View2), view2.GetType());
         }
 

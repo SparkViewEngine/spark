@@ -14,7 +14,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -23,6 +22,7 @@ using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Markup;
 using Spark.Tests.Stubs;
+using System.IO;
 
 namespace Spark.Tests.Parser
 {
@@ -122,8 +122,8 @@ namespace Spark.Tests.Parser
         public void AutomaticEncodingFalseAlwaysAllowsRawHtml()
         {
             Init(false);
-            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), "${'<span>hello</span>'} !{'<span>world</span>'}");
-            var content = RenderView(new SparkViewDescriptor().AddTemplate(string.Format("home{0}index.spark", Path.DirectorySeparatorChar)));
+            _viewFolder.Add(Path.Combine("home", "index.spark"), "${'<span>hello</span>'} !{'<span>world</span>'}");
+            var content = RenderView(new SparkViewDescriptor().AddTemplate(Path.Combine("home", "index.spark")));
             Assert.AreEqual("<span>hello</span> <span>world</span>", content);
         }
 
@@ -131,8 +131,8 @@ namespace Spark.Tests.Parser
         public void AutomaticEncodingTrueEncodesDollarSyntax()
         {
             Init(true);
-            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), "${'<span>hello</span>'} !{'<span>world</span>'}");
-            var content = RenderView(new SparkViewDescriptor().AddTemplate(string.Format("home{0}index.spark", Path.DirectorySeparatorChar)));
+            _viewFolder.Add(Path.Combine("home", "index.spark"), "${'<span>hello</span>'} !{'<span>world</span>'}");
+            var content = RenderView(new SparkViewDescriptor().AddTemplate(Path.Combine("home", "index.spark")));
             Assert.AreEqual("&lt;span&gt;hello&lt;/span&gt; <span>world</span>", content);
         }
 
@@ -140,8 +140,8 @@ namespace Spark.Tests.Parser
         public void AutomaticEncodingTrueOmitsRedundantEncoding()
         {
             Init(true);
-            _viewFolder.Add(string.Format("home{0}index.spark", Path.DirectorySeparatorChar), "${H('<span>hello</span>')} !{H('<span>world</span>')}");
-            var content = RenderView(new SparkViewDescriptor().AddTemplate(string.Format("home{0}index.spark", Path.DirectorySeparatorChar)));
+            _viewFolder.Add(Path.Combine("home", "index.spark"), "${H('<span>hello</span>')} !{H('<span>world</span>')}");
+            var content = RenderView(new SparkViewDescriptor().AddTemplate(Path.Combine("home", "index.spark")));
             Assert.AreEqual("&lt;span&gt;hello&lt;/span&gt; &lt;span&gt;world&lt;/span&gt;", content);
         }
 

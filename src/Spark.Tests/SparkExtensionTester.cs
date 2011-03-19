@@ -13,7 +13,6 @@
 // limitations under the License.
 // 
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using NUnit.Framework;
 using Spark.Compiler;
@@ -21,6 +20,7 @@ using Spark.Compiler.ChunkVisitors;
 using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
 using Spark.Parser.Markup;
+using System.IO;
 
 namespace Spark.Tests
 {
@@ -41,7 +41,7 @@ namespace Spark.Tests
         public void TestExtensions()
         {
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add(string.Format("Home{0}extensionelements.spark", Path.DirectorySeparatorChar));
+            descriptor.Templates.Add(Path.Combine("Home", "extensionelements.spark"));
             var entry = engine.CreateEntry(descriptor);
             Assert.That(entry.SourceCode.Contains("//this was a test"));
         }

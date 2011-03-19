@@ -12,45 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Spark.FileSystem;
+using System.IO;
 
 namespace Spark
-{
-    public class DefaultTemplateLocator : ITemplateLocator
+{   	
+	public class DefaultTemplateLocator : ITemplateLocator
     {
-        #region ITemplateLocator Members
-
         public LocateResult LocateMasterFile(IViewFolder viewFolder, string masterName)
         {
-            if (viewFolder.HasView(string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, masterName)))
+			var masterFile = masterName + Constants.DotSpark;
+			
+			var layoutsMaster = Path.Combine(Constants.Layouts, masterFile);
+            if (viewFolder.HasView(layoutsMaster))
             {
-                return Result(viewFolder, string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, masterName));
+                return Result(viewFolder, layoutsMaster);
             }
-            if (viewFolder.HasView(string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, masterName)))
+			
+			var sharedMaster = Path.Combine(Constants.Shared, masterFile);
+            if (viewFolder.HasView(sharedMaster))
             {
-                return Result(viewFolder, string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, masterName));
+                return Result(viewFolder, sharedMaster);
             }
-            return new LocateResult
-                       {
-                           SearchedLocations =
-                               new[]
-                                   {
-                                       string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, masterName),
-                                       string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, masterName)
-                                   }
-                       };
+			
+            return new LocateResult 
+			{ 
+				SearchedLocations = new[] { layoutsMaster, sharedMaster } 
+			};
         }
 
-        #endregion
 
         private static LocateResult Result(IViewFolder viewFolder, string path)
         {
             return new LocateResult
-                       {
-                           Path = path,
-                           ViewFile = viewFolder.GetViewSource(path)
-                       };
+            {
+                Path = path,
+                ViewFile = viewFolder.GetViewSource(path)
+            };
         }
     }
 }

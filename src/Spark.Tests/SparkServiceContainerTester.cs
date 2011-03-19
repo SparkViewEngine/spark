@@ -15,12 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Spark.Bindings;
 using Spark.FileSystem;
+using System.IO;
 
 namespace Spark.Tests
 {
@@ -95,7 +95,7 @@ namespace Spark.Tests
         {
             var settings = new SparkSettings();
             settings.AddViewFolder(typeof(TestViewFolder),
-                                   new Dictionary<string, string> { { "testpath", string.Format("hello{0}world.spark", Path.DirectorySeparatorChar) } });
+                                   new Dictionary<string, string> { { "testpath", Path.Combine("hello", "world.spark") } });
 
             var container = new SparkServiceContainer(settings);
             container.SetServiceBuilder<IViewActivatorFactory>(c=>new TestActivatorFactory());
@@ -103,7 +103,7 @@ namespace Spark.Tests
             var engine = container.GetService<ISparkViewEngine>();
             Assert.IsInstanceOfType(typeof(TestActivatorFactory), engine.ViewActivatorFactory);
 
-            Assert.IsTrue(engine.ViewFolder.HasView(string.Format("hello{0}world.spark", Path.DirectorySeparatorChar)));
+            Assert.IsTrue(engine.ViewFolder.HasView(Path.Combine("hello", "world.spark")));
         }
     }
 
