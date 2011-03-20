@@ -13,7 +13,7 @@
 // limitations under the License.
 // 
 using System.Collections.Generic;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.Compiler;
 using NUnit.Framework;
 using Spark.Compiler.CSharp;
@@ -284,7 +284,7 @@ namespace Spark.Tests.Compiler
                                         new SendLiteralChunk{ Text = "Hello world"}
                                     });
             var instance = compiler.CreateInstance();
-            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2)));
+            Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2)));
         }
 
 
@@ -303,8 +303,8 @@ namespace Spark.Tests.Compiler
                                         new SendLiteralChunk {Text = "Hello world"}
                                     });
             var instance = compiler.CreateInstance();
-            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2)));
-            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2<Comment>)));
+            Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2)));
+            Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2<Comment>)));
         }
 
         [Test]
@@ -321,9 +321,9 @@ namespace Spark.Tests.Compiler
                                         new SendLiteralChunk {Text = "Hello world"}
                                     });
             var instance = compiler.CreateInstance();
-            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2)));
-            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView2<Comment>)));
-            Assert.That(instance, Is.InstanceOfType(typeof(StubSparkView3<Comment, string>)));
+            Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2)));
+            Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2<Comment>)));
+            Assert.That(instance, Is.InstanceOf(typeof(StubSparkView3<Comment, string>)));
         }
 
         [Test]
@@ -338,8 +338,8 @@ namespace Spark.Tests.Compiler
                                         new MarkdownChunk {Body = innerChunks}
                                     });
 
-          Assert.That(compiler.SourceCode, Text.Contains("using(MarkdownOutputScope())"));
-          Assert.That(compiler.SourceCode, Text.Contains("Output.Write(\"*test*\");"));
+          Assert.That(compiler.SourceCode, Is.StringContaining("using(MarkdownOutputScope())"));
+          Assert.That(compiler.SourceCode, Is.StringContaining("Output.Write(\"*test*\");"));
 
           var instance = compiler.CreateInstance();
           var contents = instance.RenderView().Trim();

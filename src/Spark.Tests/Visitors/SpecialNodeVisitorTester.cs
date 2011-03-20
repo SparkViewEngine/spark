@@ -45,7 +45,7 @@ namespace Spark.Tests.Visitors
             Assert.AreEqual("etc", ((EndElementNode)specialNode.Body[1]).Name);
         }
 
-        [Test, ExpectedException(ExceptionType = typeof(CompilerException))]
+        [Test, ExpectedException(ExpectedException = typeof(CompilerException))]
         public void UnclosedNodeThrowsCompilerException()
         {
             var nodes = ParseNodes("<div><content name='foo'><br></etc></kontent></div>");
@@ -55,7 +55,7 @@ namespace Spark.Tests.Visitors
             visitor.Accept(nodes);
         }
 
-        [Test, ExpectedException(ExceptionType = typeof(CompilerException))]
+        [Test, ExpectedException(ExpectedException = typeof(CompilerException))]
         public void MismatchedSpecialNodeThrowsCompilerException()
         {
             var nodes = ParseNodes("<div><content name='foo'><br></etc></for></div>");
@@ -65,7 +65,7 @@ namespace Spark.Tests.Visitors
             visitor.Accept(nodes);
         }
 
-        [Test, ExpectedException(ExceptionType = typeof(CompilerException))]
+        [Test, ExpectedException(ExpectedException = typeof(CompilerException))]
         public void ExtraEndSpecialNodeThrowCompilerException()
         {
             var nodes = ParseNodes("<div><content name='foo'/><br></etc></content></div>");

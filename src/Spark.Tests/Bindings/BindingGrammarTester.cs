@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.Bindings;
 using Spark.Parser;
 
@@ -33,7 +33,7 @@ namespace Spark.Tests.Bindings
             var result1 = grammar.NameReference(Source("@caption"));
             var result2 = grammar.NameReference(Source(" @caption"));
 
-            Assert.That(result1.Value, Is.InstanceOfType(typeof(BindingNameReference)));
+            Assert.That(result1.Value, Is.InstanceOf(typeof(BindingNameReference)));
             Assert.That(result2, Is.Null);
 
             var value1 = (BindingNameReference)result1.Value;
@@ -41,7 +41,7 @@ namespace Spark.Tests.Bindings
 
             var result3 = grammar.NameReference(Source("@extra stuff"));
 
-            Assert.That(result3.Value, Is.InstanceOfType(typeof(BindingNameReference)));
+            Assert.That(result3.Value, Is.InstanceOf(typeof(BindingNameReference)));
             var value3 = (BindingNameReference)result3.Value;
             Assert.That(value3.Name, Is.EqualTo("extra"));
         }
@@ -53,7 +53,7 @@ namespace Spark.Tests.Bindings
             var grammar = new BindingGrammar();
             var result = grammar.NameReference(Source("@extra:special.more-name stuff"));
 
-            Assert.That(result.Value, Is.InstanceOfType(typeof(BindingNameReference)));
+            Assert.That(result.Value, Is.InstanceOf(typeof(BindingNameReference)));
             var value = (BindingNameReference)result.Value;
             Assert.That(value.Name, Is.EqualTo("extra:special.more-name"));
         }

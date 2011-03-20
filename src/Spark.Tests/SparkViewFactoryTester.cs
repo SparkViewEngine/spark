@@ -26,7 +26,7 @@ namespace Spark.Tests
     using System.Collections.Generic;
     using System.Text;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
+    
     using Rhino.Mocks;
     using Spark.Compiler;
     using Spark.FileSystem;

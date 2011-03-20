@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.FileSystem;
 using Spark.Tests.Models;
 using Spark.Tests.Stubs;
@@ -135,9 +135,9 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index");
 
-            Assert.That(contents, Text.Contains("ok1"));
-            Assert.That(contents, Text.Contains("ok2"));
-            Assert.That(contents, Text.DoesNotContain("fail"));
+            Assert.That(contents, Is.StringContaining("ok1"));
+            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 
         [Test]
@@ -159,9 +159,9 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index");
 
-            Assert.That(contents, Text.Contains("ok1"));
-            Assert.That(contents, Text.Contains("ok2"));
-            Assert.That(contents, Text.DoesNotContain("fail"));
+            Assert.That(contents, Is.StringContaining("ok1"));
+            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 
 
@@ -184,9 +184,9 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index", new StubViewData { { "x1", 5 }, { "x2", 5 } });
 
-            Assert.That(contents, Text.Contains("ok1"));
-            Assert.That(contents, Text.Contains("ok2"));
-            Assert.That(contents, Text.DoesNotContain("fail"));
+            Assert.That(contents, Is.StringContaining("ok1"));
+            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 
 
@@ -207,9 +207,9 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index");
 
-            Assert.That(contents, Text.Contains("ok1"));
-            Assert.That(contents, Text.Contains("ok2"));
-            Assert.That(contents, Text.DoesNotContain("fail"));
+            Assert.That(contents, Is.StringContaining("ok1"));
+            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 
         [Test]
@@ -231,9 +231,9 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index");
 
-            Assert.That(contents, Text.Contains("ok1"));
-            Assert.That(contents, Text.Contains("ok2"));
-            Assert.That(contents, Text.DoesNotContain("fail"));
+            Assert.That(contents, Is.StringContaining("ok1"));
+            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 
         [Test]

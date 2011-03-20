@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;

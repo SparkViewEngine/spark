@@ -8,7 +8,7 @@ using System.Web.Caching;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Views.Spark.Wrappers;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Rhino.Mocks;
 using Spark;
 

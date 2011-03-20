@@ -25,7 +25,7 @@ using Rhino.Mocks;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Tests.Controllers;
 using Spark.Web.Mvc.Tests.Models;
-using NUnit.Framework.SyntaxHelpers;
+
 
 namespace Spark.Web.Mvc.Tests
 {

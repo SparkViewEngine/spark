@@ -17,7 +17,7 @@ using System.Linq;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
-using NUnit.Framework.SyntaxHelpers;
+
 
 namespace Spark.Tests.FileSystem
 {
