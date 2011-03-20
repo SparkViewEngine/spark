@@ -106,7 +106,7 @@ namespace Spark.Python.Compiler
                 source.AppendLine("    Templates = new string[] {");
                 source.Append("      ").AppendLine(string.Join(",\r\n      ",
                                                                Descriptor.Templates.Select(
-                                                                   t => "\"" + t.Replace("\\", "\\\\") + "\"").ToArray()));
+                                                                   t => "\"" + SparkViewAttribute.ConvertToAttributeFormat(t) + "\"").ToArray()));
                 source.AppendLine("    })]");
             }
 
