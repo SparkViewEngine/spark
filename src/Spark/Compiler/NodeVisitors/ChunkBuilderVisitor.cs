@@ -107,8 +107,6 @@ namespace Spark.Compiler.NodeVisitors
             if(context.ParseSectionTagAsSegment) _specialNodeMap.Add("section", VisitSection);
         }
 
-
-
         private Position Locate(Node expressionNode)
         {
             Paint<Node> paint;
@@ -172,17 +170,6 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
-        private void AddKillingWhitespace(Chunk chunk)
-        {
-            var sendLiteral = Chunks.LastOrDefault() as SendLiteralChunk;
-            if (sendLiteral != null && sendLiteral.Text.Trim() == string.Empty)
-            {
-                Chunks.Remove(sendLiteral);
-            }
-            Chunks.Add(chunk);
-        }
-
-
         protected override void Visit(EntityNode entityNode)
         {
             AddLiteral("&" + entityNode.Name + ";");
@@ -199,15 +186,11 @@ namespace Spark.Compiler.NodeVisitors
             });
         }
 
-
-
         protected override void Visit(StatementNode node)
         {
             //REFACTOR: what is UnarmorCode doing at this point?
-            AddKillingWhitespace(new CodeStatementChunk { Code = node.Code, Position = Locate(node) });
+            Chunks.Add(new CodeStatementChunk { Code = node.Code, Position = Locate(node) });
         }
-
-
         protected override void Visit(DoctypeNode docTypeNode)
         {
             //[28]   	doctypedecl	   ::=   	'<!DOCTYPE' S  Name (S  ExternalID)? S? ('[' intSubset ']' S?)? '>'
