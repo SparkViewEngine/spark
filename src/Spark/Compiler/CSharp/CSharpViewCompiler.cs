@@ -77,7 +77,7 @@ namespace Spark.Compiler.CSharp
 
             source.WriteLine();
 
-            if (Descriptor != null)
+			if (Descriptor != null)
             {
                 // [SparkView] attribute
                 source.WriteLine("[global::Spark.SparkViewAttribute(");
@@ -86,7 +86,7 @@ namespace Spark.Compiler.CSharp
                 source.WriteLine("    Templates = new string[] {");
                 source.Write("      ").WriteLine(string.Join(",\r\n      ",
                                                                Descriptor.Templates.Select(
-                                                                   t => "\"" + t.Replace("\\", "\\\\") + "\"").ToArray()));
+                                                                   t => "\"" + SparkViewAttribute.ConvertToAttributeFormat(t) + "\"").ToArray()));
                 source.WriteLine("    })]");
             }
 
