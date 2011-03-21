@@ -74,7 +74,7 @@ namespace Spark.Tests
         {
             mocks.ReplayAll();
 
-            factory.RenderView(MakeViewContext("index", null));
+            factory.RenderView(MakeViewContext("Index", null));
 
             mocks.VerifyAll();
         }

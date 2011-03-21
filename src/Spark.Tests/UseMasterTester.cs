@@ -16,6 +16,7 @@ using NUnit.Framework;
 using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
+using System.IO;
 
 namespace Spark.Tests
 {
@@ -50,10 +51,10 @@ namespace Spark.Tests
         [Test]
         public void NormalSituationUsesNoLayout()
         {
-            _viewFolder.Add("Home\\Index.spark", "<p>Hello world</p>");
+            _viewFolder.Add(Path.Combine("Home", "Index.spark"), "<p>Hello world</p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                .AddTemplate("Home\\Index.spark"));
+                .AddTemplate(Path.Combine("Home", "Index.spark")));
 
             Assert.AreEqual("<p>Hello world</p>", contents);
         }
@@ -62,11 +63,11 @@ namespace Spark.Tests
         [Test]
         public void UseMasterLooksInLayoutFolder()
         {
-            _viewFolder.Add("Home\\Index.spark", "<use master=\"foo\"/><p>Hello world</p>");
-            _viewFolder.Add("Layouts\\foo.spark", "<h1>alpha</h1><use:view/><p>beta</p>");
+            _viewFolder.Add(Path.Combine("Home", "Index.spark"), "<use master=\"foo\"/><p>Hello world</p>");
+            _viewFolder.Add(Path.Combine("Layouts", "foo.spark"), "<h1>alpha</h1><use:view/><p>beta</p>");
 
             var descriptor = new SparkViewDescriptor()
-                .AddTemplate("Home\\Index.spark");
+                .AddTemplate(Path.Combine("Home", "Index.spark"));
 
             var contents = RenderView(descriptor);
 
@@ -76,11 +77,11 @@ namespace Spark.Tests
         [Test, ExpectedException(typeof(CompilerException))]
         public void TemplateWontLoadRecursively()
         {
-            _viewFolder.Add("Home\\Index.spark", "<use master=\"foo\"/><p>Hello world</p>");
-            _viewFolder.Add("Layout\\foo.spark", "<h1>alpha</h1><use:view/><p>beta<use master=\"foo\"/></p>");
+            _viewFolder.Add(Path.Combine("Home", "Index.spark"), "<use master=\"foo\"/><p>Hello world</p>");
+            _viewFolder.Add(Path.Combine("Layout", "foo.spark"), "<h1>alpha</h1><use:view/><p>beta<use master=\"foo\"/></p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                                          .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate(Path.Combine("Home", "Index.spark")));
 
             Assert.AreEqual("<h1>alpha</h1><p>Hello world</p><p>beta</p>", contents);
         }
@@ -88,20 +89,20 @@ namespace Spark.Tests
         [Test]
         public void DefaultLayoutsOverriddenByElement()
         {
-            _viewFolder.Add("Home\\Normal.spark", "<p>Hello world</p>");
-            _viewFolder.Add("Home\\Override.spark", "<use master=\"foo\"/><p>Hello world</p>");
-            _viewFolder.Add("Layouts\\foo.spark", "<h1>alpha</h1><use:view/><p>beta</p>");
-            _viewFolder.Add("Layouts\\Application.spark", "<h1>gamma</h1><use:view/><p>delta</p>");
+            _viewFolder.Add(Path.Combine("Home", "Normal.spark"), "<p>Hello world</p>");
+            _viewFolder.Add(Path.Combine("Home", "Override.spark"), "<use master=\"foo\"/><p>Hello world</p>");
+            _viewFolder.Add(Path.Combine("Layouts", "foo.spark"), "<h1>alpha</h1><use:view/><p>beta</p>");
+            _viewFolder.Add(Path.Combine("Layouts", "Application.spark"), "<h1>gamma</h1><use:view/><p>delta</p>");
 
             var contents1 = RenderView(new SparkViewDescriptor()
-                .AddTemplate("Home\\Normal.spark")
-                .AddTemplate("Layouts\\Application.spark"));
+                .AddTemplate(Path.Combine("Home", "Normal.spark"))
+                .AddTemplate(Path.Combine("Layouts", "Application.spark")));
 
             Assert.AreEqual("<h1>gamma</h1><p>Hello world</p><p>delta</p>", contents1);
 
             var contents2 = RenderView(new SparkViewDescriptor()
-                .AddTemplate("Home\\Override.spark")
-                .AddTemplate("Layouts\\Application.spark"));
+                .AddTemplate(Path.Combine("Home", "Override.spark"))
+                .AddTemplate(Path.Combine("Layouts", "Application.spark")));
 
             Assert.AreEqual("<h1>alpha</h1><p>Hello world</p><p>beta</p>", contents2);
         }
@@ -109,13 +110,13 @@ namespace Spark.Tests
         [Test]
         public void DaisyChainingMasterRendersMultipleLayers()
         {
-            _viewFolder.Add("Home\\Index.spark", "<use master=\"foo\"/><p>Hello world</p><content:title>bar</content:title>");
-            _viewFolder.Add("Layouts\\foo.spark", "<use master=\"html\"/><h1>alpha</h1><use:view/><p>beta</p>");
-            _viewFolder.Add("Layouts\\html.spark", "<html><head><title><use:title/></title></head><body><use:view/></body></html>");
+            _viewFolder.Add(Path.Combine("Home", "Index.spark"), "<use master=\"foo\"/><p>Hello world</p><content:title>bar</content:title>");
+            _viewFolder.Add(Path.Combine("Layouts", "foo.spark"), "<use master=\"html\"/><h1>alpha</h1><use:view/><p>beta</p>");
+            _viewFolder.Add(Path.Combine("Layouts", "html.spark"), "<html><head><title><use:title/></title></head><body><use:view/></body></html>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                .AddTemplate("Home\\Index.spark")
-                .AddTemplate("Layouts\\Application.spark"));
+                .AddTemplate(Path.Combine("Home", "Index.spark"))
+                .AddTemplate(Path.Combine("Layouts", "Application.spark")));
 
             Assert.AreEqual("<html><head><title>bar</title></head><body><h1>alpha</h1><p>Hello world</p><p>beta</p></body></html>", contents);
         }
@@ -129,8 +130,8 @@ namespace Spark.Tests
 
             var viewFolder = new InMemoryViewFolder
                              {
-                                 {"Home\\Index.spark", "<use master=\"\"/><p>Hello world</p><content:title>bar</content:title>"},
-                                 {"Layouts\\Application.spark", "<h1>alpha</h1><use:view/><p>beta</p>"}
+                                 {Path.Combine("Home", "Index.spark"), "<use master=\"\"/><p>Hello world</p><content:title>bar</content:title>"},
+                                 {Path.Combine("Layouts", "Application.spark"), "<h1>alpha</h1><use:view/><p>beta</p>"}
                              };
 
             container.SetServiceBuilder<IViewFolder>(c => viewFolder);
@@ -138,8 +139,8 @@ namespace Spark.Tests
             var engine = container.GetService<ISparkViewEngine>();
 
             var descriptor = new SparkViewDescriptor()
-                .AddTemplate("Home\\Index.spark")
-                .AddTemplate("Layouts\\Application.spark");
+                .AddTemplate(Path.Combine("Home", "Index.spark"))
+                .AddTemplate(Path.Combine("Layouts", "Application.spark"));
 
             var view = engine.CreateInstance(descriptor);
             var contents = view.RenderView();

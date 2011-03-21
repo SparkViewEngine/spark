@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
+using System.IO;
 
 namespace Spark.Tests.Bindings
 {
@@ -50,7 +51,7 @@ namespace Spark.Tests.Bindings
         public void ElementReplacedWithSimpleString()
         {
             _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>""world""</element></bindings>");
-            _viewFolder.Add("home\\index.spark", @"<p><hello/></p>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello/></p>");
 
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>world</p>"));
@@ -61,7 +62,7 @@ namespace Spark.Tests.Bindings
         public void ElementReplacedWithMacroCall()
         {
             _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World()</element></bindings>");
-            _viewFolder.Add("home\\index.spark", @"<p><hello/></p><macro name='World'>success</macro>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello/></p><macro name='World'>success</macro>");
 
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>success</p>"));
@@ -71,7 +72,7 @@ namespace Spark.Tests.Bindings
         public void ElementReplacedWithMacroCallAndAnArgument()
         {
             _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World('@foo')</element></bindings>");
-            _viewFolder.Add("home\\index.spark", @"<p><hello foo='alpha'/></p><macro name='World' beta='string'>success ${beta}!</macro>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo='alpha'/></p><macro name='World' beta='string'>success ${beta}!</macro>");
 
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>success alpha!</p>"));
@@ -81,7 +82,7 @@ namespace Spark.Tests.Bindings
         public void BindingRefersToAttributeWithCode()
         {
             _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World('@foo')</element></bindings>");
-            _viewFolder.Add("home\\index.spark", @"<p><hello foo='${3+4}'/></p><macro name='World' beta='int'>success ${beta}!</macro>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo='${3+4}'/></p><macro name='World' beta='int'>success ${beta}!</macro>");
 
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>success 7!</p>"));
@@ -92,7 +93,7 @@ namespace Spark.Tests.Bindings
         public void BindingRefersToAttributeWithMixedCodeAndText()
         {
             _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World('@foo')</element></bindings>");
-            _viewFolder.Add("home\\index.spark", @"<p><hello foo='one ${3+4} two ${SiteRoot} three'/></p><macro name='World' beta='string'>success ${beta}!</macro>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo='one ${3+4} two ${SiteRoot} three'/></p><macro name='World' beta='string'>success ${beta}!</macro>");
 
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>success one 7 two /TestApp three!</p>"));
@@ -102,7 +103,7 @@ namespace Spark.Tests.Bindings
         [Test]
         public void BindingRefersToAttributeWithUnescapedCode() {
             _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World(@foo)</element></bindings>");
-            _viewFolder.Add("home\\index.spark", @"<p><hello foo=""'one '+(3+4)+' two '+SiteRoot+' three'""/></p><macro name='World' beta='string'>success ${beta}!</macro>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo=""'one '+(3+4)+' two '+SiteRoot+' three'""/></p><macro name='World' beta='string'>success ${beta}!</macro>");
 
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>success one 7 two /TestApp three!</p>"));
@@ -115,7 +116,7 @@ namespace Spark.Tests.Bindings
 <element name='hello'>""foo is "" + '@foo' + ""!""</element>
 <element name='hello'>""bar is "" + '@bar' + ""!""</element>
 </bindings>");
-            _viewFolder.Add("home\\index.spark", @"<p><hello foo='one'/>, <hello bar='two'/></p>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo='one'/>, <hello bar='two'/></p>");
 
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>foo is one!, bar is two!</p>"));
@@ -127,7 +128,7 @@ namespace Spark.Tests.Bindings
             _viewFolder.Add("bindings.xml", @"<bindings>
 <element name='hello'>Callback(new{'@*'})</element>
 </bindings>");
-            _viewFolder.Add("home\\index.spark", @"<p><hello foo='one'/>, <hello bar='two'/>, <hello foo='-${SiteRoot}-' bar='four'/></p><viewdata Callback='System.Func[[object,string]]'/>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo='one'/>, <hello bar='two'/>, <hello foo='-${SiteRoot}-' bar='four'/></p><viewdata Callback='System.Func[[object,string]]'/>");
 
             Func<object, string> cb = x => x.ToString();
             var contents = Render("index", new StubViewData { { "Callback", cb } });
@@ -144,7 +145,7 @@ namespace Spark.Tests.Bindings
 <element name='hello'>Callback(""nada"", new{'@*'})</element>
 </bindings>");
 
-            _viewFolder.Add("home\\index.spark", @"<p><hello foo='one'/>, <hello bar='two'/>, <hello foo='-${SiteRoot}-' bar='four'/></p><viewdata Callback='System.Func[[string,object,string]]'/>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo='one'/>, <hello bar='two'/>, <hello foo='-${SiteRoot}-' bar='four'/></p><viewdata Callback='System.Func[[string,object,string]]'/>");
 
             Func<string, object, string> cb = (a, x) => '[' + a + ']' + x.ToString();
             var contents = Render("index", new StubViewData { { "Callback", cb } });
@@ -160,7 +161,7 @@ namespace Spark.Tests.Bindings
 <element name='hello'>Callback('@foo', new{'@*'}, new{'@route.*'})</element>
 </bindings>");
 
-            _viewFolder.Add("home\\index.spark", @"<p><hello foo='one'/>, <hello foo='one' bar='two'/>, <hello foo='one' bar='${2}' route.id='three' /></p><viewdata Callback='System.Func[[string,object,object,string]]'/>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo='one'/>, <hello foo='one' bar='two'/>, <hello foo='one' bar='${2}' route.id='three' /></p><viewdata Callback='System.Func[[string,object,object,string]]'/>");
 
             Func<string, object, object, string> cb = (a, x, y) => '[' + a + ']' + x.ToString() + y.ToString();
             var contents = Render("index", new StubViewData { { "Callback", cb } });
@@ -176,7 +177,7 @@ namespace Spark.Tests.Bindings
 <element name='hello'>#Output.Write(4+5);</element>
 </bindings>");
 
-            _viewFolder.Add("home\\index.spark", @"<p><hello/></p>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello/></p>");
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>9</p>"));
         }
@@ -188,7 +189,7 @@ namespace Spark.Tests.Bindings
 <element name='hello'><start>@a</start><end>@b</end></element>
 </bindings>");
 
-            _viewFolder.Add("home\\index.spark", @"<p><hello a='3' b='5'>world</hello></p>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello a='3' b='5'>world</hello></p>");
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>3world5</p>"));
         }
@@ -200,7 +201,7 @@ namespace Spark.Tests.Bindings
 <element name='hello'>'@a' + 'child::*' + '@b'</element>
 </bindings>");
 
-            _viewFolder.Add("home\\index.spark", @"<p><hello a='3' b='5'>world</hello></p>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello a='3' b='5'>world</hello></p>");
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>3world5</p>"));
         }
@@ -211,7 +212,7 @@ namespace Spark.Tests.Bindings
 <element name='hello'>'@a' + child::* + '@b'</element>
 </bindings>");
 
-            _viewFolder.Add("home\\index.spark", @"<p><hello a='3' b='5'>(8+7)+""4""${55}</hello></p>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello a='3' b='5'>(8+7)+""4""${55}</hello></p>");
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>31545</p>"));
         }
@@ -224,7 +225,7 @@ namespace Spark.Tests.Bindings
 <element name='hello'>'@a' + ""no text"" + '@b'</element>
 </bindings>");
 
-            _viewFolder.Add("home\\index.spark", @"<p><hello a='1' b='2'>world</hello><hello a='3' b='4'></hello><hello a='5' b='6'/></p>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello a='1' b='2'>world</hello><hello a='3' b='4'></hello><hello a='5' b='6'/></p>");
 
             var contents = Render("index");
 
@@ -238,7 +239,7 @@ namespace Spark.Tests.Bindings
 <element name='hello'>new System.Collections.Generic.Dictionary&lt;string,object&gt;{{'@*'}}.Count</element>
 </bindings>");
             
-            _viewFolder.Add("home\\index.spark", @"<p><hello a='foo' b='bar'/><hello/><hello></hello><hello x1='' x2='' x3='' x4='' x5=''/></p>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello a='foo' b='bar'/><hello/><hello></hello><hello x1='' x2='' x3='' x4='' x5=''/></p>");
 
             var contents = Render("index");
 

@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
@@ -39,7 +40,7 @@ namespace Spark.Compiler.Javascript
 
             var primaryName = Descriptor.Templates[0];
             var nameParts = primaryName
-                .Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(name => SafeName(name));
 
             // convert some syntax from csharp to javascript

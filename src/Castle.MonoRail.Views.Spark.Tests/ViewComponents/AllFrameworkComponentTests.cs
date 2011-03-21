@@ -28,26 +28,26 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         [Test]
         public void AuthenticatedContent()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-AuthenticatedContent.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-AuthenticatedContent.spark", Path.DirectorySeparatorChar));
             Assert.That(content.Contains("two"));
             Assert.IsFalse(content.Contains("one"));
         }
         [Test]
         public void CaptureFor()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-CaptureFor.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-CaptureFor.spark", Path.DirectorySeparatorChar));
             Assert.That(content.Contains("onetwothreefour"));
         }
         [Test]
         public void ChildContent()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-ChildContent.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-ChildContent.spark", Path.DirectorySeparatorChar));
             ContainsInOrder(content, "one", "5hello", "two");
         }
         [Test]
         public void ColumnRenderer()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-ColumnRenderer.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-ColumnRenderer.spark", Path.DirectorySeparatorChar));
             ContainsInOrder(content, 
                 "*start*",
                 "*firstelement*",
@@ -64,37 +64,37 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         [Test, Ignore("Creating a test for each built-in component")]
         public void DiggStylePagination()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-DiggStylePagination.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-DiggStylePagination.spark", Path.DirectorySeparatorChar));
         }
         [Test, Ignore("Creating a test for each built-in component")]
         public void Security()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-Security.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-Security.spark", Path.DirectorySeparatorChar));
         }
         [Test, Ignore("Creating a test for each built-in component")]
         public void SelectStylePagination()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-SelectStylePagination.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-SelectStylePagination.spark", Path.DirectorySeparatorChar));
         }
         [Test, Ignore("Creating a test for each built-in component")]
         public void SiteMap()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-SiteMap.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-SiteMap.spark", Path.DirectorySeparatorChar));
         }
         [Test, Ignore("Creating a test for each built-in component")]
         public void TreeMaker()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-TreeMaker.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-TreeMaker.spark", Path.DirectorySeparatorChar));
         }
         [Test, Ignore("Creating a test for each built-in component")]
         public void UpdatePage()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-UpdatePage.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-UpdatePage.spark", Path.DirectorySeparatorChar));
         }
         [Test, Ignore("Creating a test for each built-in component")]
         public void UpdateTag()
         {
-            var content = ExecuteView("Home\\AllFrameworkComponents-UpdateTag.spark");
+            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-UpdateTag.spark", Path.DirectorySeparatorChar));
         }
 
         string ExecuteView(string page)

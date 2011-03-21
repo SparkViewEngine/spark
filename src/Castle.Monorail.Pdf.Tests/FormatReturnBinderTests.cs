@@ -1,3 +1,4 @@
+using System.IO;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Test;
 using Castle.MonoRail.Pdf.Tests.Stubs;
@@ -23,7 +24,7 @@ namespace Castle.MonoRail.Pdf.Tests
 
             Assert.AreEqual(200, controller.Context.Response.StatusCode);
             Assert.AreEqual("OK", controller.Context.Response.StatusDescription);
-            Assert.AreEqual("ReturnBinderTest\\Index",viewEngineManager.TemplateRendered);
+            Assert.AreEqual(string.Format("ReturnBinderTest{0}Index", Path.DirectorySeparatorChar), viewEngineManager.TemplateRendered);
             Assert.AreEqual(0, controller.Context.Response.Output.ToString().Length);
         }
 
@@ -50,7 +51,7 @@ namespace Castle.MonoRail.Pdf.Tests
 
             Assert.AreEqual(200, controller.Context.Response.StatusCode);
             Assert.AreEqual("OK", controller.Context.Response.StatusDescription);
-            Assert.AreEqual("ReturnBinderTest\\Index.pdf.spark", viewEngineManager.TemplateRendered);
+            Assert.AreEqual(string.Format("ReturnBinderTest{0}Index.pdf.spark", Path.DirectorySeparatorChar), viewEngineManager.TemplateRendered);
             Assert.AreEqual("application/pdf", controller.Context.Response.ContentType);
             Assert.Greater(controller.Context.Response.OutputStream.Length, 0);
         }
@@ -72,7 +73,7 @@ namespace Castle.MonoRail.Pdf.Tests
                 Create("", "ReturnBinderTest", "Index", services.ControllerDescriptorProvider.BuildDescriptor(controller));
 
             controller.Contextualize(controller.Context, controllerContext);
-            viewEngineManager.RegisterTemplate("ReturnBinderTest\\Index");
+            viewEngineManager.RegisterTemplate(string.Format("ReturnBinderTest{0}Index", Path.DirectorySeparatorChar));
         }
         
     }

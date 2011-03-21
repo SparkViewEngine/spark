@@ -13,17 +13,44 @@
 // limitations under the License.
 // 
 using System;
+using System.IO;
+using System.Linq;
 
 namespace Spark
-{
-    public class SparkViewAttribute : Attribute
+{	
+	public class SparkViewAttribute : Attribute
     {
         public string TargetNamespace { get; set; }
         public string[] Templates { get; set; }
 
         public SparkViewDescriptor BuildDescriptor()
         {
-            return new SparkViewDescriptor { TargetNamespace = TargetNamespace, Templates = Templates };
+            return new SparkViewDescriptor
+			{
+				TargetNamespace = TargetNamespace,
+				Templates = Templates.Select(t => ConvertFromAttributeFormat(t)).ToList()
+			};
+        }
+
+        public static string ConvertToAttributeFormat(string template)
+        {
+            // for compiled attribute purposes, all separators become a backslash
+            // and backslashes are escaped
+            return template
+                .Replace(Path.DirectorySeparatorChar, '\\')
+                .Replace(@"\", @"\\");
+        }
+
+        public static string ConvertFromAttributeFormat(string template)
+        {
+            // when compiled attributes are bound into descriptors, the
+            // backslashes are treated as environment-specific seperators
+            if (Path.DirectorySeparatorChar == '\\')
+			{
+				return template;
+			}
+			
+            return template.Replace('\\', Path.DirectorySeparatorChar);
         }
     }
 }

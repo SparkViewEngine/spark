@@ -12,7 +12,7 @@ namespace Spark.Web.Mvc.Descriptors
         {
             string themeName;
             return TryGetString(extra, "theme", out themeName)
-                       ? locations.Select(x => Path.Combine("themes\\" + themeName, x)).Concat(locations)
+                       ? locations.Select(x => Path.Combine(string.Format("themes{0}", Path.DirectorySeparatorChar) + themeName, x)).Concat(locations)
                        : locations;
         }
 

@@ -38,7 +38,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 
             controllerContext.PropertyBag["items"] = PaginationHelper.CreatePagination(dataSource, 10, 3);
 
-            factory.Process("Home\\DiggPaginationComponent", writer, engineContext, controller, controllerContext);
+            factory.Process(string.Format("Home{0}DiggPaginationComponent", Path.DirectorySeparatorChar), writer,
+                            engineContext, controller, controllerContext);
 
             ContainsInOrder(writer.ToString(),
                             "<li>120</li>", "<li>129</li>");
@@ -74,7 +75,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
 
 			var writer = new StringWriter();
-			factory.Process("Home\\ComponentsSupportEachAttribute", writer, engineContext, controller, controllerContext);
+		    factory.Process(string.Format("Home{0}ComponentsSupportEachAttribute", Path.DirectorySeparatorChar), writer,
+		                    engineContext, controller, controllerContext);
 
 			ContainsInOrder(writer.ToString(),
 							"<p>alpha</p>",
@@ -88,7 +90,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
 
 			var writer = new StringWriter();
-			factory.Process("Home\\ComponentsSupportIfAttribute", writer, engineContext, controller, controllerContext);
+    	    factory.Process(string.Format("Home{0}ComponentsSupportIfAttribute", Path.DirectorySeparatorChar), writer,
+    	                    engineContext, controller, controllerContext);
 
 			ContainsInOrder(writer.ToString(),
 							"<p>foo1</p>",
@@ -104,7 +107,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
 
 			var writer = new StringWriter();
-			factory.Process("Home\\ComponentsSupportOnceAttribute", writer, engineContext, controller, controllerContext);
+		    factory.Process(string.Format("Home{0}ComponentsSupportOnceAttribute", Path.DirectorySeparatorChar), writer,
+		                    engineContext, controller, controllerContext);
 
 			ContainsInOrder(writer.ToString(),
 							"<p>foo1</p>",

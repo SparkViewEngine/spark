@@ -55,7 +55,7 @@ namespace Spark.Web.Mvc.Ruby.Tests
             var settings = new SparkSettings();
             var container = SparkRubyEngineStarter.CreateContainer(settings);
 
-            var viewFolder = new InMemoryViewFolder { { "stub\\index.spark", viewContents } };
+            var viewFolder = new InMemoryViewFolder { { string.Format("stub{0}index.spark", Path.DirectorySeparatorChar), viewContents } };
             container.SetServiceBuilder<IViewFolder>(c => viewFolder);
             var viewEngine = container.GetService<IViewEngine>();
 

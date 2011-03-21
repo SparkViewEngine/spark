@@ -20,6 +20,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
+using System.IO;
 
 namespace Spark.Tests.Compiler
 {
@@ -56,15 +57,15 @@ namespace Spark.Tests.Compiler
         [Test]
         public void SimpleExpressionsEntirelyMapped()
         {
-            _viewFolder.Add("Home\\Index.spark", "<p>Hello ${\"world\"}</p>");
+            _viewFolder.Add(Path.Combine("Home", "Index.spark"), "<p>Hello ${\"world\"}</p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                                          .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate(Path.Combine("Home", "Index.spark")));
 
             Assert.AreEqual("<p>Hello world</p>", contents);
             Assert.AreEqual(1, _entry.SourceMappings.Count);
             Assert.AreEqual("\"world\"", _entry.SourceMappings[0].Source.Value);
-            Assert.AreEqual("Home\\Index.spark", _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
+            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
             Assert.AreEqual(11, _entry.SourceMappings[0].Source.Begin.Offset);
 
             var resultOffset = _entry.SourceMappings[0].OutputBegin;
@@ -75,15 +76,15 @@ namespace Spark.Tests.Compiler
         [Test]
         public void EmbeddedCodeMapped()
         {
-            _viewFolder.Add("Home\\Index.spark", "<p><%var x = 5;%>${x}</p>");
+            _viewFolder.Add(Path.Combine("Home", "Index.spark"), "<p><%var x = 5;%>${x}</p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                                          .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate(Path.Combine("Home", "Index.spark")));
 
             Assert.AreEqual("<p>5</p>", contents);
             Assert.AreEqual(2, _entry.SourceMappings.Count);
             Assert.AreEqual("var x = 5;", _entry.SourceMappings[0].Source.Value);
-            Assert.AreEqual("Home\\Index.spark", _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
+            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
             Assert.AreEqual(5, _entry.SourceMappings[0].Source.Begin.Offset);
 
             var resultOffset = _entry.SourceMappings[0].OutputBegin;
@@ -95,15 +96,15 @@ namespace Spark.Tests.Compiler
         [Test]
         public void ExpressionInAttributeMapped()
         {
-            _viewFolder.Add("Home\\Index.spark", "<p class='${\"Hello\"}'>World</p>");
+            _viewFolder.Add(Path.Combine("Home", "Index.spark"), "<p class='${\"Hello\"}'>World</p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                                          .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate(Path.Combine("Home", "Index.spark")));
 
             Assert.AreEqual("<p class=\"Hello\">World</p>", contents);
             Assert.AreEqual(1, _entry.SourceMappings.Count);
             Assert.AreEqual("\"Hello\"", _entry.SourceMappings[0].Source.Value);
-            Assert.AreEqual("Home\\Index.spark", _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
+            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
             Assert.AreEqual(12, _entry.SourceMappings[0].Source.Begin.Offset);
 
             var resultOffset = _entry.SourceMappings[0].OutputBegin;
@@ -114,19 +115,19 @@ namespace Spark.Tests.Compiler
         [Test]
         public void SingleQuotesAreAvoided()
         {
-            _viewFolder.Add("Home\\Index.spark", "<p class=\"${'Hello' + 5}\">World</p>");
+            _viewFolder.Add(Path.Combine("Home", "Index.spark"), "<p class=\"${'Hello' + 5}\">World</p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                                          .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate(Path.Combine("Home", "Index.spark")));
 
             Assert.AreEqual("<p class=\"Hello5\">World</p>", contents);
             Assert.AreEqual(2, _entry.SourceMappings.Count);
             Assert.AreEqual("Hello", _entry.SourceMappings[0].Source.Value);
-            Assert.AreEqual("Home\\Index.spark", _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
+            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
             Assert.AreEqual(13, _entry.SourceMappings[0].Source.Begin.Offset);
             
             Assert.AreEqual(" + 5", _entry.SourceMappings[1].Source.Value);
-            Assert.AreEqual("Home\\Index.spark", _entry.SourceMappings[1].Source.Begin.SourceContext.FileName);
+            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[1].Source.Begin.SourceContext.FileName);
             Assert.AreEqual(19, _entry.SourceMappings[1].Source.Begin.Offset);
 
             var resultOffset = _entry.SourceMappings[0].OutputBegin;
@@ -140,14 +141,14 @@ namespace Spark.Tests.Compiler
 
         [Test]
         public void WarningsShouldNotCauseCompilationToFail() {
-            _viewFolder.Add("Home\\Index.spark", @"
+            _viewFolder.Add(Path.Combine("Home", "Index.spark"), @"
 <p>
 ## warning I am a warning
 Hello
 </p>");
 
             var contents = RenderView(new SparkViewDescriptor()
-                                          .AddTemplate("Home\\Index.spark"));
+                                          .AddTemplate(Path.Combine("Home", "Index.spark")));
 
             Assert.That(contents, Text.Contains("Hello"));
             Assert.That(contents, Text.DoesNotContain("warning"));

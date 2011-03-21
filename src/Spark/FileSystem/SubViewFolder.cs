@@ -29,7 +29,8 @@ namespace Spark.FileSystem
     /// 
     /// This way "~/MoreShared/x" will be matched against path "Shared/x"
     /// </summary>
-    public class SubViewFolder : IViewFolder
+	
+	public class SubViewFolder : IViewFolder
     {
         private readonly IViewFolder _viewFolder;
         private readonly string _subFolder;
@@ -37,19 +38,22 @@ namespace Spark.FileSystem
         public SubViewFolder(IViewFolder viewFolder, string subFolder)
         {
             _viewFolder = viewFolder;
-            _subFolder = subFolder.Replace('/', '\\');
+            _subFolder = subFolder.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
         }
 
         private string Adjust(string path)
         {
-            if (!path.Replace('/', '\\').StartsWith(_subFolder, StringComparison.InvariantCultureIgnoreCase))
+            if (!path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar).StartsWith(_subFolder, StringComparison.InvariantCultureIgnoreCase))
                 return null;
 
             if (path.Length == _subFolder.Length)
-                return "";
+                return string.Empty;
 
-            if (path[_subFolder.Length] != '/' && path[_subFolder.Length] != '\\')
+            if (path[_subFolder.Length] != Path.AltDirectorySeparatorChar &&
+                path[_subFolder.Length] != Path.DirectorySeparatorChar)
+            {
                 return null;
+            }
 
             return path.Substring(_subFolder.Length + 1);
         }
@@ -69,7 +73,7 @@ namespace Spark.FileSystem
             if (adjusted == null)
                 return new string[0];
 
-            return _viewFolder.ListViews(adjusted).Select(file => _subFolder + "\\" + Path.GetFileName(file)).ToArray();
+            return _viewFolder.ListViews(adjusted).Select(file => Path.Combine(_subFolder, Path.GetFileName(file))).ToArray();
         }
 
         public bool HasView(string path)

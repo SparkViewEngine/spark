@@ -32,5 +32,10 @@ namespace Spark
         public const string XIncludeNamespace = "http://www.w3.org/2001/XInclude";
 
         public const string SectionNamespace = "http://sparkviewengine.com/section/";
+		
+		public static readonly string Shared = "Shared";
+		public static readonly string Layouts = "Layouts";
+		public static readonly string GlobalSpark = "_global.spark";
+		public static readonly string DotSpark = ".spark";
     }
 }

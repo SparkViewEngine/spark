@@ -17,6 +17,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;
+using System.IO;
 
 namespace Spark.Tests
 {
@@ -42,7 +43,7 @@ namespace Spark.Tests
         [Test]
         public void LookupNonExistantReturnsNull()
         {
-            var key = BuildKey("c\\v", "shared\\m");
+            var key = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
             var entry = holder.Lookup(key);
             Assert.IsNull(entry);
         }
@@ -50,7 +51,7 @@ namespace Spark.Tests
         [Test]
         public void LookupReturnsStoredInstance()
         {
-            var key = BuildKey("c\\v", "shared\\m");
+            var key = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
             var entry = new CompiledViewEntry { Descriptor = key, Loader = new ViewLoader() };
             Assert.IsNull(holder.Lookup(key));
             holder.Store(entry);
@@ -60,17 +61,17 @@ namespace Spark.Tests
         [Test]
         public void VariousKeyEqualities()
         {
-            var key1 = BuildKey("c\\v", "shared\\m");
-            var key2 = BuildKey("c\\v", "shared\\m");
+            var key1 = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
+            var key2 = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
 
             Assert.AreNotSame(key1, key2);
             Assert.AreEqual(key1, key2);
 
-            var key3 = BuildKey("c\\v");
+            var key3 = BuildKey(Path.Combine("c", "v"));
             Assert.AreNotEqual(key1, key3);
             Assert.AreNotEqual(key2, key3);
 
-            var key4 = BuildKey("c\\v", "shared\\M");
+            var key4 = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "M"));
             Assert.AreEqual(key1, key4);
 
             Assert.That(!Equals(key1, null));
@@ -88,7 +89,7 @@ namespace Spark.Tests
             Func<bool> foo = () => isCurrent;
             loader.Stub(x => x.IsCurrent()).Do(foo);
 
-            var key = BuildKey("c\\v", "shared\\m");
+            var key = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
             var entry = new CompiledViewEntry { Descriptor = key, Loader = loader };
             holder.Store(entry);
             Assert.AreSame(entry, holder.Lookup(key));

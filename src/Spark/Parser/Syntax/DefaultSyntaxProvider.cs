@@ -71,8 +71,9 @@ namespace Spark.Parser.Syntax
             var existingPath = context.ViewPath;
 
             var directoryPath = Path.GetDirectoryName(context.ViewPath);
-            var relativePath = path.Replace('/', '\\');
-            while (relativePath.StartsWith("..\\"))
+			
+			var relativePath = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            while (relativePath.StartsWith(string.Format("..{0}", Path.DirectorySeparatorChar)))
             {
                 directoryPath = Path.GetDirectoryName(directoryPath);
                 relativePath = relativePath.Substring(3);

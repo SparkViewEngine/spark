@@ -17,29 +17,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.FileSystem;
+using System.IO;
 
 namespace Spark
-{
-    public class DefaultTemplateLocator : ITemplateLocator
+{   	
+	public class DefaultTemplateLocator : ITemplateLocator
     {
         public LocateResult LocateMasterFile(IViewFolder viewFolder, string masterName)
         {
-            if (viewFolder.HasView("Layouts\\" + masterName + ".spark"))
+			var masterFile = masterName + Constants.DotSpark;
+			
+			var layoutsMaster = Path.Combine(Constants.Layouts, masterFile);
+            if (viewFolder.HasView(layoutsMaster))
             {
-                return Result(viewFolder, "Layouts\\" + masterName + ".spark");
+                return Result(viewFolder, layoutsMaster);
             }
-            if (viewFolder.HasView("Shared\\" + masterName + ".spark"))
+			
+			var sharedMaster = Path.Combine(Constants.Shared, masterFile);
+            if (viewFolder.HasView(sharedMaster))
             {
-                return Result(viewFolder, "Shared\\" + masterName + ".spark");
+                return Result(viewFolder, sharedMaster);
             }
-            return new LocateResult
-                   {
-                       SearchedLocations = new[]
-                                           {
-                                               "Layouts\\" + masterName + ".spark", 
-                                               "Shared\\" + masterName + ".spark"
-                                           }
-                   };
+			
+            return new LocateResult 
+			{ 
+				SearchedLocations = new[] { layoutsMaster, sharedMaster } 
+			};
         }
 
 

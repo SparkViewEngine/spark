@@ -86,9 +86,9 @@ namespace Spark.Compiler.VisualBasic
                 if (TargetNamespace != null)
                     source.WriteFormat("    TargetNamespace:=\"{0}\", _", TargetNamespace).WriteLine();
                 source.WriteLine("    Templates := New String() { _");
-                source.Write("      ").Write(string.Join(", _\r\n      ",
-                                                               Descriptor.Templates.Select(
-                                                                   t => "\"" + t + "\"").ToArray()));
+                source.Write("      ").Write(string.Join(", _\r\n      ", 
+                    Descriptor.Templates.Select(t => "\"" + SparkViewAttribute.ConvertToAttributeFormat(t) + "\"").ToArray()));
+				
                 source.WriteLine("    })> _");
             }
 

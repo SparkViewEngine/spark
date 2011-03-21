@@ -20,6 +20,7 @@ using Spark.Compiler.ChunkVisitors;
 using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
 using Spark.Parser.Markup;
+using System.IO;
 
 namespace Spark.Tests
 {
@@ -40,7 +41,7 @@ namespace Spark.Tests
         public void TestExtensions()
         {
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("Home\\extensionelements.spark");
+            descriptor.Templates.Add(Path.Combine("Home", "extensionelements.spark"));
             var entry = engine.CreateEntry(descriptor);
             Assert.That(entry.SourceCode.Contains("//this was a test"));
         }

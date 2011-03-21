@@ -108,8 +108,8 @@ namespace Spark.Web.Mvc.Tests
             Assert.AreEqual(2, descriptors.Count);
             Assert.AreEqual(1, descriptors[0].Templates.Count);
             Assert.AreEqual(1, descriptors[1].Templates.Count);
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\Index.spark")));
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\List.spark")));
+            Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar))));
+            Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar))));
         }
 
         [Test]
@@ -124,8 +124,8 @@ namespace Spark.Web.Mvc.Tests
             Assert.AreEqual(2, descriptors.Count);
             Assert.AreEqual(1, descriptors[0].Templates.Count);
             Assert.AreEqual(1, descriptors[1].Templates.Count);
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\_Widget.spark")));
-            Assert.That(descriptors.Any(d => d.Templates.Contains("Stub\\List.spark")));
+            Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}_Widget.spark", Path.DirectorySeparatorChar))));
+            Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar))));
         }
 
         [Test]
@@ -156,13 +156,13 @@ namespace Spark.Web.Mvc.Tests
             Assert.AreEqual(3, descriptors.Count);
             Assert.That(
                 descriptors.Any(
-                    d => d.Templates.Contains("Stub\\Index.spark") && d.Templates.Contains("Shared\\layout.spark")));
+                    d => d.Templates.Contains(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}layout.spark", Path.DirectorySeparatorChar))));
             Assert.That(
                 descriptors.Any(
-                    d => d.Templates.Contains("Stub\\List.spark") && d.Templates.Contains("Shared\\layout.spark")));
+                    d => d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}layout.spark", Path.DirectorySeparatorChar))));
             Assert.That(
                 descriptors.Any(
-                    d => d.Templates.Contains("Stub\\_Widget.spark") && d.Templates.Contains("Shared\\ajax.spark")));
+                    d => d.Templates.Contains(string.Format("Stub{0}_Widget.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}ajax.spark", Path.DirectorySeparatorChar))));
 
             var assembly = _factory.Precompile(batch);
 
@@ -175,17 +175,17 @@ namespace Spark.Web.Mvc.Tests
         {
             _factory.ViewFolder = new InMemoryViewFolder
                                       {
-                                          {"Stub\\Index.spark", "<p>index</p>"},
-                                          {"Stub\\Helper.cs", "// this is a code file"},
-                                          {"Layouts\\Stub.spark", "<p>layout</p><use:view/>"},
+                                          {string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar), "<p>index</p>"},
+                                          {string.Format("Stub{0}Helper.cs", Path.DirectorySeparatorChar), "// this is a code file"},
+                                          {string.Format("Layouts{0}Stub.spark", Path.DirectorySeparatorChar), "<p>layout</p><use:view/>"},
                                       };
             var batch = new SparkBatchDescriptor();
             batch.For<StubController>();
             var descriptors = _factory.CreateDescriptors(batch);
             Assert.AreEqual(1, descriptors.Count);
             Assert.AreEqual(2, descriptors[0].Templates.Count);
-            Assert.AreEqual("Stub\\Index.spark", descriptors[0].Templates[0]);
-            Assert.AreEqual("Layouts\\Stub.spark", descriptors[0].Templates[1]);
+            Assert.AreEqual(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar), descriptors[0].Templates[0]);
+            Assert.AreEqual(string.Format("Layouts{0}Stub.spark", Path.DirectorySeparatorChar), descriptors[0].Templates[1]);
         }
 
     }

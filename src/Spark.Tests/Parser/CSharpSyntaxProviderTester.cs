@@ -17,6 +17,7 @@ using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
 using Spark.Parser.Syntax;
 using Spark.Tests.Stubs;
+using System.IO;
 
 namespace Spark.Tests.Parser
 {
@@ -29,7 +30,7 @@ namespace Spark.Tests.Parser
         public void CanParseSimpleFile()
         {
             var context = new VisitorContext { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
-            var result = _syntax.GetChunks(context, "Home\\childview.spark");
+            var result = _syntax.GetChunks(context, Path.Combine("Home", "childview.spark"));
             Assert.IsNotNull(result);
         }
 
@@ -42,7 +43,7 @@ namespace Spark.Tests.Parser
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("Code\\simplecode.spark");
+            descriptor.Templates.Add(Path.Combine("Code", "simplecode.spark"));
             var view = (StubSparkView)engine.CreateInstance(descriptor);
 
             // provide data and render
@@ -62,7 +63,7 @@ namespace Spark.Tests.Parser
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add("Code\\foreach.spark");
+            descriptor.Templates.Add(Path.Combine("Code", "foreach.spark"));
             var view = (StubSparkView)engine.CreateInstance(descriptor);
 
             // provide data and render
