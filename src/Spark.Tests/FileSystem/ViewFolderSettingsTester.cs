@@ -69,7 +69,7 @@ namespace Spark.Tests.FileSystem
             var combined = (CombinedViewFolder)folder;
             Assert.IsAssignableFrom(typeof(EmbeddedViewFolder), combined.Second);
             var embeddedViewFolder = (EmbeddedViewFolder)combined.Second;
-            Assert.AreEqual(Assembly.Load("spark.tests"), embeddedViewFolder.Assembly);
+            Assert.AreEqual(Assembly.Load("Spark.Tests"), embeddedViewFolder.Assembly);
         }
 
         [Test]

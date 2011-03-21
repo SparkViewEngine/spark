@@ -14,12 +14,12 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Spark.FileSystem;
+using System.IO;
 
 namespace Spark.Tests
 {
@@ -31,7 +31,7 @@ namespace Spark.Tests
         {
             var descriptor = new SparkViewDescriptor()
                 .SetLanguage(LanguageType.Javascript)
-                .AddTemplate(string.Format("Clientside{0}simple.spark", Path.DirectorySeparatorChar));
+                .AddTemplate(Path.Combine("Clientside","simple.spark"));
 
             var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             var entry = engine.CreateEntry(descriptor);
@@ -45,7 +45,7 @@ namespace Spark.Tests
         {
             var descriptor = new SparkViewDescriptor()
                 .SetLanguage(LanguageType.Javascript)
-                .AddTemplate(string.Format("Clientside{0}AnonymousTypeBecomesHashLikeObject.spark", Path.DirectorySeparatorChar));
+                .AddTemplate(Path.Combine("Clientside","AnonymousTypeBecomesHashLikeObject.spark"));
 
             var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             var entry = engine.CreateEntry(descriptor);

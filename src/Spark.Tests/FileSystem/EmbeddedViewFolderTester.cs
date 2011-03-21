@@ -30,19 +30,19 @@ namespace Spark.Tests.FileSystem
         public void LocateEmbeddedFiles()
         {
             var viewFolder = new EmbeddedViewFolder(Assembly.Load("Spark.Tests"), "Spark.Tests.FileSystem.Embedded");
-            Assert.IsTrue(viewFolder.HasView(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar)));
-            Assert.IsFalse(viewFolder.HasView(string.Format("Home{0}NoSuchFile.spark", Path.DirectorySeparatorChar)));
+            Assert.IsTrue(viewFolder.HasView(Path.Combine("Home", "Index.spark")));
+            Assert.IsFalse(viewFolder.HasView(Path.Combine("Home", "NoSuchFile.spark")));
             Assert.IsFalse(viewFolder.HasView("Home"));
-            Assert.IsTrue(viewFolder.HasView(string.Format("Shared{0}Default.spark", Path.DirectorySeparatorChar)));
+            Assert.IsTrue(viewFolder.HasView(Path.Combine("Shared", "Default.spark")));
         }
 
         [Test]
         public void ListViewsSameResults()
         {
-            var filesystem = new FileSystemViewFolder(string.Format("FileSystem{0}Embedded", Path.DirectorySeparatorChar));
-            Assert.IsTrue(filesystem.HasView(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar)));
+            var filesystem = new FileSystemViewFolder(Path.Combine("FileSystem", "Embedded"));
+            Assert.IsTrue(filesystem.HasView(Path.Combine("Home", "Index.spark")));
 
-            var files = filesystem.ListViews("home");
+            var files = filesystem.ListViews("Home");
             Assert.AreEqual(2, files.Count);
             Assert.That(files.Any(f => Path.GetFileName(f) == "Index.spark"));
             Assert.That(files.Any(f => Path.GetFileName(f) == "List.spark"));

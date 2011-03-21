@@ -12,7 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using Spark.FileSystem;
 
 namespace Spark.Tests.Stubs
 {
@@ -24,9 +29,9 @@ namespace Spark.Tests.Stubs
         public void RenderView(StubViewContext viewContext)
         {
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add(string.Format("{0}{1}{2}.spark", viewContext.ControllerName, Path.DirectorySeparatorChar, viewContext.ViewName));
+            descriptor.Templates.Add(Path.Combine(viewContext.ControllerName, viewContext.ViewName + Constants.DotSpark));
             if (viewContext.MasterName != null)
-                descriptor.Templates.Add(string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,viewContext.MasterName));
+                descriptor.Templates.Add(Path.Combine(Constants.Shared, viewContext.MasterName + Constants.DotSpark));
  
             var sparkView = Engine.CreateInstance(descriptor);
             ((StubSparkView)sparkView).ViewData = viewContext.Data;

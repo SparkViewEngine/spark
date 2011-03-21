@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -8,6 +7,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Spark.FileSystem;
 using Spark.Tests.Models;
 using Spark.Tests.Stubs;
+using System.IO;
 
 namespace Spark.Tests
 {
@@ -50,7 +50,7 @@ namespace Spark.Tests
         [Test]
         public void CompileAndRunVisualBasicView()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), "Hello world");
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), "Hello world");
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo("Hello world"));
         }
@@ -58,7 +58,7 @@ namespace Spark.Tests
         [Test]
         public void ShouldWriteTabAndCrlf()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), "Hello\r\n\tworld");
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), "Hello\r\n\tworld");
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo("Hello\r\n\tworld"));
         }
@@ -66,7 +66,7 @@ namespace Spark.Tests
         [Test]
         public void CodeStatementChunks()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 #Dim foo = 'hi there'
 <%Dim bar = 'hello again'%>
 ${foo} ${bar}");
@@ -78,7 +78,7 @@ ${foo} ${bar}");
         [Test]
         public void GlobalVariableChunks()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <global foo='5' bar=""'hello'""/>
 ${foo} ${bar}
 #bar='there'
@@ -92,7 +92,7 @@ ${bar}
         [Test]
         public void TypedGlobalVariableChunks()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <global bar=""'hello'"" type=""String""/>
 ${bar} ${bar.Length}
 ");
@@ -104,7 +104,7 @@ ${bar} ${bar.Length}
         [Test]
         public void LocalVariableChunks()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <var foo='5'/>
 <var bar=""'hello'"" type='String'/>
 ${foo} ${bar} ${bar.Length}
@@ -117,7 +117,7 @@ ${foo} ${bar} ${bar.Length}
         [Test]
         public void DefaultValuesDontCollideWithExistingLocals()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <var x1=""5""/>
 
 <default x1=""3""/>
@@ -143,7 +143,7 @@ ${foo} ${bar} ${bar.Length}
         [Test]
         public void DefaultValuesDontReplaceGlobals()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <default x1=""3""/>
 
 <p if=""x1=5"">ok1</p>
@@ -168,7 +168,7 @@ ${foo} ${bar} ${bar.Length}
         [Test]
         public void DefaultValuesDontReplaceViewData()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <default x1=""3""/>
 
 <p if=""x1=5"">ok1</p>
@@ -193,7 +193,7 @@ ${foo} ${bar} ${bar.Length}
         [Test]
         public void DefaultValuesActAsLocal()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <default x1=""3""/>
 
 <p if=""x1=3"">ok1</p>
@@ -215,7 +215,7 @@ ${foo} ${bar} ${bar.Length}
         [Test]
         public void DefaultValuesStandInForNullViewData()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <p if=""x1=7"">ok1</p>
 <else>fail</else>
 
@@ -239,7 +239,7 @@ ${foo} ${bar} ${bar.Length}
         [Test]
         public void ViewDataChunks()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <viewdata x1=""Integer"" x2=""String"" />
 ${x1} ${x2}
 ");
@@ -251,7 +251,7 @@ ${x1} ${x2}
         public void ViewDataModelChunk()
         {
 
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <viewdata model=""Spark.Tests.Models.Comment Comment"" />
 ${Comment.Text}
 ");
@@ -263,7 +263,7 @@ ${Comment.Text}
         [Test]
         public void AssignChunk()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 #Dim x = 4
 <set x='5'/>
 ${x}
@@ -275,7 +275,7 @@ ${x}
         [Test]
         public void ContentNameAndUseContentChunk()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <content name='foo'>bar</content>
 [<use content='foo'/>]
 ");
@@ -286,8 +286,8 @@ ${x}
         [Test]
         public void RenderPartialChunk()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"[<foo/>]");
-            _viewFolder.Add(string.Format("shared{0}_foo.spark", Path.DirectorySeparatorChar), @"bar");
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"[<foo/>]");
+            _viewFolder.Add(Path.Combine("shared", "_foo.spark"), @"bar");
 
             var contents = Render("index");
             Assert.That(contents.Trim(), Is.EqualTo("[bar]"));    
@@ -296,7 +296,7 @@ ${x}
         [Test]
         public void ContentVarChunk()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <content var='foo'>bar</content>
 [${foo}]
 ");
@@ -308,7 +308,7 @@ ${x}
         [Test]
         public void ContentSetChunk()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <var foo='""frap""'/>
 <content set='foo' add='replace'>fred</content>
 <content set='foo' add='before'>bar</content>
@@ -323,7 +323,7 @@ ${x}
         [Test]
         public void ConditionalAttributes()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"<div class=""""/>
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"<div class=""""/>
 <div class=""foo""/>
 
 <div class=""foo?{True}""/>
@@ -350,7 +350,7 @@ ${x}
         [Test]
         public void MacroChunks()
         {
-            _viewFolder.Add(string.Format("vbhome{0}index.spark", Path.DirectorySeparatorChar), @"
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"
 <macro name='foo'>bar</macro>
 <macro name='foo2' quux='String'>bar2${quux}bar3</macro>
 ${foo2('alpha')} ${foo}

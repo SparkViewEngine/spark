@@ -11,7 +11,7 @@ namespace Spark.Tests.Compiler
 {
     [TestFixture]
     public class SourceWriterTester
-    {
+    {		
         [Test]
         public void IndentationShouldAddLeadingSpace()
         {
@@ -25,13 +25,16 @@ namespace Spark.Tests.Compiler
                 .WriteLine("two")
                 .RemoveIndent()
                 .WriteLine("three");
-            Assert.That(source.ToString(), Is.EqualTo(@"
-one
-    two
-three
-"));
-        }
-
+			
+			var expected = new StringBuilder()
+				.AppendLine()
+				.AppendLine("one")
+				.AppendLine("    two")
+				.AppendLine("three");
+									
+			Assert.That(source.ToString(), Is.EqualTo(expected.ToString()));
+        }		
+		
         [Test]
         public void EscrowLineWritesFirstAtIndentationWhenItWasAdded()
         {
@@ -47,15 +50,18 @@ three
                 .RemoveIndent()
                 .WriteLine("three")
                 .RemoveIndent();
-            Assert.That(source.ToString(), Is.EqualTo(@"
-    one
-        two
-        two-b
-    three
-"));
-        }
-
-        [Test]
+			
+			var expected = new StringBuilder()
+				.AppendLine()
+				.AppendLine("    one")
+				.AppendLine("        two")
+				.AppendLine("        two-b")
+				.AppendLine("    three");
+						
+            Assert.That(source.ToString(), Is.EqualTo(expected.ToString()));
+        }		
+		
+		[Test]
         public void CancelEscrowPreventsOutputOfPendingLine()
         {
             var writer = new StringWriter();
@@ -78,16 +84,18 @@ three
                 .EscrowLine("endif")
                 .RemoveIndent()
                 .WriteLine("done");
-            Assert.That(source.ToString(), Is.EqualTo(@"
-begin
-    if
-        do this
-    else
-        do that
-    endif
-done
-"));
-        }
-
+			
+			var expected = new StringBuilder()
+				.AppendLine()
+				.AppendLine("begin")
+				.AppendLine("    if")
+				.AppendLine("        do this")
+				.AppendLine("    else")
+				.AppendLine("        do that")
+				.AppendLine("    endif")
+				.AppendLine("done");
+			
+            Assert.That(source.ToString(), Is.EqualTo(expected.ToString()));
+        }				
     }
 }

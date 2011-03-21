@@ -40,7 +40,7 @@ namespace Spark.Compiler.Javascript
 
             var primaryName = Descriptor.Templates[0];
             var nameParts = primaryName
-                .Split(new[] { '/', Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(name => SafeName(name));
 
             // convert some syntax from csharp to javascript
