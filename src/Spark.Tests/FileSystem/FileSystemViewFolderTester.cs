@@ -76,7 +76,7 @@ namespace Spark.Tests.FileSystem
 
             Assert.AreEqual(lastModified1, lastModified2);
 
-            File.SetLastWriteTimeUtc(Path.Combine("Spark.Tests.Views","Home","foreach.spark"), DateTime.UtcNow);
+            File.SetLastWriteTimeUtc(string.Format("Spark.Tests.Views{0}Home{0}foreach.spark", Path.DirectorySeparatorChar), DateTime.UtcNow);
             var lastModified3 = viewSource.LastModified;
 
             Assert.AreNotEqual(lastModified1, lastModified3);

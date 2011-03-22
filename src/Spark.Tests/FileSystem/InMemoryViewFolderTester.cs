@@ -45,7 +45,7 @@ namespace Spark.Tests.FileSystem
                                  {Path.Combine("Home", "Beta.spark"), "stuff"},
                                  {Path.Combine("Home2", "Gamma.spark"), "stuff"},
                                  {Path.Combine("home", "Delta.spark"), "stuff"},
-                                 {Path.Combine("Home","Something","else.spark"), "stuff"}
+                                 {string.Format("Home{0}Something{0}else.spark", Path.DirectorySeparatorChar), "stuff"}
                              };
 
             var views = folder.ListViews("Home");

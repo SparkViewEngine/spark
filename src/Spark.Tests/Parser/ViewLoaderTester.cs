@@ -257,21 +257,21 @@ namespace Spark.Tests.Parser
         {
             var viewFolder = new InMemoryViewFolder
                              {
-                                 {Path.Combine("area1","controller2","view3.spark"), ""},
-                                 {Path.Combine("area1","controller2","Shared","_alpha.spark"), ""},
-                                 {Path.Combine("area1","Shared","_beta.spark"), ""},
+                                 {string.Format("area1{0}controller2{0}view3.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area1{0}controller2{0}Shared{0}_alpha.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area1{0}Shared{0}_beta.spark", Path.DirectorySeparatorChar), ""},
                                  {Path.Combine("Shared", "_gamma.spark"), ""},
-                                 {Path.Combine("area1","controller2","_epsilon.spark"), ""},
+                                 {string.Format("area1{0}controller2{0}_epsilon.spark", Path.DirectorySeparatorChar), ""},
                                  {Path.Combine("area1", "_zeta.spark"), ""},
                                  {"_eta.spark", ""},
-                                 {Path.Combine("area1","controller4","_dontfind1.spark"), ""},
-                                 {Path.Combine("area1","controller4","Shared","_dontfind2.spark"), ""},
-                                 {Path.Combine("area2","Shared","_dontfind3.spark"), ""},
+                                 {string.Format("area1{0}controller4{0}_dontfind1.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area1{0}controller4{0}Shared{0}_dontfind2.spark", Path.DirectorySeparatorChar), ""},
+                                 {string.Format("area2{0}Shared{0}_dontfind3.spark", Path.DirectorySeparatorChar), ""},
                              };
 
             var viewLoader = new ViewLoader { ViewFolder = viewFolder };
 
-            var partials = viewLoader.FindPartialFiles(Path.Combine("area1","controller2","view3.spark"));
+            var partials = viewLoader.FindPartialFiles(string.Format("area1{0}controller2{0}view3.spark", Path.DirectorySeparatorChar));
             Assert.That(partials, Has.Some.EqualTo("alpha"));
             Assert.That(partials, Has.Some.EqualTo("beta"));
             Assert.That(partials, Has.Some.EqualTo("gamma"));
