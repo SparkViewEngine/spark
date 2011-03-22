@@ -250,7 +250,7 @@ namespace Spark.Tests.Bindings
         public void ExpressionNextToBindingShouldMaintainWhiteSpace()
         {
             _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
-            _viewFolder.Add("home\\index.spark", @"<p>${'1234'}  <Text>Smith St</Text></p>");
+            _viewFolder.Add(Path.Combine("home","index.spark"), @"<p>${'1234'}  <Text>Smith St</Text></p>");
 
             var contents = Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>1234  Smith St</p>"));
@@ -260,7 +260,7 @@ namespace Spark.Tests.Bindings
         public void ExpressionNextToBindingShouldMaintainWhiteSpaceWithLoops()
         {
             _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
-            _viewFolder.Add("home\\index.spark", @"<var names=""new [] {'alpha', 'beta', 'gamma'}""/>
+            _viewFolder.Add(Path.Combine("home","index.spark"), @"<var names=""new [] {'alpha', 'beta', 'gamma'}""/>
 <ul>
 <for each=""var name in names"">
     <li>${name} <Text>is</Text> okay too I suppose. </li>
@@ -280,7 +280,7 @@ namespace Spark.Tests.Bindings
         public void ExpressionNextToBindingShouldMaintainWhiteSpaceWithLoopsInternal()
         {
             _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
-            _viewFolder.Add("home\\index.spark", @"<var names=""new [] {'alpha', 'beta', 'gamma'}""/>
+            _viewFolder.Add(Path.Combine("home","index.spark"), @"<var names=""new [] {'alpha', 'beta', 'gamma'}""/>
 <ul>
     <li each=""var name in names"">${name} <Text>is</Text> okay too I suppose. </li>
 </ul>");
