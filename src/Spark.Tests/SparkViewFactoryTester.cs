@@ -142,23 +142,6 @@ namespace Spark.Tests
             Assert.That(content.Contains("<p>footer part two</p>"));
         }
 
-
-
-
-        [Test, Ignore("Library no longer references asp.net mvc directly")]
-        public void UsingHtmlHelper()
-        {
-
-            mocks.ReplayAll();
-
-            factory.RenderView(MakeViewContext("helpers", null));
-
-            mocks.VerifyAll();
-            string content = sb.ToString();
-            Assert.That(content.Contains("<p><a href=\"/Home/Sort\">Click me</a></p>"));
-            Assert.That(content.Contains("<p>foo&gt;bar</p>"));
-        }
-
         [Test]
         public void UsingPartialFile()
         {
@@ -202,23 +185,6 @@ namespace Spark.Tests
             string content = sb.ToString();
             Assert.That(content.Contains("<li class=\"odd\">one</li>"));
             Assert.That(content.Contains("<li class=\"even\">two</li>"));
-        }
-
-
-        [Test, Ignore("Library no longer references asp.net mvc directly")]
-        public void DeclaringViewDataAccessor()
-        {
-            mocks.ReplayAll();
-            //var comments = new[] { new Comment { Text = "foo" }, new Comment { Text = "bar" } };
-            var viewContext = MakeViewContext("viewdata", null/*, new { Comments = comments, Caption = "Hello world" }*/);
-
-            factory.RenderView(viewContext);
-
-            mocks.VerifyAll();
-            string content = sb.ToString();
-            Assert.That(content.Contains("<h1>Hello world</h1>"));
-            Assert.That(content.Contains("<p>foo</p>"));
-            Assert.That(content.Contains("<p>bar</p>"));
         }
 
         [Test]

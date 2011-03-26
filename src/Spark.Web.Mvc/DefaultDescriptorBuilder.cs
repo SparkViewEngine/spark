@@ -179,7 +179,7 @@ namespace Spark.Web.Mvc
             return false;
         }
 
-        private IEnumerable<string> ApplyFilters(IEnumerable<string> locations, IDictionary<string, object> extra)
+        protected IEnumerable<string> ApplyFilters(IEnumerable<string> locations, IDictionary<string, object> extra)
         {
             // apply all of the filters PotentialLocations in order
             return Filters.Aggregate(
@@ -189,6 +189,16 @@ namespace Spark.Web.Mvc
 
         protected virtual IEnumerable<string> PotentialViewLocations(string controllerName, string viewName, IDictionary<string, object> extra)
         {
+            if (extra.ContainsKey("area") && !string.IsNullOrEmpty(extra["area"] as string))
+            {
+                return ApplyFilters(new[]
+                                        {
+                                            string.Format("{0}{1}{2}.spark", controllerName, Path.DirectorySeparatorChar, viewName),
+                                            string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, viewName),
+                                            string.Format("~{0}Areas{0}{1}{0}Views{0}{2}{0}{3}.spark", Path.DirectorySeparatorChar, extra["area"], controllerName, viewName),
+                                            string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.spark", Path.DirectorySeparatorChar, extra["area"], viewName)
+                                        }, extra);
+            }
             return ApplyFilters(new[]
                                     {
                                         string.Format("{0}{1}{2}.spark", controllerName,Path.DirectorySeparatorChar, viewName),
