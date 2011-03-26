@@ -26,7 +26,7 @@ namespace Spark.Tests
     using System.Collections.Generic;
     using System.Text;
     using NUnit.Framework;
-    
+
     using Rhino.Mocks;
     using Spark.Compiler;
     using Spark.FileSystem;
@@ -555,13 +555,13 @@ namespace Spark.Tests
         }
 
 
-        [Test, ExpectedException(typeof(CompilerException))]
+        [Test]
         public void AddViewDataDifferentTypes()
         {
             mocks.ReplayAll();
             var viewData = new StubViewData { { "comment", new Comment { Text = "Hello world" } } };
             var viewContext = MakeViewContext("addviewdatadifferenttypes", null, viewData);
-            factory.RenderView(viewContext);
+            Assert.That(() => factory.RenderView(viewContext), Throws.TypeOf<CompilerException>());
             mocks.VerifyAll();
         }
 
@@ -1082,12 +1082,14 @@ namespace Spark.Tests
 
         }
 
-        [Test, ExpectedException(typeof(CompilerException))]
+        [Test]
         public void RecursivePartialsThrowCompilerException()
         {
             mocks.ReplayAll();
             var viewContext = MakeViewContext("RecursivePartialsThrowCompilerException", null);
-            factory.RenderView(viewContext);
+            Assert.That(() =>
+                        factory.RenderView(viewContext),
+                        Throws.TypeOf<CompilerException>());
         }
 
 

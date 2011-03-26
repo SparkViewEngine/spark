@@ -109,14 +109,21 @@ namespace Spark.Tests
             Assert.AreEqual("<p>hello world</p>", contents);
         }
 
-        [Test, ExpectedException(typeof(CompilerException))]
+        [Test]
         public void MissingFileThrowsException()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                      {
-                                          {Path.Combine("including", "index.spark"), "<p><include href='stuff.spark'/></p>"}
-                                      }, Path.Combine("including", "index.spark"));
-            view.RenderView();
+            Assert.That(() =>
+                            {
+                                var view = CreateView(new InMemoryViewFolder
+                                                          {
+                                                              {
+                                                                  Path.Combine("including", "index.spark"),
+                                                                  "<p><include href='stuff.spark'/></p>"
+                                                                  }
+                                                          }, Path.Combine("including", "index.spark"));
+                                view.RenderView();
+                            },
+                        Throws.TypeOf<CompilerException>());
         }
 
 

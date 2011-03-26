@@ -372,7 +372,7 @@ hana
 </ul>"));
         }
 
-        [Test, ExpectedException(typeof(ApplicationException))]
+        [Test]
         public void CacheFinallyShouldNotThrowExceptionWhenKeyIsBad()
         {
             _viewFolder.Add(Path.Combine("home", "index.spark"), @"
@@ -383,8 +383,7 @@ hana
 foo
 </cache>
 ");
-            Render("index", new StubViewData());
-
+            Assert.That(() => Render("index", new StubViewData()), Throws.TypeOf<ApplicationException>());
         }
 
         [Test]

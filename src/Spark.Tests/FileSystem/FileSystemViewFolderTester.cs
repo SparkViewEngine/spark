@@ -49,12 +49,12 @@ namespace Spark.Tests.FileSystem
             Assert.That(shared.Contains("partial.spark"));
         }
 
-        [Test, ExpectedException(typeof(FileNotFoundException))]
+        [Test]
         public void GetSourceNotFound()
         {
-            _viewFolder.GetViewSource(Path.Combine("Home", "NoSuchFile.spark"));
+            Assert.That(() => _viewFolder.GetViewSource(Path.Combine("Home", "NoSuchFile.spark")),
+                        Throws.TypeOf<FileNotFoundException>());
         }
-
 
         [Test]
         public void ReadingFileContents()

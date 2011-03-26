@@ -124,7 +124,7 @@ namespace Spark.Tests.Compiler
             Assert.That(contents, Is.EqualTo(""));
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Test]
         public void RethrowNullBehavior()
         {
             var compiler = CreateCompiler();
@@ -132,7 +132,7 @@ namespace Spark.Tests.Compiler
 
             DoCompileView(compiler, new[] { new SendExpressionChunk { Code = "CType(Nothing, String).Length" } });
             var instance = compiler.CreateInstance();
-            instance.RenderView();
+            Assert.That(() => instance.RenderView(), Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -244,14 +244,16 @@ namespace Spark.Tests.Compiler
         }
 
 
-        [Test, ExpectedException(typeof(BatchCompilerException))]
+        [Test]
         public void ProvideFullException()
         {
             var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
-            DoCompileView(compiler, new Chunk[]
-                                    {
-                                        new SendExpressionChunk {Code = "NoSuchVariable"}
-                                    });
+            Assert.That(() =>
+                        DoCompileView(compiler, new Chunk[]
+                                                    {
+                                                        new SendExpressionChunk {Code = "NoSuchVariable"}
+                                                    }),
+                        Throws.TypeOf<BatchCompilerException>());
         }
 
         [Test]

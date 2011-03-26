@@ -67,20 +67,20 @@ namespace Spark.Tests.Bindings
         }
 
 
-        [Test, ExpectedException(typeof(CompilerException))]
+        [Test]
         public void ChildReferenceMayNotAppearInStartPhrase()
         {
             var viewFolder = new InMemoryViewFolder { { "bindings.xml", "<bindings><element name='foo'><start>child::*</start><end>foo</end></element></bindings>" } };
             var provider = new DefaultBindingProvider();
-            provider.GetBindings(viewFolder).ToList();
+            Assert.That(() => provider.GetBindings(viewFolder).ToList(), Throws.TypeOf<CompilerException>());
         }
 
-        [Test, ExpectedException(typeof(CompilerException))]
+        [Test]
         public void ChildReferenceMayNotAppearInEndPhrase()
         {
             var viewFolder = new InMemoryViewFolder { { "bindings.xml", "<bindings><element name='foo'><start>foo</start><end>child::*</end></element></bindings>" } };
             var provider = new DefaultBindingProvider();
-            provider.GetBindings(viewFolder).ToList();
+            Assert.That(() => provider.GetBindings(viewFolder).ToList(), Throws.TypeOf<CompilerException>());
         }
     }
 }

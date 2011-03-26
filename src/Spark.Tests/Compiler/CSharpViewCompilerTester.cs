@@ -148,14 +148,16 @@ namespace Spark.Tests.Compiler
         }
 
 
-        [Test, ExpectedException(typeof(BatchCompilerException))]
+        [Test]
         public void ProvideFullException()
         {
             var compiler = new CSharpViewCompiler { BaseClass = "Spark.SparkViewBase" };
-            DoCompileView(compiler, new Chunk[]
-                                    {
-                                        new SendExpressionChunk {Code = "NoSuchVariable"}
-                                    });
+            Assert.That(() =>
+                        DoCompileView(compiler, new Chunk[]
+                                                    {
+                                                        new SendExpressionChunk {Code = "NoSuchVariable"}
+                                                    }),
+                        Throws.TypeOf<BatchCompilerException>());
         }
 
         [Test]

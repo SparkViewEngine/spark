@@ -57,14 +57,14 @@ namespace Spark.Tests.FileSystem
             }
         }
 
-        [Test, ExpectedException(typeof(FileNotFoundException))]
+        [Test]
         public void OpenMissingFile()
         {
             var first = new InMemoryViewFolder { { "one.txt", "one" } };
             var second = new InMemoryViewFolder { { "two.txt", "two" } };
             var viewFolder = new CombinedViewFolder(first, second);
 
-            viewFolder.GetViewSource("three.txt");
+            Assert.That(() => viewFolder.GetViewSource("three.txt"), Throws.TypeOf<FileNotFoundException>());
         }
 
 
