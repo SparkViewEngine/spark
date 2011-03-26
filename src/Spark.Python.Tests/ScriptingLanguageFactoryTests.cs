@@ -48,7 +48,7 @@ namespace Spark.Python.Tests
             var descriptor = new SparkViewDescriptor().SetLanguage(LanguageType.Python);
             var entry = _engine.CreateEntry(descriptor);
             var view = entry.CreateInstance();
-            Assert.IsInstanceOfType(typeof(StubSparkView), view);
+            Assert.IsInstanceOf(typeof(StubSparkView), view);
         }
     }
 }

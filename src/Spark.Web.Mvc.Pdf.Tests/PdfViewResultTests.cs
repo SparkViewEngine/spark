@@ -3,7 +3,7 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Rhino.Mocks;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Tests;

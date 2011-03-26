@@ -17,7 +17,7 @@ using System.Linq;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
-using NUnit.Framework.SyntaxHelpers;
+
 
 namespace Spark.Tests.FileSystem
 {
@@ -57,12 +57,13 @@ namespace Spark.Tests.FileSystem
             Assert.Contains("Delta", baseNames);
         }
 
-        [Test, ExpectedException(typeof(FileNotFoundException))]
+        [Test]
         public void FileNotFoundException()
         {
             var folder = new InMemoryViewFolder();
             folder.Add(Path.Combine("Home", "Index.spark"), "stuff");
-            folder.GetViewSource(Path.Combine("Home", "List.spark"));            
+            Assert.That(() => folder.GetViewSource(Path.Combine("Home", "List.spark")),
+                        Throws.TypeOf<FileNotFoundException>());
         }
 
         [Test]

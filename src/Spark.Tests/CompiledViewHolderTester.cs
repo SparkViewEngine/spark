@@ -13,7 +13,7 @@
 // limitations under the License.
 // 
 using System;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;

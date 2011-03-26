@@ -1,6 +1,6 @@
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.FileSystem;
 
 namespace Spark.Web.Mvc.Tests

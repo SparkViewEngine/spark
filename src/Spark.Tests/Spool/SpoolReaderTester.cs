@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.Spool;
 
 namespace Spark.Tests.Spool

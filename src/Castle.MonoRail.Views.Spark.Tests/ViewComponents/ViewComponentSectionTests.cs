@@ -74,7 +74,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                             writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
-            Assert.That(output, Contains.InOrder(
+            Assert.That(output, Tests.Contains.InOrder(
                 "1,2,3,",
                 "<span>10</span>",
                 "<span>9</span>",

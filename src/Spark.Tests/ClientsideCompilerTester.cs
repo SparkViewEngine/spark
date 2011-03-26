@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.FileSystem;
 using System.IO;
 
@@ -53,8 +53,8 @@ namespace Spark.Tests
             Assert.IsNotNull(entry.SourceCode);
             Assert.IsNotEmpty(entry.SourceCode);
 
-            Assert.That(entry.SourceCode, Text.Contains("x = {foo:\"bar\",quux:5}"));
-            Assert.That(entry.SourceCode, Text.Contains("HelloWorld({id:23,data:x})"));
+            Assert.That(entry.SourceCode, Is.StringContaining("x = {foo:\"bar\",quux:5}"));
+            Assert.That(entry.SourceCode, Is.StringContaining("HelloWorld({id:23,data:x})"));
 
         }
     }

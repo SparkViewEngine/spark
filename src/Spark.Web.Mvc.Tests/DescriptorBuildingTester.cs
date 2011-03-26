@@ -21,7 +21,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Rhino.Mocks;
 using Spark.FileSystem;
 using Spark.Parser;
@@ -428,11 +428,13 @@ namespace Spark.Web.Mvc.Tests
             }
         }
 
-        [Test, ExpectedException(typeof(InvalidCastException))]
+        [Test]
         public void CustomDescriptorBuildersCantUseDescriptorFilters()
         {
             _factory.DescriptorBuilder = MockRepository.GenerateStub<IDescriptorBuilder>();
-            _factory.AddFilter(MockRepository.GenerateStub<IDescriptorFilter>());
+            Assert.That(() =>
+                        _factory.AddFilter(MockRepository.GenerateStub<IDescriptorFilter>()),
+                        Throws.TypeOf<InvalidCastException>());
         }
 
         [Test]
