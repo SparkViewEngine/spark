@@ -39,10 +39,12 @@ namespace Castle.MonoRail.Views.Spark.Tests
         private ViewSourceLoaderWrapper _viewFolder;
         private readonly string NonExistingView = string.Format("Home{0}IDoNotExist", Path.DirectorySeparatorChar);
 
-        [Test, ExpectedException(typeof (FileNotFoundException))]
+        [Test]
         public void GetSourceNotFound()
         {
-            _viewFolder.GetViewSource(NonExistingView);
+            Assert.That(() =>
+                        _viewFolder.GetViewSource(NonExistingView),
+                        Throws.TypeOf<FileNotFoundException>());
         }
     }
 }

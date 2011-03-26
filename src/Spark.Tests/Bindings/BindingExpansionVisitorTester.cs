@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.Bindings;
 using Spark.Compiler.NodeVisitors;
 using Spark.Parser.Markup;

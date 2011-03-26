@@ -386,11 +386,11 @@ namespace Spark.Tests.Parser
         {
             var nodes1 = grammar.Nodes(Source("<script>\r\n$(\"#diff\").hide();\r\n</script>"));
             Assert.AreEqual(3, nodes1.Value.Count);
-            Assert.That(((TextNode)nodes1.Value[1]).Text, Contains.InOrder("$(\"#diff\").hide();"));
+            Assert.That(((TextNode)nodes1.Value[1]).Text, Tests.Contains.InOrder("$(\"#diff\").hide();"));
 
             var nodes2 = grammar.Nodes(Source("<script>\r\n$('#diff').hide();\r\n</script>"));
             Assert.AreEqual(3, nodes2.Value.Count);
-            Assert.That(((TextNode)nodes2.Value[1]).Text, Contains.InOrder("$('#diff').hide();"));
+            Assert.That(((TextNode)nodes2.Value[1]).Text, Tests.Contains.InOrder("$('#diff').hide();"));
         }
 
 
@@ -491,31 +491,31 @@ namespace Spark.Tests.Parser
             var result1 = grammar.Nodes(
                 Source("#alpha\r\n"));
             Assert.AreEqual(2, result1.Value.Count);
-            Assert.IsInstanceOfType(typeof(StatementNode), result1.Value[0]);
+            Assert.IsInstanceOf(typeof(StatementNode), result1.Value[0]);
             Assert.AreEqual("alpha", (string)((StatementNode)result1.Value[0]).Code);
-            Assert.IsInstanceOfType(typeof(TextNode), result1.Value[1]);
+            Assert.IsInstanceOf(typeof(TextNode), result1.Value[1]);
             Assert.AreEqual("\r\n", ((TextNode)result1.Value[1]).Text);
 
             var result2 = grammar.Nodes(
                 Source("#alpha\r\ntext\r\n#beta"));
             Assert.AreEqual(3, result2.Value.Count);
-            Assert.IsInstanceOfType(typeof(StatementNode), result2.Value[0]);
+            Assert.IsInstanceOf(typeof(StatementNode), result2.Value[0]);
             Assert.AreEqual("alpha", (string)((StatementNode)result2.Value[0]).Code);
-            Assert.IsInstanceOfType(typeof(TextNode), result2.Value[1]);
+            Assert.IsInstanceOf(typeof(TextNode), result2.Value[1]);
             Assert.AreEqual("\r\ntext", ((TextNode)result2.Value[1]).Text);
-            Assert.IsInstanceOfType(typeof(StatementNode), result2.Value[2]);
+            Assert.IsInstanceOf(typeof(StatementNode), result2.Value[2]);
             Assert.AreEqual("beta", (string)((StatementNode)result2.Value[2]).Code);
 
             var result3 = grammar.Nodes(
                 Source("\r\n#alpha\r\ntext\r\n#beta\r\n"));
             Assert.AreEqual(4, result3.Value.Count);
-            Assert.IsInstanceOfType(typeof(StatementNode), result3.Value[0]);
+            Assert.IsInstanceOf(typeof(StatementNode), result3.Value[0]);
             Assert.AreEqual("alpha", (string)((StatementNode)result3.Value[0]).Code);
-            Assert.IsInstanceOfType(typeof(TextNode), result3.Value[1]);
+            Assert.IsInstanceOf(typeof(TextNode), result3.Value[1]);
             Assert.AreEqual("\r\ntext", ((TextNode)result3.Value[1]).Text);
-            Assert.IsInstanceOfType(typeof(StatementNode), result3.Value[2]);
+            Assert.IsInstanceOf(typeof(StatementNode), result3.Value[2]);
             Assert.AreEqual("beta", (string)((StatementNode)result3.Value[2]).Code);
-            Assert.IsInstanceOfType(typeof(TextNode), result3.Value[3]);
+            Assert.IsInstanceOf(typeof(TextNode), result3.Value[3]);
             Assert.AreEqual("\r\n", ((TextNode)result3.Value[3]).Text);
         }
     }

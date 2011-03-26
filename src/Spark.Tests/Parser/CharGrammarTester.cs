@@ -14,7 +14,7 @@
 // 
 using System.Collections.Generic;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.Parser;
 using Spark.Parser.Code;
 using System.Linq;

@@ -27,7 +27,7 @@ namespace Spark.Tests.Caching
     using System.Linq;
     using System.Text;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
+    
     using Spark.FileSystem;
     using Spark.Tests.Stubs;
 	using System.IO;
@@ -145,14 +145,14 @@ ${foo()}
             };
 
             var contents = Render("index", data);
-            Assert.That(contents, Contains.InOrder(
+            Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1</p>",
                 "<p>1</p>"));
 
             Assert.That(calls, Is.EqualTo(1));
 
             contents = Render("index", data);
-            Assert.That(contents, Contains.InOrder(
+            Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1</p>",
                 "<p>1</p>"));
 
@@ -372,7 +372,7 @@ hana
 </ul>"));
         }
 
-        [Test, ExpectedException(typeof(ApplicationException))]
+        [Test]
         public void CacheFinallyShouldNotThrowExceptionWhenKeyIsBad()
         {
             _viewFolder.Add(Path.Combine("home", "index.spark"), @"
@@ -383,8 +383,7 @@ hana
 foo
 </cache>
 ");
-            Render("index", new StubViewData());
-
+            Assert.That(() => Render("index", new StubViewData()), Throws.TypeOf<ApplicationException>());
         }
 
         [Test]
@@ -397,7 +396,7 @@ foo
 </for>");
 
             var contents = Render("index");
-            Assert.That(contents, Contains.InOrder(
+            Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:1</p>",
                 "<p>3:2</p>",
                 "<p>5:3</p>",
@@ -428,7 +427,7 @@ foo
             };
 
             var contents = Render("index", data);
-            Assert.That(contents, Contains.InOrder(
+            Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:1</p>",
                 "<p>2:2</p>",
                 "<p>3:3</p>",
@@ -439,7 +438,7 @@ foo
 
             _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(25);
             contents = Render("index", data);
-            Assert.That(contents, Contains.InOrder(
+            Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:1</p>",
                 "<p>2:2</p>",
                 "<p>3:3</p>",
@@ -450,7 +449,7 @@ foo
 
             _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(10);
             contents = Render("index", data);
-            Assert.That(contents, Contains.InOrder(
+            Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:5</p>",
                 "<p>2:6</p>",
                 "<p>3:7</p>",
@@ -461,7 +460,7 @@ foo
 
             _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(10);
             contents = Render("index", data);
-            Assert.That(contents, Contains.InOrder(
+            Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:5</p>",
                 "<p>2:6</p>",
                 "<p>3:7</p>",
@@ -488,7 +487,7 @@ foo
                        };
 
             var contents = Render("index", data);
-            Assert.That(contents, Contains.InOrder(
+            Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:1</p>",
                 "<p>2:2</p>",
                 "<p>3:3</p>",

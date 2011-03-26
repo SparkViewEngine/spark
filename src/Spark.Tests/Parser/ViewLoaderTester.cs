@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NUnit.Framework.SyntaxHelpers;
+
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -129,12 +129,13 @@ namespace Spark.Tests.Parser
             Assert.That(partials2.Contains("footer"));
         }
 
-        [Test, ExpectedException(typeof(FileNotFoundException))]
+        [Test]
         public void FileNotFoundException()
         {
             viewFolder.Expect(x => x.GetViewSource(Path.Combine("Home", "nosuchfile.spark"))).Throw(new FileNotFoundException());
-
-            loader.Load(Path.Combine("Home", "nosuchfile.spark"));
+            Assert.That(() =>
+                        loader.Load(Path.Combine("Home", "nosuchfile.spark")),
+                        Throws.TypeOf<FileNotFoundException>());
             viewFolder.VerifyAllExpectations();
             syntaxProvider.VerifyAllExpectations();
         }

@@ -48,6 +48,18 @@ namespace Spark.Spool
             return ch;
         }
 
+        // TODO : Remove when Mono 2.10.2 is out
+        public override string ReadToEnd()
+        {
+            var result = new System.Text.StringBuilder();
+            int c;
+            while ((c = Read()) != -1)
+            {
+                result.Append((char)c);
+            }
+            return result.ToString();
+        }
+
         //TODO: override read byte[] for efficiency
     }
 }
