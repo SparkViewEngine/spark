@@ -223,15 +223,9 @@ namespace Spark.Tests.Compiler
         }
 
         [Test]
+        [Platform(Exclude = "Mono", Reason = "Problems with Mono-2.10+/Linux and the VB compiler prevent this from running.")]
         public void TargetNamespace()
         {
-            // TODO: Fix on Mono/Linux - ahjohannessen
-            var platform = Environment.OSVersion.Platform;
-            if(platform == PlatformID.Unix || platform == PlatformID.MacOSX)
-            {
-                Assert.Ignore();
-            }
-
             var compiler = new VisualBasicViewCompiler
             {
                 BaseClass = "Spark.AbstractSparkView",
