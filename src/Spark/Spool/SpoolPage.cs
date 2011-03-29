@@ -28,7 +28,9 @@ namespace Spark.Spool
         private SpoolPage _next;
         private bool _readonly;
         private bool _nonreusable;
-
+		
+		private bool _released;
+		
         public SpoolPage()
         {
             _buffer = _allocator.Obtain();
@@ -98,8 +100,9 @@ namespace Spark.Spool
                 var scan = this;
                 while (scan != null && _allocator._cache.Count < 200)
                 {
-                    if (!scan._nonreusable)
+                    if (!scan._nonreusable && !scan._released)
                     {
+						scan._released = true;
                         Array.Clear(scan._buffer, 0, scan._count);
                         _allocator._cache.Push(scan._buffer);
                     }
