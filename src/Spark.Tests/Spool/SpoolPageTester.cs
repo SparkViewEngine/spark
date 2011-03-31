@@ -56,5 +56,30 @@ namespace Spark.Tests.Spool
             Assert.AreEqual(30, last.Count);
             Assert.AreEqual(SpoolPage.BUFFER_SIZE.ToString(), last.Buffer[0]);
         }
+
+        [Test]
+        public void CallsReleaseOnNextOnlyIfIsNotReleasedAlready()
+        {
+            var first = new SpoolPage();
+            var next = first;
+            for (int index = 0; index != SpoolPage.BUFFER_SIZE + 30; ++index)
+            {
+                next = next.Append(index.ToString());
+            }
+            next.Release();
+
+            var second = new SpoolPage();
+            second.Append("1");
+            second.Append("2");
+            second.Append("3");
+
+            first.Release();
+
+            Assert.AreEqual(3, second.Count);
+            Assert.AreEqual("1", second.Buffer[0]);
+            Assert.AreEqual("2", second.Buffer[1]);
+            Assert.AreEqual("3", second.Buffer[2]);
+        }
+
     }
 }
