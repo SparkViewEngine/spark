@@ -1,0 +1,14 @@
+﻿<html>
+  <head>
+    <title>ignore test</title>
+  </head>
+  <body>
+    <h1>ignore test</h1>
+    <p>${System.DateTime.Now}</p>
+    
+    <ignore>
+        Regular text ${This.isnt.code < 0}
+        <var dummy="This isn't a variable" />
+    </ignore>
+  </body>
+</html>
