@@ -38,6 +38,7 @@ namespace Spark.Parser.Markup
             var Quot = Ch('\"');
             var Lt = Ch('<');
             var Gt = Ch('>');
+            var NotLt = ChNot('<');
 
 
             //var CombiningChar = Ch('*');
@@ -127,6 +128,18 @@ namespace Spark.Parser.Markup
                 TkAttNam(Name).And(TkAttDelim(Eq)).And(AttValue)
                 .Build(hit => new AttributeNode(hit.Left.Left, hit.Down)).Paint<AttributeNode, Node>();
 
+            Ignore =
+                Opt(Ch("\r\n").Or(Ch("\n")).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt)).And(TkEleNam(Ch("ignore"))).And(TkTagDelim(Gt)).And(Rep(ChNot('<').Or(Lt.IfNext(ChNot('/'))))).And(Ch("</ignore>"))
+                .Build(hit =>
+                {
+                    var node = new SpecialNode(new ElementNode(
+                        hit.Left.Left.Left.Down,
+                        new List<AttributeNode>(),
+                        false,
+                        hit.Left.Left.Left.Left.Left == null ? string.Empty : hit.Left.Left.Left.Left.Left.Left + hit.Left.Left.Left.Left.Left.Down));
+                    node.Body = new List<Node> { new TextNode(hit.Left.Down) };
+                    return node;
+                });
 
             //[40]   	STag	   ::=   	'<' Name (S  Attribute)* S? '>'
             //[44]   	EmptyElemTag	   ::=   	'<' Name (S  Attribute)* S? '/>'
@@ -144,7 +157,7 @@ namespace Spark.Parser.Markup
                 .Build(hit => new EndElementNode(hit.Left.Left.Down, hit.Left.Left.Left.Left == null ? string.Empty : hit.Left.Left.Left.Left.Left + hit.Left.Left.Left.Left.Down));
 
             Text =
-                Rep1(ChNot('&', '<').Unless(Statement).Unless(Code).Unless(Element).Unless(EndElement))
+                Rep1(ChNot('&', '<').Unless(Statement).Unless(Code).Unless(Ignore).Unless(Element).Unless(EndElement))
                 .Build(hit => new TextNode(hit));
 
             //[15]   	Comment	   ::=   	'<!--' ((Char - '-') | ('-' (Char - '-')))* '-->'
@@ -222,7 +235,8 @@ namespace Spark.Parser.Markup
                 .Build(hit => new ProcessingInstructionNode { Name = hit.Left.Left.Left.Down, Body = new string(hit.Left.Down.ToArray()) });
 
 
-            AnyNode = AsNode(Element).Paint()
+            AnyNode = AsNode(Ignore).Paint()
+                .Or(AsNode(Element).Paint())
                 .Or(AsNode(EndElement).Paint())
                 .Or(AsNode(Text).Paint())
                 .Or(EntityRefOrAmpersand.Paint())
@@ -245,6 +259,7 @@ namespace Spark.Parser.Markup
         public ParseAction<DoctypeNode> DoctypeDecl;
         public ParseAction<TextNode> Text;
         public ParseAction<EntityNode> EntityRef;
+        public ParseAction<SpecialNode> Ignore;
         public ParseAction<ElementNode> Element;
         public ParseAction<EndElementNode> EndElement;
         public ParseAction<AttributeNode> Attribute;

@@ -34,7 +34,7 @@ namespace Spark.Compiler.NodeVisitors
         public SpecialNodeVisitor(VisitorContext context)
             : base(context)
         {
-            _containingNames = new List<string>(new[] { "var", "def", "default", "for", "use", "content", "test", "if", "else", "elseif", "macro", "render", "segment", "cache", "markdown" });
+            _containingNames = new List<string>(new[] { "var", "def", "default", "for", "use", "content", "test", "if", "else", "elseif", "macro", "render", "segment", "cache", "markdown", "ignore" });
             _nonContainingNames = new List<string>(new[] { "global", "set", "viewdata" });
             if(context.ParseSectionTagAsSegment)
                 _containingNames.Add("section");
@@ -239,7 +239,7 @@ namespace Spark.Compiler.NodeVisitors
 
         protected override void Visit(SpecialNode specialNode)
         {
-            throw new System.NotImplementedException();
+            Add(specialNode);
         }
 
         protected override void Visit(ExtensionNode node)
