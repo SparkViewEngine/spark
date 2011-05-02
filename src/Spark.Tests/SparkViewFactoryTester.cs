@@ -1162,8 +1162,10 @@ namespace Spark.Tests
             string content = sb.ToString();
 
             Assert.That(content, Contains.InOrder(
+                "<div>",
                 "Regular text ${This.isnt.code < 0}",
-                "<var dummy=\"This isn't a variable\" />"));
+                "<var dummy=\"This isn't a variable\" />",
+                "</div>"));
             Assert.IsFalse(content.Contains("<ignore>"));
             Assert.IsFalse(content.Contains("</ignore>"));
         }
