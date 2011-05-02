@@ -7,8 +7,10 @@
     <p>${System.DateTime.Now}</p>
     
     <ignore>
-        Regular text ${This.isnt.code < 0}
-        <var dummy="This isn't a variable" />
+        <div>
+            Regular text ${This.isnt.code < 0}
+            <var dummy="This isn't a variable" />
+        </div>
     </ignore>
   </body>
 </html>

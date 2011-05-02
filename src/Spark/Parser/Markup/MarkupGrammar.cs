@@ -129,7 +129,7 @@ namespace Spark.Parser.Markup
                 .Build(hit => new AttributeNode(hit.Left.Left, hit.Down)).Paint<AttributeNode, Node>();
 
             Ignore =
-                Opt(Ch("\r\n").Or(Ch("\n")).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt)).And(TkEleNam(Ch("ignore"))).And(TkTagDelim(Gt)).And(Rep(ChNot('<').Or(Lt.IfNext(ChNot('/'))))).And(Ch("</ignore>"))
+                Opt(Ch("\r\n").Or(Ch("\n")).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt)).And(TkEleNam(Ch("ignore"))).And(TkTagDelim(Gt)).And(Rep(ChNot('<').Or(Lt.IfNext(ChNot("/ignore>"))))).And(Ch("</ignore>"))
                 .Build(hit =>
                 {
                     var node = new SpecialNode(new ElementNode(
