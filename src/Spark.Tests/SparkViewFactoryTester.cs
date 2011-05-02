@@ -1150,5 +1150,24 @@ namespace Spark.Tests
                 "<p>", "Regular Text.", "</p>",
                 "<pre><code>", "code block on the last line", "</code></pre>"));
         }
+
+        [Test]
+        public void Ignore()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("ignore", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<div>",
+                "Regular text ${This.isnt.code < 0}",
+                "<var dummy=\"This isn't a variable\" />",
+                "</div>"));
+            Assert.IsFalse(content.Contains("<ignore>"));
+            Assert.IsFalse(content.Contains("</ignore>"));
+        }
     }
 }

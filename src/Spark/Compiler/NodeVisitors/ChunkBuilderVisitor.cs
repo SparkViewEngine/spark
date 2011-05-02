@@ -102,7 +102,8 @@ namespace Spark.Compiler.NodeVisitors
                                       {"render", VisitRender},
                                       {"segment", VisitSection},
                                       {"cache", VisitCache},
-                                      {"markdown", VisitMarkdown}
+                                      {"markdown", VisitMarkdown},
+                                      {"ignore", VisitIgnore}
                                   };
             if(context.ParseSectionTagAsSegment) _specialNodeMap.Add("section", VisitSection);
         }
@@ -363,7 +364,7 @@ namespace Spark.Compiler.NodeVisitors
                                      {
                                          Condition = conditionNode.Code,
                                          Type = ConditionalType.If,
-                                         Position = Locate(conditionNode)                                         
+                                         Position = Locate(conditionNode)
                                      };
             Chunks.Add(conditionChunk);
 
@@ -861,6 +862,11 @@ namespace Spark.Compiler.NodeVisitors
             }
         }
 
+        private void VisitIgnore(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            Accept(specialNode.Body);
+        }
+
         private bool SatisfyElsePrecondition()
         {
             var lastChunk = Chunks.LastOrDefault();
@@ -901,8 +907,5 @@ namespace Spark.Compiler.NodeVisitors
             using (new Frame(this, extensionChunk.Body))
                 extensionNode.Extension.VisitNode(this, extensionNode.Body, Chunks);
         }
-
-
-
     }
 }
