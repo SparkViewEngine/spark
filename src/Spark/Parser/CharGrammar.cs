@@ -183,6 +183,24 @@ namespace Spark.Parser
         }
 
         /// <summary>
+        /// Matches characters of length match string unless the next characters exactly match the match string.
+        /// </summary>
+        /// <param name="match">The string of characters disallowed to match.</param>
+        /// <returns>The corresponding ParseAction for this match.</returns>
+        public static ParseAction<string> ChNot(string match)
+        {
+            return delegate(Position input)
+            {
+                if (input.PeekTest(match))
+                {
+                    return null;
+                }
+
+                return new ParseResult<string>(input.Advance(match.Length), match);
+            };
+        }
+
+        /// <summary>
         /// Matches the start or the end of the text.
         /// </summary>
         /// <returns>The corresponding ParseAction for this match.</returns>
