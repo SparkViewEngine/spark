@@ -9,7 +9,7 @@ namespace Spark.Bindings
 {
     public class DefaultBindingProvider : BindingProvider
     {
-        public override IEnumerable<Binding> GetBindings(IViewFolder viewFolder)
+        public override IEnumerable<Binding> GetBindings(IViewFolder viewFolder, string directoryPath)
         {
             if (viewFolder.HasView("bindings.xml") == false)
                 return new Binding[0];
