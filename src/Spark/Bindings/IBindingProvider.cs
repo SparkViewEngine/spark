@@ -8,6 +8,6 @@ namespace Spark.Bindings
 {
     public interface IBindingProvider
     {
-        IEnumerable<Binding> GetBindings(IViewFolder viewFolder, string directoryPath);
+        IEnumerable<Binding> GetBindings(IViewFolder viewFolder, string viewPath);
     }
 }
