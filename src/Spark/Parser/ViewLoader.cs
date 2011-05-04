@@ -194,7 +194,7 @@ namespace Spark.Parser
                 Prefix = this.Prefix,
                 ExtensionFactory = this.ExtensionFactory,
                 PartialFileNames = this.FindPartialFiles(viewPath),
-                Bindings = this.FindBindings(Path.GetDirectoryName(viewPath)),
+                Bindings = this.FindBindings(viewPath),
                 ParseSectionTagAsSegment = this.ParseSectionTagAsSegment
             };
             newEntry.Chunks = this.SyntaxProvider.GetChunks(context, viewPath);
@@ -236,14 +236,14 @@ namespace Spark.Parser
             }
         }
 
-        private IEnumerable<Binding> FindBindings(string directoryPath)
+        private IEnumerable<Binding> FindBindings(string viewPath)
         {
             if (this.BindingProvider == null)
             {
                 return new Binding[0];
             }
 
-            return this.BindingProvider.GetBindings(this.ViewFolder, directoryPath);
+            return this.BindingProvider.GetBindings(this.ViewFolder, viewPath);
         }
 
         private string ResolveReference(string existingViewPath, string viewName)
