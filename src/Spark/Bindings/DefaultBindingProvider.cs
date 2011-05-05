@@ -9,12 +9,12 @@ namespace Spark.Bindings
 {
     public class DefaultBindingProvider : BindingProvider
     {
-        public override IEnumerable<Binding> GetBindings(IViewFolder viewFolder)
+        public override IEnumerable<Binding> GetBindings(BindingRequest bindingRequest)
         {
-            if (viewFolder.HasView("bindings.xml") == false)
+            if (bindingRequest.ViewFolder.HasView("bindings.xml") == false)
                 return new Binding[0];
 
-            var file = viewFolder.GetViewSource("bindings.xml");
+            var file = bindingRequest.ViewFolder.GetViewSource("bindings.xml");
             using (var stream = file.OpenViewStream())
             {
                 using (var reader = new StreamReader(stream))

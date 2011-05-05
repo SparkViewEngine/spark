@@ -68,6 +68,6 @@ namespace Spark.Bindings
             return grammar.Phrase(new Position(new SourceContext(element.Value))).Value;
         }
 
-        public abstract IEnumerable<Binding> GetBindings(IViewFolder viewFolder);
+        public abstract IEnumerable<Binding> GetBindings(BindingRequest bindingRequest);
     }
 }
