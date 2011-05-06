@@ -243,7 +243,7 @@ namespace Spark.Parser
                 return new Binding[0];
             }
 
-            return this.BindingProvider.GetBindings(this.ViewFolder, viewPath);
+            return this.BindingProvider.GetBindings(new BindingRequest(this.ViewFolder){ViewPath = viewPath});
         }
 
         private string ResolveReference(string existingViewPath, string viewName)

@@ -16,7 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using Spark.Bindings;
+using Spark.Compiler.NodeVisitors;
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -164,6 +165,30 @@ namespace Spark.Tests.Parser
             viewFolder.LastModified = 7;
             Assert.That(!viewLoader.IsCurrent());
         }
+
+        [Test]
+        public void BindingProviderIsCalledUsingTheCorrectBindingRequest()
+        {
+            var bindingProvider = MockRepository.GenerateMock<IBindingProvider>();
+            var sintaxProvider = MockRepository.GenerateStub<ISparkSyntaxProvider>();
+            var viewPath = Path.Combine("Account", "index.spark");
+            var viewFolder = new StubViewFolder { Path = viewPath, LastModified = 4 };
+            var request = new BindingRequest(viewFolder) { ViewPath = viewPath };
+
+            bindingProvider.Expect(x => x.GetBindings(request)).Return(new Binding[0]);
+            sintaxProvider.Stub(x => x.GetChunks(Arg<VisitorContext>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(new List<Chunk>());
+            var viewLoader = new ViewLoader
+            {
+                ViewFolder = viewFolder,
+                SyntaxProvider = sintaxProvider,
+                BindingProvider = bindingProvider
+            };
+            viewLoader.Load(viewPath);
+
+            bindingProvider.VerifyAllExpectations();
+        }
+
 
         public class StubViewFolder : IViewFolder, IViewFile
         {
