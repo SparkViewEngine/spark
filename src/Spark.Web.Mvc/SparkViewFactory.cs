@@ -136,7 +136,9 @@ namespace Spark.Web.Mvc
 
         public virtual void ReleaseView(ControllerContext controllerContext, IView view)
         {
-            Engine.ReleaseInstance((ISparkView)view);
+            var sparkView = view as ISparkView;
+            if (sparkView != null)
+                Engine.ReleaseInstance(sparkView);
         }
 
         private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> _cache =
