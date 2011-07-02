@@ -1171,6 +1171,38 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void Escape()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("escape", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<div>",
+                "${Encoded.Escaped.with.a.dollar < 0}",
+                "${Encoded.Escaped.with.a.backslash < 0}",
+                "${Encoded.Escaped.with.a.backtick < 0}",
+                "</div>"));
+
+            Assert.That(content, Contains.InOrder(
+                "<div>",
+                "!{Unencoded.Escaped.with.a.dollar < 0}",
+                "!{Unencoded.Escaped.with.a.backslash < 0}",
+                "!{Unencoded.Escaped.with.a.backtick < 0}",
+                "</div>"));
+
+            Assert.That(content, Contains.InOrder(
+                "<div>",
+                "$!{Encoded.Silent.Nulls.Escaped.with.a.dollar < 0}",
+                "$!{Encoded.Silent.Nulls.Escaped.with.a.backslash < 0}",
+                "$!{Encoded.Silent.Nulls.Escaped.with.a.backtick < 0}",
+                "</div>"));
+        }
+
+        [Test]
         public void PreserveSingleQuotes()
         {
             mocks.ReplayAll();

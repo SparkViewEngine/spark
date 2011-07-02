@@ -172,6 +172,9 @@
     <None Include="Spark.Tests.Views\Home\addviewdatadifferenttypes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\escape.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\preserveDoubleQuotes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
