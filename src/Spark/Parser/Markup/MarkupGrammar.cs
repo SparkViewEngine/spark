@@ -82,7 +82,16 @@ namespace Spark.Parser.Markup
 
             Statement = StatementNode1.Or(StatementNode2);
 
+            var EscapedCode1 = TkCode(Ch("\\${").Or(Ch("$${")).Or(Ch("`${"))).And(Expression).And(TkCode(Ch('}')))
+                .Build(hit => new TextNode("${" + hit.Left.Down + "}"));
 
+            var EscapedCode2 = TkCode(Ch("\\!{").Or(Ch("!!{")).Or(Ch("`!{"))).And(Expression).And(TkCode(Ch('}')))
+                .Build(hit => new TextNode("!{" + hit.Left.Down + "}"));
+
+            var EscapedCode3 = TkCode(Ch("\\$!{").Or(Ch("$$!{")).Or(Ch("`$!{"))).And(Expression).And(TkCode(Ch('}')))
+                .Build(hit => new TextNode("$!{" + hit.Left.Down + "}"));
+
+            EscapedCode = EscapedCode1.Or(EscapedCode2).Or(EscapedCode3);
 
             // Syntax 1: ${csharp_expression}
             var Code1 = TkCode(Ch("${")).And(Expression).And(TkCode(Ch('}')))
@@ -156,7 +165,7 @@ namespace Spark.Parser.Markup
                 .Build(hit => new EndElementNode(hit.Left.Left.Down, hit.Left.Left.Left.Left == null ? string.Empty : hit.Left.Left.Left.Left.Left + hit.Left.Left.Left.Left.Down));
 
             Text =
-                Rep1(ChNot('&', '<').Unless(Statement).Unless(Code).Unless(Ignore).Unless(Element).Unless(EndElement))
+                Rep1(ChNot('&', '<').Unless(Statement).Unless(Code).Unless(EscapedCode).Unless(Ignore).Unless(Element).Unless(EndElement))
                 .Build(hit => new TextNode(hit));
 
             //[15]   	Comment	   ::=   	'<!--' ((Char - '-') | ('-' (Char - '-')))* '-->'
@@ -235,6 +244,7 @@ namespace Spark.Parser.Markup
 
 
             AnyNode = AsNode(Ignore).Paint()
+                .Or(AsNode(EscapedCode).Paint())
                 .Or(AsNode(Element).Paint())
                 .Or(AsNode(EndElement).Paint())
                 .Or(AsNode(Text).Paint())
@@ -266,6 +276,7 @@ namespace Spark.Parser.Markup
         public ParseAction<ProcessingInstructionNode> ProcessingInstruction;
         public ParseAction<XMLDeclNode> XMLDecl;
 
+        public ParseAction<TextNode> EscapedCode;
         public ParseAction<ExpressionNode> Code;
         public ParseAction<StatementNode> Statement;
 
