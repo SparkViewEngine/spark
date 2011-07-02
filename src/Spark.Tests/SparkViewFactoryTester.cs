@@ -411,10 +411,10 @@ namespace Spark.Tests
                 "<p>1: Beta</p>",
                 "<p>2: Gamma</p>",
                 "<p>3: Delta</p>",
-                "<li ", "class=\"even\">Alpha</li>",
-                "<li ", "class=\"odd\">Beta</li>",
-                "<li ", "class=\"even\">Gamma</li>",
-                "<li ", "class=\"odd\">Delta</li>"
+                "<li ", "class='even'>Alpha</li>",
+                "<li ", "class='odd'>Beta</li>",
+                "<li ", "class='even'>Gamma</li>",
+                "<li ", "class='odd'>Delta</li>"
                 ));
         }
 
@@ -1168,6 +1168,32 @@ namespace Spark.Tests
                 "</div>"));
             Assert.IsFalse(content.Contains("<ignore>"));
             Assert.IsFalse(content.Contains("</ignore>"));
+        }
+
+        [Test]
+        public void PreserveSingleQuotes()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("preserveSingleQuotes", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+
+            Assert.That(content, Is.EqualTo(@"<tag attr='something; other=""value1, value2""'/>"));
+        }
+
+        [Test]
+        public void PreserveDoubleQuotes()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("preserveDoubleQuotes", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+
+            Assert.That(content, Is.EqualTo(@"<tag attr=""something; other='value1, value2'""/>"));
         }
     }
 }

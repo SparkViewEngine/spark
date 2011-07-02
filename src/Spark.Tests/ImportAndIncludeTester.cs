@@ -206,7 +206,7 @@ namespace Spark.Tests
                                           {Path.Combine("lib", "other.spark"), "other file"}
                                       }, Path.Combine("including", "index.spark"));
             var contents = view.RenderView();
-            Assert.AreEqual("<p xmlns:x=\"http://www.w3.org/2001/XInclude\"><include/>other file</p>", contents);
+            Assert.AreEqual("<p xmlns:x='http://www.w3.org/2001/XInclude\'><include/>other file</p>", contents);
         }
 
         [Test]

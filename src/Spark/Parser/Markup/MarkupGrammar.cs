@@ -120,13 +120,12 @@ namespace Spark.Parser.Markup
             var AttValueSingle = TkAttQuo(Apos).And(Rep(AsNode(AttValueSingleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Or(LessThanTextNode).Paint())).And(TkAttQuo(Apos));
             var AttValueDoubleText = TkAttVal(Rep1(ChNot('<', '&', '\"').Unless(Code).Unless(Condition))).Build(hit => new TextNode(hit));
             var AttValueDouble = TkAttQuo(Quot).And(Rep(AsNode(AttValueDoubleText).Or(EntityRefOrAmpersand).Or(AsNode(Code)).Or(AsNode(Condition)).Or(LessThanTextNode).Paint())).And(TkAttQuo(Quot));
-            var AttValue = AttValueSingle.Or(AttValueDouble).Left().Down();
-
+            var AttValueQuoted = AttValueSingle.Or(AttValueDouble);
 
             //[41]   	Attribute	   ::=   	 Name  Eq  AttValue  
             Attribute =
-                TkAttNam(Name).And(TkAttDelim(Eq)).And(AttValue)
-                .Build(hit => new AttributeNode(hit.Left.Left, hit.Down)).Paint<AttributeNode, Node>();
+                TkAttNam(Name).And(TkAttDelim(Eq)).And(AttValueQuoted)
+                    .Build(hit => new AttributeNode(hit.Left.Left, hit.Down.Down, hit.Down.Left.Down)).Paint<AttributeNode, Node>();
 
             Ignore =
                 Opt(Ch("\r\n").Or(Ch("\n")).And(StringOf(Ch(char.IsWhiteSpace).Unless(Ch('\r', '\n'))))).And(TkTagDelim(Lt)).And(TkEleNam(Ch("ignore"))).And(TkTagDelim(Gt)).And(Rep(ChNot('<').Or(Lt.IfNext(ChNot("/ignore>"))))).And(Ch("</ignore>"))

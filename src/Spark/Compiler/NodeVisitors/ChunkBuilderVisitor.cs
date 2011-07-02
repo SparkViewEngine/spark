@@ -291,10 +291,10 @@ namespace Spark.Compiler.NodeVisitors
             if (allNodesAreConditional == false || processedNodes.Any() == false)
             {
                 // This attribute may not disapper - send it literally
-                AddLiteral(" " + attributeNode.Name + "=\"");
+                AddLiteral(string.Format(" {0}={1}", attributeNode.Name, attributeNode.QuotChar));
                 foreach (var node in processedNodes)
                     Accept(node);
-                AddLiteral("\"");
+                AddLiteral(attributeNode.QuotChar.ToString());
             }
             else
             {
