@@ -40,7 +40,7 @@ namespace Spark.Compiler.NodeVisitors
 
 	    protected override SpecialNode CreateWrappingNode(AttributeNode attr, ElementNode node)
 		{
-			var fakeAttribute = new AttributeNode("each", attr.Nodes) { OriginalNode = attr };
+			var fakeAttribute = new AttributeNode("each", '"', attr.Nodes) { OriginalNode = attr };
 			var fakeElement = new ElementNode("for", new[] { fakeAttribute }, false) { OriginalNode = attr };
 			return new SpecialNode(fakeElement);
 		}

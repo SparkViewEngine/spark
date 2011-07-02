@@ -47,8 +47,8 @@ namespace Spark.Tests.Visitors
         {
             var elt = new ElementNode("img", new[]
                                                  {
-                                                     new AttributeNode("href", new []{new TextNode("urn:picture".ToArray())}),
-                                                     new AttributeNode("alt", new Node[]{new TextNode("A Picture".ToArray()), new EntityNode("amp")})
+                                                     new AttributeNode("href", '"', new []{new TextNode("urn:picture".ToArray())}),
+                                                     new AttributeNode("alt", '"', new Node[]{new TextNode("A Picture".ToArray()), new EntityNode("amp")})
                                                  }, true);
             var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(elt);

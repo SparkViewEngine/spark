@@ -172,6 +172,12 @@
     <None Include="Spark.Tests.Views\Home\addviewdatadifferenttypes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\preserveDoubleQuotes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\preserveSingleQuotes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\expression-has-verbatim-strings.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

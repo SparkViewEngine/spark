@@ -46,7 +46,7 @@ namespace Spark.Tests.Bindings
 
         static AttributeNode CreateAttribute(string name, params Node[] nodes)
         {
-            return new AttributeNode(name, nodes);
+            return new AttributeNode(name, '"', nodes);
         }
 
         [Test]

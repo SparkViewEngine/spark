@@ -64,7 +64,7 @@ namespace Spark.Compiler.NodeVisitors
                 return null;
 
             node.Attributes.Remove(attribute);
-            return new AttributeNode(fakeName, attribute.Nodes);
+            return new AttributeNode(fakeName, '"', attribute.Nodes);
         }
     }
 }
