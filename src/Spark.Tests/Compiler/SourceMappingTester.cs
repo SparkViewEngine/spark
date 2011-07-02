@@ -101,7 +101,7 @@ namespace Spark.Tests.Compiler
             var contents = RenderView(new SparkViewDescriptor()
                                           .AddTemplate(Path.Combine("Home", "Index.spark")));
 
-            Assert.AreEqual("<p class=\"Hello\">World</p>", contents);
+            Assert.AreEqual("<p class='Hello'>World</p>", contents);
             Assert.AreEqual(1, _entry.SourceMappings.Count);
             Assert.AreEqual("\"Hello\"", _entry.SourceMappings[0].Source.Value);
             Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
