@@ -41,14 +41,14 @@ namespace Spark.Compiler.Javascript
             var primaryName = Descriptor.Templates[0];
             var nameParts = primaryName
                 .Split(new[] { Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(name => SafeName(name));
+                .Select(SafeName);
 
             // convert some syntax from csharp to javascript
             foreach (var template in viewTemplates)
                 anonymousTypeVisitor.Accept(template);
 
             var cumulativeName = "window.Spark";
-            foreach (var part in nameParts)
+            foreach (var part in nameParts.Where(p => p != "~"))
             {
                 source.Append("if (!").Append(cumulativeName).Append(") ").Append(cumulativeName).
                     AppendLine(" = {};");
@@ -65,7 +65,7 @@ namespace Spark.Compiler.Javascript
 
             source.Append("var StringWriter = function() {");
             source.Append("this._parts = [];");
-            source.Append("this.Write = function(arg) {this._parts.push(arg.toString());};");
+            source.Append("this.Write = function(arg) {if(arg !== null){this._parts.push(arg.toString());}};");
             source.Append("this.toString = function() {return this._parts.join('');};");
             source.AppendLine("};");
 
