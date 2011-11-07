@@ -208,15 +208,40 @@ namespace Spark.Web.Mvc
 
         protected virtual IEnumerable<string> PotentialMasterLocations(string masterName, IDictionary<string, object> extra)
         {
+            if (extra.ContainsKey("area") && !string.IsNullOrEmpty(extra["area"] as string))
+            {
+                return ApplyFilters(new[]
+                                    {
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Layouts{0}{2}.spark", Path.DirectorySeparatorChar, extra["area"], masterName),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.spark", Path.DirectorySeparatorChar, extra["area"], masterName),
+                                        string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar,masterName),
+                                        string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,masterName),
+                                    }, extra);
+            }
             return ApplyFilters(new[]
                                     {
                                         string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar,masterName),
-                                        string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,masterName)
+                                        string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,masterName),
                                     }, extra);
         }
 
         protected virtual IEnumerable<string> PotentialDefaultMasterLocations(string controllerName, IDictionary<string, object> extra)
         {
+            if (extra.ContainsKey("area") && !string.IsNullOrEmpty(extra["area"] as string))
+            {
+                return ApplyFilters(new[]
+                                    {
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Layouts{0}{2}.spark", Path.DirectorySeparatorChar, extra["area"], controllerName),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.spark", Path.DirectorySeparatorChar, extra["area"], controllerName),
+                                        string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, controllerName),
+                                        string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, controllerName),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Layouts{0}Application.spark", Path.DirectorySeparatorChar, extra["area"]),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}Application.spark", Path.DirectorySeparatorChar, extra["area"]),
+                                        string.Format("Layouts{0}Application.spark", Path.DirectorySeparatorChar),
+                                        string.Format("Shared{0}Application.spark", Path.DirectorySeparatorChar),
+                                    }, extra);
+            }
+
             return ApplyFilters(new[]
                                     {
                                         string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, controllerName),
