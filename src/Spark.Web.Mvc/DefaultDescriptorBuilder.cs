@@ -193,10 +193,10 @@ namespace Spark.Web.Mvc
             {
                 return ApplyFilters(new[]
                                         {
+                                            string.Format("~{0}Areas{0}{1}{0}Views{0}{2}{0}{3}.spark", Path.DirectorySeparatorChar, extra["area"], controllerName, viewName),
+                                            string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.spark", Path.DirectorySeparatorChar, extra["area"], viewName),
                                             string.Format("{0}{1}{2}.spark", controllerName, Path.DirectorySeparatorChar, viewName),
                                             string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, viewName),
-                                            string.Format("~{0}Areas{0}{1}{0}Views{0}{2}{0}{3}.spark", Path.DirectorySeparatorChar, extra["area"], controllerName, viewName),
-                                            string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.spark", Path.DirectorySeparatorChar, extra["area"], viewName)
                                         }, extra);
             }
             return ApplyFilters(new[]
