@@ -88,6 +88,11 @@ namespace Spark.Compiler.NodeVisitors
             Nodes.Add(node);
         }
 
+        protected override void Visit(IndentationNode node)
+        {
+            Nodes.Add(node);
+        }
+
         protected override void Visit(SpecialNode node)
         {
             bool detachFromParent = false;

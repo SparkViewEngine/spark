@@ -100,6 +100,7 @@
     <Compile Include="Caching\TextWriterOriginator.cs" />
     <Compile Include="Compiler\BatchCompilerException.cs" />
     <Compile Include="Compiler\NodeVisitors\CacheAttributeVisitor.cs" />
+    <Compile Include="Compiler\NodeVisitors\IndentationVisitor.cs" />
     <Compile Include="Compiler\NodeVisitors\SpecialAttributeVisitorBase.cs" />
     <Compile Include="CompositeViewEntry.cs" />
     <Compile Include="AbstractSparkView.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="ICacheSignal.cs" />
     <Compile Include="NullCacheService.cs" />
     <Compile Include="Compiler\NodeVisitors\BindingExpansionVisitor.cs" />
+    <Compile Include="Parser\Offset\OffsetGrammar.cs" />
     <Compile Include="SparkViewBase.cs" />
     <Compile Include="CompiledViewEntry.cs" />
     <Compile Include="CompiledViewHolder.cs" />
@@ -257,6 +259,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -20,6 +20,8 @@
 // <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
+using System.Linq;
+
 namespace Spark.Tests
 {
     using System;
@@ -51,8 +53,7 @@ namespace Spark.Tests
             factory = new StubViewFactory { Engine = engine };
 
             sb = new StringBuilder();
-
-
+           
             mocks = new MockRepository();
 
         }
@@ -1226,6 +1227,113 @@ namespace Spark.Tests
             string content = sb.ToString();
 
             Assert.That(content, Is.EqualTo(@"<tag attr=""something; other='value1, value2'""/>"));
+        }
+
+
+        [Test]
+        public void ShadeFileRenders()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("ShadeFileRenders", null);
+            factory.RenderView(viewContext, Constants.DotShade);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<html>",
+                "<head>", 
+                "<title>", 
+                "offset test",
+                "</title>", 
+                "<body>", 
+                "<div class=\"container\">", 
+                "<h1 id=\"top\">", 
+                "offset test",
+                "</h1>",
+                "</div>",
+                "</body>",
+                "</html>"));
+        }
+
+        [Test]
+        public void ShadeEvaluatesExpressions()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("ShadeEvaluatesExpressions", null);
+            factory.RenderView(viewContext, Constants.DotShade);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<p>",
+                "<span>",
+                "8",
+                "</span>",
+                "<span>",
+                "2", " and ", "7",
+                "</span>",
+                "</p>"));
+        }
+
+        [Test]
+        public void ShadeSupportsAttributesAndMayTreatSomeElementsAsSpecialNodes()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("ShadeSupportsAttributesAndMayTreatSomeElementsAsSpecialNodes", null);
+            factory.RenderView(viewContext, Constants.DotShade);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<ul class=\"nav\">",
+                "<li>Welcome</li>",
+                "<li>to</li>",
+                "<li>the</li>",
+                "<li>Machine</li>",
+                "</ul>",
+                "<p>",
+                "<span>4</span>",
+                "</p>"));
+        }
+
+        [Test]
+        public void ShadeCodeMayBeDashOrAtBraced()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("ShadeCodeMayBeDashOrAtBraced", null);
+            factory.RenderView(viewContext, Constants.DotShade);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<ul>",
+                "<li>emocleW</li>",
+                "<li>ot</li>",
+                "<li>eht</li>",
+                "<li>enihcaM</li>",
+                "</ul>"));
+        }
+
+
+        [Test]
+        public void ShadeTextMayContainExpressions()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("ShadeTextMayContainExpressions", null);
+            factory.RenderView(viewContext, Constants.DotShade);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<p>",
+                "<span>8</span>",
+                "<span>2 and 7</span>",
+                "</p>"));
         }
     }
 }
