@@ -74,6 +74,8 @@ namespace Spark.Compiler.NodeVisitors
                 Visit((XMLDeclNode) node);
             else if (node is ProcessingInstructionNode)
                 Visit((ProcessingInstructionNode)node);
+            else if (node is IndentationNode)
+                Visit((IndentationNode)node);
             else
                 throw new ArgumentException(string.Format("Unknown node type {0}", node.GetType()), "node");
         }
@@ -94,5 +96,6 @@ namespace Spark.Compiler.NodeVisitors
         protected abstract void Visit(ConditionNode node);
         protected abstract void Visit(XMLDeclNode node);
         protected abstract void Visit(ProcessingInstructionNode node);
+        protected abstract void Visit(IndentationNode node);
     }
 }

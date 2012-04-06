@@ -37,5 +37,6 @@ namespace Spark
 		public static readonly string Layouts = "Layouts";
 		public static readonly string GlobalSpark = "_global.spark";
 		public static readonly string DotSpark = ".spark";
+        public static readonly string DotShade = ".shade";
     }
 }

@@ -192,6 +192,11 @@ namespace Spark.Compiler.NodeVisitors
             //REFACTOR: what is UnarmorCode doing at this point?
             Chunks.Add(new CodeStatementChunk { Code = node.Code, Position = Locate(node) });
         }
+
+        protected override void Visit(IndentationNode node)
+        {            
+        }
+
         protected override void Visit(DoctypeNode docTypeNode)
         {
             //[28]   	doctypedecl	   ::=   	'<!DOCTYPE' S  Name (S  ExternalID)? S? ('[' intSubset ']' S?)? '>'

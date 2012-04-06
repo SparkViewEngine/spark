@@ -242,6 +242,11 @@ namespace Spark.Compiler.NodeVisitors
             Add(specialNode);
         }
 
+        protected override void Visit(IndentationNode node)
+        {
+            Add(node);
+        }
+
         protected override void Visit(ExtensionNode node)
         {
             throw new System.NotImplementedException();

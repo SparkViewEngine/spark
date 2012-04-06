@@ -37,9 +37,10 @@ namespace Spark.Parser
 
         private readonly List<string> pending = new List<string>();
 
+
         public IViewFolder ViewFolder { get; set; }
 
-        public ParseAction<IList<Node>> Parser { get; set; }
+        //public ParseAction<IList<Node>> Parser { get; set; }
 
         public ISparkExtensionFactory ExtensionFactory { get; set; }
 
@@ -78,7 +79,7 @@ namespace Spark.Parser
             {
                 return null;
             }
-			
+
             // import _global.spark files from template path and shared path
             var perFolderGlobal = Path.Combine(Path.GetDirectoryName(viewPath), Constants.GlobalSpark);
             if (this.ViewFolder.HasView(perFolderGlobal))
@@ -156,6 +157,18 @@ namespace Spark.Parser
 
             return needsSparkExtension
                 ? viewName + Constants.DotSpark
+                : viewName;
+        }
+
+        private static string EnsureShadeExtension(string viewName)
+        {
+            var needsSparkExtension = string.Equals(
+                Path.GetExtension(viewName),
+                Constants.DotShade,
+                StringComparison.OrdinalIgnoreCase) == false;
+
+            return needsSparkExtension
+                ? viewName + Constants.DotShade
                 : viewName;
         }
 
@@ -243,15 +256,21 @@ namespace Spark.Parser
                 return new Binding[0];
             }
 
-            return this.BindingProvider.GetBindings(new BindingRequest(this.ViewFolder){ViewPath = viewPath});
+            return this.BindingProvider.GetBindings(new BindingRequest(this.ViewFolder) { ViewPath = viewPath });
         }
 
         private string ResolveReference(string existingViewPath, string viewName)
         {
-            var viewNameWithExtension = EnsureSparkExtension(viewName);
+            var viewNameWithSparkExtension = EnsureSparkExtension(viewName);
+            var viewNameWithShadeExtension = EnsureShadeExtension(viewName);
             var folderPaths = PartialViewFolderPaths(existingViewPath);
 
-            var partialPaths = folderPaths.Select(x => Path.Combine(x, viewNameWithExtension));
+            var partialPaths = folderPaths.SelectMany(x => new[]
+            {
+                Path.Combine(x, viewNameWithSparkExtension),
+                Path.Combine(x, viewNameWithShadeExtension)
+            });
+
             var partialViewLocation = partialPaths.FirstOrDefault(x => this.ViewFolder.HasView(x));
 
             if (partialViewLocation == null)
