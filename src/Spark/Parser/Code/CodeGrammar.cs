@@ -134,18 +134,30 @@ namespace Spark.Parser.Code
                 Swap(Ch("[["), "<")
                 .Or(Swap(Ch("]]"), ">"))
                 .Or(lateBound)
-                .Or(Snip(ChNot('\"', '\'', '{', '}')))
+                .Or(Snip(ChNot('\"', '\'', '{', '}', '(', ')')))
                 .Unless(identifier.Or(keyword).Or(SpecialCharCast))
                 .Unless(Ch("%>").Or(Ch("@\"")).Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")))));
+
+            Func<ParseAction<string>, ParseAction<IList<Snippet>>> limitedCodeStretch = limit => Snip(Rep1(
+                Swap(Ch("[["), "<")
+                .Or(Swap(Ch("]]"), ">"))
+                .Or(lateBound)
+                .Or(Snip(ChNot('\"', '\'', '{', '}', '(', ')')))
+                .Unless(identifier.Or(keyword).Or(SpecialCharCast))
+                .Unless(limit.Or(Ch("@\"")).Or(Ch("@'")).Or(Ch("//")).Or(Ch("/*")))));
 
 
             // braced ::= '{' + terms + '}'
             var braced = Snip(Snip(Ch('{')).And((ParseAction<IList<Snippet>>)FnTerms).And(Snip(Ch('}'))));
 
+            // parens ::= '(' + terms + ')'
+            var parens = Snip(Snip(Ch('(')).And((ParseAction<IList<Snippet>>)FnTerms).And(Snip(Ch(')')))).Unless(SpecialCharCast);
+
             // ExpressionTerms ::= (dquot | aquot | braced | codeStretch | specialCharCast)*            
             ExpressionTerms = Snip(Rep1(
                 stringLiteral
                 .Or(braced)
+                .Or(parens)
                 .Or(codeStretch)
                 .Or(identifier)
                 .Or(keyword)
@@ -154,8 +166,22 @@ namespace Spark.Parser.Code
                 .Or(multiLineComment)
                 )).Or(EmptySnip());
 
+            LimitedExpressionTerms = limit=>Snip(Rep1(
+                stringLiteral
+                .Or(braced)
+                .Or(parens)
+                .Or(limitedCodeStretch(limit))
+                .Or(identifier)
+                .Or(keyword)
+                .Or(SpecialCharCast)
+                .Or(oneLineComment)
+                .Or(multiLineComment)
+                )).Or(EmptySnip());
 
             Expression = ExpressionTerms.Build(hit => new Snippets(hit));
+
+
+            LimitedExpression = limit=>LimitedExpressionTerms(limit).Build(hit => new Snippets(hit));
 
 
             var statementPiece =
@@ -299,6 +325,9 @@ namespace Spark.Parser.Code
 
         public ParseAction<IList<Snippet>> ExpressionTerms;
         public ParseAction<Snippets> Expression;
+
+        public Func<ParseAction<string>, ParseAction<IList<Snippet>>> LimitedExpressionTerms;
+        public Func<ParseAction<string>, ParseAction<Snippets>> LimitedExpression;
 
         public ParseAction<IList<Snippet>> Statement1;
         public ParseAction<IList<Snippet>> Statement2;

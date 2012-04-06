@@ -26,12 +26,12 @@ namespace Spark.Tests.Stubs
         public ISparkViewEngine Engine { get; set; }
         public ICacheService CacheService { get; set; }
 
-        public void RenderView(StubViewContext viewContext)
+        public void RenderView(StubViewContext viewContext, string extension = null)
         {
             var descriptor = new SparkViewDescriptor();
-            descriptor.Templates.Add(Path.Combine(viewContext.ControllerName, viewContext.ViewName + Constants.DotSpark));
+            descriptor.Templates.Add(Path.Combine(viewContext.ControllerName, viewContext.ViewName + (extension ?? Constants.DotSpark)));
             if (viewContext.MasterName != null)
-                descriptor.Templates.Add(Path.Combine(Constants.Shared, viewContext.MasterName + Constants.DotSpark));
+                descriptor.Templates.Add(Path.Combine(Constants.Shared, viewContext.MasterName + (extension ?? Constants.DotSpark)));
  
             var sparkView = Engine.CreateInstance(descriptor);
             ((StubSparkView)sparkView).ViewData = viewContext.Data;
