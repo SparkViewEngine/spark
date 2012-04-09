@@ -33,6 +33,13 @@ namespace Spark.Configuration
             set { this["nullBehaviour"] = value; }
         }
 
+        [ConfigurationProperty("attributeBehaviour", DefaultValue = AttributeBehaviour.CodeOriented)]
+        public AttributeBehaviour AttributeBehaviour
+        {
+            get { return (AttributeBehaviour)this["attributeBehaviour"]; }
+            set { this["attributeBehaviour"] = value; }
+        }
+
         [ConfigurationProperty("defaultLanguage", DefaultValue = LanguageType.Default)]
         public LanguageType DefaultLanguage
         {

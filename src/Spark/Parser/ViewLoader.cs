@@ -50,6 +50,8 @@ namespace Spark.Parser
 
         public bool ParseSectionTagAsSegment { get; set; }
 
+        public AttributeBehaviour AttributeBehaviour { get; set; }
+
         public IBindingProvider BindingProvider { get; set; }
 
         /// <summary>
@@ -208,7 +210,8 @@ namespace Spark.Parser
                 ExtensionFactory = this.ExtensionFactory,
                 PartialFileNames = this.FindPartialFiles(viewPath),
                 Bindings = this.FindBindings(viewPath),
-                ParseSectionTagAsSegment = this.ParseSectionTagAsSegment
+                ParseSectionTagAsSegment = this.ParseSectionTagAsSegment,
+                AttributeBehaviour = this.AttributeBehaviour,
             };
             newEntry.Chunks = this.SyntaxProvider.GetChunks(context, viewPath);
 

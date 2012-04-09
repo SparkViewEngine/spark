@@ -106,6 +106,11 @@ namespace Spark.Configuration
 			get { return Compilation.NullBehaviour; }
     	}
 
+        AttributeBehaviour ISparkSettings.AttributeBehaviour
+        {
+            get { return Compilation.AttributeBehaviour; }
+        }
+
         string ISparkSettings.Prefix
         {
             get { return Pages.Prefix; }
