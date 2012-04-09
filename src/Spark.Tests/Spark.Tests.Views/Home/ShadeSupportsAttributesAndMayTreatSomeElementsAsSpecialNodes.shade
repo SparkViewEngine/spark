@@ -2,7 +2,7 @@
 use namespace="System.Collections.Generic"
 var words="'Welcome to the Machine'.Split((char)' ')"
 
-=Show(words)
+|!{Show(words)}
 p
   SimpleValue foo="words.Length"
 
