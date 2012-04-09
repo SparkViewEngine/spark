@@ -49,5 +49,6 @@ namespace Spark.Compiler.NodeVisitors
         public ISparkExtensionFactory ExtensionFactory { get; set; }
         public IEnumerable<Binding> Bindings { get; set; }
         public bool ParseSectionTagAsSegment { get; set; }
+        public AttributeBehaviour AttributeBehaviour { get; set; }
     }
 }
