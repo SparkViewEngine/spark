@@ -74,7 +74,7 @@ namespace Spark.Parser.Offset
 
 
             var expression = Ch('=').And(LimitedExpression(lineBreakOrEnd.Build(x => "")))
-                .Build(hit => new ExpressionNode(hit.Down));
+                .Build(hit => new ExpressionNode(hit.Down) { AutomaticEncoding = true });
 
             var statementDash = Ch('-').And(Statement1)
                 .Build(hit => new StatementNode(hit.Down));
@@ -84,8 +84,8 @@ namespace Spark.Parser.Offset
 
             var statement = statementDash.Or(statementAt);
 
-            var elementId = Ch('#').And(Rep(Ch(char.IsLetterOrDigit))).Skip(ows).Build(hit => new string(hit.Down.ToArray()));
-            var elementClass = Ch('.').And(Rep(Ch(char.IsLetterOrDigit))).Skip(ows).Build(hit => new string(hit.Down.ToArray()));
+            var elementId = Ch('#').And(Rep(Ch(char.IsLetterOrDigit).Or(Ch('-', '_')))).Skip(ows).Build(hit => new string(hit.Down.ToArray()));
+            var elementClass = Ch('.').And(Rep(Ch(char.IsLetterOrDigit).Or(Ch('-', '_')))).Skip(ows).Build(hit => new string(hit.Down.ToArray()));
 
             var elementClassOrId = Rep(elementClass).And(Opt(elementId)).And(Rep(elementClass))
                 .Build(hit => new { id = hit.Left.Down, classes = hit.Left.Left.Concat(hit.Down) });
