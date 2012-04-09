@@ -294,7 +294,8 @@ namespace Spark
                 ExtensionFactory = ExtensionFactory,
                 Prefix = Settings.Prefix,
                 BindingProvider = BindingProvider,
-                ParseSectionTagAsSegment = Settings.ParseSectionTagAsSegment
+                ParseSectionTagAsSegment = Settings.ParseSectionTagAsSegment,
+                AttributeBehaviour = Settings.AttributeBehaviour
             };
         }
 
