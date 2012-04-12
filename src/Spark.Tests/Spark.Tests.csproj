@@ -176,8 +176,12 @@
     <None Include="Spark.Tests.Views\Home\addviewdatadifferenttypes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\ShadeElementsMayStackOnOneLine.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\TextOrientedAttributesApplyToGlobal.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Spark.Tests.Views\Home\TextOrientedAttributesApplyToDefault.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -187,6 +191,7 @@
     </None>
     <None Include="Spark.Tests.Views\Home\TextOrientedAttributesApplyToVarAndSet.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Spark.Tests.Views\Home\ShadeTextMayContainExpressions.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
