@@ -1,0 +1,5 @@
+<var text="Hello" />
+<set text="${text}World" />
+<p>${text.GetType().Name}:${text}</p>
+<var number="${42}" />
+<p>${number.GetType().Name}:${number}</p>

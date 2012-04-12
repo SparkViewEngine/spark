@@ -1335,5 +1335,73 @@ namespace Spark.Tests
                 "<span>2 and 7</span>",
                 "</p>"));
         }
+
+        [Test]
+        public void TextOrientedAttributesApplyToVarAndSet()
+        {
+            mocks.ReplayAll();
+            ((SparkSettings)engine.Settings).AttributeBehaviour = AttributeBehaviour.TextOriented;
+            var viewContext = MakeViewContext("TextOrientedAttributesApplyToVarAndSet", null);
+            factory.RenderView(viewContext, Constants.DotSpark);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+            
+            Assert.That(content, Contains.InOrder(
+                "<p>String:HelloWorld</p>",
+                "<p>Int32:42</p>"));
+        }
+
+        [Test]
+        public void TextOrientedAttributesApplyToUseFile()
+        {
+            mocks.ReplayAll();
+            ((SparkSettings)engine.Settings).AttributeBehaviour = AttributeBehaviour.TextOriented;
+            var viewContext = MakeViewContext("TextOrientedAttributesApplyToUseFile", null);
+            factory.RenderView(viewContext, Constants.DotSpark);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<span>Hello</span>",
+                "<span>Hello World!</span>",
+                "<span>42</span>"));
+        }
+
+        [Test]
+        public void TextOrientedAttributesApplyToDefault()
+        {
+            mocks.ReplayAll();
+            ((SparkSettings)engine.Settings).AttributeBehaviour = AttributeBehaviour.TextOriented;
+            var viewContext = MakeViewContext("TextOrientedAttributesApplyToDefault", null);
+            factory.RenderView(viewContext, Constants.DotSpark);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<p>String:World</p>",
+                "<p>String:Hello World!</p>",
+                "<p>Int32:42</p>"));
+        }
+
+
+        [Test]
+        public void TextOrientedAttributesApplyToGlobal()
+        {
+            mocks.ReplayAll();
+            ((SparkSettings)engine.Settings).AttributeBehaviour = AttributeBehaviour.TextOriented;
+            var viewContext = MakeViewContext("TextOrientedAttributesApplyToGlobal", null);
+            factory.RenderView(viewContext, Constants.DotSpark);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<p>String:World</p>",
+                "<p>String:Hello World!</p>",
+                "<p>Int32:42</p>"));
+        }
     }
 }
