@@ -1403,5 +1403,32 @@ namespace Spark.Tests
                 "<p>String:Hello World!</p>",
                 "<p>Int32:42</p>"));
         }
+
+
+        [Test]
+        public void ShadeElementsMayStackOnOneLine()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("ShadeElementsMayStackOnOneLine", null);
+            factory.RenderView(viewContext, Constants.DotShade);
+            mocks.VerifyAll();
+
+            var content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                "<html>",
+                "<head>",
+                "<title>",
+                "offset test",
+                "</title>",
+                "<body>",
+                "<div class=\"container\">",
+                "<h1 id=\"top\">",
+                "offset test",
+                "</h1>",
+                "</div>",
+                "</body>",
+                "</html>"));
+        }
     }
 }
