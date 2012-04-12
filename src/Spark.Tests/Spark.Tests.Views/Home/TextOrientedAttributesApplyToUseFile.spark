@@ -1,0 +1,6 @@
+<p>
+  <SimpleValue foo="Hello" />
+  # var text="World";
+  <SimpleValue foo="Hello ${text}!" />
+  <SimpleValue foo="${42}" />
+</p>
