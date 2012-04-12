@@ -62,6 +62,7 @@ namespace Spark.Compiler
         public void AppendExpression(Snippets code)
         {
             Flush();
+            //TODO: preserve the Snippet's Position data in the reconstruction
             _parts.Add(code);
         }
 
