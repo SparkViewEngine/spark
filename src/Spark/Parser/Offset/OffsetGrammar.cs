@@ -129,8 +129,9 @@ namespace Spark.Parser.Offset
             var line2 = indentation.And(texts).Build(hit => new Node[] { hit.Left }.Concat(hit.Down).ToArray());
             var line3 = indentation.And(expression).Build(hit => new Node[] { hit.Left, hit.Down });
             var line4 = indentation.And(statement).Build(hit => new Node[] { hit.Left, hit.Down });
+            var line5 = elementPlus.Build(hit => new[] {(Node) hit.Left}.Concat(hit.Down ?? new Node[0]).ToArray());
 
-            var line = whiteLine.Or(line1).Or(line2).Or(line3).Or(line4).Skip(ows);
+            var line = whiteLine.Or(line1).Or(line2).Or(line3).Or(line4).Or(line5).Skip(ows);
 
             var lines = Rep(line);
 

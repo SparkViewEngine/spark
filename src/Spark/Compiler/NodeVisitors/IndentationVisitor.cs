@@ -36,7 +36,7 @@ namespace Spark.Compiler.NodeVisitors
         {
             while (FrameData.Indentation != null && length <= FrameData.Indentation.Whitespace.Length)
             {
-                foreach (var element in FrameData.ElementsStarted)
+                foreach (var element in FrameData.ElementsStarted.Reverse())
                 {
                     if (Nodes.LastOrDefault() == element)
                     {
