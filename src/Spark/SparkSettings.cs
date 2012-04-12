@@ -141,6 +141,12 @@ namespace Spark
             return this;
         }
 
+        public SparkSettings SetAttributeBehaviour(AttributeBehaviour attributeBehaviour)
+        {
+            AttributeBehaviour = attributeBehaviour;
+            return this;
+        }
+
         public SparkSettings AddResourceMapping(string match, string replace)
             {
             return AddResourceMapping(match, replace, true);
