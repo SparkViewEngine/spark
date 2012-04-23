@@ -192,6 +192,11 @@ namespace Spark.Compiler.NodeVisitors
             //REFACTOR: what is UnarmorCode doing at this point?
             Chunks.Add(new CodeStatementChunk { Code = node.Code, Position = Locate(node) });
         }
+
+        protected override void Visit(IndentationNode node)
+        {            
+        }
+
         protected override void Visit(DoctypeNode docTypeNode)
         {
             //[28]   	doctypedecl	   ::=   	'<!DOCTYPE' S  Name (S  ExternalID)? S? ('[' intSubset ']' S?)? '>'
@@ -415,6 +420,13 @@ namespace Spark.Compiler.NodeVisitors
             return Context.SyntaxProvider.ParseFragment(begin, end);
         }
 
+        Snippets AsTextOrientedCode(AttributeNode attr)
+        {
+            return Context.AttributeBehaviour == AttributeBehaviour.CodeOriented 
+                ? AsCode(attr) 
+                : attr.AsCodeInverted();
+        }
+
         private void VisitMacro(SpecialNodeInspector inspector)
         {
             var name = inspector.TakeAttribute("name");
@@ -441,7 +453,7 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     foreach (var attr in inspector.Attributes)
                     {
-                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
+                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsTextOrientedCode(attr), Position = Locate(attr) });
                     }
 
                     var useFileChunk = new RenderPartialChunk { Name = file.Value, Position = Locate(inspector.OriginalNode) };
@@ -517,7 +529,7 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     foreach (var attr in inspector.Attributes)
                     {
-                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
+                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsTextOrientedCode(attr), Position = Locate(attr) });
                     }
 
                     var renderPartial = new RenderPartialChunk { Name = partial.Value, Position = Locate(inspector.OriginalNode) };
@@ -546,7 +558,7 @@ namespace Spark.Compiler.NodeVisitors
                 {
                     foreach (var attr in inspector.Attributes)
                     {
-                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
+                        Chunks.Add(new LocalVariableChunk { Name = attr.Name, Value = AsTextOrientedCode(attr), Position = Locate(attr) });
                     }
                     var render = new RenderSectionChunk { Name = sectionName };
                     Chunks.Add(render);
@@ -760,7 +772,7 @@ namespace Spark.Compiler.NodeVisitors
         {
             foreach (var attr in inspector.Attributes)
             {
-                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
+                Chunks.Add(new AssignVariableChunk { Name = attr.Name, Value = AsTextOrientedCode(attr), Position = Locate(attr) });
             }
         }
 
@@ -769,7 +781,7 @@ namespace Spark.Compiler.NodeVisitors
             var defaultAttr = inspector.TakeAttribute("default");
             Snippets defaultValue = null;
             if (defaultAttr != null)
-                defaultValue = AsCode(defaultAttr);
+                defaultValue = AsTextOrientedCode(defaultAttr);
 
             var modelAttr = inspector.TakeAttribute("model");
             if (modelAttr != null)
@@ -799,7 +811,7 @@ namespace Spark.Compiler.NodeVisitors
 
             foreach (var attr in specialNode.Element.Attributes.Where(a => a != typeAttr))
             {
-                AddUnordered(new GlobalVariableChunk { Type = type, Name = attr.Name, Value = AsCode(attr) });
+                AddUnordered(new GlobalVariableChunk { Type = type, Name = attr.Name, Value = AsTextOrientedCode(attr) });
             }
         }
 
@@ -818,7 +830,7 @@ namespace Spark.Compiler.NodeVisitors
 
             foreach (var attr in inspector.Attributes)
             {
-                Chunks.Add(new LocalVariableChunk { Type = type, Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
+                Chunks.Add(new LocalVariableChunk { Type = type, Name = attr.Name, Value = AsTextOrientedCode(attr), Position = Locate(attr) });
             }
 
             Accept(specialNode.Body);
@@ -842,7 +854,7 @@ namespace Spark.Compiler.NodeVisitors
 
             foreach (var attr in inspector.Attributes)
             {
-                Chunks.Add(new DefaultVariableChunk { Type = type, Name = attr.Name, Value = AsCode(attr), Position = Locate(attr) });
+                Chunks.Add(new DefaultVariableChunk { Type = type, Name = attr.Name, Value = AsTextOrientedCode(attr), Position = Locate(attr) });
             }
 
             Accept(specialNode.Body);

@@ -61,6 +61,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\rhinomocks\Rhino.Mocks.dll</HintPath>
     </Reference>
+    <Reference Include="Shouldly">
+      <HintPath>..\packages\Shouldly.1.1.1.0\lib\35\Shouldly.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -100,6 +103,7 @@
     <Compile Include="Parser\AutomaticEncodingTester.cs" />
     <Compile Include="Parser\CharGrammarTester.cs" />
     <Compile Include="Parser\JavascriptAnonymousTypeGrammarTester.cs" />
+    <Compile Include="Parser\OffsetGrammarTester.cs" />
     <Compile Include="Precompiled\ComplexPrecompileController.cs" />
     <Compile Include="Precompiled\SimplePrecompileController.cs" />
     <Compile Include="Compiler\SourceMappingTester.cs" />
@@ -157,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="Spark.Tests.Views\Code\foreach.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -170,6 +175,41 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\addviewdatadifferenttypes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\ShadeElementsMayStackOnOneLine.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\TextOrientedAttributesApplyToGlobal.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Spark.Tests.Views\Home\TextOrientedAttributesApplyToDefault.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\TextOrientedAttributesApplyToUseFile.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\TextOrientedAttributesApplyToVarAndSet.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Spark.Tests.Views\Home\ShadeTextMayContainExpressions.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\ShadeCodeMayBeDashOrAtBraced.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\Index2.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\ShadeSupportsAttributesAndMayTreatSomeElementsAsSpecialNodes.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\ShadeEvaluatesExpressions.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\ShadeFileRenders.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Spark.Tests.Views\Home\escape.spark">

@@ -29,6 +29,7 @@ namespace Spark
             _resourceMappings = new List<IResourceMapping>();
             _viewFolders = new List<IViewFolderSettings>();
  			NullBehaviour = NullBehaviour.Lenient;
+            AttributeBehaviour = AttributeBehaviour.CodeOriented;
 
             AutomaticEncoding = ParserSettings.DefaultAutomaticEncoding;
         }
@@ -41,6 +42,8 @@ namespace Spark
         public string PageBaseType { get; set; }
         public LanguageType DefaultLanguage { get; set; }
         public bool ParseSectionTagAsSegment { get; set; }
+
+        public AttributeBehaviour AttributeBehaviour { get; set; }
 
         private readonly IList<string> _useNamespaces;
         public IEnumerable<string> UseNamespaces
@@ -135,6 +138,12 @@ namespace Spark
         public SparkSettings SetParseSectionTagAsSegment(bool parseSectionTagAsSegment)
         {
             ParseSectionTagAsSegment = parseSectionTagAsSegment;
+            return this;
+        }
+
+        public SparkSettings SetAttributeBehaviour(AttributeBehaviour attributeBehaviour)
+        {
+            AttributeBehaviour = attributeBehaviour;
             return this;
         }
 

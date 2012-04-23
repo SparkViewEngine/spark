@@ -28,6 +28,21 @@ namespace Spark
         Strict
     }
 
+    public enum AttributeBehaviour
+    {
+        /// <summary>
+        /// Follows original Spark behavior, where all attributes that contain code are treated as
+        /// direct c# snippets. e.g. hello="'string no. ' + index"
+        /// </summary>
+        CodeOriented,
+        /// <summary>
+        /// Follows a text-oriented behavior, where many attributes that contain code are treated as
+        /// text which may contain expression. e.g. hello="string no. ${index}"
+        /// Expressions are not html encoded.
+        /// </summary>
+        TextOriented,
+    }
+
     public interface ISparkSettings : IParserSettings
     {
         bool Debug { get; }
@@ -41,6 +56,7 @@ namespace Spark
         IEnumerable<IResourceMapping> ResourceMappings { get; }
         IEnumerable<IViewFolderSettings> ViewFolders { get; }
         bool ParseSectionTagAsSegment { get; }
+        AttributeBehaviour AttributeBehaviour { get; }
     }
 
     public interface IResourceMapping

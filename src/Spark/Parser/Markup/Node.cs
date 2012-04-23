@@ -271,4 +271,18 @@ namespace Spark.Parser.Markup
         public ISparkExtension Extension { get; set; }
         public IList<Node> Body = new List<Node>();
     }
+
+    public class IndentationNode : Node
+    {
+        public IndentationNode(ICollection<char> text)
+        {
+            Whitespace = new string(text.ToArray());
+        }
+        public IndentationNode(string whitespace)
+        {
+            Whitespace = whitespace;
+        }
+
+        public string Whitespace;
+    }
 }
