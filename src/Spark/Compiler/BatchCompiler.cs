@@ -78,6 +78,7 @@ namespace Spark.Compiler
 
             CompilerResults compilerResults;
             var basePath = AppDomain.CurrentDomain.SetupInformation.DynamicBase ?? Path.GetTempPath();
+            compilerParameters.TempFiles = new TempFileCollection(basePath); //Without this, the generated code throws Access Denied exception with Impersonate mode on platforms like SharePoint
             if (debug)
             {
                 compilerParameters.IncludeDebugInformation = true;
