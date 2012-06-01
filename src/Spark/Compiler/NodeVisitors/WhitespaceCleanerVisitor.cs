@@ -44,6 +44,7 @@ namespace Spark.Compiler.NodeVisitors
                                       {"if", VisitIf},
                                       {"else", VisitIf},
                                       {"elseif", VisitIf},
+                                      {"unless", VisitIf},
                                   };
         }
 

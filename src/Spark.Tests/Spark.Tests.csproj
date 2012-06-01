@@ -176,6 +176,15 @@
     <None Include="Spark.Tests.Views\Home\addviewdatadifferenttypes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Spark.Tests.Views\Home\unlessattribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\unlesselement.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Spark.Tests.Views\Home\UnlessAttributeWorksOnSpecialNodes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Spark.Tests.Views\Home\ShadeElementsMayStackOnOneLine.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -350,6 +359,7 @@
     </None>
     <None Include="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Spark.Tests.Views\Home\eachattribute-whitespace.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

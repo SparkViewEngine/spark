@@ -316,6 +316,44 @@ namespace Spark.Tests.Compiler
         }
 
         [Test]
+        public void UnlessTrueCondition()
+        {
+            var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
+
+            var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
+
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new SendLiteralChunk {Text = "<p>"},
+                                        new LocalVariableChunk{Name="arg", Value="5"},
+                                        new ConditionalChunk{Type=ConditionalType.Unless, Condition="arg=5", Body=trueChunks},
+                                        new SendLiteralChunk {Text = "</p>"}
+                                    });
+            var instance = compiler.CreateInstance();
+            var contents = instance.RenderView();
+            Assert.AreEqual("<p></p>", contents);
+        }
+
+        [Test]
+        public void UnlessFalseCondition()
+        {
+            var compiler = new VisualBasicViewCompiler { BaseClass = "Spark.AbstractSparkView" };
+
+            var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
+
+            DoCompileView(compiler, new Chunk[]
+                                    {
+                                        new SendLiteralChunk {Text = "<p>"},
+                                        new LocalVariableChunk{Name="arg", Value="5"},
+                                        new ConditionalChunk{Type=ConditionalType.Unless, Condition="arg=6", Body=trueChunks},
+                                        new SendLiteralChunk {Text = "</p>"}
+                                    });
+            var instance = compiler.CreateInstance();
+            var contents = instance.RenderView();
+            Assert.AreEqual("<p>wastrue</p>", contents);
+        }
+
+        [Test]
         public void StrictNullUsesException()
         {
             var compiler = new VisualBasicViewCompiler()

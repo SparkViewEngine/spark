@@ -470,6 +470,9 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
                 case ConditionalType.Once:
                     _source.Write("If Once(").WriteCode(chunk.Condition).WriteLine(") Then");
                     break;
+                case ConditionalType.Unless:
+                    CodeIndent(chunk).Write("If Not ").WriteCode(chunk.Condition).WriteLine(" Then");
+                    break;
                 default:
                     throw new CompilerException(string.Format("Unknown ConditionalChunk type {0}", chunk.Type));
             }

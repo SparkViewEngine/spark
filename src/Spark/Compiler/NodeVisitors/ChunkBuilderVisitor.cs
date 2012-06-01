@@ -96,6 +96,7 @@ namespace Spark.Compiler.NodeVisitors
                                       {"if", VisitIf},
                                       {"else", (n,i)=>VisitElse(i)},
                                       {"elseif", VisitElseIf},
+                                      {"unless", VisitUnless},
                                       {"content", (n,i)=>VisitContent(i)},
                                       {"use", VisitUse},
                                       {"macro", (n,i)=>VisitMacro(i)},
@@ -748,6 +749,16 @@ namespace Spark.Compiler.NodeVisitors
             var elseIfChunk = new ConditionalChunk { Type = ConditionalType.ElseIf, Condition = AsCode(conditionAttr), Position = Locate(inspector.OriginalNode) };
             Chunks.Add(elseIfChunk);
             using (new Frame(this, elseIfChunk.Body))
+                Accept(specialNode.Body);
+        }
+
+        private void VisitUnless(SpecialNode specialNode, SpecialNodeInspector inspector)
+        {
+            var conditionAttr = inspector.TakeAttribute("condition") ?? inspector.TakeAttribute("unless");
+
+            var unlessChunk = new ConditionalChunk { Type = ConditionalType.Unless, Condition = AsCode(conditionAttr), Position = Locate(inspector.OriginalNode) };
+            Chunks.Add(unlessChunk);
+            using (new Frame(this, unlessChunk.Body))
                 Accept(specialNode.Body);
         }
 

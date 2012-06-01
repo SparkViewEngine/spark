@@ -241,7 +241,8 @@ namespace Spark.Compiler
         If,
         Else,
         ElseIf,
-        Once
+        Once,
+        Unless
     }
 
     public class ExtensionChunk : Chunk
