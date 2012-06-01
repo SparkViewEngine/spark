@@ -197,12 +197,18 @@ namespace Spark.Web.Mvc
                                             string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.spark", Path.DirectorySeparatorChar, extra["area"], viewName),
                                             string.Format("{0}{1}{2}.spark", controllerName, Path.DirectorySeparatorChar, viewName),
                                             string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, viewName),
+                                            string.Format("~{0}Areas{0}{1}{0}Views{0}{2}{0}{3}.shade", Path.DirectorySeparatorChar, extra["area"], controllerName, viewName),
+                                            string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.shade", Path.DirectorySeparatorChar, extra["area"], viewName),
+                                            string.Format("{0}{1}{2}.shade", controllerName, Path.DirectorySeparatorChar, viewName),
+                                            string.Format("Shared{0}{1}.shade", Path.DirectorySeparatorChar, viewName)
                                         }, extra);
             }
             return ApplyFilters(new[]
                                     {
                                         string.Format("{0}{1}{2}.spark", controllerName,Path.DirectorySeparatorChar, viewName),
-                                        string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,viewName)
+                                        string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,viewName),
+                                        string.Format("{0}{1}{2}.shade", controllerName,Path.DirectorySeparatorChar, viewName),
+                                        string.Format("Shared{0}{1}.shade", Path.DirectorySeparatorChar,viewName)
                                     }, extra);
         }
 
@@ -216,12 +222,18 @@ namespace Spark.Web.Mvc
                                         string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.spark", Path.DirectorySeparatorChar, extra["area"], masterName),
                                         string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar,masterName),
                                         string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,masterName),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Layouts{0}{2}.shade", Path.DirectorySeparatorChar, extra["area"], masterName),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.shade", Path.DirectorySeparatorChar, extra["area"], masterName),
+                                        string.Format("Layouts{0}{1}.shade", Path.DirectorySeparatorChar,masterName),
+                                        string.Format("Shared{0}{1}.shade", Path.DirectorySeparatorChar,masterName)
                                     }, extra);
             }
             return ApplyFilters(new[]
                                     {
                                         string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar,masterName),
                                         string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar,masterName),
+                                        string.Format("Layouts{0}{1}.shade", Path.DirectorySeparatorChar,masterName),
+                                        string.Format("Shared{0}{1}.shade", Path.DirectorySeparatorChar,masterName)
                                     }, extra);
         }
 
@@ -239,6 +251,14 @@ namespace Spark.Web.Mvc
                                         string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}Application.spark", Path.DirectorySeparatorChar, extra["area"]),
                                         string.Format("Layouts{0}Application.spark", Path.DirectorySeparatorChar),
                                         string.Format("Shared{0}Application.spark", Path.DirectorySeparatorChar),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Layouts{0}{2}.shade", Path.DirectorySeparatorChar, extra["area"], controllerName),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}{2}.shade", Path.DirectorySeparatorChar, extra["area"], controllerName),
+                                        string.Format("Layouts{0}{1}.shade", Path.DirectorySeparatorChar, controllerName),
+                                        string.Format("Shared{0}{1}.shade", Path.DirectorySeparatorChar, controllerName),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Layouts{0}Application.shade", Path.DirectorySeparatorChar, extra["area"]),
+                                        string.Format("~{0}Areas{0}{1}{0}Views{0}Shared{0}Application.shade", Path.DirectorySeparatorChar, extra["area"]),
+                                        string.Format("Layouts{0}Application.shade", Path.DirectorySeparatorChar),
+                                        string.Format("Shared{0}Application.shade", Path.DirectorySeparatorChar)
                                     }, extra);
             }
 
@@ -247,7 +267,11 @@ namespace Spark.Web.Mvc
                                         string.Format("Layouts{0}{1}.spark", Path.DirectorySeparatorChar, controllerName),
                                         string.Format("Shared{0}{1}.spark", Path.DirectorySeparatorChar, controllerName),
                                         string.Format("Layouts{0}Application.spark", Path.DirectorySeparatorChar),
-                                        string.Format("Shared{0}Application.spark", Path.DirectorySeparatorChar)
+                                        string.Format("Shared{0}Application.spark", Path.DirectorySeparatorChar),
+                                        string.Format("Layouts{0}{1}.shade", Path.DirectorySeparatorChar, controllerName),
+                                        string.Format("Shared{0}{1}.shade", Path.DirectorySeparatorChar, controllerName),
+                                        string.Format("Layouts{0}Application.shade", Path.DirectorySeparatorChar),
+                                        string.Format("Shared{0}Application.shade", Path.DirectorySeparatorChar)
                                     }, extra);
         }
     }
