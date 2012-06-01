@@ -40,6 +40,23 @@ namespace Spark.Tests.Visitors
         }
 
         [Test]
+        public void DetectUnlessAttribute()
+        {
+            var grammar = new MarkupGrammar();
+            string input = "<div unless=\"true\">hello</div>";
+            var nodes = grammar.Nodes(new Position(new SourceContext(input))).Value;
+            var visitor = new ConditionalAttributeVisitor(new VisitorContext());
+            visitor.Accept(nodes);
+
+            Assert.AreEqual(1, visitor.Nodes.Count);
+            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[0]);
+
+            var unlessNode = visitor.Nodes[0] as SpecialNode;
+            Assert.IsNotNull(unlessNode);
+            Assert.AreEqual("unless", unlessNode.Element.Name);
+        }
+
+        [Test]
         public void ChainConditionalAttribute()
         {
             var grammar = new MarkupGrammar();

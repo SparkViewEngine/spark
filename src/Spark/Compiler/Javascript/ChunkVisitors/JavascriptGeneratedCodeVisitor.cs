@@ -103,6 +103,13 @@ namespace Spark.Compiler.Javascript.ChunkVisitors
                         _source.AppendLine("}");
                     }
                     break;
+                case ConditionalType.Unless:
+                    {
+                        _source.Append("if (!(").Append(chunk.Condition).AppendLine(")) {");
+                        Accept(chunk.Body);
+                        _source.AppendLine("}");
+                    }
+                    break;
             }
         }
 

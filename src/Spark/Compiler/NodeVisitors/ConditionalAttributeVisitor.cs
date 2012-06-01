@@ -31,13 +31,13 @@ namespace Spark.Compiler.NodeVisitors
                 return false;
 
             if (Context.Namespaces == NamespacesType.Unqualified)
-                return attr.Name == "if" || attr.Name == "elseif";
+                return attr.Name == "if" || attr.Name == "elseif" || attr.Name == "unless";
 
             if (attr.Namespace != Constants.Namespace)
                 return false;
 
             var nqName = NameUtility.GetName(attr.Name);
-            return nqName == "if" || nqName == "elseif";
+            return nqName == "if" || nqName == "elseif" || nqName == "unless";
         }
 
 	    protected override SpecialNode CreateWrappingNode(AttributeNode attr, ElementNode node)

@@ -108,12 +108,14 @@ namespace Spark.Tests
             ContainsInOrder(output.ToString(),
                             "ok1",
                             "ok2",
-                            "ok3");
+                            "ok3",
+                            "ok4");
 
             Assert.IsFalse(output.ToString().Contains("fail"));
             Assert.IsFalse(output.ToString().Contains("if"));
             Assert.IsFalse(output.ToString().Contains("else"));
             Assert.IsFalse(output.ToString().Contains("condition"));
+            Assert.IsFalse(output.ToString().Contains("unless fail"));
         }
 
         [Test]

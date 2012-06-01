@@ -439,6 +439,14 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
                             .WriteLine("))");
                     }
                     break;
+                case ConditionalType.Unless:
+                    {
+                        CodeIndent(chunk)
+                            .Write("if (!(")
+                            .WriteCode(chunk.Condition)
+                            .WriteLine("))");
+                    }
+                    break;
                 default:
                     throw new CompilerException("Unexpected conditional type " + chunk.Type);
             }
@@ -464,7 +472,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
 
             _source
                 .WriteLine("try");
-            
+
             AppendOpenBrace();
             Accept(chunk.Body);
             AppendCloseBrace();
@@ -487,7 +495,7 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             AppendCloseBrace();
         }
 
-        
+
     }
 
 }
