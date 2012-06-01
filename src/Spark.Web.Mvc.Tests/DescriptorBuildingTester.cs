@@ -75,6 +75,19 @@ namespace Spark.Web.Mvc.Tests
         }
 
         [Test]
+        public void NormalViewAndNoDefaultLayoutWithShade()
+        {
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.shade");
+        }
+
+        [Test]
         public void NormalViewAndDefaultLayoutPresent()
         {
             _routeData.Values.Add("controller", "Home");
@@ -89,6 +102,20 @@ namespace Spark.Web.Mvc.Tests
                 @"Layouts\Application.spark");
         }
 
+        [Test]
+        public void NormalViewAndDefaultLayoutPresentWithShade()
+        {
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+            _viewFolder.Add(@"Layouts\Application.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.shade",
+                @"Layouts\Application.shade");
+        }
 
         [Test]
         public void NormalViewAndControllerLayoutOverrides()
@@ -104,6 +131,22 @@ namespace Spark.Web.Mvc.Tests
                 result, searchedLocations,
                 @"Home\Index.spark",
                 @"Layouts\Home.spark");
+        }
+
+        [Test]
+        public void NormalViewAndControllerLayoutOverridesWithShade()
+        {
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+            _viewFolder.Add(@"Layouts\Application.shade", "");
+            _viewFolder.Add(@"Layouts\Home.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.shade",
+                @"Layouts\Home.shade");
         }
 
         [Test]
@@ -124,6 +167,23 @@ namespace Spark.Web.Mvc.Tests
         }
 
         [Test]
+        public void NormalViewAndNamedMasterWithShade()
+        {
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+            _viewFolder.Add(@"Layouts\Application.shade", "");
+            _viewFolder.Add(@"Layouts\Home.shade", "");
+            _viewFolder.Add(@"Layouts\Site.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.shade",
+                @"Layouts\Site.shade");
+        }
+
+        [Test]
         public void PartialViewIgnoresDefaultLayouts()
         {
             _routeData.Values.Add("controller", "Home");
@@ -141,6 +201,23 @@ namespace Spark.Web.Mvc.Tests
         }
 
         [Test]
+        public void PartialViewIgnoresDefaultLayoutsWithShade()
+        {
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+            _viewFolder.Add(@"Layouts\Application.shade", "");
+            _viewFolder.Add(@"Layouts\Home.shade", "");
+            _viewFolder.Add(@"Shared\Application.shade", "");
+            _viewFolder.Add(@"Shared\Home.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.shade");
+        }
+
+        [Test]
         public void RouteAreaPresentDefaultsToNormalLocation()
         {
             _routeData.DataTokens.Add("area", "Admin");
@@ -154,6 +231,22 @@ namespace Spark.Web.Mvc.Tests
                 result, searchedLocations,
                 @"Home\Index.spark",
                 @"Layouts\Application.spark");
+        }
+
+        [Test]
+        public void RouteAreaPresentDefaultsToNormalLocationWithShade()
+        {
+            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+            _viewFolder.Add(@"Layouts\Application.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Home\Index.shade",
+                @"Layouts\Application.shade");
         }
 
         [Test]
@@ -174,6 +267,23 @@ namespace Spark.Web.Mvc.Tests
         }
 
         [Test]
+        public void AreaFolderMayContainControllerFolderWithShade()
+        {
+            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+            _viewFolder.Add(@"Layouts\Application.shade", "");
+            _viewFolder.Add(@"Admin\Home\Index.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Admin\Home\Index.shade",
+                @"Layouts\Application.shade");
+        }
+
+        [Test]
         public void AreaRouteValueAlsoRecognizedForBackCompatWithEarlierAssumptions() {
             _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
@@ -187,6 +297,22 @@ namespace Spark.Web.Mvc.Tests
                 result, searchedLocations,
                 @"Admin\Home\Index.spark",
                 @"Layouts\Application.spark");
+        }
+
+        [Test]
+        public void AreaRouteValueAlsoRecognizedForBackCompatWithEarlierAssumptionsWithShade() {
+            _routeData.Values.Add("area", "Admin");
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+            _viewFolder.Add(@"Layouts\Application.shade", "");
+            _viewFolder.Add(@"Admin\Home\Index.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Admin\Home\Index.shade",
+                @"Layouts\Application.shade");
         }
 
         [Test]
@@ -208,6 +334,24 @@ namespace Spark.Web.Mvc.Tests
         }
 
         [Test]
+        public void AreaFolderMayContainLayoutsFolderWithShade()
+        {
+            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+            _viewFolder.Add(@"Layouts\Application.shade", "");
+            _viewFolder.Add(@"Admin\Home\Index.shade", "");
+            _viewFolder.Add(@"Admin\Layouts\Application.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Admin\Home\Index.shade",
+                @"Admin\Layouts\Application.shade");
+        }
+
+        [Test]
         public void AreaContainsNamedLayout()
         {
             _routeData.DataTokens.Add("area", "Admin");
@@ -224,6 +368,25 @@ namespace Spark.Web.Mvc.Tests
                 result, searchedLocations,
                 @"Admin\Home\Index.spark",
                 @"Admin\Layouts\Site.spark");
+        }
+
+        [Test]
+        public void AreaContainsNamedLayoutWithShade()
+        {
+            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("controller", "Home");
+            _viewFolder.Add(@"Home\Index.shade", "");
+            _viewFolder.Add(@"Layouts\Application.shade", "");
+            _viewFolder.Add(@"Admin\Home\Index.shade", "");
+            _viewFolder.Add(@"Admin\Layouts\Application.shade", "");
+            _viewFolder.Add(@"Admin\Layouts\Site.shade", "");
+
+            var searchedLocations = new List<string>();
+            var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+            AssertDescriptorTemplates(
+                result, searchedLocations,
+                @"Admin\Home\Index.shade",
+                @"Admin\Layouts\Site.shade");
         }
 
         [Test]
