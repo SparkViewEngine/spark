@@ -244,6 +244,35 @@ namespace Spark.Tests
             Assert.That(content.Contains("<p>argisstillnot6</p>"));
         }
 
+        [Test]
+        public void UnlessElements()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("unlesselement", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+            Assert.That(!content.Contains("<unless"));
+
+            Assert.That(content.Contains("<p>argisnot6</p>"));
+            Assert.That(!content.Contains("<p>argis5</p>"));
+        }
+
+        [Test]
+        public void UnlessAttributes()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("unlessattribute", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+
+            string content = sb.ToString();
+            Assert.That(!content.Contains("<unless"));
+
+            Assert.That(content.Contains("<p>argisnot6</p>"));
+            Assert.That(!content.Contains("<p>argis5</p>"));
+        }
 
         [Test]
         public void ChainingElseIfElement()
@@ -1022,6 +1051,25 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void UnlessAttributeWorksOnSpecialNodes()
+        {
+            mocks.ReplayAll();
+            var viewContext = MakeViewContext("UnlessAttributeWorksOnSpecialNodes", null);
+            factory.RenderView(viewContext);
+            mocks.VerifyAll();
+            string content = sb.ToString();
+
+            Assert.That(content, Contains.InOrder(
+                            "<p>name-0-alpha</p>",
+                            "<p>name-2-gamma</p>",
+                            "<span>one</span>",
+                            "<span>three</span>"));
+
+            Assert.IsFalse(content.Contains("beta"));
+            Assert.IsFalse(content.Contains("two"));
+        }
+
+        [Test]
         public void OnceAttributeWorksOnSpecialNodes()
         {
             mocks.ReplayAll();
@@ -1092,7 +1140,6 @@ namespace Spark.Tests
                         factory.RenderView(viewContext),
                         Throws.TypeOf<CompilerException>());
         }
-
 
         [Test]
         public void NestedPartialsCanBackRenderUpAndReRenderDown()

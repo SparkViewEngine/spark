@@ -16,5 +16,13 @@
     <s:else/>
     ok3
   </s:test>
+    
+  <p s:unless="true">
+    unless fail
+  </p>
+  
+  <p s:unless="false">
+    ok4
+  </p>
 
 </div>

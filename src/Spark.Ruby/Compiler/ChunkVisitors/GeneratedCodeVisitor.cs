@@ -199,6 +199,9 @@ namespace Spark.Ruby.Compiler.ChunkVisitors
                 case ConditionalType.Once:
                     _source.Write("if once(").Write(chunk.Condition).WriteLine(")");
                     break;
+                case ConditionalType.Unless:
+                    _source.Write("unless ").WriteLine(chunk.Condition);
+                    break;
                 default:
                     throw new CompilerException(string.Format("Unknown ConditionalChunk type {0}", chunk.Type));
             }

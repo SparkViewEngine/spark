@@ -360,6 +360,24 @@ namespace Spark.Ruby.Tests
         }
 
         [Test]
+        public void ConditionalChunkUnlessNegates()
+        {
+            var condition1 = new ConditionalChunk { Condition = "x != 12", Type = ConditionalType.Unless };
+            condition1.Body.Add(new SendLiteralChunk { Text = "ok1" });
+            var condition2 = new ConditionalChunk { Condition = "x == 12", Type = ConditionalType.Unless };
+            condition2.Body.Add(new SendLiteralChunk { Text = "fail" });
+            var chunks = Chunks(
+                new LocalVariableChunk { Name = "x", Value = "12" },
+                new SendLiteralChunk { Text = "a" },
+                condition1,
+                condition2,
+                new SendLiteralChunk { Text = "b" });
+            _compiler.CompileView(chunks, chunks);
+            var contents = ExecuteView();
+            Assert.AreEqual("aok1b", contents);
+        }
+
+        [Test]
         public void ChainingElseIfNestsProperly()
         {
             var condition1 = new ConditionalChunk { Type = ConditionalType.If, Condition = "x == 1" };
