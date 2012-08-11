@@ -27,6 +27,7 @@ namespace Spark.Bindings
 
         public string Name { get; set; }
         public bool AssumeStringValue { get; set; }
+        public bool Optional { get; set; }
     }
 
     public class BindingPrefixReference : BindingNode

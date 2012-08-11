@@ -99,6 +99,35 @@ namespace Spark.Tests.Bindings
             Assert.That(contents, Is.EqualTo(@"<p>success one 7 two /TestApp three!</p>"));
         }
 
+        [Test]
+        public void BindingRefersToAttributeWithMixedCodeAndTextWithOptional()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World('@@foo')</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo='one ${3+4} two ${SiteRoot} three'/></p><macro name='World' beta='string'>success ${beta}!</macro>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>success one 7 two /TestApp three!</p>"));
+        }
+
+        [Test]
+        public void BindingRefersToAttributeWithMixedCodeAndTextWithOptionalNotSupplied()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World('@@foo')</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello /></p><macro name='World' beta='string'>success ${beta}!</macro>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>success !</p>"));
+        }
+
+        [Test]
+        public void BindingRefersToAttributeWithMixedCodeAndTextWithAttributeNotSupplied()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World('@foo')</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello /></p><macro name='World' beta='string'>success ${beta}!</macro>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p><hello/></p>"));
+        }
 
         [Test]
         public void BindingRefersToAttributeWithUnescapedCode() {
