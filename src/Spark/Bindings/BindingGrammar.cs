@@ -41,13 +41,20 @@ namespace Spark.Bindings
                 .Or(Ch("'@").And(Name).And(Ch('\'')))
                 .Build(hit => (BindingNode)new BindingNameReference(hit.Left.Down) { AssumeStringValue = true });
 
+            var stringNameReferenceOptional = Ch("\"@@").And(Name).And(Ch('\"'))
+                .Or(Ch("'@@").And(Name).And(Ch('\'')))
+                .Build(hit => (BindingNode)new BindingNameReference(hit.Left.Down) { AssumeStringValue = true, Optional = true });
+
             var rawNameReference = Ch('@').And(Name)
                 .Build(hit => (BindingNode)new BindingNameReference(hit.Down));
+
+            var rawNameReferenceOptional = Ch("@@").And(Name)
+                .Build(hit => (BindingNode)new BindingNameReference(hit.Down) { Optional = true });
 
             var childReference = Ch("child::*").Or(Ch("'child::*'")).Or(Ch("\"child::*\""))
                 .Build(hit => (BindingNode)new BindingChildReference());
 
-            NameReference = stringNameReference.Or(rawNameReference);
+            NameReference = stringNameReference.Or(rawNameReference).Or(stringNameReferenceOptional).Or(rawNameReferenceOptional);
 
             var anyReference = PrefixReference.Or(NameReference).Or(childReference);
 
