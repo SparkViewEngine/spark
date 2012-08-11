@@ -132,6 +132,8 @@ namespace Spark.Compiler.NodeVisitors
             foreach (var reference in AllNodes(binding).OfType<BindingNameReference>())
             {
                 var nameReference = reference;
+                if (nameReference.Optional)
+                    continue;
                 if (!element.Attributes.Any(attr => attr.Name == nameReference.Name))
                     return false;
             }
