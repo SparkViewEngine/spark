@@ -38,6 +38,8 @@ namespace Spark.Compiler.NodeVisitors
                 return;
             }
 
+            if (!string.IsNullOrEmpty(element.PreceedingWhitespace))
+                Nodes.Add(new TextNode(element.PreceedingWhitespace));
             BeginBinding(element, binding);
             if (element.IsEmptyElement)
                 EndBinding();
