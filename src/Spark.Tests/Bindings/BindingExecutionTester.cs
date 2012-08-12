@@ -322,5 +322,72 @@ namespace Spark.Tests.Bindings
     <li>gamma is okay too I suppose. </li>
 </ul>"));
         }
+
+        [Test]
+        public void BindingShouldMaintainNewLine()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+<p>
+    <Text>John St</Text>
+</p>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"
+<p>
+    John St
+</p>"));
+        }
+
+        [Test]
+        public void BindingNextToBindingShouldMaintainNewLine()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+<p>
+    <Text>John St</Text>
+    <Text>Smith St</Text>
+</p>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"
+<p>
+    John St
+    Smith St
+</p>"));
+        }
+
+        [Test]
+        public void BindingShouldMaintainNewLineWithNoChild()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>'@tt'</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+<p>
+    <Text tt=""John St"" />
+</p>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"
+<p>
+    John St
+</p>"));
+        }
+
+        [Test]
+        public void BindingShouldMaintainNewLineWithNoChildAndCode()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>'@tt'</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+<p>
+    <var t=""23"" />
+    <Text tt=""${t}"" />
+</p>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"
+<p>
+    23
+</p>"));
+        }
     }
 }
