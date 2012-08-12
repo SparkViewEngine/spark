@@ -12,5 +12,7 @@
     <td>${itemCount}</td>
     <td>${itemIsFirst}</td>
     <td>${itemIsLast}</td>
+    <td>${itemIsEven}</td>
+    <td>${itemIsOdd}</td>
   </tr>
 </table>
