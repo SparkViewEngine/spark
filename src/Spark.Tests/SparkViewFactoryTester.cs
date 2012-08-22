@@ -458,10 +458,10 @@ namespace Spark.Tests
 
             string content = sb.ToString().Replace(" ", "").Replace("\t", "").Replace("\r\n", "");
             Assert.That(content, Contains.InOrder(
-                "<tr><td>one</td><td>0</td><td>4</td><td>True</td><td>False</td></tr>",
-                "<tr><td>two</td><td>1</td><td>4</td><td>False</td><td>False</td></tr>",
-                "<tr><td>three</td><td>2</td><td>4</td><td>False</td><td>False</td></tr>",
-                "<tr><td>four</td><td>3</td><td>4</td><td>False</td><td>True</td></tr>"));
+                "<tr><td>one</td><td>0</td><td>4</td><td>True</td><td>False</td><td>False</td><td>True</td></tr>",
+                "<tr><td>two</td><td>1</td><td>4</td><td>False</td><td>False</td><td>True</td><td>False</td></tr>",
+                "<tr><td>three</td><td>2</td><td>4</td><td>False</td><td>False</td><td>False</td><td>True</td></tr>",
+                "<tr><td>four</td><td>3</td><td>4</td><td>False</td><td>True</td><td>True</td><td>False</td></tr>"));
         }
 
 
