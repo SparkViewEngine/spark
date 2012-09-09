@@ -38,6 +38,8 @@ namespace Spark.Compiler.NodeVisitors
                 return;
             }
 
+            if (!string.IsNullOrEmpty(element.PreceedingWhitespace))
+                Nodes.Add(new TextNode(element.PreceedingWhitespace));
             BeginBinding(element, binding);
             if (element.IsEmptyElement)
                 EndBinding();
@@ -132,6 +134,8 @@ namespace Spark.Compiler.NodeVisitors
             foreach (var reference in AllNodes(binding).OfType<BindingNameReference>())
             {
                 var nameReference = reference;
+                if (nameReference.Optional)
+                    continue;
                 if (!element.Attributes.Any(attr => attr.Name == nameReference.Name))
                     return false;
             }

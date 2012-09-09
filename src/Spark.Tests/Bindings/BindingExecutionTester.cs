@@ -99,6 +99,35 @@ namespace Spark.Tests.Bindings
             Assert.That(contents, Is.EqualTo(@"<p>success one 7 two /TestApp three!</p>"));
         }
 
+        [Test]
+        public void BindingRefersToAttributeWithMixedCodeAndTextWithOptional()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World('@@foo')</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo='one ${3+4} two ${SiteRoot} three'/></p><macro name='World' beta='string'>success ${beta}!</macro>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>success one 7 two /TestApp three!</p>"));
+        }
+
+        [Test]
+        public void BindingRefersToAttributeWithMixedCodeAndTextWithOptionalNotSupplied()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World('@@foo')</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello /></p><macro name='World' beta='string'>success ${beta}!</macro>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p>success !</p>"));
+        }
+
+        [Test]
+        public void BindingRefersToAttributeWithMixedCodeAndTextWithAttributeNotSupplied()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World('@foo')</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello /></p><macro name='World' beta='string'>success ${beta}!</macro>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"<p><hello/></p>"));
+        }
 
         [Test]
         public void BindingRefersToAttributeWithUnescapedCode() {
@@ -292,6 +321,73 @@ namespace Spark.Tests.Bindings
     <li>beta is okay too I suppose. </li>
     <li>gamma is okay too I suppose. </li>
 </ul>"));
+        }
+
+        [Test]
+        public void BindingShouldMaintainNewLine()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+<p>
+    <Text>John St</Text>
+</p>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"
+<p>
+    John St
+</p>"));
+        }
+
+        [Test]
+        public void BindingNextToBindingShouldMaintainNewLine()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+<p>
+    <Text>John St</Text>
+    <Text>Smith St</Text>
+</p>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"
+<p>
+    John St
+    Smith St
+</p>"));
+        }
+
+        [Test]
+        public void BindingShouldMaintainNewLineWithNoChild()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>'@tt'</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+<p>
+    <Text tt=""John St"" />
+</p>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"
+<p>
+    John St
+</p>"));
+        }
+
+        [Test]
+        public void BindingShouldMaintainNewLineWithNoChildAndCode()
+        {
+            _viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>'@tt'</element></bindings>");
+            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+<p>
+    <var t=""23"" />
+    <Text tt=""${t}"" />
+</p>");
+
+            var contents = Render("index");
+            Assert.That(contents, Is.EqualTo(@"
+<p>
+    23
+</p>"));
         }
     }
 }
