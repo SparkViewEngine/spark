@@ -18,6 +18,8 @@ obj/
 _ReSharper.*
 *.ReSharper
 *.dotCover
+*.ncrunchproject
+*crunchsolution*
 
 # Ignore all MonoDevelop generated files.
 *.userprefs
