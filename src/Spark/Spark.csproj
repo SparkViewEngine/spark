@@ -104,6 +104,7 @@
     <Compile Include="Compiler\NodeVisitors\SpecialAttributeVisitorBase.cs" />
     <Compile Include="CompositeViewEntry.cs" />
     <Compile Include="AbstractSparkView.cs" />
+    <Compile Include="FastViewActivator.cs" />
     <Compile Include="ICacheService.cs" />
     <Compile Include="ICacheSignal.cs" />
     <Compile Include="NullCacheService.cs" />
