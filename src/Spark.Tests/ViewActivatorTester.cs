@@ -14,6 +14,7 @@
 // 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -78,6 +79,17 @@ namespace Spark.Tests
         }
 
         [Test]
+        public void FastCreateViewInstance()
+        {
+            var type = typeof(TestView);
+            var factory = new FastViewActivator();
+            var activator = factory.Register(type);
+            var view = activator.Activate(type);
+            Assert.IsNotNull(view);
+            Assert.IsAssignableFrom(typeof(TestView), view);
+        }
+
+        [Test]
         public void CustomViewActivator()
         {
             var engine = new SparkViewEngine(
@@ -92,6 +104,39 @@ namespace Spark.Tests
 
             Assert.IsNotNull(view);
             Assert.IsAssignableFrom(typeof(TestView), view);
+        }
+
+        [Test, Explicit]
+        public void PerfTest()
+        {
+            var type = typeof(TestView);
+            var defFactory = new DefaultViewActivator();
+            var fastFactory = new FastViewActivator();
+
+            var activator = defFactory.Register(type);
+            var fastActivator = fastFactory.Register(type);
+            var iterations = 1000000;
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            for (int i = 0; i < iterations; i++)
+            {
+                var view = activator.Activate(type);
+            }
+            sw.Stop();
+            
+            Console.WriteLine("Default took: {0}ms", sw.Elapsed.TotalMilliseconds);
+            sw.Reset();
+
+            sw.Start();
+
+            for (int i = 0; i < iterations; i++)
+            {
+                var view = fastActivator.Activate(type);
+            }
+            sw.Stop();
+            Console.WriteLine("Fast took: {0}ms", sw.Elapsed.TotalMilliseconds);
         }
     }
 }
