@@ -56,7 +56,7 @@ namespace Spark.Ruby.Tests
 
         private string ExecuteView(StubViewData viewData)
         {
-            var view = (StubSparkView)Activator.CreateInstance(_compiler.CompiledType);
+            var view = FastActivator<StubSparkView>.New(_compiler.CompiledType);
             _languageFactory.InstanceCreated(_compiler, view);
             view.ViewData = viewData;
             var contents = new StringWriter();
@@ -71,7 +71,7 @@ namespace Spark.Ruby.Tests
         {
             var chunks = Chunks(new SendLiteralChunk { Text = "Hello" });
             _compiler.CompileView(chunks, chunks);
-            var view = (IScriptingSparkView)Activator.CreateInstance(_compiler.CompiledType);
+            var view = FastActivator<IScriptingSparkView>.New(_compiler.CompiledType);
             var source = _compiler.SourceCode;
             var script = view.ScriptSource;
             Assert.IsNotNull(source);

@@ -13,11 +13,8 @@
 // limitations under the License.
 // 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using Spark.Compiler.ChunkVisitors;
-using Spark;
+using System.Linq.Expressions;
 
 namespace Spark.Compiler
 {
@@ -53,10 +50,30 @@ namespace Spark.Compiler
         public abstract void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources);
         public abstract void GenerateSourceCode(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources);
 
+
+
+        private static Dictionary<Type, Func<ISparkView>> _ctors = new Dictionary<Type, Func<ISparkView>>();
         public ISparkView CreateInstance()
         {
-            return (ISparkView)Activator.CreateInstance(CompiledType);
+            return FastActivator<ISparkView>.New(CompiledType);
         }
 
+    }
+
+    public static class FastActivator<TTargetClass> where TTargetClass : class
+    {
+        private static Dictionary<Type, Func<TTargetClass>> _ctors = new Dictionary<Type, Func<TTargetClass>>();
+
+        public static TTargetClass New(Type type)
+        {
+            if (!_ctors.ContainsKey(type))
+            {
+                var exp = Expression.New(type);
+                var d = Expression.Lambda<Func<TTargetClass>>(exp).Compile();
+                _ctors.Add(type, d);
+            }
+
+            return _ctors[type]();
+        }
     }
 }
