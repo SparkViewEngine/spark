@@ -263,7 +263,15 @@ namespace Spark.Compiler.NodeVisitors
             foreach (var attribute in node.Attributes)
                 Accept(attribute);
 
-            AddLiteral(node.IsEmptyElement ? "/>" : ">");
+            if (node.IsEmptyElement)
+            {
+                bool isVoidElement = voidElements.Contains(node.Name);
+                AddLiteral(isVoidElement ? "/>" : "></" + node.Name + ">");
+            }
+            else
+            {
+                AddLiteral(">");
+            }
         }
 
         protected override void Visit(AttributeNode attributeNode)
@@ -363,6 +371,26 @@ namespace Spark.Compiler.NodeVisitors
 
         private ConditionalChunk _sendAttributeOnce;
         private Chunk _sendAttributeIncrement;
+
+        private static readonly string[] voidElements = new[]
+        {
+            "area",
+            "base",
+            "br",
+            "col",
+            "command",
+            "embed",
+            "hr",
+            "img",
+            "input",
+            "keygen",
+            "link",
+            "meta",
+            "param",
+            "source",
+            "track",
+            "wbr"
+        };
 
         protected override void Visit(ConditionNode conditionNode)
         {
