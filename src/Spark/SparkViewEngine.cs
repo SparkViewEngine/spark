@@ -53,6 +53,7 @@ namespace Spark
             ResourcePathManager = container.GetService<IResourcePathManager>();
             TemplateLocator = container.GetService<ITemplateLocator>();
             CompiledViewHolder = container.GetService<ICompiledViewHolder>();
+            PartialProvider = container.GetService<IPartialProvider>();
             SetViewFolder(container.GetService<IViewFolder>());
         }
 
@@ -91,6 +92,18 @@ namespace Spark
                 return _bindingProvider;
             }
             set { _bindingProvider = value; }
+        }
+
+        private IPartialProvider _partialProvider;
+        public IPartialProvider PartialProvider
+        {
+            get
+            {
+                if (_partialProvider == null)
+                    _partialProvider = new DefaultPartialProvider();
+                return _partialProvider;
+            }
+            set { _partialProvider = value; }
         }
 
         private static IViewFolder CreateDefaultViewFolder()
@@ -295,7 +308,8 @@ namespace Spark
                 Prefix = Settings.Prefix,
                 BindingProvider = BindingProvider,
                 ParseSectionTagAsSegment = Settings.ParseSectionTagAsSegment,
-                AttributeBehaviour = Settings.AttributeBehaviour
+                AttributeBehaviour = Settings.AttributeBehaviour,
+                PartialProvider = PartialProvider
             };
         }
 
@@ -358,7 +372,7 @@ namespace Spark
                 var entry = new CompiledViewEntry
                                 {
                                     Descriptor = descriptor,
-                                    Loader = new ViewLoader(),
+                                    Loader = new ViewLoader { PartialProvider = PartialProvider },
                                     Compiler = new CSharpViewCompiler { CompiledType = type },
                                     Activator = ViewActivatorFactory.Register(type)
                                 };
