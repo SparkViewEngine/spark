@@ -53,6 +53,7 @@ namespace Spark
                     {typeof (IBindingProvider), c => new DefaultBindingProvider()},
                     {typeof (IViewFolder), CreateDefaultViewFolder},
                     {typeof (ICompiledViewHolder), c => new CompiledViewHolder()},
+                    {typeof (IPartialProvider), c => new DefaultPartialProvider()},
                 };
 
 

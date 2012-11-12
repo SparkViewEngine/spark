@@ -37,6 +37,7 @@ namespace Spark.Parser
 
         private readonly List<string> pending = new List<string>();
 
+        private IPartialProvider partialProvider;
 
         public IViewFolder ViewFolder { get; set; }
 
@@ -53,6 +54,19 @@ namespace Spark.Parser
         public AttributeBehaviour AttributeBehaviour { get; set; }
 
         public IBindingProvider BindingProvider { get; set; }
+
+        public IPartialProvider PartialProvider
+        {
+            get
+            {
+                if (partialProvider == null)
+                {
+                    partialProvider = new DefaultPartialProvider();
+                };
+                return partialProvider;
+            }
+            set { partialProvider = value; }
+        }
 
         /// <summary>
         /// Returns a value indicating whether this view loader is current.
@@ -133,16 +147,9 @@ namespace Spark.Parser
         /// </summary>
         /// <param name="viewPath">The view path for which to return partial view paths.</param>
         /// <returns>The full list of possible partial view paths.</returns>
-        private static IEnumerable<string> PartialViewFolderPaths(string viewPath)
+        private IEnumerable<string> PartialViewFolderPaths(string viewPath)
         {
-            do
-            {
-                viewPath = Path.GetDirectoryName(viewPath);
-
-                yield return viewPath;
-                yield return Path.Combine(viewPath, Constants.Shared);
-            }
-            while (!String.IsNullOrEmpty(viewPath));
+            return this.PartialProvider.GetPaths(viewPath);
         }
 
         /// <summary>

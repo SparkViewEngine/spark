@@ -109,6 +109,8 @@
     <Compile Include="ICacheSignal.cs" />
     <Compile Include="NullCacheService.cs" />
     <Compile Include="Compiler\NodeVisitors\BindingExpansionVisitor.cs" />
+    <Compile Include="DefaultPartialProvider.cs" />
+    <Compile Include="IPartialProvider.cs" />
     <Compile Include="Parser\Offset\OffsetGrammar.cs" />
     <Compile Include="SparkViewBase.cs" />
     <Compile Include="CompiledViewEntry.cs" />
