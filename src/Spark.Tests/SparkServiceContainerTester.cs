@@ -40,6 +40,9 @@ namespace Spark.Tests
 
             var bindingProvider = container.GetService<IBindingProvider>();
             Assert.IsInstanceOf(typeof(DefaultBindingProvider), bindingProvider);
+
+            var partialProvider = container.GetService<IPartialProvider>();
+            Assert.IsInstanceOf(typeof(DefaultPartialProvider), partialProvider);
         }
 
         [Test]
