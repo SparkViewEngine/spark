@@ -550,8 +550,8 @@ namespace Spark.Tests
 
             Assert.That(content, Contains.InOrder(
                 "<img src=\"/TestApp/content/images/etc.png\"/>",
-                "<script src=\"/TestApp/content/js/etc.js\"/>",
-                "<p class=\"~/blah.css\"/>"));
+                "<script src=\"/TestApp/content/js/etc.js\"></script>",
+                "<p class=\"~/blah.css\"></p>"));
         }
 
         [Test]
@@ -980,13 +980,13 @@ namespace Spark.Tests
 
             Assert.IsFalse(content.Contains("broken"));
             Assert.That(content, Contains.InOrder(
-                "<h1 class=\"one three\"/>",
-                "<h2/>",
-                "<h3 class=\" two three\"/>",
-                "<h4 class=\"one three\"/>",
-                "<h5 class=\"one two\"/>",
-                "<h6/>",
-                "<h7 class=\"one&two<three\"/>"));
+                "<h1 class=\"one three\"></h1>",
+                "<h2></h2>",
+                "<h3 class=\" two three\"></h3>",
+                "<h4 class=\"one three\"></h4>",
+                "<h5 class=\"one two\"></h5>",
+                "<h6></h6>",
+                "<h7 class=\"one&two<three\"></h7>"));
         }
 
 
@@ -1260,7 +1260,7 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(content, Is.EqualTo(@"<tag attr='something; other=""value1, value2""'/>"));
+            Assert.That(content, Is.EqualTo(@"<img attr='something; other=""value1, value2""'/>"));
         }
 
         [Test]
@@ -1273,7 +1273,7 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(content, Is.EqualTo(@"<tag attr=""something; other='value1, value2'""/>"));
+            Assert.That(content, Is.EqualTo(@"<img attr=""something; other='value1, value2'""/>"));
         }
 
 

@@ -323,28 +323,28 @@ ${x}
         [Test]
         public void ConditionalAttributes()
         {
-            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"<div class=""""/>
-<div class=""foo""/>
+            _viewFolder.Add(Path.Combine("vbhome", "index.spark"), @"<img class=""""/>
+<img class=""foo""/>
 
-<div class=""foo?{True}""/>
-<div class=""foo?{False}""/>
+<img class=""foo?{True}""/>
+<img class=""foo?{False}""/>
 
-<div class=""foo?{True} bar?{True}""/>
-<div class=""foo?{True} bar?{False}""/>
-<div class=""foo?{False} bar?{True}""/>
-<div class=""foo?{False} bar?{False}""/>");
+<img class=""foo?{True} bar?{True}""/>
+<img class=""foo?{True} bar?{False}""/>
+<img class=""foo?{False} bar?{True}""/>
+<img class=""foo?{False} bar?{False}""/>");
 
             var contents = Render("index");
-            Assert.That(contents.Trim(), Is.EqualTo(@"<div class=""""/>
-<div class=""foo""/>
+            Assert.That(contents.Trim(), Is.EqualTo(@"<img class=""""/>
+<img class=""foo""/>
 
-<div class=""foo""/>
-<div/>
+<img class=""foo""/>
+<img/>
 
-<div class=""foo bar""/>
-<div class=""foo""/>
-<div class="" bar""/>
-<div/>"));
+<img class=""foo bar""/>
+<img class=""foo""/>
+<img class="" bar""/>
+<img/>"));
         }
 
         [Test]

@@ -1,6 +1,6 @@
 <div if="true">  
-  <img src="~/content/images/etc.png"/>
-  <script src="~/content/js/${'etc.js'}"/>
-  <p class="~/blah.css"/>
+  <img src="~/content/images/etc.png" />
+  <script src="~/content/js/${'etc.js'}"></script>
+  <p class="~/blah.css"></p>
 </div>
 
