@@ -126,7 +126,7 @@ namespace Spark.Tests.Bindings
             _viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello /></p><macro name='World' beta='string'>success ${beta}!</macro>");
 
             var contents = Render("index");
-            Assert.That(contents, Is.EqualTo(@"<p><hello/></p>"));
+            Assert.That(contents, Is.EqualTo(@"<p><hello></hello></p>"));
         }
 
         [Test]
