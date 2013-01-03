@@ -144,12 +144,18 @@ namespace Spark.Compiler.CSharp
             {
                 if (invokeLevel != renderLevel - 1)
                 {
-                    source.WriteLine("using (OutputScope()) {{RenderViewLevel{0}(); Content[\"view\"] = Output;}}", invokeLevel);
+                  source.WriteLine("using (OutputScope()) {{DelegateFirstRender(RenderViewLevel{0}); Content[\"view\"] = Output;}}", invokeLevel);
                 }
                 else
                 {
-
-                    source.WriteLine("        RenderViewLevel{0}();", invokeLevel);
+                    if (renderLevel <= 1)
+                    {
+                     source.WriteLine("        DelegateFirstRender(RenderViewLevel{0});", invokeLevel);
+                    }
+                     else
+                   {
+                     source.WriteLine("        RenderViewLevel{0}();", invokeLevel);
+                   }
                 }
             }
             source.RemoveIndent().WriteLine("}");
