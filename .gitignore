@@ -20,6 +20,7 @@ _ReSharper.*
 *.dotCover
 *.ncrunchproject
 *crunchsolution*
+*.disposechecksettings
 
 # Ignore all MonoDevelop generated files.
 *.userprefs

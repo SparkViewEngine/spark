@@ -241,6 +241,10 @@ namespace Spark
         }
 
         public abstract void Render();
+      protected virtual void DelegateFirstRender(Action render)
+       {
+          render();
+        }
     }
 
 }
