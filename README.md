@@ -27,7 +27,7 @@ else
 
 ### Installation
 
-It's as easy as `PM> Install-Package Spark` from (nuget)[http://nuget.org/packages/Spark] for the core
+It's as easy as `PM> Install-Package Spark` from [nuget](http://nuget.org/packages/Spark) for the core
 
 ### Need Help
 
