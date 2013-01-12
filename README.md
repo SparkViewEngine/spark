@@ -31,8 +31,11 @@ It's as easy as `PM> Install-Package Spark` from [nuget](http://nuget.org/packag
 
 ### Need Help
 
-[Google Group](https://groups.google.com/forum/?fromgroups=#!forum/spark-dev)
-Twitter
-[Community Resources](https://github.com/SparkViewEngine/spark/wiki/Community-Resources)
+ * [Google Group](https://groups.google.com/forum/?fromgroups=#!forum/spark-dev)
+ * [Twitter](https://twitter.com/sparkviewengine)
+ * [Community Resources](https://github.com/SparkViewEngine/spark/wiki/Community-Resources)
 
 ### Core Team
+ * [@RobertTheGrey](https://twitter.com/RobertTheGrey)
+ * [@loudej](https://twitter.com/loudej)
+
