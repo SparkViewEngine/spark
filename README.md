@@ -12,7 +12,7 @@ Spark is a view engine for [ASP.NET MVC](http://www.asp.net/mvc), [FubuMVC](http
 </else>
 ```
 Although we also support "left-offset" syntax inspired by frameworks like [Jade](http://jade-lang.com/) and [Haml](http://haml.info/)
-```html
+```csharp
 viewdata products="IEnumerable[[Product]]"
 ul if="products.Any()"
   li each="var p in products" 
