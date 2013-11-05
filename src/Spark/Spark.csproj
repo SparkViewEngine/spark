@@ -104,9 +104,11 @@
     <Compile Include="Compiler\NodeVisitors\SpecialAttributeVisitorBase.cs" />
     <Compile Include="CompositeViewEntry.cs" />
     <Compile Include="AbstractSparkView.cs" />
+    <Compile Include="DefaultPartialReferenceProvider.cs" />
     <Compile Include="FastViewActivator.cs" />
     <Compile Include="ICacheService.cs" />
     <Compile Include="ICacheSignal.cs" />
+    <Compile Include="IPartialReferenceProvider.cs" />
     <Compile Include="NullCacheService.cs" />
     <Compile Include="Compiler\NodeVisitors\BindingExpansionVisitor.cs" />
     <Compile Include="DefaultPartialProvider.cs" />
