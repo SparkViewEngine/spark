@@ -105,6 +105,17 @@ namespace Spark
             }
             set { _partialProvider = value; }
         }
+        private IPartialReferenceProvider _partialReferenceProvider;
+        public IPartialReferenceProvider PartialReferenceProvider
+        {
+            get
+            {
+                if (_partialReferenceProvider == null)
+                    _partialReferenceProvider = new DefaultPartialReferenceProvider();
+                return _partialReferenceProvider;
+            }
+            set { _partialReferenceProvider = value; }
+        }
 
         private static IViewFolder CreateDefaultViewFolder()
         {
@@ -309,7 +320,8 @@ namespace Spark
                 BindingProvider = BindingProvider,
                 ParseSectionTagAsSegment = Settings.ParseSectionTagAsSegment,
                 AttributeBehaviour = Settings.AttributeBehaviour,
-                PartialProvider = PartialProvider
+                PartialProvider = PartialProvider,
+                PartialReferenceProvider = PartialReferenceProvider
             };
         }
 
@@ -372,7 +384,7 @@ namespace Spark
                 var entry = new CompiledViewEntry
                                 {
                                     Descriptor = descriptor,
-                                    Loader = new ViewLoader { PartialProvider = PartialProvider },
+                                    Loader = new ViewLoader { PartialProvider = PartialProvider, PartialReferenceProvider = PartialReferenceProvider },
                                     Compiler = new CSharpViewCompiler { CompiledType = type },
                                     Activator = ViewActivatorFactory.Register(type)
                                 };
