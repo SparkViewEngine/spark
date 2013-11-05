@@ -38,6 +38,7 @@ namespace Spark.Parser
         private readonly List<string> pending = new List<string>();
 
         private IPartialProvider partialProvider;
+        private IPartialReferenceProvider partialReferenceProvider;
 
         public IViewFolder ViewFolder { get; set; }
 
@@ -66,6 +67,18 @@ namespace Spark.Parser
                 return partialProvider;
             }
             set { partialProvider = value; }
+        }
+        public IPartialReferenceProvider PartialReferenceProvider
+        {
+            get
+            {
+                if (partialReferenceProvider == null)
+                {
+                    partialReferenceProvider = new DefaultPartialReferenceProvider();
+                };
+                return partialReferenceProvider;
+            }
+            set { partialReferenceProvider = value; }
         }
 
         /// <summary>
@@ -137,7 +150,7 @@ namespace Spark.Parser
         /// <returns>All partial files available.</returns>
         public IList<string> FindPartialFiles(string viewPath)
         {
-            var folderPaths = PartialViewFolderPaths(viewPath);
+            var folderPaths = PartialViewFolderPaths(viewPath, false);
             var partialNames = this.FindAllPartialFiles(folderPaths);
             return partialNames.Distinct().ToList().AsReadOnly();
         }
@@ -147,9 +160,16 @@ namespace Spark.Parser
         /// </summary>
         /// <param name="viewPath">The view path for which to return partial view paths.</param>
         /// <returns>The full list of possible partial view paths.</returns>
-        private IEnumerable<string> PartialViewFolderPaths(string viewPath)
+        private IEnumerable<string> PartialViewFolderPaths(string viewPath, bool allowCustomReferencePath)
         {
-            return this.PartialProvider.GetPaths(viewPath);
+            if (allowCustomReferencePath)
+            {
+                return this.PartialReferenceProvider.GetPaths(viewPath, allowCustomReferencePath);
+            }
+            else
+            {
+                return this.PartialProvider.GetPaths(viewPath);
+            }
         }
 
         /// <summary>
@@ -273,7 +293,7 @@ namespace Spark.Parser
         {
             var viewNameWithSparkExtension = EnsureSparkExtension(viewName);
             var viewNameWithShadeExtension = EnsureShadeExtension(viewName);
-            var folderPaths = PartialViewFolderPaths(existingViewPath);
+            var folderPaths = PartialViewFolderPaths(existingViewPath, true);
 
             var partialPaths = folderPaths.SelectMany(x => new[]
             {
