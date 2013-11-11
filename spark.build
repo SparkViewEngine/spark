@@ -14,7 +14,7 @@
   <property name="version.major" value="1"/>
   <property name="version.minor" value="7"/>
   <property name="version.build" value="5"/>
-  <property name="version.revision" value="1"/>
+  <property name="version.revision" value="2"/>
   <property name="project.version" value="${version.major}.${version.minor}" dynamic="true" />
   <property name="project.fullversion" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true" />
   <property name="nant.settings.currentframework" value="net-3.5" />
