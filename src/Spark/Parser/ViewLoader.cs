@@ -31,6 +31,12 @@ namespace Spark.Parser
     using Spark.FileSystem;
     using Spark.Parser.Markup;
 
+    public interface ITest
+    {
+        IPartialProvider PartialProvider { get; set; }
+        IPartialReferenceProvider PartialReferenceProvider { get; set; }
+    }
+
     public class ViewLoader
     {
         private readonly Dictionary<string, Entry> entries = new Dictionary<string, Entry>();
@@ -68,13 +74,14 @@ namespace Spark.Parser
             }
             set { partialProvider = value; }
         }
+
         public IPartialReferenceProvider PartialReferenceProvider
         {
             get
             {
                 if (partialReferenceProvider == null)
                 {
-                    partialReferenceProvider = new DefaultPartialReferenceProvider();
+                    partialReferenceProvider = new DefaultPartialReferenceProvider(() => PartialProvider);
                 };
                 return partialReferenceProvider;
             }
