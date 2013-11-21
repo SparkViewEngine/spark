@@ -68,13 +68,14 @@ namespace Spark.Parser
             }
             set { partialProvider = value; }
         }
+
         public IPartialReferenceProvider PartialReferenceProvider
         {
             get
             {
                 if (partialReferenceProvider == null)
                 {
-                    partialReferenceProvider = new DefaultPartialReferenceProvider();
+                    partialReferenceProvider = new DefaultPartialReferenceProvider(() => PartialProvider);
                 };
                 return partialReferenceProvider;
             }

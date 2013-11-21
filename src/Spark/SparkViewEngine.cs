@@ -54,6 +54,7 @@ namespace Spark
             TemplateLocator = container.GetService<ITemplateLocator>();
             CompiledViewHolder = container.GetService<ICompiledViewHolder>();
             PartialProvider = container.GetService<IPartialProvider>();
+            PartialReferenceProvider = container.GetService<IPartialReferenceProvider>();
             SetViewFolder(container.GetService<IViewFolder>());
         }
 
@@ -105,13 +106,14 @@ namespace Spark
             }
             set { _partialProvider = value; }
         }
+
         private IPartialReferenceProvider _partialReferenceProvider;
         public IPartialReferenceProvider PartialReferenceProvider
         {
             get
             {
                 if (_partialReferenceProvider == null)
-                    _partialReferenceProvider = new DefaultPartialReferenceProvider();
+                    _partialReferenceProvider = new DefaultPartialReferenceProvider(() => PartialProvider);
                 return _partialReferenceProvider;
             }
             set { _partialReferenceProvider = value; }
