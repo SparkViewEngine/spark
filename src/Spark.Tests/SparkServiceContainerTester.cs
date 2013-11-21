@@ -43,6 +43,9 @@ namespace Spark.Tests
 
             var partialProvider = container.GetService<IPartialProvider>();
             Assert.IsInstanceOf(typeof(DefaultPartialProvider), partialProvider);
+
+            var partialReferenceProvider = container.GetService<IPartialReferenceProvider>();
+            Assert.IsInstanceOf(typeof(DefaultPartialReferenceProvider), partialReferenceProvider);
         }
 
         [Test]
