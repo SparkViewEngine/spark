@@ -54,6 +54,7 @@ namespace Spark
                     {typeof (IViewFolder), CreateDefaultViewFolder},
                     {typeof (ICompiledViewHolder), c => new CompiledViewHolder()},
                     {typeof (IPartialProvider), c => new DefaultPartialProvider()},
+                    {typeof (IPartialReferenceProvider), c => new DefaultPartialReferenceProvider(c.GetService<IPartialProvider>())},
                 };
 
 

@@ -103,6 +103,7 @@
     <Compile Include="Parser\CharGrammarTester.cs" />
     <Compile Include="Parser\JavascriptAnonymousTypeGrammarTester.cs" />
     <Compile Include="Parser\OffsetGrammarTester.cs" />
+    <Compile Include="PartialProviderTester.cs" />
     <Compile Include="Precompiled\ComplexPrecompileController.cs" />
     <Compile Include="Precompiled\SimplePrecompileController.cs" />
     <Compile Include="Compiler\SourceMappingTester.cs" />
