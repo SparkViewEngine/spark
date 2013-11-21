@@ -1,19 +1,26 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Spark
 {
     public class DefaultPartialReferenceProvider : IPartialReferenceProvider
     {
-        private IPartialProvider _proxy;
-        public DefaultPartialReferenceProvider()
+        private readonly Func<IPartialProvider> _getProvider = () => null;
+
+        public DefaultPartialReferenceProvider(IPartialProvider partialProvider)
+            : this(() => partialProvider)
         {
-            _proxy = new DefaultPartialProvider();
         }
+
+        public DefaultPartialReferenceProvider(Func<IPartialProvider> getProvider)
+        {
+            _getProvider = getProvider;
+        }
+
         public IEnumerable<string> GetPaths(string viewPath, bool allowCustomReferencePath)
         {
-            return _proxy.GetPaths(viewPath);
+            var provider = _getProvider() ?? new DefaultPartialProvider();
+            return provider.GetPaths(viewPath);
         }
     }
 }
