@@ -19,6 +19,7 @@ using System.Security.Permissions;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Caching;
+using System.Web.Instrumentation;
 using System.Web.Profile;
 
 namespace Spark.Web.Mvc.Wrappers
@@ -159,6 +160,11 @@ namespace Spark.Web.Mvc.Wrappers
         {
             get { return _context.User; }
             set { _context.User = value; }
+        }
+
+        public override PageInstrumentationService PageInstrumentation
+        {
+            get { return _context.PageInstrumentation; }
         }
 
         public override void AddError(Exception errorInfo)
