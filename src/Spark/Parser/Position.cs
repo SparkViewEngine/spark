@@ -85,6 +85,18 @@ namespace Spark.Parser
             this.paintLink = paintLink;
         }
 
+        public bool IsSamePosition(Position position)
+        {
+            if (position == null)
+                throw new ArgumentNullException("position");
+
+            if (object.ReferenceEquals(position, this)) //obviously
+                return true;
+            return position.Column == this.Column
+                   && position.Line == this.Line
+                   && position.Offset == this.Offset;
+        }
+
         public SourceContext SourceContext
         {
             get

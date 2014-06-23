@@ -184,7 +184,7 @@ namespace Spark.Parser
 
                 var rest = input;
                 var result = parse(rest);
-                while (result != null)
+                while (result != null && !rest.IsSamePosition(result.Rest))
                 {
                     list.Add(result.Value);
                     rest = result.Rest;

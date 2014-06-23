@@ -311,5 +311,31 @@ namespace Spark.Tests.Parser
             Assert.That(partials, Has.None.EqualTo("dontfind2"));
             Assert.That(partials, Has.None.EqualTo("dontfind3"));
         }
+
+        [Test]
+        public void LoadingEmptyFile()
+        {
+            var viewFolder = new InMemoryViewFolder
+            {
+                {Path.Combine("home", "empty.spark"), ""},                                     
+            };
+            var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+            var chunks = viewLoader.Load(Path.Combine("home", "empty.spark"));
+            var everything = viewLoader.GetEverythingLoaded();
+            Assert.AreEqual(1, everything.Count());
+        }
+
+        [Test]
+        public void LoadingEmptyShadeFile()
+        {
+            var viewFolder = new InMemoryViewFolder
+            {
+                {Path.Combine("home", "empty.shade"), ""},                                     
+            };
+            var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+            var chunks = viewLoader.Load(Path.Combine("home", "empty.shade"));
+            var everything = viewLoader.GetEverythingLoaded();
+            Assert.AreEqual(1, everything.Count());
+        }
     }
 }
