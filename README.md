@@ -39,3 +39,10 @@ It's as easy as `PM> Install-Package Spark` from [nuget](http://nuget.org/packag
  * [@RobertTheGrey](https://twitter.com/RobertTheGrey)
  * [@loudej](https://twitter.com/loudej)
 
+### Licence
+
+All software produced by the Spark Software Foundation or any of its projects or subjects is licensed according to the terms of [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+See the [Apache License FAQ](http://www.apache.org/foundation/license-faq.html)
+
+Read more about licencing [in the Wiki](https://github.com/SparkViewEngine/spark/wiki/Licence-information)
