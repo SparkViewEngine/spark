@@ -46,7 +46,9 @@ namespace Spark.Compiler.Javascript
             // convert some syntax from csharp to javascript
             foreach (var template in viewTemplates)
                 anonymousTypeVisitor.Accept(template);
-
+            foreach (var template in allResources)
+                anonymousTypeVisitor.Accept(template);
+                
             var cumulativeName = "window.Spark";
             foreach (var part in nameParts.Where(p => p != "~"))
             {
