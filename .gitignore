@@ -38,3 +38,11 @@ src/Tools/SparkLanguagePackage/*_i.c
 src/Tools/SparkLanguagePackage/*_i.h
 src/Tools/SparkLanguagePackage/*_p.c
 src/Tools/SparkLanguagePackage/PackageLoadKey.h
+
+#NuGet
+packages/
+*.nupkg
+
+#ncrunch
+*ncrunch*
+*crunch*.local.xml
