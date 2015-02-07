@@ -41,7 +41,6 @@ src/Tools/SparkLanguagePackage/PackageLoadKey.h
 
 #NuGet
 packages/
-*.nupkg
 
 #ncrunch
 *ncrunch*
