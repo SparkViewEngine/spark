@@ -12,9 +12,9 @@
   <property name="results.dir" value="${build.base}\results" />
   <property name="samples.dir" value="${solution.dir}\samples"/>
   <property name="version.major" value="1"/>
-  <property name="version.minor" value="7"/>
-  <property name="version.build" value="5"/>
-  <property name="version.revision" value="3"/>
+  <property name="version.minor" value="8"/>
+  <property name="version.build" value="0"/>
+  <property name="version.revision" value="0"/>
   <property name="project.version" value="${version.major}.${version.minor}" dynamic="true" />
   <property name="project.fullversion" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true" />
   <property name="nant.settings.currentframework" value="net-4.0" />
@@ -82,9 +82,9 @@
     <echo message="Build Directory is ${build.dir}" />
 
     <exec program="${msbuild.dir}\msbuild.exe"
-				  commandline="&quot;${solution.file}&quot; /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
+				  commandline="&quot;${solution.file}&quot; /p:VisualStudioVersion=12.0 /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
     <exec program="${msbuild.dir}\msbuild.exe"
-				  commandline="&quot;${solution.file}&quot; /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
+				  commandline="&quot;${solution.file}&quot; /p:VisualStudioVersion=12.0 /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
 
     <if test="${property::exists('tools.solution.file')}">
       <property name="wix-parameters" value="WixTargetsPath=..\..\..\bin\msbuild\Microsoft\WiX\v3.0\wix.targets;WixTasksPath=WixTasks.dll;WixToolPath=..\..\..\bin\wix"/>
