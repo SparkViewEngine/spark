@@ -2,7 +2,7 @@
 using Spark;
 using Spark.Web.Mvc;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.SparkWebMvc), "Start")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.SparkWebMvc), "Start")]
 
 namespace $rootnamespace$.App_Start {
     public static class SparkWebMvc {
