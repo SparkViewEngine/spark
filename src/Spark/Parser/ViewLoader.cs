@@ -31,6 +31,12 @@ namespace Spark.Parser
     using Spark.FileSystem;
     using Spark.Parser.Markup;
 
+    public interface ITest
+    {
+        IPartialProvider PartialProvider { get; set; }
+        IPartialReferenceProvider PartialReferenceProvider { get; set; }
+    }
+
     public class ViewLoader
     {
         private readonly Dictionary<string, Entry> entries = new Dictionary<string, Entry>();
