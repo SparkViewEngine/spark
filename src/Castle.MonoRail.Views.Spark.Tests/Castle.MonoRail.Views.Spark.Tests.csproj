@@ -1,21 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AD93C831-E12E-45AE-B654-682F9EFAE314}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Castle.MonoRail.Views.Spark.Tests</RootNamespace>
-    <AssemblyName>Castle.MonoRail.Views.Spark.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -31,28 +16,11 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Components.Pagination, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -79,217 +47,182 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\rhinomocks\Rhino.Mocks.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
-    <Reference Include="System.Core">
+    <Reference Update="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq">
+    <Reference Update="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Caching\HybridCacheServiceProviderTests.cs" />
-    <Compile Include="Constraints.cs" />
-    <Compile Include="HelperExtensionMethodsTests.cs" />
     <None Include="MonoRail.Tests.Views\Stub\Helper.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="Helpers\HomeController.cs" />
-    <Compile Include="ModelDictionaryTests.cs" />
-    <Compile Include="Models\UserInfo.cs" />
-    <Compile Include="PrecompileInstallerTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SparkBatchCompilerTester.cs" />
-    <Compile Include="SparkViewDataTests.cs" />
-    <Compile Include="SparkViewFactoryStrictNullBehaviourTests.cs" />
-    <Compile Include="SparkViewFactoryTests.cs" />
-    <Compile Include="SparkViewFactoryTestsBase.cs" />
-    <Compile Include="Stubs\StubController.cs" />
-    <Compile Include="ViewComponents\AllFrameworkComponentTests.cs" />
-    <Compile Include="ViewComponents\BaseViewComponentTests.cs" />
-    <Compile Include="ViewComponents\ViewComponentExtensionTests.cs" />
-    <Compile Include="ViewComponents\ViewComponentRenderBodyTests.cs" />
-    <Compile Include="ViewComponents\ViewComponentRenderViewTests.cs" />
-    <Compile Include="ViewComponents\ViewComponentSectionChunkBuilderVisitorTests.cs" />
-    <Compile Include="ViewComponents\ViewComponentSectionTests.cs" />
-    <Compile Include="ViewSourceLoaderWrapperTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Castle.MonoRail.Views.Spark\Castle.MonoRail.Views.Spark.csproj">
-      <Project>{33D786A4-C95D-473E-B96F-06EC68527F66}</Project>
-      <Name>Castle.MonoRail.Views.Spark</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Spark\Spark.csproj">
-      <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
-      <Name>Spark</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Castle.MonoRail.Views.Spark\Castle.MonoRail.Views.Spark.csproj" />
+    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="MonoRail.Tests.Views\Components\Widget\WithExtraData.spark">
+    <None Update="MonoRail.Tests.Views\Components\Widget\WithExtraData.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Components\Widget\Default.spark">
+    <None Update="MonoRail.Tests.Views\Components\Widget\Default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\CodeStatements.spark">
+    <None Update="MonoRail.Tests.Views\Home\CodeStatements.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentCallingRenderView.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentCallingRenderView.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewWithParameters.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentRenderViewWithParameters.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\HelperModelDictionaries.spark">
+    <None Update="MonoRail.Tests.Views\Home\HelperModelDictionaries.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\Index.spark">
+    <None Update="MonoRail.Tests.Views\Home\Index.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\PropertyBagViewdata.spark">
+    <None Update="MonoRail.Tests.Views\Home\PropertyBagViewdata.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\TerseHtmlEncode.spark">
+    <None Update="MonoRail.Tests.Views\Home\TerseHtmlEncode.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\DiggPaginationComponent.spark">
+    <None Update="MonoRail.Tests.Views\Home\DiggPaginationComponent.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Shared\Default.spark">
+    <None Update="MonoRail.Tests.Views\Shared\Default.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="MonoRail.Tests.Views\Components\ChildContent\default.spark">
+    <None Update="MonoRail.Tests.Views\Components\ChildContent\default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="EmbeddedViews\Components\UseEmbeddedViews\default.spark" />
-    <None Include="MonoRail.Tests.Views\Components\OnceWidget\default.spark">
+    <None Update="MonoRail.Tests.Views\Components\OnceWidget\default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Components\UsesGlobalSpark\default.spark">
+    <None Update="MonoRail.Tests.Views\Components\UsesGlobalSpark\default.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-AuthenticatedContent.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-AuthenticatedContent.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-CaptureFor.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-CaptureFor.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-ChildContent.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-ChildContent.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-ColumnRenderer.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-ColumnRenderer.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-DiggStylePagination.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-DiggStylePagination.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-Security.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-Security.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-SiteMap.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-SiteMap.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-TreeMaker.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-TreeMaker.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-UpdatePage.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-UpdatePage.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-UpdateTag.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-UpdateTag.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\LateBoundExpressionShouldCallEval.spark">
+    <None Update="MonoRail.Tests.Views\Home\LateBoundExpressionShouldCallEval.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\NullBehaviourConfiguredToStrict_RegularConstruct.spark">
+    <None Update="MonoRail.Tests.Views\Home\NullBehaviourConfiguredToStrict_RegularConstruct.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\NullBehaviourConfiguredToStrict_SuppressNullsConstruct.spark">
+    <None Update="MonoRail.Tests.Views\Home\NullBehaviourConfiguredToStrict_SuppressNullsConstruct.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentBodySimpleHtml.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentBodySimpleHtml.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewWithContent.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentRenderViewWithContent.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentWithComplexSections.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentWithComplexSections.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentWithPartialsInSection.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentWithPartialsInSection.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentWithSimpleSections.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentWithSimpleSections.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\AllFrameworkComponents-SelectStylePagination.spark">
+    <None Update="MonoRail.Tests.Views\Home\AllFrameworkComponents-SelectStylePagination.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentBodyHtmlHasAttributes.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentBodyHtmlHasAttributes.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ControllerHelperAttributeCanBeUsed.spark">
+    <None Update="MonoRail.Tests.Views\Home\ControllerHelperAttributeCanBeUsed.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewFromEmbeddedResource.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentRenderViewFromEmbeddedResource.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentsSupportEachAttribute.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentsSupportEachAttribute.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentsSupportIfAttribute.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentsSupportIfAttribute.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentsSupportOnceAttribute.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentsSupportOnceAttribute.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewSharesOnceFlags.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentRenderViewSharesOnceFlags.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\ComponentRenderViewUsesGlobalSpark.spark">
+    <None Update="MonoRail.Tests.Views\Home\ComponentRenderViewUsesGlobalSpark.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\NullBehaviourConfiguredToLenient.spark">
+    <None Update="MonoRail.Tests.Views\Home\NullBehaviourConfiguredToLenient.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\NestedComponentInSection.spark">
+    <None Update="MonoRail.Tests.Views\Home\NestedComponentInSection.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\RenderingComponentWithBodyAndNoDetailsAttrib.spark">
+    <None Update="MonoRail.Tests.Views\Home\RenderingComponentWithBodyAndNoDetailsAttrib.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Home\_PartialComponentSection.spark">
+    <None Update="MonoRail.Tests.Views\Home\_PartialComponentSection.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Rescues\404.spark">
+    <None Update="MonoRail.Tests.Views\Rescues\404.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Shared\Ajax.spark">
+    <None Update="MonoRail.Tests.Views\Shared\Ajax.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Shared\Alternate.spark">
+    <None Update="MonoRail.Tests.Views\Shared\Alternate.spark">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="MonoRail.Tests.Views\Shared\_global.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="MonoRail.Tests.Views\Stub\Index.spark">
+    <None Update="MonoRail.Tests.Views\Stub\Index.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Stub\List.spark">
+    <None Update="MonoRail.Tests.Views\Stub\List.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MonoRail.Tests.Views\Stub\_Widget.spark">
+    <None Update="MonoRail.Tests.Views\Stub\_Widget.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -310,12 +243,10 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="MonoRail.Tests.Views\Stub\Helper.cs" />
+  </ItemGroup>
 </Project>

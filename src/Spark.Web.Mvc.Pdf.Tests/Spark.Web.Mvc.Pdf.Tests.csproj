@@ -1,21 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0799EE7A-58D3-467F-8DE6-8F3FFDDEF4A1}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Spark.Web.Mvc.Pdf.Tests</RootNamespace>
-    <AssemblyName>Spark.Web.Mvc.Pdf.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -31,28 +16,11 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
@@ -63,44 +31,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\rhinomocks\Rhino.Mocks.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
+    <Reference Update="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq">
+    <Reference Update="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PdfViewResultTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Spark.Web.Mvc.Pdf\Spark.Web.Mvc.Pdf.csproj">
-      <Project>{0A90BB41-BE2E-4608-B5DB-A3A8A5269E2F}</Project>
-      <Name>Spark.Web.Mvc.Pdf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Spark.Web.Mvc.Tests\Spark.Web.Mvc.Tests.csproj">
-      <Project>{C8E58F51-8630-4420-8630-8E634EC8900E}</Project>
-      <Name>Spark.Web.Mvc.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj">
-      <Project>{286050D6-95A1-4381-93D8-93381D8AB8E2}</Project>
-      <Name>Spark.Web.Mvc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Spark\Spark.csproj">
-      <Project>{31929D34-1A68-4A6B-9D8A-B93037163A5A}</Project>
-      <Name>Spark</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\Spark.Web.Mvc.Pdf\Spark.Web.Mvc.Pdf.csproj" />
+    <ProjectReference Include="..\Spark.Web.Mvc.Tests\Spark.Web.Mvc.Tests.csproj" />
+    <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />
+    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -123,13 +66,6 @@
     <PackageReference Include="Microsoft.AspNet.Mvc">
       <Version>5.2.7</Version>
     </PackageReference>
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
