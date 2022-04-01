@@ -8,7 +8,7 @@
   <property name="company.name" value="Louis DeJardin"/>
   <property name="bin.dir" value="bin" />
   <property name="build.base" value="build"/>
-  <property name="msbuild.dir" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319" />
+  <property name="msbuild.dir" value="C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin" />
   <property name="results.dir" value="${build.base}\results" />
   <property name="samples.dir" value="${solution.dir}\samples"/>
   <property name="version.major" value="1"/>
