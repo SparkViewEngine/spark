@@ -163,7 +163,7 @@ namespace Spark.Compiler
         }
     }
 
-    public static class AssemblyExtentions
+    public static class AssemblyExtensions
     {
         public static bool IsDynamic(this Assembly assembly)
         {
