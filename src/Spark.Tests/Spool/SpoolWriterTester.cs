@@ -29,7 +29,7 @@ namespace Spark.Tests.Spool
         private string _FiveThousandNumbers;
         private Stack<string[]> _cache;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitOnce()
         {
             var sb = new StringBuilder();

@@ -192,7 +192,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 			{
 
                 manager.Process(string.Format("Home{0}LateBoundExpressionShouldCallEval", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
-				Assert.That(output.ToString(), Is.StringContaining(string.Format("<p>world {0:#,##0.00}</p>", 1005.3)));
+				Assert.That(output.ToString(), Does.Contain(string.Format("<p>world {0:#,##0.00}</p>", 1005.3)));
 			}
         }
     }

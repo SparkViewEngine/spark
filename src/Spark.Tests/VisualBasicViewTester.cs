@@ -136,8 +136,8 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index");
 
-            Assert.That(contents, Is.StringContaining("ok1"));
-            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Does.Contain("ok1"));
+            Assert.That(contents, Does.Contain("ok2"));
             Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 
@@ -160,8 +160,8 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index");
 
-            Assert.That(contents, Is.StringContaining("ok1"));
-            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Does.Contain("ok1"));
+            Assert.That(contents, Does.Contain("ok2"));
             Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 
@@ -185,8 +185,8 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index", new StubViewData { { "x1", 5 }, { "x2", 5 } });
 
-            Assert.That(contents, Is.StringContaining("ok1"));
-            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Does.Contain("ok1"));
+            Assert.That(contents, Does.Contain("ok2"));
             Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 
@@ -208,8 +208,8 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index");
 
-            Assert.That(contents, Is.StringContaining("ok1"));
-            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Does.Contain("ok1"));
+            Assert.That(contents, Does.Contain("ok2"));
             Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 
@@ -232,8 +232,8 @@ ${foo} ${bar} ${bar.Length}
 ");
             var contents = Render("index");
 
-            Assert.That(contents, Is.StringContaining("ok1"));
-            Assert.That(contents, Is.StringContaining("ok2"));
+            Assert.That(contents, Does.Contain("ok1"));
+            Assert.That(contents, Does.Contain("ok2"));
             Assert.That(contents, Is.Not.StringContaining("fail"));
         }
 

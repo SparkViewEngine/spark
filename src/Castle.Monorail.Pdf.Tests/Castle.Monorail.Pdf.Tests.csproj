@@ -33,12 +33,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\castle\Castle.MonoRail.TestSupport.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+	<PackageReference Include="NUnit" Version="2.7.1" />
 	<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
 	<PackageReference Include="RhinoMocks" Version="3.6.0" />
   </ItemGroup>
