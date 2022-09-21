@@ -14,13 +14,11 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Web.Configuration;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Spark.Spool;
 
 namespace Spark.Tests.Spool
@@ -44,7 +42,7 @@ namespace Spark.Tests.Spool
         public void Init()
         {
             var allocatorField = typeof(SpoolPage).GetField("_allocator", BindingFlags.Static | BindingFlags.NonPublic);
-            var allocator = allocatorField.GetValue(null);
+            var allocator = allocatorField.GetValue(Arg<object>.Is.Anything);
 
             var cacheField = allocator.GetType().GetField("_cache", BindingFlags.Instance | BindingFlags.NonPublic);
             _cache = (Stack<string[]>)cacheField.GetValue(allocator);

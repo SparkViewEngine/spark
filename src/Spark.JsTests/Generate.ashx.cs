@@ -12,15 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Collections;
-using System.Data;
+
 using System.IO;
-using System.Linq;
 using System.Web;
 using System.Web.Services;
-using System.Web.Services.Protocols;
-using System.Xml.Linq;
 using Spark.FileSystem;
 
 namespace Spark.JsTests
@@ -32,7 +27,6 @@ namespace Spark.JsTests
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     public class Generate : IHttpHandler
     {
-
         public void ProcessRequest(HttpContext context)
         {
             var engine = new SparkViewEngine

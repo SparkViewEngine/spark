@@ -82,9 +82,9 @@
     <echo message="Build Directory is ${build.dir}" />
 
     <exec program="${msbuild.dir}\msbuild.exe"
-				  commandline="&quot;${solution.file}&quot; /p:VisualStudioVersion=12.0 /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
+				  commandline="&quot;${solution.file}&quot; /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
     <exec program="${msbuild.dir}\msbuild.exe"
-				  commandline="&quot;${solution.file}&quot; /p:VisualStudioVersion=12.0 /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
+				  commandline="&quot;${solution.file}&quot; /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
 
     <if test="${property::exists('tools.solution.file')}">
       <property name="wix-parameters" value="WixTargetsPath=..\..\..\bin\msbuild\Microsoft\WiX\v3.0\wix.targets;WixTasksPath=WixTasks.dll;WixToolPath=..\..\..\bin\wix"/>
