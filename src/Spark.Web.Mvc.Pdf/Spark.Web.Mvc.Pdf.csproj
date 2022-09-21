@@ -28,13 +28,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\itextsharp\itextsharp.dll</HintPath>
     </Reference>
-    <Reference Update="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Update="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />

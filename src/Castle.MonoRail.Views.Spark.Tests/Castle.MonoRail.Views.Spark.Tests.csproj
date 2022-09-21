@@ -44,13 +44,7 @@
       <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
     </Reference>
 	<Reference Include="System.Configuration.Install" />
-    <Reference Update="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Update="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
 	<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />

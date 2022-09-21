@@ -28,13 +28,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Update="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Update="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
 	<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
