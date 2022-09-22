@@ -378,8 +378,8 @@ namespace Spark.Tests.Compiler
                                         new MarkdownChunk {Body = innerChunks}
                                     });
 
-          Assert.That(compiler.SourceCode, Is.StringContaining("using(MarkdownOutputScope())"));
-          Assert.That(compiler.SourceCode, Is.StringContaining("Output.Write(\"*test*\");"));
+          Assert.That(compiler.SourceCode, Does.Contain("using(MarkdownOutputScope())"));
+          Assert.That(compiler.SourceCode, Does.Contain("Output.Write(\"*test*\");"));
 
           var instance = compiler.CreateInstance();
           var contents = instance.RenderView().Trim();

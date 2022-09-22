@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <OutputType>Exe</OutputType>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -20,14 +20,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Update="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Update="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <None Update="XparkSamples\diggstyle.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

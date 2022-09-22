@@ -53,9 +53,8 @@ namespace Spark.Tests
             Assert.IsNotNull(entry.SourceCode);
             Assert.IsNotEmpty(entry.SourceCode);
 
-            Assert.That(entry.SourceCode, Is.StringContaining("x = {foo:\"bar\",quux:5}"));
-            Assert.That(entry.SourceCode, Is.StringContaining("HelloWorld({id:23,data:x})"));
-
+            Assert.That(entry.SourceCode, Does.Contain("x = {foo:\"bar\",quux:5}"));
+            Assert.That(entry.SourceCode, Does.Contain("HelloWorld({id:23,data:x})"));
         }
     }
 }

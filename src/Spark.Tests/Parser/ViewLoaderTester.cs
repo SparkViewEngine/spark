@@ -22,6 +22,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Spark.FileSystem;
 using Spark.Compiler;
+using Spark.Compiler.NodeVisitors;
 using Spark.Parser.Syntax;
 
 namespace Spark.Tests.Parser
@@ -57,7 +58,7 @@ namespace Spark.Tests.Parser
 
             viewFolder.Expect(x => x.GetViewSource(path)).Return(source);
             source.Expect(x => x.LastModified).Return(0);
-            syntaxProvider.Expect(x => x.GetChunks(null, null)).IgnoreArguments().Return(chunks);
+            syntaxProvider.Expect(x => x.GetChunks(Arg<VisitorContext>.Is.Anything, Arg<string>.Is.Anything)).Return(chunks);
 
             return source;
         }

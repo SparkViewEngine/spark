@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <OutputType>Library</OutputType>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -40,12 +40,6 @@
     <Reference Include="Microsoft.Scripting.ExtensionAttribute, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\ironpython\Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
-    </Reference>
-    <Reference Update="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Update="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>

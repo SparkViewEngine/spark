@@ -150,7 +150,7 @@ Hello
             var contents = RenderView(new SparkViewDescriptor()
                                           .AddTemplate(Path.Combine("Home", "Index.spark")));
 
-            Assert.That(contents, Is.StringContaining("Hello"));
+            Assert.That(contents, Does.Contain("Hello"));
             Assert.That(contents, Is.Not.StringContaining("warning"));
         }
     }

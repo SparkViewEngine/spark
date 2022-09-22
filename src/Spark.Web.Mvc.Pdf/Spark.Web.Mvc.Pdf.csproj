@@ -19,7 +19,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -28,13 +28,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\itextsharp\itextsharp.dll</HintPath>
     </Reference>
-    <Reference Update="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Update="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />
@@ -66,9 +60,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.Mvc">
-      <Version>5.2.7</Version>
-    </PackageReference>
+	<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 </Project>

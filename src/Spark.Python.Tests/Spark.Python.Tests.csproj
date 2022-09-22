@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <OutputType>Library</OutputType>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -33,23 +33,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\ironpython\Microsoft.Scripting.Core.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Update="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Update="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+	<PackageReference Include="NUnit" Version="2.7.1" />
+	<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark.Python\Spark.Python.csproj" />
     <ProjectReference Include="..\Spark.Tests\Spark.Tests.csproj" />
     <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
-  <ItemGroup>
+	<ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -65,8 +59,5 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -39,22 +39,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\castle\Castle.MonoRail.TestSupport.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.3.0.906, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\rhinomocks\Rhino.Mocks.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration.Install" />
-    <Reference Update="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Update="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+	<PackageReference Include="NUnit" Version="2.7.1" />
+	<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+	<PackageReference Include="RhinoMocks" Version="3.6.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MonoRail.Tests.Views\Stub\Helper.cs">
@@ -243,10 +234,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-  </ItemGroup>
-  <ItemGroup>
+	<ItemGroup>
     <Compile Remove="MonoRail.Tests.Views\Stub\Helper.cs" />
   </ItemGroup>
 </Project>

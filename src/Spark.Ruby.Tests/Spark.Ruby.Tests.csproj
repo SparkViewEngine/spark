@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <OutputType>Library</OutputType>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -37,13 +37,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\ironruby\NonStandard.Microsoft.Scripting.Core.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\nunit\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Update="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+	<PackageReference Include="NUnit" Version="2.7.1" />
+	<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark.Ruby\Spark.Ruby.csproj" />
@@ -66,8 +63,5 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 </Project>
