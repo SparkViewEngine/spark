@@ -17,7 +17,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Spark.Web.Mvc.Pdf\Spark.Web.Mvc.Pdf.csproj" />
     <ProjectReference Include="..\Spark.Web.Mvc.Tests\Spark.Web.Mvc.Tests.csproj" />
-    <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />
-    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
 </Project>

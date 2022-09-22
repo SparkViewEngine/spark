@@ -26,6 +26,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Spark.Python\Spark.Python.csproj" />
     <ProjectReference Include="..\Spark.Tests\Spark.Tests.csproj" />
-    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
 </Project>

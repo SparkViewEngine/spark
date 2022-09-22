@@ -19,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Spark.Python\Spark.Python.csproj" />
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />
-    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
 	<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />

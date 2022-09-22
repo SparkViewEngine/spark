@@ -37,7 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Castle.MonoRail.Views.Spark\Castle.MonoRail.Views.Spark.csproj" />
-    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="MonoRail.Tests.Views\Components\Widget\WithExtraData.spark">
