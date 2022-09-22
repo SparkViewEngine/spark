@@ -34,7 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />
-    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="AspNetMvc.Tests.Views\Admin\Home\Index.spark">

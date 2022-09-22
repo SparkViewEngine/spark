@@ -30,10 +30,8 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spark.Ruby\Spark.Ruby.csproj" />
     <PackageReference Include="NUnit" Version="2.7.1" />
     <ProjectReference Include="..\Spark.Web.Mvc.Ruby\Spark.Web.Mvc.Ruby.csproj" />
-    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

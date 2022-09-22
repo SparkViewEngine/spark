@@ -45,7 +45,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Spark.Ruby\Spark.Ruby.csproj" />
     <ProjectReference Include="..\Spark.Tests\Spark.Tests.csproj" />
-    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
