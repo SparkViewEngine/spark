@@ -1,31 +1,49 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-	<TargetFramework>net481</TargetFramework>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-	<SignAssembly>true</SignAssembly>
-	<AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
+    <TargetFramework>net481</TargetFramework>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <SignAssembly>False</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
+    <Title>Spark</Title>
+    <Authors>RobertTheGrey</Authors>
+    <Company>Louis DeJardin</Company>
+    <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/SparkViewEngine/spark</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <AssemblyVersion>1.8</AssemblyVersion>
+    <FileVersion>1.8.1.0</FileVersion>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageTags>spark;view engine</PackageTags>
+    <Copyright>Copyright (c) Louis DeJardin 2008-2022</Copyright>
+    <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web" />
+    <Compile Remove="Compiler\NodeVisitors\FileReferenceVisitor.cs" />
+    <Compile Remove="Parser\Code\CodeSnipGrammar.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="..\..\license.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\SparkKey.snk">
       <Link>SparkKey.snk</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Compiler\NodeVisitors\FileReferenceVisitor.cs" />
-    <Compile Remove="Parser\Code\CodeSnipGrammar.cs" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 </Project>

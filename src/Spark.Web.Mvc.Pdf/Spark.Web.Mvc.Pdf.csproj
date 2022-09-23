@@ -1,10 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <TargetFramework>net481</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Title>Spark.Web.Mvc.Pdf</Title>
+    <Authors>RobertTheGrey</Authors>
+    <Company>Louis DeJardin</Company>
+    <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/SparkViewEngine/spark</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <AssemblyVersion>1.8</AssemblyVersion>
+    <FileVersion>1.8.1.0</FileVersion>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageTags>spark;view engine</PackageTags>
+    <Copyright>Copyright (c) Louis DeJardin 2008-2022</Copyright>
+    <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="itextsharp, Version=4.1.2.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca">
@@ -17,12 +31,17 @@
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\SparkKey.snk">
-      <Link>SparkKey.snk</Link>
+    <None Include="..\..\license.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-	<ItemGroup>
-	<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 </Project>

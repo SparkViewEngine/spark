@@ -1,9 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
     <OutputType>Exe</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Title>Spark</Title>
+    <Authors>RobertTheGrey</Authors>
+    <Company>Louis DeJardin</Company>
+    <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/SparkViewEngine/spark</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <AssemblyVersion>1.8</AssemblyVersion>
+    <FileVersion>1.8.1.0</FileVersion>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageTags>spark;view engine</PackageTags>
+    <Copyright>Copyright (c) Louis DeJardin 2008-2022</Copyright>
+    <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
   <ItemGroup>
     <None Update="XparkSamples\diggstyle.css">
@@ -36,7 +51,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
-	<ItemGroup>
+  <ItemGroup>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 </Project>
