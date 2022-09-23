@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
     <OutputType>Library</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
@@ -23,11 +22,6 @@
 	<PackageReference Include="NUnit" Version="2.7.1" />
 	<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
 	<PackageReference Include="RhinoMocks" Version="3.6.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Castle.Monorail.Pdf\Castle.MonoRail.Pdf.csproj" />

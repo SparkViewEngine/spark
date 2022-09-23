@@ -5,7 +5,6 @@
   <property name="solution.dir" value="src"/>
   <property name="solution.file" value="${solution.dir}\Spark.sln"/>
   <property name="trunk.dir" value="."/>
-  <property name="company.name" value="Louis DeJardin"/>
   <property name="bin.dir" value="bin" />
   <property name="build.base" value="build"/>
   <property name="msbuild.dir" value="C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin" />
@@ -20,6 +19,8 @@
   <property name="nant.settings.currentframework" value="net-4.0" />
   <property name="ncover.path" value="${bin.dir}\ncover" />
 
+  <property name="company.name" value="Louis DeJardin" />
+  <property name="project.authors" value="RobertTheGrey" />
   <property name="project.copyright" value="Copyright (c) ${company.name} 2008-${datetime::get-year(datetime::now())}"/>
 
   <property name="package.dir" value="${build.base}\package" />
@@ -34,14 +35,8 @@
 
   <property name="dist.revision" value="${datetime::get-year(datetime::now())*10000+datetime::get-month(datetime::now())*100+ datetime::get-day(datetime::now())}"/>
 
-  <target name="build" depends="clean, version, init, commonassemblyinfo, compile, test, compile-samples"/>
-  <target name="cruise" depends="build, package"/>
-  <target name="cruise-coverage" depends="analyze"/>
-  <target name="commiter" depends="build, analyze, package"/>
-
-  <target name="compile-samples"/>
-  <target name="analyze"/>
-
+  <target name="build" depends="clean, version, init, commonassemblyinfo, compile, test" />
+  
   <target name="init" description="Initializes build properties">
     <tstamp>
       <formatter property="datetime.buildtime" pattern="yyyy-MM-dd, HH:mm:ss" />
@@ -77,40 +72,30 @@
   </target>
 
   <target name="commonassemblyinfo" depends="version, init">
-    <echo message="MARKING THIS BUILD AS VERSION ${project.fullversion}" />
-    <delete file="${solution.dir}/CommonAssemblyInfo.cs" failonerror="false"/>
-    <asminfo output="${solution.dir}/CommonAssemblyInfo.cs" language="CSharp">
-      <imports>
-        <import namespace="System" />
-        <import namespace="System.Reflection" />
-        <import namespace="System.Runtime.InteropServices" />
-      </imports>
-      <attributes>
-        <attribute type="ComVisibleAttribute" value="false" />
-        <attribute type="AssemblyVersionAttribute" value="${project.version}" />
-        <attribute type="AssemblyFileVersionAttribute" value="${project.fullversion}" />
-        <attribute type="AssemblyCopyrightAttribute" value="${project.copyright}" />
-        <attribute type="AssemblyProductAttribute" value="${project::get-name()}" />
-        <attribute type="AssemblyCompanyAttribute" value="${company.name}" />
-        <attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
-        <attribute type="AssemblyInformationalVersionAttribute" value="${project.fullversion}" />
-      </attributes>
-      <references>
-        <include name="System.dll" />
-      </references>
-    </asminfo>
-    <delete file="${solution.dir}/CommonVersionInfo.h" failonerror="false"/>
-    <echo message="// this is an auto-generated file" file="${solution.dir}/CommonVersionInfo.h"  />
-
-    <echo message='#define VERSIONINFO_VERSIONSTRING "${project.fullversion}"' file="${solution.dir}/CommonVersionInfo.h" append="true" />
-    <echo message="#define VERSIONINFO_MAJOR ${version.major}" file="${solution.dir}/CommonVersionInfo.h" append="true" />
-    <echo message="#define VERSIONINFO_MINOR ${version.minor}" file="${solution.dir}/CommonVersionInfo.h" append="true" />
-    <echo message="#define VERSIONINFO_BUILD ${version.build}" file="${solution.dir}/CommonVersionInfo.h" append="true" />
-    <echo message="#define VERSIONINFO_REVISION ${version.revision}" file="${solution.dir}/CommonVersionInfo.h" append="true" />
-
-    <echo message='#define VERSIONINFO_COPYRIGHT "${project.copyright}"' file="${solution.dir}/CommonVersionInfo.h" append="true" />
-    <echo message='#define VERSIONINFO_COMPANY "${company.name}"' file="${solution.dir}/CommonVersionInfo.h" append="true" />
-    <echo message='#define VERSIONINFO_PRODUCT "${project::get-name()}"' file="${solution.dir}/CommonVersionInfo.h" append="true" />
+    <echo message="UPDATING PACKAGE INFO AND SETTING VERSION TO ${project.fullversion}" />
+	
+	<foreach item="File" property="filename">
+		<in>
+			<items>
+				<include name="**/*.csproj" />
+				<!-- No need set the info on unit test projects -->
+				<exclude name="**Tests**" />
+				<!-- Ancient code is hiding in the \src folder! -->
+				<exclude name="*/Tools/**" />
+				<exclude name="**/Profiling/**" />
+				<exclude name="**/Samples/**" />
+				
+			</items>
+		</in>
+		<do>
+			<echo message="Poking ${filename}" />
+			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/AssemblyVersion" value="${project.version}" />
+			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/FileVersion" value="${project.fullversion}" />
+			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/Copyright" value="${project.copyright}" />
+			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/Authors" value="${project.authors}" />
+			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/Company" value="${company.name}" />
+		</do>
+	</foreach>
 
   </target>
 

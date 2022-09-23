@@ -1,10 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <TargetFramework>net481</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Title>Castle.MonoRail.Views.Spark</Title>
+    <Authors>RobertTheGrey</Authors>
+    <Company>Louis DeJardin</Company>
+    <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/SparkViewEngine/spark</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <AssemblyVersion>1.8</AssemblyVersion>
+    <FileVersion>1.8.1.0</FileVersion>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageTags>spark;view engine</PackageTags>
+    <Copyright>Copyright (c) Louis DeJardin 2008-2022</Copyright>
+    <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -20,9 +34,6 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Update="Install\PrecompileInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -34,11 +45,16 @@
     <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\SparkKey.snk">
-      <Link>SparkKey.snk</Link>
-    </None>
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <None Include="..\..\license.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 </Project>
