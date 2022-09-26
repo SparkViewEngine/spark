@@ -1,4 +1,4 @@
-// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
+﻿// Copyright 2008-2009 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ namespace Spark.Tests.Spool
             GC.WaitForPendingFinalizers();
             _cache.Clear();
         }
-
+        
         [Test]
         public void ToStringCombinesResults()
         {
@@ -211,12 +211,28 @@ namespace Spark.Tests.Spool
             Assert.AreEqual(1, countBetween);
             Assert.AreEqual(1, countAfter);
         }
-
+        
         [Test]
         public void EncodingShouldBeUtf8ByDefault()
         {
             var writer = new SpoolWriter();
-            Assert.AreEqual(65001, writer.Encoding.CodePage);
+
+            Assert.Throws<NotSupportedException>(
+                () =>
+                {
+                    var encoding = writer.Encoding;
+                });
+        }
+
+        [Test]
+        public void ToStringWhenCodingIsDifferentFromUtf8()
+        {
+            TextWriter writer = new SpoolWriter();
+            
+            // The accentuated char and unicode emoji shouldn't matter as the SpoolPage just keeps track of the bytes
+            writer.Write("hèllo 🌍");
+            
+            Assert.AreEqual("hèllo 🌍", writer.ToString());
         }
     }
 }
