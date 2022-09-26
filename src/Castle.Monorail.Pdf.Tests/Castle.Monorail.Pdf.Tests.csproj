@@ -21,7 +21,7 @@
   <ItemGroup>
 	<PackageReference Include="NUnit" Version="2.7.1" />
 	<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-	<PackageReference Include="RhinoMocks" Version="3.6.0" />
+	<PackageReference Include="RhinoMocks" Version="3.6.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Castle.Monorail.Pdf\Castle.MonoRail.Pdf.csproj" />
