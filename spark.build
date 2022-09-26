@@ -119,7 +119,7 @@
             </items>
         </in>
         <do>
-          <exec program="nunit3-console.exe" basedir="${nunit.dir}" workingdir=".">
+          <exec program="nunit3-console.exe" basedir="${nunit.dir}" workingdir="${path::get-directory-name(filename)}">
             <arg value="${filename}" />
             <arg value="--result:${results.dir}\${path::get-file-name(filename)}-results.xml"/>
           </exec>
