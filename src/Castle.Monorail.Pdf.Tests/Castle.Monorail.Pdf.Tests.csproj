@@ -20,9 +20,7 @@
   </ItemGroup>
   <ItemGroup>
 	<PackageReference Include="NUnit" Version="3.13.3" />
-	<PackageReference Include="NUnit.Console" Version="3.15.2" />
 	<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-	<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
 	<PackageReference Include="RhinoMocks" Version="3.6.0" />
   </ItemGroup>
   <ItemGroup>

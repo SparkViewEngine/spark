@@ -34,9 +34,6 @@
     <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Remove="Symbols.cs" />
   </ItemGroup>
   <ItemGroup>
