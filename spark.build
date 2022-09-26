@@ -66,36 +66,36 @@
     <echo message="Build Directory is ${build.dir}" />
 
     <exec program="${msbuild.dir}\msbuild.exe"
-				  commandline="&quot;${solution.file}&quot; /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
+                  commandline="&quot;${solution.file}&quot; /t:Clean &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
     <exec program="${msbuild.dir}\msbuild.exe"
-				  commandline="&quot;${solution.file}&quot; /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
+                  commandline="&quot;${solution.file}&quot; /t:Rebuild &quot;/p:Configuration=${project.config};OutDir=${out.dir};SignAssembly=${project.signassembly}&quot; /v:q" workingdir="." />
   </target>
 
   <target name="commonassemblyinfo" depends="version, init">
     <echo message="UPDATING PACKAGE INFO AND SETTING VERSION TO ${project.fullversion}" />
-	
-	<foreach item="File" property="filename">
-		<in>
-			<items>
-				<include name="**/*.csproj" />
-				<!-- No need set the info on unit test projects -->
-				<exclude name="**Tests**" />
-				<!-- Ancient code is hiding in the \src folder! -->
-				<exclude name="*/Tools/**" />
-				<exclude name="**/Profiling/**" />
-				<exclude name="**/Samples/**" />
-				
-			</items>
-		</in>
-		<do>
-			<echo message="Poking ${filename}" />
-			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/AssemblyVersion" value="${project.version}" />
-			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/FileVersion" value="${project.fullversion}" />
-			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/Copyright" value="${project.copyright}" />
-			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/Authors" value="${project.authors}" />
-			<xmlpoke file="${filename}" xpath="//Project/PropertyGroup/Company" value="${company.name}" />
-		</do>
-	</foreach>
+    
+    <foreach item="File" property="filename">
+        <in>
+            <items>
+                <include name="**/*.csproj" />
+                <!-- No need set the info on unit test projects -->
+                <exclude name="**Tests**" />
+                <!-- Ancient code is hiding in the \src folder! -->
+                <exclude name="*/Tools/**" />
+                <exclude name="**/Profiling/**" />
+                <exclude name="**/Samples/**" />
+                
+            </items>
+        </in>
+        <do>
+            <echo message="Poking ${filename}" />
+            <xmlpoke file="${filename}" xpath="//Project/PropertyGroup/AssemblyVersion" value="${project.version}" />
+            <xmlpoke file="${filename}" xpath="//Project/PropertyGroup/FileVersion" value="${project.fullversion}" />
+            <xmlpoke file="${filename}" xpath="//Project/PropertyGroup/Copyright" value="${project.copyright}" />
+            <xmlpoke file="${filename}" xpath="//Project/PropertyGroup/Authors" value="${project.authors}" />
+            <xmlpoke file="${filename}" xpath="//Project/PropertyGroup/Company" value="${company.name}" />
+        </do>
+    </foreach>
 
   </target>
 
@@ -103,56 +103,39 @@
     <delete dir="${results.dir}" if="${directory::exists('${results.dir}')}" verbose="true" />
     <mkdir dir="${results.dir}"/>
 
-    <if test="${not property::exists('outputType')}">
-      <property name="outputType" value="Plain"/>
-    </if>
+    <!-- Assumes nunit console running installed via "choco install nunit-console-runner" -->
+    <property name="nunit.dir" value="C:\ProgramData\chocolatey\lib\nunit-console-runner\tools" readonly="true" />
 
-    <nunit2 failonerror="true" verbose="true">
-      <formatter type="Xml" outputdir="${results.dir}" usefile="true" extension=".xml"/>
-      <formatter type="${outputType}" />
-      <test assemblyname="${build.dir}/Spark.Tests.dll">
-        <categories>
-          <exclude name="Integration" />
-        </categories>
-      </test>
-      <test assemblyname="${build.dir}/Spark.Web.Mvc.Tests.dll">
-        <categories>
-          <exclude name="Integration" />
-        </categories>
-      </test>
-      <test assemblyname="${build.dir}/Castle.MonoRail.Views.Spark.Tests.dll">
-        <categories>
-          <exclude name="Integration" />
-        </categories>
-      </test>
-      <test assemblyname="${build.dir}/Spark.Ruby.Tests.dll">
-        <categories>
-          <exclude name="Integration" />
-        </categories>
-      </test>
-      <test assemblyname="${build.dir}/Spark.Python.Tests.dll">
-        <categories>
-          <exclude name="Integration" />
-        </categories>
-      </test>
-      <test assemblyname="${build.dir}/Spark.Web.Mvc.Ruby.Tests.dll">
-        <categories>
-          <exclude name="Integration" />
-        </categories>
-      </test>
-    </nunit2>
+    <foreach item="File" property="filename">
+        <in>
+            <items>
+                <include name="${build.dir}/Spark.Tests.dll" />
+                <include name="${build.dir}/Spark.Python.Tests.dll" />
+                <include name="${build.dir}/Spark.Web.Mvc.Tests.dll" />
+                <include name="${build.dir}/Castle.MonoRail.Views.Spark.Tests.dll" />
+                <include name="${build.dir}/Spark.Ruby.Tests.dll" />
+                <include name="${build.dir}/Spark.Python.Tests.dll" />
+                <include name="${build.dir}/Spark.Web.Mvc.Ruby.Tests.dll" />
+            </items>
+        </in>
+        <do>
+          <exec program="nunit3-console.exe" basedir="${nunit.dir}" workingdir="${path::get-directory-name(filename)}">
+            <arg value="${filename}" />
+            <arg value="--result:${results.dir}\${path::get-file-name(filename)}-results.xml"/>
+          </exec>
+        </do>
+    </foreach>
   </target>
-
-
+    
   <target name="package">
-    <!-- 		
-			make a new dir for release.
-			include subfolders
-				Bin
-					referenceDLLs
-				Docs
-				Samples
-		-->
+    <!--         
+            make a new dir for release.
+            include subfolders
+                Bin
+                    referenceDLLs
+                Docs
+                Samples
+        -->
     <delete dir="${package.dir}"/>
     <mkdir dir="${package.dir}/" />
     <mkdir dir="${package.dir}/Bin" />
@@ -191,12 +174,12 @@
         <include name="itextsharp/*.*" />
         <include name="castle/*.*" />
         <include name="nunit/nunit.framework.dll" />
-		<include name="MvcIntegrationTestFramework/*.*" />
+        <include name="MvcIntegrationTestFramework/*.*" />
       </fileset>
     </copy>
 
     <copy todir="${package.dir}/Bin/Dependencies MVC 2" flatten="true">
-	  <fileset basedir="${bin.dir}">
+      <fileset basedir="${bin.dir}">
         <include name="aspnetmvc2/*.*" />
       </fileset>
     </copy>

@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31829.152
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Spark Core", "Spark Core", "{F606A062-1BD5-40E2-8E8A-BCC4F374BFBF}"
 EndProject
@@ -11,6 +11,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B23DD51D-925A-4488-ABE8-F2A9D69E5976}"
 	ProjectSection(SolutionItems) = preProject
 		Settings.StyleCop = Settings.StyleCop
+		..\spark.build = ..\spark.build
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{8D3C4016-6843-4266-BA52-61D0A2C78880}"
@@ -27,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.Web.Mvc", "Spark.Web.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.Web.Mvc.Tests", "Spark.Web.Mvc.Tests\Spark.Web.Mvc.Tests.csproj", "{C8E58F51-8630-4420-8630-8E634EC8900E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spark.JsTests", "Spark.JsTests\Spark.JsTests.csproj", "{E3D6EDAD-3C8F-4C0D-AD96-740566A055F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.JsTests", "Spark.JsTests\Spark.JsTests.csproj", "{E3D6EDAD-3C8F-4C0D-AD96-740566A055F3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.Python", "Spark.Python\Spark.Python.csproj", "{0703F11D-FA13-4182-8577-170C9A5121FF}"
 EndProject
