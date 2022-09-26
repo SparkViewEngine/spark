@@ -65,11 +65,11 @@ namespace Castle.MonoRail.Views.Spark.Tests
             /// </summary>
             /// <param name="actual">The actual value to test.</param>
             /// <returns>true, if all items are contained within the actual value, in order; false, otherwise.</returns>
-            public override bool Matches(object actual)
+            public override ConstraintResult ApplyTo<TActual>(TActual actual)
             {
                 if (actual == null)
                 {
-                    return this.items.Length == 0;
+                    return new ConstraintResult(this, this.items.Length, this.items.Length == 0);
                 }
 
                 var actualString = actual.ToString();
@@ -80,23 +80,19 @@ namespace Castle.MonoRail.Views.Spark.Tests
                     int nextIndex = actualString.IndexOf(value, index);
                     if (nextIndex < 0)
                     {
-                        return false;
+                        return new ConstraintResult(this, nextIndex, false);
                     }
 
                     index = nextIndex + value.Length;
                 }
-
-                return true;
+                
+                return new ConstraintResult(this, index, true);
             }
 
             /// <summary>
             /// Writes the constraint description to a MessageWriter.
             /// </summary>
-            /// <param name="writer">The writer on which the description is displayed.</param>
-            public override void WriteDescriptionTo(MessageWriter writer)
-            {
-                writer.WriteLine("Tests whether the actual value contains all of the specified items in order.");
-            }
+            public override string Description => "Tests whether the actual value contains all of the specified items in order.";
         }
     }
 }

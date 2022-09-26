@@ -45,7 +45,7 @@ namespace Spark.Tests.Parser
             viewFolder.Stub(x => x.ListViews("Home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
             viewFolder.Stub(x => x.ListViews("Account")).Return(new[] { "index.spark" });
             viewFolder.Stub(x => x.ListViews("Shared")).Return(new[] { "layout.spark", "_header.spark", "default.spark", "_footer.spark" });
-            viewFolder.Stub(x => x.ListViews("")).IgnoreArguments().Return(new string[0]);
+            viewFolder.Stub(x => x.ListViews(Arg<string>.Is.Anything)).IgnoreArguments().Return(new string[0]);
 
             syntaxProvider = MockRepository.GenerateMock<ISparkSyntaxProvider>();
 
