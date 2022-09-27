@@ -138,7 +138,7 @@ ${foo} ${bar} ${bar.Length}
 
             Assert.That(contents, Does.Contain("ok1"));
             Assert.That(contents, Does.Contain("ok2"));
-            Assert.That(contents, Is.Not.StringContaining("fail"));
+            Assert.That(contents, Does.Not.Contains("fail"));
         }
 
         [Test]
@@ -162,7 +162,7 @@ ${foo} ${bar} ${bar.Length}
 
             Assert.That(contents, Does.Contain("ok1"));
             Assert.That(contents, Does.Contain("ok2"));
-            Assert.That(contents, Is.Not.StringContaining("fail"));
+            Assert.That(contents, Does.Not.Contains("fail"));
         }
 
 
@@ -187,7 +187,7 @@ ${foo} ${bar} ${bar.Length}
 
             Assert.That(contents, Does.Contain("ok1"));
             Assert.That(contents, Does.Contain("ok2"));
-            Assert.That(contents, Is.Not.StringContaining("fail"));
+            Assert.That(contents, Does.Not.Contains("fail"));
         }
 
 
@@ -210,7 +210,7 @@ ${foo} ${bar} ${bar.Length}
 
             Assert.That(contents, Does.Contain("ok1"));
             Assert.That(contents, Does.Contain("ok2"));
-            Assert.That(contents, Is.Not.StringContaining("fail"));
+            Assert.That(contents, Does.Not.Contains("fail"));
         }
 
         [Test]
@@ -234,7 +234,7 @@ ${foo} ${bar} ${bar.Length}
 
             Assert.That(contents, Does.Contain("ok1"));
             Assert.That(contents, Does.Contain("ok2"));
-            Assert.That(contents, Is.Not.StringContaining("fail"));
+            Assert.That(contents, Does.Not.Contains("fail"));
         }
 
         [Test]

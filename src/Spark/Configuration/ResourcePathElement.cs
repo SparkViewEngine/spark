@@ -21,22 +21,22 @@ namespace Spark.Configuration
         [ConfigurationProperty("match")]
         public string Match
         {
-            get { return (string)this["match"]; }
-            set { this["match"] = value; }
+            get => (string)this["match"];
+            set => this["match"] = value;
         }
 
         [ConfigurationProperty("location")]
         public string Location
         {
-            get { return (string)this["location"]; }
-            set { this["location"] = value; }
+            get => (string)this["location"];
+            set => this["location"] = value;
         }
 
         [ConfigurationProperty("stop")]
         public bool Stop
         {
-            get { return (bool) this["stop"]; }
-            set { this["stop"] = value; }
+            get => (bool) this["stop"];
+            set => this["stop"] = value;
         }
     }
 }

@@ -21,8 +21,8 @@ namespace Spark.Configuration
         [ConfigurationProperty("namespace")]
         public string Namespace
         {
-            get { return (string)this["namespace"]; }
-            set { this["namespace"] = value; }
+            get => (string)this["namespace"];
+            set => this["namespace"] = value;
         }
     }
 }

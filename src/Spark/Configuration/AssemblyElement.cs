@@ -21,8 +21,8 @@ namespace Spark.Configuration
         [ConfigurationProperty("assembly")]
         public string Assembly
         {
-            get { return (string)this["assembly"]; }
-            set { this["assembly"] = value; }
+            get => (string)this["assembly"];
+            set => this["assembly"] = value;
         }
     }
 }

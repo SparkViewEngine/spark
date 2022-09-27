@@ -25,29 +25,29 @@ namespace Spark.Configuration
         [ConfigurationProperty("xmlns")]
         public string XmlNamespace
         {
-            get { return (string)this["xmlns"]; }
-            set { this["xmlns"] = value; }
+            get => (string)this["xmlns"];
+            set => this["xmlns"] = value;
         }
 
         [ConfigurationProperty("compilation")]
         public CompilationElement Compilation
         {
-            get { return (CompilationElement)this["compilation"]; }
-            set { this["compilation"] = value; }
+            get => (CompilationElement)this["compilation"];
+            set => this["compilation"] = value;
         }
 
         [ConfigurationProperty("pages")]
         public PagesElement Pages
         {
-            get { return (PagesElement)this["pages"]; }
-            set { this["pages"] = value; }
+            get => (PagesElement)this["pages"];
+            set => this["pages"] = value;
         }
 
         [ConfigurationProperty("views")]
         public ViewFolderElementCollection Views
         {
-            get { return (ViewFolderElementCollection)this["views"]; }
-            set { this["views"] = value; }
+            get => (ViewFolderElementCollection)this["views"];
+            set => this["views"] = value;
         }
 
         public SparkSectionHandler SetDebug(bool debug)
@@ -86,51 +86,27 @@ namespace Spark.Configuration
             return this;
         }
 
-        bool ISparkSettings.Debug
-        {
-            get { return Compilation.Debug; }
-        }
-        
-        bool IParserSettings.AutomaticEncoding
-        {
-            get { return Pages.AutomaticEncoding; }
-        }
+        bool ISparkSettings.Debug => Compilation.Debug;
 
-        string IParserSettings.StatementMarker
-        {
-            get { return Pages.StatementMarker; }
-        }
+        bool IParserSettings.AutomaticEncoding => Pages.AutomaticEncoding;
 
-        NullBehaviour ISparkSettings.NullBehaviour
-    	{
-			get { return Compilation.NullBehaviour; }
-    	}
+        string IParserSettings.StatementMarker => Pages.StatementMarker;
 
-        AttributeBehaviour ISparkSettings.AttributeBehaviour
-        {
-            get { return Compilation.AttributeBehaviour; }
-        }
+        NullBehaviour ISparkSettings.NullBehaviour => Compilation.NullBehaviour;
 
-        string ISparkSettings.Prefix
-        {
-            get { return Pages.Prefix; }
-        }
+        AttributeBehaviour ISparkSettings.AttributeBehaviour => Compilation.AttributeBehaviour;
 
-        bool ISparkSettings.ParseSectionTagAsSegment
-        {
-            get { return Pages.ParseSectionTagAsSegment; }
-        }
+        string ISparkSettings.Prefix => Pages.Prefix;
+
+        bool ISparkSettings.ParseSectionTagAsSegment => Pages.ParseSectionTagAsSegment;
 
         string ISparkSettings.PageBaseType
         {
-            get { return Pages.PageBaseType; }
-            set { Pages.PageBaseType = value; }
+            get => Pages.PageBaseType;
+            set => Pages.PageBaseType = value;
         }
 
-        LanguageType ISparkSettings.DefaultLanguage
-        {
-            get { return Compilation.DefaultLanguage; }
-        }
+        LanguageType ISparkSettings.DefaultLanguage => Compilation.DefaultLanguage;
 
         IEnumerable<string> ISparkSettings.UseNamespaces
         {

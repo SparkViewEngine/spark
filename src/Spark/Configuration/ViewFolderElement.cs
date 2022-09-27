@@ -14,7 +14,6 @@
 // 
 using System.Collections.Generic;
 using System.Configuration;
-using Spark.FileSystem;
 
 namespace Spark.Configuration
 {
@@ -28,27 +27,26 @@ namespace Spark.Configuration
         [ConfigurationProperty("name")]
         public string Name
         {
-            get { return (string)this["name"]; }
-            set { this["name"] = value; }
+            get => (string)this["name"];
+            set => this["name"] = value;
         }
         
         [ConfigurationProperty("type")]
         public string Type
         {
-            get { return (string)this["type"]; }
-            set { this["type"] = value; }
+            get => (string)this["type"];
+            set => this["type"] = value;
         }
 
         [ConfigurationProperty("subfolder")]
         public string Subfolder
         {
-            get { return (string)this["subfolder"]; }
-            set { this["subfolder"] = value; }
+            get => (string)this["subfolder"];
+            set => this["subfolder"] = value;
         }
 
         public IDictionary<string, string> Parameters { get; set;}
-
-
+        
         protected override bool OnDeserializeUnrecognizedAttribute(string name, string value)
         {
             Parameters.Add(name, value);

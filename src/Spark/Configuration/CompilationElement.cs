@@ -11,8 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-using System;
+//
 using System.Configuration;
 
 namespace Spark.Configuration
@@ -22,37 +21,37 @@ namespace Spark.Configuration
         [ConfigurationProperty("debug")]
         public bool Debug
         {
-            get { return (bool)this["debug"]; }
-            set { this["debug"] = value; }
+            get => (bool)this["debug"];
+            set => this["debug"] = value;
         }
 
         [ConfigurationProperty("nullBehaviour", DefaultValue = NullBehaviour.Lenient)]
         public NullBehaviour NullBehaviour
         {
-            get { return (NullBehaviour)this["nullBehaviour"]; }
-            set { this["nullBehaviour"] = value; }
+            get => (NullBehaviour)this["nullBehaviour"];
+            set => this["nullBehaviour"] = value;
         }
 
         [ConfigurationProperty("attributeBehaviour", DefaultValue = AttributeBehaviour.CodeOriented)]
         public AttributeBehaviour AttributeBehaviour
         {
-            get { return (AttributeBehaviour)this["attributeBehaviour"]; }
-            set { this["attributeBehaviour"] = value; }
+            get => (AttributeBehaviour)this["attributeBehaviour"];
+            set => this["attributeBehaviour"] = value;
         }
 
         [ConfigurationProperty("defaultLanguage", DefaultValue = LanguageType.Default)]
         public LanguageType DefaultLanguage
         {
-            get { return (LanguageType)this["defaultLanguage"]; }
-            set { this["defaultLanguage"] = value; }
+            get => (LanguageType)this["defaultLanguage"];
+            set => this["defaultLanguage"] = value;
         }
 
         [ConfigurationProperty("assemblies")]
         [ConfigurationCollection(typeof(AssemblyElementCollection))]
         public AssemblyElementCollection Assemblies
         {
-            get { return (AssemblyElementCollection)this["assemblies"]; }
-            set { this["assemblies"] = value; }
+            get => (AssemblyElementCollection)this["assemblies"];
+            set => this["assemblies"] = value;
         }
     }
 }
