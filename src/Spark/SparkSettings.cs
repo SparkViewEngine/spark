@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Spark.FileSystem;
 using Spark.Parser;
 
 namespace Spark
@@ -28,14 +27,14 @@ namespace Spark
             _useAssemblies = new List<string>();
             _resourceMappings = new List<IResourceMapping>();
             _viewFolders = new List<IViewFolderSettings>();
- 			NullBehaviour = NullBehaviour.Lenient;
+            NullBehaviour = NullBehaviour.Lenient;
             AttributeBehaviour = AttributeBehaviour.CodeOriented;
 
             AutomaticEncoding = ParserSettings.DefaultAutomaticEncoding;
         }
 
         public bool Debug { get; set; }
-		public NullBehaviour NullBehaviour { get; set; }
+        public NullBehaviour NullBehaviour { get; set; }
         public bool AutomaticEncoding { get; set; }
         public string StatementMarker { get; set; }
         public string Prefix { get; set; }
@@ -46,28 +45,16 @@ namespace Spark
         public AttributeBehaviour AttributeBehaviour { get; set; }
 
         private readonly IList<string> _useNamespaces;
-        public IEnumerable<string> UseNamespaces
-        {
-            get { return _useNamespaces; }
-        }
+        public IEnumerable<string> UseNamespaces => _useNamespaces;
 
         private readonly IList<string> _useAssemblies;
-        public IEnumerable<string> UseAssemblies
-        {
-            get { return _useAssemblies; }
-        }
+        public IEnumerable<string> UseAssemblies => _useAssemblies;
 
         private readonly IList<IResourceMapping> _resourceMappings;
-        public IEnumerable<IResourceMapping> ResourceMappings
-        {
-            get { return _resourceMappings; }
-        }
+        public IEnumerable<IResourceMapping> ResourceMappings => _resourceMappings;
 
         private readonly IList<IViewFolderSettings> _viewFolders;
-        public IEnumerable<IViewFolderSettings> ViewFolders
-        {
-            get { return _viewFolders; }
-        }
+        public IEnumerable<IViewFolderSettings> ViewFolders => _viewFolders;
 
         public SparkSettings SetDebug(bool debug)
         {
@@ -87,11 +74,11 @@ namespace Spark
             return this;
         }
 
-		public SparkSettings SetNullBehaviour(NullBehaviour nullBehaviour)
-		{
+        public SparkSettings SetNullBehaviour(NullBehaviour nullBehaviour)
+        {
             NullBehaviour = nullBehaviour;
-			return this;
-		}
+            return this;
+        }
 
         public SparkSettings SetPageBaseType(string typeName)
         {
@@ -148,34 +135,24 @@ namespace Spark
         }
 
         public SparkSettings AddResourceMapping(string match, string replace)
-            {
+        {
             return AddResourceMapping(match, replace, true);
-            }
+        }
 
         public SparkSettings AddResourceMapping(string match, string replace, bool stopProcess)
         {
-            _resourceMappings.Add(new SimpleResourceMapping { Match = match, Location = replace, Stop = stopProcess});
-            return this;
-        }
-
-        public SparkSettings AddViewFolder(ViewFolderType type, IDictionary<string, string> parameters)
-        {
-            _viewFolders.Add(new ViewFolderSettings
-                                 {
-                                     FolderType = type,
-                                     Parameters = parameters
-                                 });
+            _resourceMappings.Add(new SimpleResourceMapping { Match = match, Location = replace, Stop = stopProcess });
             return this;
         }
 
         public SparkSettings AddViewFolder(Type customType, IDictionary<string, string> parameters)
         {
             _viewFolders.Add(new ViewFolderSettings
-                                 {
-                                     FolderType = ViewFolderType.Custom,
-                                     Type = customType.AssemblyQualifiedName,
-                                     Parameters = parameters
-                                 });
+            {
+                Name = customType.Name,
+                Type = customType.AssemblyQualifiedName,
+                Parameters = parameters
+            });
             return this;
         }
     }

@@ -16,9 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web.Hosting;
 using Spark.Bindings;
 using Spark.FileSystem;
 using Spark.Parser.Syntax;
@@ -29,7 +26,6 @@ namespace Spark
     {
         public SparkServiceContainer()
         {
-
         }
 
         public SparkServiceContainer(ISparkSettings settings)
@@ -37,24 +33,28 @@ namespace Spark
             _services[typeof(ISparkSettings)] = settings;
         }
 
-
         readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
 
-        readonly Dictionary<Type, Func<ISparkServiceContainer, object>> _defaults =
+        private readonly Dictionary<Type, Func<ISparkServiceContainer, object>> _defaults =
             new Dictionary<Type, Func<ISparkServiceContainer, object>>
                 {
-                    {typeof (ISparkSettings), c => ConfigurationManager.GetSection("spark") ?? new SparkSettings()},
-                    {typeof (ISparkViewEngine), c => new SparkViewEngine(c.GetService<ISparkSettings>())},
-                    {typeof (ISparkLanguageFactory), c => new DefaultLanguageFactory()},
-                    {typeof (ISparkSyntaxProvider), c => new DefaultSyntaxProvider(c.GetService<ISparkSettings>())},
-                    {typeof (IViewActivatorFactory), c => new DefaultViewActivator()},
-                    {typeof (IResourcePathManager), c => new DefaultResourcePathManager(c.GetService<ISparkSettings>())},
-                    {typeof (ITemplateLocator), c => new DefaultTemplateLocator()},
-                    {typeof (IBindingProvider), c => new DefaultBindingProvider()},
-                    {typeof (IViewFolder), CreateDefaultViewFolder},
-                    {typeof (ICompiledViewHolder), c => new CompiledViewHolder()},
-                    {typeof (IPartialProvider), c => new DefaultPartialProvider()},
-                    {typeof (IPartialReferenceProvider), c => new DefaultPartialReferenceProvider(c.GetService<IPartialProvider>())},
+                    {typeof(ISparkSettings), c => ConfigurationManager.GetSection("spark") ?? new SparkSettings()},
+                    {typeof(ISparkViewEngine), c => new SparkViewEngine(c.GetService<ISparkSettings>())},
+                    {typeof(ISparkLanguageFactory), c => new DefaultLanguageFactory()},
+                    {typeof(ISparkSyntaxProvider), c => new DefaultSyntaxProvider(c.GetService<ISparkSettings>())},
+                    {typeof(IViewActivatorFactory), c => new DefaultViewActivator()},
+                    {typeof(IResourcePathManager), c => new DefaultResourcePathManager(c.GetService<ISparkSettings>())},
+                    {typeof(ITemplateLocator), c => new DefaultTemplateLocator()},
+                    {typeof(IBindingProvider), c => new DefaultBindingProvider()},
+                    {typeof(IViewFolder), c =>
+                        {
+                            var appBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                            return new FileSystemViewFolder(Path.Combine(appBase, "Views"));
+                        }
+                    },
+                    {typeof(ICompiledViewHolder), c => new CompiledViewHolder()},
+                    {typeof(IPartialProvider), c => new DefaultPartialProvider()},
+                    {typeof(IPartialReferenceProvider), c => new DefaultPartialReferenceProvider(c.GetService<IPartialProvider>())},
                 };
 
 
@@ -84,7 +84,6 @@ namespace Spark
             }
         }
 
-
         public void SetService<TService>(TService service)
         {
             SetService(typeof(TService), service);
@@ -93,9 +92,9 @@ namespace Spark
         public void SetService(Type serviceType, object service)
         {
             if (_services.ContainsKey(serviceType))
-                throw new ApplicationException(string.Format("A service of type {0} has already been created", serviceType));
+                throw new ApplicationException($"A service of type {serviceType} has already been created");
             if (!serviceType.IsInterface)
-                throw new ApplicationException(string.Format("Only an interface may be used as service type. {0}", serviceType));
+                throw new ApplicationException($"Only an interface may be used as service type. {serviceType}");
 
             lock (_services)
             {
@@ -113,22 +112,14 @@ namespace Spark
         public void SetServiceBuilder(Type serviceType, Func<ISparkServiceContainer, object> serviceBuilder)
         {
             if (_services.ContainsKey(serviceType))
-                throw new ApplicationException(string.Format("A service of type {0} has already been created", serviceType));
+                throw new ApplicationException($"A service of type {serviceType} has already been created");
             if (!serviceType.IsInterface)
-                throw new ApplicationException(string.Format("Only an interface may be used as service type. {0}", serviceType));
+                throw new ApplicationException($"Only an interface may be used as service type. {serviceType}");
 
             lock (_services)
             {
                 _defaults[serviceType] = serviceBuilder;
             }
-        }
-
-        private static object CreateDefaultViewFolder(ISparkServiceContainer arg)
-        {
-            if (HostingEnvironment.IsHosted && HostingEnvironment.VirtualPathProvider != null)
-                return new VirtualPathProviderViewFolder("~/Views");
-            var appBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            return new FileSystemViewFolder(Path.Combine(appBase, "Views"));
         }
     }
 }

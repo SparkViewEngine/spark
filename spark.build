@@ -110,6 +110,7 @@
         <in>
             <items>
                 <include name="${build.dir}/Spark.Tests.dll" />
+                <include name="${build.dir}/Spark.Web.Tests.dll" />
                 <include name="${build.dir}/Spark.Python.Tests.dll" />
                 <include name="${build.dir}/Spark.Web.Mvc.Tests.dll" />
                 <include name="${build.dir}/Castle.MonoRail.Views.Spark.Tests.dll" />

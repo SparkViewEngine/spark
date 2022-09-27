@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net481</TargetFramework>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RootNamespace>Spark</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup>
+	<PackageReference Include="NUnit" Version="3.13.3" />
+	<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+	<PackageReference Include="Shouldly" Version="4.1.0" />
+	<PackageReference Include="RhinoMocks" Version="3.6.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Spark.Web\Spark.Web.csproj" />
+    <ProjectReference Include="..\Spark.Tests\Spark.Tests.csproj" />
+  </ItemGroup>
+  
+</Project>

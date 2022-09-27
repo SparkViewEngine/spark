@@ -14,7 +14,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using Spark.FileSystem;
 using Spark.Parser;
 
 namespace Spark
@@ -68,12 +67,10 @@ namespace Spark
 
     public class SimpleResourceMapping : IResourceMapping
     {
-
         public string Match { get; set; }
         public string Location { get; set; }
         public bool Stop { get; set; }
-
-
+        
         public bool IsMatch(string path)
         {
             return path.StartsWith(Match, StringComparison.InvariantCultureIgnoreCase);
@@ -83,14 +80,11 @@ namespace Spark
         {
             return Location + path.Substring(Match.Length);
         }
-
-
     }
 
     public interface IViewFolderSettings
     {
         string Name { get; set; }
-        ViewFolderType FolderType { get; set; }
         string Type { get; set; }
         string Subfolder { get; set; }
         IDictionary<string, string> Parameters { get; set; }
@@ -99,7 +93,6 @@ namespace Spark
     internal class ViewFolderSettings : IViewFolderSettings
     {
         public string Name { get; set; }
-        public ViewFolderType FolderType { get; set; }
         public string Type { get; set; }
         public string Subfolder { get; set; }
         public IDictionary<string, string> Parameters { get; set; }

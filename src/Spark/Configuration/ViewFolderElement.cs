@@ -31,14 +31,7 @@ namespace Spark.Configuration
             get { return (string)this["name"]; }
             set { this["name"] = value; }
         }
-
-        [ConfigurationProperty("folderType")]
-        public ViewFolderType FolderType
-        {
-            get { return (ViewFolderType)this["folderType"]; }
-            set { this["folderType"] = value; }
-        }
-
+        
         [ConfigurationProperty("type")]
         public string Type
         {
