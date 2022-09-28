@@ -42,7 +42,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spark\Spark.csproj" />
+    <ProjectReference Include="..\Spark.Web\Spark.Web.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\license.txt">

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net481</TargetFramework>
@@ -19,5 +19,4 @@
     <ProjectReference Include="..\Spark.Web\Spark.Web.csproj" />
     <ProjectReference Include="..\Spark.Tests\Spark.Tests.csproj" />
   </ItemGroup>
-  
 </Project>

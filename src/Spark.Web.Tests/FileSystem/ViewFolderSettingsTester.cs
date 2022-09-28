@@ -15,7 +15,6 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using System.Web.Hosting;
 using NUnit.Framework;
 
 namespace Spark.FileSystem
