@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
-using System.Web.Hosting;
 using Spark.Bindings;
 using Spark.Compiler;
 using Spark.Compiler.CSharp;
@@ -28,7 +27,6 @@ using Spark.Parser.Syntax;
 
 namespace Spark
 {
-
     public class SparkViewEngine : ISparkViewEngine, ISparkServiceInitialize
     {
         public SparkViewEngine()
@@ -121,8 +119,6 @@ namespace Spark
 
         private static IViewFolder CreateDefaultViewFolder()
         {
-            if (HostingEnvironment.IsHosted && HostingEnvironment.VirtualPathProvider != null)
-                return new VirtualPathProviderViewFolder("~/Views");
             var appBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             return new FileSystemViewFolder(Path.Combine(appBase, "Views"));
         }
@@ -130,38 +126,29 @@ namespace Spark
         private void SetViewFolder(IViewFolder value)
         {
             var aggregateViewFolder = value;
-            foreach (var viewFolderSettings in Settings.ViewFolders)
+            
+            if (this.Settings.ViewFolders != null)
             {
-                IViewFolder viewFolder = ActivateViewFolder(viewFolderSettings);
-                if (!string.IsNullOrEmpty(viewFolderSettings.Subfolder))
-                    viewFolder = new SubViewFolder(viewFolder, viewFolderSettings.Subfolder);
-                aggregateViewFolder = aggregateViewFolder.Append(viewFolder);
+                foreach (var viewFolderSettings in this.Settings.ViewFolders)
+                {
+                    IViewFolder viewFolder = this.ActivateViewFolder(viewFolderSettings);
+                    
+                    if (!string.IsNullOrEmpty(viewFolderSettings.Subfolder))
+                    {
+                        viewFolder = new SubViewFolder(viewFolder, viewFolderSettings.Subfolder);
+                    }
 
+                    aggregateViewFolder = aggregateViewFolder.Append(viewFolder);
+                }
             }
+            
             _viewFolder = aggregateViewFolder;
         }
 
         private IViewFolder ActivateViewFolder(IViewFolderSettings viewFolderSettings)
         {
-            Type type;
-            switch (viewFolderSettings.FolderType)
-            {
-                case ViewFolderType.FileSystem:
-                    type = typeof(FileSystemViewFolder);
-                    break;
-                case ViewFolderType.EmbeddedResource:
-                    type = typeof(EmbeddedViewFolder);
-                    break;
-                case ViewFolderType.VirtualPathProvider:
-                    type = typeof(VirtualPathProviderViewFolder);
-                    break;
-                case ViewFolderType.Custom:
-                    type = Type.GetType(viewFolderSettings.Type);
-                    break;
-                default:
-                    throw new ArgumentException("Unknown value for view folder type");
-            }
-
+            var type = Type.GetType(viewFolderSettings.Type);
+            
             ConstructorInfo bestConstructor = null;
             foreach (var constructor in type.GetConstructors())
             {
@@ -173,11 +160,16 @@ namespace Spark
                     }
                 }
             }
+
             if (bestConstructor == null)
-                throw new MissingMethodException(string.Format("No suitable constructor for {0} located", type.FullName));
+            {
+                throw new MissingMethodException($"No suitable constructor for {type.FullName} located");
+            }
+
             var args = bestConstructor.GetParameters()
                 .Select(param => ChangeType(viewFolderSettings, param))
                 .ToArray();
+
             return (IViewFolder)Activator.CreateInstance(type, args);
         }
 

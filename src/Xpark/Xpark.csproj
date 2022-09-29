@@ -21,6 +21,9 @@
     <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Spark.Web\Spark.Web.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="XparkSamples\diggstyle.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -47,8 +50,5 @@
     <None Update="XparkSamples\_global.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
 </Project>
