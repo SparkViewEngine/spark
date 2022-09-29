@@ -15,11 +15,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web.Configuration;
 
 namespace Spark.Spool
 {
@@ -27,7 +25,7 @@ namespace Spark.Spool
     {
         private readonly SpoolPage _first;
         private SpoolPage _last;
-        private Encoding _encoding;
+
         public SpoolWriter()
         {
             _first = new SpoolPage();
@@ -39,19 +37,10 @@ namespace Spark.Spool
             Dispose(false);
         }
 
-        public override Encoding Encoding
-        {
-            get
-            {
-                if(_encoding == null)
-                {
-                    var configSection = ConfigurationManager.GetSection("system.web/globalization") as GlobalizationSection;
-                    _encoding = configSection != null ? configSection.ResponseEncoding : Encoding.UTF8;
-                }
-
-                return _encoding;
-            }
-        }
+        /// <summary>
+        /// Writing is delegated to <see cref="SpoolPage"/>. SpoolPage itself it just a buffer of bytes. Encoding does not matter.
+        /// </summary>
+        public override Encoding Encoding => throw new NotSupportedException("The spool writer is encoding agnostic");
 
         public override void Write(char value)
         {
