@@ -1,7 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
+using Spark.Tests;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class SparkDecoratorTester
@@ -22,10 +23,7 @@ namespace Spark.Tests
             {
             }
 
-            public override Guid GeneratedViewId
-            {
-                get { throw new System.NotImplementedException(); }
-            }
+            public override Guid GeneratedViewId => throw new System.NotImplementedException();
 
             public override void Render()
             {
@@ -45,10 +43,7 @@ namespace Spark.Tests
             {
             }
 
-            public override Guid GeneratedViewId
-            {
-                get { throw new System.NotImplementedException(); }
-            }
+            public override Guid GeneratedViewId => throw new System.NotImplementedException();
 
             public override void Render()
             {

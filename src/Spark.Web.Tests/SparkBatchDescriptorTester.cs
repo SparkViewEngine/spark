@@ -17,12 +17,11 @@ using System.Linq;
 using NUnit.Framework;
 using Spark.Tests.Precompiled;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class SparkBatchDescriptorTester
     {
-        
         [Test]
         public void BatchForControllerWithSimplePrecompileAttrib()
         {

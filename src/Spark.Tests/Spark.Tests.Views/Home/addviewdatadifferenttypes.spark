@@ -1,5 +1,0 @@
-
-<viewdata comment="Spark.Tests.Models.Comment"/>
-
-<div>${comment.Text}</div>
-<AddViewDataPartial/>

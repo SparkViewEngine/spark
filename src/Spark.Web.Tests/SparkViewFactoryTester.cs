@@ -20,6 +20,8 @@
 // <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
+using Spark.Web;
+
 namespace Spark.Tests
 {
     using System.Collections.Generic;
@@ -45,7 +47,7 @@ namespace Spark.Tests
         [SetUp]
         public void Init()
         {
-            settings = new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
+            settings = new ApplicationBaseSparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
             engine = new SparkViewEngine(settings) { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             factory = new StubViewFactory { Engine = engine };
 
@@ -279,7 +281,7 @@ namespace Spark.Tests
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();
-            Assert.That(content, Contains.InOrder(
+            Assert.That(content, Tests.Contains.InOrder(
                 "<p>Hi Bob!</p>",
                 "<p>Administrator James</p>",
                 "<p>Test user.</p>",

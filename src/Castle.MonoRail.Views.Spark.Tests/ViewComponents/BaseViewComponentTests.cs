@@ -18,6 +18,7 @@ using Castle.MonoRail.Framework.Test;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Spark;
+using Spark.Web;
 
 namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 {
@@ -45,7 +46,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             services.AddService(typeof(IViewComponentFactory), viewComponentFactory);
             services.AddService(typeof(IViewComponentRegistry), viewComponentFactory.Registry);
 
-            var settings = new SparkSettings();
+            var settings = new ApplicationBaseSparkSettings();
             engine = new SparkViewEngine(settings);
             services.AddService(typeof(ISparkViewEngine), engine);
 

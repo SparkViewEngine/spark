@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 using System.IO;
+using Spark.Web;
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
@@ -27,7 +28,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
     {
         protected override void Configure()
         {
-            var settings = new SparkSettings();
+            var settings = new ApplicationBaseSparkSettings();
             settings.SetNullBehaviour(NullBehaviour.Strict);
             var sparkViewEngine = new SparkViewEngine(settings);
             serviceProvider.AddService(typeof(ISparkViewEngine), sparkViewEngine);

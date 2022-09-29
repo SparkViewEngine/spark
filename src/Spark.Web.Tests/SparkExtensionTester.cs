@@ -21,8 +21,9 @@ using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
 using Spark.Parser.Markup;
 using System.IO;
+using Spark.Web;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class SparkExtensionTester
@@ -32,7 +33,7 @@ namespace Spark.Tests
         [SetUp]
         public void Init()
         {
-            engine = new SparkViewEngine(new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
+            engine = new SparkViewEngine(new ApplicationBaseSparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
                          {ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")};
             engine.ExtensionFactory = new StubExtensionFactory();
         }

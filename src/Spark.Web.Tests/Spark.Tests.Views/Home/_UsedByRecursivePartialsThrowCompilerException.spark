@@ -1,0 +1,3 @@
+
+<!-- references the original view -->
+<render partial="RecursivePartialsThrowCompilerException.spark"/>

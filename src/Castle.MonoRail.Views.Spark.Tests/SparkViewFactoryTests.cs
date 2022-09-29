@@ -15,12 +15,11 @@
 using System;
 using System.Globalization;
 using System.Threading;
+using Spark.Web;
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
     using System.IO;
-
-
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Helpers;
     using Castle.MonoRail.Framework.Services;
@@ -40,7 +39,8 @@ namespace Castle.MonoRail.Views.Spark.Tests
 			manager = new DefaultViewEngineManager();
 			manager.Service(serviceProvider);
 			serviceProvider.ViewEngineManager = manager;
-			serviceProvider.AddService(typeof(IViewEngineManager), manager);
+            serviceProvider.AddService(typeof(IViewEngineManager), manager);
+            serviceProvider.AddService(typeof(ISparkSettings), new ApplicationBaseSparkSettings());
 
 			manager.RegisterEngineForExtesionLookup(factory);
 			manager.RegisterEngineForView(factory);

@@ -1,0 +1,21 @@
+<div class="xbox">
+  <b class="xtop">
+    <b class="xb1"/>
+    <b class="xb2"/>
+    <b class="xb3"/>
+    <b class="xb4"/>
+  </b>
+  <content var="tooltip">
+    <render:tooltip>Default Tooltip</render:tooltip>
+  </content>
+  <div class="xboxcontent" title="${tooltip.Replace('\r\n',' ').Trim()}">
+    <render:top/>
+    <render/>
+  </div>
+  <b class="xbottom">
+    <b class="xb4"/>
+    <b class="xb3"/>
+    <b class="xb2"/>
+    <b class="xb1"/>
+  </b>
+</div>

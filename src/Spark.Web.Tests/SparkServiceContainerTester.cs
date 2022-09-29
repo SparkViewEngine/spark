@@ -15,14 +15,13 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Spark.Bindings;
 using Spark.FileSystem;
 using System.IO;
+using Spark.Web;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class SparkServiceContainerTester
@@ -60,7 +59,7 @@ namespace Spark.Tests
         [Test]
         public void CreatedSettingsUsedWhenProvided()
         {
-            var settings = new SparkSettings().SetPrefix("foo");
+            var settings = new ApplicationBaseSparkSettings().SetPrefix("foo");
             var container = new SparkServiceContainer(settings);
 
             var settings2 = container.GetService<ISparkViewEngine>().Settings;
@@ -99,7 +98,7 @@ namespace Spark.Tests
         [Test]
         public void EngineGetsCustomServiceAndViewFolderSettings()
         {
-            var settings = new SparkSettings();
+            var settings = new ApplicationBaseSparkSettings();
             settings.AddViewFolder(typeof(TestViewFolder),
                                    new Dictionary<string, string> { { "testpath", Path.Combine("hello", "world.spark") } });
 

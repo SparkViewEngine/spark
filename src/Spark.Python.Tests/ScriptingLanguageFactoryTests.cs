@@ -15,6 +15,7 @@
 using NUnit.Framework;
 using Spark.Python.Compiler;
 using Spark.Tests.Stubs;
+using Spark.Web;
 
 namespace Spark.Python.Tests
 {
@@ -26,7 +27,7 @@ namespace Spark.Python.Tests
         [SetUp]
         public void Init()
         {
-            _engine = new SparkViewEngine(new SparkSettings())
+            _engine = new SparkViewEngine(new ApplicationBaseSparkSettings())
                       {
                           LanguageFactory = new PythonLanguageFactory(),
                           DefaultPageBaseType = typeof(StubSparkView).FullName

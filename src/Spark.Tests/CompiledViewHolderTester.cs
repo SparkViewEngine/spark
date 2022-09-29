@@ -13,11 +13,10 @@
 // limitations under the License.
 // 
 using System;
-
+using System.IO;
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;
-using System.IO;
 
 namespace Spark.Tests
 {

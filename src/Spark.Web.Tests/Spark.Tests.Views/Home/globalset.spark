@@ -1,0 +1,5 @@
+<p>default: ${title}</p>
+<set title='2+5'/>
+<p>7==${title}</p>
+
+<global title='"Global set test"'/>

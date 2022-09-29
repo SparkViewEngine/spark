@@ -1,8 +1,0 @@
-<div>
-  <var arg="5"/>
-
-  <p unless="arg==5">argis5</p>
-
-  <p unless="arg==6">argisnot6</p>
-
-</div>

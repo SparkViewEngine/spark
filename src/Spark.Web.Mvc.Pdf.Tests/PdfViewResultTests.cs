@@ -61,7 +61,7 @@ namespace Spark.Web.Mvc.Pdf.Tests
         [Test]
         public void PdfResultShouldWriteToOutputStream()
         {
-            var settings = new SparkSettings();
+            var settings = new ApplicationBaseSparkSettings();
             var viewFolder = new InMemoryViewFolder
                              {
                                  {

@@ -52,7 +52,7 @@ namespace Spark.Web.Mvc.Ruby.Tests
 
         private static ViewContext CompileView(string viewContents)
         {
-            var settings = new SparkSettings();
+            var settings = new ApplicationBaseSparkSettings();
             var container = SparkRubyEngineStarter.CreateContainer(settings);
 
             var viewFolder = new InMemoryViewFolder { { string.Format("stub{0}index.spark", Path.DirectorySeparatorChar), viewContents } };

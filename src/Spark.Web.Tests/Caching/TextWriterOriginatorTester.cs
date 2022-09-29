@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using NUnit.Framework;
-
-using Spark.Caching;
 using Spark.Spool;
 
-namespace Spark.Tests.Caching
+namespace Spark.Caching
 {
     [TestFixture]
     public class TextWriterOriginatorTester

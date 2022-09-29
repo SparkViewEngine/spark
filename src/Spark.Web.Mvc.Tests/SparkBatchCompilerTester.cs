@@ -31,7 +31,7 @@ namespace Spark.Web.Mvc.Tests
         [SetUp]
         public void Init()
         {
-            var settings = new SparkSettings();
+            var settings = new ApplicationBaseSparkSettings();
 
             _factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
         }
@@ -84,7 +84,7 @@ namespace Spark.Web.Mvc.Tests
         {
             public void Precompile()
             {
-                var settings = new SparkSettings();
+                var settings = new ApplicationBaseSparkSettings();
 
                 var factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
 

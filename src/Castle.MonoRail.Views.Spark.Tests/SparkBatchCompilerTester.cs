@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 using System.IO;
+using Spark.Web;
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
@@ -35,7 +36,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         [SetUp]
         public void Init()
         {
-            var settings = new SparkSettings();
+            var settings = new ApplicationBaseSparkSettings();
 
             var services = new StubMonoRailServices();
             services.AddService(typeof(IViewSourceLoader), new FileAssemblyViewSourceLoader("MonoRail.Tests.Views"));

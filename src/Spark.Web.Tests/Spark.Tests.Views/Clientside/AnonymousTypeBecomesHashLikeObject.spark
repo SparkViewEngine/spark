@@ -1,0 +1,3 @@
+
+<var x="new {foo='bar', quux=5}"/>
+<p>${HelloWorld(new {id=23, data=x})}</p>

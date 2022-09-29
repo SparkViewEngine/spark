@@ -1,6 +1,0 @@
-<use namespace="Spark.Tests.Models"/>
-<viewdata comment="Comment"/>
-<div>
-  Again: ${comment.Text}
-</div>
-

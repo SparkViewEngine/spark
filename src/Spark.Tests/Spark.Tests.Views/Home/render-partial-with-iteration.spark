@@ -1,9 +1,0 @@
-<RoundedEx>
-  <section name="top">
-    <h3>This is a test</h3>
-  </section>
-  <section name="tooltip">
-    My Tooltip
-  </section>
-  <p>Hello World</p>
-</RoundedEx>

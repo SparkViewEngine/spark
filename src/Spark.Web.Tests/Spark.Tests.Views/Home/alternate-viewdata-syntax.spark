@@ -1,0 +1,3 @@
+<viewdata my-data="string MyData" model="System.Collections.Generic.IList[[string]] Names"/>
+<p>one:${MyData}</p>
+<p each="var name in Names">${name}</p>

@@ -1,5 +1,0 @@
-<ul>
-  <li each="var item in new[]{1,2,3}" class="selected?{itemIsFirst}">
-    blah
-  </li>
-</ul>

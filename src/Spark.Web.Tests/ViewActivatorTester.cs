@@ -18,8 +18,9 @@ using System.IO;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
+using Spark.Web;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class ViewActivatorTester
@@ -90,7 +91,7 @@ namespace Spark.Tests
         public void CustomViewActivator()
         {
             var engine = new SparkViewEngine(
-                new SparkSettings().SetPageBaseType(typeof(StubSparkView)))
+                new ApplicationBaseSparkSettings().SetPageBaseType(typeof(StubSparkView)))
                              {
                                  ViewActivatorFactory = new CustomFactory(),
                                  ViewFolder = new InMemoryViewFolder { { "hello/world.spark", "<p>hello world</p>" } }

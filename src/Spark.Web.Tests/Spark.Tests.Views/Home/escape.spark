@@ -1,0 +1,24 @@
+﻿<html>
+  <head>
+    <title>escape test</title>
+  </head>
+  <body>
+    <h1>escape test</h1>
+    <p>${System.DateTime.Now}</p>
+    <div>
+        $${Encoded.Escaped.with.a.dollar < 0}
+        \${Encoded.Escaped.with.a.backslash < 0}
+        `${Encoded.Escaped.with.a.backtick < 0}
+    </div>
+    <div>
+        !!{Unencoded.Escaped.with.a.dollar < 0}
+        \!{Unencoded.Escaped.with.a.backslash < 0}
+        `!{Unencoded.Escaped.with.a.backtick < 0}
+    </div>
+    <div>
+        $$!{Encoded.Silent.Nulls.Escaped.with.a.dollar < 0}
+        \$!{Encoded.Silent.Nulls.Escaped.with.a.backslash < 0}
+        `$!{Encoded.Silent.Nulls.Escaped.with.a.backtick < 0}
+    </div>
+  </body>
+</html>

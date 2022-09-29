@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net481</TargetFramework>
@@ -23,6 +23,9 @@
     <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="Compiler\NodeVisitors\FileReferenceVisitor.cs" />
     <Compile Remove="Parser\Code\CodeSnipGrammar.cs" />
   </ItemGroup>
@@ -38,8 +41,5 @@
     <None Include="..\SparkKey.snk">
       <Link>SparkKey.snk</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Configuration" />
   </ItemGroup>
 </Project>

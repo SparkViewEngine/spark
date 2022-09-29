@@ -1,0 +1,5 @@
+<content name="Hello" each="var name in new[]{'alpha', 'beta', 'gamma'}" unless="name == 'beta'">
+  <p>name-${nameIndex}-${name}</p>
+</content>
+<use content="Hello"/>
+<SimpleValue each="var foo in new[] {'one','two','three'}" unless="foo == 'two'"/>

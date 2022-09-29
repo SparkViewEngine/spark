@@ -1,0 +1,25 @@
+<div>
+  <var arg="5"/>
+
+  <if condition="arg==5">
+    <p>argis5</p>
+  </if>
+
+  <if condition="arg==6">
+    <p>argis6</p>
+  </if>
+
+  <if condition="arg==5">
+    <p>argisstill5</p>
+  </if>
+  <else>
+    <p>argisnotstill5</p>
+  </else>
+
+  <if condition="arg==6">
+    <p>argisnow6</p>
+  </if>
+  <else>
+    <p>argisstillnot6</p>
+  </else>
+</div>

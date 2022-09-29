@@ -17,8 +17,9 @@ using System.IO;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
+using Spark.Web;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class PrefixSupportTester
@@ -29,7 +30,7 @@ namespace Spark.Tests
         [SetUp]
         public void Init()
         {
-            _settings = new SparkSettings()
+            _settings = new ApplicationBaseSparkSettings()
                 .SetPageBaseType(typeof(StubSparkView));
 
             _engine = new SparkViewEngine(_settings)
@@ -52,7 +53,7 @@ namespace Spark.Tests
         [Test]
         public void PrefixFromSettings()
         {
-            var settings = new SparkSettings()
+            var settings = new ApplicationBaseSparkSettings()
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetPrefix("s");
 
@@ -162,7 +163,7 @@ namespace Spark.Tests
         [Test]
         public void SectionAsSegmentAndRenderPrefixes()
         {
-            var settings = new SparkSettings()
+            var settings = new ApplicationBaseSparkSettings()
                 .SetPageBaseType(typeof (StubSparkView))
                 .SetParseSectionTagAsSegment(true);
 
@@ -192,7 +193,7 @@ namespace Spark.Tests
         [Test]
         public void MacroAndContentPrefixesFromSettings()
         {
-            _engine.Settings = new SparkSettings()
+            _engine.Settings = new ApplicationBaseSparkSettings()
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetPrefix("s");
 

@@ -44,6 +44,11 @@ namespace Spark
 
     public interface ISparkSettings : IParserSettings
     {
+        /// <summary>
+        /// Gets the base path of the directory containing the application.
+        /// </summary>
+        string RootPath { get; }
+
         bool Debug { get; }
         NullBehaviour NullBehaviour { get; }
         string Prefix { get; }

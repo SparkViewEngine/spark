@@ -19,9 +19,9 @@ using Spark.Parser;
 
 namespace Spark
 {
-    public class SparkSettings : ISparkSettings
+    public abstract class SparkSettings : ISparkSettings
     {
-        public SparkSettings()
+        protected SparkSettings()
         {
             _useNamespaces = new List<string>();
             _useAssemblies = new List<string>();
@@ -32,6 +32,11 @@ namespace Spark
 
             AutomaticEncoding = ParserSettings.DefaultAutomaticEncoding;
         }
+
+        /// <summary>
+        /// Depending on the target framework this value must be determined (E.g. AppDomain.CurrentDomain.SetupInformation.ApplicationBase in .net framework) or set.
+        /// </summary>
+        public abstract string RootPath { get; }
 
         public bool Debug { get; set; }
         public NullBehaviour NullBehaviour { get; set; }
@@ -80,6 +85,11 @@ namespace Spark
             return this;
         }
 
+        /// <summary>
+        /// Sets the fully full name of the type each spark page should inherit from.
+        /// </summary>
+        /// <param name="typeName">The full name of the type.</param>
+        /// <returns></returns>
         public SparkSettings SetPageBaseType(string typeName)
         {
             PageBaseType = typeName;
@@ -98,6 +108,11 @@ namespace Spark
             return this;
         }
 
+        /// <summary>
+        /// Adds the full name of an assembly for the view compiler to be aware of.
+        /// </summary>
+        /// <param name="assembly">The full name of an assembly.</param>
+        /// <returns></returns>
         public SparkSettings AddAssembly(string assembly)
         {
             _useAssemblies.Add(assembly);

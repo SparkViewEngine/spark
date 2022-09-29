@@ -17,11 +17,12 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Spark.Configuration;
 using Spark.FileSystem;
+using Spark.Tests;
 using Spark.Tests.Stubs;
+using Spark.Web;
 
-namespace Spark.Tests.Configuration
+namespace Spark.Configuration
 {
     [TestFixture]
     public class SparkSectionHandlerTester
@@ -56,7 +57,7 @@ namespace Spark.Tests.Configuration
         [Test]
         public void CreateSettingsFluentInterface()
         {
-            var settings = new SparkSettings()
+            var settings = new ApplicationBaseSparkSettings()
                 .SetDebug(true)
                 .SetNullBehaviour(NullBehaviour.Lenient)
                 .AddNamespace("System")
@@ -74,7 +75,7 @@ namespace Spark.Tests.Configuration
         [Test]
         public void UseAssemblyAndNamespaceFromSettings()
         {
-            var settings = new SparkSettings()
+            var settings = new ApplicationBaseSparkSettings()
                 .AddNamespace("System.Web")
                 .AddAssembly("System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
                 .SetPageBaseType(typeof(StubSparkView));

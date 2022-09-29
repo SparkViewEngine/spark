@@ -79,7 +79,7 @@ namespace Spark.Web.Mvc.Tests
 
             controllerContext = new ControllerContext(httpContext, routeData, controller);
 
-            var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html").SetAutomaticEncoding(true);
+            var settings = new ApplicationBaseSparkSettings().AddNamespace("System.Web.Mvc.Html").SetAutomaticEncoding(true);
             factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
 
             ControllerBuilder.Current.SetControllerFactory(new DefaultControllerFactory());
@@ -464,7 +464,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CreatingViewEngineWithSimpleContainer()
         {
-            var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html");
+            var settings = new ApplicationBaseSparkSettings().AddNamespace("System.Web.Mvc.Html");
             var container = SparkEngineStarter.CreateContainer(settings);
 
             var viewFactory = (SparkViewFactory)container.GetService<IViewEngine>();

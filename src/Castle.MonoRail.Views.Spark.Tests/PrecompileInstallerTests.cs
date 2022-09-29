@@ -56,7 +56,6 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
         public class ParentInstaller : Installer
         {
-
         }
     }
 }

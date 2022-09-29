@@ -16,8 +16,10 @@ using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 using System.IO;
+using Spark.Tests;
+using Spark.Web;
 
-namespace Spark.Tests.Compiler
+namespace Spark.Compiler
 {
     [TestFixture]
     public class SourceMappingTester
@@ -29,7 +31,7 @@ namespace Spark.Tests.Compiler
         [SetUp]
         public void Init()
         {
-            var settings = new SparkSettings()
+            var settings = new ApplicationBaseSparkSettings()
                 .SetPageBaseType(typeof(StubSparkView));
             var container = new SparkServiceContainer(settings);
 
