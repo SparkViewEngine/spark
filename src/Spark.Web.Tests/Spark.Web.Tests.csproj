@@ -4,6 +4,7 @@
     <TargetFramework>net481</TargetFramework>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RootNamespace>Spark</RootNamespace>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="SparkControllerFactoryTester.cs" />

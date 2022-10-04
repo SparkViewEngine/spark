@@ -3,7 +3,7 @@
     <OutputType>Library</OutputType>
     <TargetFramework>net481</TargetFramework>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Web" />

@@ -3,6 +3,7 @@
     <TargetFramework>net481</TargetFramework>
     <OutputType>Library</OutputType>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
