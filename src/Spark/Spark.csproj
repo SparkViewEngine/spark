@@ -24,6 +24,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+    <PackageReference Include="MarkdownSharp" Version="2.0.5" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Compiler\NodeVisitors\FileReferenceVisitor.cs" />
