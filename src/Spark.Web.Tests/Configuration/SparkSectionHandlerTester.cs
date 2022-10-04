@@ -20,7 +20,6 @@ using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests;
 using Spark.Tests.Stubs;
-using Spark.Web;
 
 namespace Spark.Configuration
 {
@@ -57,7 +56,7 @@ namespace Spark.Configuration
         [Test]
         public void CreateSettingsFluentInterface()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .SetDebug(true)
                 .SetNullBehaviour(NullBehaviour.Lenient)
                 .AddNamespace("System")
@@ -75,7 +74,7 @@ namespace Spark.Configuration
         [Test]
         public void UseAssemblyAndNamespaceFromSettings()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .AddNamespace("System.Web")
                 .AddAssembly("System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
                 .SetPageBaseType(typeof(StubSparkView));

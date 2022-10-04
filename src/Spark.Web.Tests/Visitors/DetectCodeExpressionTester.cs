@@ -20,7 +20,6 @@ using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Syntax;
 using System.IO;
-using Spark.Web;
 
 namespace Spark.Tests.Visitors
 {
@@ -32,7 +31,7 @@ namespace Spark.Tests.Visitors
         {
             var context = new VisitorContext
                               {
-                                  SyntaxProvider = new DefaultSyntaxProvider(new ApplicationBaseSparkSettings())
+                                  SyntaxProvider = new DefaultSyntaxProvider(new SparkSettings())
                               };
             var nodes = ParseNodes("<for each='var x in new [] {1,2,3}'>${xIndex}${xIsLast}</for>",
                                    new SpecialNodeVisitor(context));

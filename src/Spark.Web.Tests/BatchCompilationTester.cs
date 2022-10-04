@@ -21,7 +21,6 @@ using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests.Precompiled;
 using System.IO;
-using Spark.Web;
 using Spark.Tests;
 
 namespace Spark
@@ -34,7 +33,7 @@ namespace Spark
         [SetUp]
         public void Init()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .SetPageBaseType(typeof(Tests.Stubs.StubSparkView));
 
             engine = new SparkViewEngine(settings)

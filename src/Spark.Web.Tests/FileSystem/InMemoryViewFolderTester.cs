@@ -18,7 +18,6 @@ using System.Linq;
 using NUnit.Framework;
 using Spark.Tests;
 using Spark.Tests.Stubs;
-using Spark.Web;
 
 namespace Spark.FileSystem
 {
@@ -110,7 +109,7 @@ namespace Spark.FileSystem
         {
             var folder = new InMemoryViewFolder();
             folder.Add(Path.Combine("home", "index.spark"), "<p>Hello world</p>");
-            var engine = new SparkViewEngine(new ApplicationBaseSparkSettings().SetPageBaseType(typeof (StubSparkView))){ViewFolder = folder};
+            var engine = new SparkViewEngine(new SparkSettings().SetPageBaseType(typeof (StubSparkView))){ViewFolder = folder};
 
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add(Path.Combine("home", "index.spark"));
@@ -152,7 +151,7 @@ namespace Spark.FileSystem
             Assert.That(ReadToEnd(folder, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));
             Assert.That(ReadToEnd(folder, Path.Combine("Home", "ja.spark")), Is.EqualTo("日本語"));
             
-            var settings = new ApplicationBaseSparkSettings().SetPageBaseType(typeof(StubSparkView));
+            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
             var engine = new SparkViewEngine(settings) { ViewFolder = folder };
             Assert.That(RenderView(engine, Path.Combine("Home", "fr.spark")), Is.EqualTo("Français"));
             Assert.That(RenderView(engine, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));

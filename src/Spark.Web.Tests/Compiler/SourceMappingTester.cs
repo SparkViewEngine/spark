@@ -17,7 +17,6 @@ using Spark.FileSystem;
 using Spark.Tests.Stubs;
 using System.IO;
 using Spark.Tests;
-using Spark.Web;
 
 namespace Spark.Compiler
 {
@@ -31,7 +30,7 @@ namespace Spark.Compiler
         [SetUp]
         public void Init()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .SetPageBaseType(typeof(StubSparkView));
             var container = new SparkServiceContainer(settings);
 

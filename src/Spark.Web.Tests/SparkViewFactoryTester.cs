@@ -20,8 +20,6 @@
 // <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
-using Spark.Web;
-
 namespace Spark.Tests
 {
     using System.Collections.Generic;
@@ -47,7 +45,7 @@ namespace Spark.Tests
         [SetUp]
         public void Init()
         {
-            settings = new ApplicationBaseSparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
+            settings = new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
             engine = new SparkViewEngine(settings) { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             factory = new StubViewFactory { Engine = engine };
 

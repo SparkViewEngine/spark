@@ -4,7 +4,6 @@ using Spark.FileSystem;
 using Spark.Tests.Models;
 using Spark.Tests.Stubs;
 using System.IO;
-using Spark.Web;
 
 namespace Spark
 {
@@ -22,7 +21,7 @@ namespace Spark
             _factory = new StubViewFactory
             {
                 Engine = new SparkViewEngine(
-                    new ApplicationBaseSparkSettings()
+                    new SparkSettings()
                         .SetDefaultLanguage(LanguageType.VisualBasic)
                         .SetPageBaseType(typeof(StubSparkView)))
                 {

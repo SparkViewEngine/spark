@@ -15,7 +15,6 @@
 using System;
 using System.Globalization;
 using System.Threading;
-using Spark.Web;
 
 namespace Castle.MonoRail.Views.Spark.Tests
 {
@@ -40,7 +39,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 			manager.Service(serviceProvider);
 			serviceProvider.ViewEngineManager = manager;
             serviceProvider.AddService(typeof(IViewEngineManager), manager);
-            serviceProvider.AddService(typeof(ISparkSettings), new ApplicationBaseSparkSettings());
+            serviceProvider.AddService(typeof(ISparkSettings), new SparkSettings());
 
 			manager.RegisterEngineForExtesionLookup(factory);
 			manager.RegisterEngineForView(factory);

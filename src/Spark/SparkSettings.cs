@@ -19,9 +19,9 @@ using Spark.Parser;
 
 namespace Spark
 {
-    public abstract class SparkSettings : ISparkSettings
+    public class SparkSettings : ISparkSettings
     {
-        protected SparkSettings()
+        public SparkSettings()
         {
             _useNamespaces = new List<string>();
             _useAssemblies = new List<string>();
@@ -36,7 +36,7 @@ namespace Spark
         /// <summary>
         /// Depending on the target framework this value must be determined (E.g. AppDomain.CurrentDomain.SetupInformation.ApplicationBase in .net framework) or set.
         /// </summary>
-        public abstract string RootPath { get; }
+        public string RootPath => AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
 
         public bool Debug { get; set; }
         public NullBehaviour NullBehaviour { get; set; }

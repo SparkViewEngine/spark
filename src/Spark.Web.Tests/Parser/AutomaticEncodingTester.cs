@@ -20,7 +20,6 @@ using Spark.FileSystem;
 using Spark.Parser.Markup;
 using Spark.Tests;
 using Spark.Tests.Stubs;
-using Spark.Web;
 
 namespace Spark.Parser
 {
@@ -40,7 +39,7 @@ namespace Spark.Parser
 
         public void Init(bool automaticEncoding)
         {
-            this._settings = new ApplicationBaseSparkSettings()
+            this._settings = new SparkSettings()
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetAutomaticEncoding(automaticEncoding);
             var container = new SparkServiceContainer(this._settings);

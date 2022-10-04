@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using Rhino.Mocks;
-using Spark.Web;
 
 namespace Spark
 {
@@ -17,7 +16,7 @@ namespace Spark
         {
             this._viewPath = "fake/path";
             this._partialProvider = MockRepository.GenerateMock<IPartialProvider>();
-            this._engine = new SparkViewEngine(new ApplicationBaseSparkSettings())
+            this._engine = new SparkViewEngine(new SparkSettings())
             {
                 PartialProvider = this._partialProvider
             };

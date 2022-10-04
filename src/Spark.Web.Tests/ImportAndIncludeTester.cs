@@ -19,7 +19,6 @@ using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests;
 using Spark.Tests.Stubs;
-using Spark.Web;
 
 namespace Spark
 {
@@ -28,7 +27,7 @@ namespace Spark
     {
         private ISparkView CreateView(IViewFolder viewFolder, string template)
         {
-            var settings = new ApplicationBaseSparkSettings().SetPageBaseType(typeof(StubSparkView));
+            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
 
             var engine = new SparkViewEngine(settings)
                              {

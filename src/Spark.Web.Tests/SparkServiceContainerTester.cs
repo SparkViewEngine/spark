@@ -19,7 +19,6 @@ using NUnit.Framework;
 using Spark.Bindings;
 using Spark.FileSystem;
 using System.IO;
-using Spark.Web;
 
 namespace Spark
 {
@@ -59,7 +58,7 @@ namespace Spark
         [Test]
         public void CreatedSettingsUsedWhenProvided()
         {
-            var settings = new ApplicationBaseSparkSettings().SetPrefix("foo");
+            var settings = new SparkSettings().SetPrefix("foo");
             var container = new SparkServiceContainer(settings);
 
             var settings2 = container.GetService<ISparkViewEngine>().Settings;
@@ -98,7 +97,7 @@ namespace Spark
         [Test]
         public void EngineGetsCustomServiceAndViewFolderSettings()
         {
-            var settings = new ApplicationBaseSparkSettings();
+            var settings = new SparkSettings();
             settings.AddViewFolder(typeof(TestViewFolder),
                                    new Dictionary<string, string> { { "testpath", Path.Combine("hello", "world.spark") } });
 

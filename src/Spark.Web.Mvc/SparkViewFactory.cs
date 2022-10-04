@@ -41,7 +41,7 @@ namespace Spark.Web.Mvc
 
         public SparkViewFactory(ISparkSettings settings)
         {
-            Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new ApplicationBaseSparkSettings();
+            Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
         }
 
 

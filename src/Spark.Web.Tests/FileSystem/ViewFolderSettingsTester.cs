@@ -16,7 +16,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
-using Spark.Web;
 
 namespace Spark.FileSystem
 {
@@ -26,7 +25,7 @@ namespace Spark.FileSystem
         [Test]
         public void ApplySettings()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .AddViewFolder(typeof(VirtualPathProviderViewFolder), new Dictionary<string, string> { { "virtualBaseDir", "~/MoreViews/" } });
             var engine = new SparkViewEngine(settings);
 
@@ -41,7 +40,7 @@ namespace Spark.FileSystem
         [Test]
         public void CustomViewFolder()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .AddViewFolder(typeof(MyViewFolder), new Dictionary<string, string> { { "foo", "quux" }, { "bar", "42" } });
             var engine = new SparkViewEngine(settings);
 
@@ -57,7 +56,7 @@ namespace Spark.FileSystem
         [Test]
         public void AssemblyParameter()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .AddViewFolder(typeof(EmbeddedViewFolder), new Dictionary<string, string> { { "assembly", "Spark.Tests" }, { "resourcePath", "Spark.Tests.Views" } });
 
             var engine = new SparkViewEngine(settings);
@@ -73,7 +72,7 @@ namespace Spark.FileSystem
         [Test]
         public void TypeFileSystemCreatesFileSystemViewFolder()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .AddViewFolder(typeof(FileSystemViewFolder), new Dictionary<string, string>
                                                              {
                                                                  { "basePath", @"e:\no\such\path" }

@@ -7,7 +7,6 @@ using System.Xml;
 using System.Xml.Linq;
 using Spark;
 using Spark.FileSystem;
-using Spark.Web;
 
 namespace Xpark
 {
@@ -46,7 +45,7 @@ a _global.spark file with common namespaces, macros, etc.
 
             // Create an engine using the templates path as the root location
             // as well as the shared location
-            var engine = new SparkViewEngine(new ApplicationBaseSparkSettings())
+            var engine = new SparkViewEngine(new SparkSettings())
             {
                 DefaultPageBaseType = typeof(SparkView).FullName,
                 ViewFolder = viewFolder.Append(new SubViewFolder(viewFolder, "Shared"))

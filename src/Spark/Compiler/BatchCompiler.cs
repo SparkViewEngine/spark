@@ -69,15 +69,25 @@ namespace Spark.Compiler
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-
                 if (assembly.IsDynamic())
+                {
                     continue;
+                }
 
                 compilerParameters.ReferencedAssemblies.Add(assembly.Location);
             }
-
+            
             CompilerResults compilerResults;
-            var basePath = AppDomain.CurrentDomain.SetupInformation.DynamicBase ?? Path.GetTempPath();
+
+            var dynamicBase = string.Empty;
+
+#if NETFRAMEWORK
+            dynamicBase = AppDomain.CurrentDomain.SetupInformation.DynamicBase;
+#else
+            dynamicBase = AppDomain.CurrentDomain.DynamicDirectory;
+#endif
+
+            var basePath = !string.IsNullOrEmpty(dynamicBase) ? dynamicBase : Path.GetTempPath();
             compilerParameters.TempFiles = new TempFileCollection(basePath); //Without this, the generated code throws Access Denied exception with Impersonate mode on platforms like SharePoint
             if (debug)
             {
@@ -167,14 +177,23 @@ namespace Spark.Compiler
     {
         public static bool IsDynamic(this Assembly assembly)
         {
-            return assembly is AssemblyBuilder
-                   || assembly.ManifestModule.GetType().Namespace == "System.Reflection.Emit" //.Net 4 specific
-                   || assembly.HasNoLocation();
+            if (assembly is AssemblyBuilder)
+            {
+                return true;
+            }
+
+            if (assembly.ManifestModule.GetType().Namespace == "System.Reflection.Emit" /* .Net 4 specific */)
+            {
+                return true;
+            }
+
+            return assembly.HasNoLocation();
         }
 
         private static bool HasNoLocation(this Assembly assembly)
         {
             bool result;
+
             try
             {
                 result = string.IsNullOrEmpty(assembly.Location);
@@ -183,6 +202,7 @@ namespace Spark.Compiler
             {
                 return true;
             }
+
             return result;
         }
     }

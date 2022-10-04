@@ -27,7 +27,6 @@ using Castle.MonoRail.Framework.Resources;
 using Castle.MonoRail.Framework.Routing;
 using Castle.MonoRail.Views.Spark.Wrappers;
 using Spark.Compiler;
-using Spark.Web;
 
 namespace Castle.MonoRail.Views.Spark
 {   
@@ -56,7 +55,7 @@ namespace Castle.MonoRail.Views.Spark
             {
                 if (_engine == null)
                 {
-                    SetEngine(new SparkViewEngine(new ApplicationBaseSparkSettings()));
+                    SetEngine(new SparkViewEngine(new SparkSettings()));
                 }
 
                 return _engine;

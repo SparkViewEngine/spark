@@ -21,7 +21,6 @@ using System.Reflection;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Test;
 using Spark;
-using Spark.Web;
 
 namespace Castle.MonoRail.Views.Spark.Install
 {
@@ -74,7 +73,7 @@ namespace Castle.MonoRail.Views.Spark.Install
             // Attempt to get the configuration from settings, otherwise use default settings
             var settings =
                 (ISparkSettings)config.GetSection("spark") ??
-                new ApplicationBaseSparkSettings();
+                new SparkSettings();
 
             var services = new StubMonoRailServices();
             services.AddService(typeof(IViewSourceLoader), new FileAssemblyViewSourceLoader(viewsLocation));

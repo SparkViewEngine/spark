@@ -17,7 +17,6 @@ using System.IO;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
-using Spark.Web;
 
 namespace Spark
 {
@@ -30,7 +29,7 @@ namespace Spark
         [SetUp]
         public void Init()
         {
-            _settings = new ApplicationBaseSparkSettings()
+            _settings = new SparkSettings()
                 .SetPageBaseType(typeof(StubSparkView));
 
             _engine = new SparkViewEngine(_settings)
@@ -53,7 +52,7 @@ namespace Spark
         [Test]
         public void PrefixFromSettings()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetPrefix("s");
 
@@ -163,7 +162,7 @@ namespace Spark
         [Test]
         public void SectionAsSegmentAndRenderPrefixes()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .SetPageBaseType(typeof (StubSparkView))
                 .SetParseSectionTagAsSegment(true);
 
@@ -193,7 +192,7 @@ namespace Spark
         [Test]
         public void MacroAndContentPrefixesFromSettings()
         {
-            _engine.Settings = new ApplicationBaseSparkSettings()
+            _engine.Settings = new SparkSettings()
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetPrefix("s");
 

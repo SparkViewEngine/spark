@@ -20,7 +20,6 @@ using Spark.FileSystem;
 using Spark.Parser.Syntax;
 using Spark.Tests;
 using Spark.Tests.Stubs;
-using Spark.Web;
 
 namespace Spark.Parser
 {
@@ -41,7 +40,7 @@ namespace Spark.Parser
         public void UsingCSharpSyntaxInsideEngine()
         {
             // engine takes base class and IViewFolder
-            var engine = new SparkViewEngine(new ApplicationBaseSparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
+            var engine = new SparkViewEngine(new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
             {
                 SyntaxProvider = this._syntax, 
                 ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")
@@ -65,7 +64,7 @@ namespace Spark.Parser
         {
             // engine takes base class and IViewFolder
             var engine = new SparkViewEngine(
-                new ApplicationBaseSparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView")) { SyntaxProvider = this._syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView")) { SyntaxProvider = this._syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();

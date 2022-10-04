@@ -26,7 +26,6 @@ using System.Text;
 using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
-using Spark.Web;
 
 namespace Spark.Caching
 {
@@ -46,7 +45,7 @@ namespace Spark.Caching
             this._factory = new StubViewFactory
             {
                 Engine = new SparkViewEngine(
-                    new ApplicationBaseSparkSettings()
+                    new SparkSettings()
                         .SetPageBaseType(typeof(StubSparkView)))
                 {
                     ViewFolder = this._viewFolder

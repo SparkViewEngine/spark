@@ -14,7 +14,6 @@
 // 
 
 using NUnit.Framework;
-using Spark.Web;
 
 namespace Spark
 {
@@ -24,7 +23,7 @@ namespace Spark
         [Test]
         public void NormalUrlPathsAreUnchanged()
         {
-            var manager = new DefaultResourcePathManager(new ApplicationBaseSparkSettings());
+            var manager = new DefaultResourcePathManager(new SparkSettings());
             var path = manager.GetResourcePath("", "/content/js/jquery.1.2.6.js");
             Assert.AreEqual("/content/js/jquery.1.2.6.js", path);
         }
@@ -32,7 +31,7 @@ namespace Spark
         [Test]
         public void SiteRootPrependedByDefault()
         {
-            var manager = new DefaultResourcePathManager(new ApplicationBaseSparkSettings());
+            var manager = new DefaultResourcePathManager(new SparkSettings());
             var path = manager.GetResourcePath("/my/webapp", "/content/js/jquery.1.2.6.js");
             Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);
         }
@@ -40,7 +39,7 @@ namespace Spark
         [Test]
         public void SiteRootPrependedByDefaultEnsureSlashBetweenSiteRootAndPath()
         {
-            var manager = new DefaultResourcePathManager(new ApplicationBaseSparkSettings());
+            var manager = new DefaultResourcePathManager(new SparkSettings());
 
             var path = manager.GetResourcePath("/my/webapp", "content/js/jquery.1.2.6.js");
             Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);
@@ -52,7 +51,7 @@ namespace Spark
         [Test]
         public void TildePrefixedPathMorphAsSiteRootPrependedByDefault()
         {
-            var manager = new DefaultResourcePathManager(new ApplicationBaseSparkSettings());
+            var manager = new DefaultResourcePathManager(new SparkSettings());
             var path = manager.GetResourcePath("/my/webapp", "~/content/js/jquery.1.2.6.js");
             Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);   
         }
@@ -60,7 +59,7 @@ namespace Spark
         [Test]
         public void WhenResourceMappingWithNoStopAttributeThenNextMatchOrDefaultMatchWillBeProcessedWithItOutput()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .AddResourceMapping("/js", "~/content/js", false);
 
             var manager = new DefaultResourcePathManager(settings);
@@ -78,7 +77,7 @@ namespace Spark
         [Test]
         public void ReplacingJustSomePrefixes()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .AddResourceMapping("/content/js", "http://my.cdn.com/myaccount/content/js");
 
             var manager = new DefaultResourcePathManager(settings);
@@ -93,7 +92,7 @@ namespace Spark
         [Test]
         public void AllTypesOfPathSlashesShouldCombineWithSingleForwardSlash()
         {
-            var manager = new DefaultResourcePathManager(new ApplicationBaseSparkSettings());
+            var manager = new DefaultResourcePathManager(new SparkSettings());
             var path1 = manager.PathConcat("foo", "bar");
             var path2 = manager.PathConcat("foo/", "bar");
             var path3 = manager.PathConcat("foo", "/bar");
@@ -108,7 +107,7 @@ namespace Spark
         [Test]
         public void ReplacingJustSomePrefixesThatHaveTildeNoStop()
         {
-            var settings = new ApplicationBaseSparkSettings()
+            var settings = new SparkSettings()
                 .AddResourceMapping("~/content/js", "http://my.cdn.com/myaccount/content/js", false);
 
             var manager = new DefaultResourcePathManager(settings);
