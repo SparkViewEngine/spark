@@ -3,6 +3,7 @@
     <TargetFramework>net481</TargetFramework>
     <OutputType>Library</OutputType>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IronRuby, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using Spark.Bindings;
 using Spark.FileSystem;
 using Spark.Parser.Syntax;
@@ -24,6 +23,9 @@ namespace Spark
 {
     public class SparkServiceContainer : ISparkServiceContainer
     {
+        internal static string MissingSparkSettingsConfigurationErrorExceptionMessage
+            = "Spark setting not configured. Missing spark section app configuration or no ISparkSetting instance registered in IoC container.";
+
         public SparkServiceContainer()
         {
         }
@@ -37,25 +39,25 @@ namespace Spark
 
         private readonly Dictionary<Type, Func<ISparkServiceContainer, object>> _defaults =
             new Dictionary<Type, Func<ISparkServiceContainer, object>>
-                {
-                    {typeof(ISparkSettings), c => ConfigurationManager.GetSection("spark") ?? new SparkSettings()},
-                    {typeof(ISparkViewEngine), c => new SparkViewEngine(c.GetService<ISparkSettings>())},
-                    {typeof(ISparkLanguageFactory), c => new DefaultLanguageFactory()},
-                    {typeof(ISparkSyntaxProvider), c => new DefaultSyntaxProvider(c.GetService<ISparkSettings>())},
-                    {typeof(IViewActivatorFactory), c => new DefaultViewActivator()},
-                    {typeof(IResourcePathManager), c => new DefaultResourcePathManager(c.GetService<ISparkSettings>())},
-                    {typeof(ITemplateLocator), c => new DefaultTemplateLocator()},
-                    {typeof(IBindingProvider), c => new DefaultBindingProvider()},
-                    {typeof(IViewFolder), c =>
-                        {
-                            var appBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                            return new FileSystemViewFolder(Path.Combine(appBase, "Views"));
-                        }
-                    },
-                    {typeof(ICompiledViewHolder), c => new CompiledViewHolder()},
-                    {typeof(IPartialProvider), c => new DefaultPartialProvider()},
-                    {typeof(IPartialReferenceProvider), c => new DefaultPartialReferenceProvider(c.GetService<IPartialProvider>())},
-                };
+            {
+                { 
+                    typeof(ISparkSettings), 
+                    c => ConfigurationManager.GetSection("spark") ?? 
+                         c.GetService<ISparkSettings>() ?? 
+                         throw new ConfigurationErrorsException(MissingSparkSettingsConfigurationErrorExceptionMessage)
+                },
+                { typeof(ISparkViewEngine), c => new SparkViewEngine(c.GetService<ISparkSettings>()) },
+                { typeof(ISparkLanguageFactory), c => new DefaultLanguageFactory() },
+                { typeof(ISparkSyntaxProvider), c => new DefaultSyntaxProvider(c.GetService<ISparkSettings>()) },
+                { typeof(IViewActivatorFactory), c => new DefaultViewActivator() },
+                { typeof(IResourcePathManager), c => new DefaultResourcePathManager(c.GetService<ISparkSettings>()) },
+                { typeof(ITemplateLocator), c => new DefaultTemplateLocator() },
+                { typeof(IBindingProvider), c => new DefaultBindingProvider() },
+                { typeof(IViewFolder), c => c.GetService<ISparkSettings>().CreateDefaultViewFolder() },
+                { typeof(ICompiledViewHolder), c => new CompiledViewHolder() },
+                { typeof(IPartialProvider), c => new DefaultPartialProvider() },
+                { typeof(IPartialReferenceProvider), c => new DefaultPartialReferenceProvider(c.GetService<IPartialProvider>()) },
+            };
 
 
         public T GetService<T>()
@@ -63,6 +65,7 @@ namespace Spark
             return (T)GetService(typeof(T));
         }
 
+        // This implementation throws stack overflow exceptions when a type is not found
         public object GetService(Type serviceType)
         {
             lock (_services)

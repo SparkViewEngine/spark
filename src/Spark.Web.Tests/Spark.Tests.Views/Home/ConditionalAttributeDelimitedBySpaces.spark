@@ -1,0 +1,13 @@
+<h1 class="one?{true} two?{false} three?{true}"></h1>
+
+<h2 class="one?{false} two?{false} three?{false}"></h2>
+
+<h3 class="one?{false} two three"></h3>
+
+<h4 class="one two?{false} three"></h4>
+
+<h5 class="one two three?{false}"></h5>
+
+<h6 class="one&two<three?{false}"></h6>
+
+<h7 class="one&two<three?{true}"></h7>

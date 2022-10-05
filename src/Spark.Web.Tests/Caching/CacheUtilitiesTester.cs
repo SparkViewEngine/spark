@@ -2,10 +2,9 @@
 using System.Globalization;
 using System.Threading;
 using NUnit.Framework;
-
 using Spark.Utilities;
 
-namespace Spark.Tests.Caching
+namespace Spark.Caching
 {
     [TestFixture]
     public class CacheUtilitiesTester
@@ -35,7 +34,7 @@ namespace Spark.Tests.Caching
             using (new CurrentCultureScope(""))
             {
                 var id3 = CacheUtilities.ToIdentifier("foo", new object[] {45.2, null, this});
-                Assert.That(id3, Is.EqualTo("foo45.2\u001f\u001fSpark.Tests.Caching.CacheUtilitiesTester"));
+                Assert.That(id3, Is.EqualTo("foo45.2\u001f\u001fSpark.Caching.CacheUtilitiesTester"));
             }
         }
 
@@ -44,12 +43,12 @@ namespace Spark.Tests.Caching
             private readonly CultureInfo _culture;
             public CurrentCultureScope(string name)
             {
-                _culture = Thread.CurrentThread.CurrentCulture;
+                this._culture = Thread.CurrentThread.CurrentCulture;
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(name);
             }
             public void Dispose()
             {
-                Thread.CurrentThread.CurrentCulture = _culture;
+                Thread.CurrentThread.CurrentCulture = this._culture;
             }
         }
     }

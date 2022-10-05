@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Spark.FileSystem;
+using Spark.Tests;
 using Spark.Tests.Stubs;
 
-
-namespace Spark.Tests.FileSystem
+namespace Spark.FileSystem
 {
     [TestFixture]
     public class InMemoryViewFolderTester 

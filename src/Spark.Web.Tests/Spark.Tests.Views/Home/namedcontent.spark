@@ -1,0 +1,12 @@
+<div>
+  <content name="footer">
+    <p>footer part one</p>
+  </content>
+  <p>main content</p>
+  <content name="header">
+    <p>this is the header</p>
+    <content name="footer">
+      <p>footer part two</p>
+    </content>
+  </content>
+</div>

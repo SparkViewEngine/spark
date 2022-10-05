@@ -16,8 +16,9 @@ using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 using System.IO;
+using Spark.Tests;
 
-namespace Spark.Tests.Compiler
+namespace Spark.Compiler
 {
     [TestFixture]
     public class SourceMappingTester

@@ -1,12 +1,11 @@
 ﻿using System.Text;
 using NUnit.Framework;
-
 using Spark.FileSystem;
 using Spark.Tests.Models;
 using Spark.Tests.Stubs;
 using System.IO;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     [Platform(Exclude = "Mono", Reason = "Problems with Mono-2.10+/Linux and the VB compiler prevent this from running.")]

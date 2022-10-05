@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using MarkdownSharp;
 using Spark.Caching;
 using Spark.Spool;
 using Spark.Utilities;

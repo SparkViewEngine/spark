@@ -39,13 +39,7 @@ namespace Spark.Compiler
     	public IEnumerable<string> UseNamespaces { get; set; }
         public IEnumerable<string> UseAssemblies { get; set; }
 
-        public string TargetNamespace
-        {
-            get
-            {
-                return Descriptor == null ? null : Descriptor.TargetNamespace;
-            }
-        }
+        public string TargetNamespace => Descriptor?.TargetNamespace;
 
         public abstract void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources);
         public abstract void GenerateSourceCode(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources);

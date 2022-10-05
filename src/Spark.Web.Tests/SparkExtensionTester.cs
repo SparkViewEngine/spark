@@ -22,7 +22,7 @@ using Spark.FileSystem;
 using Spark.Parser.Markup;
 using System.IO;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class SparkExtensionTester

@@ -1,4 +1,0 @@
-
-<!-- should cause an exception -->
-<UsedByRecursivePartialsThrowCompilerException/>
-

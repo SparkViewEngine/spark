@@ -13,30 +13,23 @@
 // limitations under the License.
 // 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Spark.FileSystem
 {
     public class EmbeddedViewFolder : InMemoryViewFolder
     {
         private readonly Assembly _assembly;
-        private readonly string _resourcePath;
-
+        
         public EmbeddedViewFolder(Assembly assembly, string resourcePath)
         {
             _assembly = assembly;
-            _resourcePath = resourcePath;
             LoadAllResources(assembly, resourcePath);
         }
 
-        public Assembly Assembly
-        {
-            get { return _assembly; }
-        }
+        public Assembly Assembly => _assembly;
 
         private void LoadAllResources(Assembly assembly, string path)
         {
@@ -59,6 +52,5 @@ namespace Spark.FileSystem
                 }
             }
         }
-
     }
 }

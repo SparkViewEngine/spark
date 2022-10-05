@@ -19,18 +19,16 @@
 // <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using NUnit.Framework;
+using Spark.FileSystem;
+using Spark.Tests.Stubs;
 
-namespace Spark.Tests.Caching
+namespace Spark.Caching
 {
-    using System;
-    using System.Linq;
-    using System.Text;
-    using NUnit.Framework;
-    
-    using Spark.FileSystem;
-    using Spark.Tests.Stubs;
-	using System.IO;
-
     [TestFixture]
     public class CacheElementTester
     {
@@ -42,29 +40,29 @@ namespace Spark.Tests.Caching
         [SetUp]
         public void Init()
         {
-            _viewFolder = new InMemoryViewFolder();
-            _cacheService = new StubCacheService();
-            _factory = new StubViewFactory
+            this._viewFolder = new InMemoryViewFolder();
+            this._cacheService = new StubCacheService();
+            this._factory = new StubViewFactory
             {
                 Engine = new SparkViewEngine(
                     new SparkSettings()
                         .SetPageBaseType(typeof(StubSparkView)))
                 {
-                    ViewFolder = _viewFolder
+                    ViewFolder = this._viewFolder
                 },
-                CacheService = _cacheService
+                CacheService = this._cacheService
             };
         }
 
         private string Render(string viewName)
         {
-            return Render(viewName, new StubViewData());
+            return this.Render(viewName, new StubViewData());
         }
 
         private string Render(string viewName, StubViewData viewData)
         {
             var context = new StubViewContext { ControllerName = "home", ViewName = viewName, Output = new StringBuilder(), Data = viewData };
-            _factory.RenderView(context);
+            this._factory.RenderView(context);
             return context.Output.ToString()
                 .Replace("\r\n\r\n", "\r\n")
                 .Replace("\r\n\r\n", "\r\n");
@@ -73,7 +71,7 @@ namespace Spark.Tests.Caching
         [Test]
         public void TemplateRunsNormallyThroughCacheMiss()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <viewdata model=""System.Func<string>""/>
 <div>
 <cache key='string.Empty'>
@@ -81,7 +79,7 @@ namespace Spark.Tests.Caching
 </cache>
 </div>");
             var calls = 0;
-            var contents = Render("index", new StubViewData<Func<string>>
+            var contents = this.Render("index", new StubViewData<Func<string>>
                                            {
                                                Model = () => (++calls).ToString()
                                            });
@@ -95,7 +93,7 @@ namespace Spark.Tests.Caching
         [Test]
         public void TemplateDoesNotRunThroughCacheHit()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <viewdata model=""System.Func<string>""/>
 <div>
 <cache key='string.Empty'>
@@ -108,14 +106,14 @@ namespace Spark.Tests.Caching
                            Model = () => (++calls).ToString()
                        };
 
-            var contents = Render("index", data);
+            var contents = this.Render("index", data);
             Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
 </div>"));
             Assert.That(calls, Is.EqualTo(1));
 
-            contents = Render("index", data);
+            contents = this.Render("index", data);
             Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
@@ -127,7 +125,7 @@ namespace Spark.Tests.Caching
         [Test]
         public void CacheInMacroShouldActAsSameSite()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <viewdata model=""System.Func<string>""/>
 <macro name=""foo"">
 <cache><p>${ViewData.Model()}</p></cache>
@@ -143,14 +141,14 @@ ${foo()}
                 Model = () => (++calls).ToString()
             };
 
-            var contents = Render("index", data);
+            var contents = this.Render("index", data);
             Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1</p>",
                 "<p>1</p>"));
 
             Assert.That(calls, Is.EqualTo(1));
 
-            contents = Render("index", data);
+            contents = this.Render("index", data);
             Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1</p>",
                 "<p>1</p>"));
@@ -161,7 +159,7 @@ ${foo()}
         [Test]
         public void MultipleCachesShouldActAsDifferentSite()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <viewdata model=""System.Func<string>""/>
 <div>
 <cache>
@@ -178,7 +176,7 @@ ${foo()}
                 Model = () => (++calls).ToString()
             };
 
-            var contents = Render("index", data);
+            var contents = this.Render("index", data);
             Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
@@ -187,7 +185,7 @@ ${foo()}
             Assert.That(calls, Is.EqualTo(2));
 
 
-            contents = Render("index", data);
+            contents = this.Render("index", data);
             Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
@@ -199,7 +197,7 @@ ${foo()}
         [Test]
         public void NamedContentShouldIndividuallySpoolAndCache()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <viewdata model=""System.Func<string>""/>
 <div>
 <content name='foo'>
@@ -232,7 +230,7 @@ placed
                 Model = () => (++calls).ToString()
             };
 
-            var contents = Render("index", data);
+            var contents = this.Render("index", data);
             Assert.That(calls, Is.EqualTo(8));
             Assert.That(contents, Is.EqualTo(@"
 <div>
@@ -249,7 +247,7 @@ placed
 </div>"));
 
 
-            contents = Render("index", data);
+            contents = this.Render("index", data);
             Assert.That(calls, Is.EqualTo(12));
             Assert.That(contents, Is.EqualTo(@"
 <div>
@@ -271,7 +269,7 @@ placed
         public void OutputWhileNamedContentActiveShouldAppearOnceAtCorrectTarget()
         {
 
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <viewdata model=""System.Func<string>""/>
 <ul>
 <content name='foo'>
@@ -300,7 +298,7 @@ hana
                 Model = () => (++calls).ToString()
             };
 
-            var contents = Render("index", data);
+            var contents = this.Render("index", data);
             Assert.That(calls, Is.EqualTo(6));
             Assert.That(contents, Is.EqualTo(@"
 <ul>
@@ -314,7 +312,7 @@ hana
 </ul>"));
 
 
-            contents = Render("index", data);
+            contents = this.Render("index", data);
             Assert.That(calls, Is.EqualTo(10));
             Assert.That(contents, Is.EqualTo(@"
 <ul>
@@ -332,7 +330,7 @@ hana
         [Test]
         public void OnceFlagsSetWhenCacheRecordedShouldBeSetWhenCacheReplayed()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <viewdata model=""System.Func<string>""/>
 <ul>
 <li once='foo'>${ViewData.Model()}[1]</li>
@@ -352,7 +350,7 @@ hana
                 Model = () => (++calls).ToString()
             };
 
-            var contents = Render("index", data);
+            var contents = this.Render("index", data);
             Assert.That(calls, Is.EqualTo(3));
             Assert.That(contents, Is.EqualTo(@"
 <ul>
@@ -361,7 +359,7 @@ hana
 <li>3[4]</li>
 </ul>"));
 
-            contents = Render("index", data);
+            contents = this.Render("index", data);
             Assert.That(calls, Is.EqualTo(5));
             Assert.That(contents, Is.EqualTo(@"
 <ul>
@@ -374,7 +372,7 @@ hana
         [Test]
         public void CacheFinallyShouldNotThrowExceptionWhenKeyIsBad()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <macro name='boom'>
 #throw new System.ApplicationException();
 </macro>
@@ -382,19 +380,19 @@ hana
 foo
 </cache>
 ");
-            Assert.That(() => Render("index", new StubViewData()), Throws.TypeOf<ApplicationException>());
+            Assert.That(() => this.Render("index", new StubViewData()), Throws.TypeOf<ApplicationException>());
         }
 
         [Test]
         public void CacheAttributeUsedAsKey()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <var stuff='new[]{1,3,5,2,3,3,5,7}' count='0'/>
 <for each='var x in stuff'>
 <p cache='x'>${x}:${++count}</p>
 </for>");
 
-            var contents = Render("index");
+            var contents = this.Render("index");
             Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:1</p>",
                 "<p>3:2</p>",
@@ -409,7 +407,7 @@ foo
         [Test]
         public void CacheExpiresTakesOutContentAfterTime()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <viewdata model=""System.Func<string>""/>
 <for each='var x in new[]{1,2,3,1,2,3}'>
 <cache key='x' expires='System.TimeSpan.FromSeconds(30)'>
@@ -425,7 +423,7 @@ foo
                 Model = () => (++calls).ToString()
             };
 
-            var contents = Render("index", data);
+            var contents = this.Render("index", data);
             Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:1</p>",
                 "<p>2:2</p>",
@@ -435,8 +433,8 @@ foo
                 "<p>3:3</p>",
                 "<p>last:4</p>"));
 
-            _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(25);
-            contents = Render("index", data);
+            this._cacheService.UtcNow = this._cacheService.UtcNow.AddSeconds(25);
+            contents = this.Render("index", data);
             Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:1</p>",
                 "<p>2:2</p>",
@@ -446,8 +444,8 @@ foo
                 "<p>3:3</p>",
                 "<p>last:4</p>"));
 
-            _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(10);
-            contents = Render("index", data);
+            this._cacheService.UtcNow = this._cacheService.UtcNow.AddSeconds(10);
+            contents = this.Render("index", data);
             Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:5</p>",
                 "<p>2:6</p>",
@@ -457,8 +455,8 @@ foo
                 "<p>3:7</p>",
                 "<p>last:4</p>"));
 
-            _cacheService.UtcNow = _cacheService.UtcNow.AddSeconds(10);
-            contents = Render("index", data);
+            this._cacheService.UtcNow = this._cacheService.UtcNow.AddSeconds(10);
+            contents = this.Render("index", data);
             Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:5</p>",
                 "<p>2:6</p>",
@@ -472,7 +470,7 @@ foo
         [Test]
         public void CommaCreatesMultiPartKey()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"),
+            this._viewFolder.Add(Path.Combine("home", "index.spark"),
                             @"
 <viewdata model=""System.Func<string>""/>
 <for each='var x in new[]{1,2,3,1,2,3}'>
@@ -485,7 +483,7 @@ foo
                            Model = () => (++calls).ToString()
                        };
 
-            var contents = Render("index", data);
+            var contents = this.Render("index", data);
             Assert.That(contents, Tests.Contains.InOrder(
                 "<p>1:1</p>",
                 "<p>2:2</p>",
@@ -494,19 +492,19 @@ foo
                 "<p>2:5</p>",
                 "<p>3:6</p>"));
 
-            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f0"), Is.EqualTo(1));
-            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f1"), Is.EqualTo(1));
-            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f2"), Is.EqualTo(1));
-            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f3"), Is.EqualTo(1));
-            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f4"), Is.EqualTo(1));
-            Assert.That(_cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f5"), Is.EqualTo(1));
+            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f0"), Is.EqualTo(1));
+            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f1"), Is.EqualTo(1));
+            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f2"), Is.EqualTo(1));
+            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f3"), Is.EqualTo(1));
+            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f4"), Is.EqualTo(1));
+            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f5"), Is.EqualTo(1));
         }
 
 
         [Test]
         public void SignalWillExpireOutputCachingEntry()
         {
-            _viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
 <viewdata model=""System.Func<string>"" datasignal='Spark.ICacheSignal'/>
 <div>
 <cache key='string.Empty' signal='datasignal'>
@@ -521,14 +519,14 @@ foo
             };
             data["datasignal"] = signal;
 
-            var contents = Render("index", data);
+            var contents = this.Render("index", data);
             Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
 </div>"));
             Assert.That(calls, Is.EqualTo(1));
 
-            contents = Render("index", data);
+            contents = this.Render("index", data);
             Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
@@ -537,14 +535,14 @@ foo
 
             signal.FireChanged();
 
-            contents = Render("index", data);
+            contents = this.Render("index", data);
             Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>2</p>
 </div>"));
             Assert.That(calls, Is.EqualTo(2));
 
-            contents = Render("index", data);
+            contents = this.Render("index", data);
             Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>2</p>

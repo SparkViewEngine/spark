@@ -1,0 +1,10 @@
+
+<global type="const int" Lower="3"/>
+<global type="readonly int" Higher="8"/>
+<global type="int" Iter="1"/>
+
+<ol>
+#while(Iter < Higher) {
+<li if="Iter >= Lower">${Iter}</li>
+#++Iter;}
+</ol>

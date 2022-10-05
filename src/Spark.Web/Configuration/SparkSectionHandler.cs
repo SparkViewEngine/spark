@@ -85,8 +85,13 @@ namespace Spark.Configuration
             Pages.Namespaces.Add(ns);
             return this;
         }
-
+        
         bool ISparkSettings.Debug => Compilation.Debug;
+
+        /// <summary>
+        /// Returns where the app is installed.
+        /// </summary>
+        string ISparkSettings.RootPath => AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
 
         bool IParserSettings.AutomaticEncoding => Pages.AutomaticEncoding;
 
@@ -143,6 +148,5 @@ namespace Spark.Configuration
                     yield return viewFolder;
             }
         }
-
     }
 }

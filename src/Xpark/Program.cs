@@ -45,11 +45,11 @@ a _global.spark file with common namespaces, macros, etc.
 
             // Create an engine using the templates path as the root location
             // as well as the shared location
-            var engine = new SparkViewEngine
-                             {
-                                 DefaultPageBaseType = typeof(SparkView).FullName,
-                                 ViewFolder = viewFolder.Append(new SubViewFolder(viewFolder, "Shared"))
-                             };
+            var engine = new SparkViewEngine(new SparkSettings())
+            {
+                DefaultPageBaseType = typeof(SparkView).FullName,
+                ViewFolder = viewFolder.Append(new SubViewFolder(viewFolder, "Shared"))
+            };
 
             SparkView view;
             // compile and instantiate the template

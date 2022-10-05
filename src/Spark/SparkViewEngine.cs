@@ -16,7 +16,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Reflection;
 using Spark.Bindings;
 using Spark.Compiler;
@@ -36,7 +35,9 @@ namespace Spark
 
         public SparkViewEngine(ISparkSettings settings)
         {
-            Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
+            Settings = settings ??
+                (ISparkSettings)ConfigurationManager.GetSection("spark") ??
+                throw new ConfigurationErrorsException(SparkServiceContainer.MissingSparkSettingsConfigurationErrorExceptionMessage);
             SyntaxProvider = new DefaultSyntaxProvider(Settings);
             ViewActivatorFactory = new DefaultViewActivator();
         }
@@ -62,7 +63,10 @@ namespace Spark
             get
             {
                 if (_viewFolder == null)
-                    SetViewFolder(CreateDefaultViewFolder());
+                {
+                    SetViewFolder(Settings.CreateDefaultViewFolder());
+                }
+
                 return _viewFolder;
             }
             set { SetViewFolder(value); }
@@ -116,13 +120,7 @@ namespace Spark
             }
             set { _partialReferenceProvider = value; }
         }
-
-        private static IViewFolder CreateDefaultViewFolder()
-        {
-            var appBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            return new FileSystemViewFolder(Path.Combine(appBase, "Views"));
-        }
-
+        
         private void SetViewFolder(IViewFolder value)
         {
             var aggregateViewFolder = value;

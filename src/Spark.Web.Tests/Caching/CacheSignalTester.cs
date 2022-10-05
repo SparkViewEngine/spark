@@ -1,8 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-
-namespace Spark.Tests.Caching
+namespace Spark.Caching
 {
     [TestFixture]
     public class CacheSignalTester
@@ -67,13 +66,13 @@ namespace Spark.Tests.Caching
         {
             protected override void Enable()
             {
-                Assert.That(Enabled, Is.False);
-                Enabled = true;
+                Assert.That(this.Enabled, Is.False);
+                this.Enabled = true;
             }
             protected override void Disable()
             {
-                Assert.That(Enabled, Is.True);
-                Enabled = false;                
+                Assert.That(this.Enabled, Is.True);
+                this.Enabled = false;                
             }
 
             public bool Enabled { get; set; }

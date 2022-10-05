@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+
+using System;
 using System.Collections;
-using System.ComponentModel.Design;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Principal;
 using System.Web;
 using Castle.Core.Logging;
+using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Descriptors;
 using Castle.MonoRail.Framework.Resources;
 using Castle.MonoRail.Framework.Routing;
@@ -26,16 +29,8 @@ using Castle.MonoRail.Views.Spark.Wrappers;
 using Spark.Compiler;
 
 namespace Castle.MonoRail.Views.Spark
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-
-    using Castle.MonoRail.Framework;
-
+{   
     using global::Spark;
-    using global::Spark.FileSystem;
-    using global::Spark.Parser.Markup;
 
     public class SparkViewFactory : ViewEngineBase, IViewSourceLoaderContainer
     {
@@ -59,7 +54,10 @@ namespace Castle.MonoRail.Views.Spark
             get
             {
                 if (_engine == null)
-                    SetEngine(new SparkViewEngine());
+                {
+                    SetEngine(new SparkViewEngine(new SparkSettings()));
+                }
+
                 return _engine;
             }
             set

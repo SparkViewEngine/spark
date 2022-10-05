@@ -17,9 +17,10 @@ using System.IO;
 using NUnit.Framework;
 using Spark.Compiler;
 using Spark.FileSystem;
+using Spark.Tests;
 using Spark.Tests.Stubs;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class ImportAndIncludeTester

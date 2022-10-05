@@ -18,7 +18,7 @@ using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class PrefixSupportTester

@@ -1,19 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net481</TargetFramework>
+    <TargetFrameworks>net481;net6.0</TargetFrameworks>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
-    <Title>Spark</Title>
+    <IsPackable>True</IsPackable>
+    <AssemblyVersion>1.8</AssemblyVersion>
+    <Version>1.8.2.0-alpha</Version>
+    <FileVersion>1.8.2.0-alpha</FileVersion>
     <Authors>RobertTheGrey</Authors>
     <Company>Louis DeJardin</Company>
     <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/SparkViewEngine/spark</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>1.8</AssemblyVersion>
-    <FileVersion>1.8.1.0</FileVersion>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
@@ -22,6 +23,11 @@
     <Copyright>Copyright (c) Louis DeJardin 2008-2022</Copyright>
     <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+    <PackageReference Include="MarkdownSharp" Version="2.0.5" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Remove="Compiler\NodeVisitors\FileReferenceVisitor.cs" />
     <Compile Remove="Parser\Code\CodeSnipGrammar.cs" />
@@ -38,8 +44,5 @@
     <None Include="..\SparkKey.snk">
       <Link>SparkKey.snk</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Configuration" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,21 @@
+<p>
+  a:<%Output.Write("1");%>
+</p>
+<p>
+  b:
+  #Output.Write("2");
+</p>
+<p>
+  c:<%Output.Write("3%>");%>
+</p>
+<p>
+  d:<%Output.Write("<%4%>");%>
+</p>
+<p>
+  e:
+  #Output.Write("5%>");
+</p>
+<p>
+  f:
+  #Output.Write("<%6%>");
+</p>

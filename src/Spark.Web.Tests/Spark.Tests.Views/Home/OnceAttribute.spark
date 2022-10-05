@@ -1,0 +1,11 @@
+
+<test once="foo">foo1</test>
+<test once="foo">foo2</test>
+<test once="foo">foo3</test>
+
+<for each="var x in new[]{'bar','bar','quux','bar'}">
+  <test once="${x}">${x}${xIndex}</test>
+</for>
+
+<p once="alpha">a1</p>
+<p once="alpha">a2</p>

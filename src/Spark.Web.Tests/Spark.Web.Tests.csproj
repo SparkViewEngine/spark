@@ -4,7 +4,11 @@
     <TargetFramework>net481</TargetFramework>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RootNamespace>Spark</RootNamespace>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="SparkControllerFactoryTester.cs" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
@@ -18,5 +22,347 @@
   <ItemGroup>
     <ProjectReference Include="..\Spark.Web\Spark.Web.csproj" />
     <ProjectReference Include="..\Spark.Tests\Spark.Tests.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Spark.Tests.Views\Code\foreach.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Code\simplecode.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\addviewdatamorethanonce.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\childview.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\addviewdatadifferenttypes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\unlessattribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\unlesselement.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\UnlessAttributeWorksOnSpecialNodes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\ShadeElementsMayStackOnOneLine.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\TextOrientedAttributesApplyToGlobal.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Spark.Tests.Views\Home\TextOrientedAttributesApplyToDefault.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\TextOrientedAttributesApplyToUseFile.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\TextOrientedAttributesApplyToVarAndSet.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Spark.Tests.Views\Home\ShadeTextMayContainExpressions.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\ShadeCodeMayBeDashOrAtBraced.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\Index2.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\ShadeSupportsAttributesAndMayTreatSomeElementsAsSpecialNodes.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\ShadeEvaluatesExpressions.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\ShadeFileRenders.shade">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\escape.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\preserveDoubleQuotes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\preserveSingleQuotes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\expression-has-verbatim-strings.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\partialspecialelements.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\relativeapplicationpaths.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\statement-terminating-strings.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\testelementnested.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\eachattribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\elseifattribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\elseifelement.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\elseifelement2.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\extensionelements.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\foreach.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\foreachindex.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\globalset.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\helpers.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\ifattribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\ifelement.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\Index.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\macros.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\namedcontent.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\testelement.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\useassembly.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\usingnamespace.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\usingpartial.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\usingpartialimplicit.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\viewdata.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_AddViewDataPartial.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\render-partial-section-or-ignore.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Prefix\section-render-prefix.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Shared\layout.spark">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Shared\partial.spark">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Shared\_comment.spark">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Shared\_UsePartialWithSpecialElements.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FileSystem\Embedded\Home\Index.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileSystem\Embedded\Home\List.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileSystem\Embedded\Shared\Default.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Update="Spark.Tests.Views\Clientside\AnonymousTypeBecomesHashLikeObject.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Clientside\simple.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\alternate-viewdata-syntax.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\capture-content-as-variable.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\capture-content-before-and-after.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\const-and-readonly-globals.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\CodeCommentsCanHaveQuotes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\ConditionalAttributeDelimitedBySpaces.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Spark.Tests.Views\Home\eachattribute-whitespace.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\markdown.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_NamedSegmentFallback.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\SegmentRenderingFallbackMayRenderSegment.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\render-dotted-partial.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_NestedPartialsInner.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\NestedPartialsCanBackRenderUpAndReRenderDown.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_NestedPartialsOuter.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_PartialWith.Dot.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_UsedByRecursivePartialsThrowCompilerException.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\RecursivePartialsThrowCompilerException.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_PartialInMacro.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\PartialInMacroMayUseDefaultElement.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\LateBoundEvalResolvesViewData.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\OnceAttributeWorksOnSpecialNodes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\IfAttributeWorksOnSpecialNodes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_SimpleValue.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\EachAttributeWorksOnSpecialNodes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\OnceAttribute.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\NullExceptionHandledAutomatically.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\DefaultValuesStandInForNullViewData.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\DefaultValuesActAsLocal.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\DefaultValuesDontReplaceViewData.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\DefaultValuesDontReplaceGlobals.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\DefaultValuesDontCollideWithExistingLocals.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\foreach-autovariables-used-inline.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Prefix\conditional-attributes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Prefix\macro-content-prefix-from-settings.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Prefix\segment-render-prefix.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Prefix\macro-content-prefix.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Prefix\prefix-from-xmlns.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Prefix\prefix-from-settings.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\xmldecl-and-processing-instruction.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_Data.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\render-partial-with-iteration.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_RoundedEx.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\render-partial-with-segment-content.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\dynamic-attributes.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\foreach-moreautovariables.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\prefix-content-notation.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\usingpartial-render-element.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\render-partial-with-contained-content.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Home\_Rounded.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Spark.Tests.Views\Prefix\_PartialWithSegments.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Spark.Tests.Views\Home\ignore.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="SparkControllerFactoryTester.cs" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,37 @@
+
+<div>
+  <elt1 a1="1" a2="?{false}" a3="3"></elt1>
+  <elt2 a1="1" a2="2?{false}" a3="3"></elt2>
+  <elt3 a1="1" a2="?{true}" a3="3"></elt3>
+  <elt4 a1="1" a2="2?{true}" a3="3"></elt4>
+
+  <elt5 a1="1" a2="alpha?{false} beta?{true}" a3="3"></elt5>
+  <elt6 a1="1" a2="alpha?{true} beta?{true}" a3="3"></elt6>
+  <elt7 a1="1" a2="alpha?{true} beta?{false}" a3="3"></elt7>
+  <elt8 a1="1" a2="alpha?{false} beta?{false}" a3="3"></elt8>
+  
+  <elt9 a1="1" a2="alpha?{false} beta" a3="3"></elt9>
+  <elt10 a1="1" a2="alpha?{true} beta" a3="3"></elt10>
+
+  <elt11 a1="1" a2="${'one'}${'two'}?{false}" a3="3"></elt11>
+  <elt12 a1="1" a2="${'one'}${'two'}?{true}" a3="3"></elt12>
+</div>
+
+
+code with attributes...
+literal...
+conditional...
+ConditionalAttributeNode
+Yarbles
+
+[ a2="] //if last child nodes cond, escro start tag. Otherwise all is normal.
+cond
+  lit
+cond
+  lit
+cond
+  lit
+lit
+["] //if start tag out, do end tag
+we don't know in advance?
+or do we?

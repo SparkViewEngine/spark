@@ -22,7 +22,6 @@ using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Test;
 using Spark;
 
-
 namespace Castle.MonoRail.Views.Spark.Install
 {
     public partial class PrecompileInstaller : Installer
@@ -70,7 +69,11 @@ namespace Castle.MonoRail.Views.Spark.Install
 
             // GetSection will try to resolve the "Spark" assembly, which the installutil appdomain needs help finding
             AppDomain.CurrentDomain.AssemblyResolve += ((sender, e) => Assembly.LoadFile(Path.Combine(appBinPath, e.Name + ".dll")));
-            var settings = (ISparkSettings)config.GetSection("spark");
+
+            // Attempt to get the configuration from settings, otherwise use default settings
+            var settings =
+                (ISparkSettings)config.GetSection("spark") ??
+                new SparkSettings();
 
             var services = new StubMonoRailServices();
             services.AddService(typeof(IViewSourceLoader), new FileAssemblyViewSourceLoader(viewsLocation));

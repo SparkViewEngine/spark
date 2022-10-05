@@ -1,0 +1,32 @@
+<Project>
+  <Target Name="RemoveObjAndBinFolders" AfterTargets="Clean">
+    <PropertyGroup>
+      <ObjFolder>$(ProjectDir)$(BaseIntermediateOutputPath)</ObjFolder>
+      <BinFolder>$(ProjectDir)$(BaseOutputPath)</BinFolder>
+
+      <!-- Microsoft.NET.Sdk.Web sets $(BaseIntermediateOutputPath) to -->
+      <!-- an absolute path. Not fixed up to MsBuild 17! -->
+      <BaseIntermediateOutputPathFix Condition="$(BaseIntermediateOutputPath.StartsWith($(MSBuildProjectDirectory)))">$([MSBuild]::MakeRelative(
+        $(ProjectDir),
+        $(BaseIntermediateOutputPath)
+        ))</BaseIntermediateOutputPathFix>
+    
+      <ObjFolder Condition="$(BaseIntermediateOutputPath.StartsWith($(MSBuildProjectDirectory)))">$(ProjectDir)$(BaseIntermediateOutputPathFix)</ObjFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ObjFiles Include="$(ObjFolder)/*.*"
+                Exclude="$(ObjFolder)/project.assets.json" />
+      <ObjSubFolders
+        Include="$([System.IO.Directory]::GetDirectories('$(ObjFolder)'))" />
+    </ItemGroup>
+    
+    <!-- Remove "obj" sub folders -->
+    <RemoveDir Directories="@(ObjSubFolders)" ContinueOnError="true" />
+    <!-- Remove "obj" files (keeping necessary asset file)-->
+    <Delete Files="@(ObjFiles)" />
+    
+    <!-- Remove "bin" folders -->
+    <RemoveDir Directories="$(BinFolder)" ContinueOnError="true" />
+  </Target>
+</Project>

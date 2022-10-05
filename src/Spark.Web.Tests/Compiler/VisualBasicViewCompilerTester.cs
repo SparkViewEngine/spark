@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+
 using System;
 using System.Collections.Generic;
-
-using Spark.Compiler;
 using NUnit.Framework;
 using Spark.Compiler.VisualBasic;
+using Spark.Tests;
 using Spark.Tests.Models;
 using Spark.Tests.Stubs;
 
-namespace Spark.Tests.Compiler
+namespace Spark.Compiler
 {
     [TestFixture]
     public class VisualBasicViewCompilerTester

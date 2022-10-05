@@ -13,7 +13,6 @@
 // limitations under the License.
 // 
 using System;
-using System.Dynamic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
@@ -95,15 +94,10 @@ namespace Spark.Web.Mvc.Tests
         {
             public override void Render()
             {
-
                 throw new NotImplementedException();
-
             }
 
-            public override Guid GeneratedViewId
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public override Guid GeneratedViewId => throw new NotImplementedException();
         }
 
         [Test]

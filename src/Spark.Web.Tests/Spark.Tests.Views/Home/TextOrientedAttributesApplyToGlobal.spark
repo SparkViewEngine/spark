@@ -1,0 +1,5 @@
+<global foo="World" foo2="Hello ${'World'}!" type="string"/>
+<global foo3="${42}" type="int"/>
+<p>${foo.GetType().Name}:${foo}</p>
+<p>${foo2.GetType().Name}:${foo2}</p>
+<p>${foo3.GetType().Name}:${foo3}</p>

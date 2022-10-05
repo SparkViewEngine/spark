@@ -279,7 +279,7 @@ namespace Spark.Tests
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();
-            Assert.That(content, Contains.InOrder(
+            Assert.That(content, Tests.Contains.InOrder(
                 "<p>Hi Bob!</p>",
                 "<p>Administrator James</p>",
                 "<p>Test user.</p>",

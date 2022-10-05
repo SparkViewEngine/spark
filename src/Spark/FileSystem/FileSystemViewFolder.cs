@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,11 +29,7 @@ namespace Spark.FileSystem
             _basePath = basePath;
         }
 
-        public string BasePath
-        {
-            get { return _basePath; }
-        }
-
+        public string BasePath => _basePath;
 
         public IViewFile GetViewSource(string path)
         {
@@ -45,7 +43,7 @@ namespace Spark.FileSystem
         public IList<string> ListViews(string path)
         {
             if (!Directory.Exists(Path.Combine(_basePath, path)))
-                return new string[0];
+                return Array.Empty<string>();
 
             var files = Directory.GetFiles(Path.Combine(_basePath, path));
             return files.ToList().ConvertAll(viewPath => Path.GetFileName(viewPath));

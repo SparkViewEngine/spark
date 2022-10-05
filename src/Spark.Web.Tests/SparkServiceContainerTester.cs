@@ -15,14 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Spark.Bindings;
 using Spark.FileSystem;
 using System.IO;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class SparkServiceContainerTester

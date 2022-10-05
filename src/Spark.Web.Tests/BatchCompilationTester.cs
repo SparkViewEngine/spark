@@ -21,8 +21,9 @@ using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests.Precompiled;
 using System.IO;
+using Spark.Tests;
 
-namespace Spark.Tests
+namespace Spark
 {
     [TestFixture]
     public class BatchCompilationTester
@@ -33,7 +34,7 @@ namespace Spark.Tests
         public void Init()
         {
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(Stubs.StubSparkView));
+                .SetPageBaseType(typeof(Tests.Stubs.StubSparkView));
 
             engine = new SparkViewEngine(settings)
                          {

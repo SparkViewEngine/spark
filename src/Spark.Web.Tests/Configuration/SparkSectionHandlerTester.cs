@@ -17,11 +17,11 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Spark.Configuration;
 using Spark.FileSystem;
+using Spark.Tests;
 using Spark.Tests.Stubs;
 
-namespace Spark.Tests.Configuration
+namespace Spark.Configuration
 {
     [TestFixture]
     public class SparkSectionHandlerTester
