@@ -4,7 +4,7 @@
 		<RootNamespace>Spark.JsTests</RootNamespace>
 		<OutputType>Library</OutputType>
 		<OutputPath>bin\</OutputPath>
-		<TargetFramework>net481</TargetFramework>
+		<TargetFramework>net48</TargetFramework>
 		<Company>Marketwatch</Company>
 		<Copyright>Copyright © MarketWatch 2008</Copyright>
     <IsPackable>False</IsPackable>
