@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net481</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <IsPackable>False</IsPackable>
-    <AssemblyVersion>1.8</AssemblyVersion>
+    <AssemblyVersion>1.8.2.0</AssemblyVersion>
     <Version>1.8.2.0-alpha</Version>
     <FileVersion>1.8.2.0-alpha</FileVersion>
     <Authors>RobertTheGrey</Authors>
@@ -47,6 +47,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
   </ItemGroup>
 </Project>

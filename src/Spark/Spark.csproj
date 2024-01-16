@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net481;net6.0</TargetFrameworks>
+    <TargetFrameworks>net48;net8.0;netstandard2.0</TargetFrameworks>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <IsPackable>True</IsPackable>
-    <AssemblyVersion>1.8</AssemblyVersion>
+    <AssemblyVersion>1.8.2.0</AssemblyVersion>
     <Version>1.8.2.0-alpha</Version>
     <FileVersion>1.8.2.0-alpha</FileVersion>
     <Authors>RobertTheGrey</Authors>
@@ -24,8 +24,8 @@
     <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.CodeDom" Version="6.0.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+    <PackageReference Include="System.CodeDom" Version="8.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     <PackageReference Include="MarkdownSharp" Version="2.0.5" />
   </ItemGroup>
   <ItemGroup>

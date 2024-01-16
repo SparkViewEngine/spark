@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <OutputType>Library</OutputType>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <IsPackable>False</IsPackable>
-    <AssemblyVersion>1.8</AssemblyVersion>
+    <AssemblyVersion>1.8.2.0</AssemblyVersion>
     <Version>1.8.2.0-alpha</Version>
     <FileVersion>1.8.2.0-alpha</FileVersion>
     <Authors>RobertTheGrey</Authors>
@@ -38,7 +38,7 @@
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\license.txt">
