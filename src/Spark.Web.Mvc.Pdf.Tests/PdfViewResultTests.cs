@@ -2,9 +2,11 @@
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Spark.FileSystem;
+using Spark.Web.Mvc.Extensions;
 using Spark.Web.Mvc.Tests;
 
 namespace Spark.Web.Mvc.Pdf.Tests
@@ -62,17 +64,20 @@ namespace Spark.Web.Mvc.Pdf.Tests
         public void PdfResultShouldWriteToOutputStream()
         {
             var settings = new SparkSettings();
-            var viewFolder = new InMemoryViewFolder
-                             {
-                                 {
-                                     "foo/bar.spark",
-                                     HelloWorldXml
-                                     }
-                             };
-            var factory = new SparkViewFactory(settings)
-                          {
-                              ViewFolder = viewFolder
-                          };
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(
+                    new InMemoryViewFolder
+                    {
+                        {
+                            "foo/bar.spark",
+                            HelloWorldXml
+                        }
+                    })
+                .BuildServiceProvider();
+
+            var factory = sp.GetService<SparkViewFactory>();
 
             var stream = new MemoryStream();
             var controllerContext = GetControllerContext(stream);

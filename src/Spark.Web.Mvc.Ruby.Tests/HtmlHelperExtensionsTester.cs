@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Collections.Generic;
+
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Compiler.Roslyn;
 using Spark.FileSystem;
+using Spark.Web.Mvc.Extensions;
 
 namespace Spark.Web.Mvc.Ruby.Tests
 {
@@ -41,7 +41,10 @@ namespace Spark.Web.Mvc.Ruby.Tests
         [Test]
         public void BuildingScriptHeader()
         {
-            var languageFactory = new RubyLanguageFactoryWithExtensions();
+            var batchCompiler = new RoslynBatchCompiler();
+
+            var languageFactory = new RubyLanguageFactoryWithExtensions(batchCompiler);
+
             var header = languageFactory.BuildScriptHeader(languageFactory.GetType().Assembly);
 
             Assert.That(header.Contains("ActionLink"));
@@ -51,15 +54,18 @@ namespace Spark.Web.Mvc.Ruby.Tests
 
         private static ViewContext CompileView(string viewContents)
         {
-            var settings = new SparkSettings();
-            var container = SparkRubyEngineStarter.CreateContainer(settings);
+            var services = new ServiceCollection()
+                .AddSpark(new SparkSettings());
+            
+            var viewFolder = new InMemoryViewFolder { { $"stub{Path.DirectorySeparatorChar}index.spark", viewContents } };
 
-            var viewFolder = new InMemoryViewFolder { { string.Format("stub{0}index.spark", Path.DirectorySeparatorChar), viewContents } };
-            container.SetServiceBuilder<IViewFolder>(c => viewFolder);
-            var viewEngine = container.GetService<IViewEngine>();
+            services.AddSingleton<IViewFolder>(viewFolder);
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            var viewEngine = serviceProvider.GetService<SparkViewFactory>();
 
             var httpContext = new StubHttpContext();
-
 
             var routeData = new RouteData();
             routeData.Values.Add("controller", "stub");

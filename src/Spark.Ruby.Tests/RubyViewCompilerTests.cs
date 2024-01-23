@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Spark.Compiler;
+using Spark.Compiler.Roslyn;
 using Spark.Parser;
 using Spark.Ruby.Compiler;
 using Spark.Tests.Models;
@@ -34,10 +35,11 @@ namespace Spark.Ruby.Tests
         public void Init()
         {
             _compiler = new RubyViewCompiler
-                        {
-                            BaseClass = typeof(StubSparkView).FullName,Debug = true
-                        };
-            _languageFactory = new RubyLanguageFactory();
+            {
+                BaseClass = typeof(StubSparkView).FullName,
+                Debug = true
+            };
+            _languageFactory = new RubyLanguageFactory(new RoslynBatchCompiler());
 
             //load assemblies
             global::IronRuby.Ruby.CreateEngine();

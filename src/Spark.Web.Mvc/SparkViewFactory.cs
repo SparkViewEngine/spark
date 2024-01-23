@@ -14,11 +14,9 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Spark.Compiler;
@@ -27,92 +25,40 @@ using Spark.Web.Mvc.Wrappers;
 
 namespace Spark.Web.Mvc
 {
-    public class SparkViewFactory : IViewEngine, IViewFolderContainer, ISparkServiceInitialize
+    public class SparkViewFactory : IViewEngine, IViewFolderContainer
     {
-        private ISparkViewEngine _engine;
-        private IDescriptorBuilder _descriptorBuilder;
-        private ICacheServiceProvider _cacheServiceProvider;
+        public ISparkSettings Settings { get; protected set; }
+        public ISparkViewEngine Engine { get; protected set; }
+        public IDescriptorBuilder DescriptorBuilder { get; protected set; }
+        public IResourcePathManager ResourcePathManager { get; protected set; }
+        public ICacheServiceProvider CacheServiceProvider { get; protected set; }
 
+        private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> _cache;
+        private readonly ViewEngineResult _cacheMissResult;
 
-        public SparkViewFactory()
-            : this(null)
+        public SparkViewFactory(ISparkSettings settings, 
+            ISparkViewEngine viewEngine,
+            IDescriptorBuilder descriptorBuilder,
+            IResourcePathManager resourcePathManager,
+            ICacheServiceProvider cacheServiceProvider)
         {
-        }
+            Settings = settings;
 
-        public SparkViewFactory(ISparkSettings settings)
-        {
-            Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
-        }
-
-
-        public virtual void Initialize(ISparkServiceContainer container)
-        {
-            Settings = container.GetService<ISparkSettings>();
-            Engine = container.GetService<ISparkViewEngine>();
-            DescriptorBuilder = container.GetService<IDescriptorBuilder>();
-            CacheServiceProvider = container.GetService<ICacheServiceProvider>();
-        }
-
-        public ISparkSettings Settings { get; set; }
-
-        public ISparkViewEngine Engine
-        {
-            get
+            if (string.IsNullOrEmpty(settings.PageBaseType))
             {
-                if (_engine == null)
-                    SetEngine(new SparkViewEngine(Settings));
-
-                return _engine;
+                settings.PageBaseType = typeof(SparkView).FullName;
             }
-            set
-            {
-                SetEngine(value);
-            }
+
+            Engine = viewEngine;
+            DescriptorBuilder = descriptorBuilder;
+            ResourcePathManager = resourcePathManager;
+            CacheServiceProvider = cacheServiceProvider;
+
+            _cache = new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
+            _cacheMissResult = new ViewEngineResult(Array.Empty<string>());
         }
 
-        public void SetEngine(ISparkViewEngine engine)
-        {
-            _descriptorBuilder = null;
-            _engine = engine;
-            if (_engine != null)
-            {
-                _engine.DefaultPageBaseType = typeof(SparkView).FullName;
-            }
-        }
-
-        public IViewActivatorFactory ViewActivatorFactory
-        {
-            get { return Engine.ViewActivatorFactory; }
-            set { Engine.ViewActivatorFactory = value; }
-        }
-
-        public IViewFolder ViewFolder
-        {
-            get { return Engine.ViewFolder; }
-            set { Engine.ViewFolder = value; }
-        }
-
-        public IDescriptorBuilder DescriptorBuilder
-        {
-            get
-            {
-                return _descriptorBuilder ??
-                       Interlocked.CompareExchange(ref _descriptorBuilder, new DefaultDescriptorBuilder(Engine), null) ??
-                       _descriptorBuilder;
-            }
-            set { _descriptorBuilder = value; }
-        }
-
-        public ICacheServiceProvider CacheServiceProvider
-        {
-            get
-            {
-                return _cacheServiceProvider ??
-                       Interlocked.CompareExchange(ref _cacheServiceProvider, new DefaultCacheServiceProvider(), null) ??
-                       _cacheServiceProvider;
-            }
-            set { _cacheServiceProvider = value; }
-        }
+        public IViewActivatorFactory ViewActivatorFactory => Engine.ViewActivatorFactory;
 
         public virtual ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
         {
@@ -136,15 +82,11 @@ namespace Spark.Web.Mvc
 
         public virtual void ReleaseView(ControllerContext controllerContext, IView view)
         {
-            var sparkView = view as ISparkView;
-            if (sparkView != null)
+            if (view is ISparkView sparkView)
+            {
                 Engine.ReleaseInstance(sparkView);
+            }
         }
-
-        private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> _cache =
-            new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
-
-        private readonly ViewEngineResult _cacheMissResult = new ViewEngineResult(new string[0]);
 
         private ViewEngineResult FindViewInternal(ControllerContext controllerContext, string viewName, string masterName, bool findDefaultMaster, bool useCache)
         {
@@ -198,16 +140,16 @@ namespace Spark.Web.Mvc
             lock (_cache) _cache[descriptorParams] = entry;
         }
 
-
         private ViewEngineResult BuildResult(RequestContext requestContext, ISparkViewEntry entry)
         {
             var view = (IView)entry.CreateInstance();
-            if (view is SparkView)
+            
+            if (view is SparkView sparkView)
             {
-                var sparkView = (SparkView)view;
-                sparkView.ResourcePathManager = Engine.ResourcePathManager;
+                sparkView.ResourcePathManager = ResourcePathManager;
                 sparkView.CacheService = CacheServiceProvider.GetCacheService(requestContext);
             }
+
             return new ViewEngineResult(view, this);
         }
 
@@ -233,17 +175,23 @@ namespace Spark.Web.Mvc
                 searchedLocations);
         }
 
-        public SparkViewDescriptor CreateDescriptor(string targetNamespace, string controllerName, string viewName,
-                                                    string masterName, bool findDefaultMaster)
+        public SparkViewDescriptor CreateDescriptor(
+            string targetNamespace, 
+            string controllerName, 
+            string viewName,
+            string masterName, 
+            bool findDefaultMaster)
         {
             var searchedLocations = new List<string>();
+
             var descriptor = DescriptorBuilder.BuildDescriptor(
                 new BuildDescriptorParams(
                     targetNamespace /*areaName*/,
                     controllerName,
                     viewName,
                     masterName,
-                    findDefaultMaster, null),
+                    findDefaultMaster, 
+                    null),
                 searchedLocations);
 
             if (descriptor == null)
@@ -291,7 +239,7 @@ namespace Spark.Web.Mvc
             {
                 if (include.EndsWith("*"))
                 {
-                    foreach (var fileName in ViewFolder.ListViews(controllerName))
+                    foreach (var fileName in Engine.ViewFolder.ListViews(controllerName))
                     {
                         if (!string.Equals(Path.GetExtension(fileName), ".spark", StringComparison.InvariantCultureIgnoreCase))
                         {
@@ -332,23 +280,25 @@ namespace Spark.Web.Mvc
             {
                 if (entry.LayoutNames.Count == 0)
                 {
-                    descriptors.Add(CreateDescriptor(
-                                        entry.ControllerType.Namespace,
-                                        controllerName,
-                                        viewName,
-                                        null /*masterName*/,
-                                        true));
+                    descriptors.Add(
+                        CreateDescriptor(
+                            entry.ControllerType.Namespace,
+                            controllerName,
+                            viewName,
+                            null /*masterName*/,
+                            true));
                 }
                 else
                 {
                     foreach (var masterName in entry.LayoutNames)
                     {
-                        descriptors.Add(CreateDescriptor(
-                                            entry.ControllerType.Namespace,
-                                            controllerName,
-                                            viewName,
-                                            string.Join(" ", masterName.ToArray()),
-                                            false));
+                        descriptors.Add(
+                            CreateDescriptor(
+                                entry.ControllerType.Namespace,
+                                controllerName,
+                                viewName,
+                                string.Join(" ", masterName.ToArray()),
+                                false));
                     }
                 }
             }
@@ -401,17 +351,6 @@ namespace Spark.Web.Mvc
         }
 
         #endregion
-
-
-        #region ISparkServiceInitialize Members
-
-        void ISparkServiceInitialize.Initialize(ISparkServiceContainer container)
-        {
-            Initialize(container);
-        }
-
-        #endregion
-
 
         #region IViewFolderContainer Members
 

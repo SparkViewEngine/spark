@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 
@@ -16,16 +18,20 @@ namespace Spark.Bindings
         [SetUp]
         public void Init()
         {
-            this._viewFolder = new InMemoryViewFolder();
+            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder, InMemoryViewFolder>()
+                .BuildServiceProvider();
+
+            this._viewFolder = (InMemoryViewFolder)sp.GetService<IViewFolder>();
+
+            var viewEngine = sp.GetService<ISparkViewEngine>();
 
             this._factory = new StubViewFactory
             {
-                Engine = new SparkViewEngine(
-                    new SparkSettings()
-                        .SetPageBaseType(typeof(StubSparkView)))
-                {
-                    ViewFolder = this._viewFolder
-                }
+                Engine = viewEngine
             };
         }
 

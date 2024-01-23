@@ -77,11 +77,12 @@ namespace Castle.MonoRail.Views.Spark.Install
             // Attempt to get the configuration from settings, otherwise use default settings
             var settings =
                 (ISparkSettings)config.GetSection("spark") ??
-                new SparkSettings();
+                new SparkSettings()
+                    .SetPageBaseType(typeof(SparkView));
 
             var services = new StubMonoRailServices();
+            services.AddService(typeof(ISparkSettings), settings);
             services.AddService(typeof(IViewSourceLoader), new FileAssemblyViewSourceLoader(viewsLocation));
-            services.AddService(typeof(ISparkViewEngine), new SparkViewEngine(settings));
             services.AddService(typeof(IControllerDescriptorProvider), services.ControllerDescriptorProvider);
 
             var factory = new SparkViewFactory();

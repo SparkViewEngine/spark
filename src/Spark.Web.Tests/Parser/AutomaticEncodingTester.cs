@@ -15,7 +15,9 @@
 
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.FileSystem;
 using Spark.Parser.Markup;
 using Spark.Tests;
@@ -42,13 +44,15 @@ namespace Spark.Parser
             this._settings = new SparkSettings()
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetAutomaticEncoding(automaticEncoding);
-            var container = new SparkServiceContainer(this._settings);
             
             this._viewFolder = new InMemoryViewFolder();
 
-            container.SetServiceBuilder<IViewFolder>(c => this._viewFolder);
+            var sp = new ServiceCollection()
+                .AddSpark(_settings)
+                .AddSingleton<IViewFolder>(_viewFolder)
+                .BuildServiceProvider();
 
-            this._engine = container.GetService<ISparkViewEngine>();
+            _engine = sp.GetService<ISparkViewEngine>();
         }
 
         private string RenderView(SparkViewDescriptor descriptor)

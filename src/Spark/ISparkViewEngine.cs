@@ -14,7 +14,6 @@
 // 
 using System.Collections.Generic;
 using System.Reflection;
-using Spark;
 using Spark.FileSystem;
 
 namespace Spark
@@ -22,12 +21,12 @@ namespace Spark
     public interface ISparkViewEngine
     {
         ISparkSettings Settings { get; }
+
         IViewFolder ViewFolder { get; set; }
-        IResourcePathManager ResourcePathManager { get; set; }
-        ISparkExtensionFactory ExtensionFactory { get; set; }
-        IViewActivatorFactory ViewActivatorFactory { get; set; }
-        string DefaultPageBaseType { get; set; }
-        ISparkSyntaxProvider SyntaxProvider { get; set; }
+
+        IViewActivatorFactory ViewActivatorFactory { get; }
+        string DefaultPageBaseType { get; }
+        ISparkSyntaxProvider SyntaxProvider { get; }
 
         ISparkViewEntry GetEntry(SparkViewDescriptor descriptor);
         ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor);

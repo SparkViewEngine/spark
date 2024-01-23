@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Compiler;
+using Spark.Compiler.CodeDom;
 using Spark.Compiler.CSharp.ChunkVisitors;
 using GeneratedCodeVisitor=Spark.Python.Compiler.ChunkVisitors.GeneratedCodeVisitor;
 using GlobalFunctionsVisitor=Spark.Python.Compiler.ChunkVisitors.GlobalFunctionsVisitor;
@@ -29,8 +30,8 @@ namespace Spark.Python.Compiler
         {
             GenerateSourceCode(viewTemplates, allResources);
 
-            var compiler = new BatchCompiler();
-            var assembly = compiler.Compile(Debug, "csharp", SourceCode);
+            var compiler = new CodeDomBatchCompiler();
+            var assembly = compiler.Compile(Debug, "csharp", null, new[] { SourceCode });
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 

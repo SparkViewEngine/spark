@@ -15,7 +15,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 
@@ -88,12 +90,15 @@ namespace Spark
         [Test]
         public void CustomViewActivator()
         {
-            var engine = new SparkViewEngine(
-                new SparkSettings().SetPageBaseType(typeof(StubSparkView)))
-                             {
-                                 ViewActivatorFactory = new CustomFactory(),
-                                 ViewFolder = new InMemoryViewFolder { { "hello/world.spark", "<p>hello world</p>" } }
-                             };
+            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewActivatorFactory, CustomFactory>()
+                .AddSingleton<IViewFolder>(new InMemoryViewFolder { { "hello/world.spark", "<p>hello world</p>" } })
+                .BuildServiceProvider();
+            
+            var engine = (SparkViewEngine) sp.GetService<ISparkViewEngine>();
 
             var descriptor = new SparkViewDescriptor().AddTemplate("hello/world.spark");
             var view = engine.CreateInstance(descriptor);

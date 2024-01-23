@@ -4,6 +4,8 @@ using Spark.FileSystem;
 using Spark.Tests.Models;
 using Spark.Tests.Stubs;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using Spark.Extensions;
 
 namespace Spark
 {
@@ -17,16 +19,19 @@ namespace Spark
         [SetUp]
         public void Init()
         {
-            _viewFolder = new InMemoryViewFolder();
+            var settings = new SparkSettings()
+                .SetDefaultLanguage(LanguageType.VisualBasic)
+                .SetPageBaseType(typeof(StubSparkView));
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder, InMemoryViewFolder>()
+                .BuildServiceProvider();
+
+            _viewFolder = (InMemoryViewFolder)sp.GetService<IViewFolder>();
             _factory = new StubViewFactory
             {
-                Engine = new SparkViewEngine(
-                    new SparkSettings()
-                        .SetDefaultLanguage(LanguageType.VisualBasic)
-                        .SetPageBaseType(typeof(StubSparkView)))
-                {
-                    ViewFolder = _viewFolder
-                }
+                Engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>()
             };
         }
 

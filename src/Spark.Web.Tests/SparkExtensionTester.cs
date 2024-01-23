@@ -21,6 +21,8 @@ using Spark.Compiler.NodeVisitors;
 using Spark.FileSystem;
 using Spark.Parser.Markup;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using Spark.Extensions;
 
 namespace Spark
 {
@@ -32,9 +34,15 @@ namespace Spark
         [SetUp]
         public void Init()
         {
-            engine = new SparkViewEngine(new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
-                         {ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")};
-            engine.ExtensionFactory = new StubExtensionFactory();
+            var settings = new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(new FileSystemViewFolder("Spark.Tests.Views"))
+                .AddSingleton<ISparkExtensionFactory>(new StubExtensionFactory())
+                .BuildServiceProvider();
+
+            engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
         }
 
         [Test]

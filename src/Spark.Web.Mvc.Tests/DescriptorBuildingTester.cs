@@ -16,16 +16,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 using Rhino.Mocks;
 using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Web.Mvc.Descriptors;
+using Spark.Web.Mvc.Extensions;
 
 namespace Spark.Web.Mvc.Tests
 {
@@ -37,13 +38,35 @@ namespace Spark.Web.Mvc.Tests
         private RouteData _routeData;
         private ControllerContext _controllerContext;
 
+        public static IServiceProvider SetupServiceProvider(ISparkSettings settings, Action<IServiceCollection> serviceOverrides = null)
+        {
+            IServiceCollection services = new ServiceCollection()
+                .AddSpark(settings);
+
+            if (serviceOverrides != null)
+            {
+                serviceOverrides.Invoke(services);
+            }
+
+            return services.BuildServiceProvider();
+        }
+
         [SetUp]
         public void Init()
         {
-            _factory = new SparkViewFactory();
-            _viewFolder = new InMemoryViewFolder();
-            _factory.ViewFolder = _viewFolder;
+            var settings = new SparkSettings();
 
+            _viewFolder = new InMemoryViewFolder();
+
+            var sp = SetupServiceProvider(
+                settings,
+                services =>
+                {
+                    services.AddSingleton<IViewFolder>(this._viewFolder);
+                });
+
+            _factory = sp.GetService<SparkViewFactory>();
+            
             var httpContext = MockRepository.GenerateStub<HttpContextBase>();
             _routeData = new RouteData();
             var controller = MockRepository.GenerateStub<ControllerBase>();
@@ -573,7 +596,17 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CustomParameterAddedToViewSearchPath()
         {
-            _factory.DescriptorBuilder = new ExtendingDescriptorBuilderWithInheritance(_factory.Engine);
+            var settings = new SparkSettings();
+
+            var sp = SetupServiceProvider(settings,
+                s =>
+                {
+                    s.AddSingleton<IViewFolder>(this._viewFolder);
+                    s.AddSingleton<IDescriptorBuilder, ExtendingDescriptorBuilderWithInheritance>();
+                });
+
+            var factory = sp.GetService<SparkViewFactory>();
+
             _routeData.Values.Add("controller", "Home");
             _routeData.Values.Add("language", "en-us");
             _viewFolder.Add(@"Home\Index.en-us.spark", "");
@@ -584,7 +617,8 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Application.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
                 result,
                 searchedLocations,
@@ -594,12 +628,8 @@ namespace Spark.Web.Mvc.Tests
 
         public class ExtendingDescriptorBuilderWithInheritance : DefaultDescriptorBuilder
         {
-            public ExtendingDescriptorBuilderWithInheritance()
-            {
-            }
-
-            public ExtendingDescriptorBuilderWithInheritance(ISparkViewEngine engine)
-                : base(engine)
+            public ExtendingDescriptorBuilderWithInheritance(ISparkSettings settings, IViewFolder viewFolder)
+                : base(settings, viewFolder)
             {
             }
 
@@ -649,16 +679,30 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CustomDescriptorBuildersCantUseDescriptorFilters()
         {
-            _factory.DescriptorBuilder = MockRepository.GenerateStub<IDescriptorBuilder>();
-            Assert.That(() =>
-                        _factory.AddFilter(MockRepository.GenerateStub<IDescriptorFilter>()),
-                        Throws.TypeOf<InvalidCastException>());
+            var settings = new SparkSettings();
+
+            var factory = new SparkViewFactory(
+                settings,
+                null,
+                MockRepository.GenerateStub<IDescriptorBuilder>(),
+                null,
+                null);
+
+            Assert.That(
+                () =>
+                    factory.AddFilter(MockRepository.GenerateStub<IDescriptorFilter>()),
+                Throws.TypeOf<InvalidCastException>());
         }
 
         [Test]
         public void SimplifiedUseMasterGrammarDetectsElementCorrectly()
         {
-            var builder = new DefaultDescriptorBuilder();
+            var settings = new SparkSettings
+            {
+                Prefix = null
+            };
+
+            var builder = new DefaultDescriptorBuilder(settings, null);
 
             var a = builder.ParseUseMaster(new Position(new SourceContext("<use master='a'/>")));
             var b = builder.ParseUseMaster(new Position(new SourceContext("<use\r\nmaster \r\n =\r\n'b' />")));
@@ -678,7 +722,12 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void SimplifiedUseMasterGrammarWithPrefixDetectsElementCorrectly()
         {
-            var builder = new DefaultDescriptorBuilder("s");
+            var settings = new SparkSettings
+            {
+                Prefix = "s"
+            };
+
+            var builder = new DefaultDescriptorBuilder(settings, null);
 
             var a = builder.ParseUseMaster(new Position(new SourceContext("<s:use master='a'/>")));
             var b = builder.ParseUseMaster(new Position(new SourceContext("<s:use\r\nmaster \r\n =\r\n'b' />")));

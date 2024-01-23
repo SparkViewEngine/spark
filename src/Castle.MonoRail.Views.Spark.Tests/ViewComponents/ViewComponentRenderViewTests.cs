@@ -16,6 +16,7 @@ using System.IO;
 using System.Reflection;
 using Castle.MonoRail.Framework;
 using NUnit.Framework;
+using Spark;
 using Spark.FileSystem;
 
 namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
@@ -81,7 +82,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                 Assembly.Load("Castle.MonoRail.Views.Spark.Tests"),
                 "Castle.MonoRail.Views.Spark.Tests.EmbeddedViews");
 
-            engine.ViewFolder = engine.ViewFolder.Append(embeddedViewFolder);
+            this.factory.Engine.ViewFolder = this.factory.Engine.ViewFolder.Append(embeddedViewFolder);
 
             mocks.ReplayAll();
 

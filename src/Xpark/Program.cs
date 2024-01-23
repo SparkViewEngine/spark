@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Spark;
+using Spark.Bindings;
+using Spark.Compiler.Roslyn;
 using Spark.FileSystem;
+using Spark.Parser;
+using Spark.Parser.Syntax;
 
 namespace Xpark
 {
@@ -41,29 +43,45 @@ a _global.spark file with common namespaces, macros, etc.
             var templateName = Path.GetFileName(templatePath);
             var templateDirPath = Path.GetDirectoryName(templatePath);
 
+            // Look for views in the root and shared location
             var viewFolder = new FileSystemViewFolder(templateDirPath);
+            viewFolder.Append(new SubViewFolder(viewFolder, "Shared"));
 
-            // Create an engine using the templates path as the root location
-            // as well as the shared location
-            var engine = new SparkViewEngine(new SparkSettings())
-            {
-                DefaultPageBaseType = typeof(SparkView).FullName,
-                ViewFolder = viewFolder.Append(new SubViewFolder(viewFolder, "Shared"))
-            };
+            var settings = new SparkSettings()
+                .SetPageBaseType(typeof(SparkView));
 
-            SparkView view;
+            var partialProvider = new DefaultPartialProvider();
+
+            var batchCompiler = new RoslynBatchCompiler();
+
+            var engine = new SparkViewEngine(
+                settings,
+                new DefaultSyntaxProvider(settings),
+                new DefaultViewActivator(),
+                new DefaultLanguageFactory(batchCompiler),
+                new CompiledViewHolder(),
+                viewFolder,
+                batchCompiler,
+                partialProvider,
+                new DefaultPartialReferenceProvider(partialProvider),
+                new DefaultBindingProvider(),
+                null);
+
             // compile and instantiate the template
-            view = (SparkView)engine.CreateInstance(
-                                  new SparkViewDescriptor()
-                                      .AddTemplate(templateName));
-
+            var view =
+                (SparkView)engine.CreateInstance(
+                    new SparkViewDescriptor()
+                        .AddTemplate(templateName));
 
             // load the second argument, or default to reading stdin
             if (args.Length >= 2)
+            {
                 view.Model = XDocument.Load(args[1]);
+            }
             else
+            {
                 view.Model = XDocument.Load(XmlReader.Create(Console.OpenStandardInput()));
-
+            }
 
             // write out to the third argument, or default to writing stdout
             if (args.Length >= 3)

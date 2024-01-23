@@ -27,21 +27,25 @@ namespace Castle.MonoRail.Views.Spark.Tests
     
     [TestFixture]
     public class SparkViewFactoryTests : SparkViewFactoryTestsBase
-	{
-		protected override void Configure()
-		{
-			factory = new SparkViewFactory();
-			factory.Service(serviceProvider);
+    {
+        protected override void Configure()
+        {
+            var settings = new SparkSettings()
+                .SetPageBaseType(typeof(SparkView));
 
-			manager = new DefaultViewEngineManager();
-			manager.Service(serviceProvider);
-			serviceProvider.ViewEngineManager = manager;
+            serviceProvider.AddService(typeof(ISparkSettings), settings);
+
+            factory = new SparkViewFactory();
+            factory.Service(serviceProvider);
+
+            manager = new DefaultViewEngineManager();
+            manager.Service(serviceProvider);
+            serviceProvider.ViewEngineManager = manager;
             serviceProvider.AddService(typeof(IViewEngineManager), manager);
-            serviceProvider.AddService(typeof(ISparkSettings), new SparkSettings());
-
-			manager.RegisterEngineForExtesionLookup(factory);
-			manager.RegisterEngineForView(factory);
-		}
+            
+            manager.RegisterEngineForExtesionLookup(factory);
+            manager.RegisterEngineForView(factory);
+        }
 
         [Test]
         public void ExtensionIsSpark()
@@ -69,7 +73,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             descriptor.Templates.Add(string.Format("Shared{0}default.spark", Path.DirectorySeparatorChar));
             var entry = factory.Engine.GetEntry(descriptor);
             var view = (SparkView)entry.CreateInstance();
-            view.Contextualize(engineContext, controllerContext, factory, null);
+            view.Contextualize(engineContext, controllerContext, serviceProvider.GetService<IResourcePathManager>(), factory, null);
             
             var result = new StringWriter();
             view.RenderView(result);
@@ -114,14 +118,14 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             mocks.ReplayAll();
             manager.Process(string.Format("Home{0}NullBehaviourConfiguredToLenient", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
-			var content = output.ToString();
-			Assert.IsFalse(content.Contains("default"));
+            var content = output.ToString();
+            Assert.IsFalse(content.Contains("default"));
 
-			ContainsInOrder(content,
-				"<p>name kaboom *${user.Name}*</p>",
-				"<p>name silently **</p>",
-				"<p>name fixed *fred*</p>");
-		}
+            ContainsInOrder(content,
+                "<p>name kaboom *${user.Name}*</p>",
+                "<p>name silently **</p>",
+                "<p>name fixed *fred*</p>");
+        }
 
         [Test]
         public void TerseHtmlEncode()

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Spark.Compiler;
+using Spark.Compiler.Roslyn;
 using Spark.Parser;
 using Spark.Python.Compiler;
 using Spark.Tests.Models;
@@ -37,7 +38,7 @@ namespace Spark.Python.Tests
                         {
                             BaseClass = typeof(StubSparkView).FullName
                         };
-            _languageFactory = new PythonLanguageFactory();
+            _languageFactory = new PythonLanguageFactory(new RoslynBatchCompiler());
 
             // Load up assemblies
             IronPython.Hosting.Python.CreateEngine();

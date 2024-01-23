@@ -22,6 +22,7 @@ using System.Linq;
 using IronRuby.Runtime;
 using Microsoft.Scripting.Runtime;
 using Spark.Compiler;
+using Spark.Compiler.Roslyn;
 using Spark.Ruby;
 using Spark.Ruby.Compiler;
 
@@ -39,7 +40,12 @@ namespace Spark.Web.Mvc.Ruby
 {
     public class RubyLanguageFactoryWithExtensions : RubyLanguageFactory
     {
+        public RubyLanguageFactoryWithExtensions(IBatchCompiler batchCompiler) : base(batchCompiler)
+        {
+        }
+
         private bool _initialized;
+
         private string _scriptHeader;
 
         public override ViewCompiler CreateViewCompiler(ISparkViewEngine engine, SparkViewDescriptor descriptor)

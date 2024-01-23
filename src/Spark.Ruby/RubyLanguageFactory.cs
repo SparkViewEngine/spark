@@ -20,6 +20,9 @@ namespace Spark.Ruby
 {
     public class RubyLanguageFactory : DefaultLanguageFactory
     {
+        public RubyLanguageFactory(IBatchCompiler batchCompiler) : base(batchCompiler)
+        {
+        }
 
         private RubyEngineManager _RubyEngineManager;
 

@@ -15,6 +15,7 @@
 using System.Web.Mvc;
 using Microsoft.Scripting.Runtime;
 using Spark.Compiler;
+using Spark.Compiler.Roslyn;
 using Spark.Python;
 
 [assembly: ExtensionType(typeof(HtmlHelper), typeof(System.Web.Mvc.Html.FormExtensions))]
@@ -31,6 +32,10 @@ namespace Spark.Web.Mvc.Python
 {
     public class PythonLanguageFactoryWithExtensions : PythonLanguageFactory
     {
+        public PythonLanguageFactoryWithExtensions(IBatchCompiler batchCompiler) : base(batchCompiler)
+        {
+        }
+
         private bool _initialized;
 
         public override ViewCompiler CreateViewCompiler(ISparkViewEngine engine, SparkViewDescriptor descriptor)

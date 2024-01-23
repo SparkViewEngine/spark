@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Compiler;
-using Spark.Ruby.Compiler;
+using Spark.Compiler.CodeDom;
 using Spark.Ruby.Compiler.ChunkVisitors;
 using BaseClassVisitor = Spark.Compiler.CSharp.ChunkVisitors.BaseClassVisitor;
 
@@ -31,8 +31,8 @@ namespace Spark.Ruby.Compiler
         {
             GenerateSourceCode(viewTemplates, allResources);
 
-            var compiler = new BatchCompiler();
-            var assembly = compiler.Compile(Debug, "csharp", SourceCode);
+            var compiler = new CodeDomBatchCompiler();
+            var assembly = compiler.Compile(Debug, "csharp", null, new[] { SourceCode });
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 

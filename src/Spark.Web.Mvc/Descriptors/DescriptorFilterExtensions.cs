@@ -4,11 +4,6 @@ namespace Spark.Web.Mvc.Descriptors
 {
     public static class DescriptorFilterExtensions
     {
-        public static void AddFilter(this ISparkServiceContainer target, IDescriptorFilter filter)
-        {
-            target.GetService<IDescriptorBuilder>().AddFilter(filter);
-        }
-
         public static void AddFilter(this SparkViewFactory target, IDescriptorFilter filter)
         {
             target.DescriptorBuilder.AddFilter(filter);
@@ -17,7 +12,7 @@ namespace Spark.Web.Mvc.Descriptors
         public static void AddFilter(this IDescriptorBuilder target, IDescriptorFilter filter)
         {
             if (!(target is DefaultDescriptorBuilder))
-                throw new InvalidCastException("IDescriptorFilters may only be added to DefaultDescriptorBuilder");
+                throw new InvalidCastException($"IDescriptorFilters may only be added to {nameof(DefaultDescriptorBuilder)}");
 
             ((DefaultDescriptorBuilder) target).AddFilter(filter);
         }

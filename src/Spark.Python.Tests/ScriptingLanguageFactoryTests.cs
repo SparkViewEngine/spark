@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.Python.Compiler;
 using Spark.Tests.Stubs;
 
@@ -26,11 +29,15 @@ namespace Spark.Python.Tests
         [SetUp]
         public void Init()
         {
-            _engine = new SparkViewEngine(new SparkSettings())
-                      {
-                          LanguageFactory = new PythonLanguageFactory(),
-                          DefaultPageBaseType = typeof(StubSparkView).FullName
-                      };
+            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<ISparkLanguageFactory, PythonLanguageFactory>()
+                .BuildServiceProvider();;
+
+            _engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
+
             IronPython.Hosting.Python.CreateEngine();
         }
 

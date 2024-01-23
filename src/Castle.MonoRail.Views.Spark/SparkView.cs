@@ -35,6 +35,7 @@ namespace Castle.MonoRail.Views.Spark
 
         private IEngineContext _context;
         private IControllerContext _controllerContext;
+        private IResourcePathManager _resourcePathManager;
         private SparkViewFactory _viewEngine;
         private IDictionary _contextVars;
 
@@ -54,7 +55,7 @@ namespace Castle.MonoRail.Views.Spark
         public string SiteRoot { get { return _context.ApplicationPath; } }
         public string SiteResource(string path)
         {
-            return _viewEngine.Engine.ResourcePathManager.GetResourcePath(SiteRoot, path);
+            return this._resourcePathManager.GetResourcePath(SiteRoot, path);
         }
 
         public IDictionary PropertyBag { get { return _contextVars ?? _controllerContext.PropertyBag; } }
@@ -91,10 +92,11 @@ namespace Castle.MonoRail.Views.Spark
         public T Helper<T>() where T : class { return ControllerContext.Helpers[typeof(T).Name] as T; }
         public T Helper<T>(string name) where T : class { return ControllerContext.Helpers[name] as T; }
 
-        public virtual void Contextualize(IEngineContext context, IControllerContext controllerContext, SparkViewFactory viewEngine, SparkView outerView)
+        public virtual void Contextualize(IEngineContext context, IControllerContext controllerContext, IResourcePathManager resourcePathManager, SparkViewFactory viewEngine, SparkView outerView)
         {
             _context = context;
             _controllerContext = controllerContext;
+            _resourcePathManager = resourcePathManager;
             _viewEngine = viewEngine;
 
             if (_viewEngine != null && _viewEngine.CacheServiceProvider != null)
@@ -132,7 +134,7 @@ namespace Castle.MonoRail.Views.Spark
             var service = (IViewComponentFactory)_context.GetService(typeof(IViewComponentFactory));
             var component = service.Create(name);
 
-            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _viewEngine, name, parameters, body, sections);
+            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _resourcePathManager, _viewEngine, name, parameters, body, sections);
 
             var oldContextVars = _contextVars;
             try

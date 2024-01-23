@@ -29,58 +29,24 @@ namespace Spark.Parser
     using Spark.Compiler.CSharp.ChunkVisitors;
     using Spark.Compiler.NodeVisitors;
     using Spark.FileSystem;
-    using Spark.Parser.Markup;
 
-    public class ViewLoader
+    public class ViewLoader(
+        ISparkSettings settings,
+        IViewFolder viewFolder,
+        IPartialProvider partialProvider,
+        IPartialReferenceProvider partialReferenceProvider,
+        ISparkExtensionFactory extensionFactory,
+        ISparkSyntaxProvider syntaxProvider,
+        IBindingProvider bindingProvider)
     {
-        private readonly Dictionary<string, Entry> entries = new Dictionary<string, Entry>();
+        private readonly Dictionary<string, Entry> entries = new();
+        private readonly List<string> pending = new();
 
-        private readonly List<string> pending = new List<string>();
+        public string Prefix => settings.Prefix;
 
-        private IPartialProvider partialProvider;
-        private IPartialReferenceProvider partialReferenceProvider;
+        public bool ParseSectionTagAsSegment => settings.ParseSectionTagAsSegment;
 
-        public IViewFolder ViewFolder { get; set; }
-
-        //public ParseAction<IList<Node>> Parser { get; set; }
-
-        public ISparkExtensionFactory ExtensionFactory { get; set; }
-
-        public ISparkSyntaxProvider SyntaxProvider { get; set; }
-
-        public string Prefix { get; set; }
-
-        public bool ParseSectionTagAsSegment { get; set; }
-
-        public AttributeBehaviour AttributeBehaviour { get; set; }
-
-        public IBindingProvider BindingProvider { get; set; }
-
-        public IPartialProvider PartialProvider
-        {
-            get
-            {
-                if (partialProvider == null)
-                {
-                    partialProvider = new DefaultPartialProvider();
-                };
-                return partialProvider;
-            }
-            set { partialProvider = value; }
-        }
-
-        public IPartialReferenceProvider PartialReferenceProvider
-        {
-            get
-            {
-                if (partialReferenceProvider == null)
-                {
-                    partialReferenceProvider = new DefaultPartialReferenceProvider(() => PartialProvider);
-                };
-                return partialReferenceProvider;
-            }
-            set { partialReferenceProvider = value; }
-        }
+        public AttributeBehaviour AttributeBehaviour => settings.AttributeBehaviour;
 
         /// <summary>
         /// Returns a value indicating whether this view loader is current.
@@ -93,8 +59,7 @@ namespace Spark.Parser
         {
             // The view is current if all entries' last modified value is the
             // same as when it was created. 
-            return this.entries.All(
-                entry => entry.Value.ViewFile.LastModified == entry.Value.LastModified);
+            return this.entries.All(entry => entry.Value.ViewFile.LastModified == entry.Value.LastModified);
         }
 
         public IList<Chunk> Load(string viewPath)
@@ -112,13 +77,13 @@ namespace Spark.Parser
 
             // import _global.spark files from template path and shared path
             var perFolderGlobal = Path.Combine(Path.GetDirectoryName(viewPath), Constants.GlobalSpark);
-            if (this.ViewFolder.HasView(perFolderGlobal))
+            if (viewFolder.HasView(perFolderGlobal))
             {
                 this.BindEntry(perFolderGlobal);
             }
 
             var sharedGlobal = Path.Combine(Constants.Shared, Constants.GlobalSpark);
-            if (this.ViewFolder.HasView(sharedGlobal))
+            if (viewFolder.HasView(sharedGlobal))
             {
                 this.BindEntry(sharedGlobal);
             }
@@ -165,11 +130,11 @@ namespace Spark.Parser
         {
             if (allowCustomReferencePath)
             {
-                return this.PartialReferenceProvider.GetPaths(viewPath, allowCustomReferencePath);
+                return partialReferenceProvider.GetPaths(viewPath, allowCustomReferencePath);
             }
             else
             {
-                return this.PartialProvider.GetPaths(viewPath);
+                return partialProvider.GetPaths(viewPath);
             }
         }
 
@@ -209,7 +174,7 @@ namespace Spark.Parser
                 return this.entries[referencePath];
             }
 
-            var viewSource = this.ViewFolder.GetViewSource(referencePath);
+            var viewSource = viewFolder.GetViewSource(referencePath);
 
             var newEntry = new Entry
             {
@@ -233,15 +198,16 @@ namespace Spark.Parser
 
             var context = new VisitorContext
             {
-                ViewFolder = this.ViewFolder,
+                ViewFolder = viewFolder,
                 Prefix = this.Prefix,
-                ExtensionFactory = this.ExtensionFactory,
+                ExtensionFactory = extensionFactory,
                 PartialFileNames = this.FindPartialFiles(viewPath),
                 Bindings = this.FindBindings(viewPath),
                 ParseSectionTagAsSegment = this.ParseSectionTagAsSegment,
                 AttributeBehaviour = this.AttributeBehaviour,
             };
-            newEntry.Chunks = this.SyntaxProvider.GetChunks(context, viewPath);
+
+            newEntry.Chunks = syntaxProvider.GetChunks(context, viewPath);
 
             var fileReferenceVisitor = new FileReferenceVisitor();
             fileReferenceVisitor.Accept(newEntry.Chunks);
@@ -269,7 +235,7 @@ namespace Spark.Parser
         {
             foreach (var folderPath in folderPaths.Distinct())
             {
-                foreach (var view in this.ViewFolder.ListViews(folderPath))
+                foreach (var view in viewFolder.ListViews(folderPath))
                 {
                     var baseName = Path.GetFileNameWithoutExtension(view);
                     if (baseName.StartsWith("_"))
@@ -282,12 +248,12 @@ namespace Spark.Parser
 
         private IEnumerable<Binding> FindBindings(string viewPath)
         {
-            if (this.BindingProvider == null)
+            if (bindingProvider == null)
             {
-                return new Binding[0];
+                return Array.Empty<Binding>();
             }
 
-            return this.BindingProvider.GetBindings(new BindingRequest(this.ViewFolder) { ViewPath = viewPath });
+            return bindingProvider.GetBindings(new BindingRequest(viewFolder) { ViewPath = viewPath });
         }
 
         private string ResolveReference(string existingViewPath, string viewName)
@@ -302,11 +268,11 @@ namespace Spark.Parser
                 Path.Combine(x, viewNameWithShadeExtension)
             });
 
-            var partialViewLocation = partialPaths.FirstOrDefault(x => this.ViewFolder.HasView(x));
+            var partialViewLocation = partialPaths.FirstOrDefault(x => viewFolder.HasView(x));
 
             if (partialViewLocation == null)
             {
-                var message = string.Format("Unable to locate {0} in {1}", viewName, string.Join(", ", partialPaths.ToArray()));
+                var message = $"Unable to locate {viewName} in {string.Join(", ", partialPaths.ToArray())}";
                 throw new FileNotFoundException(message, viewName);
             }
 
@@ -319,37 +285,17 @@ namespace Spark.Parser
 
             public string ViewPath
             {
-                get
-                {
-                    return this.fileContext.ViewSourcePath;
-                }
-
-                set
-                {
-                    this.fileContext.ViewSourcePath = value;
-                }
+                get => this.fileContext.ViewSourcePath;
+                set => this.fileContext.ViewSourcePath = value;
             }
 
             public IList<Chunk> Chunks
             {
-                get
-                {
-                    return this.fileContext.Contents;
-                }
-
-                set
-                {
-                    this.fileContext.Contents = value;
-                }
+                get => this.fileContext.Contents;
+                set => this.fileContext.Contents = value;
             }
 
-            public FileContext FileContext
-            {
-                get
-                {
-                    return this.fileContext;
-                }
-            }
+            public FileContext FileContext => this.fileContext;
 
             public long LastModified { get; set; }
 

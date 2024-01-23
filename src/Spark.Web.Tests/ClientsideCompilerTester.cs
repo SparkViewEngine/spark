@@ -14,7 +14,9 @@
 // 
 
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.FileSystem;
 
 namespace Spark
@@ -22,14 +24,30 @@ namespace Spark
     [TestFixture]
     public class ClientsideCompilerTester
     {
+        private static ServiceProvider CreateServiceProvider(ISparkSettings settings, IViewFolder viewFolder)
+        {
+            return new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(viewFolder)
+                .BuildServiceProvider();
+        }
+
         [Test]
         public void GenerateSimpleTemplate()
         {
+            var settings = new SparkSettings();
+
+            var viewFolder = new FileSystemViewFolder("Spark.Tests.Views");
+
+            var sp = CreateServiceProvider(settings, viewFolder);
+
+            var engine = sp.GetService<ISparkViewEngine>();
+
             var descriptor = new SparkViewDescriptor()
                 .SetLanguage(LanguageType.Javascript)
                 .AddTemplate(Path.Combine("Clientside","simple.spark"));
 
-            var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+
             var entry = engine.CreateEntry(descriptor);
 
             Assert.IsNotNull(entry.SourceCode);
@@ -39,11 +57,18 @@ namespace Spark
         [Test]
         public void AnonymousTypeBecomesHashLikeObject()
         {
+            var settings = new SparkSettings();
+
+            var viewFolder = new FileSystemViewFolder("Spark.Tests.Views");
+
+            var sp = CreateServiceProvider(settings, viewFolder);
+
+            var engine = sp.GetService<ISparkViewEngine>();
+
             var descriptor = new SparkViewDescriptor()
                 .SetLanguage(LanguageType.Javascript)
                 .AddTemplate(Path.Combine("Clientside","AnonymousTypeBecomesHashLikeObject.spark"));
 
-            var engine = new SparkViewEngine { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             var entry = engine.CreateEntry(descriptor);
 
             Assert.IsNotNull(entry.SourceCode);

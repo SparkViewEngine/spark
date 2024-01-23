@@ -26,7 +26,12 @@ using Castle.MonoRail.Framework.Descriptors;
 using Castle.MonoRail.Framework.Resources;
 using Castle.MonoRail.Framework.Routing;
 using Castle.MonoRail.Views.Spark.Wrappers;
+using Spark.Bindings;
 using Spark.Compiler;
+using Spark.Compiler.CodeDom;
+using Spark.Compiler.Roslyn;
+using Spark.Parser;
+using Spark.Parser.Syntax;
 
 namespace Castle.MonoRail.Views.Spark
 {   
@@ -36,6 +41,7 @@ namespace Castle.MonoRail.Views.Spark
     {
         private IControllerDescriptorProvider _controllerDescriptorProvider;
         private IViewActivatorFactory _viewActivatorFactory;
+        private IResourcePathManager _resourcePathManager;
 
         public override void Service(IServiceProvider provider)
         {
@@ -43,9 +49,10 @@ namespace Castle.MonoRail.Views.Spark
 
             _controllerDescriptorProvider = (IControllerDescriptorProvider)provider.GetService(typeof(IControllerDescriptorProvider));
             _viewActivatorFactory = (IViewActivatorFactory)provider.GetService(typeof(IViewActivatorFactory));
+            _resourcePathManager = (IResourcePathManager)provider.GetService(typeof(IResourcePathManager));
             _cacheServiceProvider = (ICacheServiceProvider)provider.GetService(typeof(ICacheServiceProvider));
 
-            SetEngine((ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine)));
+            Engine = (ISparkViewEngine)provider.GetService(typeof(ISparkViewEngine));
         }
 
         private ISparkViewEngine _engine;
@@ -55,29 +62,35 @@ namespace Castle.MonoRail.Views.Spark
             {
                 if (_engine == null)
                 {
-                    SetEngine(new SparkViewEngine(new SparkSettings()));
+                    var settings =
+                        (ISparkSettings)this.serviceProvider.GetService(typeof(ISparkSettings))
+                        ?? new SparkSettings()
+                            .SetPageBaseType(typeof(SparkView));
+
+                    var partialProvider = new DefaultPartialProvider();
+
+                    var viewFolder = new ViewSourceLoaderWrapper(this);
+
+                    var batchCompiler = new CodeDomBatchCompiler();
+
+                    this._engine =
+                        new SparkViewEngine(
+                            settings,
+                            new DefaultSyntaxProvider(settings),
+                            this._viewActivatorFactory ?? new DefaultViewActivator(),
+                            new DefaultLanguageFactory(batchCompiler),
+                            new CompiledViewHolder(),
+                            viewFolder,
+                            batchCompiler,
+                            partialProvider,
+                            new DefaultPartialReferenceProvider(partialProvider),
+                            new DefaultBindingProvider(),
+                            new ViewComponentExtensionFactory(this.serviceProvider));
                 }
 
                 return _engine;
             }
-            set
-            {
-                SetEngine(value);
-            }
-        }
-
-        private void SetEngine(ISparkViewEngine engine)
-        {
-            _engine = engine;
-            if (_engine == null)
-                return;
-
-            _engine.ViewFolder = new ViewSourceLoaderWrapper(this);
-            _engine.ExtensionFactory = new ViewComponentExtensionFactory(serviceProvider);
-            _engine.DefaultPageBaseType = typeof(SparkView).FullName;
-
-            if (_viewActivatorFactory != null)
-                _engine.ViewActivatorFactory = _viewActivatorFactory;
+            set => this._engine = value;
         }
 
         private ICacheServiceProvider _cacheServiceProvider;
@@ -156,7 +169,7 @@ namespace Castle.MonoRail.Views.Spark
 
             var entry = Engine.CreateEntry(descriptor);
             var view = (SparkView)entry.CreateInstance();
-            view.Contextualize(context, controllerContext, this, null);
+            view.Contextualize(context, controllerContext, _resourcePathManager, this, null);
             if (view.Logger == null || view.Logger == NullLogger.Instance)
                 view.Logger = Logger;
             view.RenderView(output);

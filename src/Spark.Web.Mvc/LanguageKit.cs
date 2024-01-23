@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Descriptors;
@@ -11,16 +10,11 @@ namespace Spark.Web.Mvc
 {
     public static class LanguageKit
     {
-        public static void Install(ISparkServiceContainer services, Func<ControllerContext, string> selector)
-        {
-            services.AddFilter(new Filter(selector));
-            services.GetService<ISparkViewEngine>().ViewFolder = new Folder(services.GetService<IViewFolder>());
-        }
-
         public static void Install(SparkViewFactory factory, Func<ControllerContext, string> selector)
         {
             factory.AddFilter(new Filter(selector));
-            factory.ViewFolder = new Folder(factory.ViewFolder);
+
+            factory.Engine.ViewFolder = new Folder(factory.Engine.ViewFolder);
         }
 
         public static void Install(IEnumerable<IViewEngine> engines, Func<ControllerContext, string> selector)

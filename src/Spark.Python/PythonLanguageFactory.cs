@@ -20,6 +20,10 @@ namespace Spark.Python
 {
     public class PythonLanguageFactory : DefaultLanguageFactory
     {
+        public PythonLanguageFactory(IBatchCompiler batchCompiler) : base(batchCompiler)
+        {
+        }
+
         private PythonEngineManager _PythonEngineManager;
 
         public PythonEngineManager PythonEngineManager

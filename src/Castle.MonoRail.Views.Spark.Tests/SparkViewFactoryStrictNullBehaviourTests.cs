@@ -27,10 +27,13 @@ namespace Castle.MonoRail.Views.Spark.Tests
     {
         protected override void Configure()
         {
-            var settings = new SparkSettings();
+            var settings = 
+                new SparkSettings()
+                    .SetPageBaseType(typeof(SparkView));
+
             settings.SetNullBehaviour(NullBehaviour.Strict);
-            var sparkViewEngine = new SparkViewEngine(settings);
-            serviceProvider.AddService(typeof(ISparkViewEngine), sparkViewEngine);
+
+            serviceProvider.AddService(typeof(ISparkSettings), settings);
 
             factory = new SparkViewFactory();
             factory.Service(serviceProvider);

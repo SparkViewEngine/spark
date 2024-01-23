@@ -23,7 +23,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 
@@ -39,16 +41,20 @@ namespace Spark.Caching
         [SetUp]
         public void Init()
         {
-            this._viewFolder = new InMemoryViewFolder();
-            this._cacheService = new StubCacheService();
+            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder, InMemoryViewFolder>()
+                .AddSingleton<ICacheService, StubCacheService>()
+                .BuildServiceProvider();
+
+            this._viewFolder = (InMemoryViewFolder) sp.GetService<IViewFolder>();
+            this._cacheService = (StubCacheService) sp.GetService<ICacheService>();
+
             this._factory = new StubViewFactory
             {
-                Engine = new SparkViewEngine(
-                    new SparkSettings()
-                        .SetPageBaseType(typeof(StubSparkView)))
-                {
-                    ViewFolder = this._viewFolder
-                },
+                Engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>(),
                 CacheService = this._cacheService
             };
         }

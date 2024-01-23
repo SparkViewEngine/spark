@@ -14,8 +14,10 @@
 // 
 
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Spark.Compiler;
+using Spark.Extensions;
 using Spark.FileSystem;
 using Spark.Tests;
 using Spark.Tests.Stubs;
@@ -29,10 +31,12 @@ namespace Spark
         {
             var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
 
-            var engine = new SparkViewEngine(settings)
-                             {
-                                 ViewFolder = viewFolder
-                             };
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(viewFolder)
+                .BuildServiceProvider();
+
+            var engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
 
             return engine.CreateInstance(new SparkViewDescriptor().AddTemplate(template));
         }

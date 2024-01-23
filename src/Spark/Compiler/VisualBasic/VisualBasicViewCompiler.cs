@@ -12,22 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using Spark.Compiler.CodeDom;
 using Spark.Compiler.VisualBasic.ChunkVisitors;
 
 namespace Spark.Compiler.VisualBasic
 {
-    public class VisualBasicViewCompiler : ViewCompiler
+    public class VisualBasicViewCompiler(IBatchCompiler batchCompiler) : ViewCompiler
     {
         public override void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
             GenerateSourceCode(viewTemplates, allResources);
 
-            var batchCompiler = new BatchCompiler();
-            var assembly = batchCompiler.Compile(Debug, "visualbasic", SourceCode);
+            var assembly = batchCompiler.Compile(Debug, "visualbasic", null, new[] { SourceCode });
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 
@@ -100,8 +101,11 @@ namespace Spark.Compiler.VisualBasic
                 .AddIndent();
 
             source.WriteLine();
-            source.WriteLine(string.Format("    Private Shared ReadOnly _generatedViewId As Global.System.Guid = New Global.System.Guid(\"{0:n}\")", GeneratedViewId));
 
+            source
+                .Write("    Private Shared ReadOnly _generatedViewId As Global.System.Guid = New Global.System.Guid(\"")
+                .Write(GeneratedViewId.ToString("n"))
+                .WriteLine("\")");
 
             source
                 .WriteLine("    Public Overrides ReadOnly Property GeneratedViewId() As Global.System.Guid")

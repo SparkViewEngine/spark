@@ -29,8 +29,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         protected StubEngineContext engineContext;
         protected SparkViewFactory factory;
         protected IController controller;
-        protected SparkViewEngine engine;
-
+        
         [SetUp]
         public virtual void Init()
         {
@@ -45,9 +44,11 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             services.AddService(typeof(IViewComponentFactory), viewComponentFactory);
             services.AddService(typeof(IViewComponentRegistry), viewComponentFactory.Registry);
 
-            var settings = new SparkSettings();
-            engine = new SparkViewEngine(settings);
-            services.AddService(typeof(ISparkViewEngine), engine);
+            var settings = new SparkSettings()
+                .SetPageBaseType(typeof(SparkView));
+            services.AddService(typeof(ISparkSettings), settings);
+
+            services.AddService(typeof(IResourcePathManager), new DefaultResourcePathManager(settings));
 
             factory = new SparkViewFactory();
             factory.Service(services);

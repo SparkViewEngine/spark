@@ -14,7 +14,9 @@
 // 
 
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 
@@ -32,10 +34,12 @@ namespace Spark
             _settings = new SparkSettings()
                 .SetPageBaseType(typeof(StubSparkView));
 
-            _engine = new SparkViewEngine(_settings)
-            {
-                ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")
-            };
+            var sp = new ServiceCollection()
+                .AddSpark(_settings)
+                .AddSingleton<IViewFolder>(new FileSystemViewFolder("Spark.Tests.Views"))
+                .BuildServiceProvider();
+
+            _engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
         }
 
         static void ContainsInOrder(string content, params string[] values)
@@ -56,10 +60,12 @@ namespace Spark
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetPrefix("s");
 
-            var engine = new SparkViewEngine(settings)
-                             {
-                                 ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")
-                             };
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(new FileSystemViewFolder("Spark.Tests.Views"))
+                .BuildServiceProvider();
+
+            var engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
 
             var view = (StubSparkView)engine.CreateInstance(new SparkViewDescriptor().AddTemplate(Path.Combine("Prefix", "prefix-from-settings.spark")));
             view.ViewData["Names"] = new[] { "alpha", "beta", "gamma" };
@@ -177,13 +183,15 @@ namespace Spark
         public void SectionAsSegmentAndRenderPrefixes()
         {
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof (StubSparkView))
+                .SetPageBaseType(typeof(StubSparkView))
                 .SetParseSectionTagAsSegment(true);
 
-            var engine = new SparkViewEngine(settings)
-            {
-                ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")
-            };
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(new FileSystemViewFolder("Spark.Tests.Views"))
+                .BuildServiceProvider();
+
+            var engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
 
             var view =
                 (StubSparkView)
@@ -206,8 +214,7 @@ namespace Spark
         [Test]
         public void MacroAndContentPrefixesFromSettings()
         {
-            _engine.Settings = new SparkSettings()
-                .SetPageBaseType(typeof(StubSparkView))
+            this._settings.SetPageBaseType(typeof(StubSparkView))
                 .SetPrefix("s");
 
             var view =

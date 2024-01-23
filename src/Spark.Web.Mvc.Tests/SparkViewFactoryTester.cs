@@ -21,9 +21,11 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using System.Web.SessionState;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Spark.FileSystem;
+using Spark.Web.Mvc.Extensions;
 using Spark.Web.Mvc.Tests.Controllers;
 using Spark.Web.Mvc.Tests.Models;
 
@@ -33,6 +35,20 @@ namespace Spark.Web.Mvc.Tests
     public class SparkViewFactoryTester
     {
         #region Setup/Teardown
+
+        public static IServiceProvider SetupServiceProvider(ISparkSettings settings, Action<ServiceCollection> serviceOverrides = null)
+        {
+            var services = new ServiceCollection();
+
+            services.AddSpark(settings);
+
+            if (serviceOverrides != null)
+            {
+                serviceOverrides.Invoke(services);
+            }
+
+            return services.BuildServiceProvider();
+        }
 
         [SetUp]
         public void Init()
@@ -78,8 +94,17 @@ namespace Spark.Web.Mvc.Tests
 
             controllerContext = new ControllerContext(httpContext, routeData, controller);
 
-            var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html").SetAutomaticEncoding(true);
-            factory = new SparkViewFactory(settings) { ViewFolder = new FileSystemViewFolder("AspNetMvc.Tests.Views") };
+            var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html")
+                .SetAutomaticEncoding(true);
+
+            var serviceProvider = SetupServiceProvider(
+                settings,
+                s =>
+                {
+                    s.AddSingleton<IViewFolder>(new FileSystemViewFolder("AspNetMvc.Tests.Views"));
+                });
+
+            factory = serviceProvider.GetService<SparkViewFactory>();
 
             ControllerBuilder.Current.SetControllerFactory(new DefaultControllerFactory());
 
@@ -150,7 +175,8 @@ namespace Spark.Web.Mvc.Tests
             foreach (var value in values)
             {
                 var nextIndex = content.IndexOf(value, index);
-                Assert.GreaterOrEqual(nextIndex, 0, string.Format("Looking for {0}", value));
+
+                Assert.GreaterOrEqual(nextIndex, 0, $"Looking for {value}");
                 index = nextIndex + value.Length;
             }
         }
@@ -241,14 +267,20 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void MasterApplicationIfPresent()
         {
-            factory.ViewFolder = new InMemoryViewFolder
-                             {
-                                 {string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), ""},
-                                 {string.Format("Shared{0}Application.spark", Path.DirectorySeparatorChar), ""}
-                             };
+            var viewFolder = new InMemoryViewFolder
+            {
+                { $"Foo{Path.DirectorySeparatorChar}Baaz.spark", "" },
+                { $"Shared{Path.DirectorySeparatorChar}Application.spark", "" }
+            };
 
+            var sp = SetupServiceProvider(
+                new SparkSettings(),
+                s =>
+                {
+                    s.AddSingleton<IViewFolder>(viewFolder);
+                });
 
-
+            factory = sp.GetService<SparkViewFactory>();
 
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
@@ -258,17 +290,26 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
 
             Assert.AreEqual(2, descriptor.Templates.Count);
-            Assert.AreEqual(string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), descriptor.Templates[0]);
-            Assert.AreEqual(string.Format("Shared{0}Application.spark", Path.DirectorySeparatorChar), descriptor.Templates[1]);
+            Assert.AreEqual($"Foo{Path.DirectorySeparatorChar}Baaz.spark", descriptor.Templates[0]);
+            Assert.AreEqual($"Shared{Path.DirectorySeparatorChar}Application.spark", descriptor.Templates[1]);
         }
 
         [Test]
         public void MasterEmptyByDefault()
         {
-            factory.ViewFolder = new InMemoryViewFolder
-                             {
-                                 {string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), ""}
-                             };
+            var viewFolder = new InMemoryViewFolder
+            {
+                { $"Foo{Path.DirectorySeparatorChar}Baaz.spark", "" }
+            };
+
+            var sp = SetupServiceProvider(
+                new SparkSettings(),
+                s =>
+                {
+                    s.AddSingleton<IViewFolder>(viewFolder);
+                });
+
+            factory = sp.GetService<SparkViewFactory>();
 
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
@@ -276,21 +317,27 @@ namespace Spark.Web.Mvc.Tests
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
             Assert.AreEqual(1, descriptor.Templates.Count);
-            Assert.AreEqual(string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), descriptor.Templates[0]);
+            Assert.AreEqual($"Foo{Path.DirectorySeparatorChar}Baaz.spark", descriptor.Templates[0]);
         }
 
         [Test]
         public void MasterForControllerIfPresent()
         {
-            factory.ViewFolder = new InMemoryViewFolder
-                             {
-                                 {string.Format("Foo{0}Baaz.spark", Path.DirectorySeparatorChar), ""},
-                                 {string.Format("Shared{0}Foo.spark", Path.DirectorySeparatorChar),""}
-                             };
+            var viewFolder = new InMemoryViewFolder
+            {
+                { $"Foo{Path.DirectorySeparatorChar}Baaz.spark", "" },
+                { $"Shared{Path.DirectorySeparatorChar}Foo.spark", "" }
+            };
 
+            var sp = SetupServiceProvider(
+                new SparkSettings(),
+                s =>
+                {
+                    s.AddSingleton<IViewFolder>(viewFolder);
+                });
 
-
-
+            factory = sp.GetService<SparkViewFactory>();
+            
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
 
@@ -355,16 +402,23 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void TargetNamespaceFromController()
         {
-            factory.ViewFolder = new InMemoryViewFolder
-                             {
-                                 {string.Format("Home{0}Baaz.spark", Path.DirectorySeparatorChar), ""},
-                                 {string.Format("Layouts{0}Home.spark", Path.DirectorySeparatorChar),""}
-                             };
+            var viewFolder = new InMemoryViewFolder
+            {
+                { $"Home{Path.DirectorySeparatorChar}Baaz.spark", "" },
+                { $"Layouts{Path.DirectorySeparatorChar}Home.spark", "" }
+            };
+
+            var sp = SetupServiceProvider(
+                new SparkSettings(),
+                s =>
+                {
+                    s.AddSingleton<IViewFolder>(viewFolder);
+                });
+
+            factory = sp.GetService<SparkViewFactory>();
 
             controller = new StubController();
             controllerContext = new ControllerContext(httpContext, routeData, controller);
-
-
 
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
             //mocks.VerifyAll();
@@ -440,35 +494,36 @@ namespace Spark.Web.Mvc.Tests
         {
             var replacement = MockRepository.GenerateStub<IViewFolder>();
 
+            var existing = factory.Engine.ViewFolder;
 
-
-            var existing = factory.ViewFolder;
             Assert.AreNotSame(existing, replacement);
-            Assert.AreSame(existing, factory.ViewFolder);
+            Assert.AreSame(existing, factory.Engine.ViewFolder);
 
-            factory.ViewFolder = replacement;
-            Assert.AreSame(replacement, factory.ViewFolder);
-            Assert.AreNotSame(existing, factory.ViewFolder);
+            factory.Engine.ViewFolder = replacement;
+
+            Assert.AreSame(replacement, factory.Engine.ViewFolder);
+            Assert.AreNotSame(existing, factory.Engine.ViewFolder);
         }
 
         [Test]
         public void CreatingViewEngineWithSimpleContainer()
         {
             var settings = new SparkSettings().AddNamespace("System.Web.Mvc.Html");
-            var container = SparkEngineStarter.CreateContainer(settings);
 
-            var viewFactory = (SparkViewFactory)container.GetService<IViewEngine>();
-            var viewEngine = container.GetService<ISparkViewEngine>();
-            var viewFolder = container.GetService<IViewFolder>();
-            var descriptorBuilder = container.GetService<IDescriptorBuilder>();
-            var cacheServiceProvider = container.GetService<ICacheServiceProvider>();
-            var viewActivatorFactory = container.GetService<IViewActivatorFactory>();
+            var sp = SetupServiceProvider(settings);
+
+            var viewFactory = sp.GetService<SparkViewFactory>();
+            var viewEngine = sp.GetService<ISparkViewEngine>();
+            var viewFolder = sp.GetService<IViewFolder>();
+            var descriptorBuilder = sp.GetService<IDescriptorBuilder>();
+            var cacheServiceProvider = sp.GetService<ICacheServiceProvider>();
+            var viewActivatorFactory = sp.GetService<IViewActivatorFactory>();
 
             Assert.AreSame(settings, viewFactory.Settings);
             Assert.AreSame(settings, viewEngine.Settings);
             Assert.AreSame(viewEngine, viewFactory.Engine);
             Assert.AreSame(viewFolder, viewEngine.ViewFolder);
-            Assert.AreSame(viewFolder, viewFactory.ViewFolder);
+            Assert.AreSame(viewFolder, viewFactory.Engine.ViewFolder);
             Assert.AreSame(descriptorBuilder, viewFactory.DescriptorBuilder);
             Assert.AreSame(cacheServiceProvider, viewFactory.CacheServiceProvider);
             Assert.AreSame(viewActivatorFactory, viewFactory.ViewActivatorFactory);

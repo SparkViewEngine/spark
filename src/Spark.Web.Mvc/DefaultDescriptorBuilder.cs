@@ -2,43 +2,27 @@
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using Spark.Compiler;
-using Spark.Compiler.NodeVisitors;
+using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Syntax;
 using Spark.Web.Mvc.Descriptors;
 
 namespace Spark.Web.Mvc
 {
-    public class DefaultDescriptorBuilder : IDescriptorBuilder, ISparkServiceInitialize
+    public class DefaultDescriptorBuilder : IDescriptorBuilder
     {
-        private ISparkViewEngine _engine;
+        private IViewFolder _viewFolder;
 
-        public DefaultDescriptorBuilder()
-            : this((string)null)
+        public DefaultDescriptorBuilder(ISparkSettings settings, IViewFolder viewFolder)
         {
-        }
-
-        public DefaultDescriptorBuilder(string _prefix)
-        {
-            Filters = new List<IDescriptorFilter>
+            this.Filters = new List<IDescriptorFilter>
                           {
                               new AreaDescriptorFilter()
                           };
-            _grammar = new UseMasterGrammar(_prefix);
-        }
 
-        public DefaultDescriptorBuilder(ISparkViewEngine engine)
-            : this()
-        {
-            _engine = engine;
-            _grammar = new UseMasterGrammar(_engine.Settings.Prefix);
-        }
+            this._grammar = new UseMasterGrammar(settings.Prefix);
 
-        public virtual void Initialize(ISparkServiceContainer container)
-        {
-            _engine = container.GetService<ISparkViewEngine>();
-            _grammar = new UseMasterGrammar(_engine.Settings.Prefix);
+            this._viewFolder = viewFolder;
         }
 
         public IList<IDescriptorFilter> Filters { get; set; }
@@ -153,12 +137,12 @@ namespace Spark.Web.Mvc
         }
 
         private UseMasterGrammar _grammar;
-        public ParseAction<string> ParseUseMaster { get { return _grammar.ParseUseMaster; } }
+        public ParseAction<string> ParseUseMaster => _grammar.ParseUseMaster;
 
         public string TrailingUseMasterName(SparkViewDescriptor descriptor)
         {
             var lastTemplate = descriptor.Templates.Last();
-            var sourceContext = AbstractSyntaxProvider.CreateSourceContext(lastTemplate, _engine.ViewFolder);
+            var sourceContext = AbstractSyntaxProvider.CreateSourceContext(lastTemplate, _viewFolder);
             if (sourceContext == null)
             {
                 return null;
@@ -173,7 +157,7 @@ namespace Spark.Web.Mvc
             ICollection<string> descriptorTemplates,
             ICollection<string> searchedLocations)
         {
-            var template = potentialTemplates.FirstOrDefault(t => _engine.ViewFolder.HasView(t));
+            var template = potentialTemplates.FirstOrDefault(t => _viewFolder.HasView(t));
             if (template != null)
             {
                 descriptorTemplates.Add(template);

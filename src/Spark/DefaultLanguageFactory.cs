@@ -19,7 +19,7 @@ using Spark.Compiler.VisualBasic;
 
 namespace Spark
 {
-    public class DefaultLanguageFactory : ISparkLanguageFactory
+    public class DefaultLanguageFactory(IBatchCompiler batchCompiler) : ISparkLanguageFactory
     {
         public virtual ViewCompiler CreateViewCompiler(ISparkViewEngine engine, SparkViewDescriptor descriptor)
         {
@@ -40,16 +40,16 @@ namespace Spark
             {
                 case LanguageType.Default:
                 case LanguageType.CSharp:
-                    viewCompiler = new CSharpViewCompiler();
+                    viewCompiler = new CSharpViewCompiler(batchCompiler);
                     break;
                 case LanguageType.VisualBasic:
-                    viewCompiler = new VisualBasicViewCompiler();
+                    viewCompiler = new VisualBasicViewCompiler(batchCompiler);
                     break;
                 case LanguageType.Javascript:
                     viewCompiler = new JavascriptViewCompiler();
                     break;
                 default:
-                    throw new CompilerException(string.Format("Unknown language type {0}", descriptor.Language));
+                    throw new CompilerException($"Unknown language type {descriptor.Language}");
             }
 
             viewCompiler.BaseClass = pageBaseType;
