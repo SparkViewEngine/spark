@@ -20,9 +20,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-	<PackageReference Include="NUnit" Version="3.13.3" />
-	<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-	<PackageReference Include="RhinoMocks" Version="3.6.0" />
+	<PackageReference Include="NUnit" Version="3.14.0" />
+	<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+	<PackageReference Include="RhinoMocks" Version="3.6.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Castle.Monorail.Pdf\Castle.MonoRail.Pdf.csproj" />

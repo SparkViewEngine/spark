@@ -21,8 +21,22 @@ namespace Spark
 {
     public class SparkSettings : ISparkSettings
     {
-        public SparkSettings()
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public SparkSettings() : this(null)
         {
+            RootPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+        }
+
+        /// <summary>
+        /// Constructor that lets you specify the <see cref="rootPath"/>.
+        /// </summary>
+        /// <param name="rootPath">The path of the web app folder (the one containing the Views folder)</param>
+        public SparkSettings(string rootPath)
+        {
+            RootPath = rootPath;
+
             _useNamespaces = new List<string>();
             _useAssemblies = new List<string>();
             _resourceMappings = new List<IResourceMapping>();
@@ -34,9 +48,9 @@ namespace Spark
         }
 
         /// <summary>
-        /// Depending on the target framework this value must be determined (E.g. AppDomain.CurrentDomain.SetupInformation.ApplicationBase in .net framework) or set.
+        /// The path of the web app folder (the one containing the Views folder).
         /// </summary>
-        public string RootPath => AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+        public string RootPath { get; set; }
 
         public bool Debug { get; set; }
         public NullBehaviour NullBehaviour { get; set; }
@@ -64,24 +78,28 @@ namespace Spark
         public SparkSettings SetDebug(bool debug)
         {
             Debug = debug;
+
             return this;
         }
 
         public SparkSettings SetAutomaticEncoding(bool automaticEncoding)
         {
             AutomaticEncoding = automaticEncoding;
+
             return this;
         }
 
         public SparkSettings SetStatementMarker(string statementMarker)
         {
             StatementMarker = statementMarker;
+
             return this;
         }
 
         public SparkSettings SetNullBehaviour(NullBehaviour nullBehaviour)
         {
             NullBehaviour = nullBehaviour;
+
             return this;
         }
 
@@ -93,18 +111,31 @@ namespace Spark
         public SparkSettings SetPageBaseType(string typeName)
         {
             PageBaseType = typeName;
+
             return this;
         }
 
+        /// <summary>
+        /// Sets the type each spark page should inherit from.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
         public SparkSettings SetPageBaseType(Type type)
         {
             PageBaseType = type.FullName;
+
             return this;
         }
 
+        /// <summary>
+        /// Specifies the <see cref="LanguageType"/> the spark view should be compiled to.
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
         public SparkSettings SetDefaultLanguage(LanguageType language)
         {
             DefaultLanguage = language;
+
             return this;
         }
 
@@ -116,36 +147,42 @@ namespace Spark
         public SparkSettings AddAssembly(string assembly)
         {
             _useAssemblies.Add(assembly);
+
             return this;
         }
 
         public SparkSettings AddAssembly(Assembly assembly)
         {
             _useAssemblies.Add(assembly.FullName);
+
             return this;
         }
 
         public SparkSettings AddNamespace(string ns)
         {
             _useNamespaces.Add(ns);
+
             return this;
         }
 
         public SparkSettings SetPrefix(string prefix)
         {
             Prefix = prefix;
+
             return this;
         }
 
         public SparkSettings SetParseSectionTagAsSegment(bool parseSectionTagAsSegment)
         {
             ParseSectionTagAsSegment = parseSectionTagAsSegment;
+
             return this;
         }
 
         public SparkSettings SetAttributeBehaviour(AttributeBehaviour attributeBehaviour)
         {
             AttributeBehaviour = attributeBehaviour;
+
             return this;
         }
 
@@ -157,6 +194,7 @@ namespace Spark
         public SparkSettings AddResourceMapping(string match, string replace, bool stopProcess)
         {
             _resourceMappings.Add(new SimpleResourceMapping { Match = match, Location = replace, Stop = stopProcess });
+
             return this;
         }
 
@@ -168,6 +206,7 @@ namespace Spark
                 Type = customType.AssemblyQualifiedName,
                 Parameters = parameters
             });
+
             return this;
         }
     }
