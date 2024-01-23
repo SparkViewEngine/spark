@@ -43,21 +43,27 @@ namespace Spark.Compiler.CSharp
             var usingGenerator = new UsingNamespaceVisitor(source);
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
             var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, NullBehaviour);
-            
-
 
             // using <namespaces>;
-            foreach (var ns in UseNamespaces ?? new string[0])
+            foreach (var ns in UseNamespaces ?? Array.Empty<string>())
+            {
                 usingGenerator.UsingNamespace(ns);
+            }
 
-            foreach (var assembly in UseAssemblies ?? new string[0])
+            foreach (var assembly in UseAssemblies ?? Array.Empty<string>())
+            {
                 usingGenerator.UsingAssembly(assembly);
+            }
 
             foreach (var resource in allResources)
+            {
                 usingGenerator.Accept(resource);
+            }
 
             foreach (var resource in allResources)
+            {
                 baseClassGenerator.Accept(resource);
+            }
 
             var viewClassName = "View" + GeneratedViewId.ToString("n");
 
@@ -77,7 +83,7 @@ namespace Spark.Compiler.CSharp
 
             source.WriteLine();
 
-			if (Descriptor != null)
+            if (Descriptor != null)
             {
                 // [SparkView] attribute
                 source.WriteLine("[global::Spark.SparkViewAttribute(");
@@ -117,7 +123,9 @@ namespace Spark.Compiler.CSharp
 
             // properties and macros
             foreach (var resource in allResources)
+            {
                 globalsGenerator.Accept(resource);
+            }
 
             // public void RenderViewLevelx()
             int renderLevel = 0;

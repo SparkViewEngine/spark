@@ -31,12 +31,11 @@ namespace Spark.Web.Mvc.Ruby.Tests
     {
         public class StubHttpContext : HttpContextBase
         {
-            public override Cache Cache { get { return null; } }
+            public override Cache Cache => null;
         }
 
         public class StubController : Controller
         {
-
         }
 
         [Test]
@@ -44,11 +43,11 @@ namespace Spark.Web.Mvc.Ruby.Tests
         {
             var languageFactory = new RubyLanguageFactoryWithExtensions();
             var header = languageFactory.BuildScriptHeader(languageFactory.GetType().Assembly);
+
             Assert.That(header.Contains("ActionLink"));
             Assert.That(header.Contains("Password"));
             Assert.That(header.Contains("RenderPartial"));
         }
-
 
         private static ViewContext CompileView(string viewContents)
         {
@@ -70,6 +69,7 @@ namespace Spark.Web.Mvc.Ruby.Tests
             var controllerContext = new ControllerContext(httpContext, routeData, controller);
 
             var result = viewEngine.FindPartialView(controllerContext, "index", false);
+
             return new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), new StringWriter());
         }
 

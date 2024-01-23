@@ -14,7 +14,6 @@
 // 
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using Spark.Compiler.ChunkVisitors;
 using Spark.Parser.Code;
 

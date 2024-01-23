@@ -71,7 +71,7 @@ namespace Spark.FileSystem
         {
             var adjusted = Adjust(path);
             if (adjusted == null)
-                return new string[0];
+                return Array.Empty<string>();
 
             return _viewFolder.ListViews(adjusted).Select(file => Path.Combine(_subFolder, Path.GetFileName(file))).ToArray();
         }

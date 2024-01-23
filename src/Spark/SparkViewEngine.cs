@@ -246,14 +246,16 @@ namespace Spark
         public ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor)
         {
             var entry = CompiledViewHolder.Lookup(descriptor);
+
             if (entry == null)
             {
                 entry = CreateEntryInternal(descriptor, true);
+
                 CompiledViewHolder.Store(entry);
             }
+
             return entry;
         }
-
 
         public ISparkViewEntry CreateEntryInternal(SparkViewDescriptor descriptor, bool compile)
         {
@@ -265,9 +267,9 @@ namespace Spark
                 LanguageFactory = LanguageFactory
             };
 
-
             var chunksLoaded = new List<IList<Chunk>>();
             var templatesLoaded = new List<string>();
+
             LoadTemplates(entry.Loader, entry.Descriptor.Templates, chunksLoaded, templatesLoaded);
 
             if (compile)
@@ -290,9 +292,7 @@ namespace Spark
             {
                 if (templatesLoaded.Contains(template))
                 {
-                    throw new CompilerException(string.Format(
-                        "Unable to include template '{0}' recusively",
-                        templates));
+                    throw new CompilerException($"Unable to include template '{templates}' recursively");
                 }
 
                 var chunks = loader.Load(template);
@@ -353,8 +353,10 @@ namespace Spark
             {
                 entry.Compiler.CompiledType = assembly.GetType(entry.Compiler.ViewClassFullName);
                 entry.Activator = ViewActivatorFactory.Register(entry.Compiler.CompiledType);
+
                 CompiledViewHolder.Store(entry);
             }
+
             return assembly;
         }
 
@@ -365,11 +367,15 @@ namespace Spark
             foreach (var type in assembly.GetExportedTypes())
             {
                 if (!typeof(ISparkView).IsAssignableFrom(type))
+                {
                     continue;
+                }
 
                 var attributes = type.GetCustomAttributes(typeof(SparkViewAttribute), false);
                 if (attributes == null || attributes.Length == 0)
+                {
                     continue;
+                }
 
                 var descriptor = ((SparkViewAttribute)attributes[0]).BuildDescriptor();
 
@@ -387,6 +393,5 @@ namespace Spark
 
             return descriptors;
         }
-
     }
 }

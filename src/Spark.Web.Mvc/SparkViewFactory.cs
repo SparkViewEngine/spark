@@ -168,6 +168,7 @@ namespace Spark.Web.Mvc
                 {
                     return BuildResult(controllerContext.RequestContext, entry);
                 }
+
                 return _cacheMissResult;
             }
 
@@ -176,10 +177,14 @@ namespace Spark.Web.Mvc
                 searchedLocations);
 
             if (descriptor == null)
+            {
                 return new ViewEngineResult(searchedLocations);
+            }
 
             entry = Engine.CreateEntry(descriptor);
+            
             SetCacheValue(descriptorParams, entry);
+
             return BuildResult(controllerContext.RequestContext, entry);
         }
 
@@ -243,9 +248,9 @@ namespace Spark.Web.Mvc
 
             if (descriptor == null)
             {
-                throw new CompilerException("Unable to find templates at " +
-                                            string.Join(", ", searchedLocations.ToArray()));
+                throw new CompilerException($"Unable to find templates at {string.Join(", ", searchedLocations.ToArray())}");
             }
+
             return descriptor;
         }
 
@@ -258,8 +263,12 @@ namespace Spark.Web.Mvc
         public List<SparkViewDescriptor> CreateDescriptors(SparkBatchDescriptor batch)
         {
             var descriptors = new List<SparkViewDescriptor>();
+            
             foreach (var entry in batch.Entries)
+            {
                 descriptors.AddRange(CreateDescriptors(entry));
+            }
+
             return descriptors;
         }
 
@@ -270,9 +279,13 @@ namespace Spark.Web.Mvc
             var controllerName = RemoveSuffix(entry.ControllerType.Name, "Controller");
 
             var viewNames = new List<string>();
+
             var includeViews = entry.IncludeViews;
+
             if (includeViews.Count == 0)
+            {
                 includeViews = new[] { "*" };
+            }
 
             foreach (var include in includeViews)
             {
@@ -281,23 +294,31 @@ namespace Spark.Web.Mvc
                     foreach (var fileName in ViewFolder.ListViews(controllerName))
                     {
                         if (!string.Equals(Path.GetExtension(fileName), ".spark", StringComparison.InvariantCultureIgnoreCase))
+                        {
                             continue;
+                        }
 
                         var potentialMatch = Path.GetFileNameWithoutExtension(fileName);
                         if (!TestMatch(potentialMatch, include))
+                        {
                             continue;
+                        }
 
                         var isExcluded = false;
                         foreach (var exclude in entry.ExcludeViews)
                         {
                             if (!TestMatch(potentialMatch, RemoveSuffix(exclude, ".spark")))
+                            {
                                 continue;
+                            }
 
                             isExcluded = true;
                             break;
                         }
                         if (!isExcluded)
+                        {
                             viewNames.Add(potentialMatch);
+                        }
                     }
                 }
                 else
@@ -349,18 +370,18 @@ namespace Spark.Web.Mvc
             }
 
             // otherwise the only thing that's supported is "starts with"
-            return potentialMatch.StartsWith(pattern.Substring(0, pattern.Length - 1),
-                                             StringComparison.InvariantCultureIgnoreCase);
+            return potentialMatch.StartsWith(pattern.Substring(0, pattern.Length - 1), StringComparison.InvariantCultureIgnoreCase);
         }
 
         private static string RemoveSuffix(string value, string suffix)
         {
             if (value.EndsWith(suffix, StringComparison.InvariantCultureIgnoreCase))
+            {
                 return value.Substring(0, value.Length - suffix.Length);
+            }
+
             return value;
         }
-
-
 
         #region IViewEngine Members
 
@@ -396,8 +417,8 @@ namespace Spark.Web.Mvc
 
         IViewFolder IViewFolderContainer.ViewFolder
         {
-            get { return ViewFolder; }
-            set { ViewFolder = value; }
+            get => Engine.ViewFolder;
+            set => Engine.ViewFolder = value;
         }
 
         #endregion

@@ -30,7 +30,6 @@ namespace Spark.Tests.Parser
     [TestFixture]
     public class ViewLoaderTester
     {
-
         private ViewLoader loader;
 
         private IViewFolder viewFolder;
@@ -39,13 +38,13 @@ namespace Spark.Tests.Parser
         [SetUp]
         public void Init()
         {
-
             viewFolder = MockRepository.GenerateMock<IViewFolder>();
+
             viewFolder.Stub(x => x.ListViews("home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
             viewFolder.Stub(x => x.ListViews("Home")).Return(new[] { "file.spark", "other.spark", "_comment.spark" });
             viewFolder.Stub(x => x.ListViews("Account")).Return(new[] { "index.spark" });
             viewFolder.Stub(x => x.ListViews("Shared")).Return(new[] { "layout.spark", "_header.spark", "default.spark", "_footer.spark" });
-            viewFolder.Stub(x => x.ListViews(Arg<string>.Is.Anything)).IgnoreArguments().Return(new string[0]);
+            viewFolder.Stub(x => x.ListViews(Arg<string>.Is.Anything)).IgnoreArguments().Return(Array.Empty<string>());
 
             syntaxProvider = MockRepository.GenerateMock<ISparkSyntaxProvider>();
 
@@ -67,6 +66,7 @@ namespace Spark.Tests.Parser
         public void LoadSimpleFile()
         {
             ExpectGetChunks(Path.Combine("home", "simple.spark"), new SendLiteralChunk());
+
             viewFolder.Stub(x => x.HasView(Path.Combine("home", "_global.spark"))).Return(false);
             viewFolder.Stub(x => x.HasView(Path.Combine("Shared", "_global.spark"))).Return(false);
 
@@ -79,21 +79,22 @@ namespace Spark.Tests.Parser
         }
 
         [Test]
-        public void LoadUsedFile()
+        public void LoadUseFile()
         {
             ExpectGetChunks(Path.Combine("Home", "usefile.spark"), new RenderPartialChunk { Name = "mypartial" });
             viewFolder.Expect(x => x.HasView(Path.Combine("Home", "mypartial.spark"))).Return(true);
             ExpectGetChunks(Path.Combine("Home", "mypartial.spark"), new SendLiteralChunk { Text = "Hello world" });
+
             viewFolder.Stub(x => x.HasView(Path.Combine("Home", "_global.spark"))).Return(false);
             viewFolder.Stub(x => x.HasView(Path.Combine("Shared", "_global.spark"))).Return(false);
 
             loader.Load(Path.Combine("Home", "usefile.spark"));
+
             viewFolder.VerifyAllExpectations();
-            syntaxProvider.VerifyAllExpectations();
+            syntaxProvider.AssertWasCalled(call => call.GetChunks(Arg<VisitorContext>.Is.Anything, Arg<string>.Is.Anything), options => options.Repeat.Times(2));
 
             Assert.AreEqual(2, loader.GetEverythingLoaded().Count());
         }
-
 
         [Test]
         public void LoadSharedFile()
@@ -107,8 +108,9 @@ namespace Spark.Tests.Parser
             viewFolder.Stub(x => x.HasView(Path.Combine("Shared", "_global.spark"))).Return(false);
 
             loader.Load(Path.Combine("Home", "usefile.spark"));
+
             viewFolder.VerifyAllExpectations();
-            syntaxProvider.VerifyAllExpectations();
+            syntaxProvider.AssertWasCalled(call => call.GetChunks(Arg<VisitorContext>.Is.Anything, Arg<string>.Is.Anything), options => options.Repeat.Times(2));
         }
 
         [Test, Ignore("This test is invalidated. Mocks are hard to keep 'current'.")]
@@ -123,7 +125,6 @@ namespace Spark.Tests.Parser
             Assert.That(partials3.Contains("comment"));
             Assert.That(partials3.Contains("header"));
             Assert.That(partials3.Contains("footer"));
-
 
             Assert.AreEqual(2, partials2.Count);
             Assert.That(partials2.Contains("header"));
@@ -141,8 +142,6 @@ namespace Spark.Tests.Parser
             syntaxProvider.VerifyAllExpectations();
         }
 
-
-
         [Test]
         public void ExpiresWhenFilesChange()
         {
@@ -156,7 +155,7 @@ namespace Spark.Tests.Parser
             viewLoader.SyntaxProvider
                 .Expect(x => x.GetChunks(null, null))
                 .IgnoreArguments()
-                .Return(new Chunk[0]);
+                .Return(Array.Empty<Chunk>());
 
             viewLoader.Load(Path.Combine("home", "changing.spark"));
 
@@ -176,7 +175,7 @@ namespace Spark.Tests.Parser
 
             bindingProvider.Expect(x => x.GetBindings(null))
                 .IgnoreArguments()
-                .Return(new Binding[0])
+                .Return(Array.Empty<Binding>())
                 .Callback<BindingRequest>(x => x.ViewFolder == folder && x.ViewPath == viewPath);
 
             syntaxProvider.Stub(x => x.GetChunks(null, null))
@@ -209,7 +208,7 @@ namespace Spark.Tests.Parser
 
             public IList<string> ListViews(string path)
             {
-                return new string[0];
+                return Array.Empty<string>();
             }
 
             public bool HasView(string path)
@@ -238,6 +237,7 @@ namespace Spark.Tests.Parser
             var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
             var chunks = viewLoader.Load(Path.Combine("home", "index.spark"));
             var everything = viewLoader.GetEverythingLoaded();
+            
             Assert.AreEqual(3, everything.Count());
         }
 
@@ -302,6 +302,7 @@ namespace Spark.Tests.Parser
             var viewLoader = new ViewLoader { ViewFolder = viewFolder };
 
             var partials = viewLoader.FindPartialFiles(Path.Combine("area1","controller2","view3.spark"));
+
             Assert.That(partials, Has.Some.EqualTo("alpha"));
             Assert.That(partials, Has.Some.EqualTo("beta"));
             Assert.That(partials, Has.Some.EqualTo("gamma"));
@@ -318,11 +319,12 @@ namespace Spark.Tests.Parser
         {
             var viewFolder = new InMemoryViewFolder
             {
-                {Path.Combine("home", "empty.spark"), ""},                                     
+                { Path.Combine("home", "empty.spark"), "" },
             };
             var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
             var chunks = viewLoader.Load(Path.Combine("home", "empty.spark"));
             var everything = viewLoader.GetEverythingLoaded();
+
             Assert.AreEqual(1, everything.Count());
         }
 
@@ -331,11 +333,12 @@ namespace Spark.Tests.Parser
         {
             var viewFolder = new InMemoryViewFolder
             {
-                {Path.Combine("home", "empty.shade"), ""},                                     
+                { Path.Combine("home", "empty.shade"), "" },
             };
             var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
             var chunks = viewLoader.Load(Path.Combine("home", "empty.shade"));
             var everything = viewLoader.GetEverythingLoaded();
+            
             Assert.AreEqual(1, everything.Count());
         }
     }

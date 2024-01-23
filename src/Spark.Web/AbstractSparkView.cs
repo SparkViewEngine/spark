@@ -21,10 +21,10 @@ namespace Spark
             : this(null)
         {
         }
+
         protected AbstractSparkView(SparkViewBase decorated)
             : base(decorated)
         {
         }
-
     }
 }

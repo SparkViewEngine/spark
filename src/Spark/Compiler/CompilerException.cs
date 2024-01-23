@@ -22,7 +22,6 @@ namespace Spark.Compiler
         public CompilerException(string message)
             : base(message)
         {
-
         }
             
         public CompilerException(string message, Position position)

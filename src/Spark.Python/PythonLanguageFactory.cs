@@ -21,12 +21,16 @@ namespace Spark.Python
     public class PythonLanguageFactory : DefaultLanguageFactory
     {
         private PythonEngineManager _PythonEngineManager;
+
         public PythonEngineManager PythonEngineManager
         {
             get
             {
                 if (_PythonEngineManager == null)
-                    Interlocked.CompareExchange(ref _PythonEngineManager, new PythonEngineManager(), null);
+                {
+                    Interlocked.CompareExchange(ref this._PythonEngineManager, new PythonEngineManager(), null);
+                }
+
                 return _PythonEngineManager;
             }
         }
@@ -46,14 +50,17 @@ namespace Spark.Python
 
             var pageBaseType = engine.Settings.PageBaseType;
             if (string.IsNullOrEmpty(pageBaseType))
+            {
                 pageBaseType = engine.DefaultPageBaseType;
+            }
 
             viewCompiler.BaseClass = pageBaseType;
             viewCompiler.Descriptor = descriptor;
             viewCompiler.Debug = engine.Settings.Debug;
-        	viewCompiler.NullBehaviour = engine.Settings.NullBehaviour;
+            viewCompiler.NullBehaviour = engine.Settings.NullBehaviour;
             viewCompiler.UseAssemblies = engine.Settings.UseAssemblies;
             viewCompiler.UseNamespaces = engine.Settings.UseNamespaces;
+
             return viewCompiler;
         }
 

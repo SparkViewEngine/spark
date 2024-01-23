@@ -41,12 +41,15 @@ namespace Spark.Python.Compiler
 
             var globalMembersVisitor = new GlobalMembersVisitor(script, globals);
             foreach(var resource in allResources)
+            {
                 globalMembersVisitor.Accept(resource);
+            }
 
             var globalFunctionsVisitor = new GlobalFunctionsVisitor(script, globals);
             foreach (var resource in allResources)
+            {
                 globalFunctionsVisitor.Accept(resource);
-
+            }
 
             var templateIndex = 0;
             foreach (var template in viewTemplates)
@@ -54,7 +57,10 @@ namespace Spark.Python.Compiler
                 script.Write("def RenderViewLevel").Write(templateIndex).WriteLine("():");
                 script.Indent++;
                 foreach (var global in globals.Keys)
+                {
                     script.Write("global ").WriteLine(global);
+                }
+
                 var generator = new GeneratedCodeVisitor(script, globals);
                 generator.Accept(template);
                 script.Indent--;
@@ -79,7 +85,9 @@ namespace Spark.Python.Compiler
 
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
             foreach (var resource in allResources)
+            {
                 baseClassGenerator.Accept(resource);
+            }
 
             BaseClass = baseClassGenerator.BaseClassTypeName;
 
@@ -102,7 +110,10 @@ namespace Spark.Python.Compiler
                 // [SparkView] attribute
                 source.AppendLine("[global::Spark.SparkViewAttribute(");
                 if (TargetNamespace != null)
-                    source.AppendFormat("    TargetNamespace=\"{0}\",", TargetNamespace).AppendLine();
+                {
+                    source.AppendFormat("    TargetNamespace=\"{0}\",", this.TargetNamespace).AppendLine();
+                }
+
                 source.AppendLine("    Templates = new string[] {");
                 source.Append("      ").AppendLine(string.Join(",\r\n      ",
                                                                Descriptor.Templates.Select(

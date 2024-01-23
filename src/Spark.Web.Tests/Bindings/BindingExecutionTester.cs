@@ -10,7 +10,6 @@ namespace Spark.Bindings
     [TestFixture]
     public class BindingExecutionTester
     {
-
         private InMemoryViewFolder _viewFolder;
         private StubViewFactory _factory;
 
@@ -53,7 +52,6 @@ namespace Spark.Bindings
             var contents = this.Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>world</p>"));
         }
-
 
         [Test]
         public void ElementReplacedWithMacroCall()
@@ -324,13 +322,18 @@ namespace Spark.Bindings
         public void BindingShouldMaintainNewLine()
         {
             this._viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
-            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"
+            this._viewFolder.Add(
+                Path.Combine("home", "index.spark"),
+                @"
 <p>
     <Text>John St</Text>
 </p>");
 
             var contents = this.Render("index");
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.That(
+                contents,
+                Is.EqualTo(
+                    @"
 <p>
     John St
 </p>"));

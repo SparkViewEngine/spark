@@ -47,7 +47,10 @@ namespace Spark.Web.Mvc
         {
             var extra = new Dictionary<string, object>();
             foreach (var filter in Filters)
+            {
                 filter.ExtraParameters(controllerContext, extra);
+            }
+
             return extra;
         }
 
@@ -138,7 +141,9 @@ namespace Spark.Web.Mvc
                         {
                             var result = useMaster(scan);
                             if (result != null)
+                            {
                                 return result;
+                            }
                         }
                         return null;
                     };
@@ -155,7 +160,10 @@ namespace Spark.Web.Mvc
             var lastTemplate = descriptor.Templates.Last();
             var sourceContext = AbstractSyntaxProvider.CreateSourceContext(lastTemplate, _engine.ViewFolder);
             if (sourceContext == null)
+            {
                 return null;
+            }
+
             var result = ParseUseMaster(new Position(sourceContext));
             return result == null ? null : result.Value;
         }
@@ -174,7 +182,9 @@ namespace Spark.Web.Mvc
             if (searchedLocations != null)
             {
                 foreach (var potentialTemplate in potentialTemplates)
+                {
                     searchedLocations.Add(potentialTemplate);
+                }
             }
             return false;
         }

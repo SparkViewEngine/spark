@@ -81,7 +81,9 @@ namespace Spark
                 ^ (TargetNamespace ?? "").GetHashCode();
 
             foreach (var template in Templates)
+            {
                 hashCode ^= template.ToLowerInvariant().GetHashCode();
+            }
 
             return hashCode;
         }
@@ -91,7 +93,9 @@ namespace Spark
             var that = obj as SparkViewDescriptor;
 
             if (that == null || GetType() != that.GetType())
+            {
                 return false;
+            }
 
             if (!string.Equals(TargetNamespace ?? "", that.TargetNamespace ?? "") ||
                 Language != that.Language ||

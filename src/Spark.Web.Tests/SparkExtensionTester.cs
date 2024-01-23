@@ -52,7 +52,9 @@ namespace Spark
         public ISparkExtension CreateExtension(VisitorContext context, ElementNode node)
         {
             if (node.Name == "unittest")
+            {
                 return new TestExtension();
+            }
 
             return null;
         }
@@ -61,14 +63,15 @@ namespace Spark
     internal class TestExtension : ISparkExtension
     {
         public void VisitNode(INodeVisitor visitor, IList<Node> body, IList<Chunk> chunks)
-        {
-            
+        {   
         }
 
         public void VisitChunk(IChunkVisitor visitor, OutputLocation location, IList<Chunk> chunks, StringBuilder output)
         {
             if (location == OutputLocation.UsingNamespace)
+            {
                 output.AppendLine("//this was a test");
+            }
         }
     }
 }

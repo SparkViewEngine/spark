@@ -51,9 +51,9 @@ namespace Spark.Web.Mvc.Install
                 targetPath = Path.Combine(webBinPath, TargetAssemblyFile);
 
             ISparkSettings settings;
-            if (SettingsInstantiator != null)
+            if (this.SettingsInstantiator != null)
             {
-                settings = SettingsInstantiator();
+                settings = this.SettingsInstantiator();
             }
             else
             {
@@ -82,7 +82,9 @@ namespace Spark.Web.Mvc.Install
 
             // and give the containing installer a change to add entries
             if (DescribeBatch != null)
-                DescribeBatch(this, new DescribeBatchEventArgs {Batch = batch});
+            {
+                this.DescribeBatch(this, new DescribeBatchEventArgs { Batch = batch });
+            }
 
             factory.Precompile(batch);
 

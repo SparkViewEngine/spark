@@ -54,8 +54,7 @@ namespace Spark.Web.Mvc.Python
                 // need to load the assembly into the runtime domain
                 // before any scripts are created in order for the extension
                 // methods to be "seen" on the dynamic type.
-                PythonEngineManager.ScriptEngine.Runtime.LoadAssembly(
-                    typeof (PythonLanguageFactoryWithExtensions).Assembly);
+                PythonEngineManager.ScriptEngine.Runtime.LoadAssembly(typeof (PythonLanguageFactoryWithExtensions).Assembly);
             }
         }
     }

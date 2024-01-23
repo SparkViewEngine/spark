@@ -41,7 +41,6 @@ namespace Castle.MonoRail.Views.Spark.Tests
             precompile.ViewPath = "MonoRail.Tests.Views";
             precompile.DescribeBatch += ((sender, e) => e.Batch.For<StubController>().Include("*").Include("_*"));
 
-            var context = new InstallContext();
             var state = new Hashtable();
 
             parent.Installers.Add(precompile);

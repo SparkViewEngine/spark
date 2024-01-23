@@ -52,7 +52,6 @@ namespace Spark.Tests
             sb = new StringBuilder();
            
             mocks = new MockRepository();
-
         }
 
         StubViewContext MakeViewContext(string viewName, string masterName)
@@ -65,8 +64,6 @@ namespace Spark.Tests
             return new StubViewContext { ControllerName = "Home", ViewName = viewName, MasterName = masterName, Output = sb, Data = data };
         }
 
-
-
         [Test]
         public void RenderPlainView()
         {
@@ -76,7 +73,6 @@ namespace Spark.Tests
 
             mocks.VerifyAll();
         }
-
 
         [Test]
         public void ForEachTest()
@@ -88,16 +84,15 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString();
+
             Assert.That(content.Contains(@"<li class=""odd"">1: foo</li>"));
             Assert.That(content.Contains(@"<li class=""even"">2: bar</li>"));
             Assert.That(content.Contains(@"<li class=""odd"">3: baaz</li>"));
         }
 
-
         [Test]
         public void GlobalSetTest()
         {
-
             mocks.ReplayAll();
 
             factory.RenderView(MakeViewContext("globalset", null));
@@ -105,6 +100,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString();
+
             Assert.That(content.Contains("<p>default: Global set test</p>"));
             Assert.That(content.Contains("<p>7==7</p>"));
         }
@@ -118,6 +114,7 @@ namespace Spark.Tests
 
             mocks.VerifyAll();
             string content = sb.ToString();
+
             Assert.That(content.Contains("<title>Standalone Index View</title>"));
             Assert.That(content.Contains("<h1>Standalone Index View</h1>"));
             Assert.That(content.Contains("<p>no header by default</p>"));
@@ -127,13 +124,13 @@ namespace Spark.Tests
         [Test]
         public void CaptureNamedContent()
         {
-
             mocks.ReplayAll();
 
             factory.RenderView(MakeViewContext("namedcontent", "layout"));
 
             mocks.VerifyAll();
             string content = sb.ToString();
+
             Assert.That(content.Contains("<p>main content</p>"));
             Assert.That(content.Contains("<p>this is the header</p>"));
             Assert.That(content.Contains("<p>footer part one</p>"));
@@ -149,6 +146,7 @@ namespace Spark.Tests
 
             mocks.VerifyAll();
             string content = sb.ToString();
+
             Assert.That(content.Contains("<li>Partial where x=\"zero\"</li>"));
             Assert.That(content.Contains("<li>Partial where x=\"one\"</li>"));
             Assert.That(content.Contains("<li>Partial where x=\"two\"</li>"));
@@ -165,6 +163,7 @@ namespace Spark.Tests
 
             mocks.VerifyAll();
             string content = sb.ToString();
+
             Assert.That(content.Contains("<li>Partial where x=\"zero\"</li>"));
             Assert.That(content.Contains("<li>Partial where x=\"one\"</li>"));
             Assert.That(content.Contains("<li>Partial where x=\"two\"</li>"));
@@ -181,6 +180,7 @@ namespace Spark.Tests
 
             mocks.VerifyAll();
             string content = sb.ToString();
+
             Assert.That(content.Contains("<li class=\"odd\">one</li>"));
             Assert.That(content.Contains("<li class=\"even\">two</li>"));
         }
@@ -209,6 +209,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString();
+
             Assert.That(!content.Contains("<if"));
             Assert.That(!content.Contains("<else"));
 
@@ -220,7 +221,6 @@ namespace Spark.Tests
             Assert.That(content.Contains("<p>argisstillnot6</p>"));
         }
 
-
         [Test]
         public void IfElseAttributes()
         {
@@ -230,6 +230,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString();
+
             Assert.That(!content.Contains("<if"));
             Assert.That(!content.Contains("<else"));
 
@@ -250,6 +251,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString();
+
             Assert.That(!content.Contains("<unless"));
 
             Assert.That(content.Contains("<p>argisnot6</p>"));
@@ -265,6 +267,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString();
+
             Assert.That(!content.Contains("<unless"));
 
             Assert.That(content.Contains("<p>argisnot6</p>"));
@@ -279,6 +282,7 @@ namespace Spark.Tests
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();
+
             Assert.That(content, Tests.Contains.InOrder(
                 "<p>Hi Bob!</p>",
                 "<p>Administrator James</p>",
@@ -301,6 +305,7 @@ namespace Spark.Tests
                 "<p>Test user.</p>",
                 "<p>Anonymous user.</p>"));
         }
+
         [Test]
         public void ChainingElseIfAttribute()
         {
@@ -417,11 +422,17 @@ namespace Spark.Tests
             factory.RenderView(viewContext);
             mocks.VerifyAll();
             string content = sb.ToString();
-            Assert.That(content, Contains.InOrder(
-                "<p>Bob</p>", "<p>Alpha</p>",
-                "<p>Bob</p>", "<p>Beta</p>",
-                "<p>Bob</p>", "<p>Gamma</p>",
-                "<span class=\"yadda\">Rating: 5</span>"));
+
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "<p>Bob</p>",
+                    "<p>Alpha</p>",
+                    "<p>Bob</p>",
+                    "<p>Beta</p>",
+                    "<p>Bob</p>",
+                    "<p>Gamma</p>",
+                    "<span class=\"yadda\">Rating: 5</span>"));
         }
 
         [Test]
@@ -433,16 +444,22 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString();
-            Assert.That(content, Contains.InOrder(
-                "<p>0: Alpha</p>",
-                "<p>1: Beta</p>",
-                "<p>2: Gamma</p>",
-                "<p>3: Delta</p>",
-                "<li ", "class='even'>Alpha</li>",
-                "<li ", "class='odd'>Beta</li>",
-                "<li ", "class='even'>Gamma</li>",
-                "<li ", "class='odd'>Delta</li>"
-                ));
+
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "<p>0: Alpha</p>",
+                    "<p>1: Beta</p>",
+                    "<p>2: Gamma</p>",
+                    "<p>3: Delta</p>",
+                    "<li ",
+                    "class='even'>Alpha</li>",
+                    "<li ",
+                    "class='odd'>Beta</li>",
+                    "<li ",
+                    "class='even'>Gamma</li>",
+                    "<li ",
+                    "class='odd'>Delta</li>"));
         }
 
         [Test]
@@ -454,13 +471,13 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString().Replace(" ", "").Replace("\t", "").Replace("\r\n", "");
+
             Assert.That(content, Contains.InOrder(
                 "<tr><td>one</td><td>0</td><td>4</td><td>True</td><td>False</td><td>False</td><td>True</td></tr>",
                 "<tr><td>two</td><td>1</td><td>4</td><td>False</td><td>False</td><td>True</td><td>False</td></tr>",
                 "<tr><td>three</td><td>2</td><td>4</td><td>False</td><td>False</td><td>False</td><td>True</td></tr>",
                 "<tr><td>four</td><td>3</td><td>4</td><td>False</td><td>True</td><td>True</td><td>False</td></tr>"));
         }
-
 
         [Test]
         public void ConditionalTestElement()
@@ -480,7 +497,6 @@ namespace Spark.Tests
                             "<p>out-6</p>"));
 
             Assert.IsFalse(content.Contains("fail"));
-
         }
 
         [Test]
@@ -492,8 +508,8 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
-            Assert.AreEqual("<p>a</p><p>b</p><p>c</p><p>d</p><p>e</p><p>f</p>", content);
 
+            Assert.AreEqual("<p>a</p><p>b</p><p>c</p><p>d</p><p>e</p><p>f</p>", content);
         }
 
         [Test]
@@ -505,6 +521,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString();
+
             Assert.That(content, Contains.InOrder(
                 "Hi there, alpha.",
                 "Hi there, alpha."));
@@ -519,8 +536,8 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
-            Assert.AreEqual("<p>a:1</p><p>b:2</p><p>c:3%></p><p>d:<%4%></p><p>e:5%></p><p>f:<%6%></p>", content);
 
+            Assert.AreEqual("<p>a:1</p><p>b:2</p><p>c:3%></p><p>d:<%4%></p><p>e:5%></p><p>f:<%6%></p>", content);
         }
 
         [Test]
@@ -532,6 +549,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
+
             Assert.AreEqual("<p>a\\\"b</p><p>c\\\"}d</p>", content);
         }
 
@@ -545,10 +563,12 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                "<img src=\"/TestApp/content/images/etc.png\"/>",
-                "<script src=\"/TestApp/content/js/etc.js\"></script>",
-                "<p class=\"~/blah.css\"></p>"));
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "<img src=\"/TestApp/content/images/etc.png\"/>",
+                    "<script src=\"/TestApp/content/js/etc.js\"></script>",
+                    "<p class=\"~/blah.css\"></p>"));
         }
 
         [Test]
@@ -561,8 +581,7 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                "<p>SortByCategory</p>"));
+            Assert.That(content, Contains.InOrder("<p>SortByCategory</p>"));
         }
 
         [Test]
@@ -580,7 +599,6 @@ namespace Spark.Tests
                 "<div>Hello world</div>",
                 "<div>\r\n  Again: Hello world\r\n</div>"));
         }
-
 
         [Test]
         public void AddViewDataDifferentTypes()
@@ -601,20 +619,22 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                "xbox",
-                "xtop",
-                "xb1",
-                "xb2",
-                "xb3",
-                "xb4",
-                "xboxcontent",
-                "Hello World",
-                "xbottom",
-                "xb4",
-                "xb3",
-                "xb2",
-                "xb1"));
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "xbox",
+                    "xtop",
+                    "xb1",
+                    "xb2",
+                    "xb3",
+                    "xb4",
+                    "xboxcontent",
+                    "Hello World",
+                    "xbottom",
+                    "xb4",
+                    "xb3",
+                    "xb2",
+                    "xb1"));
         }
 
         [Test]
@@ -626,22 +646,24 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                "xbox",
-                "xtop",
-                "xb1",
-                "xb2",
-                "xb3",
-                "xb4",
-                "xboxcontent",
-                "title=\"My Tooltip\"",
-                "<h3>This is a test</h3>",
-                "Hello World",
-                "xbottom",
-                "xb4",
-                "xb3",
-                "xb2",
-                "xb1"));
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "xbox",
+                    "xtop",
+                    "xb1",
+                    "xb2",
+                    "xb3",
+                    "xb4",
+                    "xboxcontent",
+                    "title=\"My Tooltip\"",
+                    "<h3>This is a test</h3>",
+                    "Hello World",
+                    "xbottom",
+                    "xb4",
+                    "xb3",
+                    "xb2",
+                    "xb1"));
         }
 
         [Test]
@@ -653,26 +675,28 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                "xbox",
-                "xtop",
-                "xb1",
-                "xb2",
-                "xb3",
-                "xb4",
-                "xboxcontent",
-                "<section name=\"top\">",
-                "<h3>This is a test</h3>",
-                "</section>",
-                "<section name=\"tooltip\">",
-                "My Tooltip",
-                "</section>",
-                "<p>Hello World</p>",
-                "xbottom",
-                "xb4",
-                "xb3",
-                "xb2",
-                "xb1"));
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "xbox",
+                    "xtop",
+                    "xb1",
+                    "xb2",
+                    "xb3",
+                    "xb4",
+                    "xboxcontent",
+                    "<section name=\"top\">",
+                    "<h3>This is a test</h3>",
+                    "</section>",
+                    "<section name=\"tooltip\">",
+                    "My Tooltip",
+                    "</section>",
+                    "<p>Hello World</p>",
+                    "xbottom",
+                    "xb4",
+                    "xb3",
+                    "xb2",
+                    "xb1"));
         }
 
         [Test]
@@ -686,26 +710,28 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                "xbox",
-                "xtop",
-                "xb1",
-                "xb2",
-                "xb3",
-                "xb4",
-                "xboxcontent",
-                "title=\"My Tooltip\"",
-                "<h3>This is a test</h3>",
-                "Hello World",
-                "xbottom",
-                "xb4",
-                "xb3",
-                "xb2",
-                "xb1"));
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "xbox",
+                    "xtop",
+                    "xb1",
+                    "xb2",
+                    "xb3",
+                    "xb4",
+                    "xboxcontent",
+                    "title=\"My Tooltip\"",
+                    "<h3>This is a test</h3>",
+                    "Hello World",
+                    "xbottom",
+                    "xb4",
+                    "xb3",
+                    "xb2",
+                    "xb1"));
         }
 
         [Test]
-        public void RenderlPartialWithDotInName()
+        public void RenderPartialWithDotInName()
         {
             mocks.ReplayAll();
             var viewContext = MakeViewContext("render-dotted-partial", null);
@@ -713,12 +739,13 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
+            Assert.That(
+                content,
+                Contains.InOrder(
                     "<p>",
                     "this.is.some.text:",
                     "test456",
-                    "</p>"
-                    ));
+                    "</p>"));
 
             Assert.IsFalse(content.Contains("<PartialWith.Dot"));
         }
@@ -783,25 +810,26 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                        "<div>",
-                        @"<elt1 a1=""1"" a3=""3""></elt1>",
-                        @"<elt2 a1=""1"" a3=""3""></elt2>",
-                        @"<elt3 a1=""1"" a2="""" a3=""3""></elt3>",
-                        @"<elt4 a1=""1"" a2=""2"" a3=""3""></elt4>",
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "<div>",
+                    @"<elt1 a1=""1"" a3=""3""></elt1>",
+                    @"<elt2 a1=""1"" a3=""3""></elt2>",
+                    @"<elt3 a1=""1"" a2="""" a3=""3""></elt3>",
+                    @"<elt4 a1=""1"" a2=""2"" a3=""3""></elt4>",
 
-                        @"<elt5 a1=""1"" a2="" beta"" a3=""3""></elt5>",
-                        @"<elt6 a1=""1"" a2=""alpha beta"" a3=""3""></elt6>",
-                        @"<elt7 a1=""1"" a2=""alpha"" a3=""3""></elt7>",
-                        @"<elt8 a1=""1"" a3=""3""></elt8>",
+                    @"<elt5 a1=""1"" a2="" beta"" a3=""3""></elt5>",
+                    @"<elt6 a1=""1"" a2=""alpha beta"" a3=""3""></elt6>",
+                    @"<elt7 a1=""1"" a2=""alpha"" a3=""3""></elt7>",
+                    @"<elt8 a1=""1"" a3=""3""></elt8>",
 
-                        @"<elt9 a1=""1"" a2="" beta"" a3=""3""></elt9>",
-                        @"<elt10 a1=""1"" a2=""alpha beta"" a3=""3""></elt10>",
+                    @"<elt9 a1=""1"" a2="" beta"" a3=""3""></elt9>",
+                    @"<elt10 a1=""1"" a2=""alpha beta"" a3=""3""></elt10>",
 
-                        @"<elt11 a1=""1"" a3=""3""></elt11>",
-                        @"<elt12 a1=""1"" a2=""onetwo"" a3=""3""></elt12>",
-                        "</div>"
-            ));
+                    @"<elt11 a1=""1"" a3=""3""></elt11>",
+                    @"<elt12 a1=""1"" a2=""onetwo"" a3=""3""></elt12>",
+                    "</div>"));
         }
 
         [Test]
@@ -813,10 +841,11 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                            "<?xml version=\"1.0\" encoding=\"utf-8\" ?>",
-                            "<?php yadda yadda yadda ?>"
-                ));
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "<?xml version=\"1.0\" encoding=\"utf-8\" ?>",
+                    "<?php yadda yadda yadda ?>"));
         }
 
 
@@ -829,10 +858,16 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                            "<li", "class=", "selected", "blah", "</li>",
-                            "blah", "blah"));
-
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "<li",
+                    "class=",
+                    "selected",
+                    "blah",
+                    "</li>",
+                    "blah",
+                    "blah"));
         }
 
         [Test]
@@ -847,12 +882,21 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                            "<p>", "alpha", "</p>",
-                            "<p>", "beta", "</p>",
-                            "<p>", "gamma", "</p>",
-                            "<p>", "delta", "</p>"
-                            ));
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "<p>",
+                    "alpha",
+                    "</p>",
+                    "<p>",
+                    "beta",
+                    "</p>",
+                    "<p>",
+                    "gamma",
+                    "</p>",
+                    "<p>",
+                    "delta",
+                    "</p>"));
         }
 
         [Test]
@@ -986,7 +1030,6 @@ namespace Spark.Tests
                 "<h7 class=\"one&two<three\"></h7>"));
         }
 
-
         [Test]
         public void OnceAttribute()
         {
@@ -1008,7 +1051,6 @@ namespace Spark.Tests
             Assert.IsFalse(content.Contains("bar3"));
             Assert.IsFalse(content.Contains("a2"));
         }
-
 
         [Test]
         public void EachAttributeWorksOnSpecialNodes()
@@ -1103,12 +1145,13 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                            "<p><strong>hi</strong></p>",
-                            "<p>&lt;strong&gt;hi&lt;/strong&gt;</p>",
-                            "yadda",
-                            "<p>42</p>"));
-
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "<p><strong>hi</strong></p>",
+                    "<p>&lt;strong&gt;hi&lt;/strong&gt;</p>",
+                    "yadda",
+                    "<p>42</p>"));
         }
 
         [Test]
@@ -1120,12 +1163,13 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content, Contains.InOrder(
-                            "<p>3hello</p>",
-                            "<p>2hello.</p>",
-                            "<p>1hello..</p>",
-                            "<p>0hello...</p>"));
-
+            Assert.That(
+                content,
+                Contains.InOrder(
+                    "<p>3hello</p>",
+                    "<p>2hello.</p>",
+                    "<p>1hello..</p>",
+                    "<p>0hello...</p>"));
         }
 
         [Test]
@@ -1148,14 +1192,16 @@ namespace Spark.Tests
             string content = sb.ToString();
 
             var stripped = content.Replace(" ", "").Replace("\t", "").Replace("\r\n", "");
-            Assert.That(stripped, Is.EqualTo(
-                "[001][101]" +
-                "[201][102]" +
-                "[201][104][202]" +
-                "[106][002][107]" +
-                "[201][109][202]" +
-                "[111][202]" +
-                "[112][003]"));
+            Assert.That(
+                stripped,
+                Is.EqualTo(
+                    "[001][101]" +
+                    "[201][102]" +
+                    "[201][104][202]" +
+                    "[106][002][107]" +
+                    "[201][109][202]" +
+                    "[111][202]" +
+                    "[112][003]"));
         }
 
         [Test]
@@ -1273,7 +1319,6 @@ namespace Spark.Tests
             Assert.That(content, Is.EqualTo(@"<img attr=""something; other='value1, value2'""/>"));
         }
 
-
         [Test]
         public void ShadeFileRenders()
         {
@@ -1362,7 +1407,6 @@ namespace Spark.Tests
                 "</ul>"));
         }
 
-
         [Test]
         public void ShadeTextMayContainExpressions()
         {
@@ -1430,7 +1474,6 @@ namespace Spark.Tests
                 "<p>Int32:42</p>"));
         }
 
-
         [Test]
         public void TextOrientedAttributesApplyToGlobal()
         {
@@ -1447,7 +1490,6 @@ namespace Spark.Tests
                 "<p>String:Hello World!</p>",
                 "<p>Int32:42</p>"));
         }
-
 
         [Test]
         public void ShadeElementsMayStackOnOneLine()

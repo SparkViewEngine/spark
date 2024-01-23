@@ -90,6 +90,7 @@ namespace Spark.Configuration
             descriptor.Templates.Add(Path.Combine("home", "index.spark"));
 
             var contents = engine.CreateInstance(descriptor).RenderView();
+
             Assert.AreEqual("<div>Alive</div>", contents);
         }
     }

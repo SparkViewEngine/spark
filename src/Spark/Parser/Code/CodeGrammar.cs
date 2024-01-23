@@ -125,7 +125,7 @@ namespace Spark.Parser.Code
                                                    .Concat(hit.Left.Left.Down)
                                                    .Concat(hit.Left.Down)
                                                    .Concat(new Snippets("\""))
-                                                   .Concat(hit.Down ?? new Snippet[0])
+                                                   .Concat(hit.Down ?? Array.Empty<Snippet>())
                                                    .Concat(new Snippets(")"))
                                                    .ToList());
 

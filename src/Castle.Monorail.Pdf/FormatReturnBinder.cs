@@ -14,9 +14,15 @@ namespace Castle.MonoRail.Framework
         {
             //TODO: we can find a better way to do this....
             if (context.UrlInfo.Extension.ToLowerInvariant() == "json")
+            {
                 return new JSONReturnBinderAttribute();
+            }
+
             if (context.UrlInfo.Extension.ToLowerInvariant() == "pdf")
+            {
                 return new PdfReturnBinderAttribute();
+            }
+
             return new NullReturnBinder();
         }
     }

@@ -30,9 +30,12 @@ namespace Spark.FileSystem
             var engine = new SparkViewEngine(settings);
 
             var folder = engine.ViewFolder;
+
             Assert.IsAssignableFrom(typeof(CombinedViewFolder), folder);
+
             var combined = (CombinedViewFolder)folder;
             Assert.IsAssignableFrom(typeof(VirtualPathProviderViewFolder), combined.Second);
+            
             var vpp = (VirtualPathProviderViewFolder)combined.Second;
             Assert.AreEqual("~/MoreViews/", vpp.VirtualBaseDir);
         }

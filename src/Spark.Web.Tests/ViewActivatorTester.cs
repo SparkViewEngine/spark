@@ -51,7 +51,6 @@ namespace Spark
 
             public void Unregister(Type type, IViewActivator activator)
             {
-
             }
 
             public ISparkView Activate(Type type)

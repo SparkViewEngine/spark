@@ -32,7 +32,6 @@ namespace Spark.Caching
     [TestFixture]
     public class CacheElementTester
     {
-
         private InMemoryViewFolder _viewFolder;
         private StubViewFactory _factory;
         private StubCacheService _cacheService;

@@ -74,6 +74,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.AreEqual(2, descriptors.Count);
             Assert.AreEqual(2, descriptors[0].Templates.Count);
             Assert.AreEqual(2, descriptors[1].Templates.Count);
+
             Assert.That(
                 descriptors.Any(
                     d =>
@@ -174,18 +175,18 @@ namespace Castle.MonoRail.Views.Spark.Tests
             var batch = new SparkBatchDescriptor();
             batch.For<FooController>().Include("index");
             _factory.Engine.ViewFolder = new InMemoryViewFolder { { string.Format("foo{0}index.spark", Path.DirectorySeparatorChar), "<p>foo</p>" } };
+            
             var descriptors = _factory.CreateDescriptors(batch);
+
             Assert.AreEqual(1, descriptors.Count);
             Assert.AreEqual(1, descriptors[0].Accessors.Count);
             Assert.AreEqual(typeof(FooHelper).FullName + " Foo", descriptors[0].Accessors[0].Property);            
         }
     }
 
-
     [Helper(typeof(FooHelper), "Foo")]
     public class FooController : Controller
     {
-
     }
 
     public class FooHelper : AbstractHelper

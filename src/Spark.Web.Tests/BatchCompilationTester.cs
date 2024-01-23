@@ -63,11 +63,13 @@ namespace Spark
             var entry0 = engine.GetEntry(descriptors[0]);
             var view0 = entry0.CreateInstance();
             var result0 = view0.RenderView();
+
             Assert.AreEqual("<p>Hello world</p>", result0);
 
             var entry1 = engine.GetEntry(descriptors[1]);
             var view1 = entry1.CreateInstance();
             var result1 = view1.RenderView();
+
             Assert.AreEqual("<ol><li>one</li><li>two</li></ol>", result1);
 
             Assert.AreSame(view0.GetType().Assembly, view1.GetType().Assembly);
@@ -117,18 +119,23 @@ namespace Spark
         public void LoadCompiledViews()
         {
             var descriptors = engine.LoadBatchCompilation(GetType().Assembly);
+
             Assert.AreEqual(2, descriptors.Count);
 
-            var view1 = engine.CreateInstance(new SparkViewDescriptor()
-                                      .SetTargetNamespace("Spark.Tests.Precompiled")
-                                      .AddTemplate(Path.Combine("Foo","Bar.spark"))
-                                      .AddTemplate(Path.Combine("Shared","Quux.spark")));
+            var view1 = engine.CreateInstance(
+                new SparkViewDescriptor()
+                    .SetTargetNamespace("Spark.Tests.Precompiled")
+                    .AddTemplate(Path.Combine("Foo", "Bar.spark"))
+                    .AddTemplate(Path.Combine("Shared", "Quux.spark")));
+
             Assert.AreEqual(typeof(View1), view1.GetType());
 
-            var view2 = engine.CreateInstance(new SparkViewDescriptor()
-                                      .SetTargetNamespace("Spark.Tests.Precompiled")
-                                      .AddTemplate(Path.Combine("Hello","World.spark"))
-                                      .AddTemplate(Path.Combine("Shared","Default.spark")));
+            var view2 = engine.CreateInstance(
+                new SparkViewDescriptor()
+                    .SetTargetNamespace("Spark.Tests.Precompiled")
+                    .AddTemplate(Path.Combine("Hello", "World.spark"))
+                    .AddTemplate(Path.Combine("Shared", "Default.spark")));
+
             Assert.AreEqual(typeof(View2), view2.GetType());
         }
 
@@ -143,9 +150,8 @@ namespace Spark
             var moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicModule", "DynamicAssembly.dll");
             var type = moduleBuilder.DefineType("DynamicType", TypeAttributes.Public).CreateType();
             assemblyBuilder.Save("DynamicAssembly.dll");
+
             Assert.IsTrue(type.Assembly.IsDynamic());
         }
-
-        
     }
 }

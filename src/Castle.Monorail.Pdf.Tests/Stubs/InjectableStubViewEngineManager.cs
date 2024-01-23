@@ -128,7 +128,7 @@ namespace Castle.MonoRail.Pdf.Tests.Stubs
         {
             var codeGen = new JSCodeGenerator();
 
-            return new JSCodeGeneratorInfo(codeGen, new PrototypeGenerator(codeGen), new object[0], new object[0]);
+            return new JSCodeGeneratorInfo(codeGen, new PrototypeGenerator(codeGen), Array.Empty<object>(), Array.Empty<object>());
         }
     }
 

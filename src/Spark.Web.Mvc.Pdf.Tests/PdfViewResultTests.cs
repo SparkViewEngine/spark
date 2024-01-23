@@ -81,6 +81,7 @@ namespace Spark.Web.Mvc.Pdf.Tests
                          {
                              ViewEngineCollection = new ViewEngineCollection(new[] { factory })
                          };
+
             result.ExecuteResult(controllerContext);
 
             Assert.That(stream.Length, Is.Not.EqualTo(0));

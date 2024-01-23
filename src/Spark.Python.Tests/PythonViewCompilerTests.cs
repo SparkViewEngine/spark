@@ -30,7 +30,6 @@ namespace Spark.Python.Tests
         private PythonViewCompiler _compiler;
         private PythonLanguageFactory _languageFactory;
 
-
         [SetUp]
         public void Init()
         {
@@ -62,9 +61,9 @@ namespace Spark.Python.Tests
             var contents = new StringWriter();
             view.RenderView(contents);
             _languageFactory.InstanceReleased(_compiler, view);
+
             return contents.ToString();
         }
-
 
         [Test]
         public void CreatedViewHasScriptProperty()
@@ -74,6 +73,7 @@ namespace Spark.Python.Tests
             var view = FastActivator<IScriptingSparkView>.New(_compiler.CompiledType);
             var source = _compiler.SourceCode;
             var script = view.ScriptSource;
+
             Assert.IsNotNull(source);
             Assert.IsNotEmpty(source);
             Assert.IsNotNull(script);
@@ -87,6 +87,7 @@ namespace Spark.Python.Tests
 
             _compiler.BaseClass = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass"));
         }
 
@@ -97,6 +98,7 @@ namespace Spark.Python.Tests
 
             _compiler.BaseClass = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass<ThisIsTheModelClass>"));
         }
 
@@ -111,6 +113,7 @@ namespace Spark.Python.Tests
             var chunks = new[] { chunks0[0], chunks1[0] };
             _compiler.CompileView(chunks, chunks);
             var content = ExecuteView();
+
             Assert.AreEqual("420", content);
         }
 
@@ -120,6 +123,7 @@ namespace Spark.Python.Tests
             var chunks = Chunks(new UseNamespaceChunk { Namespace = "AnotherNamespace.ToBe.Used" });
 
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("Imports AnotherNamespace.ToBe.Used"));
         }
 
@@ -130,6 +134,7 @@ namespace Spark.Python.Tests
 
             _compiler.Descriptor = new SparkViewDescriptor { TargetNamespace = "TargetNamespace.ForThe.GeneratedView" };
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("namespace TargetNamespace.ForThe.GeneratedView"));
         }
 
@@ -140,6 +145,7 @@ namespace Spark.Python.Tests
 
             _compiler.Descriptor = new SparkViewDescriptor { TargetNamespace = "TargetNamespace.ForThe.GeneratedView" };
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("Namespace TargetNamespace.ForThe.GeneratedView"));
             Assert.That(_compiler.SourceCode.Contains("Imports AnotherNamespace.ToBe.Used"));
         }
@@ -151,6 +157,7 @@ namespace Spark.Python.Tests
 
             _compiler.Descriptor = new SparkViewDescriptor { TargetNamespace = "TargetNamespace.ForThe.GeneratedView", Templates = new[] { "one", "two", "three" } };
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("SparkViewAttribute"));
             Assert.That(_compiler.SourceCode.Contains("one"));
             Assert.That(_compiler.SourceCode.Contains("two"));
@@ -163,6 +170,7 @@ namespace Spark.Python.Tests
             var chunks = Chunks();
 
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("GeneratedViewId"));
             Assert.That(_compiler.SourceCode.Contains("\"" + _compiler.GeneratedViewId + "\""));
         }
@@ -173,6 +181,7 @@ namespace Spark.Python.Tests
             var chunks = Chunks(new SendLiteralChunk { Text = "Hello World" });
 
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("Hello World"));
         }
 
@@ -182,9 +191,9 @@ namespace Spark.Python.Tests
             var chunks = Chunks(new SendExpressionChunk { Code = "5 + 3", Position = new Position(null, 100, 0, 50, 3, null) });
 
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("5 + 3"));
         }
-
 
         [Test]
         public void RenderingSimpleView()
@@ -195,15 +204,14 @@ namespace Spark.Python.Tests
             Assert.AreEqual("Hello World", contents);
         }
 
-
         [Test]
         public void CompilingSimpleView()
         {
             var chunks = Chunks(new SendLiteralChunk { Text = "Hello World" });
             _compiler.CompileView(chunks, chunks);
+
             Assert.That(typeof(StubSparkView).IsAssignableFrom(_compiler.CompiledType));
         }
-
 
         [Test]
         public void SettingLocalVariable()
@@ -215,6 +223,7 @@ namespace Spark.Python.Tests
                 new SendExpressionChunk { Code = "x" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("42", contents);
         }
 
@@ -229,6 +238,7 @@ namespace Spark.Python.Tests
                 new SendExpressionChunk { Code = "x" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("42", contents);
         }
 
@@ -239,6 +249,7 @@ namespace Spark.Python.Tests
                 new SendExpressionChunk { Code = "hello" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView(new StubViewData { { "hello", 42 } });
+
             Assert.AreEqual("42", contents);
         }
 
@@ -252,9 +263,11 @@ namespace Spark.Python.Tests
             _compiler.CompileView(chunks, chunks);
 
             var contents = ExecuteView(new StubViewData { { "hello", 42 } });
+
             Assert.AreEqual("42", contents);
 
             var contents2 = ExecuteView();
+
             Assert.AreEqual("55", contents2);
         }
 
@@ -268,6 +281,7 @@ namespace Spark.Python.Tests
                 new SendExpressionChunk { Code = "x + 22" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual(contents, "42");
         }
 
@@ -284,6 +298,7 @@ namespace Spark.Python.Tests
             var chunks = Chunks(scope1, scope2);
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual(contents, "42");
         }
 
@@ -297,6 +312,7 @@ namespace Spark.Python.Tests
                 loop);
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView(new StubViewData { { "numbers", new[] { 1, 2, 3, 4, 5 } } });
+
             Assert.AreEqual("12345", contents);
         }
 
@@ -314,6 +330,7 @@ namespace Spark.Python.Tests
                 macro);
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("hello", contents);
         }
 
@@ -332,6 +349,7 @@ namespace Spark.Python.Tests
                 new SendLiteralChunk { Text = "b" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("aok1b", contents);
         }
 
@@ -358,6 +376,7 @@ namespace Spark.Python.Tests
                 new SendLiteralChunk { Text = "b" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("aok1ok2b", contents);
         }
 
@@ -376,6 +395,7 @@ namespace Spark.Python.Tests
                 new SendLiteralChunk { Text = "b" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("aok1b", contents);
         }
 
@@ -401,6 +421,7 @@ namespace Spark.Python.Tests
                 loop);
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView(new StubViewData { { "numbers", new[] { 0, 1, 2, 3, 4, 7, 2, -4 } } });
+
             Assert.AreEqual("dabcddbd", contents);
         }
 
@@ -417,6 +438,7 @@ namespace Spark.Python.Tests
 
             _compiler.CompileView(chunks, new[] { chunks[0], partial[0] });
             var contents = ExecuteView();
+
             Assert.AreEqual("(Hello world)", contents);
         }
 
@@ -428,7 +450,6 @@ namespace Spark.Python.Tests
                 new RenderSectionChunk(),
                 new SendLiteralChunk { Text = "]" });
 
-
             var renderPartial = new RenderPartialChunk { FileContext = new FileContext { Contents = partial[0] } };
             var chunks = Chunks(
                 new SendLiteralChunk { Text = "(" },
@@ -439,6 +460,7 @@ namespace Spark.Python.Tests
 
             _compiler.CompileView(chunks, new[] { chunks[0], partial[0] });
             var contents = ExecuteView();
+
             Assert.AreEqual("([From inside caller])", contents);
         }
 
@@ -449,7 +471,6 @@ namespace Spark.Python.Tests
                 new SendLiteralChunk { Text = "[" },
                 new RenderSectionChunk { Name = "foo" },
                 new SendLiteralChunk { Text = "]" });
-
 
             var renderPartial = new RenderPartialChunk { FileContext = new FileContext { Contents = partial[0] } };
             renderPartial.Sections.Add("foo",
@@ -465,6 +486,7 @@ namespace Spark.Python.Tests
 
             _compiler.CompileView(chunks, new[] { chunks[0], partial[0] });
             var contents = ExecuteView();
+
             Assert.AreEqual("([From inside caller])", contents);
         }
 
@@ -483,9 +505,9 @@ namespace Spark.Python.Tests
 
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("bac", contents);
         }
-
 
         [Test]
         public void CaptureContentToNamedSpool()
@@ -498,6 +520,7 @@ namespace Spark.Python.Tests
 
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("abc", contents);
         }
 
@@ -516,6 +539,7 @@ namespace Spark.Python.Tests
 
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("abe", contents);
         }
 
@@ -544,6 +568,7 @@ namespace Spark.Python.Tests
 
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("42", contents);
         }
 
@@ -560,6 +585,7 @@ namespace Spark.Python.Tests
 
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("1${user.Name}23", contents);
         }
 
@@ -580,6 +606,7 @@ namespace Spark.Python.Tests
                                        {
                                            {"stuff", new[] {6, 2, 7, 4}}
                                        });
+
             Assert.AreEqual("04TrueFalse14FalseFalse24FalseFalse34FalseTrue", contents);
         }
 
@@ -598,6 +625,7 @@ namespace Spark.Python.Tests
 
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("213", contents);
         }
     }

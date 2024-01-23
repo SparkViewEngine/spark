@@ -14,8 +14,6 @@
 // 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Spark.Bindings;
 using Spark.FileSystem;
 using Spark.Parser;
@@ -33,8 +31,8 @@ namespace Spark.Compiler.NodeVisitors
         public VisitorContext()
         {
             Namespaces = NamespacesType.Unqualified;
-            Paint = new Paint[0];
-            PartialFileNames = new string[0];
+            Paint = Array.Empty<Paint>();
+            PartialFileNames = Array.Empty<string>();
         }
 
         public ISparkSyntaxProvider SyntaxProvider { get; set; }

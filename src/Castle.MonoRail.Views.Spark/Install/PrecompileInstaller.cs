@@ -48,7 +48,9 @@ namespace Castle.MonoRail.Views.Spark.Install
 
             var viewPath = ViewPath;
             if (string.IsNullOrEmpty(viewPath))
+            {
                 viewPath = "Views";
+            }
 
             if (!Directory.Exists(Path.Combine(appBasePath, viewPath)) &&
                 Directory.Exists(Path.Combine(appBinPath, viewPath)))
@@ -60,7 +62,9 @@ namespace Castle.MonoRail.Views.Spark.Install
             var viewsLocation = Path.Combine(appBasePath, viewPath);
 
             if (!string.IsNullOrEmpty(TargetAssemblyFile))
-                targetPath = Path.Combine(appBinPath, TargetAssemblyFile);
+            {
+                targetPath = Path.Combine(appBinPath, this.TargetAssemblyFile);
+            }
 
             // this hack enables you to open the web.config as if it was an .exe.config
             File.Create(webFileHack).Close();
@@ -83,15 +87,17 @@ namespace Castle.MonoRail.Views.Spark.Install
             var factory = new SparkViewFactory();
             factory.Service(services);
 
-            // And generate all of the known view/master templates into the target assembly
+            // And generate all the known view/master templates into the target assembly
             var batch = new SparkBatchDescriptor(targetPath);
 
-            // create entries for controller attributes in the parent installer's assembly
+            // Create entries for controller attributes in the parent installer's assembly
             batch.FromAssembly(Parent.GetType().Assembly);
 
-            // and give the containing installer a change to add entries
+            // And give the containing installer a change to add entries
             if (DescribeBatch != null)
-                DescribeBatch(this, new DescribeBatchEventArgs { Batch = batch });
+            {
+                this.DescribeBatch(this, new DescribeBatchEventArgs { Batch = batch });
+            }
 
             factory.Precompile(batch);
 

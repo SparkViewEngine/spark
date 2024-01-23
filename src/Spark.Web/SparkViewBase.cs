@@ -60,8 +60,7 @@ namespace Spark
             }
             set { _sparkViewContext = value; }
         }
-
-
+        
         public TextWriter Output { get { return SparkViewContext.Output; } set { SparkViewContext.Output = value; } }
         public Dictionary<string, TextWriter> Content { get { return SparkViewContext.Content; } set { SparkViewContext.Content = value; } }
         public Dictionary<string, object> Globals { get { return SparkViewContext.Globals; } set { SparkViewContext.Globals = value; } }
@@ -92,8 +91,7 @@ namespace Spark
         {
             return new MarkdownOutputScopeImpl(this, new SpoolWriter());
         }
-
-
+        
         public bool Once(object flag)
         {
             var flagString = Convert.ToString(flag);
@@ -103,8 +101,7 @@ namespace Spark
             SparkViewContext.OnceTable.Add(flagString, null);
             return true;
         }
-
-
+        
         public class OutputScopeImpl : IDisposable
         {
             private readonly SparkViewBase view;
@@ -169,7 +166,6 @@ namespace Spark
         private CacheScopeImpl _currentCacheScope;
         public ICacheService CacheService { get; set; }
 
-
         private class CacheScopeImpl
         {
             private readonly CacheScopeImpl _previousCacheScope;
@@ -190,8 +186,7 @@ namespace Spark
                 _cacheService = view.CacheService ?? _nullCacheService;
                 _originator = new CacheOriginator(view.SparkViewContext);
             }
-
-
+            
             public bool Begin()
             {
                 var memento = _cacheService.Get(_identifier) as CacheMemento;
@@ -218,8 +213,7 @@ namespace Spark
                 }
                 return _previousCacheScope;
             }
-
-
+            
             private class NullCacheService : ICacheService
             {
                 public object Get(string identifier)
@@ -242,9 +236,10 @@ namespace Spark
         }
 
         public abstract void Render();
-      protected virtual void DelegateFirstRender(Action render)
-       {
-          render();
+        
+        protected virtual void DelegateFirstRender(Action render)
+        {
+            render();
         }
     }
 
