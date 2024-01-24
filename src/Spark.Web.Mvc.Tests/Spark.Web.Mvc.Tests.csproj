@@ -11,7 +11,8 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-	<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 	<PackageReference Include="RhinoMocks" Version="3.6.1" />
 	<PackageReference Include="NUnit" Version="3.14.0" />
   </ItemGroup>
