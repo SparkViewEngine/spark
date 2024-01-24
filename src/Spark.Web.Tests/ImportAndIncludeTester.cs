@@ -40,13 +40,16 @@ namespace Spark
         [Test]
         public void ImportExplicitFile()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                 {
-                                     {Path.Combine("importing", "index.spark"), "<p><use import='extra.spark'/>hello ${name}</p>"},
-                                     {Path.Combine("importing", "extra.spark"), "this is imported <global name='\"world\"'/>"}
-                                 }, Path.Combine("importing", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    { Path.Combine("importing", "index.spark"), "<p><use import='extra.spark'/>hello ${name}</p>" },
+                    { Path.Combine("importing", "extra.spark"), "this is imported <global name='\"world\"'/>" }
+                },
+                Path.Combine("importing", "index.spark"));
 
             var contents = view.RenderView();
+
             Assert.AreEqual("<p>hello world</p>", contents);
             Assert.IsFalse(contents.Contains("import"));
         }
@@ -54,12 +57,16 @@ namespace Spark
         [Test]
         public void ImportExplicitFileFromShared()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                 {
-                                     {Path.Combine("importing", "index.spark"), "<p><use import='extra.spark'/>hello ${name}</p>"},
-                                     {Path.Combine("shared", "extra.spark"), "this is imported <global name='\"world\"'/>"}
-                                 }, Path.Combine("importing", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    { Path.Combine("importing", "index.spark"), "<p><use import='extra.spark'/>hello ${name}</p>" },
+                    { Path.Combine("shared", "extra.spark"), "this is imported <global name='\"world\"'/>" }
+                },
+                Path.Combine("importing", "index.spark"));
+            
             var contents = view.RenderView();
+            
             Assert.AreEqual("<p>hello world</p>", contents);
             Assert.IsFalse(contents.Contains("import"));
         }
@@ -67,14 +74,20 @@ namespace Spark
         [Test]
         public void ImportExplicitWithoutExtension()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                 {
-                                     {Path.Combine("importing", "index.spark"), "<p>${foo()} ${name}</p><use import='extra'/><use import='another'/>"},
-                                     {Path.Combine("importing", "another.spark"), "<macro name='foo'>hello</macro>"},
-                                     {Path.Combine("shared", "extra.spark"), "this is imported <global name='\"world\"'/>"}
-                                 }, Path.Combine("importing", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    {
+                        Path.Combine("importing", "index.spark"),
+                        "<p>${foo()} ${name}</p><use import='extra'/><use import='another'/>"
+                    },
+                    { Path.Combine("importing", "another.spark"), "<macro name='foo'>hello</macro>" },
+                    { Path.Combine("shared", "extra.spark"), "this is imported <global name='\"world\"'/>" }
+                },
+                Path.Combine("importing", "index.spark"));
 
             var contents = view.RenderView();
+
             Assert.AreEqual("<p>hello world</p>", contents);
             Assert.IsFalse(contents.Contains("import"));
         }
@@ -82,115 +95,158 @@ namespace Spark
         [Test]
         public void ImportImplicit()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                      {
-                                          {Path.Combine("importing", "index.spark"), "<p>${foo()} ${name}</p>"},
-                                          {Path.Combine("importing", "_global.spark"), "<macro name='foo'>hello</macro>"},
-                                          {Path.Combine("shared", "_global.spark"), "this is imported <global name='\"world\"'/>"}
-                                      }, Path.Combine("importing", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    { Path.Combine("importing", "index.spark"), "<p>${foo()} ${name}</p>" },
+                    { Path.Combine("importing", "_global.spark"), "<macro name='foo'>hello</macro>" },
+                    { Path.Combine("shared", "_global.spark"), "this is imported <global name='\"world\"'/>" }
+                },
+                Path.Combine("importing", "index.spark"));
 
             var contents = view.RenderView();
+
             Assert.AreEqual("<p>hello world</p>", contents);
             Assert.IsFalse(contents.Contains("import"));
         }
 
-
         [Test]
         public void IncludeFile()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                      {
-                                          {Path.Combine("including", "index.spark"), "<p><include href='stuff.spark'/></p>"},
-                                          {Path.Combine("including", "stuff.spark"), "hello world"}
-                                      }, Path.Combine("including", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    { Path.Combine("including", "index.spark"), "<p><include href='stuff.spark'/></p>" },
+                    { Path.Combine("including", "stuff.spark"), "hello world" }
+                },
+                Path.Combine("including", "index.spark"));
+            
             var contents = view.RenderView();
+            
             Assert.AreEqual("<p>hello world</p>", contents);
         }
 
         [Test]
         public void MissingFileThrowsException()
         {
-            Assert.That(() =>
+            Assert.That(
+                () =>
+                {
+                    var view = CreateView(
+                        new InMemoryViewFolder
+                        {
                             {
-                                var view = CreateView(new InMemoryViewFolder
-                                                          {
-                                                              {
-                                                                  Path.Combine("including", "index.spark"),
-                                                                  "<p><include href='stuff.spark'/></p>"
-                                                                  }
-                                                          }, Path.Combine("including", "index.spark"));
-                                view.RenderView();
-                            },
-                        Throws.TypeOf<CompilerException>());
+                                Path.Combine("including", "index.spark"),
+                                "<p><include href='stuff.spark'/></p>"
+                            }
+                        },
+                        Path.Combine("including", "index.spark"));
+                    view.RenderView();
+                },
+                Throws.TypeOf<CompilerException>());
         }
 
 
         [Test]
         public void MissingFileWithEmptyFallbackIsBlank()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                      {
-                                          {Path.Combine("including", "index.spark"), "<p><include href='stuff.spark'><fallback/></include></p>"}
-                                      }, Path.Combine("including", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    {
+                        Path.Combine("including", "index.spark"),
+                        "<p><include href='stuff.spark'><fallback/></include></p>"
+                    }
+                },
+                Path.Combine("including", "index.spark"));
+            
             var contents = view.RenderView();
+
             Assert.AreEqual("<p></p>", contents);
         }
 
         [Test]
         public void MissingFileWithFallbackUsesContents()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                      {
-                                          {Path.Combine("including", "index.spark"), "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"}
-                                      }, Path.Combine("including", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    {
+                        Path.Combine("including", "index.spark"),
+                        "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"
+                    }
+                },
+                Path.Combine("including", "index.spark"));
+
             var contents = view.RenderView();
+
             Assert.AreEqual("<p>hello world</p>", contents);
         }
 
         [Test]
         public void ValidIncludeFallbackDisappears()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                      {
-                                          {Path.Combine("including", "index.spark"), "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"},
-                                          {Path.Combine("including", "stuff.spark"), "another file"}
-                                      }, Path.Combine("including", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    {
+                        Path.Combine("including", "index.spark"),
+                        "<p><include href='stuff.spark'><fallback>hello world</fallback></include></p>"
+                    },
+                    { Path.Combine("including", "stuff.spark"), "another file" }
+                },
+                Path.Combine("including", "index.spark"));
+            
             var contents = view.RenderView();
+            
             Assert.AreEqual("<p>another file</p>", contents);
         }
 
         [Test]
         public void FallbackContainsAnotherInclude()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                      {
-                                          {Path.Combine("including", "index.spark"), "<p><include href='stuff.spark'><fallback><include href='other.spark'/></fallback></include></p>"},
-                                          {Path.Combine("including", "other.spark"), "other file"}
-                                      }, Path.Combine("including", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    {
+                        Path.Combine("including", "index.spark"),
+                        "<p><include href='stuff.spark'><fallback><include href='other.spark'/></fallback></include></p>"
+                    },
+                    { Path.Combine("including", "other.spark"), "other file" }
+                },
+                Path.Combine("including", "index.spark"));
+            
             var contents = view.RenderView();
+            
             Assert.AreEqual("<p>other file</p>", contents);
         }
 
         [Test]
         public void IncludeRelativePath()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                      {
-                                          {Path.Combine("including", "index.spark"), "<p><include href='../lib/other.spark'/></p>"},
-                                          {Path.Combine("lib", "other.spark"), "other file"}
-                                      }, Path.Combine("including", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    { Path.Combine("including", "index.spark"), "<p><include href='../lib/other.spark'/></p>" },
+                    { Path.Combine("lib", "other.spark"), "other file" }
+                },
+                Path.Combine("including", "index.spark"));
+            
             var contents = view.RenderView();
+
             Assert.AreEqual("<p>other file</p>", contents);
         }
         [Test]
         public void IncludeInsideAnInclude()
         {
-            var view = CreateView(new InMemoryViewFolder
-                                      {
-                                          {Path.Combine("including", "index.spark"), "<p><include href='../lib/other.spark'/></p>"},
-                                          {Path.Combine("lib", "other.spark"), "other <include href='third.spark'/> file"},
-                                          {Path.Combine("lib", "third.spark"), "third file"}
-                                      }, Path.Combine("including", "index.spark"));
+            var view = CreateView(
+                new InMemoryViewFolder
+                {
+                    { Path.Combine("including", "index.spark"), "<p><include href='../lib/other.spark'/></p>" },
+                    { Path.Combine("lib", "other.spark"), "other <include href='third.spark'/> file" },
+                    { Path.Combine("lib", "third.spark"), "third file" }
+                },
+                Path.Combine("including", "index.spark"));
             var contents = view.RenderView();
             Assert.AreEqual("<p>other third file file</p>", contents);
         }
@@ -203,7 +259,9 @@ namespace Spark
                                           {Path.Combine("including", "index.spark"), "<p xmlns:x='http://www.w3.org/2001/XInclude'><include/><x:include href='../lib/other.spark'/></p>"},
                                           {Path.Combine("lib", "other.spark"), "other file"}
                                       }, Path.Combine("including", "index.spark"));
+            
             var contents = view.RenderView();
+            
             Assert.AreEqual("<p xmlns:x='http://www.w3.org/2001/XInclude\'><include></include>other file</p>", contents);
         }
 
@@ -215,7 +273,9 @@ namespace Spark
                                           {Path.Combine("including", "index.spark"), "<p><include href='item.spark' parse='text'/></p>"},
                                           {Path.Combine("including", "item.spark"), "<li>at&t</li>"}
                                       }, Path.Combine("including", "index.spark"));
+            
             var contents = view.RenderView();
+            
             Assert.AreEqual("<p>&lt;li&gt;at&amp;t&lt;/li&gt;</p>", contents);
         }
 
@@ -227,7 +287,9 @@ namespace Spark
                                           {Path.Combine("including", "index.spark"), "<p><include href='jquery.templ.htm' parse='html'/></p>"},
                                           {Path.Combine("including", "jquery.templ.htm"), "<h4>${Title}</h4>"}
                                       }, Path.Combine("including", "index.spark"));
+            
             var contents = view.RenderView();
+            
             Assert.AreEqual("<p><h4>${Title}</h4></p>", contents);
         }
     }

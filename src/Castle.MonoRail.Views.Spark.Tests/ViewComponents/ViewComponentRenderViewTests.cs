@@ -30,7 +30,6 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             viewComponentFactory.Registry.AddViewComponent("Widget", typeof(WidgetComponent));
         }
 
-
         [Test]
         public void ComponentCallingRenderView()
         {
@@ -167,7 +166,6 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             }
         }
 
-
         [ViewComponentDetails("OnceWidget")]
         public class OnceWidget : ViewComponent
         {
@@ -176,7 +174,6 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                 RenderView("default");
             }
         }
-
 
         [ViewComponentDetails("UsesGlobalSpark")]
         public class UsesGlobalSpark : ViewComponent

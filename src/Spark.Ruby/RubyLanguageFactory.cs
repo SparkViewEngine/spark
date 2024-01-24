@@ -22,6 +22,7 @@ namespace Spark.Ruby
     {
 
         private RubyEngineManager _RubyEngineManager;
+
         public RubyEngineManager RubyEngineManager
         {
             get
@@ -52,12 +53,12 @@ namespace Spark.Ruby
             viewCompiler.BaseClass = pageBaseType;
             viewCompiler.Descriptor = descriptor;
             viewCompiler.Debug = engine.Settings.Debug;
-			viewCompiler.NullBehaviour = engine.Settings.NullBehaviour;
-			viewCompiler.UseAssemblies = engine.Settings.UseAssemblies;
+            viewCompiler.NullBehaviour = engine.Settings.NullBehaviour;
+            viewCompiler.UseAssemblies = engine.Settings.UseAssemblies;
             viewCompiler.UseNamespaces = engine.Settings.UseNamespaces;
+
             return viewCompiler;
         }
-
 
         public override void InstanceCreated(ViewCompiler compiler, ISparkView view)
         {

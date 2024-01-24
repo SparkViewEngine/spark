@@ -244,15 +244,9 @@ namespace Castle.MonoRail.Views.Spark
             throw new NotImplementedException();
         }
 
-        public override bool SupportsJSGeneration
-        {
-            get { return false; }
-        }
+        public override bool SupportsJSGeneration => false;
 
-        public override string JSGeneratorFileExtension
-        {
-            get { return null; }
-        }
+        public override string JSGeneratorFileExtension => null;
 
         public override object CreateJSGenerator(JSCodeGeneratorInfo generatorInfo, IEngineContext context,
                                                  IController controller, IControllerContext controllerContext)
@@ -265,7 +259,6 @@ namespace Castle.MonoRail.Views.Spark
         {
             throw new NotImplementedException();
         }
-
 
         public Assembly Precompile(SparkBatchDescriptor batch)
         {

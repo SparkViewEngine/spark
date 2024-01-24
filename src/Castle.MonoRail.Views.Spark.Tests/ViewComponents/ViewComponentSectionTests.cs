@@ -83,41 +83,41 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             Assert.IsFalse(output.Contains("span each"));
         }
 
-		[Test]
-		public void ComponentWithPartialsInSection()
-		{
-			mocks.ReplayAll();
+        [Test]
+        public void ComponentWithPartialsInSection()
+        {
+            mocks.ReplayAll();
 
-			var writer = new StringWriter();
-		    factory.Process(string.Format("Home{0}ComponentWithPartialsInSection.spark", Path.DirectorySeparatorChar), writer,
-		                    engineContext, controller, controllerContext);
+            var writer = new StringWriter();
+            factory.Process(string.Format("Home{0}ComponentWithPartialsInSection.spark", Path.DirectorySeparatorChar), writer,
+                            engineContext, controller, controllerContext);
 
-			var output = writer.ToString();
-			Assert.IsTrue(output.Contains("this is some text: test123"));
-		}
+            var output = writer.ToString();
+            Assert.IsTrue(output.Contains("this is some text: test123"));
+        }
 
-		[Test]
-		public void NestedComponentInSection()
-		{
-			mocks.ReplayAll();
+        [Test]
+        public void NestedComponentInSection()
+        {
+            mocks.ReplayAll();
 
-			var writer = new StringWriter();
-		    factory.Process(string.Format("Home{0}NestedComponentInSection.spark", Path.DirectorySeparatorChar), writer,
-		                    engineContext, controller, controllerContext);
+            var writer = new StringWriter();
+            factory.Process(string.Format("Home{0}NestedComponentInSection.spark", Path.DirectorySeparatorChar), writer,
+                            engineContext, controller, controllerContext);
 
-			var output = writer.ToString();
-			Assert.IsTrue(output.Contains("header1"));
-			Assert.IsTrue(output.Contains("header2"));
-			Assert.IsTrue(output.Contains("body1"));
-			Assert.IsTrue(output.Contains("body2"));
-			Assert.IsTrue(output.Contains("footer1"));
-			Assert.IsTrue(output.Contains("footer2"));
+            var output = writer.ToString();
+            Assert.IsTrue(output.Contains("header1"));
+            Assert.IsTrue(output.Contains("header2"));
+            Assert.IsTrue(output.Contains("body1"));
+            Assert.IsTrue(output.Contains("body2"));
+            Assert.IsTrue(output.Contains("footer1"));
+            Assert.IsTrue(output.Contains("footer2"));
 
-			Assert.IsFalse(output.Contains("<header>"));
-			Assert.IsFalse(output.Contains("<body>"));
-			Assert.IsFalse(output.Contains("<footer>"));
-			Assert.IsFalse(output.Contains("</ComponentWithSections>"));
-		}
+            Assert.IsFalse(output.Contains("<header>"));
+            Assert.IsFalse(output.Contains("<body>"));
+            Assert.IsFalse(output.Contains("<footer>"));
+            Assert.IsFalse(output.Contains("</ComponentWithSections>"));
+        }
 
         [ViewComponentDetails("ComponentWithSections",Sections="header,body,footer")]
         class ComponentWithSections : ViewComponent

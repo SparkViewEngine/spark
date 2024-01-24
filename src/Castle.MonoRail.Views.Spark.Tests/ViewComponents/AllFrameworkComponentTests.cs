@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Collections.Generic;
+
 using System.IO;
-using System.Linq;
-using System.Text;
-using Castle.MonoRail.Framework.ViewComponents;
 using NUnit.Framework;
 
 namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
@@ -29,68 +25,83 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         public void AuthenticatedContent()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-AuthenticatedContent.spark", Path.DirectorySeparatorChar));
+
             Assert.That(content.Contains("two"));
             Assert.IsFalse(content.Contains("one"));
         }
+
         [Test]
         public void CaptureFor()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-CaptureFor.spark", Path.DirectorySeparatorChar));
+
             Assert.That(content.Contains("onetwothreefour"));
         }
+
         [Test]
         public void ChildContent()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-ChildContent.spark", Path.DirectorySeparatorChar));
+
             ContainsInOrder(content, "one", "5hello", "two");
         }
+
         [Test]
         public void ColumnRenderer()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-ColumnRenderer.spark", Path.DirectorySeparatorChar));
-            ContainsInOrder(content, 
+
+            ContainsInOrder(
+                content,
                 "*start*",
                 "*firstelement*",
                 "*a*",
                 "*b*",
                 "*c*",
                 "*d*",
-                "*e*",  
+                "*e*",
                 "*f*",
                 "*g*",
                 "*h*",
                 "*endblock*");
         }
+
         [Test, Ignore("Creating a test for each built-in component")]
         public void DiggStylePagination()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-DiggStylePagination.spark", Path.DirectorySeparatorChar));
         }
+
         [Test, Ignore("Creating a test for each built-in component")]
         public void Security()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-Security.spark", Path.DirectorySeparatorChar));
         }
+
         [Test, Ignore("Creating a test for each built-in component")]
         public void SelectStylePagination()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-SelectStylePagination.spark", Path.DirectorySeparatorChar));
         }
+
         [Test, Ignore("Creating a test for each built-in component")]
         public void SiteMap()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-SiteMap.spark", Path.DirectorySeparatorChar));
         }
+
         [Test, Ignore("Creating a test for each built-in component")]
         public void TreeMaker()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-TreeMaker.spark", Path.DirectorySeparatorChar));
         }
+
         [Test, Ignore("Creating a test for each built-in component")]
         public void UpdatePage()
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-UpdatePage.spark", Path.DirectorySeparatorChar));
         }
+
         [Test, Ignore("Creating a test for each built-in component")]
         public void UpdateTag()
         {
@@ -110,6 +121,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             Assert.IsNotEmpty(writer.ToString());
             return writer.ToString();
         }
+
         static void ContainsInOrder(string content, params string[] values)
         {
             int index = 0;

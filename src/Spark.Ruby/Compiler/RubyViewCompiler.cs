@@ -23,10 +23,9 @@ using BaseClassVisitor = Spark.Compiler.CSharp.ChunkVisitors.BaseClassVisitor;
 
 namespace Spark.Ruby.Compiler
 {
-    public class RubyViewCompiler:ViewCompiler
+    public class RubyViewCompiler : ViewCompiler
     {
         public string ScriptHeader { get; set; }
-
 
         public override void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
@@ -49,12 +48,15 @@ namespace Spark.Ruby.Compiler
 
             var globalMembersVisitor = new GlobalMembersVisitor(script, globals);
             foreach (var resource in allResources)
+            {
                 globalMembersVisitor.Accept(resource);
+            }
 
             var globalFunctionsVisitor = new GlobalFunctionsVisitor(script, globals);
             foreach (var resource in allResources)
+            {
                 globalFunctionsVisitor.Accept(resource);
-
+            }
 
             var templateIndex = 0;
             foreach (var template in viewTemplates)
@@ -76,7 +78,9 @@ namespace Spark.Ruby.Compiler
 
             var globalInitializeVisitor = new GlobalInitializeVisitor(script);
             foreach(var resource in allResources)
+            {
                 globalInitializeVisitor.Accept(resource);
+            }
 
             for (var renderIndex = 0; renderIndex != templateIndex; ++renderIndex)
             {
@@ -103,7 +107,9 @@ namespace Spark.Ruby.Compiler
 
             var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
             foreach (var resource in allResources)
+            {
                 baseClassGenerator.Accept(resource);
+            }
 
             BaseClass = baseClassGenerator.BaseClassTypeName;
 
@@ -126,7 +132,10 @@ namespace Spark.Ruby.Compiler
                 // [SparkView] attribute
                 source.AppendLine("[global::Spark.SparkViewAttribute(");
                 if (TargetNamespace != null)
-                    source.AppendFormat("    TargetNamespace=\"{0}\",", TargetNamespace).AppendLine();
+                {
+                    source.AppendFormat("    TargetNamespace=\"{0}\",", this.TargetNamespace).AppendLine();
+                }
+
                 source.AppendLine("    Templates = new string[] {");
                 source.Append("      ").AppendLine(string.Join(",\r\n      ",
                                                                Descriptor.Templates.Select(

@@ -40,7 +40,7 @@ namespace Spark.Tests
         }
 
         [Test]
-        public void LookupNonExistantReturnsNull()
+        public void LookupNonExistentReturnsNull()
         {
             var key = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
             var entry = holder.Lookup(key);

@@ -25,8 +25,6 @@ namespace Castle.MonoRail.Views.Spark.Tests
     using NUnit.Framework;
     using global::Spark;
     
-
-
     [TestFixture]
     public class SparkViewFactoryTests : SparkViewFactoryTestsBase
 	{
@@ -45,7 +43,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 			manager.RegisterEngineForView(factory);
 		}
 
-		[Test]
+        [Test]
         public void ExtensionIsSpark()
         {
             mocks.ReplayAll();
@@ -111,10 +109,10 @@ namespace Castle.MonoRail.Views.Spark.Tests
                             "<p>bar+4:11</p>");
         }
 
-		[Test]
-		public void NullBehaviourConfiguredToLenient()
-		{
-			mocks.ReplayAll();
+        [Test]
+        public void NullBehaviourConfiguredToLenient()
+        {
+            mocks.ReplayAll();
             manager.Process(string.Format("Home{0}NullBehaviourConfiguredToLenient", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
 			var content = output.ToString();
 			Assert.IsFalse(content.Contains("default"));
@@ -170,16 +168,16 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.That(output.ToString().Contains("<p>Hello</p>"));            
         }
 
-		[Test, Ignore("No way to mock HttpContext.Current")]
-		public void ControllerHelpersCanBeUsedWhenRenderingMailView()
-		{
-			controller = new Helpers.HomeController();
-			controllerContext.ControllerDescriptor = serviceProvider.ControllerDescriptorProvider.BuildDescriptor(controller);
-			controllerContext.Helpers.Add("bar", new Helpers.TestingHelper());
-			mocks.ReplayAll();
+        [Test, Ignore("No way to mock HttpContext.Current")]
+        public void ControllerHelpersCanBeUsedWhenRenderingMailView()
+        {
+            controller = new Helpers.HomeController();
+            controllerContext.ControllerDescriptor = serviceProvider.ControllerDescriptorProvider.BuildDescriptor(controller);
+            controllerContext.Helpers.Add("bar", new Helpers.TestingHelper());
+            mocks.ReplayAll();
             manager.Process(string.Format("Home{0}ControllerHelperAttributeCanBeUsed", Path.DirectorySeparatorChar), null, output, null);
-			Assert.That(output.ToString().Contains("<p>Hello</p>"));
-		}
+            Assert.That(output.ToString().Contains("<p>Hello</p>"));
+        }
 
         [Test]
         public void LateBoundExpressionShouldCallEval()
@@ -187,27 +185,27 @@ namespace Castle.MonoRail.Views.Spark.Tests
             mocks.ReplayAll();
             propertyBag["hello"] = "world";
             propertyBag["foo"] = 1005.3;
-			using (new CurrentCultureScope(""))
-			{
+            using (new CurrentCultureScope(""))
+            {
 
                 manager.Process(string.Format("Home{0}LateBoundExpressionShouldCallEval", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
-				Assert.That(output.ToString(), Does.Contain(string.Format("<p>world {0:#,##0.00}</p>", 1005.3)));
-			}
+                Assert.That(output.ToString(), Does.Contain(string.Format("<p>world {0:#,##0.00}</p>", 1005.3)));
+            }
         }
     }
 
-	public class CurrentCultureScope : IDisposable
-	{
-		private readonly CultureInfo _culture;
-		public CurrentCultureScope(string name)
-		{
-			_culture = Thread.CurrentThread.CurrentCulture;
-			Thread.CurrentThread.CurrentCulture = new CultureInfo(name);
-		}
-		public void Dispose()
-		{
-			Thread.CurrentThread.CurrentCulture = _culture;
-		}
-	}
+    public class CurrentCultureScope : IDisposable
+    {
+        private readonly CultureInfo _culture;
+        public CurrentCultureScope(string name)
+        {
+            _culture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(name);
+        }
+        public void Dispose()
+        {
+            Thread.CurrentThread.CurrentCulture = _culture;
+        }
+    }
 }
     

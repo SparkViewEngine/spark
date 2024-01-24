@@ -1,5 +1,3 @@
-using System;
-using System.Web.Caching;
 using System.Web.Routing;
 using Spark.Caching;
 

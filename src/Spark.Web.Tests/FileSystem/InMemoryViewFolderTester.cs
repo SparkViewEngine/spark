@@ -27,30 +27,34 @@ namespace Spark.FileSystem
         [Test]
         public void HasViewCaseInsensitive()
         {
-            var folder = new InMemoryViewFolder();
-            Assert.IsFalse(folder.HasView(Path.Combine("Home", "Index.spark")));
-            folder.Add(Path.Combine("Home", "Index.spark"), "stuff");
-            Assert.IsTrue(folder.HasView(Path.Combine("Home", "Index.spark")));
-            Assert.IsFalse(folder.HasView(Path.Combine("Home", "Index")));
-            Assert.IsTrue(folder.HasView(Path.Combine("Home", "index.spark")));
-            Assert.IsTrue(folder.HasView(Path.Combine("home", "INDEX.SPARK")));
+            var viewFolder = new InMemoryViewFolder();
+
+            Assert.IsFalse(viewFolder.HasView(Path.Combine("Home", "Index.spark")));
+            viewFolder.Add(Path.Combine("Home", "Index.spark"), "stuff");
+            Assert.IsTrue(viewFolder.HasView(Path.Combine("Home", "Index.spark")));
+            Assert.IsFalse(viewFolder.HasView(Path.Combine("Home", "Index")));
+            Assert.IsTrue(viewFolder.HasView(Path.Combine("Home", "index.spark")));
+            Assert.IsTrue(viewFolder.HasView(Path.Combine("home", "INDEX.SPARK")));
         }
 
         [Test]
         public void ListViewsInFolder()
         {
-            var folder = new InMemoryViewFolder
-                             {
-                                 {Path.Combine("Home", "Alpha.spark"), "stuff"},
-                                 {Path.Combine("Home", "Beta.spark"), "stuff"},
-                                 {Path.Combine("Home2", "Gamma.spark"), "stuff"},
-                                 {Path.Combine("home", "Delta.spark"), "stuff"},
-                                 {Path.Combine("Home","Something","else.spark"), "stuff"}
-                             };
+            var viewFolder = new InMemoryViewFolder
+            {
+                { Path.Combine("Home", "Alpha.spark"), "stuff" },
+                { Path.Combine("Home", "Beta.spark"), "stuff" },
+                { Path.Combine("Home2", "Gamma.spark"), "stuff" },
+                { Path.Combine("home", "Delta.spark"), "stuff" },
+                { Path.Combine("Home", "Something", "else.spark"), "stuff" }
+            };
 
-            var views = folder.ListViews("Home");
+            var views = viewFolder.ListViews("Home");
 
-            var baseNames = views.Select(v => Path.GetFileNameWithoutExtension(v)).ToArray();
+            var baseNames = views
+                .Select(Path.GetFileNameWithoutExtension)
+                .ToArray();
+
             Assert.AreEqual(3, baseNames.Count());
             Assert.Contains("Alpha", baseNames);
             Assert.Contains("Beta", baseNames);
@@ -60,18 +64,24 @@ namespace Spark.FileSystem
         [Test]
         public void FileNotFoundException()
         {
-            var folder = new InMemoryViewFolder();
-            folder.Add(Path.Combine("Home", "Index.spark"), "stuff");
-            Assert.That(() => folder.GetViewSource(Path.Combine("Home", "List.spark")),
+            var viewFolder = new InMemoryViewFolder
+            {
+                { Path.Combine("Home", "Index.spark"), "stuff" }
+            };
+
+            Assert.That(() => viewFolder.GetViewSource(Path.Combine("Home", "List.spark")),
                         Throws.TypeOf<FileNotFoundException>());
         }
 
         [Test]
         public void ReadFileContents()
         {
-            var folder = new InMemoryViewFolder();
-            folder.Add(Path.Combine("Home", "Index.spark"), "this is the file contents");
-            var source = folder.GetViewSource(Path.Combine("Home", "Index.spark"));
+            var viewFolder = new InMemoryViewFolder
+            {
+                { Path.Combine("Home", "Index.spark"), "this is the file contents" }
+            };
+
+            var source = viewFolder.GetViewSource(Path.Combine("Home", "Index.spark"));
             using (var stream = source.OpenViewStream())
             {
                 using(var reader = new StreamReader(stream))
@@ -85,13 +95,16 @@ namespace Spark.FileSystem
         [Test]
         public void LastModifiedChanges()
         {
-            var folder = new InMemoryViewFolder();
-            folder.Add(Path.Combine("Home", "Index.spark"), "this is the file contents");
-            var source1 = folder.GetViewSource(Path.Combine("Home", "Index.spark"));
+            var viewFolder = new InMemoryViewFolder
+            {
+                { Path.Combine("Home", "Index.spark"), "this is the file contents" }
+            };
+
+            var source1 = viewFolder.GetViewSource(Path.Combine("Home", "Index.spark"));
             var lastModified1 = source1.LastModified;
             
-            folder.Set(Path.Combine("Home", "Index.spark"), "this is the file contents");
-            var source2 = folder.GetViewSource(Path.Combine("Home", "Index.spark"));
+            viewFolder.Set(Path.Combine("Home", "Index.spark"), "this is the file contents");
+            var source2 = viewFolder.GetViewSource(Path.Combine("Home", "Index.spark"));
             var lastModified2 = source2.LastModified;
 
             Assert.AreNotEqual(lastModified1, lastModified2);
@@ -101,7 +114,6 @@ namespace Spark.FileSystem
 
             Assert.AreNotEqual(lastModified1, lastModified1b);
             Assert.AreEqual(lastModified1b, lastModified2b);
-
         }
 
         [Test]
@@ -118,7 +130,7 @@ namespace Spark.FileSystem
             Assert.AreEqual("<p>Hello world</p>", contents);
         }
 
-        static string ReadToEnd(IViewFolder viewFolder, string path)
+        private static string ReadToEnd(IViewFolder viewFolder, string path)
         {
             using (var stream = viewFolder.GetViewSource(path).OpenViewStream())
             {
@@ -129,7 +141,7 @@ namespace Spark.FileSystem
             }
         }
 
-        static string RenderView(ISparkViewEngine engine, string path)
+        private static string RenderView(ISparkViewEngine engine, string path)
         {
             var descriptor = new SparkViewDescriptor()
                 .AddTemplate(path);

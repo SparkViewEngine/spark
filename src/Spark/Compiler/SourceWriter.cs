@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -44,10 +43,7 @@ namespace Spark.Compiler
         public static bool AdjustDebugSymbolsDefault { get; set; }
         public bool AdjustDebugSymbols { get; set; }
 
-        public int Length
-        {
-            get { return _writer.GetStringBuilder().Length; }
-        }
+        public int Length => _writer.GetStringBuilder().Length;
 
         public SourceWriter AddIndent()
         {
@@ -91,14 +87,12 @@ namespace Spark.Compiler
             Indent();
         }
 
-
         public SourceWriter Write(string value)
         {
             Flush();
             _writer.Write(value);
             return this;
         }
-
 
         public SourceWriter WriteFormat(string format, params object[] args)
         {
@@ -163,7 +157,6 @@ namespace Spark.Compiler
             return true;
         }
 
-
         public SourceWriter WriteLine()
         {
             Flush();
@@ -181,8 +174,6 @@ namespace Spark.Compiler
         {
             return WriteLine(string.Format(format, args));
         }
-
-
 
         public SourceWriter WriteDirective(string line)
         {
@@ -213,11 +204,13 @@ namespace Spark.Compiler
             return this;
         }
 
+        /// <summary>
+        /// For backwards compatibility with extensions
+        /// </summary>
+        /// <returns>The string writer's string builder.</returns>
         public StringBuilder GetStringBuilder()
         {
-            // for backwards compatability with extensions
             return _writer.GetStringBuilder();
         }
-
     }
 }

@@ -49,7 +49,6 @@ namespace Spark.Web.Mvc.Tests
                 .For<StubController>().Layout("layout").Include("Index").Include("List.spark")
                 .For<StubController>().Layout("ajax").Include("_Widget");
 
-
             var assembly = _factory.Precompile(batch);
 
             Assert.IsNotNull(assembly);
@@ -60,9 +59,10 @@ namespace Spark.Web.Mvc.Tests
         public void CanHandleCSharpV3SyntaxWhenLoadedInAppDomainWithoutConfig()
         {
             var appDomainSetup = new AppDomainSetup
-                                    {
-										ApplicationBase = Assembly.GetExecutingAssembly().GetCodeBaseDirectory()
-                                    };
+            {
+                ApplicationBase = Assembly.GetExecutingAssembly().GetCodeBaseDirectory()
+            };
+
             AppDomain sandbox = null;
             try
             {
@@ -134,8 +134,11 @@ namespace Spark.Web.Mvc.Tests
             var batch = new SparkBatchDescriptor();
 
             batch
-                .For<StubController>().Layout("layout").Layout("alternate").Include("Index").Include("List.spark");
-
+                .For<StubController>()
+                .Layout("layout")
+                .Layout("alternate")
+                .Include("Index")
+                .Include("List.spark");
 
             var assembly = _factory.Precompile(batch);
 
@@ -173,28 +176,29 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void FileWithoutSparkExtensionAreIgnored()
         {
-            _factory.ViewFolder = new InMemoryViewFolder
-                                      {
-                                          {string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar), "<p>index</p>"},
-                                          {string.Format("Stub{0}Helper.cs", Path.DirectorySeparatorChar), "// this is a code file"},
-                                          {string.Format("Layouts{0}Stub.spark", Path.DirectorySeparatorChar), "<p>layout</p><use:view/>"},
-                                      };
+            var viewFolder = new InMemoryViewFolder
+            {
+                { string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar), "<p>index</p>" },
+                { string.Format("Stub{0}Helper.cs", Path.DirectorySeparatorChar), "// this is a code file" },
+                { string.Format("Layouts{0}Stub.spark", Path.DirectorySeparatorChar), "<p>layout</p><use:view/>" },
+            };
             var batch = new SparkBatchDescriptor();
             batch.For<StubController>();
+
             var descriptors = _factory.CreateDescriptors(batch);
+
             Assert.AreEqual(1, descriptors.Count);
             Assert.AreEqual(2, descriptors[0].Templates.Count);
             Assert.AreEqual(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar), descriptors[0].Templates[0]);
             Assert.AreEqual(string.Format("Layouts{0}Stub.spark", Path.DirectorySeparatorChar), descriptors[0].Templates[1]);
         }
-
     }
 
     public static class FooExtensions
     {
         public static string FooFor<T>(this SparkView view, Expression<Action<T>> action)
         {
-            return string.Format("Foo on lambda expression {0}", action);
+            return $"Foo on lambda expression {action}";
         }
     }
 
@@ -209,9 +213,10 @@ namespace Spark.Web.Mvc.Tests
         /// </remarks>
         public static string GetCodeBaseDirectory(this Assembly assembly)
         {
-            string codeBaseUriString = assembly.CodeBase;
-            var uri = new UriBuilder(codeBaseUriString);
-            string codeBasePath = Uri.UnescapeDataString(uri.Path);
+            var codeBaseUriString = assembly.CodeBase;
+            var uriBuilder = new UriBuilder(codeBaseUriString);
+            var codeBasePath = Uri.UnescapeDataString(uriBuilder.Path);
+            
             return Path.GetDirectoryName(codeBasePath);
         }
     }

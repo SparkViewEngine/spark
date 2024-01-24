@@ -54,7 +54,7 @@ namespace Spark
         public SparkBatchDescriptor FromAttributes(Type controllerType)
         {
             var precompileAttributes = controllerType.GetCustomAttributes(typeof(PrecompileAttribute), true);
-            foreach (PrecompileAttribute precompileAttribute in precompileAttributes ?? new object[0])
+            foreach (PrecompileAttribute precompileAttribute in precompileAttributes ?? Array.Empty<object>())
             {
                 var config = For(controllerType);
                 foreach (var item in SplitParts(precompileAttribute.Include))

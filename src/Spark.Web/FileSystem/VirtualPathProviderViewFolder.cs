@@ -22,14 +22,12 @@ namespace Spark.FileSystem
 {
     public class VirtualPathProviderViewFolder : IViewFolder
     {
-        private readonly string _virtualBaseDir;
-
         public VirtualPathProviderViewFolder(string virtualBaseDir)
         {
-            _virtualBaseDir = virtualBaseDir.TrimEnd(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar) + "/";
+            this.VirtualBaseDir = virtualBaseDir.TrimEnd(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar) + "/";
         }
 
-        public string VirtualBaseDir => _virtualBaseDir;
+        public string VirtualBaseDir { get; }
 
         public IViewFile GetViewSource(string path)
         {
@@ -64,6 +62,7 @@ namespace Spark.FileSystem
         public IList<string> ListViews(string path)
         {
             var directory = HostingEnvironment.VirtualPathProvider.GetDirectory(Combine(path));
+
             return directory.Files.OfType<VirtualFile>().Select(f => f.VirtualPath).ToArray();
         }
 
@@ -75,7 +74,9 @@ namespace Spark.FileSystem
         private string Combine(string path)
         {
             if (string.IsNullOrEmpty(path))
-                return VirtualBaseDir;
+            {
+                return this.VirtualBaseDir;
+            }
 
             return HostingEnvironment.VirtualPathProvider.CombineVirtualPaths(VirtualBaseDir, path);
         }

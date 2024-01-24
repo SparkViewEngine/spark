@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Spark.Parser.Markup;
 
@@ -51,7 +52,7 @@ namespace Spark.Parser.Offset
             var ows = Rep(Ch(' ', '\t'));
 
             var whiteLine = lineBreakOrStart.And(Rep(Ch(' ', '\t'))).IfNext(lineBreakOrEnd)
-                .Build(hit => new Node[0]);
+                .Build(hit => Array.Empty<Node>());
 
             //[4]   	NameChar	   ::=   	 Letter | Digit | '.' | '-' | '_' | ':' | CombiningChar | Extender  
             var NameChar = Ch(char.IsLetterOrDigit).Or(Ch(/*'.',*/ '-', '_', ':'))/*.Or(CombiningChar).Or(Extener)*/;
@@ -102,14 +103,14 @@ namespace Spark.Parser.Offset
                                       attrs =
                                   (hit.Down.id != null
                                        ? new[] { new AttributeNode("id", hit.Down.id) }
-                                       : new AttributeNode[0])
+                                       : Array.Empty<AttributeNode>())
                                   .Concat(hit.Down.classes.Any()
                                               ? new[]
                                                     {
                                                         new AttributeNode("class",
                                                                           string.Join(" ", hit.Down.classes.ToArray()))
                                                     }
-                                              : new AttributeNode[0])
+                                              : Array.Empty<AttributeNode>())
                                   });
 
             var element = elementLeadin.And(Rep(Attribute.Skip(ows)))
@@ -124,12 +125,12 @@ namespace Spark.Parser.Offset
 
             var elementPlus = element.Skip(ows).And(Opt(elementFollower));
 
-            var line1 = indentation.And(elementPlus).Build(hit => new[] { hit.Left, (Node)hit.Down.Left }.Concat(hit.Down.Down??new Node[0]).ToArray());
+            var line1 = indentation.And(elementPlus).Build(hit => new[] { hit.Left, (Node)hit.Down.Left }.Concat(hit.Down.Down?? Array.Empty<Node>()).ToArray());
             //var line2 = indentation.And(text).Build(hit => new Node[] { hit.Left, hit.Down });
             var line2 = indentation.And(texts).Build(hit => new Node[] { hit.Left }.Concat(hit.Down).ToArray());
             var line3 = indentation.And(expression).Build(hit => new Node[] { hit.Left, hit.Down });
             var line4 = indentation.And(statement).Build(hit => new Node[] { hit.Left, hit.Down });
-            var line5 = elementPlus.Build(hit => new[] {(Node) hit.Left}.Concat(hit.Down ?? new Node[0]).ToArray());
+            var line5 = elementPlus.Build(hit => new[] {(Node) hit.Left}.Concat(hit.Down ?? Array.Empty<Node>()).ToArray());
 
             var line = whiteLine.Or(line1).Or(line2).Or(line3).Or(line4).Or(line5).Skip(ows);
 

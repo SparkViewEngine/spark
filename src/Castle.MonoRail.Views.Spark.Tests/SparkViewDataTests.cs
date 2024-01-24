@@ -38,8 +38,6 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
             engineContext = new StubEngineContext(new UrlInfo("", "Home", "Index", "/", "castle"));
             controllerContext = new ControllerContext();
-
-
         }
 
         [Test]

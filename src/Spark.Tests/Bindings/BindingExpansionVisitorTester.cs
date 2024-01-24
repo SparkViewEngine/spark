@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 using Spark.Bindings;
@@ -28,7 +26,7 @@ namespace Spark.Tests.Bindings
         [Test]
         public void CallVisitorToProcessNodes()
         {
-            var nodes = new Node[] { new ElementNode("hello", new AttributeNode[0], true) };
+            var nodes = new Node[] { new ElementNode("hello", Array.Empty<AttributeNode>(), true) };
             _visitor.Accept(nodes);
             Assert.That(_visitor.Nodes.Count, Is.EqualTo(1));
             Assert.That(_visitor.Nodes[0], Is.SameAs(nodes[0]));

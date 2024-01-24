@@ -72,6 +72,7 @@ namespace Spark.Compiler
             DoCompileView(compiler, new[] { new SendExpressionChunk { Code = "3 + 4" } });
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();
+
             Assert.AreEqual("7", contents);
         }
 
@@ -112,6 +113,7 @@ namespace Spark.Compiler
                                     });
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
+
             Assert.AreEqual("<ul><li>3</li><li>4</li><li>5</li></ul>", contents);
         }
 
@@ -130,6 +132,7 @@ namespace Spark.Compiler
                                     });
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
+
             Assert.AreEqual("hello world:8", contents);
         }
 
@@ -143,8 +146,8 @@ namespace Spark.Compiler
                            };
             DoCompileView(compiler, new Chunk[] { new SendLiteralChunk { Text = "Hello" } });
             var instance = compiler.CreateInstance();
-            Assert.AreEqual("Testing.Target.Namespace", instance.GetType().Namespace);
 
+            Assert.AreEqual("Testing.Target.Namespace", instance.GetType().Namespace);
         }
 
 
@@ -152,12 +155,16 @@ namespace Spark.Compiler
         public void ProvideFullException()
         {
             var compiler = new CSharpViewCompiler { BaseClass = "Spark.SparkViewBase" };
-            Assert.That(() =>
-                        DoCompileView(compiler, new Chunk[]
-                                                    {
-                                                        new SendExpressionChunk {Code = "NoSuchVariable"}
-                                                    }),
-                        Throws.TypeOf<BatchCompilerException>());
+
+            Assert.That(
+                () =>
+                    DoCompileView(
+                        compiler,
+                        new Chunk[]
+                        {
+                            new SendExpressionChunk { Code = "NoSuchVariable" }
+                        }),
+                Throws.TypeOf<CodeDomCompilerException>().Or.TypeOf<RoslynCompilerException>());
         }
 
         [Test]
@@ -167,15 +174,19 @@ namespace Spark.Compiler
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
-            DoCompileView(compiler, new Chunk[]
-                                    {
-                                        new SendLiteralChunk {Text = "<p>"},
-                                        new LocalVariableChunk{Name="arg", Value="5"},
-                                        new ConditionalChunk{Type=ConditionalType.If, Condition="arg==5", Body=trueChunks},
-                                        new SendLiteralChunk {Text = "</p>"}
-                                    });
+            DoCompileView(
+                compiler,
+                new Chunk[]
+                {
+                    new SendLiteralChunk { Text = "<p>" },
+                    new LocalVariableChunk { Name = "arg", Value = "5" },
+                    new ConditionalChunk { Type = ConditionalType.If, Condition = "arg==5", Body = trueChunks },
+                    new SendLiteralChunk { Text = "</p>" }
+                });
+
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
+
             Assert.AreEqual("<p>wastrue</p>", contents);
         }
 
@@ -186,15 +197,19 @@ namespace Spark.Compiler
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
-            DoCompileView(compiler, new Chunk[]
-                                    {
-                                        new SendLiteralChunk {Text = "<p>"},
-                                        new LocalVariableChunk{Name="arg", Value="5"},
-                                        new ConditionalChunk{Type=ConditionalType.If, Condition="arg==6", Body=trueChunks},
-                                        new SendLiteralChunk {Text = "</p>"}
-                                    });
+            DoCompileView(
+                compiler,
+                new Chunk[]
+                {
+                    new SendLiteralChunk { Text = "<p>" },
+                    new LocalVariableChunk { Name = "arg", Value = "5" },
+                    new ConditionalChunk { Type = ConditionalType.If, Condition = "arg==6", Body = trueChunks },
+                    new SendLiteralChunk { Text = "</p>" }
+                });
+
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
+
             Assert.AreEqual("<p></p>", contents);
         }
 
@@ -206,16 +221,20 @@ namespace Spark.Compiler
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
             var falseChunks = new Chunk[] { new SendLiteralChunk { Text = "wasfalse" } };
 
-            DoCompileView(compiler, new Chunk[]
-                                    {
-                                        new SendLiteralChunk {Text = "<p>"},
-                                        new LocalVariableChunk{Name="arg", Value="5"},
-                                        new ConditionalChunk{Type=ConditionalType.If, Condition="arg==6", Body=trueChunks},
-                                        new ConditionalChunk{Type=ConditionalType.Else, Body=falseChunks},
-                                        new SendLiteralChunk {Text = "</p>"}
-                                    });
+            DoCompileView(
+                compiler,
+                new Chunk[]
+                {
+                    new SendLiteralChunk { Text = "<p>" },
+                    new LocalVariableChunk { Name = "arg", Value = "5" },
+                    new ConditionalChunk { Type = ConditionalType.If, Condition = "arg==6", Body = trueChunks },
+                    new ConditionalChunk { Type = ConditionalType.Else, Body = falseChunks },
+                    new SendLiteralChunk { Text = "</p>" }
+                });
+
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
+
             Assert.AreEqual("<p>wasfalse</p>", contents);
         }
 
@@ -226,15 +245,19 @@ namespace Spark.Compiler
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
-            DoCompileView(compiler, new Chunk[]
-                                    {
-                                        new SendLiteralChunk {Text = "<p>"},
-                                        new LocalVariableChunk{Name="arg", Value="5"},
-                                        new ConditionalChunk{Type=ConditionalType.Unless, Condition="arg==5", Body=trueChunks},
-                                        new SendLiteralChunk {Text = "</p>"}
-                                    });
+            DoCompileView(
+                compiler,
+                new Chunk[]
+                {
+                    new SendLiteralChunk { Text = "<p>" },
+                    new LocalVariableChunk { Name = "arg", Value = "5" },
+                    new ConditionalChunk { Type = ConditionalType.Unless, Condition = "arg==5", Body = trueChunks },
+                    new SendLiteralChunk { Text = "</p>" }
+                });
+
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
+
             Assert.AreEqual("<p></p>", contents);
         }
 
@@ -245,15 +268,19 @@ namespace Spark.Compiler
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
-            DoCompileView(compiler, new Chunk[]
-                                    {
-                                        new SendLiteralChunk {Text = "<p>"},
-                                        new LocalVariableChunk{Name="arg", Value="5"},
-                                        new ConditionalChunk{Type=ConditionalType.Unless, Condition="arg==6", Body=trueChunks},
-                                        new SendLiteralChunk {Text = "</p>"}
-                                    });
+            DoCompileView(
+                compiler,
+                new Chunk[]
+                {
+                    new SendLiteralChunk { Text = "<p>" },
+                    new LocalVariableChunk { Name = "arg", Value = "5" },
+                    new ConditionalChunk { Type = ConditionalType.Unless, Condition = "arg==6", Body = trueChunks },
+                    new SendLiteralChunk { Text = "</p>" }
+                });
+
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
+
             Assert.AreEqual("<p>wastrue</p>", contents);
         }
 
@@ -265,12 +292,15 @@ namespace Spark.Compiler
                                BaseClass = "Spark.Tests.Stubs.StubSparkView",
                                NullBehaviour = NullBehaviour.Lenient
                            };
+            
             var chunks = new Chunk[]
-                         {
-                             new ViewDataChunk { Name="comment", Type="Spark.Tests.Models.Comment"},
-                             new SendExpressionChunk {Code = "comment.Text", SilentNulls = true}
-                         };
+            {
+                new ViewDataChunk { Name = "comment", Type = "Spark.Tests.Models.Comment" },
+                new SendExpressionChunk { Code = "comment.Text", SilentNulls = true }
+            };
+
             compiler.CompileView(new[] { chunks }, new[] { chunks });
+
             Assert.That(compiler.SourceCode.Contains("catch(System.NullReferenceException)"));
         }
 
@@ -283,11 +313,13 @@ namespace Spark.Compiler
                                NullBehaviour = NullBehaviour.Lenient
                            };
             var chunks = new Chunk[]
-                         {
-                             new ViewDataChunk { Name="comment", Type="Spark.Tests.Models.Comment"},
-                             new SendExpressionChunk {Code = "comment.Text", SilentNulls = false}
-                         };
+            {
+                new ViewDataChunk { Name = "comment", Type = "Spark.Tests.Models.Comment" },
+                new SendExpressionChunk { Code = "comment.Text", SilentNulls = false }
+            };
+
             compiler.CompileView(new[] { chunks }, new[] { chunks });
+
             Assert.That(compiler.SourceCode.Contains("catch(System.NullReferenceException)"));
         }
 
@@ -299,12 +331,15 @@ namespace Spark.Compiler
                                BaseClass = "Spark.Tests.Stubs.StubSparkView",
                                NullBehaviour = NullBehaviour.Strict
                            };
+            
             var chunks = new Chunk[]
-                         {
-                             new ViewDataChunk { Name="comment", Type="Spark.Tests.Models.Comment"},
-                             new SendExpressionChunk {Code = "comment.Text", SilentNulls = false}
-                         };
+            {
+                new ViewDataChunk { Name = "comment", Type = "Spark.Tests.Models.Comment" },
+                new SendExpressionChunk { Code = "comment.Text", SilentNulls = false }
+            };
+            
             compiler.CompileView(new[] { chunks }, new[] { chunks });
+            
             Assert.That(compiler.SourceCode.Contains("catch(System.NullReferenceException ex)"));
             Assert.That(compiler.SourceCode.Contains("ArgumentNullException("));
             Assert.That(compiler.SourceCode.Contains(", ex);"));
@@ -323,7 +358,9 @@ namespace Spark.Compiler
                                         new PageBaseTypeChunk {  BaseClass="Spark.Tests.Stubs.StubSparkView2"},
                                         new SendLiteralChunk{ Text = "Hello world"}
                                     });
+
             var instance = compiler.CreateInstance();
+            
             Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2)));
         }
 
@@ -336,13 +373,18 @@ namespace Spark.Compiler
                                BaseClass = "Spark.Tests.Stubs.StubSparkView",
                                NullBehaviour = NullBehaviour.Strict
                            };
-            DoCompileView(compiler, new Chunk[]
-                                    {
-                                        new PageBaseTypeChunk {BaseClass = "Spark.Tests.Stubs.StubSparkView2"},
-                                        new ViewDataModelChunk {TModel = "Spark.Tests.Models.Comment"},
-                                        new SendLiteralChunk {Text = "Hello world"}
-                                    });
+
+            DoCompileView(
+                compiler,
+                new Chunk[]
+                {
+                    new PageBaseTypeChunk { BaseClass = "Spark.Tests.Stubs.StubSparkView2" },
+                    new ViewDataModelChunk { TModel = "Spark.Tests.Models.Comment" },
+                    new SendLiteralChunk { Text = "Hello world" }
+                });
+            
             var instance = compiler.CreateInstance();
+            
             Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2)));
             Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2<Comment>)));
         }
@@ -360,7 +402,9 @@ namespace Spark.Compiler
                                         new PageBaseTypeChunk {BaseClass = "Spark.Tests.Stubs.StubSparkView3<Spark.Tests.Models.Comment, string>"},
                                         new SendLiteralChunk {Text = "Hello world"}
                                     });
+
             var instance = compiler.CreateInstance();
+
             Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2)));
             Assert.That(instance, Is.InstanceOf(typeof(StubSparkView2<Comment>)));
             Assert.That(instance, Is.InstanceOf(typeof(StubSparkView3<Comment, string>)));
@@ -373,10 +417,12 @@ namespace Spark.Compiler
 
           var innerChunks = new Chunk[] { new SendLiteralChunk { Text = "*test*" } };
 
-          DoCompileView(compiler, new Chunk[]
-                                    {
-                                        new MarkdownChunk {Body = innerChunks}
-                                    });
+          DoCompileView(
+              compiler,
+              new Chunk[]
+              {
+                  new MarkdownChunk { Body = innerChunks }
+              });
 
           Assert.That(compiler.SourceCode, Does.Contain("using(MarkdownOutputScope())"));
           Assert.That(compiler.SourceCode, Does.Contain("Output.Write(\"*test*\");"));

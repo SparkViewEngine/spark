@@ -31,7 +31,6 @@ namespace Spark.Compiler.VisualBasic
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 
-
         public override void GenerateSourceCode(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
             var globalSymbols = new Dictionary<string, object>();
@@ -50,11 +49,11 @@ namespace Spark.Compiler.VisualBasic
             source.WriteLine("Option Infer On");
 
             usingGenerator.UsingNamespace("Microsoft.VisualBasic");
-            foreach (var ns in UseNamespaces ?? new string[0])
+            foreach (var ns in UseNamespaces ?? Array.Empty<string>())
                 usingGenerator.UsingNamespace(ns);
 
             usingGenerator.UsingAssembly("Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-            foreach (var assembly in UseAssemblies ?? new string[0])
+            foreach (var assembly in UseAssemblies ?? Array.Empty<string>())
                 usingGenerator.UsingAssembly(assembly);
 
             foreach (var resource in allResources)
@@ -74,7 +73,7 @@ namespace Spark.Compiler.VisualBasic
                 ViewClassFullName = TargetNamespace + "." + viewClassName;
 
                 source.WriteLine();
-                source.WriteLine(string.Format("Namespace {0}", TargetNamespace));
+                source.Write("Namespace ").WriteLine(TargetNamespace);
             }
 
             source.WriteLine();

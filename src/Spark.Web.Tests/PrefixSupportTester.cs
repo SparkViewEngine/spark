@@ -67,13 +67,19 @@ namespace Spark
             var output = new StringWriter();
             view.RenderView(output);
 
-            ContainsInOrder(output.ToString(),
-                            "<li", "alpha", "</li>",
-                            "<li", "beta", "</li>",
-                            "<li", "gamma", "</li>",
-                            "<var x=\"1/0\">element ignored</var>",
-                            "<p each=\"5\">attribute ignored</p>"
-                );
+            ContainsInOrder(
+                output.ToString(),
+                "<li",
+                "alpha",
+                "</li>",
+                "<li",
+                "beta",
+                "</li>",
+                "<li",
+                "gamma",
+                "</li>",
+                "<var x=\"1/0\">element ignored</var>",
+                "<p each=\"5\">attribute ignored</p>");
         }
 
 
@@ -86,12 +92,19 @@ namespace Spark
             var output = new StringWriter();
             view.RenderView(output);
 
-            ContainsInOrder(output.ToString(),
-                            "<li", "alpha", "</li>",
-                            "<li", "beta", "</li>",
-                            "<li", "gamma", "</li>",
-                            "<var x=\"1/0\">element ignored</var>",
-                            "<p each=\"5\">attribute ignored</p>");
+            ContainsInOrder(
+                output.ToString(),
+                "<li",
+                "alpha",
+                "</li>",
+                "<li",
+                "beta",
+                "</li>",
+                "<li",
+                "gamma",
+                "</li>",
+                "<var x=\"1/0\">element ignored</var>",
+                "<p each=\"5\">attribute ignored</p>");
         }
 
 
@@ -102,11 +115,12 @@ namespace Spark
             var output = new StringWriter();
             view.RenderView(output);
 
-            ContainsInOrder(output.ToString(),
-                            "ok1",
-                            "ok2",
-                            "ok3",
-                            "ok4");
+            ContainsInOrder(
+                output.ToString(),
+                "ok1",
+                "ok2",
+                "ok3",
+                "ok4");
 
             Assert.IsFalse(output.ToString().Contains("fail"));
             Assert.IsFalse(output.ToString().Contains("if"));
@@ -124,18 +138,18 @@ namespace Spark
             var output = new StringWriter();
             view.RenderView(output);
 
-            ContainsInOrder(output.ToString(),
-                            "<p>one</p>",
-                            "<p>two</p>",
-                            "<p>Hello, world!</p>",
-                            "<p>three</p>",
-                            "<p>four</p>",
-                            "<macro:ignored>ignored</macro:ignored>",
-                            "<content:ignored>ignored</content:ignored>",
-                            "<use:ignored>ignored</use:ignored>",
-                            "<render:ignored>ignored</render:ignored>",
-                            "<segment:ignored>ignored</segment:ignored>"
-                );
+            ContainsInOrder(
+                output.ToString(),
+                "<p>one</p>",
+                "<p>two</p>",
+                "<p>Hello, world!</p>",
+                "<p>three</p>",
+                "<p>four</p>",
+                "<macro:ignored>ignored</macro:ignored>",
+                "<content:ignored>ignored</content:ignored>",
+                "<use:ignored>ignored</use:ignored>",
+                "<render:ignored>ignored</render:ignored>",
+                "<segment:ignored>ignored</segment:ignored>");
         }
 
         [Test]
@@ -147,16 +161,16 @@ namespace Spark
             var output = new StringWriter();
             view.RenderView(output);
 
-            ContainsInOrder(output.ToString(),
-                            "<p>one</p>",
-                            "<p>two</p>",
-                            "<p>three</p>",
-                            "<macro:ignored>ignored</macro:ignored>",
-                            "<content:ignored>ignored</content:ignored>",
-                            "<use:ignored>ignored</use:ignored>",
-                            "<render:ignored>ignored</render:ignored>",
-                            "<segment:ignored>ignored</segment:ignored>"
-                );
+            ContainsInOrder(
+                output.ToString(),
+                "<p>one</p>",
+                "<p>two</p>",
+                "<p>three</p>",
+                "<macro:ignored>ignored</macro:ignored>",
+                "<content:ignored>ignored</content:ignored>",
+                "<use:ignored>ignored</use:ignored>",
+                "<render:ignored>ignored</render:ignored>",
+                "<segment:ignored>ignored</segment:ignored>");
         }
 
         [Test]
@@ -177,16 +191,16 @@ namespace Spark
             var output = new StringWriter();
             view.RenderView(output);
 
-            ContainsInOrder(output.ToString(),
-                            "<p>one</p>",
-                            "<p>two</p>",
-                            "<p>three</p>",
-                            "<macro:ignored>ignored</macro:ignored>",
-                            "<content:ignored>ignored</content:ignored>",
-                            "<use:ignored>ignored</use:ignored>",
-                            "<render:ignored>ignored</render:ignored>",
-                            "<section:ignored>ignored</section:ignored>"
-                );
+            ContainsInOrder(
+                output.ToString(),
+                "<p>one</p>",
+                "<p>two</p>",
+                "<p>three</p>",
+                "<macro:ignored>ignored</macro:ignored>",
+                "<content:ignored>ignored</content:ignored>",
+                "<use:ignored>ignored</use:ignored>",
+                "<render:ignored>ignored</render:ignored>",
+                "<section:ignored>ignored</section:ignored>");
         }
 
         [Test]
@@ -202,14 +216,14 @@ namespace Spark
             var output = new StringWriter();
             view.RenderView(output);
 
-            ContainsInOrder(output.ToString(),
-                            "<p>one</p>",
-                            "<p>two</p>",
-                            "<p>Hello, world!</p>",
-                            "<p>three</p>",
-                            "<p>four</p>",
-                            "<var x=\"1/0\">ignored</var>"
-                );
+            ContainsInOrder(
+                output.ToString(),
+                "<p>one</p>",
+                "<p>two</p>",
+                "<p>Hello, world!</p>",
+                "<p>three</p>",
+                "<p>four</p>",
+                "<var x=\"1/0\">ignored</var>");
         }
     }
 }

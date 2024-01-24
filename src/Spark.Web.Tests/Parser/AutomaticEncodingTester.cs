@@ -43,7 +43,7 @@ namespace Spark.Parser
                 .SetPageBaseType(typeof(StubSparkView))
                 .SetAutomaticEncoding(automaticEncoding);
             var container = new SparkServiceContainer(this._settings);
-
+            
             this._viewFolder = new InMemoryViewFolder();
 
             container.SetServiceBuilder<IViewFolder>(c => this._viewFolder);
@@ -89,7 +89,6 @@ namespace Spark.Parser
             Assert.IsFalse(((ExpressionNode)result.Value[0]).AutomaticEncoding);
         }
 
-
         [Test]
         public void DollarHasEncodedContentWhenEnabled()
         {
@@ -101,7 +100,6 @@ namespace Spark.Parser
             Assert.AreEqual("\"hello world\"", (string)((ExpressionNode)result.Value[0]).Code);
             Assert.IsTrue(((ExpressionNode)result.Value[0]).AutomaticEncoding);
         }
-
 
         [Test]
         public void BangSyntaxStillHasRawContentWhenEnabled()
@@ -142,7 +140,6 @@ namespace Spark.Parser
             Assert.AreEqual("&lt;span&gt;hello&lt;/span&gt; &lt;span&gt;world&lt;/span&gt;", content);
         }
 
-
         [Test]
         public void HashSyntaxForStatementsByDefault()
         {
@@ -167,7 +164,6 @@ namespace Spark.Parser
             Assert.That(statement.Code.ToString(), Is.EqualTo("bernate  "));
         }
 
-
         [Test]
         public void HashSyntaxIgnoredWhenCustomMarkerProvided()
         {
@@ -179,6 +175,5 @@ namespace Spark.Parser
             var statement = result.Value.OfType<StatementNode>().Any();
             Assert.That(statement, Is.False);
         }
-
     }
 }

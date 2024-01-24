@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace Spark
 {	
-	public class SparkViewAttribute : Attribute
+    public class SparkViewAttribute : Attribute
     {
         public string TargetNamespace { get; set; }
         public string[] Templates { get; set; }
@@ -26,10 +26,10 @@ namespace Spark
         public SparkViewDescriptor BuildDescriptor()
         {
             return new SparkViewDescriptor
-			{
-				TargetNamespace = TargetNamespace,
-				Templates = Templates.Select(t => ConvertFromAttributeFormat(t)).ToList()
-			};
+            {
+                TargetNamespace = TargetNamespace,
+                Templates = Templates.Select(t => ConvertFromAttributeFormat(t)).ToList()
+            };
         }
 
         public static string ConvertToAttributeFormat(string template)
@@ -46,10 +46,10 @@ namespace Spark
             // when compiled attributes are bound into descriptors, the
             // backslashes are treated as environment-specific seperators
             if (Path.DirectorySeparatorChar == '\\')
-			{
-				return template;
-			}
-			
+            {
+                return template;
+            }
+            
             return template.Replace('\\', Path.DirectorySeparatorChar);
         }
     }

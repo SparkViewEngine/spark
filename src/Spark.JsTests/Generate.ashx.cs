@@ -42,12 +42,6 @@ namespace Spark.JsTests
             context.Response.Write(entry.SourceCode);
         }
 
-        public bool IsReusable
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReusable => false;
     }
 }

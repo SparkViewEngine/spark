@@ -145,7 +145,6 @@ namespace Castle.MonoRail.Views.Spark
                 {
                     viewComponentContext.RenderView(viewComponentContext.ViewToRender, Output);
                 }
-
             }
             finally
             {
@@ -161,6 +160,5 @@ namespace Castle.MonoRail.Views.Spark
                 }
             }
         }
-
     }
 }

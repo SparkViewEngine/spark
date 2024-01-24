@@ -56,8 +56,12 @@ namespace Spark.Web.Mvc.Tests
             params string[] templates)
         {
             Assert.AreEqual(templates.Length, descriptor.Templates.Count, "Descriptor template count must match");
+
             for (var index = 0; index != templates.Length; ++index)
+            {
                 Assert.AreEqual(templates[index], descriptor.Templates[index]);
+            }
+
             Assert.AreEqual(0, searchedLocations.Count, "searchedLocations must be empty");
         }
 
@@ -69,8 +73,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.spark");
         }
 
@@ -82,8 +88,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.shade");
         }
 
@@ -96,8 +104,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.spark",
                 @"Layouts\Application.spark");
         }
@@ -111,8 +121,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.shade",
                 @"Layouts\Application.shade");
         }
@@ -127,8 +139,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.spark",
                 @"Layouts\Home.spark");
         }
@@ -143,8 +157,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.shade",
                 @"Layouts\Home.shade");
         }
@@ -160,8 +176,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.spark",
                 @"Layouts\Site.spark");
         }
@@ -177,8 +195,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.shade",
                 @"Layouts\Site.shade");
         }
@@ -195,8 +215,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.spark");
         }
 
@@ -212,8 +234,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.shade");
         }
 
@@ -227,8 +251,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.spark",
                 @"Layouts\Application.spark");
         }
@@ -243,8 +269,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.shade",
                 @"Layouts\Application.shade");
         }
@@ -260,8 +288,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Admin\Home\Index.spark",
                 @"Layouts\Application.spark");
         }
@@ -277,8 +307,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Admin\Home\Index.shade",
                 @"Layouts\Application.shade");
         }
@@ -293,8 +325,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Admin\Home\Index.spark",
                 @"Layouts\Application.spark");
         }
@@ -309,8 +343,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Admin\Home\Index.shade",
                 @"Layouts\Application.shade");
         }
@@ -327,8 +363,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Admin\Home\Index.spark",
                 @"Admin\Layouts\Application.spark");
         }
@@ -345,8 +383,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Admin\Home\Index.shade",
                 @"Admin\Layouts\Application.shade");
         }
@@ -364,8 +404,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Admin\Home\Index.spark",
                 @"Admin\Layouts\Site.spark");
         }
@@ -383,8 +425,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Admin\Home\Index.shade",
                 @"Admin\Layouts\Site.shade");
         }
@@ -404,8 +448,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Admin\Home\Index.spark");
         }
 
@@ -422,8 +468,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.spark",
                 @"Layouts\Green.spark",
                 @"Layouts\Red.spark",
@@ -443,8 +491,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", "Red", true, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.spark",
                 @"Layouts\Red.spark",
                 @"Layouts\Blue.spark");
@@ -463,8 +513,10 @@ namespace Spark.Web.Mvc.Tests
 
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.spark");
         }
 
@@ -498,7 +550,7 @@ namespace Spark.Web.Mvc.Tests
             var param3 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new[] { "beta" }));
             var param4 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new[] { "beta", "alpha" }));
             var param5 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(null));
-            var param6 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new string[0]));
+            var param6 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(Array.Empty<string>()));
             var param7 = new BuildDescriptorParams("a", "c", "d", "e", false, Dict(new[] { "alpha", "beta" }));
 
             Assert.That(param1, Is.Not.EqualTo(param2));
@@ -534,7 +586,8 @@ namespace Spark.Web.Mvc.Tests
             var searchedLocations = new List<string>();
             var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
             AssertDescriptorTemplates(
-                result, searchedLocations,
+                result,
+                searchedLocations,
                 @"Home\Index.en-us.spark",
                 @"Layouts\Application.en.spark");
         }
@@ -553,9 +606,9 @@ namespace Spark.Web.Mvc.Tests
             public override IDictionary<string, object> GetExtraParameters(ControllerContext controllerContext)
             {
                 return new Dictionary<string, object>
-                           {
-                               {"language", Convert.ToString(controllerContext.RouteData.Values["language"])}
-                           };
+                {
+                    { "language", Convert.ToString(controllerContext.RouteData.Values["language"]) }
+                };
             }
 
             protected override IEnumerable<string> PotentialViewLocations(string controllerName, string viewName, IDictionary<string, object> extra)
@@ -584,7 +637,9 @@ namespace Spark.Web.Mvc.Tests
                     {
                         yield return Path.ChangeExtension(location, region + ".spark");
                         if (slashPos != -1)
+                        {
                             yield return Path.ChangeExtension(location, language + ".spark");
+                        }
                     }
                     yield return location;
                 }
@@ -612,7 +667,6 @@ namespace Spark.Web.Mvc.Tests
             var none = builder.ParseUseMaster(new Position(new SourceContext("  x <use etc=''/> <using master=\"def\"/> y ")));
             var g = builder.ParseUseMaster(new Position(new SourceContext("-<use master=\"g\"/>-<use master=\"h\"/>-")));
 
-
             Assert.That(a.Value, Is.EqualTo("a"));
             Assert.That(b.Value, Is.EqualTo("b"));
             Assert.That(c.Value, Is.EqualTo("c"));
@@ -632,7 +686,6 @@ namespace Spark.Web.Mvc.Tests
             var def = builder.ParseUseMaster(new Position(new SourceContext("  x <s:use etc=''/> <s:use master=\"def\"/> y ")));
             var none = builder.ParseUseMaster(new Position(new SourceContext("  x <s:use etc=''/> <using master=\"def\"/> y ")));
             var g = builder.ParseUseMaster(new Position(new SourceContext("-<s:use master=\"g\"/>-<s:use master=\"h\"/>-")));
-
 
             Assert.That(a.Value, Is.EqualTo("a"));
             Assert.That(b.Value, Is.EqualTo("b"));

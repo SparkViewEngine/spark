@@ -15,6 +15,7 @@ namespace Spark
         public void Init()
         {
             this._viewPath = "fake/path";
+
             this._partialProvider = MockRepository.GenerateMock<IPartialProvider>();
             this._engine = new SparkViewEngine(new SparkSettings())
             {

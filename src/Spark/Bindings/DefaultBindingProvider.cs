@@ -12,7 +12,7 @@ namespace Spark.Bindings
         public override IEnumerable<Binding> GetBindings(BindingRequest bindingRequest)
         {
             if (bindingRequest.ViewFolder.HasView("bindings.xml") == false)
-                return new Binding[0];
+                return Array.Empty<Binding>();
 
             var file = bindingRequest.ViewFolder.GetViewSource("bindings.xml");
             using (var stream = file.OpenViewStream())

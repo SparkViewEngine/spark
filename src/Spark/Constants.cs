@@ -12,11 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Spark.Compiler.NodeVisitors;
 
 namespace Spark
 {
@@ -28,15 +23,15 @@ namespace Spark
         public const string UseNamespace = "http://sparkviewengine.com/use/";
         public const string SegmentNamespace = "http://sparkviewengine.com/segment/";
         public const string RenderNamespace = "http://sparkviewengine.com/render/";
-
+        
         public const string XIncludeNamespace = "http://www.w3.org/2001/XInclude";
-
+        
         public const string SectionNamespace = "http://sparkviewengine.com/section/";
-		
-		public static readonly string Shared = "Shared";
-		public static readonly string Layouts = "Layouts";
-		public static readonly string GlobalSpark = "_global.spark";
-		public static readonly string DotSpark = ".spark";
+        
+        public static readonly string Shared = "Shared";
+        public static readonly string Layouts = "Layouts";
+        public static readonly string GlobalSpark = "_global.spark";
+        public static readonly string DotSpark = ".spark";
         public static readonly string DotShade = ".shade";
     }
 }

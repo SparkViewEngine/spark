@@ -26,31 +26,18 @@ namespace Spark.Web.Mvc
         private ViewDataDictionary _viewData;
         private ViewContext _viewContext;
     	private dynamic _viewBag;
-
-
-        public TempDataDictionary TempData
-        {
-            get { return ViewContext.TempData; }
-        }
+        
+        public TempDataDictionary TempData => ViewContext.TempData;
 
         public HtmlHelper Html { get; set; }
         public UrlHelper Url { get; set; }
         public AjaxHelper Ajax { get; set; }
 
-        public HttpContextBase Context
-        {
-            get { return ViewContext.HttpContext; }
-        }
+        public HttpContextBase Context => ViewContext.HttpContext;
 
-        public HttpRequestBase Request
-        {
-            get { return ViewContext.HttpContext.Request; }
-        }
+        public HttpRequestBase Request => ViewContext.HttpContext.Request;
 
-        public HttpResponseBase Response
-        {
-            get { return ViewContext.HttpContext.Response; }
-        }
+        public HttpResponseBase Response => ViewContext.HttpContext.Response;
 
         public IResourcePathManager ResourcePathManager { get; set; }
 
@@ -196,12 +183,14 @@ namespace Spark.Web.Mvc
 
             Content.Clear();
         }
-
-
+        
         public string H(object value)
         {
-            if (value is MvcHtmlString)
-                return H((MvcHtmlString)value);
+            if (value is MvcHtmlString htmlString)
+            {
+                return H(htmlString);
+            }
+            
             return Html.Encode(value);
         }
 
@@ -223,8 +212,6 @@ namespace Spark.Web.Mvc
         {
             return ViewData.Eval(expression, format);
         }
-
-
     }
 
     public abstract class SparkView<TModel> : SparkView
@@ -233,10 +220,7 @@ namespace Spark.Web.Mvc
         private HtmlHelper<TModel> _htmlHelper;
         private AjaxHelper<TModel> _ajaxHelper;
 
-        public TModel Model
-        {
-            get { return ViewData.Model; }
-        }
+        public TModel Model => ViewData.Model;
 
         public new ViewDataDictionary<TModel> ViewData
         {
@@ -251,7 +235,7 @@ namespace Spark.Web.Mvc
 
         public new HtmlHelper<TModel> Html
         {
-            get { return _htmlHelper; }
+            get => _htmlHelper;
             set
             {
                 _htmlHelper = value; 
@@ -261,7 +245,7 @@ namespace Spark.Web.Mvc
 
         public new AjaxHelper<TModel> Ajax
         {
-            get { return _ajaxHelper; }
+            get => _ajaxHelper;
             set
             {
                 _ajaxHelper = value;

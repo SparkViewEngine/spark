@@ -33,6 +33,7 @@ namespace Spark.Parser
         {
             var context = new VisitorContext { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
             var result = this._syntax.GetChunks(context, Path.Combine("Home", "childview.spark"));
+
             Assert.IsNotNull(result);
         }
 
@@ -57,7 +58,6 @@ namespace Spark.Parser
 
             Assert.IsNotNull(code);
         }
-
 
         [Test]
         public void StatementAndExpressionInCode()

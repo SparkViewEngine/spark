@@ -35,8 +35,8 @@ namespace Spark.Compiler
         public Guid GeneratedViewId { get; set; }
 
         public bool Debug { get; set; }
-		public NullBehaviour NullBehaviour { get; set; }
-    	public IEnumerable<string> UseNamespaces { get; set; }
+        public NullBehaviour NullBehaviour { get; set; }
+        public IEnumerable<string> UseNamespaces { get; set; }
         public IEnumerable<string> UseAssemblies { get; set; }
 
         public string TargetNamespace => Descriptor?.TargetNamespace;
@@ -44,14 +44,11 @@ namespace Spark.Compiler
         public abstract void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources);
         public abstract void GenerateSourceCode(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources);
 
-
-
         private static Dictionary<Type, Func<ISparkView>> _ctors = new Dictionary<Type, Func<ISparkView>>();
         public ISparkView CreateInstance()
         {
             return FastActivator<ISparkView>.New(CompiledType);
         }
-
     }
 
     public static class FastActivator<TTargetClass> where TTargetClass : class

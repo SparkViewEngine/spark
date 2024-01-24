@@ -30,7 +30,6 @@ namespace Spark.Ruby.Tests
         private RubyViewCompiler _compiler;
         private RubyLanguageFactory _languageFactory;
 
-
         [SetUp]
         public void Init()
         {
@@ -62,6 +61,7 @@ namespace Spark.Ruby.Tests
             var contents = new StringWriter();
             view.RenderView(contents);
             _languageFactory.InstanceReleased(_compiler, view);
+
             return contents.ToString();
         }
 
@@ -74,6 +74,7 @@ namespace Spark.Ruby.Tests
             var view = FastActivator<IScriptingSparkView>.New(_compiler.CompiledType);
             var source = _compiler.SourceCode;
             var script = view.ScriptSource;
+
             Assert.IsNotNull(source);
             Assert.IsNotEmpty(source);
             Assert.IsNotNull(script);
@@ -87,6 +88,7 @@ namespace Spark.Ruby.Tests
 
             _compiler.BaseClass = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass"));
         }
 
@@ -97,6 +99,7 @@ namespace Spark.Ruby.Tests
 
             _compiler.BaseClass = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass<ThisIsTheModelClass>"));
         }
 
@@ -111,6 +114,7 @@ namespace Spark.Ruby.Tests
             var chunks = new[] { chunks0[0], chunks1[0] };
             _compiler.CompileView(chunks, chunks);
             var content = ExecuteView();
+
             Assert.AreEqual("420", content);
         }
 
@@ -120,6 +124,7 @@ namespace Spark.Ruby.Tests
             var chunks = Chunks(new UseNamespaceChunk { Namespace = "AnotherNamespace.ToBe.Used" });
 
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("Imports AnotherNamespace.ToBe.Used"));
         }
 
@@ -130,6 +135,7 @@ namespace Spark.Ruby.Tests
 
             _compiler.Descriptor = new SparkViewDescriptor { TargetNamespace = "TargetNamespace.ForThe.GeneratedView" };
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("namespace TargetNamespace.ForThe.GeneratedView"));
         }
 
@@ -140,6 +146,7 @@ namespace Spark.Ruby.Tests
 
             _compiler.Descriptor = new SparkViewDescriptor { TargetNamespace = "TargetNamespace.ForThe.GeneratedView" };
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("Namespace TargetNamespace.ForThe.GeneratedView"));
             Assert.That(_compiler.SourceCode.Contains("Imports AnotherNamespace.ToBe.Used"));
         }
@@ -151,6 +158,7 @@ namespace Spark.Ruby.Tests
 
             _compiler.Descriptor = new SparkViewDescriptor { TargetNamespace = "TargetNamespace.ForThe.GeneratedView", Templates = new[] { "one", "two", "three" } };
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("SparkViewAttribute"));
             Assert.That(_compiler.SourceCode.Contains("one"));
             Assert.That(_compiler.SourceCode.Contains("two"));
@@ -163,6 +171,7 @@ namespace Spark.Ruby.Tests
             var chunks = Chunks();
 
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("GeneratedViewId"));
             Assert.That(_compiler.SourceCode.Contains("\"" + _compiler.GeneratedViewId + "\""));
         }
@@ -173,6 +182,7 @@ namespace Spark.Ruby.Tests
             var chunks = Chunks(new SendLiteralChunk { Text = "Hello World" });
 
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("Hello World"));
         }
 
@@ -182,6 +192,7 @@ namespace Spark.Ruby.Tests
             var chunks = Chunks(new SendExpressionChunk { Code = "5 + 3", Position = new Position(null, 100, 0, 50, 3, null) });
 
             _compiler.GenerateSourceCode(chunks, chunks);
+
             Assert.That(_compiler.SourceCode.Contains("5 + 3"));
         }
 
@@ -192,6 +203,7 @@ namespace Spark.Ruby.Tests
             var chunks = Chunks(new SendLiteralChunk { Text = "Hello World" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("Hello World", contents);
         }
 
@@ -201,6 +213,7 @@ namespace Spark.Ruby.Tests
         {
             var chunks = Chunks(new SendLiteralChunk { Text = "Hello World" });
             _compiler.CompileView(chunks, chunks);
+
             Assert.That(typeof(StubSparkView).IsAssignableFrom(_compiler.CompiledType));
         }
 
@@ -215,6 +228,7 @@ namespace Spark.Ruby.Tests
                 new SendExpressionChunk { Code = "x" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("42", contents);
         }
 
@@ -229,6 +243,7 @@ namespace Spark.Ruby.Tests
                 new SendExpressionChunk { Code = "x" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView();
+
             Assert.AreEqual("42", contents);
         }
 
@@ -239,6 +254,7 @@ namespace Spark.Ruby.Tests
                 new SendExpressionChunk { Code = "@hello" });
             _compiler.CompileView(chunks, chunks);
             var contents = ExecuteView(new StubViewData { { "hello", 42 } });
+            
             Assert.AreEqual("42", contents);
         }
 
@@ -252,9 +268,11 @@ namespace Spark.Ruby.Tests
             _compiler.CompileView(chunks, chunks);
 
             var contents = ExecuteView(new StubViewData { { "hello", 42 } });
+
             Assert.AreEqual("42", contents);
 
             var contents2 = ExecuteView();
+
             Assert.AreEqual("55", contents2);
         }
 
@@ -265,7 +283,9 @@ namespace Spark.Ruby.Tests
                 new CodeStatementChunk { Code = "x = 20" },
                 new SendExpressionChunk { Code = "x + 22" });
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+
             Assert.AreEqual(contents, "42");
         }
 
@@ -281,7 +301,9 @@ namespace Spark.Ruby.Tests
 
             var chunks = Chunks(scope1, scope2);
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+
             Assert.AreEqual(contents, "42");
         }
 
@@ -294,7 +316,9 @@ namespace Spark.Ruby.Tests
             var chunks = Chunks(
                 loop);
             _compiler.CompileView(chunks, chunks);
+
             var contents = ExecuteView(new StubViewData { { "numbers", new[] { 1, 2, 3, 4, 5 } } });
+            
             Assert.AreEqual("12345", contents);
         }
 
@@ -311,7 +335,9 @@ namespace Spark.Ruby.Tests
                 new SendExpressionChunk { Code = "foo(\"hello\")" },
                 macro);
             _compiler.CompileView(chunks, chunks);
+
             var contents = ExecuteView();
+            
             Assert.AreEqual("hello", contents);
         }
 
@@ -329,7 +355,9 @@ namespace Spark.Ruby.Tests
                 condition2,
                 new SendLiteralChunk { Text = "b" });
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+
             Assert.AreEqual("aok1b", contents);
         }
 
@@ -355,7 +383,9 @@ namespace Spark.Ruby.Tests
                 else2,
                 new SendLiteralChunk { Text = "b" });
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("aok1ok2b", contents);
         }
 
@@ -373,7 +403,9 @@ namespace Spark.Ruby.Tests
                 condition2,
                 new SendLiteralChunk { Text = "b" });
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("aok1b", contents);
         }
 
@@ -398,7 +430,9 @@ namespace Spark.Ruby.Tests
             var chunks = Chunks(
                 loop);
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView(new StubViewData { { "numbers", new[] { 0, 1, 2, 3, 4, 7, 2, -4 } } });
+            
             Assert.AreEqual("dabcddbd", contents);
         }
 
@@ -414,7 +448,9 @@ namespace Spark.Ruby.Tests
                 new SendLiteralChunk { Text = ")" });
 
             _compiler.CompileView(chunks, new[] { chunks[0], partial[0] });
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("(Hello world)", contents);
         }
 
@@ -436,7 +472,9 @@ namespace Spark.Ruby.Tests
             renderPartial.Body.Add(new SendLiteralChunk { Text = "From inside caller" });
 
             _compiler.CompileView(chunks, new[] { chunks[0], partial[0] });
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("([From inside caller])", contents);
         }
 
@@ -447,7 +485,6 @@ namespace Spark.Ruby.Tests
                 new SendLiteralChunk { Text = "[" },
                 new RenderSectionChunk { Name = "foo" },
                 new SendLiteralChunk { Text = "]" });
-
 
             var renderPartial = new RenderPartialChunk { FileContext = new FileContext { Contents = partial[0] } };
             renderPartial.Sections.Add("foo",
@@ -462,7 +499,9 @@ namespace Spark.Ruby.Tests
                 new SendLiteralChunk { Text = ")" });
 
             _compiler.CompileView(chunks, new[] { chunks[0], partial[0] });
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("([From inside caller])", contents);
         }
 
@@ -480,7 +519,9 @@ namespace Spark.Ruby.Tests
                 new SendExpressionChunk { Code = "foo" });
 
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("bac", contents);
         }
 
@@ -495,7 +536,9 @@ namespace Spark.Ruby.Tests
                 new SendLiteralChunk { Text = "c" });
 
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("abc", contents);
         }
 
@@ -513,7 +556,9 @@ namespace Spark.Ruby.Tests
                 new SendExpressionChunk { Code = "x3" });
 
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("abe", contents);
         }
 
@@ -541,7 +586,9 @@ namespace Spark.Ruby.Tests
                 });
 
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("42", contents);
         }
 
@@ -557,7 +604,9 @@ namespace Spark.Ruby.Tests
                 new SendLiteralChunk { Text = "3" });
 
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("1${user.Name => undefined method `Name' for nil:NilClass}23", contents);
         }
 
@@ -574,10 +623,12 @@ namespace Spark.Ruby.Tests
                 new ForEachChunk { Code = "foo in @stuff", Body = loop[0] });
 
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView(new StubViewData
                                        {
                                            {"stuff", new[] {6, 2, 7, 4}}
                                        });
+            
             Assert.AreEqual("04TrueFalse14FalseFalse24FalseFalse34FalseTrue", contents);
         }
 
@@ -595,7 +646,9 @@ namespace Spark.Ruby.Tests
                 new SendLiteralChunk { Text = "3" });
 
             _compiler.CompileView(chunks, chunks);
+            
             var contents = ExecuteView();
+            
             Assert.AreEqual("213", contents);
         }
     }
