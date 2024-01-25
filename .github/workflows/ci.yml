@@ -27,7 +27,7 @@ jobs:
     - name: Build
       run: |
         cd src
-        dotnet build --no-restore
+        dotnet build --no-restore spark-ci.slnf
     - name: Test
       run: |
         cd src
