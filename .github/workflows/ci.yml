@@ -23,7 +23,7 @@ jobs:
     - name: Restore dependencies
       run: |
        cd src
-       dotnet restore
+       dotnet restore spark-ci.slnf
     - name: Build
       run: |
         cd src
@@ -31,4 +31,4 @@ jobs:
     - name: Test
       run: |
         cd src
-        dotnet test --no-build --verbosity normal
+        dotnet test --no-build --verbosity normal spark-ci.slnf
