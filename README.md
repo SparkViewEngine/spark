@@ -29,6 +29,8 @@ else
 
 It's as easy as `PM> Install-Package Spark` from [nuget](http://nuget.org/packages/Spark) for the core
 
+![Continuous Integration Status](https://github.com/SparkViewEngine/spark/actions/workflows/ci.yml/badge.svg)
+
 ### Need Help
 
  * [Google Group](https://groups.google.com/forum/?fromgroups=#!forum/spark-dev)

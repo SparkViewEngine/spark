@@ -1,0 +1,27 @@
+{
+  "solution": {
+    "path": "Spark.sln",
+    "projects": [
+      "Castle.MonoRail.Views.Spark.Tests\\Castle.MonoRail.Views.Spark.Tests.csproj",
+      "Castle.MonoRail.Views.Spark\\Castle.MonoRail.Views.Spark.csproj",
+      "Castle.Monorail.Pdf.Tests\\Castle.MonoRail.Pdf.Tests.csproj",
+      "Castle.Monorail.Pdf\\Castle.MonoRail.Pdf.csproj",
+      "Spark.Python.Tests\\Spark.Python.Tests.csproj",
+      "Spark.Python\\Spark.Python.csproj",
+      "Spark.Ruby.Tests\\Spark.Ruby.Tests.csproj",
+      "Spark.Ruby\\Spark.Ruby.csproj",
+      "Spark.Tests\\Spark.Tests.csproj",
+      "Spark.Web.Mvc.Pdf.Tests\\Spark.Web.Mvc.Pdf.Tests.csproj",
+      "Spark.Web.Mvc.Pdf\\Spark.Web.Mvc.Pdf.csproj",
+      "Spark.Web.Mvc.Python\\Spark.Web.Mvc.Python.csproj",
+      "Spark.Web.Mvc.Ruby.Tests\\Spark.Web.Mvc.Ruby.Tests.csproj",
+      "Spark.Web.Mvc.Ruby\\Spark.Web.Mvc.Ruby.csproj",
+      "Spark.Web.Mvc.Tests\\Spark.Web.Mvc.Tests.csproj",
+      "Spark.Web.Mvc\\Spark.Web.Mvc.csproj",
+      "Spark.Web.Tests\\Spark.Web.Tests.csproj",
+      "Spark.Web\\Spark.Web.csproj",
+      "Spark\\Spark.csproj",
+      "Xpark\\Xpark.csproj"
+    ]
+  }
+}
