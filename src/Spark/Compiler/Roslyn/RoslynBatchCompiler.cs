@@ -39,19 +39,24 @@ namespace Spark.Compiler.Roslyn
                 throw new ConfigurationErrorsException("No IRoslynCompilationLink links");
             }
 
-            string assemblyName;
-            if (!string.IsNullOrEmpty(outputAssembly))
-            {
-                var basePath = Path.GetTempPath();
-                assemblyName = Path.Combine(basePath, outputAssembly);
-            }
-            else
-            {
-                assemblyName = Path.GetRandomFileName();
-            }
+            var assemblyName = !string.IsNullOrEmpty(outputAssembly) 
+                // Strips the path from the outputAssembly full path...
+                ? Path.GetFileName(outputAssembly) 
+                // ... or generates a random assembly name
+                : Path.GetRandomFileName();
+
+            assemblyName = Path.GetFileNameWithoutExtension(assemblyName);
 
             var references = new List<MetadataReference>();
             
+            // This won't work when targeting .net core
+            // https://github.com/jaredpar/basic-reference-assemblies/
+            var systemCoreAssembly = typeof(System.Linq.Enumerable).Assembly;
+            var systemCorePath = systemCoreAssembly.Location;
+            MetadataReference systemCoreRef = AssemblyMetadata.CreateFromFile(systemCorePath).GetReference();
+
+            references.Add(systemCoreRef);
+
             foreach (var currentAssembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (currentAssembly.IsDynamic())
@@ -71,7 +76,7 @@ namespace Spark.Compiler.Roslyn
                 {
                     match = true;
 
-                    assembly = visitor.Compile(debug, assemblyName, references, sourceCode);
+                    assembly = visitor.Compile(debug, assemblyName, outputAssembly, references, sourceCode);
 
                     // Chain of responsibility pattern
                     break;

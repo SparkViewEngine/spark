@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace Spark.Compiler.Roslyn;
 
@@ -12,7 +13,28 @@ public class CSharpLink : IRoslynCompilationLink
 {
     public bool ShouldVisit(string languageOrExtension) => languageOrExtension is "c#" or "cs" or "csharp";
 
-    public Assembly Compile(bool debug, string assemblyName, List<MetadataReference> references, IEnumerable<string> sourceCode)
+    public static void ThrowIfCompilationNotSuccessful(EmitResult result)
+    {
+        if (result.Success)
+        {
+            return;
+        }
+
+        var failures = result.Diagnostics.Where(diagnostic =>
+            diagnostic.IsWarningAsError ||
+            diagnostic.Severity == DiagnosticSeverity.Error);
+
+        var sb = new StringBuilder();
+
+        foreach (var diagnostic in failures)
+        {
+            sb.Append(diagnostic.Id).Append(":").AppendLine(diagnostic.GetMessage());
+        }
+
+        throw new RoslynCompilerException(sb.ToString(), result);
+    }
+
+    public Assembly Compile(bool debug, string assemblyName, string outputAssembly, IEnumerable<MetadataReference> references, IEnumerable<string> sourceCode)
     {
         var syntaxTrees = sourceCode.Select(source => CSharpSyntaxTree.ParseText(source));
 
@@ -28,29 +50,32 @@ public class CSharpLink : IRoslynCompilationLink
             references: references,
             options: options);
 
-        using var ms = new MemoryStream();
+        EmitResult result;
+        Assembly assembly = null;
 
-        var result = compilation.Emit(ms);
-
-        if (!result.Success)
+        if (string.IsNullOrEmpty(outputAssembly))
         {
-            var failures = result.Diagnostics.Where(diagnostic =>
-                diagnostic.IsWarningAsError ||
-                diagnostic.Severity == DiagnosticSeverity.Error);
+            using var ms = new MemoryStream();
+            
+            result = compilation.Emit(ms);
 
-            var sb = new StringBuilder();
+            ThrowIfCompilationNotSuccessful(result);
 
-            foreach (var diagnostic in failures)
+            ms.Seek(0, SeekOrigin.Begin);
+
+            assembly = Assembly.Load(ms.ToArray());
+        }
+        else
+        {
+            using (var fs = new FileStream(outputAssembly, FileMode.Create))
             {
-                sb.Append(diagnostic.Id).Append(":").AppendLine(diagnostic.GetMessage());
+                result = compilation.Emit(fs);
             }
 
-            throw new RoslynCompilerException(sb.ToString(), result);
+            ThrowIfCompilationNotSuccessful(result);
+
+            assembly = Assembly.Load(outputAssembly);
         }
-
-        ms.Seek(0, SeekOrigin.Begin);
-
-        var assembly = Assembly.Load(ms.ToArray());
 
         return assembly;
     }

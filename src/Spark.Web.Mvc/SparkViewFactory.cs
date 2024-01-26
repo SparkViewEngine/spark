@@ -202,7 +202,6 @@ namespace Spark.Web.Mvc
             return descriptor;
         }
 
-
         public Assembly Precompile(SparkBatchDescriptor batch)
         {
             return Engine.BatchCompilation(batch.OutputAssembly, CreateDescriptors(batch));

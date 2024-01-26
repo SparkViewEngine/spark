@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Spark.Compiler.Roslyn;
@@ -12,7 +12,7 @@ public class VisualBasicLink : IRoslynCompilationLink
 {
     public bool ShouldVisit(string languageOrExtension) => languageOrExtension is "vb" or "vbs" or "visualbasic" or "vbscript";
 
-    public Assembly Compile(bool debug, string assemblyName, List<MetadataReference> references, IEnumerable<string> sourceCode)
+    public Assembly Compile(bool debug, string assemblyName, string outputAssembly, IEnumerable<MetadataReference> references, IEnumerable<string> sourceCode)
     {
         var syntaxTrees = sourceCode.Select(source => VisualBasicSyntaxTree.ParseText(source));
 
@@ -28,29 +28,31 @@ public class VisualBasicLink : IRoslynCompilationLink
             references: references,
             options: options);
 
-        using var ms = new MemoryStream();
+        EmitResult result;
+        Assembly assembly = null;
 
-        var result = compilation.Emit(ms);
-
-        if (!result.Success)
+        if (string.IsNullOrEmpty(outputAssembly))
         {
-            var failures = result.Diagnostics.Where(diagnostic =>
-                diagnostic.IsWarningAsError ||
-                diagnostic.Severity == DiagnosticSeverity.Error);
+            using var ms = new MemoryStream();
+            
+            result = compilation.Emit(ms);
 
-            var sb = new StringBuilder();
+            CSharpLink.ThrowIfCompilationNotSuccessful(result);
 
-            foreach (var diagnostic in failures)
-            {
-                sb.Append(diagnostic.Id).Append(":").AppendLine(diagnostic.GetMessage());
-            }
+            ms.Seek(0, SeekOrigin.Begin);
 
-            throw new RoslynCompilerException(sb.ToString(), result);
+            assembly = Assembly.Load(ms.ToArray());
         }
+        else
+        {
+            using var fs = new FileStream(outputAssembly, FileMode.Create);
 
-        ms.Seek(0, SeekOrigin.Begin);
+            result = compilation.Emit(fs);
 
-        var assembly = Assembly.Load(ms.ToArray());
+            CSharpLink.ThrowIfCompilationNotSuccessful(result);
+
+            assembly = Assembly.Load(outputAssembly);
+        }
 
         return assembly;
     }
