@@ -20,7 +20,6 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Spark.Compiler;
-using Spark.Compiler.CodeDom;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Extensions;
 using Spark.Web.Mvc.Tests.Controllers;

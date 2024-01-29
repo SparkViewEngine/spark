@@ -20,7 +20,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using Spark.Compiler.Roslyn;
+using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Extensions;
 

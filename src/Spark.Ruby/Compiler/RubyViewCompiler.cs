@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Compiler;
-using Spark.Compiler.CodeDom;
 using Spark.Ruby.Compiler.ChunkVisitors;
 using BaseClassVisitor = Spark.Compiler.CSharp.ChunkVisitors.BaseClassVisitor;
 

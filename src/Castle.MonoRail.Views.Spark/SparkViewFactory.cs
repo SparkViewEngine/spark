@@ -28,9 +28,6 @@ using Castle.MonoRail.Framework.Routing;
 using Castle.MonoRail.Views.Spark.Wrappers;
 using Spark.Bindings;
 using Spark.Compiler;
-using Spark.Compiler.CodeDom;
-using Spark.Compiler.Roslyn;
-using Spark.Parser;
 using Spark.Parser.Syntax;
 
 namespace Castle.MonoRail.Views.Spark

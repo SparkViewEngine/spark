@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Compiler;
-using Spark.Compiler.CodeDom;
 using Spark.Compiler.CSharp.ChunkVisitors;
 using GeneratedCodeVisitor=Spark.Python.Compiler.ChunkVisitors.GeneratedCodeVisitor;
 using GlobalFunctionsVisitor=Spark.Python.Compiler.ChunkVisitors.GlobalFunctionsVisitor;

@@ -336,17 +336,17 @@ namespace Spark.Web.Mvc
 
         ViewEngineResult IViewEngine.FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
-            return FindPartialView(controllerContext, partialViewName, useCache);
+            return this.FindPartialView(controllerContext, partialViewName, useCache);
         }
 
         ViewEngineResult IViewEngine.FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
-            return FindView(controllerContext, viewName, masterName, useCache);
+            return this.FindView(controllerContext, viewName, masterName, useCache);
         }
 
         void IViewEngine.ReleaseView(ControllerContext controllerContext, IView view)
         {
-            ReleaseView(controllerContext, view);
+            this.ReleaseView(controllerContext, view);
         }
 
         #endregion
@@ -355,8 +355,8 @@ namespace Spark.Web.Mvc
 
         IViewFolder IViewFolderContainer.ViewFolder
         {
-            get => Engine.ViewFolder;
-            set => Engine.ViewFolder = value;
+            get => this.Engine.ViewFolder;
+            set => this.Engine.ViewFolder = value;
         }
 
         #endregion

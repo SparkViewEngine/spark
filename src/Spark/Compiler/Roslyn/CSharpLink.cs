@@ -67,14 +67,13 @@ public class CSharpLink : IRoslynCompilationLink
         }
         else
         {
-            using (var fs = new FileStream(outputAssembly, FileMode.Create))
-            {
-                result = compilation.Emit(fs);
-            }
+            result = debug 
+                ? compilation.Emit(outputAssembly, outputAssembly.Replace(".dll", ".pdb")) 
+                : compilation.Emit(outputAssembly);
 
             ThrowIfCompilationNotSuccessful(result);
 
-            assembly = Assembly.Load(outputAssembly);
+            assembly = Assembly.LoadFile(outputAssembly);
         }
 
         return assembly;

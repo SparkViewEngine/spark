@@ -16,8 +16,6 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Spark.Compiler.CodeDom;
-using Spark.Compiler.Roslyn;
 using Spark.Compiler.VisualBasic;
 using Spark.Tests;
 using Spark.Tests.Models;

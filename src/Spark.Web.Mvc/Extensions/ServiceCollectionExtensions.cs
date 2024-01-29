@@ -3,7 +3,6 @@ using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spark.Bindings;
 using Spark.Compiler;
-using Spark.Compiler.CodeDom;
 using Spark.Compiler.Roslyn;
 using Spark.FileSystem;
 using Spark.Parser;

@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Spark.Compiler.CodeDom;
 using Spark.Compiler.VisualBasic.ChunkVisitors;
 
 namespace Spark.Compiler.VisualBasic

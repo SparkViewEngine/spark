@@ -5,9 +5,8 @@ using System.Xml;
 using System.Xml.Linq;
 using Spark;
 using Spark.Bindings;
-using Spark.Compiler.Roslyn;
+using Spark.Compiler;
 using Spark.FileSystem;
-using Spark.Parser;
 using Spark.Parser.Syntax;
 
 namespace Xpark
