@@ -50,7 +50,11 @@ namespace Castle.MonoRail.Views.Spark.Tests
             Assert.That(File.Exists(targetFile), "File exists");
 
             var result = Assembly.LoadFrom(targetFile);
-            Assert.AreEqual(3, result.GetTypes().Count());
+
+            var views = result.GetTypes().Where(x => x.BaseType == typeof(SparkView))
+                .ToArray();
+
+            Assert.AreEqual(3, views.Length);
         }
 
         public class ParentInstaller : Installer

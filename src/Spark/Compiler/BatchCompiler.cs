@@ -15,7 +15,7 @@ namespace Spark.Compiler;
 
 #if NETFRAMEWORK
 
-[Obsolete("To be replaced with RoslynBatchCompiler (code dom cannot target .net 'core'")]
+[Obsolete("To be replaced with RoslynBatchCompiler (code dom cannot target .net 'core')")]
 public class CodeDomBatchCompiler : IBatchCompiler
 {
     /// <summary>

@@ -167,7 +167,7 @@ namespace Spark.Compiler
                         {
                             new SendExpressionChunk { Code = "NoSuchVariable" }
                         }),
-                Throws.TypeOf<CompilerException>());
+                Throws.TypeOf<RoslynCompilerException>());
         }
 
         [Test]

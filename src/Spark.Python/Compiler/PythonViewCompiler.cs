@@ -29,7 +29,7 @@ namespace Spark.Python.Compiler
         {
             GenerateSourceCode(viewTemplates, allResources);
 
-            var compiler = new CodeDomBatchCompiler();
+            var compiler = new RoslynBatchCompiler();
             var assembly = compiler.Compile(Debug, "csharp", null, new[] { SourceCode });
             CompiledType = assembly.GetType(ViewClassFullName);
         }

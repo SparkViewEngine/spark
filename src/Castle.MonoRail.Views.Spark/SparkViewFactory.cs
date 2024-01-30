@@ -68,7 +68,7 @@ namespace Castle.MonoRail.Views.Spark
 
                     var viewFolder = new ViewSourceLoaderWrapper(this);
 
-                    var batchCompiler = new CodeDomBatchCompiler();
+                    var batchCompiler = new RoslynBatchCompiler();
 
                     this._engine =
                         new SparkViewEngine(
