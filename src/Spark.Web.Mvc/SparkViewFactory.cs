@@ -223,7 +223,22 @@ namespace Spark.Web.Mvc
         {
             var descriptors = new List<SparkViewDescriptor>();
 
-            var controllerName = RemoveSuffix(entry.ControllerType.Name, "Controller");
+            string controllerName = null;
+
+            if (entry.ControllerType.ContainsGenericParameters)
+            {
+                // generic controller have a backtick suffix in their (name e.g. "SomeController`2")
+                var indexOfBacktick = entry.ControllerType.Name.IndexOf("Controller`", StringComparison.Ordinal);
+                if (indexOfBacktick > -1)
+                {
+                    // removing it otherwise locating the view templates will fail
+                    controllerName = entry.ControllerType.Name.Substring(0, indexOfBacktick);
+                }
+            }
+            else
+            {
+                controllerName = RemoveSuffix(entry.ControllerType.Name, "Controller");
+            }
 
             var viewNames = new List<string>();
 
@@ -324,12 +339,9 @@ namespace Spark.Web.Mvc
 
         private static string RemoveSuffix(string value, string suffix)
         {
-            if (value.EndsWith(suffix, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return value.Substring(0, value.Length - suffix.Length);
-            }
-
-            return value;
+            return value.EndsWith(suffix, StringComparison.InvariantCultureIgnoreCase) 
+                ? value.Substring(0, value.Length - suffix.Length) 
+                : value;
         }
 
         #region IViewEngine Members
