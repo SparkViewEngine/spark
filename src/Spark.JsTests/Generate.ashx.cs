@@ -46,7 +46,7 @@ namespace Spark.JsTests
                 settings, 
                 new DefaultSyntaxProvider(settings), 
                 new DefaultViewActivator(), 
-                new DefaultLanguageFactory(batchCompiler), 
+                new DefaultLanguageFactory(batchCompiler, settings), 
                 new CompiledViewHolder(), 
                 viewFolder, 
                 batchCompiler,

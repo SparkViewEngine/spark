@@ -90,7 +90,7 @@ namespace Spark
         [Test]
         public void CustomViewActivator()
         {
-            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+            var settings = new SparkSettings().SetBaseClassTypeName(typeof(StubSparkView));
 
             var sp = new ServiceCollection()
                 .AddSpark(settings)

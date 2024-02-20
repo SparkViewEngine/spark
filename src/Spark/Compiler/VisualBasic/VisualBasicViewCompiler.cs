@@ -20,13 +20,13 @@ using Spark.Compiler.VisualBasic.ChunkVisitors;
 
 namespace Spark.Compiler.VisualBasic
 {
-    public class VisualBasicViewCompiler(IBatchCompiler batchCompiler) : ViewCompiler
+    public class VisualBasicViewCompiler(IBatchCompiler batchCompiler, ISparkSettings settings) : ViewCompiler()
     {
         public override void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
             GenerateSourceCode(viewTemplates, allResources);
 
-            var assembly = batchCompiler.Compile(Debug, "visualbasic", null, new[] { SourceCode });
+            var assembly = batchCompiler.Compile(settings.Debug, "visualbasic", null, new[] { SourceCode }, settings.ExcludeAssemblies);
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 
@@ -41,25 +41,33 @@ namespace Spark.Compiler.VisualBasic
             source.AdjustDebugSymbols = false;
 
             var usingGenerator = new UsingNamespaceVisitor(source);
-            var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
-            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, NullBehaviour);
+            var baseClassGenerator = new BaseClassVisitor { BaseClass = settings.BaseClassTypeName };
+            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, settings.NullBehaviour);
 
             // needed for proper vb functionality
             source.WriteLine("Option Infer On");
 
             usingGenerator.UsingNamespace("Microsoft.VisualBasic");
-            foreach (var ns in UseNamespaces ?? Array.Empty<string>())
+            foreach (var ns in settings.UseNamespaces ?? Array.Empty<string>())
+            {
                 usingGenerator.UsingNamespace(ns);
+            }
 
             usingGenerator.UsingAssembly("Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-            foreach (var assembly in UseAssemblies ?? Array.Empty<string>())
+            foreach (var assembly in settings.UseAssemblies ?? Array.Empty<string>())
+            {
                 usingGenerator.UsingAssembly(assembly);
+            }
 
             foreach (var resource in allResources)
+            {
                 usingGenerator.Accept(resource);
+            }
 
             foreach (var resource in allResources)
+            {
                 baseClassGenerator.Accept(resource);
+            }
 
             var viewClassName = "View" + GeneratedViewId.ToString("n");
 
@@ -82,7 +90,10 @@ namespace Spark.Compiler.VisualBasic
                 // [SparkView] attribute
                 source.WriteLine("<Global.Spark.SparkViewAttribute( _");
                 if (TargetNamespace != null)
-                    source.WriteFormat("    TargetNamespace:=\"{0}\", _", TargetNamespace).WriteLine();
+                {
+                    source.WriteFormat("    TargetNamespace:=\"{0}\", _", this.TargetNamespace).WriteLine();
+                }
+
                 source.WriteLine("    Templates := New String() { _");
                 source.Write("      ").Write(string.Join(", _\r\n      ", 
                     Descriptor.Templates.Select(t => "\"" + SparkViewAttribute.ConvertToAttributeFormat(t) + "\"").ToArray()));
@@ -125,7 +136,9 @@ namespace Spark.Compiler.VisualBasic
 
             // properties and macros
             foreach (var resource in allResources)
+            {
                 globalsGenerator.Accept(resource);
+            }
 
             // public void RenderViewLevelx()
             int renderLevel = 0;
@@ -136,7 +149,7 @@ namespace Spark.Compiler.VisualBasic
                 source
                     .WriteLine("Private Sub RenderViewLevel{0}()", renderLevel)
                     .AddIndent();
-                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols, NullBehaviour);
+                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols, settings.NullBehaviour);
                 viewGenerator.Accept(viewTemplate);
                 source
                     .RemoveIndent()

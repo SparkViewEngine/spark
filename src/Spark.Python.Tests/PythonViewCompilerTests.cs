@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
+
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
@@ -28,17 +28,21 @@ namespace Spark.Python.Tests
     [TestFixture]
     public class PythonViewCompilerTests
     {
+        private ISparkSettings _settings;
         private PythonViewCompiler _compiler;
         private PythonLanguageFactory _languageFactory;
 
         [SetUp]
         public void Init()
         {
-            _compiler = new PythonViewCompiler
-                        {
-                            BaseClass = typeof(StubSparkView).FullName
-                        };
-            _languageFactory = new PythonLanguageFactory(new RoslynBatchCompiler());
+            _settings = new SparkSettings
+            {
+                BaseClassTypeName = typeof(StubSparkView).FullName
+            };
+
+            _compiler = new PythonViewCompiler(_settings);
+
+            _languageFactory = new PythonLanguageFactory(new RoslynBatchCompiler(), _settings);
 
             // Load up assemblies
             IronPython.Hosting.Python.CreateEngine();
@@ -86,7 +90,7 @@ namespace Spark.Python.Tests
         {
             var chunks = Chunks();
 
-            _compiler.BaseClass = "ThisIsTheBaseClass";
+            this._settings.BaseClassTypeName = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
 
             Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass"));
@@ -97,7 +101,7 @@ namespace Spark.Python.Tests
         {
             var chunks = Chunks(new ViewDataModelChunk { TModel = "ThisIsTheModelClass" });
 
-            _compiler.BaseClass = "ThisIsTheBaseClass";
+            this._settings.BaseClassTypeName = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
 
             Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass<ThisIsTheModelClass>"));

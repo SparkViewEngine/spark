@@ -36,7 +36,7 @@ namespace Spark.Compiler
         public void Init()
         {
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(StubSparkView));
+                .SetBaseClassTypeName(typeof(StubSparkView));
 
             var partialProvider = new DefaultPartialProvider();
 
@@ -48,7 +48,7 @@ namespace Spark.Compiler
                 settings,
                 new DefaultSyntaxProvider(settings),
                 new DefaultViewActivator(),
-                new DefaultLanguageFactory(batchCompiler),
+                new DefaultLanguageFactory(batchCompiler, settings),
                 new CompiledViewHolder(),
                 _viewFolder,
                 batchCompiler,

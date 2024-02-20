@@ -22,12 +22,10 @@ public class VisualBasicLink : IRoslynCompilationLink
             .WithOptimizationLevel(optimizationLevel)
             .WithPlatform(Platform.AnyCpu);
 
-        var compilation = VisualBasicCompilation.Create(
-            assemblyName,
-            syntaxTrees: syntaxTrees,
-            references: references,
-            options: options);
-
+        var compilation = VisualBasicCompilation.Create(assemblyName, options: options)
+            .AddSyntaxTrees(syntaxTrees)
+            .AddReferences(references);
+        
         EmitResult result;
         Assembly assembly = null;
 

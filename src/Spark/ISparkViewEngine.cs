@@ -25,7 +25,6 @@ namespace Spark
         IViewFolder ViewFolder { get; set; }
 
         IViewActivatorFactory ViewActivatorFactory { get; }
-        string DefaultPageBaseType { get; }
         ISparkSyntaxProvider SyntaxProvider { get; }
 
         ISparkViewEntry GetEntry(SparkViewDescriptor descriptor);

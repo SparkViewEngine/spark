@@ -29,7 +29,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             var settings = 
                 new SparkSettings()
-                    .SetPageBaseType(typeof(SparkView));
+                    .SetBaseClassTypeName(typeof(SparkView));
 
             settings.SetNullBehaviour(NullBehaviour.Strict);
 

@@ -41,7 +41,8 @@ namespace Spark.Compiler
         [Test]
         public void MakeAndCompile()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             DoCompileView(compiler, new[] { new SendLiteralChunk { Text = "hello world" } });
 
@@ -55,8 +56,9 @@ namespace Spark.Compiler
         [Test]
         public void UnsafeLiteralCharacters()
         {
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
             var text = "hello\t\r\n\"world";
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             DoCompileView(compiler, new[] { new SendLiteralChunk { Text = text } });
 
             Assert.That(compiler.SourceCode.Contains("Write(\"hello\\t\\r\\n\\\"world\")"));
@@ -70,7 +72,8 @@ namespace Spark.Compiler
         [Test]
         public void SimpleOutput()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             DoCompileView(compiler, new[] { new SendExpressionChunk { Code = "3 + 4" } });
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();
@@ -81,7 +84,8 @@ namespace Spark.Compiler
         [Test]
         public void LocalVariableDecl()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             DoCompileView(compiler, new Chunk[]
                                     {
                                         new LocalVariableChunk { Name = "i", Value = "5" }, 
@@ -96,7 +100,8 @@ namespace Spark.Compiler
         [Test]
         public void ForEachLoop()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             DoCompileView(compiler, new Chunk[]
                                     {
                                         new LocalVariableChunk {Name = "data", Value = "new[]{3,4,5}"},
@@ -122,7 +127,8 @@ namespace Spark.Compiler
         [Test]
         public void GlobalVariables()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             DoCompileView(compiler, new Chunk[]
                                     {
                                         new SendExpressionChunk{Code="title"},
@@ -141,9 +147,9 @@ namespace Spark.Compiler
         [Test]
         public void TargetNamespace()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler)
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings)
             {
-                BaseClass = "Spark.SparkViewBase",
                 Descriptor = new SparkViewDescriptor { TargetNamespace = "Testing.Target.Namespace" }
             };
 
@@ -157,7 +163,8 @@ namespace Spark.Compiler
         [Test]
         public void ProvideFullException()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             Assert.That(
                 () =>
@@ -173,7 +180,8 @@ namespace Spark.Compiler
         [Test]
         public void IfTrueCondition()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
@@ -196,7 +204,8 @@ namespace Spark.Compiler
         [Test]
         public void IfFalseCondition()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
@@ -219,7 +228,8 @@ namespace Spark.Compiler
         [Test]
         public void IfElseFalseCondition()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
             var falseChunks = new Chunk[] { new SendLiteralChunk { Text = "wasfalse" } };
@@ -244,7 +254,8 @@ namespace Spark.Compiler
         [Test]
         public void UnlessTrueCondition()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
@@ -267,7 +278,8 @@ namespace Spark.Compiler
         [Test]
         public void UnlessFalseCondition()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             var trueChunks = new Chunk[] { new SendLiteralChunk { Text = "wastrue" } };
 
@@ -290,11 +302,12 @@ namespace Spark.Compiler
         [Test]
         public void LenientSilentNullDoesNotCauseWarningCS0168()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler)
-                           {
-                               BaseClass = "Spark.Tests.Stubs.StubSparkView",
-                               NullBehaviour = NullBehaviour.Lenient
-                           };
+            var settings = new SparkSettings
+            {
+                BaseClassTypeName = "Spark.Tests.Stubs.StubSparkView",
+                NullBehaviour = NullBehaviour.Lenient
+            };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             
             var chunks = new Chunk[]
             {
@@ -310,11 +323,12 @@ namespace Spark.Compiler
         [Test]
         public void LenientOutputNullDoesNotCauseWarningCS0168()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler)
-                           {
-                               BaseClass = "Spark.Tests.Stubs.StubSparkView",
-                               NullBehaviour = NullBehaviour.Lenient
-                           };
+            var settings = new SparkSettings
+            {
+                BaseClassTypeName = "Spark.Tests.Stubs.StubSparkView",
+                NullBehaviour = NullBehaviour.Lenient
+            };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             var chunks = new Chunk[]
             {
                 new ViewDataChunk { Name = "comment", Type = "Spark.Tests.Models.Comment" },
@@ -329,11 +343,12 @@ namespace Spark.Compiler
         [Test]
         public void StrictNullUsesException()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler)
-                           {
-                               BaseClass = "Spark.Tests.Stubs.StubSparkView",
-                               NullBehaviour = NullBehaviour.Strict
-                           };
+            var settings = new SparkSettings
+            {
+                BaseClassTypeName = "Spark.Tests.Stubs.StubSparkView",
+                NullBehaviour = NullBehaviour.Strict
+            };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             
             var chunks = new Chunk[]
             {
@@ -351,11 +366,12 @@ namespace Spark.Compiler
         [Test]
         public void PageBaseTypeOverridesBaseClass()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler)
+            var settings = new SparkSettings
             {
-                BaseClass = "Spark.Tests.Stubs.StubSparkView",
+                BaseClassTypeName = "Spark.Tests.Stubs.StubSparkView",
                 NullBehaviour = NullBehaviour.Strict
             };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             DoCompileView(compiler, new Chunk[]
                                     {
@@ -372,11 +388,12 @@ namespace Spark.Compiler
         [Test]
         public void PageBaseTypeWorksWithOptionalModel()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler)
+            var settings = new SparkSettings
             {
-                BaseClass = "Spark.Tests.Stubs.StubSparkView",
+                BaseClassTypeName = "Spark.Tests.Stubs.StubSparkView",
                 NullBehaviour = NullBehaviour.Strict
             };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             DoCompileView(
                 compiler,
@@ -396,11 +413,12 @@ namespace Spark.Compiler
         [Test]
         public void PageBaseTypeWorksWithGenericParametersIncluded()
         {
-            var compiler = new CSharpViewCompiler(this.batchCompiler)
+            var settings = new SparkSettings
             {
-                BaseClass = "Spark.Tests.Stubs.StubSparkView",
+                BaseClassTypeName = "Spark.Tests.Stubs.StubSparkView",
                 NullBehaviour = NullBehaviour.Strict
             };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
             DoCompileView(compiler, new Chunk[]
                                     {
@@ -418,24 +436,25 @@ namespace Spark.Compiler
         [Test]
         public void Markdown()
         {
-          var compiler = new CSharpViewCompiler(this.batchCompiler) { BaseClass = "Spark.SparkViewBase" };
+            var settings = new SparkSettings { BaseClassTypeName = "Spark.SparkViewBase" };
+            var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
 
-          var innerChunks = new Chunk[] { new SendLiteralChunk { Text = "*test*" } };
+            var innerChunks = new Chunk[] { new SendLiteralChunk { Text = "*test*" } };
 
-          DoCompileView(
-              compiler,
-              new Chunk[]
-              {
-                  new MarkdownChunk { Body = innerChunks }
-              });
+            DoCompileView(
+                compiler,
+                new Chunk[]
+                {
+                    new MarkdownChunk { Body = innerChunks }
+                });
 
-          Assert.That(compiler.SourceCode, Does.Contain("using(MarkdownOutputScope())"));
-          Assert.That(compiler.SourceCode, Does.Contain("Output.Write(\"*test*\");"));
+            Assert.That(compiler.SourceCode, Does.Contain("using(MarkdownOutputScope())"));
+            Assert.That(compiler.SourceCode, Does.Contain("Output.Write(\"*test*\");"));
 
-          var instance = compiler.CreateInstance();
-          var contents = instance.RenderView().Trim();
+            var instance = compiler.CreateInstance();
+            var contents = instance.RenderView().Trim();
 
-          Assert.That(contents, Is.EqualTo("<p><em>test</em></p>"));
+            Assert.That(contents, Is.EqualTo("<p><em>test</em></p>"));
         }
     }
 }

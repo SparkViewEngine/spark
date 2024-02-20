@@ -32,7 +32,7 @@ namespace Spark
         public void Init()
         {
             _settings = new SparkSettings()
-                .SetPageBaseType(typeof(StubSparkView));
+                .SetBaseClassTypeName(typeof(StubSparkView));
 
             var sp = new ServiceCollection()
                 .AddSpark(_settings)
@@ -57,7 +57,7 @@ namespace Spark
         public void PrefixFromSettings()
         {
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(StubSparkView))
+                .SetBaseClassTypeName(typeof(StubSparkView))
                 .SetPrefix("s");
 
             var sp = new ServiceCollection()
@@ -183,7 +183,7 @@ namespace Spark
         public void SectionAsSegmentAndRenderPrefixes()
         {
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(StubSparkView))
+                .SetBaseClassTypeName(typeof(StubSparkView))
                 .SetParseSectionTagAsSegment(true);
 
             var sp = new ServiceCollection()
@@ -214,7 +214,7 @@ namespace Spark
         [Test]
         public void MacroAndContentPrefixesFromSettings()
         {
-            this._settings.SetPageBaseType(typeof(StubSparkView))
+            this._settings.SetBaseClassTypeName(typeof(StubSparkView))
                 .SetPrefix("s");
 
             var view =

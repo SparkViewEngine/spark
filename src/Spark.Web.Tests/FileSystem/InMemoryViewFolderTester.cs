@@ -126,7 +126,7 @@ namespace Spark.FileSystem
                 { Path.Combine("home", "index.spark"), "<p>Hello world</p>" }
             };
 
-            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+            var settings = new SparkSettings().SetBaseClassTypeName(typeof(StubSparkView));
 
             var sp = new ServiceCollection()
                 .AddSpark(settings)
@@ -177,7 +177,7 @@ namespace Spark.FileSystem
             Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));
             Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "ja.spark")), Is.EqualTo("日本語"));
             
-            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+            var settings = new SparkSettings().SetBaseClassTypeName(typeof(StubSparkView));
 
             var sp = new ServiceCollection()
                 .AddSpark(settings)

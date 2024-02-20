@@ -21,7 +21,7 @@ using Spark.Compiler.Javascript.ChunkVisitors;
 
 namespace Spark.Compiler.Javascript
 {
-    public class JavascriptViewCompiler : ViewCompiler
+    public class JavascriptViewCompiler() : ViewCompiler()
     {
         public override void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
@@ -45,10 +45,15 @@ namespace Spark.Compiler.Javascript
 
             // convert some syntax from csharp to javascript
             foreach (var template in viewTemplates)
+            {
                 anonymousTypeVisitor.Accept(template);
+            }
+
             foreach (var template in allResources)
+            {
                 anonymousTypeVisitor.Accept(template);
-                
+            }
+
             var cumulativeName = "window.Spark";
             foreach (var part in nameParts.Where(p => p != "~"))
             {
@@ -119,7 +124,10 @@ namespace Spark.Compiler.Javascript
         {
             var safeName = name;
             if (safeName.EndsWith(".spark"))
+            {
                 safeName = safeName.Substring(0, safeName.Length - ".spark".Length);
+            }
+
             return safeName.Replace(".", "");
         }
     }

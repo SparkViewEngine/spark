@@ -18,12 +18,9 @@ using Spark.Ruby.Compiler;
 
 namespace Spark.Ruby
 {
-    public class RubyLanguageFactory : DefaultLanguageFactory
+    public class RubyLanguageFactory(IBatchCompiler batchCompiler, ISparkSettings settings)
+        : DefaultLanguageFactory(batchCompiler, settings)
     {
-        public RubyLanguageFactory(IBatchCompiler batchCompiler) : base(batchCompiler)
-        {
-        }
-
         private RubyEngineManager _RubyEngineManager;
 
         public RubyEngineManager RubyEngineManager
@@ -43,23 +40,14 @@ namespace Spark.Ruby
             {
                 case LanguageType.Default:
                 case LanguageType.Ruby:
-                    viewCompiler = new RubyViewCompiler();
+                    viewCompiler = new RubyViewCompiler(settings);
                     break;
                 default:
                     return base.CreateViewCompiler(engine, descriptor);
             }
 
-            var pageBaseType = engine.Settings.PageBaseType;
-            if (string.IsNullOrEmpty(pageBaseType))
-                pageBaseType = engine.DefaultPageBaseType;
-
-            viewCompiler.BaseClass = pageBaseType;
             viewCompiler.Descriptor = descriptor;
-            viewCompiler.Debug = engine.Settings.Debug;
-            viewCompiler.NullBehaviour = engine.Settings.NullBehaviour;
-            viewCompiler.UseAssemblies = engine.Settings.UseAssemblies;
-            viewCompiler.UseNamespaces = engine.Settings.UseNamespaces;
-
+            
             return viewCompiler;
         }
 

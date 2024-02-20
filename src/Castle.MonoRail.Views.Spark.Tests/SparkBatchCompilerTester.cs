@@ -36,7 +36,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         public void Init()
         {
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(SparkView));
+                .SetBaseClassTypeName(typeof(SparkView));
 
             var services = new StubMonoRailServices();
             services.AddService(typeof(ISparkSettings), settings);

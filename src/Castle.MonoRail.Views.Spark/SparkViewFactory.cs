@@ -62,7 +62,7 @@ namespace Castle.MonoRail.Views.Spark
                     var settings =
                         (ISparkSettings)this.serviceProvider.GetService(typeof(ISparkSettings))
                         ?? new SparkSettings()
-                            .SetPageBaseType(typeof(SparkView));
+                            .SetBaseClassTypeName(typeof(SparkView));
 
                     var partialProvider = new DefaultPartialProvider();
 
@@ -75,7 +75,7 @@ namespace Castle.MonoRail.Views.Spark
                             settings,
                             new DefaultSyntaxProvider(settings),
                             this._viewActivatorFactory ?? new DefaultViewActivator(),
-                            new DefaultLanguageFactory(batchCompiler),
+                            new DefaultLanguageFactory(batchCompiler, settings),
                             new CompiledViewHolder(),
                             viewFolder,
                             batchCompiler,

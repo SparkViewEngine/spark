@@ -70,8 +70,6 @@ namespace Spark
             SparkExtensionFactory = sparkExtensionFactory;
         }
 
-        public string DefaultPageBaseType => Settings.PageBaseType;
-
         private IViewFolder InitialiseAggregateViewFolder(ISparkSettings settings, IViewFolder value)
         {
             var aggregateViewFolder = value;
@@ -257,7 +255,7 @@ namespace Spark
                 batch.Add(entry);
             }
 
-            var assembly = BatchCompiler.Compile(Settings.Debug, "csharp", outputAssembly, sourceCode);
+            var assembly = BatchCompiler.Compile(Settings.Debug, "csharp", outputAssembly, sourceCode, Settings.ExcludeAssemblies);
 
             foreach (var entry in batch)
             {
@@ -293,7 +291,7 @@ namespace Spark
                 {
                     Descriptor = descriptor,
                     Loader = this.CreateViewLoader(),
-                    Compiler = new CSharpViewCompiler(this.BatchCompiler) { CompiledType = type },
+                    Compiler = new CSharpViewCompiler(this.BatchCompiler, this.Settings) { CompiledType = type },
                     Activator = ViewActivatorFactory.Register(type)
                 };
 

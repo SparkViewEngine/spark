@@ -46,7 +46,7 @@ namespace Spark.Parser
         [Test]
         public void UsingCSharpSyntaxInsideEngine()
         {
-            var settings = new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
+            var settings = new SparkSettings().SetBaseClassTypeName("Spark.Tests.Stubs.StubSparkView");
 
             var sp = new ServiceCollection()
                 .AddSpark(settings)
@@ -70,7 +70,7 @@ namespace Spark.Parser
         [Test]
         public void StatementAndExpressionInCode()
         {
-            var settings = new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
+            var settings = new SparkSettings().SetBaseClassTypeName("Spark.Tests.Stubs.StubSparkView");
 
             var sp = new ServiceCollection()
                 .AddSpark(settings)

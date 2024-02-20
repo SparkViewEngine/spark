@@ -35,7 +35,7 @@ namespace Spark.Configuration
             Assert.IsTrue(config.Compilation.Debug);
             Assert.AreEqual(NullBehaviour.Strict, config.Compilation.NullBehaviour);
             Assert.AreEqual(1, config.Compilation.Assemblies.Count);
-            Assert.AreEqual(typeof(StubSparkView).FullName, config.Pages.PageBaseType);
+            Assert.AreEqual(typeof(StubSparkView).FullName, config.Pages.BaseClassTypeName);
             Assert.AreEqual(1, config.Pages.Namespaces.Count);
         }
 
@@ -79,7 +79,7 @@ namespace Spark.Configuration
             var settings = new SparkSettings()
                 .AddNamespace("System.Web")
                 .AddAssembly("System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
-                .SetPageBaseType(typeof(StubSparkView));
+                .SetBaseClassTypeName(typeof(StubSparkView));
 
             var viewFolder = new InMemoryViewFolder
             {

@@ -44,9 +44,9 @@ namespace Spark.Web.Mvc
         {
             Settings = settings;
 
-            if (string.IsNullOrEmpty(settings.PageBaseType))
+            if (string.IsNullOrEmpty(settings.BaseClassTypeName))
             {
-                settings.PageBaseType = typeof(SparkView).FullName;
+                settings.BaseClassTypeName = typeof(SparkView).FullName;
             }
 
             Engine = viewEngine;

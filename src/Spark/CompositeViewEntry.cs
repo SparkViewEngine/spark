@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 using Spark.Compiler;
 using Spark.Parser;
 
 namespace Spark
 {
+    [DebuggerDisplay("{ViewId}")]
     public class CompositeViewEntry : ISparkViewEntry
     {
-        public CompositeViewEntry()
-        {
-            ViewId = Guid.NewGuid();
-        }
-
-        public Guid ViewId { get; set; }
+        public Guid ViewId { get; set; } = Guid.NewGuid();
 
         public SparkViewDescriptor Descriptor { get; set; }
         public ViewLoader Loader { get; set; }
         public ViewCompiler Compiler { get; set; }
         public IViewActivator Activator { get; set; }
         public ISparkLanguageFactory LanguageFactory { get; set; }
-
 
         public ISparkView CreateInstance()
         {
@@ -38,14 +32,8 @@ namespace Spark
             throw new System.NotImplementedException();
         }
 
-        public string SourceCode
-        {
-            get { throw new System.NotImplementedException(); }
-        }
+        public string SourceCode => throw new System.NotImplementedException();
 
-        public IList<SourceMapping> SourceMappings
-        {
-            get { throw new System.NotImplementedException(); }
-        }
+        public IList<SourceMapping> SourceMappings => throw new System.NotImplementedException();
     }
 }

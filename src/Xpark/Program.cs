@@ -47,7 +47,7 @@ a _global.spark file with common namespaces, macros, etc.
             viewFolder.Append(new SubViewFolder(viewFolder, "Shared"));
 
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(SparkView));
+                .SetBaseClassTypeName(typeof(SparkView));
 
             var partialProvider = new DefaultPartialProvider();
 
@@ -57,7 +57,7 @@ a _global.spark file with common namespaces, macros, etc.
                 settings,
                 new DefaultSyntaxProvider(settings),
                 new DefaultViewActivator(),
-                new DefaultLanguageFactory(batchCompiler),
+                new DefaultLanguageFactory(batchCompiler, settings),
                 new CompiledViewHolder(),
                 viewFolder,
                 batchCompiler,

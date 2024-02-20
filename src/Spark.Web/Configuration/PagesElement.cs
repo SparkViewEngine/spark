@@ -19,11 +19,11 @@ namespace Spark.Configuration
 {
     public class PagesElement : ConfigurationElement
     {
-        [ConfigurationProperty("pageBaseType")]
-        public string PageBaseType
+        [ConfigurationProperty("baseClassTypeName")]
+        public string BaseClassTypeName
         {
-            get => (string)this["pageBaseType"];
-            set => this["pageBaseType"] = value;
+            get => (string)this["baseClassTypeName"];
+            set => this["baseClassTypeName"] = value;
         }
 
         [ConfigurationProperty("prefix")]

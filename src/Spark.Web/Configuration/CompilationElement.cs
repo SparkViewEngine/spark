@@ -53,5 +53,13 @@ namespace Spark.Configuration
             get => (AssemblyElementCollection)this["assemblies"];
             set => this["assemblies"] = value;
         }
+
+        [ConfigurationProperty("excludeAssemblies")]
+        [ConfigurationCollection(typeof(ExcludeAssemblyElementCollection))]
+        public ExcludeAssemblyElementCollection ExcludeAssemblies
+        {
+            get => (ExcludeAssemblyElementCollection)this["excludeAssemblies"];
+            set => this["excludeAssemblies"] = value;
+        }
     }
 }

@@ -78,7 +78,7 @@ namespace Castle.MonoRail.Views.Spark.Install
             var settings =
                 (ISparkSettings)config.GetSection("spark") ??
                 new SparkSettings()
-                    .SetPageBaseType(typeof(SparkView));
+                    .SetBaseClassTypeName(typeof(SparkView));
 
             var services = new StubMonoRailServices();
             services.AddService(typeof(ISparkSettings), settings);

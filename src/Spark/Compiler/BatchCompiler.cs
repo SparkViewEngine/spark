@@ -25,10 +25,11 @@ public class CodeDomBatchCompiler : IBatchCompiler
     /// <param name="languageOrExtension">E.g. "csharp" or "visualbasic"</param>
     /// <param name="outputAssembly">E.g. "File.Name.dll" (optional)</param>
     /// <param name="sourceCode">The source code to compile.</param>
+    /// <param name="excludeAssemblies">The full name of assemblies to exclude.</param>
     /// <returns></returns>
     /// <exception cref="CompilerException"></exception>
     /// <exception cref="CodeDomCompilerException"></exception>
-    public Assembly Compile(bool debug, string languageOrExtension, string outputAssembly, IEnumerable<string> sourceCode)
+    public Assembly Compile(bool debug, string languageOrExtension, string outputAssembly, IEnumerable<string> sourceCode, IEnumerable<string> excludeAssemblies)
     {
         var language = languageOrExtension;
         if (CodeDomProvider.IsDefinedLanguage(languageOrExtension) == false &&
@@ -69,6 +70,11 @@ public class CodeDomBatchCompiler : IBatchCompiler
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             if (assembly.IsDynamic())
+            {
+                continue;
+            }
+
+            if (excludeAssemblies.Contains(assembly.FullName))
             {
                 continue;
             }
@@ -302,8 +308,9 @@ public class RoslynBatchCompiler : IBatchCompiler
     /// <param name="languageOrExtension">E.g. "csharp" or "visualbasic"</param>
     /// <param name="outputAssembly">E.g. "File.Name.dll" (optional)</param>
     /// <param name="sourceCode">The source code to compile.</param>
+    /// <param name="excludeAssemblies">The full name of assemblies to exclude.</param>
     /// <returns></returns>
-    public Assembly Compile(bool debug, string languageOrExtension, string outputAssembly, IEnumerable<string> sourceCode)
+    public Assembly Compile(bool debug, string languageOrExtension, string outputAssembly, IEnumerable<string> sourceCode, IEnumerable<string> excludeAssemblies)
     {
         Assembly assembly = null;
 
@@ -330,11 +337,17 @@ public class RoslynBatchCompiler : IBatchCompiler
         this.AddNetCoreDefaultReferences();
 #endif
 
+        // TODO: Is this needed?
         this.AddAssembly(typeof(System.Drawing.Color));
 
         foreach (var currentAssembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             if (currentAssembly.IsDynamic())
+            {
+                continue;
+            }
+
+            if (excludeAssemblies.Contains(currentAssembly.FullName))
             {
                 continue;
             }

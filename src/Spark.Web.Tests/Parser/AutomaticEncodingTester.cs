@@ -42,7 +42,7 @@ namespace Spark.Parser
         public void Init(bool automaticEncoding)
         {
             this._settings = new SparkSettings()
-                .SetPageBaseType(typeof(StubSparkView))
+                .SetBaseClassTypeName(typeof(StubSparkView))
                 .SetAutomaticEncoding(automaticEncoding);
             
             this._viewFolder = new InMemoryViewFolder();

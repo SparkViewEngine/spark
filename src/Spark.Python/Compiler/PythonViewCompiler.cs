@@ -23,14 +23,14 @@ using GlobalMembersVisitor=Spark.Python.Compiler.ChunkVisitors.GlobalMembersVisi
 
 namespace Spark.Python.Compiler
 {
-    public class PythonViewCompiler : ViewCompiler
+    public class PythonViewCompiler(ISparkSettings settings) : ViewCompiler
     {
         public override void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
             GenerateSourceCode(viewTemplates, allResources);
 
             var compiler = new RoslynBatchCompiler();
-            var assembly = compiler.Compile(Debug, "csharp", null, new[] { SourceCode });
+            var assembly = compiler.Compile(settings.Debug, "csharp", null, new[] { SourceCode }, settings.ExcludeAssemblies);
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 
@@ -83,13 +83,13 @@ namespace Spark.Python.Compiler
                 }
             }
 
-            var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
+            var baseClassGenerator = new BaseClassVisitor { BaseClass = settings.BaseClassTypeName };
             foreach (var resource in allResources)
             {
                 baseClassGenerator.Accept(resource);
             }
 
-            BaseClass = baseClassGenerator.BaseClassTypeName;
+            var baseClass = baseClassGenerator.BaseClassTypeName;
 
             var source = new StringBuilder();
 
@@ -121,7 +121,7 @@ namespace Spark.Python.Compiler
                 source.AppendLine("    })]");
             }
 
-            source.Append("public class ").Append(viewClassName).Append(" : ").Append(BaseClass).AppendLine(", global::Spark.Python.IScriptingSparkView");
+            source.Append("public class ").Append(viewClassName).Append(" : ").Append(baseClass).AppendLine(", global::Spark.Python.IScriptingSparkView");
             source.AppendLine("{");
             
             source.Append("static System.Guid _generatedViewId = new System.Guid(\"").Append(GeneratedViewId).AppendLine("\");");

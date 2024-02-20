@@ -44,11 +44,9 @@ public class CSharpLink : IRoslynCompilationLink
             .WithOptimizationLevel(optimizationLevel)
             .WithPlatform(Platform.AnyCpu);
 
-        var compilation = CSharpCompilation.Create(
-            assemblyName,
-            syntaxTrees: syntaxTrees,
-            references: references,
-            options: options);
+        var compilation = CSharpCompilation.Create(assemblyName, options: options)
+            .AddSyntaxTrees(syntaxTrees)
+            .AddReferences(references);
 
         EmitResult result;
         Assembly assembly = null;

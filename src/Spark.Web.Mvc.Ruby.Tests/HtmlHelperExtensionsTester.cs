@@ -41,9 +41,11 @@ namespace Spark.Web.Mvc.Ruby.Tests
         [Test]
         public void BuildingScriptHeader()
         {
+            var settings = new SparkSettings();
+
             var batchCompiler = new RoslynBatchCompiler();
 
-            var languageFactory = new RubyLanguageFactoryWithExtensions(batchCompiler);
+            var languageFactory = new RubyLanguageFactoryWithExtensions(batchCompiler, settings);
 
             var header = languageFactory.BuildScriptHeader(languageFactory.GetType().Assembly);
 

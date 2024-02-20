@@ -29,7 +29,7 @@ namespace Spark.Python.Tests
         [SetUp]
         public void Init()
         {
-            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+            var settings = new SparkSettings().SetBaseClassTypeName(typeof(StubSparkView));
 
             var sp = new ServiceCollection()
                 .AddSpark(settings)

@@ -36,7 +36,7 @@ namespace Spark
         public void Init()
         {
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(Tests.Stubs.StubSparkView));
+                .SetBaseClassTypeName(typeof(Tests.Stubs.StubSparkView));
 
             var sp = new ServiceCollection()
                 .AddSpark(settings)

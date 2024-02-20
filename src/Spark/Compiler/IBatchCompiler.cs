@@ -12,7 +12,8 @@ namespace Spark.Compiler
         /// <param name="languageOrExtension">E.g. "csharp" or "visualbasic"</param>
         /// <param name="outputAssembly">E.g. "File.Name.dll" (optional)</param>
         /// <param name="sourceCode">The source code to compile.</param>
+        /// <param name="excludeAssemblies">The full names of assemblies to exclude.</param>
         /// <returns></returns>
-        Assembly Compile(bool debug, string languageOrExtension, string outputAssembly, IEnumerable<string> sourceCode);
+        Assembly Compile(bool debug, string languageOrExtension, string outputAssembly, IEnumerable<string> sourceCode, IEnumerable<string> excludeAssemblies);
     }
 }

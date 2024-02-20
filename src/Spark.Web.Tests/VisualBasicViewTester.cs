@@ -21,7 +21,7 @@ namespace Spark
         {
             var settings = new SparkSettings()
                 .SetDefaultLanguage(LanguageType.VisualBasic)
-                .SetPageBaseType(typeof(StubSparkView));
+                .SetBaseClassTypeName(typeof(StubSparkView));
 
             var sp = new ServiceCollection()
                 .AddSpark(settings)

@@ -45,7 +45,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             services.AddService(typeof(IViewComponentRegistry), viewComponentFactory.Registry);
 
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(SparkView));
+                .SetBaseClassTypeName(typeof(SparkView));
             services.AddService(typeof(ISparkSettings), settings);
 
             services.AddService(typeof(IResourcePathManager), new DefaultResourcePathManager(settings));

@@ -20,13 +20,13 @@ using Spark.Compiler.CSharp.ChunkVisitors;
 
 namespace Spark.Compiler.CSharp
 {
-    public class CSharpViewCompiler(IBatchCompiler compiler) : ViewCompiler
+    public class CSharpViewCompiler(IBatchCompiler compiler, ISparkSettings settings) : ViewCompiler()
     {
         public override void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
             GenerateSourceCode(viewTemplates, allResources);
 
-            var assembly = compiler.Compile(Debug, "csharp", null, new[] { SourceCode });
+            var assembly = compiler.Compile(settings.Debug, "csharp", null, new[] { SourceCode }, settings.ExcludeAssemblies);
 
             CompiledType = assembly.GetType(ViewClassFullName);
         }
@@ -41,16 +41,16 @@ namespace Spark.Compiler.CSharp
             var source = new SourceWriter(writer);
 
             var usingGenerator = new UsingNamespaceVisitor(source);
-            var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
-            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, NullBehaviour);
+            var baseClassGenerator = new BaseClassVisitor { BaseClass = settings.BaseClassTypeName };
+            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, settings.NullBehaviour);
 
             // using <namespaces>;
-            foreach (var ns in UseNamespaces ?? Array.Empty<string>())
+            foreach (var ns in settings.UseNamespaces ?? Array.Empty<string>())
             {
                 usingGenerator.UsingNamespace(ns);
             }
 
-            foreach (var assembly in UseAssemblies ?? Array.Empty<string>())
+            foreach (var assembly in settings.UseAssemblies ?? Array.Empty<string>())
             {
                 usingGenerator.UsingAssembly(assembly);
             }
@@ -162,7 +162,7 @@ namespace Spark.Compiler.CSharp
                 source.Write("private void RenderViewLevel").Write(renderLevel.ToString()).WriteLine("()");
 
                 source.WriteLine("{").AddIndent();
-                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols, NullBehaviour);
+                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols, settings.NullBehaviour);
                 viewGenerator.Accept(viewTemplate);
                 source.RemoveIndent().WriteLine("}");
                 ++renderLevel;
