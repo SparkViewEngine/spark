@@ -13,7 +13,6 @@
 // limitations under the License.
 // 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using Spark.Bindings;
@@ -78,7 +77,7 @@ namespace Spark
             {
                 foreach (var viewFolderSettings in settings.ViewFolders)
                 {
-                    IViewFolder viewFolder = this.ActivateViewFolder(viewFolderSettings);
+                    IViewFolder viewFolder = viewFolderSettings.ActivateViewFolder();
                     
                     if (!string.IsNullOrEmpty(viewFolderSettings.Subfolder))
                     {
@@ -90,44 +89,6 @@ namespace Spark
             }
             
             return aggregateViewFolder;
-        }
-
-        private IViewFolder ActivateViewFolder(IViewFolderSettings viewFolderSettings)
-        {
-            var type = Type.GetType(viewFolderSettings.Type);
-            
-            ConstructorInfo bestConstructor = null;
-            foreach (var constructor in type.GetConstructors())
-            {
-                if (bestConstructor == null || bestConstructor.GetParameters().Length < constructor.GetParameters().Length)
-                {
-                    if (constructor.GetParameters().All(param => viewFolderSettings.Parameters.ContainsKey(param.Name)))
-                    {
-                        bestConstructor = constructor;
-                    }
-                }
-            }
-
-            if (bestConstructor == null)
-            {
-                throw new MissingMethodException($"No suitable constructor for {type.FullName} located");
-            }
-
-            var args = bestConstructor.GetParameters()
-                .Select(param => this.ChangeType(viewFolderSettings, param))
-                .ToArray();
-
-            return (IViewFolder)Activator.CreateInstance(type, args);
-        }
-
-        private object ChangeType(IViewFolderSettings viewFolderSettings, ParameterInfo param)
-        {
-            if (param.ParameterType == typeof(Assembly))
-            {
-                return Assembly.Load(viewFolderSettings.Parameters[param.Name]);
-            }
-
-            return Convert.ChangeType(viewFolderSettings.Parameters[param.Name], param.ParameterType);
         }
 
         public ISparkViewEntry GetEntry(SparkViewDescriptor descriptor)
