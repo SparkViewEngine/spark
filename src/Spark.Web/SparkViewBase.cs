@@ -242,5 +242,4 @@ namespace Spark
             render();
         }
     }
-
 }
