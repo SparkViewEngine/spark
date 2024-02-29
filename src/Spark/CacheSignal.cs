@@ -19,7 +19,7 @@ namespace Spark
                 lock (this)
                 {
                     _changed += value;
-                    if (_enabled) 
+                    if (_enabled)
                         return;
 
                     Enable();
@@ -31,7 +31,7 @@ namespace Spark
                 lock (this)
                 {
                     _changed -= value;
-                    if (_enabled != true || ChangedIsEmpty() == false) 
+                    if (_enabled != true || ChangedIsEmpty() == false)
                         return;
 
                     Disable();
@@ -42,7 +42,7 @@ namespace Spark
 
         private bool ChangedIsEmpty()
         {
-            return _changed == null || 
+            return _changed == null ||
                    _changed.GetInvocationList().Length == 0;
         }
 
@@ -52,7 +52,7 @@ namespace Spark
         /// to call FireChanged.
         /// </summary>
         protected virtual void Enable()
-        {            
+        {
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Spark
         /// when no cache dependencies remain listenning to the signal.
         /// </summary>
         protected virtual void Disable()
-        {            
+        {
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Spark
         /// </summary>
         public void FireChanged()
         {
-            if (_changed != null) 
+            if (_changed != null)
                 _changed(this, EventArgs.Empty);
         }
     }

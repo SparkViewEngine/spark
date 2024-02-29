@@ -32,7 +32,7 @@ namespace Castle.MonoRail.Views.Spark.Wrappers
             }
             else
             {
-                _fallbackCacheService = new DefaultCacheService(context.UnderlyingContext.Cache);
+                _fallbackCacheService = new WebCacheService(context.UnderlyingContext.Cache);
             }
         }
 

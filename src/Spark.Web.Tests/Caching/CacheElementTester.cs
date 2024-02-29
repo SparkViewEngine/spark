@@ -553,7 +553,6 @@ foo
 <p>2</p>
 </div>"));
             Assert.That(calls, Is.EqualTo(2));
-
         }
     }
 }

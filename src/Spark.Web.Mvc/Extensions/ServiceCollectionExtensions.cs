@@ -69,7 +69,7 @@ namespace Spark.Web.Mvc.Extensions
                 {
                     if (HttpContext.Current != null && HttpContext.Current.Cache != null)
                     {
-                        return new DefaultCacheService(HttpContext.Current.Cache);
+                        return new WebCacheService(HttpContext.Current.Cache);
                     }
 
                     return null;

@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Web.Caching;
 
-namespace Spark.Caching
+namespace Spark
 {
-    public class DefaultCacheService : ICacheService
+    public class WebCacheService : ICacheService
     {
-        private readonly Cache _cache;
+        private readonly Cache cache;
 
-        public DefaultCacheService(Cache cache)
+        public WebCacheService(Cache cache)
         {
-            _cache = cache;
+            this.cache = cache;
         }
 
         public object Get(string identifier)
         {
-            return _cache.Get(identifier);
+            return this.cache.Get(identifier);
         }
 
         public void Store(string identifier, CacheExpires expires, ICacheSignal signal, object item)
         {
-            _cache.Insert(
+            this.cache.Insert(
                 identifier,
                 item,
                 SignalDependency.For(signal),

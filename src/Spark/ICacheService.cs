@@ -1,5 +1,3 @@
-using System;
-
 namespace Spark
 {
     public interface ICacheService

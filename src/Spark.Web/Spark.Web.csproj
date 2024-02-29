@@ -29,9 +29,6 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MarkdownSharp" Version="2.0.5" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Spark\Spark.csproj" />
   </ItemGroup>
   <ItemGroup>
