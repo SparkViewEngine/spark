@@ -516,7 +516,7 @@ namespace Spark.Web.Mvc.Tests
             var viewEngine = sp.GetService<ISparkViewEngine>();
             var viewFolder = sp.GetService<IViewFolder>();
             var descriptorBuilder = sp.GetService<IDescriptorBuilder>();
-            var cacheServiceProvider = sp.GetService<ICacheServiceProvider>();
+            var cacheService = sp.GetService<ICacheService>();
             var viewActivatorFactory = sp.GetService<IViewActivatorFactory>();
 
             Assert.AreSame(settings, viewFactory.Settings);
@@ -525,7 +525,7 @@ namespace Spark.Web.Mvc.Tests
             Assert.AreSame(viewFolder, viewEngine.ViewFolder);
             Assert.AreSame(viewFolder, viewFactory.Engine.ViewFolder);
             Assert.AreSame(descriptorBuilder, viewFactory.DescriptorBuilder);
-            Assert.AreSame(cacheServiceProvider, viewFactory.CacheServiceProvider);
+            Assert.AreSame(cacheService, viewFactory.CacheService);
             Assert.AreSame(viewActivatorFactory, viewFactory.ViewActivatorFactory);
         }
 
@@ -705,6 +705,7 @@ namespace Spark.Web.Mvc.Tests
         {
             public ActionResult Header()
             {
+                // ReSharper disable once Mvc.ViewNotResolved
                 return View("FuturesRenderActionCanRunThroughItsProcess_Header");
             }
         }

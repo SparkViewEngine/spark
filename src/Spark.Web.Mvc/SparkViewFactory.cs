@@ -31,7 +31,7 @@ namespace Spark.Web.Mvc
         public ISparkViewEngine Engine { get; protected set; }
         public IDescriptorBuilder DescriptorBuilder { get; protected set; }
         public IResourcePathManager ResourcePathManager { get; protected set; }
-        public ICacheServiceProvider CacheServiceProvider { get; protected set; }
+        public ICacheService CacheService { get; protected set; }
 
         private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> _cache;
         private readonly ViewEngineResult _cacheMissResult;
@@ -40,7 +40,7 @@ namespace Spark.Web.Mvc
             ISparkViewEngine viewEngine,
             IDescriptorBuilder descriptorBuilder,
             IResourcePathManager resourcePathManager,
-            ICacheServiceProvider cacheServiceProvider)
+            ICacheService cacheService)
         {
             Settings = settings;
 
@@ -52,7 +52,7 @@ namespace Spark.Web.Mvc
             Engine = viewEngine;
             DescriptorBuilder = descriptorBuilder;
             ResourcePathManager = resourcePathManager;
-            CacheServiceProvider = cacheServiceProvider;
+            CacheService = cacheService;
 
             _cache = new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
             _cacheMissResult = new ViewEngineResult(Array.Empty<string>());
@@ -108,7 +108,7 @@ namespace Spark.Web.Mvc
             {
                 if (TryGetCacheValue(descriptorParams, out entry) && entry.IsCurrent())
                 {
-                    return BuildResult(controllerContext.RequestContext, entry);
+                    return BuildResult(entry);
                 }
 
                 return _cacheMissResult;
@@ -127,7 +127,7 @@ namespace Spark.Web.Mvc
             
             SetCacheValue(descriptorParams, entry);
 
-            return BuildResult(controllerContext.RequestContext, entry);
+            return BuildResult(entry);
         }
 
         private bool TryGetCacheValue(BuildDescriptorParams descriptorParams, out ISparkViewEntry entry)
@@ -140,14 +140,14 @@ namespace Spark.Web.Mvc
             lock (_cache) _cache[descriptorParams] = entry;
         }
 
-        private ViewEngineResult BuildResult(RequestContext requestContext, ISparkViewEntry entry)
+        private ViewEngineResult BuildResult(ISparkViewEntry entry)
         {
             var view = (IView)entry.CreateInstance();
             
             if (view is SparkView sparkView)
             {
                 sparkView.ResourcePathManager = ResourcePathManager;
-                sparkView.CacheService = CacheServiceProvider.GetCacheService(requestContext);
+                sparkView.CacheService = CacheService;
             }
 
             return new ViewEngineResult(view, this);

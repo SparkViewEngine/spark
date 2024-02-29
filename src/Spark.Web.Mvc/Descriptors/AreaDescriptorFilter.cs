@@ -24,7 +24,7 @@ namespace Spark.Web.Mvc.Descriptors
                        : locations;
         }
 
-
+        
         private static string GetAreaName(RouteBase route)
         {
             var routeWithArea = route as IRouteWithArea;

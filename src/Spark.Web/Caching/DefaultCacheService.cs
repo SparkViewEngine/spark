@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web.Caching;
 
 namespace Spark.Caching
@@ -60,7 +57,5 @@ namespace Spark.Caching
                 _signal.Changed -= SignalChanged;
             }
         }
-
     }
-
 }
