@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
@@ -27,17 +26,20 @@ namespace Spark.Ruby.Tests
     [TestFixture]
     public class RubyViewCompilerTests
     {
+        private ISparkSettings _settings;
         private RubyViewCompiler _compiler;
         private RubyLanguageFactory _languageFactory;
 
         [SetUp]
         public void Init()
         {
-            _compiler = new RubyViewCompiler
-                        {
-                            BaseClass = typeof(StubSparkView).FullName,Debug = true
-                        };
-            _languageFactory = new RubyLanguageFactory();
+            _settings = new SparkSettings
+            {
+                BaseClassTypeName = typeof(StubSparkView).FullName,
+                Debug = true
+            };
+            _compiler = new RubyViewCompiler(this._settings);
+            _languageFactory = new RubyLanguageFactory(new RoslynBatchCompiler(), this._settings);
 
             //load assemblies
             global::IronRuby.Ruby.CreateEngine();
@@ -86,7 +88,7 @@ namespace Spark.Ruby.Tests
         {
             var chunks = Chunks();
 
-            _compiler.BaseClass = "ThisIsTheBaseClass";
+            _settings.BaseClassTypeName = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
 
             Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass"));
@@ -97,7 +99,7 @@ namespace Spark.Ruby.Tests
         {
             var chunks = Chunks(new ViewDataModelChunk { TModel = "ThisIsTheModelClass" });
 
-            _compiler.BaseClass = "ThisIsTheBaseClass";
+            _settings.BaseClassTypeName = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
 
             Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass<ThisIsTheModelClass>"));

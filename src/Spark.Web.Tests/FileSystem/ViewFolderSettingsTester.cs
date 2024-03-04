@@ -25,9 +25,13 @@ namespace Spark.FileSystem
         [Test]
         public void ApplySettings()
         {
-            var settings = new SparkSettings()
-                .AddViewFolder(typeof(VirtualPathProviderViewFolder), new Dictionary<string, string> { { "virtualBaseDir", "~/MoreViews/" } });
-            var engine = new SparkViewEngine(settings);
+            var settings =
+                new SparkSettings()
+                    .AddViewFolder(
+                        typeof(VirtualPathProviderViewFolder),
+                        new Dictionary<string, string> { { "virtualBaseDir", "~/MoreViews/" } });
+
+            var engine = new SparkViewEngine(settings, null, null, null, null, null, null, null, null, null, null);
 
             var folder = engine.ViewFolder;
 
@@ -44,8 +48,11 @@ namespace Spark.FileSystem
         public void CustomViewFolder()
         {
             var settings = new SparkSettings()
-                .AddViewFolder(typeof(MyViewFolder), new Dictionary<string, string> { { "foo", "quux" }, { "bar", "42" } });
-            var engine = new SparkViewEngine(settings);
+                .AddViewFolder(
+                    typeof(MyViewFolder),
+                    new Dictionary<string, string> { { "foo", "quux" }, { "bar", "42" } });
+
+            var engine = new SparkViewEngine(settings, null, null, null, null, null, null, null, null, null, null);
 
             var folder = engine.ViewFolder;
             Assert.IsAssignableFrom(typeof(CombinedViewFolder), folder);
@@ -60,9 +67,12 @@ namespace Spark.FileSystem
         public void AssemblyParameter()
         {
             var settings = new SparkSettings()
-                .AddViewFolder(typeof(EmbeddedViewFolder), new Dictionary<string, string> { { "assembly", "Spark.Tests" }, { "resourcePath", "Spark.Tests.Views" } });
+                .AddViewFolder(
+                    typeof(EmbeddedViewFolder),
+                    new Dictionary<string, string>
+                        { { "assembly", "Spark.Tests" }, { "resourcePath", "Spark.Tests.Views" } });
 
-            var engine = new SparkViewEngine(settings);
+            var engine = new SparkViewEngine(settings, null, null, null, null, null, null, null, null, null, null);
 
             var folder = engine.ViewFolder;
             Assert.IsAssignableFrom(typeof(CombinedViewFolder), folder);
@@ -76,11 +86,14 @@ namespace Spark.FileSystem
         public void TypeFileSystemCreatesFileSystemViewFolder()
         {
             var settings = new SparkSettings()
-                .AddViewFolder(typeof(FileSystemViewFolder), new Dictionary<string, string>
-                                                             {
-                                                                 { "basePath", @"e:\no\such\path" }
-                                                             });
-            var engine = new SparkViewEngine(settings);
+                .AddViewFolder(
+                    typeof(FileSystemViewFolder),
+                    new Dictionary<string, string>
+                    {
+                        { "basePath", @"e:\no\such\path" }
+                    });
+
+            var engine = new SparkViewEngine(settings, null, null, null, null, null, null, null, null, null, null);
             var folder = engine.ViewFolder;
             Assert.IsAssignableFrom(typeof(CombinedViewFolder), folder);
             var combined = (CombinedViewFolder)folder;

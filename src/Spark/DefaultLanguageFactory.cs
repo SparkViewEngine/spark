@@ -19,16 +19,10 @@ using Spark.Compiler.VisualBasic;
 
 namespace Spark
 {
-    public class DefaultLanguageFactory : ISparkLanguageFactory
+    public class DefaultLanguageFactory(IBatchCompiler batchCompiler, ISparkSettings settings) : ISparkLanguageFactory
     {
         public virtual ViewCompiler CreateViewCompiler(ISparkViewEngine engine, SparkViewDescriptor descriptor)
         {
-            var pageBaseType = engine.Settings.PageBaseType;
-            if (string.IsNullOrEmpty(pageBaseType))
-            {
-                pageBaseType = engine.DefaultPageBaseType;
-            }
-
             var language = descriptor.Language;
             if (language == LanguageType.Default)
             {
@@ -40,24 +34,19 @@ namespace Spark
             {
                 case LanguageType.Default:
                 case LanguageType.CSharp:
-                    viewCompiler = new CSharpViewCompiler();
+                    viewCompiler = new CSharpViewCompiler(batchCompiler, settings);
                     break;
                 case LanguageType.VisualBasic:
-                    viewCompiler = new VisualBasicViewCompiler();
+                    viewCompiler = new VisualBasicViewCompiler(batchCompiler, settings);
                     break;
                 case LanguageType.Javascript:
                     viewCompiler = new JavascriptViewCompiler();
                     break;
                 default:
-                    throw new CompilerException(string.Format("Unknown language type {0}", descriptor.Language));
+                    throw new CompilerException($"Unknown language type {descriptor.Language}");
             }
 
-            viewCompiler.BaseClass = pageBaseType;
             viewCompiler.Descriptor = descriptor;
-            viewCompiler.Debug = engine.Settings.Debug;
-            viewCompiler.NullBehaviour = engine.Settings.NullBehaviour;
-            viewCompiler.UseAssemblies = engine.Settings.UseAssemblies;
-            viewCompiler.UseNamespaces = engine.Settings.UseNamespaces;
             
             return viewCompiler;
         }

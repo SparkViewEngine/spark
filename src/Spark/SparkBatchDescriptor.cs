@@ -20,14 +20,13 @@ namespace Spark
 {
     public class SparkBatchDescriptor
     {
-        public SparkBatchDescriptor()
-            : this(null /*assemblyName*/)
+        public SparkBatchDescriptor() : this(null /*outputAssemblyName*/)
         {
         }
 
-        public SparkBatchDescriptor(string assemblyName)
+        public SparkBatchDescriptor(string outputAssemblyName)
         {
-            OutputAssembly = assemblyName;
+            OutputAssembly = outputAssemblyName;
             Entries = new List<SparkBatchEntry>();
         }
 

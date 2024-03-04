@@ -12,28 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Spark.Compiler.CSharp.ChunkVisitors;
 
 namespace Spark.Compiler.CSharp
 {
-    public class CSharpViewCompiler : ViewCompiler
+    public class CSharpViewCompiler(IBatchCompiler compiler, ISparkSettings settings) : ViewCompiler()
     {
         public override void CompileView(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
         {
             GenerateSourceCode(viewTemplates, allResources);
 
-            var batchCompiler = new BatchCompiler();
-            var assembly = batchCompiler.Compile(Debug, "csharp", SourceCode);
+            var assembly = compiler.Compile(settings.Debug, "csharp", null, new[] { SourceCode }, settings.ExcludeAssemblies);
+
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 
-
-        public override void GenerateSourceCode(IEnumerable<IList<Chunk>> viewTemplates, IEnumerable<IList<Chunk>> allResources)
+        public override void GenerateSourceCode(
+            IEnumerable<IList<Chunk>> viewTemplates,
+            IEnumerable<IList<Chunk>> allResources)
         {
             var globalSymbols = new Dictionary<string, object>();
 
@@ -41,16 +41,16 @@ namespace Spark.Compiler.CSharp
             var source = new SourceWriter(writer);
 
             var usingGenerator = new UsingNamespaceVisitor(source);
-            var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
-            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, NullBehaviour);
+            var baseClassGenerator = new BaseClassVisitor { BaseClass = settings.BaseClassTypeName };
+            var globalsGenerator = new GlobalMembersVisitor(source, globalSymbols, settings.NullBehaviour);
 
             // using <namespaces>;
-            foreach (var ns in UseNamespaces ?? Array.Empty<string>())
+            foreach (var ns in settings.UseNamespaces ?? Array.Empty<string>())
             {
                 usingGenerator.UsingNamespace(ns);
             }
 
-            foreach (var assembly in UseAssemblies ?? Array.Empty<string>())
+            foreach (var assembly in settings.UseAssemblies ?? Array.Empty<string>())
             {
                 usingGenerator.UsingAssembly(assembly);
             }
@@ -77,7 +77,7 @@ namespace Spark.Compiler.CSharp
 
                 source
                     .WriteLine()
-                    .WriteLine(string.Format("namespace {0}", TargetNamespace))
+                    .Write("namespace ").WriteLine(TargetNamespace)
                     .WriteLine("{").AddIndent();
             }
 
@@ -88,11 +88,32 @@ namespace Spark.Compiler.CSharp
                 // [SparkView] attribute
                 source.WriteLine("[global::Spark.SparkViewAttribute(");
                 if (TargetNamespace != null)
-                    source.WriteFormat("    TargetNamespace=\"{0}\",", TargetNamespace).WriteLine();
+                {
+                    source
+                        .Write("    TargetNamespace=\"")
+                        .Write(TargetNamespace)
+                        .WriteLine("\",");
+                }
+
                 source.WriteLine("    Templates = new string[] {");
-                source.Write("      ").WriteLine(string.Join(",\r\n      ",
-                                                               Descriptor.Templates.Select(
-                                                                   t => "\"" + SparkViewAttribute.ConvertToAttributeFormat(t) + "\"").ToArray()));
+
+                source.Write("      ");
+
+                for (var i = 0; i < Descriptor.Templates.Count; i++)
+                {
+                    var template = Descriptor.Templates[i];
+
+                    source
+                        .Write("\"")
+                        .Write(SparkViewAttribute.ConvertToAttributeFormat(template))
+                        .Write("\"");
+
+                    if (i < Descriptor.Templates.Count - 1)
+                    {
+                        source.WriteLine(",");
+                    }
+                }
+
                 source.WriteLine("    })]");
             }
 
@@ -107,7 +128,11 @@ namespace Spark.Compiler.CSharp
 
             source.WriteLine();
             EditorBrowsableStateNever(source, 4);
-            source.WriteLine("private static System.Guid _generatedViewId = new System.Guid(\"{0:n}\");", GeneratedViewId);
+
+            source
+                .Write("private static System.Guid _generatedViewId = new System.Guid(\"")
+                .Write(GeneratedViewId.ToString("n"))
+                .WriteLine("\");");
             source.WriteLine("public override System.Guid GeneratedViewId");
             source.WriteLine("{ get { return _generatedViewId; } }");
 
@@ -127,24 +152,25 @@ namespace Spark.Compiler.CSharp
                 globalsGenerator.Accept(resource);
             }
 
-            // public void RenderViewLevelx()
+            // private void RenderViewLevelx()
             int renderLevel = 0;
             foreach (var viewTemplate in viewTemplates)
             {
                 source.WriteLine();
-                EditorBrowsableStateNever(source, 4); 
-                source.WriteLine(string.Format("private void RenderViewLevel{0}()", renderLevel));
+                EditorBrowsableStateNever(source, 4);
+
+                source.Write("private void RenderViewLevel").Write(renderLevel.ToString()).WriteLine("()");
+
                 source.WriteLine("{").AddIndent();
-                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols, NullBehaviour);
+                var viewGenerator = new GeneratedCodeVisitor(source, globalSymbols, settings.NullBehaviour);
                 viewGenerator.Accept(viewTemplate);
                 source.RemoveIndent().WriteLine("}");
                 ++renderLevel;
             }
 
             // public void RenderView()
-
             source.WriteLine();
-            EditorBrowsableStateNever(source, 4); 
+            EditorBrowsableStateNever(source, 4);
             source.WriteLine("public override void Render()");
             source.WriteLine("{").AddIndent();
             for (var invokeLevel = 0; invokeLevel != renderLevel; ++invokeLevel)
@@ -152,18 +178,27 @@ namespace Spark.Compiler.CSharp
             {
                 if (invokeLevel != renderLevel - 1)
                 {
-                  source.WriteLine("using (OutputScope()) {{DelegateFirstRender(RenderViewLevel{0}); Content[\"view\"] = Output;}}", invokeLevel);
+                    source
+                      .Write("using (OutputScope()) {{DelegateFirstRender(RenderViewLevel")
+                      .Write(invokeLevel.ToString())
+                      .WriteLine("); Content[\"view\"] = Output;}}");
                 }
                 else
                 {
                     if (renderLevel <= 1)
                     {
-                     source.WriteLine("        DelegateFirstRender(RenderViewLevel{0});", invokeLevel);
+                        source
+                            .Write("        DelegateFirstRender(RenderViewLevel")
+                            .Write(invokeLevel.ToString())
+                            .WriteLine(");");
                     }
-                     else
-                   {
-                     source.WriteLine("        RenderViewLevel{0}();", invokeLevel);
-                   }
+                    else
+                    {
+                        source
+                            .Write("        RenderViewLevel")
+                            .Write(invokeLevel.ToString())
+                            .WriteLine("();");
+                    }
                 }
             }
             source.RemoveIndent().WriteLine("}");

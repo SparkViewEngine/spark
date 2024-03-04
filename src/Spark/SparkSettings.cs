@@ -39,6 +39,7 @@ namespace Spark
 
             _useNamespaces = new List<string>();
             _useAssemblies = new List<string>();
+            _excludeAssemblies = new List<string>();
             _resourceMappings = new List<IResourceMapping>();
             _viewFolders = new List<IViewFolderSettings>();
             NullBehaviour = NullBehaviour.Lenient;
@@ -57,7 +58,7 @@ namespace Spark
         public bool AutomaticEncoding { get; set; }
         public string StatementMarker { get; set; }
         public string Prefix { get; set; }
-        public string PageBaseType { get; set; }
+        public string BaseClassTypeName { get; set; }
         public LanguageType DefaultLanguage { get; set; }
         public bool ParseSectionTagAsSegment { get; set; }
 
@@ -68,6 +69,9 @@ namespace Spark
 
         private readonly IList<string> _useAssemblies;
         public IEnumerable<string> UseAssemblies => _useAssemblies;
+
+        private readonly IList<string> _excludeAssemblies;
+        public IEnumerable<string> ExcludeAssemblies => _excludeAssemblies;
 
         private readonly IList<IResourceMapping> _resourceMappings;
         public IEnumerable<IResourceMapping> ResourceMappings => _resourceMappings;
@@ -108,9 +112,9 @@ namespace Spark
         /// </summary>
         /// <param name="typeName">The full name of the type.</param>
         /// <returns></returns>
-        public SparkSettings SetPageBaseType(string typeName)
+        public SparkSettings SetBaseClassTypeName(string typeName)
         {
-            PageBaseType = typeName;
+            BaseClassTypeName = typeName;
 
             return this;
         }
@@ -120,9 +124,9 @@ namespace Spark
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns></returns>
-        public SparkSettings SetPageBaseType(Type type)
+        public SparkSettings SetBaseClassTypeName(Type type)
         {
-            PageBaseType = type.FullName;
+            BaseClassTypeName = type.FullName;
 
             return this;
         }
@@ -151,9 +155,34 @@ namespace Spark
             return this;
         }
 
+        /// <summary>
+        /// Adds an assembly for the view compiler to be aware of.
+        /// </summary>
         public SparkSettings AddAssembly(Assembly assembly)
         {
             _useAssemblies.Add(assembly.FullName);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the full name of an assembly for the view compiler to exclude (it won't be added as a reference when compiling).
+        /// </summary>
+        /// <param name="assembly">The full name of an assembly.</param>
+        /// <returns></returns>
+        public SparkSettings ExcludeAssembly(string assembly)
+        {
+            this._excludeAssemblies.Add(assembly);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Keeps track of an assembly for the view compiler to exclude (it won't be added as a reference when compiling).
+        /// </summary>
+        public SparkSettings ExcludeAssembly(Assembly assembly)
+        {
+            this._excludeAssemblies.Add(assembly.FullName);
 
             return this;
         }

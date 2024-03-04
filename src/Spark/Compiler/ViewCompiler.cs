@@ -25,7 +25,6 @@ namespace Spark.Compiler
             GeneratedViewId = Guid.NewGuid();
         }
 
-        public string BaseClass { get; set; }
         public SparkViewDescriptor Descriptor { get; set; }
         public string ViewClassFullName { get; set; }
 
@@ -33,11 +32,6 @@ namespace Spark.Compiler
         public IList<SourceMapping> SourceMappings { get; set; }
         public Type CompiledType { get; set; }
         public Guid GeneratedViewId { get; set; }
-
-        public bool Debug { get; set; }
-        public NullBehaviour NullBehaviour { get; set; }
-        public IEnumerable<string> UseNamespaces { get; set; }
-        public IEnumerable<string> UseAssemblies { get; set; }
 
         public string TargetNamespace => Descriptor?.TargetNamespace;
 

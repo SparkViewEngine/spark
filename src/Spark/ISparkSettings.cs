@@ -52,11 +52,20 @@ namespace Spark
         bool Debug { get; }
         NullBehaviour NullBehaviour { get; }
         string Prefix { get; }
-        string PageBaseType { get; set; }
+        string BaseClassTypeName { get; set; }
         LanguageType DefaultLanguage { get; }
 
         IEnumerable<string> UseNamespaces { get; }
         IEnumerable<string> UseAssemblies { get; }
+
+        /// <summary>
+        /// A list of assemblies to avoid adding as reference when compiling views (e.g. any precompiled assemblies)
+        /// </summary>
+        /// <remarks>
+        /// Leave this empty unless you are pre-compiling views. Example value: "HelloWorld.Views.dll"
+        /// </remarks>
+        IEnumerable<string> ExcludeAssemblies { get; }
+
         IEnumerable<IResourceMapping> ResourceMappings { get; }
         IEnumerable<IViewFolderSettings> ViewFolders { get; }
         bool ParseSectionTagAsSegment { get; }

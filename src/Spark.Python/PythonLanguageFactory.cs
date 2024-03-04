@@ -18,7 +18,7 @@ using Spark.Python.Compiler;
 
 namespace Spark.Python
 {
-    public class PythonLanguageFactory : DefaultLanguageFactory
+    public class PythonLanguageFactory(IBatchCompiler batchCompiler, ISparkSettings settings) : DefaultLanguageFactory(batchCompiler, settings)
     {
         private PythonEngineManager _PythonEngineManager;
 
@@ -42,25 +42,14 @@ namespace Spark.Python
             {
                 case LanguageType.Default:
                 case LanguageType.Python:
-                    viewCompiler = new PythonViewCompiler();
+                    viewCompiler = new PythonViewCompiler(settings);
                     break;
                 default:
                     return base.CreateViewCompiler(engine, descriptor);
             }
 
-            var pageBaseType = engine.Settings.PageBaseType;
-            if (string.IsNullOrEmpty(pageBaseType))
-            {
-                pageBaseType = engine.DefaultPageBaseType;
-            }
-
-            viewCompiler.BaseClass = pageBaseType;
             viewCompiler.Descriptor = descriptor;
-            viewCompiler.Debug = engine.Settings.Debug;
-            viewCompiler.NullBehaviour = engine.Settings.NullBehaviour;
-            viewCompiler.UseAssemblies = engine.Settings.UseAssemblies;
-            viewCompiler.UseNamespaces = engine.Settings.UseNamespaces;
-
+            
             return viewCompiler;
         }
 

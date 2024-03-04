@@ -12,11 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Spark.Compiler.ChunkVisitors;
 using Spark.Parser.Code;
 
 namespace Spark.Compiler.ChunkVisitors
@@ -62,7 +59,7 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(UseImportChunk chunk)
         {
-            
+            //no-op
         }
 
         protected override void Visit(ContentSetChunk chunk)

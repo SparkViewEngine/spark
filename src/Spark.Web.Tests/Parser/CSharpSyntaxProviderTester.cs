@@ -14,8 +14,10 @@
 // 
 
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Spark.Compiler.NodeVisitors;
+using Spark.Extensions;
 using Spark.FileSystem;
 using Spark.Parser.Syntax;
 using Spark.Tests;
@@ -31,7 +33,11 @@ namespace Spark.Parser
         [Test]
         public void CanParseSimpleFile()
         {
-            var context = new VisitorContext { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+            var context = new VisitorContext
+            {
+                ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")
+            };
+
             var result = this._syntax.GetChunks(context, Path.Combine("Home", "childview.spark"));
 
             Assert.IsNotNull(result);
@@ -40,12 +46,14 @@ namespace Spark.Parser
         [Test]
         public void UsingCSharpSyntaxInsideEngine()
         {
-            // engine takes base class and IViewFolder
-            var engine = new SparkViewEngine(new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView"))
-            {
-                SyntaxProvider = this._syntax, 
-                ViewFolder = new FileSystemViewFolder("Spark.Tests.Views")
-            };
+            var settings = new SparkSettings().SetBaseClassTypeName("Spark.Tests.Stubs.StubSparkView");
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(new FileSystemViewFolder("Spark.Tests.Views"))
+                .BuildServiceProvider();
+
+            var engine = sp.GetService<ISparkViewEngine>();
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();
@@ -62,9 +70,15 @@ namespace Spark.Parser
         [Test]
         public void StatementAndExpressionInCode()
         {
-            // engine takes base class and IViewFolder
-            var engine = new SparkViewEngine(
-                new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView")) { SyntaxProvider = this._syntax, ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+            var settings = new SparkSettings().SetBaseClassTypeName("Spark.Tests.Stubs.StubSparkView");
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(new FileSystemViewFolder("Spark.Tests.Views"))
+                .AddSingleton<ISparkSyntaxProvider>(this._syntax)
+                .BuildServiceProvider();
+
+            var engine = sp.GetService<ISparkViewEngine>();
 
             // describe and instantiate view
             var descriptor = new SparkViewDescriptor();

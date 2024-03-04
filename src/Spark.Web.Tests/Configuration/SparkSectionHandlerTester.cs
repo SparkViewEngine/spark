@@ -16,7 +16,9 @@
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.FileSystem;
 using Spark.Tests;
 using Spark.Tests.Stubs;
@@ -33,7 +35,7 @@ namespace Spark.Configuration
             Assert.IsTrue(config.Compilation.Debug);
             Assert.AreEqual(NullBehaviour.Strict, config.Compilation.NullBehaviour);
             Assert.AreEqual(1, config.Compilation.Assemblies.Count);
-            Assert.AreEqual(typeof(StubSparkView).FullName, config.Pages.PageBaseType);
+            Assert.AreEqual(typeof(StubSparkView).FullName, config.Pages.BaseClassTypeName);
             Assert.AreEqual(1, config.Pages.Namespaces.Count);
         }
 
@@ -77,14 +79,19 @@ namespace Spark.Configuration
             var settings = new SparkSettings()
                 .AddNamespace("System.Web")
                 .AddAssembly("System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
-                .SetPageBaseType(typeof(StubSparkView));
+                .SetBaseClassTypeName(typeof(StubSparkView));
 
-            var views = new InMemoryViewFolder
+            var viewFolder = new InMemoryViewFolder
             {
                 { Path.Combine("home", "index.spark"), "<div>${ProcessStatus.Alive}</div>" }
             };
 
-            var engine = new SparkViewEngine(settings) { ViewFolder = views };
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(viewFolder)
+                .BuildServiceProvider();
+
+            var engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
 
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add(Path.Combine("home", "index.spark"));

@@ -47,17 +47,36 @@ namespace Spark.Tests.Parser
             viewFolder.Stub(x => x.ListViews(Arg<string>.Is.Anything)).IgnoreArguments().Return(Array.Empty<string>());
 
             syntaxProvider = MockRepository.GenerateMock<ISparkSyntaxProvider>();
+            
+            var settings = new SparkSettings();
 
-            loader = new ViewLoader { ViewFolder = viewFolder, SyntaxProvider = syntaxProvider };
+            var partialProvider = new DefaultPartialProvider();
+
+            loader = new ViewLoader(settings, viewFolder, partialProvider, new DefaultPartialReferenceProvider(partialProvider), null, syntaxProvider, null);
         }
+
+        private static int syntaxCallbacks = 0;
 
         IViewFile ExpectGetChunks(string path, params Chunk[] chunks)
         {
             var source = MockRepository.GenerateMock<IViewFile>();
 
-            viewFolder.Expect(x => x.GetViewSource(path)).Return(source);
-            source.Expect(x => x.LastModified).Return(0);
-            syntaxProvider.Expect(x => x.GetChunks(Arg<VisitorContext>.Is.Anything, Arg<string>.Is.Anything)).Return(chunks);
+            viewFolder
+                .Expect(x => x.GetViewSource(path))
+                .Return(source);
+
+            source
+                .Expect(x => x.LastModified)
+                .Return(0);
+
+            syntaxProvider
+                .Expect(x => x.GetChunks(Arg<VisitorContext>.Is.Anything, Arg<string>.Is.Anything))
+                .WhenCalled(
+                    call =>
+                    {
+                        syntaxCallbacks++;
+                    })
+                .Return(chunks);
 
             return source;
         }
@@ -145,14 +164,21 @@ namespace Spark.Tests.Parser
         [Test]
         public void ExpiresWhenFilesChange()
         {
-            var viewFolder = new StubViewFolder { Path = Path.Combine("home", "changing.spark"), LastModified = 4 };
+            var settings = new SparkSettings();
 
-            var viewLoader = new ViewLoader
-                             {
-                                 ViewFolder = viewFolder,
-                                 SyntaxProvider = MockRepository.GenerateStub<ISparkSyntaxProvider>()
-                             };
-            viewLoader.SyntaxProvider
+            var viewFolder = new StubViewFolder
+            {
+                Path = Path.Combine("home", "changing.spark"),
+                LastModified = 4
+            };
+
+            this.syntaxProvider = MockRepository.GenerateStub<ISparkSyntaxProvider>();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var viewLoader = new ViewLoader(settings, viewFolder, partialProvider, new DefaultPartialReferenceProvider(partialProvider), null, this.syntaxProvider, null);
+
+            this.syntaxProvider
                 .Expect(x => x.GetChunks(null, null))
                 .IgnoreArguments()
                 .Return(Array.Empty<Chunk>());
@@ -181,12 +207,13 @@ namespace Spark.Tests.Parser
             syntaxProvider.Stub(x => x.GetChunks(null, null))
                 .IgnoreArguments()
                 .Return(new List<Chunk>());
-            var viewLoader = new ViewLoader
-            {
-                ViewFolder = folder,
-                SyntaxProvider = syntaxProvider,
-                BindingProvider = bindingProvider
-            };
+
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+            
+            var viewLoader = new ViewLoader(settings, folder, partialProvider, new DefaultPartialReferenceProvider(partialProvider), null, syntaxProvider, bindingProvider);
+            
             viewLoader.Load(viewPath);
 
             bindingProvider.VerifyAllExpectations();
@@ -234,7 +261,20 @@ namespace Spark.Tests.Parser
                                      {Path.Combine("home", "_Guts.spark"), "<div><render:foo/></div>"},
                                      {Path.Combine("home", "_Another.spark"), "<p>hello world</p>"}
                                  };
-            var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var viewLoader = new ViewLoader(
+                settings,
+                viewFolder,
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
+
             var chunks = viewLoader.Load(Path.Combine("home", "index.spark"));
             var everything = viewLoader.GetEverythingLoaded();
             
@@ -254,7 +294,19 @@ namespace Spark.Tests.Parser
                                  {Path.Combine("invoice", "five.spark"), ""},
                              };
 
-            var viewLoader = new ViewLoader { ViewFolder = viewFolder };
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var viewLoader = new ViewLoader(
+                settings,
+                viewFolder,
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
+
             var zero = viewLoader.FindPartialFiles(Path.Combine("home", "zero.spark"));
             var product = viewLoader.FindPartialFiles(Path.Combine("product", "two.spark"));
             var invoice = viewLoader.FindPartialFiles(Path.Combine("invoice", "five.spark"));
@@ -299,7 +351,18 @@ namespace Spark.Tests.Parser
                                  {Path.Combine("area2","Shared","_dontfind3.spark"), ""},
                              };
 
-            var viewLoader = new ViewLoader { ViewFolder = viewFolder };
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var viewLoader = new ViewLoader(
+                settings,
+                viewFolder,
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
 
             var partials = viewLoader.FindPartialFiles(Path.Combine("area1","controller2","view3.spark"));
 
@@ -321,7 +384,20 @@ namespace Spark.Tests.Parser
             {
                 { Path.Combine("home", "empty.spark"), "" },
             };
-            var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var viewLoader = new ViewLoader(
+                settings,
+                viewFolder,
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
+
             var chunks = viewLoader.Load(Path.Combine("home", "empty.spark"));
             var everything = viewLoader.GetEverythingLoaded();
 
@@ -335,7 +411,20 @@ namespace Spark.Tests.Parser
             {
                 { Path.Combine("home", "empty.shade"), "" },
             };
-            var viewLoader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+            
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var viewLoader = new ViewLoader(
+                settings,
+                viewFolder,
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
+
             var chunks = viewLoader.Load(Path.Combine("home", "empty.shade"));
             var everything = viewLoader.GetEverythingLoaded();
             

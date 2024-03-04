@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
+using Spark.Descriptors;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Descriptors;
 
@@ -11,19 +11,14 @@ namespace Spark.Web.Mvc
 {
     public static class LanguageKit
     {
-        public static void Install(ISparkServiceContainer services, Func<ControllerContext, string> selector)
-        {
-            services.AddFilter(new Filter(selector));
-            services.GetService<ISparkViewEngine>().ViewFolder = new Folder(services.GetService<IViewFolder>());
-        }
-
-        public static void Install(SparkViewFactory factory, Func<ControllerContext, string> selector)
+        public static void Install(SparkViewFactory factory, Func<SparkRouteData, string> selector)
         {
             factory.AddFilter(new Filter(selector));
-            factory.ViewFolder = new Folder(factory.ViewFolder);
+
+            factory.Engine.ViewFolder = new Folder(factory.Engine.ViewFolder);
         }
 
-        public static void Install(IEnumerable<IViewEngine> engines, Func<ControllerContext, string> selector)
+        public static void Install(IEnumerable<IViewEngine> engines, Func<SparkRouteData, string> selector)
         {
             foreach (var factory in engines.OfType<SparkViewFactory>())
             {
@@ -33,16 +28,16 @@ namespace Spark.Web.Mvc
 
         public class Filter : DescriptorFilterBase
         {
-            private readonly Func<ControllerContext, string> _selector;
+            private readonly Func<SparkRouteData, string> _selector;
 
-            public Filter(Func<ControllerContext, string> selector)
+            public Filter(Func<SparkRouteData, string> selector)
             {
                 _selector = selector;
             }
 
-            public override void ExtraParameters(ControllerContext context, IDictionary<string, object> extra)
+            public override void ExtraParameters(SparkRouteData routeData, IDictionary<string, object> extra)
             {
-                var theme = Convert.ToString(_selector(context));
+                var theme = Convert.ToString(_selector(routeData));
                 if (!string.IsNullOrEmpty(theme))
                 {
                     extra["language"] = theme;

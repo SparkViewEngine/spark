@@ -33,8 +33,10 @@ namespace Spark.Tests.Visitors
                               {
                                   SyntaxProvider = new DefaultSyntaxProvider(new SparkSettings())
                               };
-            var nodes = ParseNodes("<for each='var x in new [] {1,2,3}'>${xIndex}${xIsLast}</for>",
-                                   new SpecialNodeVisitor(context));
+            
+            var nodes = ParseNodes(
+                "<for each='var x in new [] {1,2,3}'>${xIndex}${xIsLast}</for>",
+                new SpecialNodeVisitor(context));
 
             var visitor = new ChunkBuilderVisitor(context);
             visitor.Accept(nodes);
@@ -56,11 +58,23 @@ namespace Spark.Tests.Visitors
         public void ParametersInPartial()
         {
             var viewFolder = new InMemoryViewFolder
-                                 {
-                                     {Path.Combine("home", "index.spark"), "<for each='var x in new[]{1,2,3}'><Guts/></for>"},
-                                     {Path.Combine("home", "_Guts.spark"), "<p>${xIndex}</p>"}
-                                 };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+            {
+                { Path.Combine("home", "index.spark"), "<for each='var x in new[]{1,2,3}'><Guts/></for>" },
+                { Path.Combine("home", "_Guts.spark"), "<p>${xIndex}</p>" }
+            };
+
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var loader = new ViewLoader(
+                settings,
+                viewFolder,
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
 
             var chunks = loader.Load(Path.Combine("home", "index.spark"));
 
@@ -78,11 +92,23 @@ namespace Spark.Tests.Visitors
         public void ParametersInCallerBody()
         {
             var viewFolder = new InMemoryViewFolder
-                                 {
-                                     {Path.Combine("home", "index.spark"), "<for each='var x in new[]{1,2,3}'><Guts>${xIndex}</Guts></for>"},
-                                     {Path.Combine("home", "_Guts.spark"), "<p><render/></p>"}
-                                 };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+            {
+                { Path.Combine("home", "index.spark"), "<for each='var x in new[]{1,2,3}'><Guts>${xIndex}</Guts></for>" },
+                { Path.Combine("home", "_Guts.spark"), "<p><render/></p>" }
+            };
+
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var loader = new ViewLoader(
+                settings,
+                viewFolder,
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
 
             var chunks = loader.Load(Path.Combine("home", "index.spark"));
 
@@ -99,11 +125,23 @@ namespace Spark.Tests.Visitors
         public void ParametersInNamedSegment()
         {
             var viewFolder = new InMemoryViewFolder
-                                 {
-                                     {Path.Combine("home", "index.spark"), "<for each='var x in new[]{1,2,3}'><Guts><segment:foo>${xIndex}</segment:foo></Guts></for>"},
-                                     {Path.Combine("home", "_Guts.spark"), "<p><render:foo/></p>"}
-                                 };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+            {
+                { Path.Combine("home", "index.spark"), "<for each='var x in new[]{1,2,3}'><Guts><segment:foo>${xIndex}</segment:foo></Guts></for>" },
+                { Path.Combine("home", "_Guts.spark"), "<p><render:foo/></p>" }
+            };
+            
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var loader = new ViewLoader(
+                settings,
+                viewFolder,
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
 
             var chunks = loader.Load(Path.Combine("home", "index.spark"));
 
@@ -120,11 +158,23 @@ namespace Spark.Tests.Visitors
         public void IterationInPartialFile()
         {
             var viewFolder = new InMemoryViewFolder
-             {
-                 {Path.Combine("home", "index.spark"), "<Guts items='new[]{1,2,3}'><segment:each>${xIndex}</segment:each></Guts>"},
-                 {Path.Combine("home", "_Guts.spark"), "<for each='var x in items'><render:each/></for>"}
-             };
-            var loader = new ViewLoader { SyntaxProvider = new DefaultSyntaxProvider(ParserSettings.DefaultBehavior), ViewFolder = viewFolder };
+            {
+                { Path.Combine("home", "index.spark"), "<Guts items='new[]{1,2,3}'><segment:each>${xIndex}</segment:each></Guts>" },
+                { Path.Combine("home", "_Guts.spark"), "<for each='var x in items'><render:each/></for>" }
+            };
+            
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var loader = new ViewLoader(
+                settings,
+                viewFolder,
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
 
             var chunks = loader.Load(Path.Combine("home", "index.spark"));
 

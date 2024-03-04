@@ -13,123 +13,71 @@
 // limitations under the License.
 // 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Reflection;
 using Spark.Bindings;
 using Spark.Compiler;
 using Spark.Compiler.CSharp;
 using Spark.Parser;
 using Spark.FileSystem;
-using Spark.Parser.Syntax;
 
 namespace Spark
 {
-    public class SparkViewEngine : ISparkViewEngine, ISparkServiceInitialize
+    public class SparkViewEngine : ISparkViewEngine
     {
-        public SparkViewEngine()
-            : this(null)
+        public ISparkSettings Settings { get; }
+        public IViewFolder ViewFolder { get; set; }
+        public readonly ISparkLanguageFactory LanguageFactory;
+        public IViewActivatorFactory ViewActivatorFactory { get; }
+        public readonly ICompiledViewHolder CompiledViewHolder;
+
+        public ISparkSyntaxProvider SyntaxProvider { get; }
+
+        private readonly IBatchCompiler BatchCompiler;
+        private readonly IPartialProvider PartialProvider;
+        private readonly IPartialReferenceProvider PartialReferenceProvider;
+        private readonly IBindingProvider BindingProvider;
+        private readonly ISparkExtensionFactory SparkExtensionFactory;
+
+        public SparkViewEngine(
+            ISparkSettings settings, 
+            ISparkSyntaxProvider syntaxProvider,
+            IViewActivatorFactory viewActivatorFactory,
+            ISparkLanguageFactory languageFactory,
+            ICompiledViewHolder compiledViewHolder,
+            IViewFolder viewFolder,
+            IBatchCompiler batchCompiler,
+            IPartialProvider partialProvider,
+            IPartialReferenceProvider partialReferenceProvider,
+            IBindingProvider bindingProvider,
+            ISparkExtensionFactory sparkExtensionFactory)
         {
+            Settings = settings;
+
+            SyntaxProvider = syntaxProvider;
+            ViewActivatorFactory = viewActivatorFactory;
+            LanguageFactory = languageFactory;
+            
+            CompiledViewHolder = compiledViewHolder;
+            
+            ViewFolder = this.InitialiseAggregateViewFolder(settings, viewFolder);
+
+            BatchCompiler = batchCompiler;
+            PartialProvider = partialProvider;
+            PartialReferenceProvider = partialReferenceProvider;
+            BindingProvider = bindingProvider;
+            SparkExtensionFactory = sparkExtensionFactory;
         }
 
-        public SparkViewEngine(ISparkSettings settings)
-        {
-            Settings = settings ??
-                (ISparkSettings)ConfigurationManager.GetSection("spark") ??
-                throw new ConfigurationErrorsException(SparkServiceContainer.MissingSparkSettingsConfigurationErrorExceptionMessage);
-            SyntaxProvider = new DefaultSyntaxProvider(Settings);
-            ViewActivatorFactory = new DefaultViewActivator();
-        }
-
-        public void Initialize(ISparkServiceContainer container)
-        {
-            Settings = container.GetService<ISparkSettings>();
-            SyntaxProvider = container.GetService<ISparkSyntaxProvider>();
-            ViewActivatorFactory = container.GetService<IViewActivatorFactory>();
-            LanguageFactory = container.GetService<ISparkLanguageFactory>();
-            BindingProvider = container.GetService<IBindingProvider>();
-            ResourcePathManager = container.GetService<IResourcePathManager>();
-            TemplateLocator = container.GetService<ITemplateLocator>();
-            CompiledViewHolder = container.GetService<ICompiledViewHolder>();
-            PartialProvider = container.GetService<IPartialProvider>();
-            PartialReferenceProvider = container.GetService<IPartialReferenceProvider>();
-            SetViewFolder(container.GetService<IViewFolder>());
-        }
-
-        private IViewFolder _viewFolder;
-        public IViewFolder ViewFolder
-        {
-            get
-            {
-                if (_viewFolder == null)
-                {
-                    SetViewFolder(Settings.CreateDefaultViewFolder());
-                }
-
-                return _viewFolder;
-            }
-            set { SetViewFolder(value); }
-        }
-
-        private ISparkLanguageFactory _langaugeFactory;
-        public ISparkLanguageFactory LanguageFactory
-        {
-            get
-            {
-                if (_langaugeFactory == null)
-                    _langaugeFactory = new DefaultLanguageFactory();
-                return _langaugeFactory;
-            }
-            set { _langaugeFactory = value; }
-        }
-
-
-        private IBindingProvider _bindingProvider;
-        public IBindingProvider BindingProvider
-        {
-            get
-            {
-                if (_bindingProvider == null)
-                    _bindingProvider = new DefaultBindingProvider();
-                return _bindingProvider;
-            }
-            set { _bindingProvider = value; }
-        }
-
-        private IPartialProvider _partialProvider;
-        public IPartialProvider PartialProvider
-        {
-            get
-            {
-                if (_partialProvider == null)
-                    _partialProvider = new DefaultPartialProvider();
-                return _partialProvider;
-            }
-            set { _partialProvider = value; }
-        }
-
-        private IPartialReferenceProvider _partialReferenceProvider;
-        public IPartialReferenceProvider PartialReferenceProvider
-        {
-            get
-            {
-                if (_partialReferenceProvider == null)
-                    _partialReferenceProvider = new DefaultPartialReferenceProvider(() => PartialProvider);
-                return _partialReferenceProvider;
-            }
-            set { _partialReferenceProvider = value; }
-        }
-        
-        private void SetViewFolder(IViewFolder value)
+        private IViewFolder InitialiseAggregateViewFolder(ISparkSettings settings, IViewFolder value)
         {
             var aggregateViewFolder = value;
             
-            if (this.Settings.ViewFolders != null)
+            if (settings.ViewFolders != null)
             {
-                foreach (var viewFolderSettings in this.Settings.ViewFolders)
+                foreach (var viewFolderSettings in settings.ViewFolders)
                 {
-                    IViewFolder viewFolder = this.ActivateViewFolder(viewFolderSettings);
+                    IViewFolder viewFolder = viewFolderSettings.ActivateViewFolder();
                     
                     if (!string.IsNullOrEmpty(viewFolderSettings.Subfolder))
                     {
@@ -140,88 +88,8 @@ namespace Spark
                 }
             }
             
-            _viewFolder = aggregateViewFolder;
+            return aggregateViewFolder;
         }
-
-        private IViewFolder ActivateViewFolder(IViewFolderSettings viewFolderSettings)
-        {
-            var type = Type.GetType(viewFolderSettings.Type);
-            
-            ConstructorInfo bestConstructor = null;
-            foreach (var constructor in type.GetConstructors())
-            {
-                if (bestConstructor == null || bestConstructor.GetParameters().Length < constructor.GetParameters().Length)
-                {
-                    if (constructor.GetParameters().All(param => viewFolderSettings.Parameters.ContainsKey(param.Name)))
-                    {
-                        bestConstructor = constructor;
-                    }
-                }
-            }
-
-            if (bestConstructor == null)
-            {
-                throw new MissingMethodException($"No suitable constructor for {type.FullName} located");
-            }
-
-            var args = bestConstructor.GetParameters()
-                .Select(param => ChangeType(viewFolderSettings, param))
-                .ToArray();
-
-            return (IViewFolder)Activator.CreateInstance(type, args);
-        }
-
-        private object ChangeType(IViewFolderSettings viewFolderSettings, ParameterInfo param)
-        {
-            if (param.ParameterType == typeof(Assembly))
-                return Assembly.Load(viewFolderSettings.Parameters[param.Name]);
-
-            return Convert.ChangeType(viewFolderSettings.Parameters[param.Name], param.ParameterType);
-        }
-
-        private IResourcePathManager _resourcePathManager;
-        public IResourcePathManager ResourcePathManager
-        {
-            get
-            {
-                if (_resourcePathManager == null)
-                    _resourcePathManager = new DefaultResourcePathManager(Settings);
-                return _resourcePathManager;
-            }
-            set { _resourcePathManager = value; }
-        }
-
-        public ISparkExtensionFactory ExtensionFactory { get; set; }
-        public IViewActivatorFactory ViewActivatorFactory { get; set; }
-
-        private ITemplateLocator _templateLocator;
-        public ITemplateLocator TemplateLocator
-        {
-            get
-            {
-                if (_templateLocator == null)
-                    _templateLocator = new DefaultTemplateLocator();
-                return _templateLocator;
-            }
-            set { _templateLocator = value; }
-        }
-
-        private ICompiledViewHolder _compiledViewHolder;
-        public ICompiledViewHolder CompiledViewHolder
-        {
-            get
-            {
-                if (_compiledViewHolder == null)
-                    _compiledViewHolder = new CompiledViewHolder();
-                return _compiledViewHolder;
-            }
-            set { _compiledViewHolder = value; }
-        }
-
-        public ISparkSyntaxProvider SyntaxProvider { get; set; }
-
-        public ISparkSettings Settings { get; set; }
-        public string DefaultPageBaseType { get; set; }
 
         public ISparkViewEntry GetEntry(SparkViewDescriptor descriptor)
         {
@@ -235,13 +103,15 @@ namespace Spark
 
         public void ReleaseInstance(ISparkView view)
         {
-            if (view == null) throw new ArgumentNullException("view");
+            if (view == null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
 
             var entry = CompiledViewHolder.Lookup(view.GeneratedViewId);
-            if (entry != null)
-                entry.ReleaseInstance(view);
-        }
 
+            entry?.ReleaseInstance(view);
+        }
 
         public ISparkViewEntry CreateEntry(SparkViewDescriptor descriptor)
         {
@@ -301,25 +171,25 @@ namespace Spark
             }
         }
 
-        private ViewLoader CreateViewLoader()
-        {
-            return new ViewLoader
-            {
-                ViewFolder = ViewFolder,
-                SyntaxProvider = SyntaxProvider,
-                ExtensionFactory = ExtensionFactory,
-                Prefix = Settings.Prefix,
-                BindingProvider = BindingProvider,
-                ParseSectionTagAsSegment = Settings.ParseSectionTagAsSegment,
-                AttributeBehaviour = Settings.AttributeBehaviour,
-                PartialProvider = PartialProvider,
-                PartialReferenceProvider = PartialReferenceProvider
-            };
-        }
-
         public Assembly BatchCompilation(IList<SparkViewDescriptor> descriptors)
         {
             return BatchCompilation(null /*outputAssembly*/, descriptors);
+        }
+
+        /// <summary>
+        /// ViewLoader must be transient (due to its dictionary and list).
+        /// </summary>
+        /// <returns></returns>
+        private ViewLoader CreateViewLoader()
+        {
+            return new ViewLoader(
+                this.Settings,
+                this.ViewFolder,
+                this.PartialProvider,
+                this.PartialReferenceProvider,
+                this.SparkExtensionFactory,
+                this.SyntaxProvider,
+                this.BindingProvider);
         }
 
         public Assembly BatchCompilation(string outputAssembly, IList<SparkViewDescriptor> descriptors)
@@ -332,7 +202,7 @@ namespace Spark
                 var entry = new CompiledViewEntry
                 {
                     Descriptor = descriptor,
-                    Loader = CreateViewLoader(),
+                    Loader = this.CreateViewLoader(),
                     Compiler = LanguageFactory.CreateViewCompiler(this, descriptor)
                 };
 
@@ -346,9 +216,8 @@ namespace Spark
                 batch.Add(entry);
             }
 
-            var batchCompiler = new BatchCompiler { OutputAssembly = outputAssembly };
+            var assembly = BatchCompiler.Compile(Settings.Debug, "csharp", outputAssembly, sourceCode, Settings.ExcludeAssemblies);
 
-            var assembly = batchCompiler.Compile(Settings.Debug, "csharp", sourceCode.ToArray());
             foreach (var entry in batch)
             {
                 entry.Compiler.CompiledType = assembly.GetType(entry.Compiler.ViewClassFullName);
@@ -380,12 +249,13 @@ namespace Spark
                 var descriptor = ((SparkViewAttribute)attributes[0]).BuildDescriptor();
 
                 var entry = new CompiledViewEntry
-                                {
-                                    Descriptor = descriptor,
-                                    Loader = new ViewLoader { PartialProvider = PartialProvider, PartialReferenceProvider = PartialReferenceProvider },
-                                    Compiler = new CSharpViewCompiler { CompiledType = type },
-                                    Activator = ViewActivatorFactory.Register(type)
-                                };
+                {
+                    Descriptor = descriptor,
+                    Loader = this.CreateViewLoader(),
+                    Compiler = new CSharpViewCompiler(this.BatchCompiler, this.Settings) { CompiledType = type },
+                    Activator = ViewActivatorFactory.Register(type)
+                };
+
                 CompiledViewHolder.Store(entry);
 
                 descriptors.Add(descriptor);

@@ -19,11 +19,14 @@ using System.Configuration;
 using System.Configuration.Install;
 using System.IO;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Spark.FileSystem;
+using Spark.Web.Mvc.Extensions;
 
 namespace Spark.Web.Mvc.Install
 {
     [RunInstaller(true)]
+    [Obsolete("Is Spark MVC ever 'installed'?")]
     public partial class PrecompileInstaller : Installer
     {
         public PrecompileInstaller()
@@ -68,13 +71,15 @@ namespace Spark.Web.Mvc.Install
                 settings = (ISparkSettings) config.GetSection("spark");
             }
 
-            // Finally create an engine with the <spark> settings from the web.config
-            var factory = new SparkViewFactory(settings)
-                              {
-                                  ViewFolder = new FileSystemViewFolder(viewsLocation)
-                              };
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(new FileSystemViewFolder(viewsLocation))
+                .BuildServiceProvider();
 
-            // And generate all of the known view/master templates into the target assembly
+            // Create an engine with the <spark> settings from the web.config
+            var factory = sp.GetService<SparkViewFactory>();
+
+            // And generate all the known view/master templates into the target assembly
             var batch = new SparkBatchDescriptor(targetPath);
             
             // create entries for controller attributes in the parent installer's assembly

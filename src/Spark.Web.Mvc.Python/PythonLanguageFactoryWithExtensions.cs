@@ -31,6 +31,10 @@ namespace Spark.Web.Mvc.Python
 {
     public class PythonLanguageFactoryWithExtensions : PythonLanguageFactory
     {
+        public PythonLanguageFactoryWithExtensions(IBatchCompiler batchCompiler, ISparkSettings settings) : base(batchCompiler, settings)
+        {
+        }
+
         private bool _initialized;
 
         public override ViewCompiler CreateViewCompiler(ISparkViewEngine engine, SparkViewDescriptor descriptor)
