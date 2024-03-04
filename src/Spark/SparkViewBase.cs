@@ -60,11 +60,32 @@ namespace Spark
             }
             set { _sparkViewContext = value; }
         }
-        
-        public TextWriter Output { get { return SparkViewContext.Output; } set { SparkViewContext.Output = value; } }
-        public Dictionary<string, TextWriter> Content { get { return SparkViewContext.Content; } set { SparkViewContext.Content = value; } }
-        public Dictionary<string, object> Globals { get { return SparkViewContext.Globals; } set { SparkViewContext.Globals = value; } }
-        public Dictionary<string, string> OnceTable { get { return SparkViewContext.OnceTable; } set { SparkViewContext.OnceTable = value; } }
+
+        public abstract void OutputValue(object value, bool automaticEncoding);
+
+        public TextWriter Output
+        {
+            get => SparkViewContext.Output;
+            set => SparkViewContext.Output = value;
+        }
+
+        public Dictionary<string, TextWriter> Content
+        { 
+            get => SparkViewContext.Content;
+            set => SparkViewContext.Content = value;
+        }
+
+        public Dictionary<string, object> Globals
+        {
+            get => SparkViewContext.Globals; 
+            set => SparkViewContext.Globals = value;
+        }
+
+        public Dictionary<string, string> OnceTable
+        { 
+            get => SparkViewContext.OnceTable; 
+            set => SparkViewContext.OnceTable = value;
+        }
 
         public IDisposable OutputScope(string name)
         {

@@ -48,6 +48,7 @@ namespace Spark.Compiler.VisualBasic
             source.WriteLine("Option Infer On");
 
             usingGenerator.UsingNamespace("Microsoft.VisualBasic");
+
             foreach (var ns in settings.UseNamespaces ?? Array.Empty<string>())
             {
                 usingGenerator.UsingNamespace(ns);

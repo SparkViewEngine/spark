@@ -33,6 +33,8 @@ namespace Castle.MonoRail.Views.Spark.Tests
             var settings = new SparkSettings()
                 .SetBaseClassTypeName(typeof(SparkView));
 
+            settings.AutomaticEncoding = true;
+
             serviceProvider.AddService(typeof(ISparkSettings), settings);
 
             factory = new SparkViewFactory();
@@ -132,6 +134,8 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             mocks.ReplayAll();
             manager.Process(string.Format("Home{0}TerseHtmlEncode", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
+            
+            // See AutomaticEncoding = true in Configure() method
             ContainsInOrder(output.ToString(),
                 "<p>This &lt;contains/&gt; html</p>");
         }

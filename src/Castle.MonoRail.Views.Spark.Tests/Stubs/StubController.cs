@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using Castle.MonoRail.Framework;
 
 namespace Castle.MonoRail.Views.Spark.Tests.Stubs
@@ -34,7 +31,6 @@ namespace Castle.MonoRail.Views.Spark.Tests.Stubs
         [Layout("ajax")]
         public void _Widget()
         {
-            
         }
     }
 }

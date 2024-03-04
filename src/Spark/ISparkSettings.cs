@@ -52,7 +52,7 @@ namespace Spark
         bool Debug { get; }
         NullBehaviour NullBehaviour { get; }
         string Prefix { get; }
-        string BaseClassTypeName { get; set; }
+        string BaseClassTypeName { get; }
         LanguageType DefaultLanguage { get; }
 
         IEnumerable<string> UseNamespaces { get; }

@@ -36,24 +36,32 @@ namespace Spark.Compiler.ChunkVisitors
 
         public Entry Add(string expression)
         {
-            var entry = new Entry {Expression = expression};
+            var entry = new Entry { Expression = expression };
+
             _entries.Add(entry);
+
             return entry;
         }
 
         void Examine(Snippets code)
         {
             if (Snippets.IsNullOrEmpty(code))
+            {
                 return;
+            }
 
             var codeString = code.ToString();
             foreach(var entry in _entries)
             {
                 if (entry.Detected)
+                {
                     continue;
+                }
 
                 if (codeString.Contains(entry.Expression))
+                {
                     entry.Detected = true;
+                }
             }
         }
 
@@ -118,7 +126,10 @@ namespace Spark.Compiler.ChunkVisitors
         protected override void Visit(ConditionalChunk chunk)
         {
             if (!Snippets.IsNullOrEmpty(chunk.Condition))
-                Examine(chunk.Condition);
+            {
+                this.Examine(chunk.Condition);
+            }
+
             Accept(chunk.Body);
         }
 

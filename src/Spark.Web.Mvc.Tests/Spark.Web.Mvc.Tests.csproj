@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />
+    <ProjectReference Include="..\Spark.Web.Tests\Spark.Web.Tests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="AspNetMvc.Tests.Views\Admin\Home\Index.spark">
@@ -75,9 +76,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="AspNetMvc.Tests.Views\Home\helpers.spark">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="AspNetMvc.Tests.Views\Home\html-encode-function-h.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="AspNetMvc.Tests.Views\Home\Index.spark">

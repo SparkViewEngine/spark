@@ -34,7 +34,7 @@ namespace Spark.Web.Mvc.Tests
     [TestFixture]
     public class DescriptorBuildingTester
     {
-        private SparkViewFactory _factory;
+        private SparkWebPrecompiler _precompiler;
         private InMemoryViewFolder _viewFolder;
         private RouteData _routeData;
         private ControllerContext _controllerContext;
@@ -64,9 +64,10 @@ namespace Spark.Web.Mvc.Tests
                 services =>
                 {
                     services.AddSingleton<IViewFolder>(this._viewFolder);
+                    services.AddSingleton<SparkWebPrecompiler>();
                 });
 
-            _factory = sp.GetService<SparkViewFactory>();
+            this._precompiler = sp.GetService<SparkWebPrecompiler>();
             
             var httpContext = MockRepository.GenerateStub<HttpContextBase>();
             _routeData = new RouteData();
@@ -96,7 +97,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Home\Index.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -111,7 +112,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Home\Index.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -127,7 +128,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Application.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -144,7 +145,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Application.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -162,7 +163,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Home.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -180,7 +181,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Home.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -199,7 +200,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Site.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -218,7 +219,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Site.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -238,7 +239,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Shared\Home.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -257,7 +258,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Shared\Home.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -274,7 +275,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Application.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -292,7 +293,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Application.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -311,7 +312,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Admin\Home\Index.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -330,7 +331,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Admin\Home\Index.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -348,7 +349,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Admin\Home\Index.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -366,7 +367,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Admin\Home\Index.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -386,7 +387,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Admin\Layouts\Application.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -406,7 +407,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Admin\Layouts\Application.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -427,7 +428,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Admin\Layouts\Site.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -448,7 +449,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Admin\Layouts\Site.shade", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", "Site", true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -471,7 +472,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Admin\Layouts\Site.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -491,7 +492,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Home.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -514,7 +515,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Home.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", "Red", true, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", "Red", true, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -536,7 +537,7 @@ namespace Spark.Web.Mvc.Tests
             _viewFolder.Add(@"Layouts\Home.spark", "");
 
             var searchedLocations = new List<string>();
-            var result = _factory.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
+            var result = this._precompiler.CreateDescriptor(_controllerContext, "Index", null, false, searchedLocations);
 
             AssertDescriptorTemplates(
                 result,
@@ -682,12 +683,15 @@ namespace Spark.Web.Mvc.Tests
         {
             var settings = new SparkSettings();
 
+            var descriptorBuilders = MockRepository.GenerateStub<IDescriptorBuilder>();
+
             var factory = new SparkViewFactory(
                 settings,
                 null,
-                MockRepository.GenerateStub<IDescriptorBuilder>(),
+                descriptorBuilders,
                 null,
-                null);
+                null,
+                new SparkWebPrecompiler(null, descriptorBuilders));
 
             Assert.That(
                 () =>

@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Spark.Compiler;
-using Spark.Compiler.Roslyn;
 using Spark.Parser;
 using Spark.Python.Compiler;
 using Spark.Tests.Models;
@@ -35,10 +34,7 @@ namespace Spark.Python.Tests
         [SetUp]
         public void Init()
         {
-            _settings = new SparkSettings
-            {
-                BaseClassTypeName = typeof(StubSparkView).FullName
-            };
+            _settings = new SparkSettings<StubSparkView>();
 
             _compiler = new PythonViewCompiler(_settings);
 
@@ -90,10 +86,9 @@ namespace Spark.Python.Tests
         {
             var chunks = Chunks();
 
-            this._settings.BaseClassTypeName = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
 
-            Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass"));
+            Assert.That(_compiler.SourceCode.Contains(": Spark.Tests.Stubs.StubSparkView"));
         }
 
         [Test]
@@ -101,10 +96,9 @@ namespace Spark.Python.Tests
         {
             var chunks = Chunks(new ViewDataModelChunk { TModel = "ThisIsTheModelClass" });
 
-            this._settings.BaseClassTypeName = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
 
-            Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass<ThisIsTheModelClass>"));
+            Assert.That(_compiler.SourceCode.Contains(": Spark.Tests.Stubs.StubSparkView<ThisIsTheModelClass>"));
         }
 
         [Test]

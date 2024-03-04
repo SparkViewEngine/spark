@@ -27,7 +27,7 @@ using Spark.Web.Mvc.Tests.Controllers;
 namespace Spark.Web.Mvc.Tests
 {
     [TestFixture]
-    public class SparkBatchCompilerTester
+    public class SparkPrecompilerTester
     {
         #region Setup/Teardown
 
@@ -35,12 +35,14 @@ namespace Spark.Web.Mvc.Tests
         {
             var services = new ServiceCollection();
 
-            services.AddSpark(new SparkSettings());
+            services.AddSpark(new SparkSettings().SetBaseClassTypeName(typeof(SparkView).FullName));
 
             if (serviceOverrides != null)
             {
                 serviceOverrides.Invoke(services);
             }
+
+            services.AddSingleton<SparkPrecompiler>();
 
             return services.BuildServiceProvider();
         }
@@ -52,14 +54,15 @@ namespace Spark.Web.Mvc.Tests
                 s =>
                 {
                     s.AddSingleton<IViewFolder>(new FileSystemViewFolder("AspNetMvc.Tests.Views"));
+                    s.AddSingleton<SparkPrecompiler>();
                 });
 
-            _factory = serviceProvider.GetService<SparkViewFactory>();
+            this._precompiler = serviceProvider.GetService<SparkPrecompiler>();
         }
 
         #endregion
 
-        private SparkViewFactory _factory;
+        private SparkPrecompiler _precompiler;
 
         [Test]
         public void CompileBatchDescriptor()
@@ -70,7 +73,7 @@ namespace Spark.Web.Mvc.Tests
                 .For<StubController>().Layout("layout").Include("Index").Include("List.spark")
                 .For<StubController>().Layout("ajax").Include("_Widget");
 
-            var assembly = _factory.Precompile(batch);
+            var assembly = this._precompiler.Precompile(batch);
 
             Assert.IsNotNull(assembly);
             Assert.AreEqual(3, assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)));
@@ -134,7 +137,7 @@ namespace Spark.Web.Mvc.Tests
 
             batch.For<StubController>();
 
-            var descriptors = _factory.CreateDescriptors(batch);
+            var descriptors = this._precompiler.CreateDescriptors(batch);
 
             Assert.AreEqual(2, descriptors.Count);
             Assert.AreEqual(1, descriptors[0].Templates.Count);
@@ -150,7 +153,7 @@ namespace Spark.Web.Mvc.Tests
 
             batch.For<StubController>().Include("*").Include("_*").Exclude("In*");
 
-            var descriptors = _factory.CreateDescriptors(batch);
+            var descriptors = this._precompiler.CreateDescriptors(batch);
 
             Assert.AreEqual(2, descriptors.Count);
             Assert.AreEqual(1, descriptors[0].Templates.Count);
@@ -171,7 +174,7 @@ namespace Spark.Web.Mvc.Tests
                 .Include("Index")
                 .Include("List.spark");
 
-            var assembly = _factory.Precompile(batch);
+            var assembly = this._precompiler.Precompile(batch);
 
             Assert.IsNotNull(assembly);
             Assert.AreEqual(4, assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)));
@@ -186,7 +189,7 @@ namespace Spark.Web.Mvc.Tests
                 .For<StubController>().Layout("layout").Include("*")
                 .For<StubController>().Layout("ajax").Include("_*");
 
-            var descriptors = _factory.CreateDescriptors(batch);
+            var descriptors = this._precompiler.CreateDescriptors(batch);
             Assert.AreEqual(3, descriptors.Count);
             Assert.That(
                 descriptors.Any(
@@ -198,7 +201,7 @@ namespace Spark.Web.Mvc.Tests
                 descriptors.Any(
                     d => d.Templates.Contains(string.Format("Stub{0}_Widget.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}ajax.spark", Path.DirectorySeparatorChar))));
 
-            var assembly = _factory.Precompile(batch);
+            var assembly = this._precompiler.Precompile(batch);
 
             Assert.IsNotNull(assembly);
             Assert.AreEqual(3, assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)));
@@ -220,12 +223,12 @@ namespace Spark.Web.Mvc.Tests
                     s.AddSingleton<IViewFolder>(viewFolder);
                 });
 
-            _factory = sp.GetService<SparkViewFactory>();
+            this._precompiler = sp.GetService<SparkPrecompiler>();
 
             var batch = new SparkBatchDescriptor();
             batch.For<StubController>();
 
-            var descriptors = _factory.CreateDescriptors(batch);
+            var descriptors = this._precompiler.CreateDescriptors(batch);
 
             Assert.AreEqual(1, descriptors.Count);
             Assert.AreEqual(2, descriptors[0].Templates.Count);

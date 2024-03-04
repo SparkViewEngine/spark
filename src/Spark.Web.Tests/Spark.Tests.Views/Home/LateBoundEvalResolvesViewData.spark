@@ -1,5 +1,4 @@
 
 <p>${#alpha}</p>
-<p>${H(#alpha)}</p>
 # Output.Write(#beta);
 <p>4${#nosuchthing}2</p>

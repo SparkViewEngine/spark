@@ -18,8 +18,6 @@ using Spark.FileSystem;
 using Spark.Tests.Stubs;
 using System.IO;
 using Spark.Bindings;
-using Spark.Compiler.Roslyn;
-using Spark.Parser;
 using Spark.Parser.Syntax;
 using Spark.Tests;
 

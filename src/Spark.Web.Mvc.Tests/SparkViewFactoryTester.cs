@@ -242,17 +242,6 @@ namespace Spark.Web.Mvc.Tests
         }
 
         [Test]
-        public void HtmlEncodeFunctionH()
-        {
-            FindViewAndRender("html-encode-function-h");
-            //mocks.VerifyAll();
-
-            var content = output.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
-
-            Assert.AreEqual("<p>&lt;p&gt;&amp;lt;&amp;gt;&lt;/p&gt;</p>", content);
-        }
-
-        [Test]
         public void HtmlHelperWorksOnItsOwn()
         {
             var viewContext = MakeViewContext("helpers");

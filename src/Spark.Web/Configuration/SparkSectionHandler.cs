@@ -105,11 +105,7 @@ namespace Spark.Configuration
 
         bool ISparkSettings.ParseSectionTagAsSegment => Pages.ParseSectionTagAsSegment;
 
-        string ISparkSettings.BaseClassTypeName
-        {
-            get => Pages.BaseClassTypeName;
-            set => Pages.BaseClassTypeName = value;
-        }
+        string ISparkSettings.BaseClassTypeName => Pages.BaseClassTypeName;
 
         LanguageType ISparkSettings.DefaultLanguage => Compilation.DefaultLanguage;
 

@@ -27,10 +27,7 @@ namespace Spark.Tests.Precompiled
             Output.Write("<p>Hello world</p>");
         }
 
-        public override Guid GeneratedViewId
-        {
-            get { return new Guid("11111111123412341234123456123456"); }
-        }
+        public override Guid GeneratedViewId => new Guid("11111111123412341234123456123456");
 
         public override bool TryGetViewData(string name, out object value)
         {

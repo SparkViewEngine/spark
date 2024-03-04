@@ -1158,7 +1158,6 @@ namespace Spark.Tests
                 content,
                 Contains.InOrder(
                     "<p><strong>hi</strong></p>",
-                    "<p>&lt;strong&gt;hi&lt;/strong&gt;</p>",
                     "yadda",
                     "<p>42</p>"));
         }

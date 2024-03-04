@@ -136,15 +136,6 @@ namespace Spark.Parser
         }
 
         [Test]
-        public void AutomaticEncodingTrueOmitsRedundantEncoding()
-        {
-            this.Init(true);
-            this._viewFolder.Add(Path.Combine("home", "index.spark"), "${H('<span>hello</span>')} !{H('<span>world</span>')}");
-            var content = this.RenderView(new SparkViewDescriptor().AddTemplate(Path.Combine("home", "index.spark")));
-            Assert.AreEqual("&lt;span&gt;hello&lt;/span&gt; &lt;span&gt;world&lt;/span&gt;", content);
-        }
-
-        [Test]
         public void HashSyntaxForStatementsByDefault()
         {
             var settings = new ParserSettings { AutomaticEncoding = true };

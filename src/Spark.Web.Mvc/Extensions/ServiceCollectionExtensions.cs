@@ -59,7 +59,8 @@ namespace Spark.Web.Mvc.Extensions
                 .AddSingleton<IViewFolder>(settings.CreateDefaultViewFolder())
                 .AddSingleton<ICompiledViewHolder, CompiledViewHolder>()
                 .AddSingleton<IPartialProvider, DefaultPartialProvider>()
-                .AddSingleton<IPartialReferenceProvider, DefaultPartialReferenceProvider>();
+                .AddSingleton<IPartialReferenceProvider, DefaultPartialReferenceProvider>()
+                .AddSingleton<ISparkPrecompiler, SparkWebPrecompiler>();
 
             services.AddSingleton<ISparkExtensionFactory>(c => null);
 

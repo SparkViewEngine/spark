@@ -33,9 +33,8 @@ namespace Spark.Ruby.Tests
         [SetUp]
         public void Init()
         {
-            _settings = new SparkSettings
+            _settings = new SparkSettings<StubSparkView>
             {
-                BaseClassTypeName = typeof(StubSparkView).FullName,
                 Debug = true
             };
             _compiler = new RubyViewCompiler(this._settings);
@@ -88,10 +87,9 @@ namespace Spark.Ruby.Tests
         {
             var chunks = Chunks();
 
-            _settings.BaseClassTypeName = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
 
-            Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass"));
+            Assert.That(_compiler.SourceCode.Contains(": Spark.Tests.Stubs.StubSparkView"));
         }
 
         [Test]
@@ -99,10 +97,9 @@ namespace Spark.Ruby.Tests
         {
             var chunks = Chunks(new ViewDataModelChunk { TModel = "ThisIsTheModelClass" });
 
-            _settings.BaseClassTypeName = "ThisIsTheBaseClass";
             _compiler.GenerateSourceCode(chunks, chunks);
 
-            Assert.That(_compiler.SourceCode.Contains(": ThisIsTheBaseClass<ThisIsTheModelClass>"));
+            Assert.That(_compiler.SourceCode.Contains(": Spark.Tests.Stubs.StubSparkView<ThisIsTheModelClass>"));
         }
 
         [Test]

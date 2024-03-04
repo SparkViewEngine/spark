@@ -15,7 +15,6 @@
 namespace Castle.MonoRail.Views.Spark
 {
     using System;
-    using System.Linq;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -106,13 +105,33 @@ namespace Castle.MonoRail.Views.Spark
                 OnceTable = outerView.OnceTable;
         }
 
-        public string H(object value)
+        public override void OutputValue(object value, bool automaticEncoding)
         {
-            if (value is HtmlString)
-                return value.ToString();
-            return Server.HtmlEncode(Convert.ToString(value));
+            // Always encode when automatic encoding enabled or HtmlString (includes MvcHtmlString)
+            if (automaticEncoding || value is HtmlString)
+            {
+                OutputEncodedValue(value);
+            }
+            else
+            {
+                Output.Write(value);
+            }
         }
-        
+
+        public void OutputEncodedValue(object value)
+        {
+            if (value is string stringValue)
+            {
+                var encoded = System.Web.HttpUtility.HtmlEncode(stringValue);
+            
+                Output.Write(encoded);
+            }
+            else
+            {
+                Output.Write(value.ToString());
+            }
+        }
+
         public object HTML(object value)
         {
             return new HtmlString(Convert.ToString(value));

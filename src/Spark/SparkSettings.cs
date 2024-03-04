@@ -19,6 +19,18 @@ using Spark.Parser;
 
 namespace Spark
 {
+    /// <summary>
+    /// Generic version of the spark setting to set the BaseClassTypeName more conveniently.
+    /// </summary>
+    /// <typeparam name="TBaseClassOfView"></typeparam>
+    public class SparkSettings<TBaseClassOfView> : SparkSettings, ISparkSettings
+        where TBaseClassOfView : SparkViewBase
+    {
+        private string baseClassTypeName;
+
+        public override string BaseClassTypeName => this.baseClassTypeName ??= typeof(TBaseClassOfView).FullName;
+    }
+
     public class SparkSettings : ISparkSettings
     {
         /// <summary>
@@ -58,7 +70,7 @@ namespace Spark
         public bool AutomaticEncoding { get; set; }
         public string StatementMarker { get; set; }
         public string Prefix { get; set; }
-        public string BaseClassTypeName { get; set; }
+        public virtual string BaseClassTypeName { get; private set; }
         public LanguageType DefaultLanguage { get; set; }
         public bool ParseSectionTagAsSegment { get; set; }
 
@@ -108,27 +120,37 @@ namespace Spark
         }
 
         /// <summary>
-        /// Sets the fully full name of the type each spark page should inherit from.
+        /// Sets the type each spark view will inherit from.
         /// </summary>
-        /// <param name="typeName">The full name of the type.</param>
+        /// <param name="typeFullName">The full name of the type.</param>
         /// <returns></returns>
-        public SparkSettings SetBaseClassTypeName(string typeName)
+        public SparkSettings SetBaseClassTypeName(string typeFullName)
         {
-            BaseClassTypeName = typeName;
+            this.BaseClassTypeName = typeFullName;
 
             return this;
         }
 
         /// <summary>
-        /// Sets the type each spark page should inherit from.
+        /// Sets the type each spark view will inherit from.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns></returns>
         public SparkSettings SetBaseClassTypeName(Type type)
         {
-            BaseClassTypeName = type.FullName;
+            this.BaseClassTypeName = type.FullName;
 
             return this;
+        }
+
+        /// <summary>
+        /// Sets the type each spark view will inherit from.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public SparkSettings SetBaseClass<T>()
+        {
+            return this.SetBaseClassTypeName(typeof(T));
         }
 
         /// <summary>

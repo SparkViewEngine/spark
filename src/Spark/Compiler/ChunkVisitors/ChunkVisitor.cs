@@ -105,7 +105,6 @@ namespace Spark.Compiler.ChunkVisitors
 
         protected override void Visit(ViewDataModelChunk chunk)
         {
-
         }
 
         protected override void Visit(ExtensionChunk chunk)

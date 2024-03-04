@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using NUnit.Framework;
 using Spark.FileSystem;
-using Spark.Tests.Models;
 using Spark.Tests.Stubs;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
@@ -257,8 +256,8 @@ ${x1} ${x2}
 <viewdata model=""Spark.Tests.Models.Comment Comment"" />
 ${Comment.Text}
 ");
-            var comment = new Comment { Text = "hello world" };
-            var contents = Render("index", new StubViewData<Comment> { Model = comment });
+            var comment = new Spark.Tests.Models.Comment { Text = "hello world" };
+            var contents = Render("index", new StubViewData<Spark.Tests.Models.Comment> { Model = comment });
             Assert.That(contents.Trim(), Is.EqualTo("hello world"));
         }
 

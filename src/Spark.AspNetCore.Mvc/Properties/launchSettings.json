@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Spark.AspNetCore.Mvc": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:49470;http://localhost:49471"
+    }
+  }
+}
