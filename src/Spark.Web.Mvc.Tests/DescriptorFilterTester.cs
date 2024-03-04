@@ -4,9 +4,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
-
 using Rhino.Mocks;
-using Spark.Web.Mvc.Descriptors;
+using Spark.Descriptors;
 
 namespace Spark.Web.Mvc.Tests
 {
@@ -32,8 +31,8 @@ namespace Spark.Web.Mvc.Tests
         {
             var filter = new AreaDescriptorFilter();
 
-            _context.RouteData.DataTokens.Add("area", "foo");
-            filter.ExtraParameters(_context, _extra);
+            _context.RouteData.Values.Add("area", "foo");
+            filter.ExtraParameters(new SparkRouteData(_context.RouteData.Values), _extra);
 
             Assert.That(_extra["area"], Is.EqualTo("foo"));
         }
@@ -44,7 +43,7 @@ namespace Spark.Web.Mvc.Tests
             var filter = new AreaDescriptorFilter();
 
             _context.RouteData.Values.Add("area", "foo");
-            filter.ExtraParameters(_context, _extra);
+            filter.ExtraParameters(new SparkRouteData(_context.RouteData.Values), _extra);
 
             Assert.That(_extra["area"], Is.EqualTo("foo"));
         }
@@ -76,7 +75,7 @@ namespace Spark.Web.Mvc.Tests
         public void ThemeFilterDelegateCanExtractParameter()
         {
             var filter = ThemeDescriptorFilter.For(context => "foo");
-            filter.ExtraParameters(_context, _extra);
+            filter.ExtraParameters(new SparkRouteData(_context.RouteData.Values), _extra);
             Assert.That(_extra["theme"], Is.EqualTo("foo"));
         }
 
@@ -107,7 +106,7 @@ namespace Spark.Web.Mvc.Tests
         public void LanguageFilterDelegateCanExtractParameter()
         {
             var filter = LanguageDescriptorFilter.For(context => "foo");
-            filter.ExtraParameters(_context, _extra);
+            filter.ExtraParameters(new SparkRouteData(_context.RouteData.Values), _extra);
             Assert.That(_extra["language"], Is.EqualTo("foo"));
         }
 

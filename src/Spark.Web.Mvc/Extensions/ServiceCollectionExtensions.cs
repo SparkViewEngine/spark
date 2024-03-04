@@ -3,9 +3,9 @@ using System.Configuration;
 using System.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Spark.Bindings;
-using Spark.Caching;
 using Spark.Compiler;
 using Spark.Compiler.Roslyn;
+using Spark.Descriptors;
 using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Parser.Syntax;
@@ -64,7 +64,7 @@ namespace Spark.Web.Mvc.Extensions
             services.AddSingleton<ISparkExtensionFactory>(c => null);
 
             services
-                .AddSingleton<IDescriptorBuilder, DefaultDescriptorBuilder>()
+                .AddSingleton<IDescriptorBuilder, DescriptorBuilder>()
                 .AddTransient<ICacheService>(sp =>
                 {
                     if (HttpContext.Current != null && HttpContext.Current.Cache != null)

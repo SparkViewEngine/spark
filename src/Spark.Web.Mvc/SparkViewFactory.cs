@@ -18,8 +18,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Spark.Compiler;
+using Spark.Descriptors;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Wrappers;
 
@@ -95,13 +95,15 @@ namespace Spark.Web.Mvc
 
             var controllerName = controllerContext.RouteData.GetRequiredString("controller");
 
+            var routeDataWrapper = new SparkRouteData(controllerContext.RouteData.Values);
+
             var descriptorParams = new BuildDescriptorParams(
                 targetNamespace,
                 controllerName,
                 viewName,
                 masterName,
                 findDefaultMaster,
-                DescriptorBuilder.GetExtraParameters(controllerContext));
+                DescriptorBuilder.GetExtraParameters(routeDataWrapper));
 
             ISparkViewEntry entry;
             if (useCache)
@@ -164,6 +166,8 @@ namespace Spark.Web.Mvc
 
             var controllerName = controllerContext.RouteData.GetRequiredString("controller");
 
+            var routeDataWrapper = new SparkRouteData(controllerContext.RouteData.Values);
+
             return DescriptorBuilder.BuildDescriptor(
                 new BuildDescriptorParams(
                     targetNamespace,
@@ -171,7 +175,7 @@ namespace Spark.Web.Mvc
                     viewName,
                     masterName,
                     findDefaultMaster,
-                    DescriptorBuilder.GetExtraParameters(controllerContext)),
+                    DescriptorBuilder.GetExtraParameters(routeDataWrapper)),
                 searchedLocations);
         }
 

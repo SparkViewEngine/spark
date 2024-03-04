@@ -18,15 +18,16 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 using Rhino.Mocks;
+using Spark.Descriptors;
 using Spark.FileSystem;
 using Spark.Parser;
 using Spark.Web.Mvc.Descriptors;
 using Spark.Web.Mvc.Extensions;
+using RouteData = System.Web.Routing.RouteData;
 
 namespace Spark.Web.Mvc.Tests
 {
@@ -267,7 +268,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void RouteAreaPresentDefaultsToNormalLocation()
         {
-            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
             _viewFolder.Add(@"Layouts\Application.spark", "");
@@ -285,7 +286,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void RouteAreaPresentDefaultsToNormalLocationWithShade()
         {
-            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.shade", "");
             _viewFolder.Add(@"Layouts\Application.shade", "");
@@ -303,7 +304,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void AreaFolderMayContainControllerFolder()
         {
-            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
             _viewFolder.Add(@"Layouts\Application.spark", "");
@@ -322,7 +323,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void AreaFolderMayContainControllerFolderWithShade()
         {
-            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.shade", "");
             _viewFolder.Add(@"Layouts\Application.shade", "");
@@ -377,7 +378,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void AreaFolderMayContainLayoutsFolder()
         {
-            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
             _viewFolder.Add(@"Layouts\Application.spark", "");
@@ -397,7 +398,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void AreaFolderMayContainLayoutsFolderWithShade()
         {
-            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.shade", "");
             _viewFolder.Add(@"Layouts\Application.shade", "");
@@ -417,7 +418,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void AreaContainsNamedLayout()
         {
-            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
             _viewFolder.Add(@"Layouts\Application.spark", "");
@@ -438,7 +439,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void AreaContainsNamedLayoutWithShade()
         {
-            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.shade", "");
             _viewFolder.Add(@"Layouts\Application.shade", "");
@@ -459,7 +460,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void PartialViewFromAreaIgnoresLayout()
         {
-            _routeData.DataTokens.Add("area", "Admin");
+            _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
             _viewFolder.Add(@"Admin\Home\Index.spark", "");
@@ -626,18 +627,18 @@ namespace Spark.Web.Mvc.Tests
                 @"Layouts\Application.en.spark");
         }
 
-        public class ExtendingDescriptorBuilderWithInheritance : DefaultDescriptorBuilder
+        public class ExtendingDescriptorBuilderWithInheritance : DescriptorBuilder
         {
             public ExtendingDescriptorBuilderWithInheritance(ISparkSettings settings, IViewFolder viewFolder)
                 : base(settings, viewFolder)
             {
             }
 
-            public override IDictionary<string, object> GetExtraParameters(ControllerContext controllerContext)
+            public override IDictionary<string, object> GetExtraParameters(SparkRouteData routeData)
             {
                 return new Dictionary<string, object>
                 {
-                    { "language", Convert.ToString(controllerContext.RouteData.Values["language"]) }
+                    { "language", Convert.ToString(routeData.Values["language"]) }
                 };
             }
 
@@ -702,7 +703,7 @@ namespace Spark.Web.Mvc.Tests
                 Prefix = null
             };
 
-            var builder = new DefaultDescriptorBuilder(settings, null);
+            var builder = new DescriptorBuilder(settings, null);
 
             var a = builder.ParseUseMaster(new Position(new SourceContext("<use master='a'/>")));
             var b = builder.ParseUseMaster(new Position(new SourceContext("<use\r\nmaster \r\n =\r\n'b' />")));
@@ -727,7 +728,7 @@ namespace Spark.Web.Mvc.Tests
                 Prefix = "s"
             };
 
-            var builder = new DefaultDescriptorBuilder(settings, null);
+            var builder = new DescriptorBuilder(settings, null);
 
             var a = builder.ParseUseMaster(new Position(new SourceContext("<s:use master='a'/>")));
             var b = builder.ParseUseMaster(new Position(new SourceContext("<s:use\r\nmaster \r\n =\r\n'b' />")));

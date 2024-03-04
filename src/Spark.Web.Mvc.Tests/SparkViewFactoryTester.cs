@@ -24,10 +24,12 @@ using System.Web.SessionState;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Spark.Descriptors;
 using Spark.FileSystem;
 using Spark.Web.Mvc.Extensions;
 using Spark.Web.Mvc.Tests.Controllers;
 using Spark.Web.Mvc.Tests.Models;
+using RouteData = System.Web.Routing.RouteData;
 
 namespace Spark.Web.Mvc.Tests
 {
@@ -610,7 +612,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanLocateViewInArea()
         {
-            controllerContext.RouteData.DataTokens.Add("area", "admin");
+            controllerContext.RouteData.Values.Add("area", "admin");
             
             var result = factory.FindView(controllerContext, "index", null);
 
@@ -624,7 +626,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanLocateViewInAreaWithLayout()
         {
-            controllerContext.RouteData.DataTokens.Add("area", "admin");
+            controllerContext.RouteData.Values.Add("area", "admin");
             
             var result = factory.FindView(controllerContext, "index", "layout");
             
@@ -642,7 +644,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanLocateViewInAreaWithLayoutInArea()
         {
-            controllerContext.RouteData.DataTokens.Add("area", "admin");
+            controllerContext.RouteData.Values.Add("area", "admin");
             
             var result = factory.FindView(controllerContext, "index", "speciallayout");
             
@@ -660,7 +662,7 @@ namespace Spark.Web.Mvc.Tests
         [Test]
         public void CanLocatePartialViewInArea()
         {
-            controllerContext.RouteData.DataTokens.Add("area", "admin");
+            controllerContext.RouteData.Values.Add("area", "admin");
             
             var result = factory.FindPartialView(controllerContext, "index");
             

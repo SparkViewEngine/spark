@@ -1,4 +1,5 @@
 ﻿using System;
+using Spark.Descriptors;
 
 namespace Spark.Web.Mvc.Descriptors
 {
@@ -11,13 +12,15 @@ namespace Spark.Web.Mvc.Descriptors
 
         public static void AddFilter(this IDescriptorBuilder target, IDescriptorFilter filter)
         {
-            if (!(target is DefaultDescriptorBuilder))
-                throw new InvalidCastException($"IDescriptorFilters may only be added to {nameof(DefaultDescriptorBuilder)}");
+            if (!(target is DescriptorBuilder))
+            {
+                throw new InvalidCastException($"IDescriptorFilters may only be added to {nameof(DescriptorBuilder)}");
+            }
 
-            ((DefaultDescriptorBuilder) target).AddFilter(filter);
+            ((DescriptorBuilder)target).AddFilter(filter);
         }
 
-        public static void AddFilter(this DefaultDescriptorBuilder target, IDescriptorFilter filter)
+        public static void AddFilter(this DescriptorBuilder target, IDescriptorFilter filter)
         {
             target.Filters.Add(filter);
         }
