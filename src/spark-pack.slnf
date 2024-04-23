@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "Spark.sln",
+    "projects": [
+      "Spark.Web.Mvc\\Spark.Web.Mvc.csproj",
+      "Spark.Web\\Spark.Web.csproj",
+      "Spark\\Spark.csproj"
+    ]
+  }
+}
