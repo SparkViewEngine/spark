@@ -80,6 +80,10 @@ namespace Spark
         public IEnumerable<string> UseNamespaces => _useNamespaces;
 
         private readonly IList<string> _useAssemblies;
+
+        /// <summary>
+        /// A list of names, full names or absolute paths to .dll for assemblies to load before compiling views.
+        /// </summary>
         public IEnumerable<string> UseAssemblies => _useAssemblies;
 
         private readonly IList<string> _excludeAssemblies;
@@ -166,7 +170,7 @@ namespace Spark
         }
 
         /// <summary>
-        /// Adds the full name of an assembly for the view compiler to be aware of.
+        /// Adds the name, full name or absolute path of an assembly for the view compiler to be aware of.
         /// </summary>
         /// <param name="assembly">The full name of an assembly.</param>
         /// <returns></returns>
@@ -182,7 +186,7 @@ namespace Spark
         /// </summary>
         public SparkSettings AddAssembly(Assembly assembly)
         {
-            _useAssemblies.Add(assembly.FullName);
+            _useAssemblies.Add(assembly.Location);
 
             return this;
         }

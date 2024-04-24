@@ -40,7 +40,7 @@ namespace Spark.Compiler
 
             _viewFolder = new InMemoryViewFolder();
 
-            var batchCompiler = new RoslynBatchCompiler();
+            var batchCompiler = new RoslynBatchCompiler(new SparkSettings());
 
             _engine = new SparkViewEngine(
                 settings,

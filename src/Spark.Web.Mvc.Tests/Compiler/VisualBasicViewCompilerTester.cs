@@ -33,7 +33,7 @@ namespace Spark.Compiler
         public void Init()
         {
             this.batchCompiler =
-                new RoslynBatchCompiler();
+                new RoslynBatchCompiler(new SparkSettings());
         }
 
         private static void DoCompileView(ViewCompiler compiler, IList<Chunk> chunks)

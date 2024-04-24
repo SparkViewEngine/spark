@@ -43,7 +43,7 @@ namespace Spark.Web.Mvc.Ruby.Tests
         {
             var settings = new SparkSettings();
 
-            var batchCompiler = new RoslynBatchCompiler();
+            var batchCompiler = new RoslynBatchCompiler(settings);
 
             var languageFactory = new RubyLanguageFactoryWithExtensions(batchCompiler, settings);
 

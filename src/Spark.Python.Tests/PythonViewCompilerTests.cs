@@ -38,7 +38,7 @@ namespace Spark.Python.Tests
 
             _compiler = new PythonViewCompiler(_settings);
 
-            _languageFactory = new PythonLanguageFactory(new RoslynBatchCompiler(), _settings);
+            _languageFactory = new PythonLanguageFactory(new RoslynBatchCompiler(this._settings), _settings);
 
             // Load up assemblies
             IronPython.Hosting.Python.CreateEngine();

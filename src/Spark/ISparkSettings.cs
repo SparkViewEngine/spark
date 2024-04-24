@@ -56,6 +56,10 @@ namespace Spark
         LanguageType DefaultLanguage { get; }
 
         IEnumerable<string> UseNamespaces { get; }
+
+        /// <summary>
+        /// A list of name, fullname or absolute paths to .dll for assemblies to load before compiling views.
+        /// </summary>
         IEnumerable<string> UseAssemblies { get; }
 
         /// <summary>

@@ -31,7 +31,7 @@ namespace Spark.Compiler
         [SetUp]
         public void Init()
         {
-            this.batchCompiler = new RoslynBatchCompiler();
+            this.batchCompiler = new RoslynBatchCompiler(new SparkSettings());
         }
 
         private static void DoCompileView(ViewCompiler compiler, IList<Chunk> chunks)
@@ -306,7 +306,7 @@ namespace Spark.Compiler
             var settings = new SparkSettings<SparkView>
             {
                 NullBehaviour = NullBehaviour.Lenient
-            }.AddAssembly(typeof(Spark.Tests.Models.Comment).Assembly.FullName);
+            }.AddAssembly(typeof(Spark.Tests.Models.Comment).Assembly);
 
             var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             
@@ -327,7 +327,7 @@ namespace Spark.Compiler
             var settings = new SparkSettings<SparkView>
             {
                 NullBehaviour = NullBehaviour.Lenient
-            }.AddAssembly(typeof(Spark.Tests.Models.Comment).Assembly.FullName);
+            }.AddAssembly(typeof(Spark.Tests.Models.Comment).Assembly);
 
             var compiler = new CSharpViewCompiler(this.batchCompiler, settings);
             var chunks = new Chunk[]

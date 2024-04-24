@@ -28,7 +28,7 @@ public class CSharpLink : IRoslynCompilationLink
 
         foreach (var diagnostic in failures)
         {
-            sb.Append(diagnostic.Id).Append(":").AppendLine(diagnostic.GetMessage());
+            sb.AppendLine(diagnostic.ToString());
         }
 
         throw new RoslynCompilerException(sb.ToString(), result);

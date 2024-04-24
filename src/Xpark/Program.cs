@@ -51,7 +51,7 @@ a _global.spark file with common namespaces, macros, etc.
 
             var partialProvider = new DefaultPartialProvider();
 
-            var batchCompiler = new RoslynBatchCompiler();
+            var batchCompiler = new RoslynBatchCompiler(new SparkSettings());
 
             var engine = new SparkViewEngine(
                 settings,

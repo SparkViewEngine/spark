@@ -38,7 +38,7 @@ namespace Spark.Ruby.Tests
                 Debug = true
             };
             _compiler = new RubyViewCompiler(this._settings);
-            _languageFactory = new RubyLanguageFactory(new RoslynBatchCompiler(), this._settings);
+            _languageFactory = new RubyLanguageFactory(new RoslynBatchCompiler(this._settings), this._settings);
 
             //load assemblies
             global::IronRuby.Ruby.CreateEngine();

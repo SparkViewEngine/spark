@@ -185,16 +185,18 @@ public class CodeDomCompilerException(string message, CompilerResults results) :
 public class RoslynBatchCompiler : IBatchCompiler
 {
     private readonly IEnumerable<IRoslynCompilationLink> links;
+    private readonly ISparkSettings settings;
 
     private readonly IList<PortableExecutableReference> References;
 
-    public RoslynBatchCompiler() : this(new IRoslynCompilationLink[] { new CSharpLink(), new VisualBasicLink() })
+    public RoslynBatchCompiler(ISparkSettings settings) : this(new IRoslynCompilationLink[] { new CSharpLink(), new VisualBasicLink() }, settings)
     {
     }
 
-    public RoslynBatchCompiler(IEnumerable<IRoslynCompilationLink> links)
+    public RoslynBatchCompiler(IEnumerable<IRoslynCompilationLink> links, ISparkSettings settings)
     {
         this.links = links;
+        this.settings = settings;
         this.References = new List<PortableExecutableReference>();
     }
 
@@ -217,7 +219,7 @@ public class RoslynBatchCompiler : IBatchCompiler
 
         if (!File.Exists(file))
         {
-            // check framework or dedicated runtime app folder
+            // Check framework or dedicated runtime app folder
             var path = Path.GetDirectoryName(typeof(object).Assembly.Location);
             file = Path.Combine(path, assemblyDll);
             if (!File.Exists(file))
@@ -337,8 +339,16 @@ public class RoslynBatchCompiler : IBatchCompiler
 #endif
 
         // TODO: Is this needed?
-        this.AddAssembly(typeof(System.Drawing.Color));
-
+        //this.AddAssembly(typeof(System.Drawing.Color));
+        foreach(var assemblyLocation in settings.UseAssemblies)
+        {
+            // Assumes full path to assemblies
+            if (assemblyLocation.EndsWith(".dll"))
+            {
+                this.AddAssembly(assemblyLocation);
+            }
+        }
+        
         foreach (var currentAssembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             if (currentAssembly.IsDynamic())

@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using Spark.Compiler.ChunkVisitors;
 using Spark.Parser.Code;
@@ -75,7 +76,11 @@ namespace Spark.Compiler.CSharp.ChunkVisitors
             if (_assemblyAdded.ContainsKey(assemblyString))
                 return;
 
-            var assembly = Assembly.Load(assemblyString);
+            // Works with absolute path to .dll or assembly name (including fullname)
+            var assembly = assemblyString.EndsWith(".dll", ignoreCase: true, CultureInfo.InvariantCulture)
+                ? Assembly.LoadFile(assemblyString)
+                : Assembly.Load(assemblyString);
+
             _assemblyAdded.Add(assemblyString, assembly);
         }
     }

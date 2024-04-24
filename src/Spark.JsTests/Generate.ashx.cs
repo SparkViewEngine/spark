@@ -40,7 +40,7 @@ namespace Spark.JsTests
 
             var partialProvider = new DefaultPartialProvider();
 
-            var batchCompiler = new RoslynBatchCompiler();
+            var batchCompiler = new RoslynBatchCompiler(new SparkSettings());
 
             var engine = new SparkViewEngine(
                 settings, 
