@@ -56,15 +56,15 @@ namespace Spark.Configuration
             return this;
         }
 
-        public SparkSectionHandler SetPageBaseType(string typeName)
+        public SparkSectionHandler SetBaseClassTypeName(string typeName)
         {
-            Pages.PageBaseType = typeName;
+            Pages.BaseClassTypeName = typeName;
             return this;
         }
 
-        public SparkSectionHandler SetPageBaseType(Type type)
+        public SparkSectionHandler SetBaseClassTypeName(Type type)
         {
-            Pages.PageBaseType = type.FullName;
+            Pages.BaseClassTypeName = type.FullName;
             return this;
         }
 
@@ -105,11 +105,7 @@ namespace Spark.Configuration
 
         bool ISparkSettings.ParseSectionTagAsSegment => Pages.ParseSectionTagAsSegment;
 
-        string ISparkSettings.PageBaseType
-        {
-            get => Pages.PageBaseType;
-            set => Pages.PageBaseType = value;
-        }
+        string ISparkSettings.BaseClassTypeName => Pages.BaseClassTypeName;
 
         LanguageType ISparkSettings.DefaultLanguage => Compilation.DefaultLanguage;
 
@@ -118,7 +114,9 @@ namespace Spark.Configuration
             get
             {
                 foreach (NamespaceElement ns in Pages.Namespaces)
+                {
                     yield return ns.Namespace;
+                }
             }
         }
 
@@ -126,8 +124,21 @@ namespace Spark.Configuration
         {
             get
             {
-                foreach (AssemblyElement assembly in Compilation.Assemblies)
-                    yield return assembly.Assembly;
+                foreach (AssemblyElement include in Compilation.Assemblies)
+                {
+                    yield return include.Assembly;
+                }
+            }
+        }
+
+        IEnumerable<string> ISparkSettings.ExcludeAssemblies
+        {
+            get
+            {
+                foreach (ExcludeAssemblyElement exclude in Compilation.ExcludeAssemblies)
+                {
+                    yield return exclude.Assembly;
+                }
             }
         }
 
@@ -136,7 +147,9 @@ namespace Spark.Configuration
             get
             {
                 foreach (ResourcePathElement resource in Pages.Resources)
+                {
                     yield return new SimpleResourceMapping { Match = resource.Match, Location = resource.Location };
+                }
             }
         }
 
@@ -145,7 +158,9 @@ namespace Spark.Configuration
             get
             {
                 foreach (ViewFolderElement viewFolder in Views)
+                {
                     yield return viewFolder;
+                }
             }
         }
     }

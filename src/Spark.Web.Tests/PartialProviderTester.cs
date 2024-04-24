@@ -1,13 +1,15 @@
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Spark.Extensions;
 
 namespace Spark
 {
     [TestFixture]
     public class PartialProviderTester
     {
-        private SparkViewEngine _engine;
         private IPartialProvider _partialProvider;
+        private IPartialReferenceProvider _partialReferenceProvider;
         private string _viewPath;
         private string[] _result;
 
@@ -17,10 +19,14 @@ namespace Spark
             this._viewPath = "fake/path";
 
             this._partialProvider = MockRepository.GenerateMock<IPartialProvider>();
-            this._engine = new SparkViewEngine(new SparkSettings())
-            {
-                PartialProvider = this._partialProvider
-            };
+
+            var sp = new ServiceCollection()
+                .AddSpark(new SparkSettings())
+                .AddSingleton<IPartialProvider>(this._partialProvider)
+                .BuildServiceProvider();
+
+            _partialReferenceProvider = sp.GetService<IPartialReferenceProvider>();
+            
             this._result = new[] {"output"};
         }
 
@@ -28,26 +34,11 @@ namespace Spark
         public void DefaultPartialReferenceProviderWrapsPartialProvider()
         {
             this._partialProvider.Expect(x => x.GetPaths(this._viewPath)).Return(this._result);
-            var output = this._engine.PartialReferenceProvider.GetPaths(this._viewPath, true);
+            
+            var output = _partialReferenceProvider.GetPaths(this._viewPath, true);
+            
             this._partialProvider.VerifyAllExpectations();
-            Assert.AreEqual(this._result, output);
-        }
-
-        [Test]
-        public void SettingNewPartialProviderPropogatesToDefaultPartialProvider()
-        {
-            var differentPartialProvider = MockRepository.GenerateMock<IPartialProvider>();
-            this._engine.PartialProvider = differentPartialProvider;
-
-            //should not call the original
-            this._partialProvider.Expect(x => x.GetPaths(this._viewPath)).Repeat.Never();
-
-            //should call the newly provided instance
-            differentPartialProvider.Expect(x => x.GetPaths(this._viewPath)).Return(this._result);
-
-            var output = this._engine.PartialReferenceProvider.GetPaths(this._viewPath, true);
-            this._partialProvider.VerifyAllExpectations();
-            differentPartialProvider.VerifyAllExpectations();
+            
             Assert.AreEqual(this._result, output);
         }
     }

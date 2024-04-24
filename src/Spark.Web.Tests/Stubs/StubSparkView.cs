@@ -41,9 +41,16 @@ namespace Spark.Tests.Stubs
             return ViewData.TryGetValue(name, out value);
         }
 
-        public string H(object content)
+        public override void OutputValue(object value, bool automaticEncoding)
         {
-            return HttpUtility.HtmlEncode(Convert.ToString(content));
+            if (automaticEncoding)
+            {
+                Output.Write(HttpUtility.HtmlEncode(Convert.ToString(value)));
+            }
+            else
+            {
+                Output.Write(Convert.ToString(value));
+            }
         }
 
         public object HTML(object value)

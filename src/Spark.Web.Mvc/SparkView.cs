@@ -25,7 +25,7 @@ namespace Spark.Web.Mvc
         private string _siteRoot;
         private ViewDataDictionary _viewData;
         private ViewContext _viewContext;
-    	private dynamic _viewBag;
+        private dynamic _viewBag;
         
         public TempDataDictionary TempData => ViewContext.TempData;
 
@@ -52,19 +52,19 @@ namespace Spark.Web.Mvc
             set { SetViewData(value); }
         }
 
-    	public dynamic ViewBag
-    	{
-			get
-			{
-				if( _viewBag == null )
-					SetViewBag( new DynamicViewDataDictionary(ViewData) );
-				return _viewBag;
-			}
-    	}
+        public dynamic ViewBag
+        {
+            get
+            {
+                if( _viewBag == null )
+                    SetViewBag(new DynamicViewDataDictionary(ViewData));
+                return _viewBag;
+            }
+        }
 
         public ViewContext ViewContext
         {
-            get { return _viewContext; }
+            get => _viewContext;
             set { SetViewContext(value); }
         }
 
@@ -73,10 +73,10 @@ namespace Spark.Web.Mvc
             _viewData = viewData;
         }
 
-		protected virtual void SetViewBag( DynamicViewDataDictionary viewBag )
-		{
-			_viewBag = viewBag;
-		}
+        protected virtual void SetViewBag(DynamicViewDataDictionary viewBag)
+        {
+            _viewBag = viewBag;
+        }
 
         protected virtual void SetViewContext(ViewContext viewContext)
         {
@@ -135,7 +135,6 @@ namespace Spark.Web.Mvc
             return ResourcePathManager.GetResourcePath(SiteRoot, path);
         }
 
-
         public void Render(ViewContext viewContext, TextWriter writer)
         {
             var wrappedViewContext = new ViewContextWrapper(viewContext, this);
@@ -183,20 +182,36 @@ namespace Spark.Web.Mvc
 
             Content.Clear();
         }
-        
-        public string H(object value)
+
+        public override void OutputValue(object value, bool automaticEncoding)
         {
-            if (value is MvcHtmlString htmlString)
+            // Always encode when automatic encoding enabled or HtmlString (includes MvcHtmlString)
+            if (automaticEncoding || value is HtmlString)
             {
-                return H(htmlString);
+                OutputEncodedValue(value);
             }
-            
-            return Html.Encode(value);
+            else
+            {
+                Output.Write(value);
+            }
         }
 
-        public string H(MvcHtmlString value)
+        public void OutputEncodedValue(object value)
         {
-            return value == null ? null : value.ToString();
+            if (value is string stringValue)
+            {
+                var encoded = Html.Encode(stringValue);
+            
+                Output.Write(encoded);
+            }
+            else if (value is MvcHtmlString mvcHtmlString)
+            {
+                Output.Write(mvcHtmlString.ToString());
+            }
+            else
+            {
+                Output.Write(value.ToString());
+            }
         }
 
         public MvcHtmlString HTML(object value)
@@ -211,59 +226,6 @@ namespace Spark.Web.Mvc
         public string Eval(string expression, string format)
         {
             return ViewData.Eval(expression, format);
-        }
-    }
-
-    public abstract class SparkView<TModel> : SparkView
-    {
-        private ViewDataDictionary<TModel> _viewData;
-        private HtmlHelper<TModel> _htmlHelper;
-        private AjaxHelper<TModel> _ajaxHelper;
-
-        public TModel Model => ViewData.Model;
-
-        public new ViewDataDictionary<TModel> ViewData
-        {
-            get
-            {
-                if (_viewData == null)
-                    SetViewData(new ViewDataDictionary<TModel>());
-                return _viewData;
-            }
-            set { SetViewData(value); }
-        }
-
-        public new HtmlHelper<TModel> Html
-        {
-            get => _htmlHelper;
-            set
-            {
-                _htmlHelper = value; 
-                base.Html = value;
-            }
-        }
-
-        public new AjaxHelper<TModel> Ajax
-        {
-            get => _ajaxHelper;
-            set
-            {
-                _ajaxHelper = value;
-                base.Ajax = value;
-            }
-        }
-
-        protected override void SetViewData(ViewDataDictionary viewData)
-        {
-            _viewData = new ViewDataDictionary<TModel>(viewData);
-            base.SetViewData(_viewData);
-        }
-
-        protected override void CreateHelpers()
-        {
-            Html = new HtmlHelper<TModel>(ViewContext, this);
-            Url = new UrlHelper(ViewContext.RequestContext);
-            Ajax = new AjaxHelper<TModel>(ViewContext, this);
         }
     }
 }

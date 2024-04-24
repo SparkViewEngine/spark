@@ -128,15 +128,13 @@ namespace Spark.Compiler.VisualBasic.ChunkVisitors
         protected override void Visit(SendExpressionChunk chunk)
         {
             var automaticallyEncode = chunk.AutomaticallyEncode;
-            if (chunk.Code.ToString().StartsWith("H("))
-                automaticallyEncode = false;
-
+            
             _source.WriteLine("Try").AddIndent();
             CodeIndent(chunk)
-                .Write("Output.Write(")
-                .Write(automaticallyEncode ? "H(" : "")
+                .Write("OutputValue(")
                 .WriteCode(chunk.Code)
-                .Write(automaticallyEncode ? ")" : "")
+                .Write(", ")
+                .Write(automaticallyEncode ? "true" : "false")
                 .WriteLine(")")
                 .RemoveIndent();
             CodeDefault();

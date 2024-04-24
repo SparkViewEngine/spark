@@ -15,9 +15,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using Spark.Compiler;
+using Spark.Descriptors;
 
 namespace Spark.Web.Mvc
 {
@@ -44,10 +44,20 @@ namespace Spark.Web.Mvc
             if (!factories.Any())
                 throw new CompilerException("No SparkViewFactory instances are registered");
 
+            var routeDataWrapper = new SparkRouteData(context.RouteData.Values);
+
             foreach (var factory in factories)
             {
                 var descriptor = factory.DescriptorBuilder.BuildDescriptor(
-                    new BuildDescriptorParams("", controllerName, ViewName, MasterName, false, factory.DescriptorBuilder.GetExtraParameters(context)), searchedLocations);
+                    new BuildDescriptorParams(
+                        "",
+                        controllerName,
+                        ViewName,
+                        MasterName,
+                        false,
+                        factory.DescriptorBuilder.GetExtraParameters(routeDataWrapper)),
+                    searchedLocations);
+
                 descriptor.Language = LanguageType.Javascript;
                 var entry = factory.Engine.CreateEntry(descriptor);
                 context.HttpContext.Response.ContentType = "text/javascript";

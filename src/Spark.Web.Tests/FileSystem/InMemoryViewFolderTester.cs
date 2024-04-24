@@ -15,7 +15,9 @@
 
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.Tests;
 using Spark.Tests.Stubs;
 
@@ -119,9 +121,19 @@ namespace Spark.FileSystem
         [Test]
         public void InMemoryViewFolderUsedByEngine()
         {
-            var folder = new InMemoryViewFolder();
-            folder.Add(Path.Combine("home", "index.spark"), "<p>Hello world</p>");
-            var engine = new SparkViewEngine(new SparkSettings().SetPageBaseType(typeof (StubSparkView))){ViewFolder = folder};
+            var viewFolder = new InMemoryViewFolder
+            {
+                { Path.Combine("home", "index.spark"), "<p>Hello world</p>" }
+            };
+
+            var settings = new SparkSettings().SetBaseClassTypeName(typeof(StubSparkView));
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(viewFolder)
+                .BuildServiceProvider();
+
+            var engine = sp.GetService<ISparkViewEngine>();
 
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add(Path.Combine("home", "index.spark"));
@@ -154,17 +166,26 @@ namespace Spark.FileSystem
         [Test]
         public void UnicodeCharactersSurviveConversionToByteArrayAndBack()
         {
-            var folder = new InMemoryViewFolder();
-            folder.Add(Path.Combine("Home", "fr.spark"), "Fran\u00E7ais");
-            folder.Add(Path.Combine("Home", "ru.spark"), "\u0420\u0443\u0441\u0441\u043A\u0438\u0439");
-            folder.Add(Path.Combine("Home", "ja.spark"), "\u65E5\u672C\u8A9E");
+            var viewFolder = new InMemoryViewFolder
+            {
+                { Path.Combine("Home", "fr.spark"), "Fran\u00E7ais" },
+                { Path.Combine("Home", "ru.spark"), "\u0420\u0443\u0441\u0441\u043A\u0438\u0439" },
+                { Path.Combine("Home", "ja.spark"), "\u65E5\u672C\u8A9E" }
+            };
 
-            Assert.That(ReadToEnd(folder, Path.Combine("Home", "fr.spark")), Is.EqualTo("Français"));
-            Assert.That(ReadToEnd(folder, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));
-            Assert.That(ReadToEnd(folder, Path.Combine("Home", "ja.spark")), Is.EqualTo("日本語"));
+            Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "fr.spark")), Is.EqualTo("Français"));
+            Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));
+            Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "ja.spark")), Is.EqualTo("日本語"));
             
-            var settings = new SparkSettings().SetPageBaseType(typeof(StubSparkView));
-            var engine = new SparkViewEngine(settings) { ViewFolder = folder };
+            var settings = new SparkSettings().SetBaseClassTypeName(typeof(StubSparkView));
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(viewFolder)
+                .BuildServiceProvider();
+
+            var engine = sp.GetService<ISparkViewEngine>();
+
             Assert.That(RenderView(engine, Path.Combine("Home", "fr.spark")), Is.EqualTo("Français"));
             Assert.That(RenderView(engine, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));
             Assert.That(RenderView(engine, Path.Combine("Home", "ja.spark")), Is.EqualTo("日本語"));

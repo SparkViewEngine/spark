@@ -27,11 +27,6 @@ namespace Spark.Tests.Stubs
             return ViewData.TryGetValue(name, out value);
         }
 
-        public string H(object content)
-        {
-            return HttpUtility.HtmlEncode(Convert.ToString(content));
-        }
-
         public object Eval(string expression)
         {
             return ViewData.Eval(expression);

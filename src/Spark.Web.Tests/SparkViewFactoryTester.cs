@@ -20,18 +20,20 @@
 // <author>John Gietzen</author>
 //-------------------------------------------------------------------------
 
+using Microsoft.Extensions.DependencyInjection;
+using Spark.Extensions;
+using System.Collections.Generic;
+using System.Text;
+using NUnit.Framework;
+
+using Rhino.Mocks;
+using Spark.Compiler;
+using Spark.FileSystem;
+using Spark.Tests.Models;
+using Spark.Tests.Stubs;
+
 namespace Spark.Tests
 {
-    using System.Collections.Generic;
-    using System.Text;
-    using NUnit.Framework;
-
-    using Rhino.Mocks;
-    using Spark.Compiler;
-    using Spark.FileSystem;
-    using Spark.Tests.Models;
-    using Spark.Tests.Stubs;
-
     [TestFixture, Category("SparkViewEngine")]
     public class SparkViewFactoryTester
     {
@@ -45,8 +47,15 @@ namespace Spark.Tests
         [SetUp]
         public void Init()
         {
-            settings = new SparkSettings().SetPageBaseType("Spark.Tests.Stubs.StubSparkView");
-            engine = new SparkViewEngine(settings) { ViewFolder = new FileSystemViewFolder("Spark.Tests.Views") };
+            settings = new SparkSettings().SetBaseClassTypeName("Spark.Tests.Stubs.StubSparkView");
+
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(new FileSystemViewFolder("Spark.Tests.Views"))
+                .BuildServiceProvider();
+
+            engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
+
             factory = new StubViewFactory { Engine = engine };
 
             sb = new StringBuilder();
@@ -1149,7 +1158,6 @@ namespace Spark.Tests
                 content,
                 Contains.InOrder(
                     "<p><strong>hi</strong></p>",
-                    "<p>&lt;strong&gt;hi&lt;/strong&gt;</p>",
                     "yadda",
                     "<p>42</p>"));
         }

@@ -46,7 +46,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             controllerContext.PropertyBag.Add("foo", "bar");
 
             mocks.ReplayAll();
-            view.Contextualize(engineContext, controllerContext, null, null);
+            view.Contextualize(engineContext, controllerContext, null, null, null);
 
             Assert.AreEqual("bar", view.ViewData["foo"]);
         }
@@ -71,7 +71,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             engineContext.Request.Params.Add("contextParamsKey", "contextParamsValue");
             controllerContext.Resources.Add("controllerResourcesKey", resource);
 
-            view.Contextualize(engineContext, controllerContext, null, null);
+            view.Contextualize(engineContext, controllerContext, null, null, null);
 
             Assert.AreEqual("controllerPropertyBagValue", view.ViewData["controllerPropertyBagKey"]);
             Assert.AreEqual("contextFlashValue", view.ViewData["contextFlashKey"]);

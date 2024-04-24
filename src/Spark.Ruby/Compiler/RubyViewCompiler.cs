@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Spark.Compiler;
-using Spark.Ruby.Compiler;
 using Spark.Ruby.Compiler.ChunkVisitors;
 using BaseClassVisitor = Spark.Compiler.CSharp.ChunkVisitors.BaseClassVisitor;
 
 namespace Spark.Ruby.Compiler
 {
-    public class RubyViewCompiler : ViewCompiler
+    public class RubyViewCompiler(ISparkSettings settings) : ViewCompiler
     {
         public string ScriptHeader { get; set; }
 
@@ -31,8 +30,8 @@ namespace Spark.Ruby.Compiler
         {
             GenerateSourceCode(viewTemplates, allResources);
 
-            var compiler = new BatchCompiler();
-            var assembly = compiler.Compile(Debug, "csharp", SourceCode);
+            var compiler = new RoslynBatchCompiler(new SparkSettings());
+            var assembly = compiler.Compile(settings.Debug, "csharp", null, new[] { SourceCode }, settings.ExcludeAssemblies);
             CompiledType = assembly.GetType(ViewClassFullName);
         }
 
@@ -105,13 +104,13 @@ namespace Spark.Ruby.Compiler
             script.WriteLine("view.render");
 
 
-            var baseClassGenerator = new BaseClassVisitor { BaseClass = BaseClass };
+            var baseClassGenerator = new BaseClassVisitor { BaseClass = settings.BaseClassTypeName };
             foreach (var resource in allResources)
             {
                 baseClassGenerator.Accept(resource);
             }
 
-            BaseClass = baseClassGenerator.BaseClassTypeName;
+            var baseClass = baseClassGenerator.BaseClassTypeName;
 
             var source = new StringBuilder();
 
@@ -143,7 +142,7 @@ namespace Spark.Ruby.Compiler
                 source.AppendLine("    })]");
             }
 
-            source.Append("public class ").Append(viewClassName).Append(" : ").Append(BaseClass).AppendLine(", global::Spark.Ruby.IScriptingSparkView");
+            source.Append("public class ").Append(viewClassName).Append(" : ").Append(baseClass).AppendLine(", global::Spark.Ruby.IScriptingSparkView");
             source.AppendLine("{");
 
             source.Append("static System.Guid _generatedViewId = new System.Guid(\"").Append(GeneratedViewId).AppendLine("\");");

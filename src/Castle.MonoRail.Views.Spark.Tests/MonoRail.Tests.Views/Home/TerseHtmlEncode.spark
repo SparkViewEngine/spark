@@ -1,1 +1,1 @@
-<p>${H("This <contains/> html")}</p>
+<p>${"This <contains/> html"}</p>

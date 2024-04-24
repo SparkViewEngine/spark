@@ -17,8 +17,13 @@ using Spark.Parser;
 
 namespace Spark.Compiler
 {
+    [Serializable]
     public class CompilerException : SystemException
     {
+        public CompilerException()
+        {
+        }
+
         public CompilerException(string message)
             : base(message)
         {

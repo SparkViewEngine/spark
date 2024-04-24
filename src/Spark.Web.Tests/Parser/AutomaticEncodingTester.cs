@@ -15,7 +15,9 @@
 
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Spark.Extensions;
 using Spark.FileSystem;
 using Spark.Parser.Markup;
 using Spark.Tests;
@@ -40,15 +42,17 @@ namespace Spark.Parser
         public void Init(bool automaticEncoding)
         {
             this._settings = new SparkSettings()
-                .SetPageBaseType(typeof(StubSparkView))
+                .SetBaseClassTypeName(typeof(StubSparkView))
                 .SetAutomaticEncoding(automaticEncoding);
-            var container = new SparkServiceContainer(this._settings);
             
             this._viewFolder = new InMemoryViewFolder();
 
-            container.SetServiceBuilder<IViewFolder>(c => this._viewFolder);
+            var sp = new ServiceCollection()
+                .AddSpark(_settings)
+                .AddSingleton<IViewFolder>(_viewFolder)
+                .BuildServiceProvider();
 
-            this._engine = container.GetService<ISparkViewEngine>();
+            _engine = sp.GetService<ISparkViewEngine>();
         }
 
         private string RenderView(SparkViewDescriptor descriptor)
@@ -129,15 +133,6 @@ namespace Spark.Parser
             this._viewFolder.Add(Path.Combine("home", "index.spark"), "${'<span>hello</span>'} !{'<span>world</span>'}");
             var content = this.RenderView(new SparkViewDescriptor().AddTemplate(Path.Combine("home", "index.spark")));
             Assert.AreEqual("&lt;span&gt;hello&lt;/span&gt; <span>world</span>", content);
-        }
-
-        [Test]
-        public void AutomaticEncodingTrueOmitsRedundantEncoding()
-        {
-            this.Init(true);
-            this._viewFolder.Add(Path.Combine("home", "index.spark"), "${H('<span>hello</span>')} !{H('<span>world</span>')}");
-            var content = this.RenderView(new SparkViewDescriptor().AddTemplate(Path.Combine("home", "index.spark")));
-            Assert.AreEqual("&lt;span&gt;hello&lt;/span&gt; &lt;span&gt;world&lt;/span&gt;", content);
         }
 
         [Test]

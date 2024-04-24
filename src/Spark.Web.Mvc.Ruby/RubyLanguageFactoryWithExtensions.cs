@@ -39,7 +39,12 @@ namespace Spark.Web.Mvc.Ruby
 {
     public class RubyLanguageFactoryWithExtensions : RubyLanguageFactory
     {
+        public RubyLanguageFactoryWithExtensions(IBatchCompiler batchCompiler, ISparkSettings settings) : base(batchCompiler, settings)
+        {
+        }
+
         private bool _initialized;
+
         private string _scriptHeader;
 
         public override ViewCompiler CreateViewCompiler(ISparkViewEngine engine, SparkViewDescriptor descriptor)

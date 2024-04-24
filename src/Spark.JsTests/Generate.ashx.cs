@@ -1,3 +1,4 @@
+
 // Copyright 2008-2009 Louis DeJardin - http://whereslou.com
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +17,11 @@
 using System.IO;
 using System.Web;
 using System.Web.Services;
+using Spark.Bindings;
+using Spark.Compiler;
 using Spark.FileSystem;
+using Spark.Parser;
+using Spark.Parser.Syntax;
 
 namespace Spark.JsTests
 {
@@ -29,13 +34,31 @@ namespace Spark.JsTests
     {
         public void ProcessRequest(HttpContext context)
         {
-            var engine = new SparkViewEngine
-                             {
-                                 ViewFolder = new VirtualPathProviderViewFolder("~/Views")
-                             };
-            var entry = engine.CreateEntry(new SparkViewDescriptor()
-                                               .SetLanguage(LanguageType.Javascript)
-                                               .AddTemplate(context.Request.PathInfo.TrimStart('/', Path.DirectorySeparatorChar) + ".spark"));
+            var settings = new SparkSettings().SetDefaultLanguage(LanguageType.Javascript);
+
+            var viewFolder = new VirtualPathProviderViewFolder("~/Views");
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var batchCompiler = new RoslynBatchCompiler(new SparkSettings());
+
+            var engine = new SparkViewEngine(
+                settings, 
+                new DefaultSyntaxProvider(settings), 
+                new DefaultViewActivator(), 
+                new DefaultLanguageFactory(batchCompiler, settings), 
+                new CompiledViewHolder(), 
+                viewFolder, 
+                batchCompiler,
+                partialProvider,
+                new DefaultPartialReferenceProvider(partialProvider),
+                new DefaultBindingProvider(),
+                null);
+
+            var entry = engine.CreateEntry(
+                new SparkViewDescriptor()
+                    .SetLanguage(LanguageType.Javascript)
+                    .AddTemplate(context.Request.PathInfo.TrimStart('/', Path.DirectorySeparatorChar) + ".spark"));
 
             //Spark.Simple._LiteralHtml({foo:'asoi'})
             context.Response.ContentType = "text/javascript";

@@ -15,7 +15,6 @@
 namespace Castle.MonoRail.Views.Spark
 {
     using System;
-    using System.Linq;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -35,6 +34,7 @@ namespace Castle.MonoRail.Views.Spark
 
         private IEngineContext _context;
         private IControllerContext _controllerContext;
+        private IResourcePathManager _resourcePathManager;
         private SparkViewFactory _viewEngine;
         private IDictionary _contextVars;
 
@@ -54,7 +54,7 @@ namespace Castle.MonoRail.Views.Spark
         public string SiteRoot { get { return _context.ApplicationPath; } }
         public string SiteResource(string path)
         {
-            return _viewEngine.Engine.ResourcePathManager.GetResourcePath(SiteRoot, path);
+            return this._resourcePathManager.GetResourcePath(SiteRoot, path);
         }
 
         public IDictionary PropertyBag { get { return _contextVars ?? _controllerContext.PropertyBag; } }
@@ -91,10 +91,11 @@ namespace Castle.MonoRail.Views.Spark
         public T Helper<T>() where T : class { return ControllerContext.Helpers[typeof(T).Name] as T; }
         public T Helper<T>(string name) where T : class { return ControllerContext.Helpers[name] as T; }
 
-        public virtual void Contextualize(IEngineContext context, IControllerContext controllerContext, SparkViewFactory viewEngine, SparkView outerView)
+        public virtual void Contextualize(IEngineContext context, IControllerContext controllerContext, IResourcePathManager resourcePathManager, SparkViewFactory viewEngine, SparkView outerView)
         {
             _context = context;
             _controllerContext = controllerContext;
+            _resourcePathManager = resourcePathManager;
             _viewEngine = viewEngine;
 
             if (_viewEngine != null && _viewEngine.CacheServiceProvider != null)
@@ -104,13 +105,33 @@ namespace Castle.MonoRail.Views.Spark
                 OnceTable = outerView.OnceTable;
         }
 
-        public string H(object value)
+        public override void OutputValue(object value, bool automaticEncoding)
         {
-            if (value is HtmlString)
-                return value.ToString();
-            return Server.HtmlEncode(Convert.ToString(value));
+            // Always encode when automatic encoding enabled or HtmlString (includes MvcHtmlString)
+            if (automaticEncoding || value is HtmlString)
+            {
+                OutputEncodedValue(value);
+            }
+            else
+            {
+                Output.Write(value);
+            }
         }
-        
+
+        public void OutputEncodedValue(object value)
+        {
+            if (value is string stringValue)
+            {
+                var encoded = System.Web.HttpUtility.HtmlEncode(stringValue);
+            
+                Output.Write(encoded);
+            }
+            else
+            {
+                Output.Write(value.ToString());
+            }
+        }
+
         public object HTML(object value)
         {
             return new HtmlString(Convert.ToString(value));
@@ -132,7 +153,7 @@ namespace Castle.MonoRail.Views.Spark
             var service = (IViewComponentFactory)_context.GetService(typeof(IViewComponentFactory));
             var component = service.Create(name);
 
-            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _viewEngine, name, parameters, body, sections);
+            IViewComponentContext viewComponentContext = new ViewComponentContext(this, _resourcePathManager, _viewEngine, name, parameters, body, sections);
 
             var oldContextVars = _contextVars;
             try

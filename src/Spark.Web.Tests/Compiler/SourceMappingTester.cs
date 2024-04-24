@@ -17,6 +17,8 @@ using NUnit.Framework;
 using Spark.FileSystem;
 using Spark.Tests.Stubs;
 using System.IO;
+using Spark.Bindings;
+using Spark.Parser.Syntax;
 using Spark.Tests;
 
 namespace Spark.Compiler
@@ -32,14 +34,26 @@ namespace Spark.Compiler
         public void Init()
         {
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(StubSparkView));
-            var container = new SparkServiceContainer(settings);
+                .SetBaseClassTypeName(typeof(StubSparkView));
+
+            var partialProvider = new DefaultPartialProvider();
 
             _viewFolder = new InMemoryViewFolder();
 
-            container.SetServiceBuilder<IViewFolder>(c => _viewFolder);
+            var batchCompiler = new RoslynBatchCompiler(new SparkSettings());
 
-            _engine = container.GetService<ISparkViewEngine>();
+            _engine = new SparkViewEngine(
+                settings,
+                new DefaultSyntaxProvider(settings),
+                new DefaultViewActivator(),
+                new DefaultLanguageFactory(batchCompiler, settings),
+                new CompiledViewHolder(),
+                _viewFolder,
+                batchCompiler,
+                partialProvider,
+                new DefaultPartialReferenceProvider(partialProvider),
+                new DefaultBindingProvider(),
+                null);
         }
 
         private string RenderView(SparkViewDescriptor descriptor)

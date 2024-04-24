@@ -21,9 +21,10 @@ namespace Spark.Tests
         public static string RenderView(this ISparkView view)
         {
             var writer = new StringWriter();
+
             view.RenderView(writer);
+
             return writer.ToString();
         }
-
     }
 }

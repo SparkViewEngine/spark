@@ -17,6 +17,9 @@ using System.IO;
 using Spark.Parser;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Spark.Bindings;
+using Spark.FileSystem;
+using Spark.Parser.Syntax;
 
 namespace Spark.Tests
 {
@@ -51,7 +54,21 @@ namespace Spark.Tests
         public void LookupReturnsStoredInstance()
         {
             var key = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
-            var entry = new CompiledViewEntry { Descriptor = key, Loader = new ViewLoader() };
+
+            var settings = new SparkSettings();
+
+            var partialProvider = new DefaultPartialProvider();
+
+            var viewLoader = new ViewLoader(
+                settings,
+                MockRepository.GenerateMock<IViewFolder>(),
+                new DefaultPartialProvider(),
+                new DefaultPartialReferenceProvider(partialProvider),
+                null,
+                new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
+                null);
+
+            var entry = new CompiledViewEntry { Descriptor = key, Loader = viewLoader };
             Assert.IsNull(holder.Lookup(key));
             holder.Store(entry);
             Assert.AreSame(entry, holder.Lookup(key));
@@ -77,24 +94,43 @@ namespace Spark.Tests
             Assert.That(!Equals(null, key1));
         }
 
-        bool isCurrent;
+        public class FakeViewLoader : ViewLoader
+        {
+            public FakeViewLoader() : base(null, null, null, null, null, null, null)
+            {
+            }
+
+            public bool IsCurrentValue { get; set; }
+
+            public override bool IsCurrent()
+            {
+                return IsCurrentValue;
+            }
+        }
 
         [Test]
         public void ExpiredEntryReturnsNull()
         {
-            var loader = MockRepository.GenerateMock<ViewLoader>();
-
-            isCurrent = true;
-            Func<bool> foo = () => isCurrent;
-            loader.Stub(x => x.IsCurrent()).Do(foo);
+            var loader = new FakeViewLoader
+            {
+                IsCurrentValue = true
+            };
 
             var key = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
-            var entry = new CompiledViewEntry { Descriptor = key, Loader = loader };
-            holder.Store(entry);
-            Assert.AreSame(entry, holder.Lookup(key));
-            isCurrent = false;
-            Assert.IsNull(holder.Lookup(key));
 
+            var entry = new CompiledViewEntry
+            {
+                Descriptor = key,
+                Loader = loader
+            };
+
+            holder.Store(entry);
+
+            Assert.AreSame(entry, holder.Lookup(key));
+
+            loader.IsCurrentValue = false;
+
+            Assert.IsNull(holder.Lookup(key));
         }
 
         [Test]

@@ -21,6 +21,8 @@ using Spark.Compiler;
 using Spark.FileSystem;
 using Spark.Tests.Precompiled;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using Spark.Extensions;
 using Spark.Tests;
 
 namespace Spark
@@ -34,16 +36,19 @@ namespace Spark
         public void Init()
         {
             var settings = new SparkSettings()
-                .SetPageBaseType(typeof(Tests.Stubs.StubSparkView));
+                .SetBaseClassTypeName(typeof(Tests.Stubs.StubSparkView));
 
-            engine = new SparkViewEngine(settings)
-                         {
-                             ViewFolder = new InMemoryViewFolder
-                                              {
-                                                  {Path.Combine("Home","Index.spark"), "<p>Hello world</p>"},
-                                                  {Path.Combine("Home","List.spark"), "<ol><li>one</li><li>two</li></ol>"}
-                                              }
-                         };
+            var sp = new ServiceCollection()
+                .AddSpark(settings)
+                .AddSingleton<IViewFolder>(
+                    new InMemoryViewFolder
+                    {
+                        { Path.Combine("Home", "Index.spark"), "<p>Hello world</p>" },
+                        { Path.Combine("Home", "List.spark"), "<ol><li>one</li><li>two</li></ol>" }
+                    })
+                .BuildServiceProvider();
+
+            engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
         }
 
         [Test]
@@ -57,7 +62,11 @@ namespace Spark
 
             var assembly = engine.BatchCompilation(descriptors);
 
-            var types = assembly.GetTypes();
+            var types =
+                assembly
+                    .GetTypes()
+                    .Where(x => x.BaseType == typeof(Tests.Stubs.StubSparkView));
+
             Assert.AreEqual(2, types.Count());
 
             var entry0 = engine.GetEntry(descriptors[0]);
@@ -84,7 +93,12 @@ namespace Spark
 
             var assembly = engine.BatchCompilation(new[] { descriptor });
 
-            var types = assembly.GetTypes();
+            var types =
+                assembly
+                    .GetTypes()
+                    .Where(x => x.BaseType == typeof(Tests.Stubs.StubSparkView))
+                    .ToArray();
+            
             Assert.AreEqual(1, types.Count());
 
             var attribs = types[0].GetCustomAttributes(typeof(SparkViewAttribute), false);
@@ -103,7 +117,12 @@ namespace Spark
 
             var assembly = engine.BatchCompilation(new[] { descriptor });
 
-            var types = assembly.GetTypes();
+            var types =
+                assembly
+                    .GetTypes()
+                    .Where(x => x.BaseType == typeof(Tests.Stubs.StubSparkView))
+                    .ToArray();
+
             Assert.AreEqual(1, types.Count());
 
             var attribs = types[0].GetCustomAttributes(typeof(SparkViewAttribute), false);

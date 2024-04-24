@@ -35,11 +35,12 @@ namespace Castle.MonoRail.Views.Spark.Tests
         [SetUp]
         public void Init()
         {
-            var settings = new SparkSettings();
+            var settings = new SparkSettings()
+                .SetBaseClassTypeName(typeof(SparkView));
 
             var services = new StubMonoRailServices();
+            services.AddService(typeof(ISparkSettings), settings);
             services.AddService(typeof(IViewSourceLoader), new FileAssemblyViewSourceLoader("MonoRail.Tests.Views"));
-            services.AddService(typeof(ISparkViewEngine), new SparkViewEngine(settings));
             services.AddService(typeof(IControllerDescriptorProvider), services.ControllerDescriptorProvider);
             _factory = new SparkViewFactory();
             _factory.Service(services);
@@ -59,7 +60,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             var assembly = _factory.Precompile(batch);
 
             Assert.IsNotNull(assembly);
-            Assert.AreEqual(3, assembly.GetTypes().Length);
+            Assert.AreEqual(3, assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)));
         }
 
         [Test]
@@ -98,7 +99,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             var assembly = _factory.Precompile(batch);
 
             Assert.IsNotNull(assembly);
-            Assert.AreEqual(4, assembly.GetTypes().Length);
+            Assert.AreEqual(4, assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)));
         }
 
         [Test]
@@ -131,7 +132,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             var assembly = _factory.Precompile(batch);
 
             Assert.IsNotNull(assembly);
-            Assert.AreEqual(3, assembly.GetTypes().Length);
+            Assert.AreEqual(3, assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)));
         }
 
         [Test]

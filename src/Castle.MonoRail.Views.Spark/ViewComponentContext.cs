@@ -26,6 +26,7 @@ namespace Castle.MonoRail.Views.Spark
     public class ViewComponentContext : IViewComponentContext
     {
         private readonly SparkView _view;
+        private readonly IResourcePathManager _resourcePathManager;
         private readonly SparkViewFactory _viewEngine;
         private readonly string _name;
         private readonly IDictionary _componentParameters;
@@ -33,10 +34,10 @@ namespace Castle.MonoRail.Views.Spark
         private readonly IDictionary<string, Action> _sections;
         private readonly IDictionary _contextVarsAdapter;
 
-
-        public ViewComponentContext(SparkView view, SparkViewFactory viewEngine, string name, IDictionary componentParameters, Action body, IDictionary<string, Action> sections)
+        public ViewComponentContext(SparkView view, IResourcePathManager resourcePathManager, SparkViewFactory viewEngine, string name, IDictionary componentParameters, Action body, IDictionary<string, Action> sections)
         {
             _view = view;
+            _resourcePathManager = resourcePathManager;
             _viewEngine = viewEngine;
             _name = name;
             _componentParameters = componentParameters;
@@ -68,7 +69,7 @@ namespace Castle.MonoRail.Views.Spark
 
             try
             {
-                componentView.Contextualize(_view.Context, _view.ControllerContext, _viewEngine, _view);
+                componentView.Contextualize(_view.Context, _view.ControllerContext, _resourcePathManager, _viewEngine, _view);
                 componentView.RenderView(writer);
             }
             finally
