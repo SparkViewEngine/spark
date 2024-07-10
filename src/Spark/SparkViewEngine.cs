@@ -229,11 +229,29 @@ namespace Spark
             return assembly;
         }
 
+        /// <summary>
+        /// Get all the exported types in the assembly and loads the ones assignable from <see cref="ISparkView"/>.
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <seealso cref="LoadBatchCompilation(Type[])"/>
+        /// <returns>A list of <see cref="SparkViewDescriptor"/> for every loaded type.</returns>
         public IList<SparkViewDescriptor> LoadBatchCompilation(Assembly assembly)
+        {
+            var exportedTypes = assembly.GetExportedTypes();
+
+            return LoadBatchCompilation(exportedTypes);
+        }
+
+        /// <summary>
+        /// Loads the specified types (when assignable from <see cref="ISparkView"/>) into the <see cref="ICompiledViewHolder"/> implemenation.
+        /// </summary>
+        /// <param name="types"></param>
+        /// <returns>A list of <see cref="SparkViewDescriptor"/> for every loaded type.</returns>
+        public IList<SparkViewDescriptor> LoadBatchCompilation(Type[] types)
         {
             var descriptors = new List<SparkViewDescriptor>();
 
-            foreach (var type in assembly.GetExportedTypes())
+            foreach (var type in types)
             {
                 if (!typeof(ISparkView).IsAssignableFrom(type))
                 {
