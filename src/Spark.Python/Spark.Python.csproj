@@ -21,7 +21,7 @@
     <PackageLicenseFile>license.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageTags>spark;view engine</PackageTags>
-    <Copyright>Copyright (c) Louis DeJardin 2008-2022</Copyright>
+    <Copyright>Copyright (c) Louis DeJardin 2008-2024</Copyright>
     <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
   <ItemGroup>
