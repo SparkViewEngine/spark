@@ -1,5 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-    
+    <PropertyGroup>
+        <SignAssembly>False</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
+        <Company>Louis DeJardin</Company>
+        <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/SparkViewEngine/spark</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <IncludeSymbols>True</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageLicenseFile>license.txt</PackageLicenseFile>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageTags>spark;view engine</PackageTags>
+        <Copyright>Copyright (c) Louis DeJardin 2008-2024</Copyright>
+        <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
+    </PropertyGroup>
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
