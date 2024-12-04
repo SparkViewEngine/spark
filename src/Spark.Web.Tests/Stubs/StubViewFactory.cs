@@ -26,10 +26,10 @@ namespace Spark.Tests.Stubs
         {
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add(Path.Combine(viewContext.ControllerName, viewContext.ViewName + (extension ?? Constants.DotSpark)));
-            
+
             if (viewContext.MasterName != null)
                 descriptor.Templates.Add(Path.Combine(Constants.Shared, viewContext.MasterName + (extension ?? Constants.DotSpark)));
- 
+
             var sparkView = Engine.CreateInstance(descriptor);
 
             ((StubSparkView)sparkView).ViewData = viewContext.Data;

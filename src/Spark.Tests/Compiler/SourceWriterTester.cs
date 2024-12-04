@@ -11,7 +11,7 @@ namespace Spark.Tests.Compiler
 {
     [TestFixture]
     public class SourceWriterTester
-    {		
+    {
         [Test]
         public void IndentationShouldAddLeadingSpace()
         {
@@ -25,16 +25,16 @@ namespace Spark.Tests.Compiler
                 .WriteLine("two")
                 .RemoveIndent()
                 .WriteLine("three");
-			
-			var expected = new StringBuilder()
-				.AppendLine()
-				.AppendLine("one")
-				.AppendLine("    two")
-				.AppendLine("three");
-									
-			Assert.That(source.ToString(), Is.EqualTo(expected.ToString()));
-        }		
-		
+
+            var expected = new StringBuilder()
+                .AppendLine()
+                .AppendLine("one")
+                .AppendLine("    two")
+                .AppendLine("three");
+
+            Assert.That(source.ToString(), Is.EqualTo(expected.ToString()));
+        }
+
         [Test]
         public void EscrowLineWritesFirstAtIndentationWhenItWasAdded()
         {
@@ -50,18 +50,18 @@ namespace Spark.Tests.Compiler
                 .RemoveIndent()
                 .WriteLine("three")
                 .RemoveIndent();
-			
-			var expected = new StringBuilder()
-				.AppendLine()
-				.AppendLine("    one")
-				.AppendLine("        two")
-				.AppendLine("        two-b")
-				.AppendLine("    three");
-						
+
+            var expected = new StringBuilder()
+                .AppendLine()
+                .AppendLine("    one")
+                .AppendLine("        two")
+                .AppendLine("        two-b")
+                .AppendLine("    three");
+
             Assert.That(source.ToString(), Is.EqualTo(expected.ToString()));
-        }		
-		
-		[Test]
+        }
+
+        [Test]
         public void CancelEscrowPreventsOutputOfPendingLine()
         {
             var writer = new StringWriter();
@@ -84,18 +84,18 @@ namespace Spark.Tests.Compiler
                 .EscrowLine("endif")
                 .RemoveIndent()
                 .WriteLine("done");
-			
-			var expected = new StringBuilder()
-				.AppendLine()
-				.AppendLine("begin")
-				.AppendLine("    if")
-				.AppendLine("        do this")
-				.AppendLine("    else")
-				.AppendLine("        do that")
-				.AppendLine("    endif")
-				.AppendLine("done");
-			
+
+            var expected = new StringBuilder()
+                .AppendLine()
+                .AppendLine("begin")
+                .AppendLine("    if")
+                .AppendLine("        do this")
+                .AppendLine("    else")
+                .AppendLine("        do that")
+                .AppendLine("    endif")
+                .AppendLine("done");
+
             Assert.That(source.ToString(), Is.EqualTo(expected.ToString()));
-        }				
+        }
     }
 }

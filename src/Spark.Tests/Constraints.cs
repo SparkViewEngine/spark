@@ -85,7 +85,7 @@ namespace Spark.Tests
 
                     index = nextIndex + value.Length;
                 }
-                
+
                 return new ConstraintResult(this, index, true);
             }
 

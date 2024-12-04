@@ -60,7 +60,7 @@ namespace Spark.Tests.Parser
         public void AllText()
         {
             var result = _grammar.AllText(Source("hello world"));
-            Assert.That(Combine(result.Value), Is.EqualTo("hello world") );
+            Assert.That(Combine(result.Value), Is.EqualTo("hello world"));
         }
 
         [Test]

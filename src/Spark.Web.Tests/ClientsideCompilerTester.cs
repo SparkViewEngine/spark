@@ -45,13 +45,13 @@ namespace Spark
 
             var descriptor = new SparkViewDescriptor()
                 .SetLanguage(LanguageType.Javascript)
-                .AddTemplate(Path.Combine("Clientside","simple.spark"));
+                .AddTemplate(Path.Combine("Clientside", "simple.spark"));
 
 
             var entry = engine.CreateEntry(descriptor);
 
-            Assert.IsNotNull(entry.SourceCode);
-            Assert.IsNotEmpty(entry.SourceCode);
+            Assert.That(entry.SourceCode, Is.Not.Null);
+            Assert.That(entry.SourceCode, Is.Not.Empty);
         }
 
         [Test]
@@ -67,12 +67,12 @@ namespace Spark
 
             var descriptor = new SparkViewDescriptor()
                 .SetLanguage(LanguageType.Javascript)
-                .AddTemplate(Path.Combine("Clientside","AnonymousTypeBecomesHashLikeObject.spark"));
+                .AddTemplate(Path.Combine("Clientside", "AnonymousTypeBecomesHashLikeObject.spark"));
 
             var entry = engine.CreateEntry(descriptor);
 
-            Assert.IsNotNull(entry.SourceCode);
-            Assert.IsNotEmpty(entry.SourceCode);
+            Assert.That(entry.SourceCode, Is.Not.Null);
+            Assert.That(entry.SourceCode, Is.Not.Empty);
 
             Assert.That(entry.SourceCode, Does.Contain("x = {foo:\"bar\",quux:5}"));
             Assert.That(entry.SourceCode, Does.Contain("HelloWorld({id:23,data:x})"));

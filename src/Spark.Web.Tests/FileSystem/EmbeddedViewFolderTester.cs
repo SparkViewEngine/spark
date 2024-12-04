@@ -27,28 +27,37 @@ namespace Spark.FileSystem
         public void LocateEmbeddedFiles()
         {
             var viewFolder = new EmbeddedViewFolder(Assembly.Load("Spark.Web.Tests"), "Spark.FileSystem.Embedded");
-            Assert.IsTrue(viewFolder.HasView(Path.Combine("Home", "Index.spark")));
-            Assert.IsFalse(viewFolder.HasView(Path.Combine("Home", "NoSuchFile.spark")));
-            Assert.IsFalse(viewFolder.HasView("Home"));
-            Assert.IsTrue(viewFolder.HasView(Path.Combine("Shared", "Default.spark")));
+            Assert.That(viewFolder.HasView(Path.Combine("Home", "Index.spark")), Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(viewFolder.HasView(Path.Combine("Home", "NoSuchFile.spark")), Is.False);
+                Assert.That(viewFolder.HasView("Home"), Is.False);
+            });
+            Assert.That(viewFolder.HasView(Path.Combine("Shared", "Default.spark")), Is.True);
         }
 
         [Test]
         public void ListViewsSameResults()
         {
             var filesystem = new FileSystemViewFolder(Path.Combine("FileSystem", "Embedded"));
-            Assert.IsTrue(filesystem.HasView(Path.Combine("Home", "Index.spark")));
+            Assert.That(filesystem.HasView(Path.Combine("Home", "Index.spark")), Is.True);
 
             var files = filesystem.ListViews("Home");
-            Assert.AreEqual(2, files.Count);
-            Assert.That(files.Any(f => Path.GetFileName(f) == "Index.spark"));
-            Assert.That(files.Any(f => Path.GetFileName(f) == "List.spark"));
+            Assert.That(files.Count, Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(files.Any(f => Path.GetFileName(f) == "Index.spark"));
+                Assert.That(files.Any(f => Path.GetFileName(f) == "List.spark"));
+            });
 
             var embedded = new EmbeddedViewFolder(Assembly.Load("Spark.Web.Tests"), "Spark.FileSystem.Embedded");
             files = embedded.ListViews("home");
-            Assert.AreEqual(2, files.Count);
-            Assert.That(files.Any(f => Path.GetFileName(f) == "Index.spark"));
-            Assert.That(files.Any(f => Path.GetFileName(f) == "List.spark"));
+            Assert.That(files.Count, Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(files.Any(f => Path.GetFileName(f) == "Index.spark"));
+                Assert.That(files.Any(f => Path.GetFileName(f) == "List.spark"));
+            });
         }
     }
 }

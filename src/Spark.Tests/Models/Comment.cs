@@ -19,8 +19,8 @@ using System.Text;
 
 namespace Spark.Tests.Models
 {
-	public class Comment
-	{
-		public string Text { get; set; }
-	}
+    public class Comment
+    {
+        public string Text { get; set; }
+    }
 }

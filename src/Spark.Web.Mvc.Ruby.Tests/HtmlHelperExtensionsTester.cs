@@ -49,16 +49,16 @@ namespace Spark.Web.Mvc.Ruby.Tests
 
             var header = languageFactory.BuildScriptHeader(languageFactory.GetType().Assembly);
 
-            Assert.That(header.Contains("ActionLink"));
-            Assert.That(header.Contains("Password"));
-            Assert.That(header.Contains("RenderPartial"));
+            Assert.That(header, Does.Contain("ActionLink"));
+            Assert.That(header, Does.Contain("Password"));
+            Assert.That(header, Does.Contain("RenderPartial"));
         }
 
         private static ViewContext CompileView(string viewContents)
         {
             var services = new ServiceCollection()
                 .AddSpark(new SparkSettings());
-            
+
             var viewFolder = new InMemoryViewFolder { { $"stub{Path.DirectorySeparatorChar}index.spark", viewContents } };
 
             services.AddSingleton<IViewFolder>(viewFolder);
@@ -91,7 +91,7 @@ namespace Spark.Web.Mvc.Ruby.Tests
             var output = new StringWriter();
             viewContext.View.Render(viewContext, output);
 
-            Assert.AreEqual("<p>Hello world</p>", output.ToString());
+            Assert.That(output.ToString(), Is.EqualTo("<p>Hello world</p>"));
         }
 
         [Test, Ignore("MVC 3.0 bringing some complication in relation to IronRuby - need to investigate")]
@@ -104,9 +104,12 @@ namespace Spark.Web.Mvc.Ruby.Tests
             var output = new StringWriter();
             viewContext.View.Render(viewContext, output);
 
-            Assert.That(output.ToString().StartsWith("<p><input"));
-            Assert.That(output.ToString().Contains("name=\"hello\""));
-            Assert.That(output.ToString().Contains("type=\"text\""));
+            Assert.Multiple(() =>
+            {
+                Assert.That(output.ToString(), Does.StartWith("<p><input"));
+                Assert.That(output.ToString(), Does.Contain("name=\"hello\""));
+            });
+            Assert.That(output.ToString(), Does.Contain("type=\"text\""));
         }
     }
 }

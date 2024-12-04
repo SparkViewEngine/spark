@@ -26,20 +26,20 @@ namespace Spark
                 .BuildServiceProvider();
 
             _partialReferenceProvider = sp.GetService<IPartialReferenceProvider>();
-            
-            this._result = new[] {"output"};
+
+            this._result = new[] { "output" };
         }
 
         [Test]
         public void DefaultPartialReferenceProviderWrapsPartialProvider()
         {
             this._partialProvider.Expect(x => x.GetPaths(this._viewPath)).Return(this._result);
-            
+
             var output = _partialReferenceProvider.GetPaths(this._viewPath, true);
-            
+
             this._partialProvider.VerifyAllExpectations();
-            
-            Assert.AreEqual(this._result, output);
+
+            Assert.That(output, Is.EqualTo(this._result));
         }
     }
 }

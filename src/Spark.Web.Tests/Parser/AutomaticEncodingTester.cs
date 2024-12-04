@@ -39,12 +39,12 @@ namespace Spark.Parser
             this.Init(false);
         }
 
-        public void Init(bool automaticEncoding)
+        private void Init(bool automaticEncoding)
         {
             this._settings = new SparkSettings()
                 .SetBaseClassTypeName(typeof(StubSparkView))
                 .SetAutomaticEncoding(automaticEncoding);
-            
+
             this._viewFolder = new InMemoryViewFolder();
 
             var sp = new ServiceCollection()
@@ -72,13 +72,13 @@ namespace Spark.Parser
         [Test]
         public void DollarSyntaxHasRawContentWhenDisabled()
         {
-            var settings = new ParserSettings {AutomaticEncoding = false};
+            var settings = new ParserSettings { AutomaticEncoding = false };
             var grammar = new MarkupGrammar(settings);
             var result = grammar.Nodes(this.Source("${'hello world'}"));
 
-            Assert.AreEqual(1, result.Value.Count);
-            Assert.AreEqual("\"hello world\"", (string)((ExpressionNode)result.Value[0]).Code);
-            Assert.IsFalse(((ExpressionNode)result.Value[0]).AutomaticEncoding);
+            Assert.That(result.Value.Count, Is.EqualTo(1));
+            Assert.That((string)((ExpressionNode)result.Value[0]).Code, Is.EqualTo("\"hello world\""));
+            Assert.That(((ExpressionNode)result.Value[0]).AutomaticEncoding, Is.False);
         }
 
         [Test]
@@ -88,9 +88,9 @@ namespace Spark.Parser
             var grammar = new MarkupGrammar(settings);
             var result = grammar.Nodes(this.Source("!{'hello world'}"));
 
-            Assert.AreEqual(1, result.Value.Count);
-            Assert.AreEqual("\"hello world\"", (string)((ExpressionNode)result.Value[0]).Code);
-            Assert.IsFalse(((ExpressionNode)result.Value[0]).AutomaticEncoding);
+            Assert.That(result.Value.Count, Is.EqualTo(1));
+            Assert.That((string)((ExpressionNode)result.Value[0]).Code, Is.EqualTo("\"hello world\""));
+            Assert.That(((ExpressionNode)result.Value[0]).AutomaticEncoding, Is.False);
         }
 
         [Test]
@@ -100,9 +100,9 @@ namespace Spark.Parser
             var grammar = new MarkupGrammar(settings);
             var result = grammar.Nodes(this.Source("${'hello world'}"));
 
-            Assert.AreEqual(1, result.Value.Count);
-            Assert.AreEqual("\"hello world\"", (string)((ExpressionNode)result.Value[0]).Code);
-            Assert.IsTrue(((ExpressionNode)result.Value[0]).AutomaticEncoding);
+            Assert.That(result.Value.Count, Is.EqualTo(1));
+            Assert.That((string)((ExpressionNode)result.Value[0]).Code, Is.EqualTo("\"hello world\""));
+            Assert.That(((ExpressionNode)result.Value[0]).AutomaticEncoding, Is.True);
         }
 
         [Test]
@@ -112,9 +112,9 @@ namespace Spark.Parser
             var grammar = new MarkupGrammar(settings);
             var result = grammar.Nodes(this.Source("!{'hello world'}"));
 
-            Assert.AreEqual(1, result.Value.Count);
-            Assert.AreEqual("\"hello world\"", (string)((ExpressionNode)result.Value[0]).Code);
-            Assert.IsFalse(((ExpressionNode)result.Value[0]).AutomaticEncoding);
+            Assert.That(result.Value.Count, Is.EqualTo(1));
+            Assert.That((string)((ExpressionNode)result.Value[0]).Code, Is.EqualTo("\"hello world\""));
+            Assert.That(((ExpressionNode)result.Value[0]).AutomaticEncoding, Is.False);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace Spark.Parser
             this.Init(false);
             this._viewFolder.Add(Path.Combine("home", "index.spark"), "${'<span>hello</span>'} !{'<span>world</span>'}");
             var content = this.RenderView(new SparkViewDescriptor().AddTemplate(Path.Combine("home", "index.spark")));
-            Assert.AreEqual("<span>hello</span> <span>world</span>", content);
+            Assert.That(content, Is.EqualTo("<span>hello</span> <span>world</span>"));
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace Spark.Parser
             this.Init(true);
             this._viewFolder.Add(Path.Combine("home", "index.spark"), "${'<span>hello</span>'} !{'<span>world</span>'}");
             var content = this.RenderView(new SparkViewDescriptor().AddTemplate(Path.Combine("home", "index.spark")));
-            Assert.AreEqual("&lt;span&gt;hello&lt;/span&gt; <span>world</span>", content);
+            Assert.That(content, Is.EqualTo("&lt;span&gt;hello&lt;/span&gt; <span>world</span>"));
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace Spark.Parser
             var grammar = new MarkupGrammar(settings);
             var result = grammar.Nodes(this.Source("  #foo  \r\n"));
 
-            Assert.AreEqual(2, result.Value.Count);
+            Assert.That(result.Value.Count, Is.EqualTo(2));
             var statement = result.Value.OfType<StatementNode>().Single();
             Assert.That(statement.Code.ToString(), Is.EqualTo("foo  "));
         }
@@ -150,11 +150,11 @@ namespace Spark.Parser
         [Test]
         public void CustomMarkerForStatements()
         {
-            var settings = new ParserSettings { AutomaticEncoding = true, StatementMarker="hi" };
+            var settings = new ParserSettings { AutomaticEncoding = true, StatementMarker = "hi" };
             var grammar = new MarkupGrammar(settings);
             var result = grammar.Nodes(this.Source("  hibernate  \r\n"));
 
-            Assert.AreEqual(2, result.Value.Count);
+            Assert.That(result.Value.Count, Is.EqualTo(2));
             var statement = result.Value.OfType<StatementNode>().Single();
             Assert.That(statement.Code.ToString(), Is.EqualTo("bernate  "));
         }
@@ -166,7 +166,7 @@ namespace Spark.Parser
             var grammar = new MarkupGrammar(settings);
             var result = grammar.Nodes(this.Source("  #foo  \r\n"));
 
-            Assert.AreEqual(1, result.Value.Count);
+            Assert.That(result.Value.Count, Is.EqualTo(1));
             var statement = result.Value.OfType<StatementNode>().Any();
             Assert.That(statement, Is.False);
         }

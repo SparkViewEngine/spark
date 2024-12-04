@@ -24,7 +24,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
     using Castle.MonoRail.Framework.Services;
     using NUnit.Framework;
     using global::Spark;
-    
+
     [TestFixture]
     public class SparkViewFactoryTests : SparkViewFactoryTestsBase
     {
@@ -44,7 +44,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             manager.Service(serviceProvider);
             serviceProvider.ViewEngineManager = manager;
             serviceProvider.AddService(typeof(IViewEngineManager), manager);
-            
+
             manager.RegisterEngineForExtesionLookup(factory);
             manager.RegisterEngineForView(factory);
         }
@@ -53,7 +53,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         public void ExtensionIsSpark()
         {
             mocks.ReplayAll();
-            Assert.AreEqual("spark", factory.ViewFileExtension);
+            Assert.That(factory.ViewFileExtension, Is.EqualTo("spark"));
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             mocks.ReplayAll();
             manager.Process(string.Format("Home{0}Index", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
-            Assert.That(output.ToString().Contains("<h1>Simple test</h1>"));
+            Assert.That(output.ToString(), Does.Contain("<h1>Simple test</h1>"));
         }
 
         [Test]
@@ -69,19 +69,23 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             mocks.ReplayAll();
             manager.Process(string.Format("Home{0}Index", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
-            
+
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add(string.Format("Home{0}Index.spark", Path.DirectorySeparatorChar));
             descriptor.Templates.Add(string.Format("Shared{0}default.spark", Path.DirectorySeparatorChar));
             var entry = factory.Engine.GetEntry(descriptor);
             var view = (SparkView)entry.CreateInstance();
             view.Contextualize(engineContext, controllerContext, serviceProvider.GetService<IResourcePathManager>(), factory, null);
-            
+
             var result = new StringWriter();
             view.RenderView(result);
-            Assert.AreEqual(result.ToString(), output.ToString());
-            Assert.AreSame(engineContext, view.Context);
-            Assert.AreSame(controllerContext, view.ControllerContext);
+            Assert.Multiple(() =>
+            {
+                Assert.That(output.ToString(), Is.EqualTo(result.ToString()));
+
+                Assert.That(view.Context, Is.SameAs(engineContext));
+                Assert.That(view.ControllerContext, Is.SameAs(controllerContext));
+            });
         }
 
         [Test, Ignore("Need to get the helpers to function again using the stub objects")]
@@ -121,7 +125,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             mocks.ReplayAll();
             manager.Process(string.Format("Home{0}NullBehaviourConfiguredToLenient", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
             var content = output.ToString();
-            Assert.IsFalse(content.Contains("default"));
+            Assert.That(content.Contains("default"), Is.False);
 
             ContainsInOrder(content,
                 "<p>name kaboom *${user.Name}*</p>",
@@ -134,7 +138,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
         {
             mocks.ReplayAll();
             manager.Process(string.Format("Home{0}TerseHtmlEncode", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
-            
+
             // See AutomaticEncoding = true in Configure() method
             ContainsInOrder(output.ToString(),
                 "<p>This &lt;contains/&gt; html</p>");
@@ -149,8 +153,8 @@ namespace Castle.MonoRail.Views.Spark.Tests
                 "<p>was true</p>");
 
 
-            Assert.IsFalse(output.ToString().Contains("<p>was false</p>"));
-            
+            Assert.That(output.ToString().Contains("<p>was false</p>"), Is.False);
+
         }
 
         [Test]
@@ -161,8 +165,11 @@ namespace Castle.MonoRail.Views.Spark.Tests
             mocks.ReplayAll();
             var handler = new MonoRailHttpHandlerFactory.NotFoundHandler("", "nosuchcontroller", engineContext);
             handler.ProcessRequest(null);
-            Assert.AreEqual(404, response.StatusCode);
-            Assert.AreEqual("<p>404 message rendered</p>\r\n", output.ToString());
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(404));
+                Assert.That(output.ToString(), Is.EqualTo("<p>404 message rendered</p>\r\n"));
+            });
         }
 
         [Test, Ignore("Controller Type effects are no longer supported in 1.1")]
@@ -173,7 +180,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             controllerContext.Helpers.Add("bar", new Helpers.TestingHelper());
             mocks.ReplayAll();
             manager.Process(string.Format("Home{0}ControllerHelperAttributeCanBeUsed", Path.DirectorySeparatorChar), output, engineContext, controller, controllerContext);
-            Assert.That(output.ToString().Contains("<p>Hello</p>"));            
+            Assert.That(output.ToString(), Does.Contain("<p>Hello</p>"));
         }
 
         [Test, Ignore("No way to mock HttpContext.Current")]
@@ -184,7 +191,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             controllerContext.Helpers.Add("bar", new Helpers.TestingHelper());
             mocks.ReplayAll();
             manager.Process(string.Format("Home{0}ControllerHelperAttributeCanBeUsed", Path.DirectorySeparatorChar), null, output, null);
-            Assert.That(output.ToString().Contains("<p>Hello</p>"));
+            Assert.That(output.ToString(), Does.Contain("<p>Hello</p>"));
         }
 
         [Test]
@@ -216,4 +223,4 @@ namespace Castle.MonoRail.Views.Spark.Tests
         }
     }
 }
-    
+

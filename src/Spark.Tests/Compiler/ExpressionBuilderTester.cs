@@ -30,15 +30,15 @@ namespace Spark.Tests.Compiler
             var builder = new ExpressionBuilder();
             builder.AppendLiteral("hello");
             builder.AppendLiteral("world");
-            Assert.AreEqual("\"helloworld\"", builder.ToCode());
+            Assert.That(builder.ToCode(), Is.EqualTo("\"helloworld\""));
         }
 
         [Test]
         public void TextIsEscaped()
         {
             var builder = new ExpressionBuilder();
-            builder.AppendLiteral("\"\\\t");            
-            Assert.AreEqual("\"\\\"\\\\\\t\"", builder.ToCode());
+            builder.AppendLiteral("\"\\\t");
+            Assert.That(builder.ToCode(), Is.EqualTo("\"\\\"\\\\\\t\""));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace Spark.Tests.Compiler
             builder.AppendExpression("x");
             builder.AppendExpression("y");
             builder.AppendExpression("z");
-            Assert.AreEqual("string.Concat(x,y,z)", builder.ToCode());
+            Assert.That(builder.ToCode(), Is.EqualTo("string.Concat(x,y,z)"));
         }
     }
 }

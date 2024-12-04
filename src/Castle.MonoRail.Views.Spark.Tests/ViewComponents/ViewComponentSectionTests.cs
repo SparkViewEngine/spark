@@ -44,9 +44,9 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                             writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
-            Assert.IsTrue(output.Contains("this-is-a-header"));
-            Assert.IsTrue(output.Contains("this-is-a-body"));
-            Assert.IsTrue(output.Contains("this-is-a-footer"));
+            Assert.That(output, Does.Contain("this-is-a-header"));
+            Assert.That(output, Does.Contain("this-is-a-body"));
+            Assert.That(output, Does.Contain("this-is-a-footer"));
         }
 
         [Test]
@@ -59,9 +59,12 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                             writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
-            Assert.IsTrue(output.Contains("this-should-show-up"));
-            Assert.IsFalse(output.Contains("this-should-not-show-up"));
-            Assert.IsFalse(output.Contains("if condition"));
+            Assert.That(output, Does.Contain("this-should-show-up"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(output.Contains("this-should-not-show-up"), Is.False);
+                Assert.That(output.Contains("if condition"), Is.False);
+            });
         }
 
         [Test]
@@ -79,8 +82,11 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                 "<span>10</span>",
                 "<span>9</span>",
                 "<span>8</span>"));
-            Assert.IsFalse(output.Contains("for each"));
-            Assert.IsFalse(output.Contains("span each"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(output.Contains("for each"), Is.False);
+                Assert.That(output.Contains("span each"), Is.False);
+            });
         }
 
         [Test]
@@ -93,7 +99,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                             engineContext, controller, controllerContext);
 
             var output = writer.ToString();
-            Assert.IsTrue(output.Contains("this is some text: test123"));
+            Assert.That(output, Does.Contain("this is some text: test123"));
         }
 
         [Test]
@@ -106,20 +112,23 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                             engineContext, controller, controllerContext);
 
             var output = writer.ToString();
-            Assert.IsTrue(output.Contains("header1"));
-            Assert.IsTrue(output.Contains("header2"));
-            Assert.IsTrue(output.Contains("body1"));
-            Assert.IsTrue(output.Contains("body2"));
-            Assert.IsTrue(output.Contains("footer1"));
-            Assert.IsTrue(output.Contains("footer2"));
+            Assert.That(output, Does.Contain("header1"));
+            Assert.That(output, Does.Contain("header2"));
+            Assert.That(output, Does.Contain("body1"));
+            Assert.That(output, Does.Contain("body2"));
+            Assert.That(output, Does.Contain("footer1"));
+            Assert.That(output, Does.Contain("footer2"));
 
-            Assert.IsFalse(output.Contains("<header>"));
-            Assert.IsFalse(output.Contains("<body>"));
-            Assert.IsFalse(output.Contains("<footer>"));
-            Assert.IsFalse(output.Contains("</ComponentWithSections>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(output.Contains("<header>"), Is.False);
+                Assert.That(output.Contains("<body>"), Is.False);
+                Assert.That(output.Contains("<footer>"), Is.False);
+                Assert.That(output.Contains("</ComponentWithSections>"), Is.False);
+            });
         }
 
-        [ViewComponentDetails("ComponentWithSections",Sections="header,body,footer")]
+        [ViewComponentDetails("ComponentWithSections", Sections = "header,body,footer")]
         class ComponentWithSections : ViewComponent
         {
             public override void Render()

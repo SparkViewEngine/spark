@@ -48,7 +48,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             mocks.ReplayAll();
             view.Contextualize(engineContext, controllerContext, null, null, null);
 
-            Assert.AreEqual("bar", view.ViewData["foo"]);
+            Assert.That(view.ViewData["foo"], Is.EqualTo("bar"));
         }
 
         [Test]
@@ -73,11 +73,15 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
             view.Contextualize(engineContext, controllerContext, null, null, null);
 
-            Assert.AreEqual("controllerPropertyBagValue", view.ViewData["controllerPropertyBagKey"]);
-            Assert.AreEqual("contextFlashValue", view.ViewData["contextFlashKey"]);
-            Assert.AreEqual("controllerHelpersValue", view.ViewData["controllerHelpersKey"]);
-            Assert.AreEqual("contextParamsValue", view.ViewData["contextParamsKey"]);
-            Assert.AreSame(resource, view.ViewData["controllerResourcesKey"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(view.ViewData["controllerPropertyBagKey"], Is.EqualTo("controllerPropertyBagValue"));
+                Assert.That(view.ViewData["contextFlashKey"], Is.EqualTo("contextFlashValue"));
+                Assert.That(view.ViewData["controllerHelpersKey"], Is.EqualTo("controllerHelpersValue"));
+                Assert.That(view.ViewData["contextParamsKey"], Is.EqualTo("contextParamsValue"));
+
+                Assert.That(view.ViewData["controllerResourcesKey"], Is.SameAs(resource));
+            });
         }
     }
 }

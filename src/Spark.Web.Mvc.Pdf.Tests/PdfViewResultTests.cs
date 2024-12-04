@@ -29,14 +29,13 @@ namespace Spark.Web.Mvc.Pdf.Tests
             var stream = new MemoryStream();
             var controllerContext = GetControllerContext(stream);
 
-            IView view;
-            var viewEngine = MockViewEngine(controllerContext, out view);            
+            var viewEngine = MockViewEngine(controllerContext, out IView view);
 
             var result = new PdfViewResult
-                         {
-                             ViewName = "quux",
-                             ViewEngineCollection = new ViewEngineCollection(new[] { viewEngine })
-                         };
+            {
+                ViewName = "quux",
+                ViewEngineCollection = new ViewEngineCollection(new[] { viewEngine })
+            };
 
             result.ExecuteResult(controllerContext);
 
@@ -48,7 +47,7 @@ namespace Spark.Web.Mvc.Pdf.Tests
         {
             var viewEngine = MockRepository.GenerateMock<IViewEngine>();
             view = MockRepository.GenerateMock<IView>();
-            
+
             viewEngine
                 .Expect(x => x.FindView(controllerContext, "quux", "", true))
                 .Return(new ViewEngineResult(view, viewEngine));
@@ -83,9 +82,9 @@ namespace Spark.Web.Mvc.Pdf.Tests
             var controllerContext = GetControllerContext(stream);
 
             var result = new PdfViewResult
-                         {
-                             ViewEngineCollection = new ViewEngineCollection(new[] { factory })
-                         };
+            {
+                ViewEngineCollection = new ViewEngineCollection(new[] { factory })
+            };
 
             result.ExecuteResult(controllerContext);
 
@@ -97,9 +96,7 @@ namespace Spark.Web.Mvc.Pdf.Tests
         {
             var stream = new MemoryStream();
             var controllerContext = GetControllerContext(stream);
-
-            IView view;
-            var viewEngine = MockViewEngine(controllerContext, out view);
+            var viewEngine = MockViewEngine(controllerContext, out _);
 
 
             var result = new PdfViewResult

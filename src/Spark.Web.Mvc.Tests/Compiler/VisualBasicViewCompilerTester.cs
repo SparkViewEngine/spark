@@ -51,7 +51,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();
 
-            Assert.That(contents.Contains("hello world"));
+            Assert.That(contents, Does.Contain("hello world"));
         }
 
         [Test]
@@ -62,14 +62,14 @@ namespace Spark.Compiler
 
             DoCompileView(compiler, new Chunk[]
             {
-                new SendLiteralChunk { Text = "hello world" }, 
+                new SendLiteralChunk { Text = "hello world" },
                 new ViewDataModelChunk { TModel="Global.System.String"}
             });
 
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();
 
-            Assert.That(contents.Contains("hello world"));
+            Assert.That(contents, Does.Contain("hello world"));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Spark.Compiler
             var compiler = CreateCompiler();
             DoCompileView(compiler, new[] { new SendLiteralChunk { Text = text } });
 
-            Assert.That(compiler.SourceCode.Contains("Write(\"hello"));
+            Assert.That(compiler.SourceCode, Does.Contain("Write(\"hello"));
 
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();
@@ -108,7 +108,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
 
-            Assert.AreEqual("7", contents);
+            Assert.That(contents, Is.EqualTo("7"));
         }
 
         [Test]
@@ -144,7 +144,7 @@ namespace Spark.Compiler
             };
 
             var compiler = CreateCompiler(settings);
-            
+
             DoCompileView(compiler, new[] { new SendExpressionChunk { Code = "CType(Nothing, String).Length" } });
             var instance = compiler.CreateInstance();
 
@@ -159,13 +159,13 @@ namespace Spark.Compiler
             var compiler = new VisualBasicViewCompiler(this.batchCompiler, settings);
             DoCompileView(compiler, new Chunk[]
                                     {
-                                        new LocalVariableChunk { Name = "i", Value = "5" }, 
+                                        new LocalVariableChunk { Name = "i", Value = "5" },
                                         new SendExpressionChunk { Code = "i" }
                                     });
             var instance = compiler.CreateInstance();
             string contents = instance.RenderView();
 
-            Assert.AreEqual("5", contents);
+            Assert.That(contents, Is.EqualTo("5"));
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace Spark.Compiler
         {
             var settings = new SparkSettings<SparkView>();
             var compiler = new VisualBasicViewCompiler(this.batchCompiler, settings);
-			DoCompileView(compiler, new Chunk[]
+            DoCompileView(compiler, new Chunk[]
                                     {
                                         new LocalVariableChunk {Name = "data", Value = "new Integer(){3,4,5}"},
                                         new SendLiteralChunk {Text = "<ul>"},
@@ -181,7 +181,7 @@ namespace Spark.Compiler
                                         {
                                             Code = "item As Integer in data",
                                             Body = new Chunk[]
-                                                   { 
+                                                   {
                                                        new SendLiteralChunk {Text = "<li>"},
                                                        new SendExpressionChunk {Code = "item"},
                                                        new SendLiteralChunk {Text = "</li>"}
@@ -192,7 +192,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
 
-            Assert.AreEqual("<ul><li>3</li><li>4</li><li>5</li></ul>", contents);
+            Assert.That(contents, Is.EqualTo("<ul><li>3</li><li>4</li><li>5</li></ul>"));
         }
 
         [Test]
@@ -208,7 +208,7 @@ namespace Spark.Compiler
                                         {
                                             Code = "item As Integer in data",
                                             Body = new Chunk[]
-                                                   { 
+                                                   {
                                                        new SendLiteralChunk {Text = "<li>"},
                                                        new SendExpressionChunk {Code = "item"},
                                                        new SendExpressionChunk {Code = "itemIsFirst"},
@@ -223,7 +223,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
 
-            Assert.AreEqual("<ul><li>3TrueFalse03</li><li>4FalseFalse13</li><li>5FalseTrue23</li></ul>", contents);
+            Assert.That(contents, Is.EqualTo("<ul><li>3TrueFalse03</li><li>4FalseFalse13</li><li>5FalseTrue23</li></ul>"));
         }
 
         [Test]
@@ -243,7 +243,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
 
-            Assert.AreEqual("hello world:8", contents);
+            Assert.That(contents, Is.EqualTo("hello world:8"));
         }
 
         [Test]
@@ -255,11 +255,11 @@ namespace Spark.Compiler
             {
                 Descriptor = new SparkViewDescriptor { TargetNamespace = "Testing.Target.Namespace" }
             };
-            
+
             DoCompileView(compiler, new Chunk[] { new SendLiteralChunk { Text = "Hello" } });
             var instance = compiler.CreateInstance();
 
-            Assert.AreEqual("Testing.Target.Namespace", instance.GetType().Namespace);
+            Assert.That(instance.GetType().Namespace, Is.EqualTo("Testing.Target.Namespace"));
         }
 
         [Test]
@@ -294,7 +294,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
 
-            Assert.AreEqual("<p>wastrue</p>", contents);
+            Assert.That(contents, Is.EqualTo("<p>wastrue</p>"));
         }
 
         [Test]
@@ -315,7 +315,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
 
-            Assert.AreEqual("<p></p>", contents);
+            Assert.That(contents, Is.EqualTo("<p></p>"));
         }
 
         [Test]
@@ -338,7 +338,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
 
-            Assert.AreEqual("<p>wasfalse</p>", contents);
+            Assert.That(contents, Is.EqualTo("<p>wasfalse</p>"));
         }
 
         [Test]
@@ -359,7 +359,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
 
-            Assert.AreEqual("<p></p>", contents);
+            Assert.That(contents, Is.EqualTo("<p></p>"));
         }
 
         [Test]
@@ -380,7 +380,7 @@ namespace Spark.Compiler
             var instance = compiler.CreateInstance();
             var contents = instance.RenderView();
 
-            Assert.AreEqual("<p>wastrue</p>", contents);
+            Assert.That(contents, Is.EqualTo("<p>wastrue</p>"));
         }
 
         [Test]
@@ -398,9 +398,12 @@ namespace Spark.Compiler
                          };
             compiler.CompileView(new[] { chunks }, new[] { chunks });
 
-            Assert.That(compiler.SourceCode.Contains("Catch ex As Global.System.NullReferenceException"));
-            Assert.That(compiler.SourceCode.Contains("ArgumentNullException("));
-            Assert.That(compiler.SourceCode.Contains(", ex)"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(compiler.SourceCode, Does.Contain("Catch ex As Global.System.NullReferenceException"));
+                Assert.That(compiler.SourceCode, Does.Contain("ArgumentNullException("));
+                Assert.That(compiler.SourceCode, Does.Contain(", ex)"));
+            });
         }
 
         [Test]

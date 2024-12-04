@@ -32,8 +32,11 @@ namespace Spark.Tests.Visitors
             var nodes = ParseNodes("<foo xmlns:x='http://sparkviewengine.com/x'><x:bar/></foo>");
             var visitor = new NamespaceVisitor(new VisitorContext());
             visitor.Accept(nodes);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[0]).Namespace);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((ElementNode)visitor.Nodes[1]).Namespace);
+            Assert.Multiple(() =>
+            {
+                Assert.That(((ElementNode)visitor.Nodes[0]).Namespace, Is.EqualTo(""));
+                Assert.That(((ElementNode)visitor.Nodes[1]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+            });
         }
 
         [Test]
@@ -42,8 +45,11 @@ namespace Spark.Tests.Visitors
             var nodes = ParseNodes("<foo><quux:bar/></foo>");
             var visitor = new NamespaceVisitor(new VisitorContext { Prefix = "quux" });
             visitor.Accept(nodes);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[0]).Namespace);
-            Assert.AreEqual("http://sparkviewengine.com/", ((ElementNode)visitor.Nodes[1]).Namespace);
+            Assert.Multiple(() =>
+            {
+                Assert.That(((ElementNode)visitor.Nodes[0]).Namespace, Is.EqualTo(""));
+                Assert.That(((ElementNode)visitor.Nodes[1]).Namespace, Is.EqualTo("http://sparkviewengine.com/"));
+            });
         }
 
         [Test]
@@ -52,10 +58,13 @@ namespace Spark.Tests.Visitors
             var nodes = ParseNodes("<foo xmlns:x='http://sparkviewengine.com/x'><bar x:if='false'/></foo>");
             var visitor = new NamespaceVisitor(new VisitorContext());
             visitor.Accept(nodes);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[0]).Namespace);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[1]).Namespace);
+            Assert.Multiple(() =>
+            {
+                Assert.That(((ElementNode)visitor.Nodes[0]).Namespace, Is.EqualTo(""));
+                Assert.That(((ElementNode)visitor.Nodes[1]).Namespace, Is.EqualTo(""));
 
-            Assert.AreEqual("http://sparkviewengine.com/x", ((ElementNode)visitor.Nodes[1]).Attributes[0].Namespace);
+                Assert.That(((ElementNode)visitor.Nodes[1]).Attributes[0].Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+            });
         }
 
         [Test]
@@ -64,11 +73,14 @@ namespace Spark.Tests.Visitors
             var nodes = ParseNodes("<x:foo y:bar='hello' xmlns:x='http://sparkviewengine.com/x' xmlns:y='http://sparkviewengine.com/y'><quux/></foo>");
             var visitor = new NamespaceVisitor(new VisitorContext());
             visitor.Accept(nodes);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((ElementNode)visitor.Nodes[0]).Namespace);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[1]).Namespace);
+            Assert.Multiple(() =>
+            {
+                Assert.That(((ElementNode)visitor.Nodes[0]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+                Assert.That(((ElementNode)visitor.Nodes[1]).Namespace, Is.EqualTo(""));
 
-            Assert.AreEqual("y:bar", ((ElementNode)visitor.Nodes[0]).Attributes[0].Name);
-            Assert.AreEqual("http://sparkviewengine.com/y", ((ElementNode)visitor.Nodes[0]).Attributes[0].Namespace);
+                Assert.That(((ElementNode)visitor.Nodes[0]).Attributes[0].Name, Is.EqualTo("y:bar"));
+                Assert.That(((ElementNode)visitor.Nodes[0]).Attributes[0].Namespace, Is.EqualTo("http://sparkviewengine.com/y"));
+            });
 
         }
 
@@ -78,24 +90,27 @@ namespace Spark.Tests.Visitors
             var nodes = ParseNodes("<x:pre/><x:foo xmlns:x='http://sparkviewengine.com/x'/><x:post/>");
             var visitor = new NamespaceVisitor(new VisitorContext());
             visitor.Accept(nodes);
-            Assert.AreEqual("x:pre", ((ElementNode)visitor.Nodes[0]).Name);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[0]).Namespace);
-            Assert.AreEqual("x:foo", ((ElementNode)visitor.Nodes[1]).Name);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((ElementNode)visitor.Nodes[1]).Namespace);
-            Assert.AreEqual("x:post", ((ElementNode)visitor.Nodes[2]).Name);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[2]).Namespace);
+            Assert.Multiple(() =>
+            {
+                Assert.That(((ElementNode)visitor.Nodes[0]).Name, Is.EqualTo("x:pre"));
+                Assert.That(((ElementNode)visitor.Nodes[0]).Namespace, Is.EqualTo(""));
+                Assert.That(((ElementNode)visitor.Nodes[1]).Name, Is.EqualTo("x:foo"));
+                Assert.That(((ElementNode)visitor.Nodes[1]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+                Assert.That(((ElementNode)visitor.Nodes[2]).Name, Is.EqualTo("x:post"));
+                Assert.That(((ElementNode)visitor.Nodes[2]).Namespace, Is.EqualTo(""));
+            });
 
             nodes = ParseNodes("<x:pre/><x:foo xmlns:x='http://sparkviewengine.com/x'><x:bar/></x:foo><x:post/>");
             visitor = new NamespaceVisitor(new VisitorContext());
             visitor.Accept(nodes);
-            Assert.AreEqual("x:pre", ((ElementNode)visitor.Nodes[0]).Name);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[0]).Namespace);
-            Assert.AreEqual("x:foo", ((ElementNode)visitor.Nodes[1]).Name);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((ElementNode)visitor.Nodes[1]).Namespace);
-            Assert.AreEqual("x:bar", ((ElementNode)visitor.Nodes[2]).Name);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((ElementNode)visitor.Nodes[2]).Namespace);
-            Assert.AreEqual("x:post", ((ElementNode)visitor.Nodes[4]).Name);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[4]).Namespace);
+            Assert.That(((ElementNode)visitor.Nodes[0]).Name, Is.EqualTo("x:pre"));
+            Assert.That(((ElementNode)visitor.Nodes[0]).Namespace, Is.EqualTo(""));
+            Assert.That(((ElementNode)visitor.Nodes[1]).Name, Is.EqualTo("x:foo"));
+            Assert.That(((ElementNode)visitor.Nodes[1]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+            Assert.That(((ElementNode)visitor.Nodes[2]).Name, Is.EqualTo("x:bar"));
+            Assert.That(((ElementNode)visitor.Nodes[2]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+            Assert.That(((ElementNode)visitor.Nodes[4]).Name, Is.EqualTo("x:post"));
+            Assert.That(((ElementNode)visitor.Nodes[4]).Namespace, Is.EqualTo(""));
         }
 
         [Test]
@@ -104,20 +119,23 @@ namespace Spark.Tests.Visitors
             var nodes = ParseNodes("<x:pre/><x:foo xmlns:x='http://sparkviewengine.com/x'><x:foo><x:foo/></x:foo></x:foo><x:post/>");
             var visitor = new NamespaceVisitor(new VisitorContext());
             visitor.Accept(nodes);
-            Assert.AreEqual("x:pre", ((ElementNode)visitor.Nodes[0]).Name);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[0]).Namespace);
-            Assert.AreEqual("x:foo", ((ElementNode)visitor.Nodes[1]).Name);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((ElementNode)visitor.Nodes[1]).Namespace);
-            Assert.AreEqual("x:foo", ((ElementNode)visitor.Nodes[2]).Name);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((ElementNode)visitor.Nodes[2]).Namespace);
-            Assert.AreEqual("x:foo", ((ElementNode)visitor.Nodes[3]).Name);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((ElementNode)visitor.Nodes[3]).Namespace);
-            Assert.AreEqual("x:foo", ((EndElementNode)visitor.Nodes[4]).Name);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((EndElementNode)visitor.Nodes[4]).Namespace);
-            Assert.AreEqual("x:foo", ((EndElementNode)visitor.Nodes[5]).Name);
-            Assert.AreEqual("http://sparkviewengine.com/x", ((EndElementNode)visitor.Nodes[5]).Namespace);
-            Assert.AreEqual("x:post", ((ElementNode)visitor.Nodes[6]).Name);
-            Assert.AreEqual("", ((ElementNode)visitor.Nodes[6]).Namespace);
+            Assert.Multiple(() =>
+            {
+                Assert.That(((ElementNode)visitor.Nodes[0]).Name, Is.EqualTo("x:pre"));
+                Assert.That(((ElementNode)visitor.Nodes[0]).Namespace, Is.EqualTo(""));
+                Assert.That(((ElementNode)visitor.Nodes[1]).Name, Is.EqualTo("x:foo"));
+                Assert.That(((ElementNode)visitor.Nodes[1]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+                Assert.That(((ElementNode)visitor.Nodes[2]).Name, Is.EqualTo("x:foo"));
+                Assert.That(((ElementNode)visitor.Nodes[2]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+                Assert.That(((ElementNode)visitor.Nodes[3]).Name, Is.EqualTo("x:foo"));
+                Assert.That(((ElementNode)visitor.Nodes[3]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+                Assert.That(((EndElementNode)visitor.Nodes[4]).Name, Is.EqualTo("x:foo"));
+                Assert.That(((EndElementNode)visitor.Nodes[4]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+                Assert.That(((EndElementNode)visitor.Nodes[5]).Name, Is.EqualTo("x:foo"));
+                Assert.That(((EndElementNode)visitor.Nodes[5]).Namespace, Is.EqualTo("http://sparkviewengine.com/x"));
+                Assert.That(((ElementNode)visitor.Nodes[6]).Name, Is.EqualTo("x:post"));
+                Assert.That(((ElementNode)visitor.Nodes[6]).Namespace, Is.EqualTo(""));
+            });
 
         }
     }

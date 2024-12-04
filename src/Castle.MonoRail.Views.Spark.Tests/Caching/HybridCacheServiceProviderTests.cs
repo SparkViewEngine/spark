@@ -36,7 +36,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.Caching
                 .Stub(x => x.UnderlyingContext)
                 .Return(httpContext);
 
-            foreach (var key in HttpRuntime.Cache.OfType<DictionaryEntry>().Select(x=>x.Key))
+            foreach (var key in HttpRuntime.Cache.OfType<DictionaryEntry>().Select(x => x.Key))
                 HttpRuntime.Cache.Remove(Convert.ToString(key));
         }
 
@@ -115,9 +115,12 @@ namespace Castle.MonoRail.Views.Spark.Tests.Caching
             cacheService.Store("xfoo1", null, null, "bar1");
             cacheService.Store("xfoo2", null, signal, "bar2");
 
-            Assert.That(cacheService.Get("xfoo1"), Is.EqualTo("bar1"));
-            Assert.That(cacheService.Get("xfoo2"), Is.EqualTo("bar2"));
-            Assert.That(cacheService.Get("xfoo3"), Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(cacheService.Get("xfoo1"), Is.EqualTo("bar1"));
+                Assert.That(cacheService.Get("xfoo2"), Is.EqualTo("bar2"));
+                Assert.That(cacheService.Get("xfoo3"), Is.Null);
+            });
 
             _context.Services.CacheProvider.VerifyAllExpectations();
 

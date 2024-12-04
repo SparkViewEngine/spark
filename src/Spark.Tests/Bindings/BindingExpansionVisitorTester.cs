@@ -28,7 +28,7 @@ namespace Spark.Tests.Bindings
         {
             var nodes = new Node[] { new ElementNode("hello", Array.Empty<AttributeNode>(), true) };
             _visitor.Accept(nodes);
-            Assert.That(_visitor.Nodes.Count, Is.EqualTo(1));
+            Assert.That(_visitor.Nodes, Has.Count.EqualTo(1));
             Assert.That(_visitor.Nodes[0], Is.SameAs(nodes[0]));
         }
 
@@ -54,7 +54,7 @@ namespace Spark.Tests.Bindings
 
             var nodes = CreateElement("hello");
             _visitor.Accept(nodes);
-            Assert.That(_visitor.Nodes.Count, Is.EqualTo(1));
+            Assert.That(_visitor.Nodes, Has.Count.EqualTo(1));
             Assert.That(_visitor.Nodes[0], Is.Not.SameAs(nodes[0]));
             Assert.That(_visitor.Nodes[0], Is.TypeOf(typeof(ExpressionNode)));
             var expression = (ExpressionNode)_visitor.Nodes[0];
@@ -68,7 +68,7 @@ namespace Spark.Tests.Bindings
 
             var nodes = CreateElement("hello", CreateAttribute("foo", new TextNode("bar")));
             _visitor.Accept(nodes);
-            Assert.That(_visitor.Nodes.Count, Is.EqualTo(1));
+            Assert.That(_visitor.Nodes, Has.Count.EqualTo(1));
             Assert.That(_visitor.Nodes[0], Is.Not.SameAs(nodes[0]));
             Assert.That(_visitor.Nodes[0], Is.TypeOf(typeof(ExpressionNode)));
             var expression = (ExpressionNode)_visitor.Nodes[0];
@@ -83,7 +83,7 @@ namespace Spark.Tests.Bindings
 
             var nodes = CreateElement("hello", CreateAttribute("foo", new ExpressionNode("bar")));
             _visitor.Accept(nodes);
-            Assert.That(_visitor.Nodes.Count, Is.EqualTo(1));
+            Assert.That(_visitor.Nodes, Has.Count.EqualTo(1));
             Assert.That(_visitor.Nodes[0], Is.Not.SameAs(nodes[0]));
             Assert.That(_visitor.Nodes[0], Is.TypeOf(typeof(ExpressionNode)));
             var expression = (ExpressionNode)_visitor.Nodes[0];

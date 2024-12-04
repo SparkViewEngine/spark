@@ -41,7 +41,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                             writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
-            Assert.IsTrue(output.Contains("This is a widget"));
+            Assert.That(output, Does.Contain("This is a widget"));
         }
 
         [Test]
@@ -55,8 +55,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                 engineContext, controller, controllerContext);
 
             var output = writer.ToString();
-            Assert.IsTrue(output.Contains("Mode Alpha and 123"));
-            Assert.IsTrue(output.Contains("Mode Beta and 456"));
+            Assert.That(output, Does.Contain("Mode Alpha and 123"));
+            Assert.That(output, Does.Contain("Mode Beta and 456"));
         }
 
         [Test]
@@ -69,8 +69,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
                             writer, engineContext, controller, controllerContext);
 
             var output = writer.ToString();
-            Assert.IsTrue(output.Contains("Mode Delta and 789"));
-            Assert.IsTrue(output.Contains("<p class=\"message\">!!Delta!!</p>"));
+            Assert.That(output, Does.Contain("Mode Delta and 789"));
+            Assert.That(output, Does.Contain("<p class=\"message\">!!Delta!!</p>"));
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.VerifyAll();
 
             var content = writer.ToString();
-            Assert.That(content.Contains("<p>This was embedded</p>"));
+            Assert.That(content, Does.Contain("<p>This was embedded</p>"));
         }
 
         [Test]
@@ -112,9 +112,9 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.VerifyAll();
 
             var content = writer.ToString();
-            Assert.That(content.Contains("<p>ok1</p>"));
-            Assert.That(content.Contains("<p>ok2</p>"));
-            Assert.IsFalse(content.Contains("fail"));
+            Assert.That(content, Does.Contain("<p>ok1</p>"));
+            Assert.That(content, Does.Contain("<p>ok2</p>"));
+            Assert.That(content.Contains("fail"), Is.False);
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.VerifyAll();
 
             var content = writer.ToString();
-            Assert.That(content.Contains("<p>ok1</p>"));
+            Assert.That(content, Does.Contain("<p>ok1</p>"));
         }
 
         [ViewComponentDetails("WidgetComponent")]

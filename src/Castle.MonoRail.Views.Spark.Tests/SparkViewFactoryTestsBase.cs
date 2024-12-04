@@ -38,7 +38,6 @@ namespace Castle.MonoRail.Views.Spark.Tests
         protected SparkViewFactory factory;
         protected StubMonoRailServices serviceProvider;
 
-
         [SetUp]
         public void Init()
         {
@@ -54,8 +53,8 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
             controllerContext = new ControllerContext();
             propertyBag = controllerContext.PropertyBag;
-            
-            controllerContext.LayoutNames = new []{"default"};
+
+            controllerContext.LayoutNames = new[] { "default" };
             output = new StringWriter();
 
             server = new StubServerUtility();
@@ -69,20 +68,24 @@ namespace Castle.MonoRail.Views.Spark.Tests
             response = engineContext.Response;
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            output.Dispose();
+        }
 
         protected abstract void Configure();
 
-
         protected void InitUrlInfo(string areaName, string controllerName, string actionName)
         {
-            var urlInfo = new UrlInfo(areaName, controllerName, actionName, "/", "castle");
+            _ = new UrlInfo(areaName, controllerName, actionName, "/", "castle");
 
             engineContext = new StubEngineContext();
             engineContext.AddService(typeof(IUrlBuilder), serviceProvider.UrlBuilder);
             engineContext.CurrentController = controller;
             engineContext.CurrentControllerContext = controllerContext;
             engineContext.Services.ViewEngineManager = serviceProvider.ViewEngineManager;
-            output = (StringWriter) engineContext.Response.Output;
+            output = (StringWriter)engineContext.Response.Output;
 
             var routeMatch = new RouteMatch();
             controllerContext.RouteMatch = routeMatch;
@@ -95,7 +98,8 @@ namespace Castle.MonoRail.Views.Spark.Tests
             foreach (string value in values)
             {
                 int nextIndex = content.IndexOf(value, index);
-                Assert.GreaterOrEqual(nextIndex, 0, string.Format("Looking for {0}", value));
+
+                Assert.That(nextIndex, Is.GreaterThanOrEqualTo(0), () => $"Looking for {value}");
                 index = nextIndex + value.Length;
             }
         }

@@ -25,9 +25,12 @@ namespace Spark.Tests.Spool
         {
             var page = new SpoolPage();
             page.Append("hello");
-            Assert.IsNull(page.Next);
-            Assert.AreEqual(1, page.Count);
-            Assert.AreEqual("hello", page.Buffer[0]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(page.Next, Is.Null);
+                Assert.That(page.Count, Is.EqualTo(1));
+            });
+            Assert.That(page.Buffer[0], Is.EqualTo("hello"));
         }
 
         [Test]
@@ -36,10 +39,16 @@ namespace Spark.Tests.Spool
             var page = new SpoolPage();
             page.Append("hello");
             page.Append("world");
-            Assert.IsNull(page.Next);
-            Assert.AreEqual(2, page.Count);
-            Assert.AreEqual("hello", page.Buffer[0]);
-            Assert.AreEqual("world", page.Buffer[1]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(page.Next, Is.Null);
+                Assert.That(page.Count, Is.EqualTo(2));
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(page.Buffer[0], Is.EqualTo("hello"));
+                Assert.That(page.Buffer[1], Is.EqualTo("world"));
+            });
         }
 
         [Test]
@@ -51,10 +60,14 @@ namespace Spark.Tests.Spool
             {
                 last = last.Append(index.ToString());
             }
-            Assert.AreNotSame(page, last);
-            Assert.AreEqual(SpoolPage.BUFFER_SIZE, page.Count);
-            Assert.AreEqual(30, last.Count);
-            Assert.AreEqual(SpoolPage.BUFFER_SIZE.ToString(), last.Buffer[0]);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(last, Is.Not.SameAs(page));
+                Assert.That(page.Count, Is.EqualTo(SpoolPage.BUFFER_SIZE));
+            });
+            Assert.That(last.Count, Is.EqualTo(30));
+            Assert.That(last.Buffer[0], Is.EqualTo(SpoolPage.BUFFER_SIZE.ToString()));
         }
 
         [Test]
@@ -75,10 +88,13 @@ namespace Spark.Tests.Spool
 
             first.Release();
 
-            Assert.AreEqual(3, second.Count);
-            Assert.AreEqual("1", second.Buffer[0]);
-            Assert.AreEqual("2", second.Buffer[1]);
-            Assert.AreEqual("3", second.Buffer[2]);
+            Assert.That(second.Count, Is.EqualTo(3));
+            Assert.Multiple(() =>
+            {
+                Assert.That(second.Buffer[0], Is.EqualTo("1"));
+                Assert.That(second.Buffer[1], Is.EqualTo("2"));
+                Assert.That(second.Buffer[2], Is.EqualTo("3"));
+            });
         }
 
     }

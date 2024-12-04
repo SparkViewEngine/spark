@@ -39,9 +39,9 @@ namespace Spark.FileSystem
 
             var combined = (CombinedViewFolder)folder;
             Assert.IsAssignableFrom(typeof(VirtualPathProviderViewFolder), combined.Second);
-            
+
             var vpp = (VirtualPathProviderViewFolder)combined.Second;
-            Assert.AreEqual("~/MoreViews/", vpp.VirtualBaseDir);
+            Assert.That(vpp.VirtualBaseDir, Is.EqualTo("~/MoreViews/"));
         }
 
         [Test]
@@ -59,8 +59,8 @@ namespace Spark.FileSystem
             var combined = (CombinedViewFolder)folder;
             Assert.IsAssignableFrom(typeof(MyViewFolder), combined.Second);
             var customFolder = (MyViewFolder)combined.Second;
-            Assert.AreEqual("quux", customFolder.Foo);
-            Assert.AreEqual(42, customFolder.Bar);
+            Assert.That(customFolder.Foo, Is.EqualTo("quux"));
+            Assert.That(customFolder.Bar, Is.EqualTo(42));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Spark.FileSystem
             var combined = (CombinedViewFolder)folder;
             Assert.IsAssignableFrom(typeof(EmbeddedViewFolder), combined.Second);
             var embeddedViewFolder = (EmbeddedViewFolder)combined.Second;
-            Assert.AreEqual(Assembly.Load("Spark.Tests"), embeddedViewFolder.Assembly);
+            Assert.That(embeddedViewFolder.Assembly, Is.EqualTo(Assembly.Load("Spark.Tests")));
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace Spark.FileSystem
             var combined = (CombinedViewFolder)folder;
             Assert.IsAssignableFrom(typeof(FileSystemViewFolder), combined.Second);
             var fileSystemViewFolder = (FileSystemViewFolder)combined.Second;
-            Assert.AreEqual(@"e:\no\such\path", fileSystemViewFolder.BasePath);
+            Assert.That(fileSystemViewFolder.BasePath, Is.EqualTo(@"e:\no\such\path"));
         }
 
         public class MyViewFolder : IViewFolder

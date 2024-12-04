@@ -131,7 +131,8 @@ namespace Spark.Bindings
         }
 
         [Test]
-        public void BindingRefersToAttributeWithUnescapedCode() {
+        public void BindingRefersToAttributeWithUnescapedCode()
+        {
             this._viewFolder.Add("bindings.xml", @"<bindings><element name='hello'>World(@foo)</element></bindings>");
             this._viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello foo=""'one '+(3+4)+' two '+SiteRoot+' three'""/></p><macro name='World' beta='string'>success ${beta}!</macro>");
 
@@ -235,9 +236,10 @@ namespace Spark.Bindings
             var contents = this.Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>3world5</p>"));
         }
-        
+
         [Test, Ignore("The child::* is always treated as text. So this test does not represent the current capabilities.")]
-        public void ChildReferenceWillSpoolAndProvideContentAsCode() {
+        public void ChildReferenceWillSpoolAndProvideContentAsCode()
+        {
             this._viewFolder.Add("bindings.xml", @"<bindings>
 <element name='hello'>'@a' + child::* + '@b'</element>
 </bindings>");
@@ -261,14 +263,14 @@ namespace Spark.Bindings
 
             Assert.That(contents, Is.EqualTo(@"<p>1world2345no text6</p>"));
         }
-        
+
         [Test]
         public void CurleyBracesExpandAsDictionaryInitialization()
         {
             this._viewFolder.Add("bindings.xml", @"<bindings>
 <element name='hello'>new System.Collections.Generic.Dictionary&lt;string,object&gt;{{'@*'}}.Count</element>
 </bindings>");
-            
+
             this._viewFolder.Add(Path.Combine("home", "index.spark"), @"<p><hello a='foo' b='bar'/><hello/><hello></hello><hello x1='' x2='' x3='' x4='' x5=''/></p>");
 
             var contents = this.Render("index");
@@ -280,7 +282,7 @@ namespace Spark.Bindings
         public void ExpressionNextToBindingShouldMaintainWhiteSpace()
         {
             this._viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
-            this._viewFolder.Add(Path.Combine("home","index.spark"), @"<p>${'1234'}  <Text>Smith St</Text></p>");
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"<p>${'1234'}  <Text>Smith St</Text></p>");
 
             var contents = this.Render("index");
             Assert.That(contents, Is.EqualTo(@"<p>1234  Smith St</p>"));
@@ -290,7 +292,7 @@ namespace Spark.Bindings
         public void ExpressionNextToBindingShouldMaintainWhiteSpaceWithLoops()
         {
             this._viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
-            this._viewFolder.Add(Path.Combine("home","index.spark"), @"<var names=""new [] {'alpha', 'beta', 'gamma'}""/>
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"<var names=""new [] {'alpha', 'beta', 'gamma'}""/>
 <ul>
 <for each=""var name in names"">
     <li>${name} <Text>is</Text> okay too I suppose. </li>
@@ -310,7 +312,7 @@ namespace Spark.Bindings
         public void ExpressionNextToBindingShouldMaintainWhiteSpaceWithLoopsInternal()
         {
             this._viewFolder.Add("bindings.xml", @"<bindings><element name='Text'>child::*</element></bindings>");
-            this._viewFolder.Add(Path.Combine("home","index.spark"), @"<var names=""new [] {'alpha', 'beta', 'gamma'}""/>
+            this._viewFolder.Add(Path.Combine("home", "index.spark"), @"<var names=""new [] {'alpha', 'beta', 'gamma'}""/>
 <ul>
     <li each=""var name in names"">${name} <Text>is</Text> okay too I suppose. </li>
 </ul>");

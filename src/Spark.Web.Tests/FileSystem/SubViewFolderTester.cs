@@ -25,7 +25,7 @@ namespace Spark.FileSystem
         public void SharingExtraFolders()
         {
             var normal = new FileSystemViewFolder("Spark.Tests.Views");
-            var otherLocation = new FileSystemViewFolder(Path.Combine("Spark.Tests.Views","Prefix"));
+            var otherLocation = new FileSystemViewFolder(Path.Combine("Spark.Tests.Views", "Prefix"));
 
             var viewFolder = new CombinedViewFolder(normal, new SubViewFolder(otherLocation, "Shared"));
 
@@ -33,29 +33,29 @@ namespace Spark.FileSystem
             var otherLocationCount = otherLocation.ListViews("").Count;
             var totalSharedCount = viewFolder.ListViews("Shared").Count;
 
-            Assert.AreEqual(normalSharedCount + otherLocationCount, totalSharedCount);
+            Assert.That(totalSharedCount, Is.EqualTo(normalSharedCount + otherLocationCount));
         }
 
         [Test]
-		[Ignore("Is this test relevant after mono changes? : ahjohannessen")]
+        [Ignore("Is this test relevant after mono changes? : ahjohannessen")]
         public void ForwardAndBackSlashAreInterchangeable()
         {
             var viewsFolder = new InMemoryViewFolder
-			{
-				{@"Home\Index.spark", "1"},
-				{@"Shared\_global.spark", "2"},
-				{@"Collision\Home\Baaz.spark", "6"}
-			};
+            {
+                {@"Home\Index.spark", "1"},
+                {@"Shared\_global.spark", "2"},
+                {@"Collision\Home\Baaz.spark", "6"}
+            };
             var extraFolder = new InMemoryViewFolder
-			{
-				{@"Home\Foo.spark", "3"},
-				{@"Home\Bar.spark", "4"},
-				{@"Home\Quux.spark", "5"},
-			};
+            {
+                {@"Home\Foo.spark", "3"},
+                {@"Home\Bar.spark", "4"},
+                {@"Home\Quux.spark", "5"},
+            };
 
-            Assert.AreEqual(1, viewsFolder.ListViews(@"Collision/Home").Count);
-            Assert.AreEqual(1, viewsFolder.ListViews(@"Collision\Home").Count);
-            Assert.AreEqual(3, extraFolder.ListViews(@"Home").Count);
+            Assert.That(viewsFolder.ListViews(@"Collision/Home").Count, Is.EqualTo(1));
+            Assert.That(viewsFolder.ListViews(@"Collision\Home").Count, Is.EqualTo(1));
+            Assert.That(extraFolder.ListViews(@"Home").Count, Is.EqualTo(3));
 
             var combinedFolder = viewsFolder
                 .Append(new SubViewFolder(extraFolder, @"Extra/One"))
@@ -63,22 +63,25 @@ namespace Spark.FileSystem
                 .Append(new SubViewFolder(extraFolder, @"Collision"));
 
 
-            Assert.AreEqual(1, combinedFolder.ListViews("Home").Count);
-            Assert.AreEqual(3, combinedFolder.ListViews(@"Extra/One/Home").Count);
-            Assert.AreEqual(3, combinedFolder.ListViews(@"Extra\One/Home").Count);
-            Assert.AreEqual(3, combinedFolder.ListViews(@"Extra/One\Home").Count);
-            Assert.AreEqual(3, combinedFolder.ListViews(@"Extra\One\Home").Count);
-            Assert.AreEqual(3, combinedFolder.ListViews(@"Extra/Two/Home").Count);
-            Assert.AreEqual(3, combinedFolder.ListViews(@"Extra\Two/Home").Count);
-            Assert.AreEqual(3, combinedFolder.ListViews(@"Extra/Two\Home").Count);
-            Assert.AreEqual(3, combinedFolder.ListViews(@"Extra\Two\Home").Count);
-            Assert.AreEqual(4, combinedFolder.ListViews(@"Collision/Home").Count);
-            Assert.AreEqual(4, combinedFolder.ListViews(@"Collision\Home").Count);
+            Assert.That(combinedFolder.ListViews("Home").Count, Is.EqualTo(1));
+            Assert.That(combinedFolder.ListViews(@"Extra/One/Home").Count, Is.EqualTo(3));
+            Assert.That(combinedFolder.ListViews(@"Extra\One/Home").Count, Is.EqualTo(3));
+            Assert.That(combinedFolder.ListViews(@"Extra/One\Home").Count, Is.EqualTo(3));
+            Assert.That(combinedFolder.ListViews(@"Extra\One\Home").Count, Is.EqualTo(3));
+            Assert.That(combinedFolder.ListViews(@"Extra/Two/Home").Count, Is.EqualTo(3));
+            Assert.That(combinedFolder.ListViews(@"Extra\Two/Home").Count, Is.EqualTo(3));
+            Assert.That(combinedFolder.ListViews(@"Extra/Two\Home").Count, Is.EqualTo(3));
+            Assert.That(combinedFolder.ListViews(@"Extra\Two\Home").Count, Is.EqualTo(3));
+            Assert.That(combinedFolder.ListViews(@"Collision/Home").Count, Is.EqualTo(4));
+            Assert.That(combinedFolder.ListViews(@"Collision\Home").Count, Is.EqualTo(4));
 
-            Assert.IsTrue(combinedFolder.HasView(@"Extra/One/Home/Bar.spark"));
-            Assert.IsTrue(combinedFolder.HasView(@"Extra\One\Home\Bar.spark"));
-            Assert.IsTrue(combinedFolder.HasView(@"Extra/Two/Home/Bar.spark"));
-            Assert.IsTrue(combinedFolder.HasView(@"Extra\Two\Home\Bar.spark"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(combinedFolder.HasView(@"Extra/One/Home/Bar.spark"), Is.True);
+                Assert.That(combinedFolder.HasView(@"Extra\One\Home\Bar.spark"), Is.True);
+                Assert.That(combinedFolder.HasView(@"Extra/Two/Home/Bar.spark"), Is.True);
+                Assert.That(combinedFolder.HasView(@"Extra\Two\Home\Bar.spark"), Is.True);
+            });
 
         }
     }

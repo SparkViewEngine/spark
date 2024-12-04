@@ -52,14 +52,14 @@ namespace Spark.Tests.Spool
             GC.WaitForPendingFinalizers();
             _cache.Clear();
         }
-        
+
         [Test]
         public void ToStringCombinesResults()
         {
             TextWriter writer = new SpoolWriter();
             writer.Write("hello");
             writer.Write("world");
-            Assert.AreEqual("helloworld", writer.ToString());
+            Assert.That(writer.ToString(), Is.EqualTo("helloworld"));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace Spark.Tests.Spool
             {
                 writer.Write(index);
             }
-            Assert.AreEqual(_FiveThousandNumbers, writer.ToString());
+            Assert.That(writer.ToString(), Is.EqualTo(_FiveThousandNumbers));
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace Spark.Tests.Spool
             writer2.Write("before");
             writer1.WriteTo(writer2);
             writer2.Write("after");
-            Assert.AreEqual("before" + _FiveThousandNumbers + "after", writer2.ToString());
+            Assert.That(writer2.ToString(), Is.EqualTo("before" + _FiveThousandNumbers + "after"));
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace Spark.Tests.Spool
             writer2.Write("before");
             writer1.WriteTo(writer2);
             writer2.Write("after");
-            Assert.AreEqual("before" + _FiveThousandNumbers + "after", writer2.ToString());
+            Assert.That(writer2.ToString(), Is.EqualTo("before" + _FiveThousandNumbers + "after"));
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace Spark.Tests.Spool
             writer2.Write("before");
             writer1.WriteTo(writer2);
             writer2.Write("after");
-            Assert.AreEqual("before" + _FiveThousandNumbers + "after", writer2.ToString());
+            Assert.That(writer2.ToString(), Is.EqualTo("before" + _FiveThousandNumbers + "after"));
         }
 
         [Test]
@@ -134,8 +134,11 @@ namespace Spark.Tests.Spool
 
             writer1.Write("world");
 
-            Assert.AreEqual("helloworld", writer1.ToString());
-            Assert.AreEqual("beforehelloafter", writer2.ToString());
+            Assert.Multiple(() =>
+            {
+                Assert.That(writer1.ToString(), Is.EqualTo("helloworld"));
+                Assert.That(writer2.ToString(), Is.EqualTo("beforehelloafter"));
+            });
 
             var _first = typeof(SpoolWriter).GetField("_first", BindingFlags.NonPublic | BindingFlags.Instance);
             var _readonly = typeof(SpoolPage).GetField("_readonly", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -144,24 +147,24 @@ namespace Spark.Tests.Spool
             var pages1 = (SpoolPage)_first.GetValue(writer1);
             var pages2 = (SpoolPage)_first.GetValue(writer2);
 
-            Assert.IsTrue((bool)_readonly.GetValue(pages1));
-            Assert.IsTrue((bool)_nonreusable.GetValue(pages1));
+            Assert.That((bool)_readonly.GetValue(pages1), Is.True);
+            Assert.That((bool)_nonreusable.GetValue(pages1), Is.True);
 
-            Assert.IsFalse((bool)_readonly.GetValue(pages1.Next));
-            Assert.IsFalse((bool)_nonreusable.GetValue(pages1.Next));
-            Assert.IsNull(pages1.Next.Next);
+            Assert.That((bool)_readonly.GetValue(pages1.Next), Is.False);
+            Assert.That((bool)_nonreusable.GetValue(pages1.Next), Is.False);
+            Assert.That(pages1.Next.Next, Is.Null);
 
 
-            Assert.IsTrue((bool)_readonly.GetValue(pages2));
-            Assert.IsFalse((bool)_nonreusable.GetValue(pages2));
+            Assert.That((bool)_readonly.GetValue(pages2), Is.True);
+            Assert.That((bool)_nonreusable.GetValue(pages2), Is.False);
 
-            Assert.IsTrue((bool)_readonly.GetValue(pages2.Next));
-            Assert.IsTrue((bool)_nonreusable.GetValue(pages2.Next));
+            Assert.That((bool)_readonly.GetValue(pages2.Next), Is.True);
+            Assert.That((bool)_nonreusable.GetValue(pages2.Next), Is.True);
 
-            Assert.IsFalse((bool)_readonly.GetValue(pages2.Next.Next));
-            Assert.IsFalse((bool)_nonreusable.GetValue(pages2.Next.Next));
+            Assert.That((bool)_readonly.GetValue(pages2.Next.Next), Is.False);
+            Assert.That((bool)_nonreusable.GetValue(pages2.Next.Next), Is.False);
 
-            Assert.IsNull(pages2.Next.Next.Next);
+            Assert.That(pages2.Next.Next.Next, Is.Null);
 
             var countBeforeCollect = _cache.Count;
             // ReSharper disable RedundantAssignment
@@ -172,9 +175,12 @@ namespace Spark.Tests.Spool
             GC.WaitForPendingFinalizers();
             var countAfterCollect = _cache.Count;
 
-            Assert.AreEqual(0, countBefore);
-            Assert.AreEqual(0, countBeforeCollect);
-            Assert.AreEqual(3, countAfterCollect);
+            Assert.Multiple(() =>
+            {
+                Assert.That(countBefore, Is.EqualTo(0));
+                Assert.That(countBeforeCollect, Is.EqualTo(0));
+                Assert.That(countAfterCollect, Is.EqualTo(3));
+            });
         }
 
         [Test]
@@ -184,7 +190,7 @@ namespace Spark.Tests.Spool
             writer.Write('a');
             writer.Write(new[] { 'b', 'c', 'd' });
             writer.Write(new[] { 'x', 'e', 'f', 'g', 'x' }, 1, 3);
-            Assert.AreEqual("abcdefg", writer.ToString());
+            Assert.That(writer.ToString(), Is.EqualTo("abcdefg"));
         }
 
         [Test]
@@ -207,11 +213,14 @@ namespace Spark.Tests.Spool
 
             var countAfter = _cache.Count;
 
-            Assert.AreEqual(0, countBefore);
-            Assert.AreEqual(1, countBetween);
-            Assert.AreEqual(1, countAfter);
+            Assert.Multiple(() =>
+            {
+                Assert.That(countBefore, Is.EqualTo(0));
+                Assert.That(countBetween, Is.EqualTo(1));
+                Assert.That(countAfter, Is.EqualTo(1));
+            });
         }
-        
+
         [Test]
         public void EncodingShouldBeUtf8ByDefault()
         {
@@ -228,11 +237,11 @@ namespace Spark.Tests.Spool
         public void ToStringWhenCodingIsDifferentFromUtf8()
         {
             TextWriter writer = new SpoolWriter();
-            
+
             // The accentuated char and unicode emoji shouldn't matter as the SpoolPage just keeps track of the bytes
             writer.Write("hèllo 🌍");
-            
-            Assert.AreEqual("hèllo 🌍", writer.ToString());
+
+            Assert.That(writer.ToString(), Is.EqualTo("hèllo 🌍"));
         }
     }
 }

@@ -28,32 +28,44 @@ namespace Spark.Tests.Parser
         public void SimpleFields()
         {
             var result = new TypeInspector("string");
-            Assert.AreEqual("string", (string)result.Type);
-            Assert.IsNull(result.Name);
+            Assert.Multiple(() =>
+            {
+                Assert.That((string)result.Type, Is.EqualTo("string"));
+                Assert.That(result.Name, Is.Null);
+            });
         }
 
         [Test]
         public void Generics()
         {
             var result = new TypeInspector("IList<something>");
-            Assert.AreEqual("IList<something>", (string)result.Type);
-            Assert.IsNull(result.Name);
+            Assert.Multiple(() =>
+            {
+                Assert.That((string)result.Type, Is.EqualTo("IList<something>"));
+                Assert.That(result.Name, Is.Null);
+            });
         }
 
         [Test]
         public void GenericsWithName()
         {
             var result = new TypeInspector("IList<something>\r\n\tSomethingList");
-            Assert.AreEqual("IList<something>", (string)result.Type);
-            Assert.AreEqual("SomethingList", (string)result.Name);
+            Assert.Multiple(() =>
+            {
+                Assert.That((string)result.Type, Is.EqualTo("IList<something>"));
+                Assert.That((string)result.Name, Is.EqualTo("SomethingList"));
+            });
         }
 
         [Test]
         public void GenericWithSpacesButNoName()
         {
             var result = new TypeInspector("IList<something, int>");
-            Assert.AreEqual("IList<something, int>", (string)result.Type);
-            Assert.IsNull(result.Name);
+            Assert.Multiple(() =>
+            {
+                Assert.That((string)result.Type, Is.EqualTo("IList<something, int>"));
+                Assert.That(result.Name, Is.Null);
+            });
         }
     }
 }

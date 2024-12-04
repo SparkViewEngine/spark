@@ -39,7 +39,8 @@ namespace Spark.Web.Mvc.Tests
 
 
         [Test]
-        public void AreaFilterUsesRouteValuesForBackCompat() {
+        public void AreaFilterUsesRouteValuesForBackCompat()
+        {
             var filter = new AreaDescriptorFilter();
 
             _context.RouteData.Values.Add("area", "foo");

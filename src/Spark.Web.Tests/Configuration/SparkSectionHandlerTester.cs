@@ -32,11 +32,11 @@ namespace Spark.Configuration
         public void CanLoadFromAppConfig()
         {
             var config = (SparkSectionHandler)ConfigurationManager.GetSection("spark");
-            Assert.IsTrue(config.Compilation.Debug);
-            Assert.AreEqual(NullBehaviour.Strict, config.Compilation.NullBehaviour);
-            Assert.AreEqual(1, config.Compilation.Assemblies.Count);
-            Assert.AreEqual(typeof(StubSparkView).FullName, config.Pages.BaseClassTypeName);
-            Assert.AreEqual(1, config.Pages.Namespaces.Count);
+            Assert.That(config.Compilation.Debug, Is.True);
+            Assert.That(config.Compilation.NullBehaviour, Is.EqualTo(NullBehaviour.Strict));
+            Assert.That(config.Compilation.Assemblies.Count, Is.EqualTo(1));
+            Assert.That(config.Pages.BaseClassTypeName, Is.EqualTo(typeof(StubSparkView).FullName));
+            Assert.That(config.Pages.Namespaces.Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -50,9 +50,9 @@ namespace Spark.Configuration
                 .AddAssembly(typeof(TestAttribute).Assembly)
                 .AddAssembly("Spark.Tests");
 
-            Assert.IsTrue(config.Compilation.Debug);
-            Assert.AreEqual(3, config.Pages.Namespaces.Count);
-            Assert.AreEqual(2, config.Compilation.Assemblies.Count);
+            Assert.That(config.Compilation.Debug, Is.True);
+            Assert.That(config.Pages.Namespaces.Count, Is.EqualTo(3));
+            Assert.That(config.Compilation.Assemblies.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -67,10 +67,10 @@ namespace Spark.Configuration
                 .AddAssembly(typeof(TestAttribute).Assembly)
                 .AddAssembly("Spark.Tests");
 
-            Assert.IsTrue(settings.Debug);
-            Assert.AreEqual(NullBehaviour.Lenient, settings.NullBehaviour);
-            Assert.AreEqual(3, settings.UseNamespaces.Count());
-            Assert.AreEqual(2, settings.UseAssemblies.Count());
+            Assert.That(settings.Debug, Is.True);
+            Assert.That(settings.NullBehaviour, Is.EqualTo(NullBehaviour.Lenient));
+            Assert.That(settings.UseNamespaces.Count(), Is.EqualTo(3));
+            Assert.That(settings.UseAssemblies.Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace Spark.Configuration
 
             var contents = engine.CreateInstance(descriptor).RenderView();
 
-            Assert.AreEqual("<div>Alive</div>", contents);
+            Assert.That(contents, Is.EqualTo("<div>Alive</div>"));
         }
     }
 }

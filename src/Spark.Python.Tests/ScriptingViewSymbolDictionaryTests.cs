@@ -40,7 +40,7 @@ namespace Spark.Python.Tests
         {
             public override void Render()
             {
-                
+
             }
 
             public override Guid GeneratedViewId
@@ -69,7 +69,7 @@ namespace Spark.Python.Tests
         public void GuidCanBeLocated()
         {
             var viewId = (Guid)_scope.GetVariable("GeneratedViewId");
-            Assert.AreEqual(new Guid("12345678-1234-1234-1234-123456123456"), viewId);
+            Assert.That(viewId, Is.EqualTo(new Guid("12345678-1234-1234-1234-123456123456")));
         }
 
         [Test]
@@ -78,14 +78,14 @@ namespace Spark.Python.Tests
             _view.ViewData["foo"] = "bar";
 
             var viewData = (IDictionary<string, object>)_scope.GetVariable("ViewData");
-            Assert.AreEqual("bar", viewData["foo"]);
+            Assert.That(viewData["foo"], Is.EqualTo("bar"));
         }
 
         [Test]
         public void MembersCanBeCalled()
         {
             var siteResource = (Delegate)_scope.GetVariable("SiteResource");
-            Assert.AreEqual("/TestApp/Hello", siteResource.DynamicInvoke("/Hello"));
+            Assert.That(siteResource.DynamicInvoke("/Hello"), Is.EqualTo("/TestApp/Hello"));
         }
     }
 }

@@ -28,9 +28,12 @@ namespace Spark.Tests.Compiler
         public void LocatingTheVariable()
         {
             var inspector = new ForEachInspector("my var thing in collection.thing foo");
-            Assert.AreEqual("my var", inspector.VariableType); 
-            Assert.AreEqual("thing", inspector.VariableName);
-            Assert.AreEqual("collection.thing foo", inspector.CollectionCode);
+            Assert.Multiple(() =>
+            {
+                Assert.That(inspector.VariableType, Is.EqualTo("my var"));
+                Assert.That(inspector.VariableName, Is.EqualTo("thing"));
+                Assert.That(inspector.CollectionCode, Is.EqualTo("collection.thing foo"));
+            });
         }
     }
 }

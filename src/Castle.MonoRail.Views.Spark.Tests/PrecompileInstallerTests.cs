@@ -35,10 +35,11 @@ namespace Castle.MonoRail.Views.Spark.Tests
             File.Delete(targetFile);
 
             var parent = new ParentInstaller();
-            var precompile = new PrecompileInstaller();
-
-            precompile.TargetAssemblyFile = targetFile;
-            precompile.ViewPath = "MonoRail.Tests.Views";
+            var precompile = new PrecompileInstaller
+            {
+                TargetAssemblyFile = targetFile,
+                ViewPath = "MonoRail.Tests.Views"
+            };
             precompile.DescribeBatch += ((sender, e) => e.Batch.For<StubController>().Include("*").Include("_*"));
 
             var state = new Hashtable();
@@ -54,7 +55,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
             var views = result.GetTypes().Where(x => x.BaseType == typeof(SparkView))
                 .ToArray();
 
-            Assert.AreEqual(3, views.Length);
+            Assert.That(views.Length, Is.EqualTo(3));
         }
 
         public class ParentInstaller : Installer

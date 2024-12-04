@@ -67,15 +67,18 @@ namespace Spark.Tests.Parser
         {
             var pos = new Position(new SourceContext("abc123def"));
             var result = _grammar.DigitPaint(pos);
-            Assert.AreEqual("abc", result.Value.Before);
-            Assert.AreEqual("123", result.Value.Thing);
-            Assert.AreEqual("def", result.Value.After);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Value.Before, Is.EqualTo("abc"));
+                Assert.That(result.Value.Thing, Is.EqualTo("123"));
+                Assert.That(result.Value.After, Is.EqualTo("def"));
 
-            Assert.AreEqual(1, result.Rest.GetPaint().Count());
+                Assert.That(result.Rest.GetPaint().Count(), Is.EqualTo(1));
 
-            Assert.AreEqual("123", result.Rest.PaintLink.Paint.Value);
-            Assert.AreEqual(3, result.Rest.PaintLink.Paint.Begin.Offset);
-            Assert.AreEqual(6, result.Rest.PaintLink.Paint.End.Offset);
+                Assert.That(result.Rest.PaintLink.Paint.Value, Is.EqualTo("123"));
+                Assert.That(result.Rest.PaintLink.Paint.Begin.Offset, Is.EqualTo(3));
+                Assert.That(result.Rest.PaintLink.Paint.End.Offset, Is.EqualTo(6));
+            });
         }
 
         [Test]
@@ -83,7 +86,7 @@ namespace Spark.Tests.Parser
         {
             var pos = new Position(new SourceContext(" abc123def a5t 34w e5 "));
             var result = _grammar.ManyPaints(pos);
-            Assert.AreEqual(4, result.Value.Count);
+            Assert.That(result.Value, Has.Count.EqualTo(4));
 
             var paints = new List<Paint>();
             foreach (var info in result.Value)
@@ -93,17 +96,20 @@ namespace Spark.Tests.Parser
                 paints.Add(paint);
             }
 
-            Assert.AreEqual(1, paints[0].Begin.Offset);
-            Assert.AreEqual(10, paints[0].End.Offset);
-            Assert.AreEqual(11, paints[1].Begin.Offset);
-            Assert.AreEqual(14, paints[1].End.Offset);
-            Assert.AreEqual(15, paints[2].Begin.Offset);
-            Assert.AreEqual(18, paints[2].End.Offset);
-            Assert.AreEqual(19, paints[3].Begin.Offset);
-            Assert.AreEqual(21, paints[3].End.Offset);
+            Assert.Multiple(() =>
+            {
+                Assert.That(paints[0].Begin.Offset, Is.EqualTo(1));
+                Assert.That(paints[0].End.Offset, Is.EqualTo(10));
+                Assert.That(paints[1].Begin.Offset, Is.EqualTo(11));
+                Assert.That(paints[1].End.Offset, Is.EqualTo(14));
+                Assert.That(paints[2].Begin.Offset, Is.EqualTo(15));
+                Assert.That(paints[2].End.Offset, Is.EqualTo(18));
+                Assert.That(paints[3].Begin.Offset, Is.EqualTo(19));
+                Assert.That(paints[3].End.Offset, Is.EqualTo(21));
 
-            Assert.AreEqual(4, result.Rest.GetPaint().OfType<Paint<string>>().Count());
-            Assert.AreEqual(4, result.Rest.GetPaint().OfType<Paint<PaintInfo>>().Count());
+                Assert.That(result.Rest.GetPaint().OfType<Paint<string>>().Count(), Is.EqualTo(4));
+                Assert.That(result.Rest.GetPaint().OfType<Paint<PaintInfo>>().Count(), Is.EqualTo(4));
+            });
         }
 
         [Test]
@@ -112,8 +118,11 @@ namespace Spark.Tests.Parser
             var input = "<div><p class='subtle'>Hello World</p> ${Tada} </div>";
             var grammar = new MarkupGrammar();
             var result = grammar.Nodes(new Position(new SourceContext(input)));
-            Assert.AreEqual(8, result.Value.Count);
-            Assert.AreEqual(10, result.Rest.GetPaint().OfType<Paint<Node>>().Count());
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Value, Has.Count.EqualTo(8));
+                Assert.That(result.Rest.GetPaint().OfType<Paint<Node>>().Count(), Is.EqualTo(10));
+            });
         }
 
 
@@ -123,21 +132,27 @@ namespace Spark.Tests.Parser
             var input = "<div id='rea' class='foo'/>";
             var grammar = new MarkupGrammar();
             var result = grammar.Nodes(new Position(new SourceContext(input)));
-            Assert.AreEqual(1, result.Value.Count);
-            
+            Assert.That(result.Value, Has.Count.EqualTo(1));
+
             var paints = result.Rest.GetPaint();
-            Assert.AreEqual(1, paints.Select(p => p.Value).OfType<ElementNode>().Count());
-            Assert.AreEqual(2, paints.Select(p => p.Value).OfType<AttributeNode>().Count());
-            Assert.AreEqual(2, paints.Select(p => p.Value).OfType<TextNode>().Count());
-            Assert.AreEqual(5, paints.OfType<Paint<Node>>().Count());
+            Assert.Multiple(() =>
+            {
+                Assert.That(paints.Select(p => p.Value).OfType<ElementNode>().Count(), Is.EqualTo(1));
+                Assert.That(paints.Select(p => p.Value).OfType<AttributeNode>().Count(), Is.EqualTo(2));
+                Assert.That(paints.Select(p => p.Value).OfType<TextNode>().Count(), Is.EqualTo(2));
+                Assert.That(paints.OfType<Paint<Node>>().Count(), Is.EqualTo(5));
+            });
 
             var attrId = paints.Single(p => (p.Value is AttributeNode) && ((AttributeNode)p.Value).Name == "id");
             var attrClass = paints.Single(p => (p.Value is AttributeNode) && ((AttributeNode)p.Value).Name == "class");
 
-            Assert.AreEqual(5, attrId.Begin.Offset);
-            Assert.AreEqual(13, attrId.End.Offset);
-            Assert.AreEqual(14, attrClass.Begin.Offset);
-            Assert.AreEqual(25, attrClass.End.Offset);
+            Assert.Multiple(() =>
+            {
+                Assert.That(attrId.Begin.Offset, Is.EqualTo(5));
+                Assert.That(attrId.End.Offset, Is.EqualTo(13));
+                Assert.That(attrClass.Begin.Offset, Is.EqualTo(14));
+                Assert.That(attrClass.End.Offset, Is.EqualTo(25));
+            });
         }
     }
 }

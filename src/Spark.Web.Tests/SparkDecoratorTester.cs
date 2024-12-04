@@ -13,7 +13,7 @@ namespace Spark
             var layer0 = new TestLayer0();
             var layer1 = new TestLayer1(layer0);
             var content = layer1.RenderView();
-            Assert.AreEqual("[layer1top][layer0head][layer1head][layer0][layer1bottom]", content);
+            Assert.That(content, Is.EqualTo("[layer1top][layer0head][layer1head][layer0][layer1bottom]"));
         }
 
         public class TestLayer0 : SparkViewDecorator

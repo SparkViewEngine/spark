@@ -20,8 +20,7 @@ namespace Spark.Tests.Stubs
     {
         public object Eval(string key)
         {
-            object value;
-            return TryGetValue(key, out value) ? value : null;
+            return TryGetValue(key, out object value) ? value : null;
         }
     }
 

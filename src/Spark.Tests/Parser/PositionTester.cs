@@ -25,148 +25,202 @@ namespace Spark.Tests.Parser
         public void PositionStartsOnOneOne()
         {
             Position position = new Position(new SourceContext("hello world"));
-            Assert.AreEqual(1, position.Line);
-            Assert.AreEqual(1, position.Column);
-            Assert.AreEqual(0, position.Offset);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Line, Is.EqualTo(1));
+                Assert.That(position.Column, Is.EqualTo(1));
+                Assert.That(position.Offset, Is.EqualTo(0));
+            });
         }
 
         [Test]
         public void AdvanceChangesColumnOffset()
         {
             Position position = new Position(new SourceContext("hello world"));
-            Assert.AreEqual(0, position.Offset);
-            Assert.AreEqual(1, position.Line);
-            Assert.AreEqual(1, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(0));
+                Assert.That(position.Line, Is.EqualTo(1));
+                Assert.That(position.Column, Is.EqualTo(1));
+            });
             position = position.Advance(5);
-            Assert.AreEqual(5, position.Offset);
-            Assert.AreEqual(1, position.Line);
-            Assert.AreEqual(6, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(5));
+                Assert.That(position.Line, Is.EqualTo(1));
+                Assert.That(position.Column, Is.EqualTo(6));
+            });
         }
 
         [Test]
         public void NewlineChangesLine()
         {
             Position position = new Position(new SourceContext("hello\r\nworld"));
-            Assert.AreEqual(0, position.Offset);
-            Assert.AreEqual(1, position.Line);
-            Assert.AreEqual(1, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(0));
+                Assert.That(position.Line, Is.EqualTo(1));
+                Assert.That(position.Column, Is.EqualTo(1));
+            });
             position = position.Advance(5);
-            Assert.AreEqual(5, position.Offset);
-            Assert.AreEqual(1, position.Line);
-            Assert.AreEqual(6, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(5));
+                Assert.That(position.Line, Is.EqualTo(1));
+                Assert.That(position.Column, Is.EqualTo(6));
+            });
             position = position.Advance(1);
-            Assert.AreEqual(6, position.Offset);
+            Assert.That(position.Offset, Is.EqualTo(6));
             position = position.Advance(1);
-            Assert.AreEqual(7, position.Offset);
-            Assert.AreEqual(2, position.Line);
-            Assert.AreEqual(1, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(7));
+                Assert.That(position.Line, Is.EqualTo(2));
+                Assert.That(position.Column, Is.EqualTo(1));
+            });
 
             position = new Position(new SourceContext("hello\r\nworld"));
             position = position.Advance(9);
-            Assert.AreEqual(9, position.Offset);
-            Assert.AreEqual(2, position.Line);
-            Assert.AreEqual(3, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(9));
+                Assert.That(position.Line, Is.EqualTo(2));
+                Assert.That(position.Column, Is.EqualTo(3));
+            });
         }
 
         [Test]
         public void UnixStyleNewlines()
         {
             Position position = new Position(new SourceContext("hello\nworld"));
-            Assert.AreEqual(0, position.Offset);
-            Assert.AreEqual(1, position.Line);
-            Assert.AreEqual(1, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(0));
+                Assert.That(position.Line, Is.EqualTo(1));
+                Assert.That(position.Column, Is.EqualTo(1));
+            });
             position = position.Advance(5);
-            Assert.AreEqual(5, position.Offset);
-            Assert.AreEqual(1, position.Line);
-            Assert.AreEqual(6, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(5));
+                Assert.That(position.Line, Is.EqualTo(1));
+                Assert.That(position.Column, Is.EqualTo(6));
+            });
             position = position.Advance(1);
-            Assert.AreEqual(6, position.Offset);
-            Assert.AreEqual(2, position.Line);
-            Assert.AreEqual(1, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(6));
+                Assert.That(position.Line, Is.EqualTo(2));
+                Assert.That(position.Column, Is.EqualTo(1));
+            });
             position = position.Advance(1);
-            Assert.AreEqual(7, position.Offset);
-            Assert.AreEqual(2, position.Line);
-            Assert.AreEqual(2, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(7));
+                Assert.That(position.Line, Is.EqualTo(2));
+                Assert.That(position.Column, Is.EqualTo(2));
+            });
 
             position = new Position(new SourceContext("hello\nworld"));
             position = position.Advance(9);
-            Assert.AreEqual(9, position.Offset);
-            Assert.AreEqual(2, position.Line);
-            Assert.AreEqual(4, position.Column);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Offset, Is.EqualTo(9));
+                Assert.That(position.Line, Is.EqualTo(2));
+                Assert.That(position.Column, Is.EqualTo(4));
+            });
         }
 
         [Test]
         public void PeekReturnsText()
         {
             Position position = new Position(new SourceContext("hello\r\nworld"));
-            Assert.AreEqual("hello", position.Peek(5));
+            Assert.That(position.Peek(5), Is.EqualTo("hello"));
             position = position.Advance(7);
-            Assert.AreEqual("w", position.Peek(1));
-            Assert.AreEqual("world", position.Peek(5));
-            Assert.AreEqual('w', position.Peek());
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.Peek(1), Is.EqualTo("w"));
+                Assert.That(position.Peek(5), Is.EqualTo("world"));
+                Assert.That(position.Peek(), Is.EqualTo('w'));
+            });
         }
 
         [Test]
         public void FourSpaceTabs()
         {
             Position position = new Position(new SourceContext("\t\tx"));
-            Assert.AreEqual(1, position.Column);
+            Assert.That(position.Column, Is.EqualTo(1));
             position = position.Advance(1);
-            Assert.AreEqual(5, position.Column);
+            Assert.That(position.Column, Is.EqualTo(5));
             position = position.Advance(1);
-            Assert.AreEqual(9, position.Column);
+            Assert.That(position.Column, Is.EqualTo(9));
 
             position = new Position(new SourceContext("\t   \t \tx"));
-            Assert.AreEqual(1, position.Column);
+            Assert.That(position.Column, Is.EqualTo(1));
             position = position.Advance(1);
-            Assert.AreEqual(5, position.Column);
+            Assert.That(position.Column, Is.EqualTo(5));
             position = position.Advance(1);
-            Assert.AreEqual(6, position.Column);
+            Assert.That(position.Column, Is.EqualTo(6));
             position = position.Advance(1);
-            Assert.AreEqual(7, position.Column);
+            Assert.That(position.Column, Is.EqualTo(7));
             position = position.Advance(1);
-            Assert.AreEqual(8, position.Column);
+            Assert.That(position.Column, Is.EqualTo(8));
             position = position.Advance(1);
-            Assert.AreEqual(9, position.Column);
+            Assert.That(position.Column, Is.EqualTo(9));
             position = position.Advance(1);
-            Assert.AreEqual(10, position.Column);
+            Assert.That(position.Column, Is.EqualTo(10));
             position = position.Advance(1);
-            Assert.AreEqual(13, position.Column);
+            Assert.That(position.Column, Is.EqualTo(13));
         }
 
         [Test]
         public void PotentialLengths()
         {
             Position position = new Position(new SourceContext("hello world"));
-            Assert.AreEqual(11, position.PotentialLength());
-            Assert.AreEqual(6, position.PotentialLength('w'));
-            Assert.AreEqual(2, position.PotentialLength('l'));
-            Assert.AreEqual(0, position.PotentialLength('h'));
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.PotentialLength(), Is.EqualTo(11));
+                Assert.That(position.PotentialLength('w'), Is.EqualTo(6));
+                Assert.That(position.PotentialLength('l'), Is.EqualTo(2));
+                Assert.That(position.PotentialLength('h'), Is.EqualTo(0));
+            });
             position = position.Advance(4);
-            Assert.AreEqual(7, position.PotentialLength());
-            Assert.AreEqual(2, position.PotentialLength('w'));
-            Assert.AreEqual(5, position.PotentialLength('l'));
-            Assert.AreEqual(0, position.PotentialLength('o'));
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.PotentialLength(), Is.EqualTo(7));
+                Assert.That(position.PotentialLength('w'), Is.EqualTo(2));
+                Assert.That(position.PotentialLength('l'), Is.EqualTo(5));
+                Assert.That(position.PotentialLength('o'), Is.EqualTo(0));
+            });
             position = position.Advance(7);
-            Assert.AreEqual(0, position.PotentialLength());
-            Assert.AreEqual(0, position.PotentialLength('w'));
-            Assert.AreEqual(0, position.PotentialLength('l'));
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.PotentialLength(), Is.EqualTo(0));
+                Assert.That(position.PotentialLength('w'), Is.EqualTo(0));
+                Assert.That(position.PotentialLength('l'), Is.EqualTo(0));
+            });
         }
 
         [Test]
         public void PotentialLengthMultiChar()
         {
             Position position = new Position(new SourceContext("hello world"));
-            Assert.AreEqual(11, position.PotentialLength());
-            Assert.AreEqual(0, position.PotentialLength('h', 'w', 'l'));
-            Assert.AreEqual(0, position.PotentialLength('l', 'w', 'h'));
-            Assert.AreEqual(11, position.PotentialLength('i', 'f'));
-            Assert.AreEqual(4, position.PotentialLength('b', 'o', 'o'));
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.PotentialLength(), Is.EqualTo(11));
+                Assert.That(position.PotentialLength('h', 'w', 'l'), Is.EqualTo(0));
+                Assert.That(position.PotentialLength('l', 'w', 'h'), Is.EqualTo(0));
+                Assert.That(position.PotentialLength('i', 'f'), Is.EqualTo(11));
+                Assert.That(position.PotentialLength('b', 'o', 'o'), Is.EqualTo(4));
+            });
             position = position.Advance(2);
-            Assert.AreEqual(0, position.PotentialLength('h', 'w', 'l'));
-            Assert.AreEqual(0, position.PotentialLength('l', 'w', 'h'));
-            Assert.AreEqual(9, position.PotentialLength('i', 'f'));
-            Assert.AreEqual(2, position.PotentialLength('b', 'o', 'o'));
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.PotentialLength('h', 'w', 'l'), Is.EqualTo(0));
+                Assert.That(position.PotentialLength('l', 'w', 'h'), Is.EqualTo(0));
+                Assert.That(position.PotentialLength('i', 'f'), Is.EqualTo(9));
+                Assert.That(position.PotentialLength('b', 'o', 'o'), Is.EqualTo(2));
+            });
         }
 
         [Test]
@@ -174,7 +228,7 @@ namespace Spark.Tests.Parser
         {
             var position = new Position(new SourceContext("hello world"));
             var pos2 = position.Advance(11);
-            Assert.AreEqual(default(char), pos2.Peek());
+            Assert.That(pos2.Peek(), Is.EqualTo(default(char)));
         }
 
         [Test]
@@ -184,29 +238,41 @@ namespace Spark.Tests.Parser
             var begin = position.Advance(4);
             var end = begin.Advance(3);
             var range = begin.Constrain(end);
-            Assert.AreEqual(3, range.PotentialLength());
-            Assert.AreEqual("o w", range.Peek(3));
+            Assert.Multiple(() =>
+            {
+                Assert.That(range.PotentialLength(), Is.EqualTo(3));
+                Assert.That(range.Peek(3), Is.EqualTo("o w"));
+            });
             var done = range.Advance(3);
-            Assert.AreEqual(default(char), done.Peek());
+            Assert.That(done.Peek(), Is.EqualTo(default(char)));
         }
 
         [Test]
         public void PeekTestChecksNextCharacters()
         {
             var position = new Position(new SourceContext("hello world"));
-            Assert.That(position.PeekTest("hello"), Is.True);
-            Assert.That(position.PeekTest("hello world"), Is.True);
-            Assert.That(position.PeekTest("hello world!"), Is.False);
-            Assert.That(position.PeekTest("Hello"), Is.False);
-            Assert.That(position.PeekTest(""), Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(position.PeekTest("hello"), Is.True);
+                Assert.That(position.PeekTest("hello world"), Is.True);
+                Assert.That(position.PeekTest("hello world!"), Is.False);
+                Assert.That(position.PeekTest("Hello"), Is.False);
+                Assert.That(position.PeekTest(""), Is.True);
+            });
             var more = position.Advance(4);
-            Assert.That(more.PeekTest("hello"), Is.False);
-            Assert.That(more.PeekTest("o"), Is.True);
-            Assert.That(more.PeekTest("o world"), Is.True);
-            Assert.That(more.PeekTest("o world!"), Is.False);
+            Assert.Multiple(() =>
+            {
+                Assert.That(more.PeekTest("hello"), Is.False);
+                Assert.That(more.PeekTest("o"), Is.True);
+                Assert.That(more.PeekTest("o world"), Is.True);
+                Assert.That(more.PeekTest("o world!"), Is.False);
+            });
             var tail = more.Advance(7);
-            Assert.That(tail.PeekTest(""), Is.True);
-            Assert.That(tail.PeekTest("d"), Is.False);
+            Assert.Multiple(() =>
+            {
+                Assert.That(tail.PeekTest(""), Is.True);
+                Assert.That(tail.PeekTest("d"), Is.False);
+            });
 
         }
     }

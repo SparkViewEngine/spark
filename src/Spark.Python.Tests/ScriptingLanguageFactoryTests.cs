@@ -34,7 +34,7 @@ namespace Spark.Python.Tests
             var sp = new ServiceCollection()
                 .AddSpark(settings)
                 .AddSingleton<ISparkLanguageFactory, PythonLanguageFactory>()
-                .BuildServiceProvider();;
+                .BuildServiceProvider(); ;
 
             _engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
 
@@ -57,7 +57,7 @@ namespace Spark.Python.Tests
             var entry = _engine.CreateEntry(descriptor);
             var view = entry.CreateInstance();
 
-            Assert.IsInstanceOf(typeof(StubSparkView), view);
+            Assert.That(view, Is.InstanceOf(typeof(StubSparkView)));
         }
     }
 }

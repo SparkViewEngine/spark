@@ -29,14 +29,16 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         protected StubEngineContext engineContext;
         protected SparkViewFactory factory;
         protected IController controller;
-        
+
         [SetUp]
         public virtual void Init()
         {
             mocks = new MockRepository();
 
-            var services = new StubMonoRailServices();
-            services.ViewSourceLoader = new FileAssemblyViewSourceLoader("MonoRail.Tests.Views");
+            var services = new StubMonoRailServices
+            {
+                ViewSourceLoader = new FileAssemblyViewSourceLoader("MonoRail.Tests.Views")
+            };
             services.AddService(typeof(IViewSourceLoader), services.ViewSourceLoader);
 
             viewComponentFactory = new DefaultViewComponentFactory();
@@ -55,12 +57,20 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 
             controller = MockRepository.GenerateMock<IController>();
             controllerContext = new ControllerContext();
-            var request = new StubRequest();
-            request.FilePath = "";
+            var request = new StubRequest
+            {
+                FilePath = ""
+            };
             var response = new StubResponse();
             engineContext = new StubEngineContext(request, response, new UrlInfo("", "Home", "Index", "/", "castle"));
             engineContext.AddService(typeof(IViewComponentFactory), viewComponentFactory);
             engineContext.AddService(typeof(IViewComponentRegistry), viewComponentFactory.Registry);
+        }
+
+        [TearDown]
+        public virtual void TearDown()
+        {
+            controller.Dispose();
         }
     }
 }

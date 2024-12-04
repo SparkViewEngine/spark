@@ -27,7 +27,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
     {
         protected override void Configure()
         {
-            var settings = 
+            var settings =
                 new SparkSettings()
                     .SetBaseClassTypeName(typeof(SparkView));
 

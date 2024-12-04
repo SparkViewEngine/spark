@@ -17,7 +17,7 @@ namespace Spark.Caching
         [SetUp]
         public void Init()
         {
-            this._subject = new SparkViewContext {Output = new SpoolWriter()};
+            this._subject = new SparkViewContext { Output = new SpoolWriter() };
             this._originator = new CacheOriginator(this._subject);
 
             this._subject2 = new SparkViewContext { Output = new SpoolWriter() };
@@ -37,11 +37,11 @@ namespace Spark.Caching
         {
             this._originator.BeginMemento();
             this._subject.Output.Write("Hello");
-            this._subject.Output.Write("World");            
+            this._subject.Output.Write("World");
             var memento = this._originator.EndMemento();
 
             this._originator2.DoMemento(memento);
-            Assert.That(this._subject2.Output.ToString(), Is.EqualTo("HelloWorld"));            
+            Assert.That(this._subject2.Output.ToString(), Is.EqualTo("HelloWorld"));
         }
 
         [Test]
@@ -57,8 +57,11 @@ namespace Spark.Caching
             this._originator2.DoMemento(memento);
             this._subject2.Output.Write("Epsilon");
 
-            Assert.That(this._subject.Output.ToString(), Is.EqualTo("AlphaBetaGamma"));
-            Assert.That(this._subject2.Output.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(this._subject.Output.ToString(), Is.EqualTo("AlphaBetaGamma"));
+                Assert.That(this._subject2.Output.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
+            });
         }
 
         [Test]
@@ -74,8 +77,11 @@ namespace Spark.Caching
             this._originator2.DoMemento(memento);
             this._subject2.Output.Write("Epsilon");
 
-            Assert.That(this._subject.Output.ToString(), Is.EqualTo("AlphaBetaGamma"));
-            Assert.That(this._subject2.Output.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(this._subject.Output.ToString(), Is.EqualTo("AlphaBetaGamma"));
+                Assert.That(this._subject2.Output.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
+            });
 
             this._subject.Output.Dispose();
             Assert.That(this._subject2.Output.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
@@ -83,8 +89,8 @@ namespace Spark.Caching
 
             var subject3 = new SparkViewContext { Output = new SpoolWriter() };
 
-            subject3.Output.Write("Zeta"); 
-            new CacheOriginator(subject3).DoMemento(memento);            
+            subject3.Output.Write("Zeta");
+            new CacheOriginator(subject3).DoMemento(memento);
             subject3.Output.Write("Eta");
             Assert.That(subject3.Output.ToString(), Is.EqualTo("ZetaBetaEta"));
         }
@@ -100,8 +106,11 @@ namespace Spark.Caching
 
             this._originator2.DoMemento(memento);
 
-            Assert.That(this._subject2.Output.ToString(), Is.EqualTo("alpha"));
-            Assert.That(this._subject2.Content["foo"].ToString(), Is.EqualTo("beta"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(this._subject2.Output.ToString(), Is.EqualTo("alpha"));
+                Assert.That(this._subject2.Content["foo"].ToString(), Is.EqualTo("beta"));
+            });
         }
 
         [Test]
@@ -120,8 +129,11 @@ namespace Spark.Caching
 
             this._originator2.DoMemento(memento);
 
-            Assert.That(this._subject2.Output.ToString(), Is.EqualTo("alpha"));
-            Assert.That(this._subject2.Content["foo"].ToString(), Is.EqualTo("worldbeta"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(this._subject2.Output.ToString(), Is.EqualTo("alpha"));
+                Assert.That(this._subject2.Content["foo"].ToString(), Is.EqualTo("worldbeta"));
+            });
         }
 
         [Test]
@@ -137,15 +149,18 @@ namespace Spark.Caching
             this._originator2.DoMemento(memento);
             this._subject2.OnceTable.Add("ahop", "yuul");
 
-            Assert.That(this._subject.OnceTable.Count(), Is.EqualTo(3));
-            Assert.That(this._subject.OnceTable["hana"], Is.EqualTo("duul"));
-            Assert.That(this._subject.OnceTable["set"], Is.EqualTo("net"));
-            Assert.That(this._subject.OnceTable["daset"], Is.EqualTo("yaset"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(this._subject.OnceTable.Count(), Is.EqualTo(3));
+                Assert.That(this._subject.OnceTable["hana"], Is.EqualTo("duul"));
+                Assert.That(this._subject.OnceTable["set"], Is.EqualTo("net"));
+                Assert.That(this._subject.OnceTable["daset"], Is.EqualTo("yaset"));
 
-            Assert.That(this._subject2.OnceTable.Count(), Is.EqualTo(3));
-            Assert.That(this._subject2.OnceTable["ilgot"], Is.EqualTo("yadul"));
-            Assert.That(this._subject2.OnceTable["set"], Is.EqualTo("net"));
-            Assert.That(this._subject2.OnceTable["ahop"], Is.EqualTo("yuul"));
+                Assert.That(this._subject2.OnceTable.Count(), Is.EqualTo(3));
+                Assert.That(this._subject2.OnceTable["ilgot"], Is.EqualTo("yadul"));
+                Assert.That(this._subject2.OnceTable["set"], Is.EqualTo("net"));
+                Assert.That(this._subject2.OnceTable["ahop"], Is.EqualTo("yuul"));
+            });
         }
 
         [Test]
@@ -155,7 +170,7 @@ namespace Spark.Caching
             this._subject.Content.Add("bar", new SpoolWriter());
             this._subject.Output = this._subject.Content["foo"];
             this._subject.Output.Write("hello");
-            
+
             this._originator.BeginMemento();
             this._subject.Content["foo"].Write(" ");
             this._subject.Content["bar"].Write("yadda");
@@ -163,16 +178,22 @@ namespace Spark.Caching
             this._subject.Content["foo"].Write("!");
             var memento = this._originator.EndMemento();
 
-            Assert.That(this._subject.Output.ToString(), Is.EqualTo("hello world!"));
-            Assert.That(this._subject.Content["foo"].ToString(), Is.EqualTo("hello world!"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(this._subject.Output.ToString(), Is.EqualTo("hello world!"));
+                Assert.That(this._subject.Content["foo"].ToString(), Is.EqualTo("hello world!"));
+            });
 
             this._subject2.Content.Add("foo", new SpoolWriter());
             this._subject2.Output = this._subject2.Content["foo"];
             this._subject2.Output.Write("hello");
             this._originator2.DoMemento(memento);
 
-            Assert.That(this._subject2.Output.ToString(), Is.EqualTo("hello world!"));
-            Assert.That(this._subject2.Content["foo"].ToString(), Is.EqualTo("hello world!"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(this._subject2.Output.ToString(), Is.EqualTo("hello world!"));
+                Assert.That(this._subject2.Content["foo"].ToString(), Is.EqualTo("hello world!"));
+            });
         }
     }
 }

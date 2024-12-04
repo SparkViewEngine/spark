@@ -67,21 +67,21 @@ namespace Spark
                     .GetTypes()
                     .Where(x => x.BaseType == typeof(Tests.Stubs.StubSparkView));
 
-            Assert.AreEqual(2, types.Count());
+            Assert.That(types.Count(), Is.EqualTo(2));
 
             var entry0 = engine.GetEntry(descriptors[0]);
             var view0 = entry0.CreateInstance();
             var result0 = view0.RenderView();
 
-            Assert.AreEqual("<p>Hello world</p>", result0);
+            Assert.That(result0, Is.EqualTo("<p>Hello world</p>"));
 
             var entry1 = engine.GetEntry(descriptors[1]);
             var view1 = entry1.CreateInstance();
             var result1 = view1.RenderView();
 
-            Assert.AreEqual("<ol><li>one</li><li>two</li></ol>", result1);
+            Assert.That(result1, Is.EqualTo("<ol><li>one</li><li>two</li></ol>"));
 
-            Assert.AreSame(view0.GetType().Assembly, view1.GetType().Assembly);
+            Assert.That(view1.GetType().Assembly, Is.SameAs(view0.GetType().Assembly));
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Spark
         {
             var descriptor = new SparkViewDescriptor()
                 .SetTargetNamespace("Foo")
-                .AddTemplate(Path.Combine("Home","Index.spark"));
+                .AddTemplate(Path.Combine("Home", "Index.spark"));
 
             var assembly = engine.BatchCompilation(new[] { descriptor });
 
@@ -98,8 +98,8 @@ namespace Spark
                     .GetTypes()
                     .Where(x => x.BaseType == typeof(Tests.Stubs.StubSparkView))
                     .ToArray();
-            
-            Assert.AreEqual(1, types.Count());
+
+            Assert.That(types.Count(), Is.EqualTo(1));
 
             var attribs = types[0].GetCustomAttributes(typeof(SparkViewAttribute), false);
             var sparkViewAttrib = (SparkViewAttribute)attribs[0];
@@ -107,13 +107,13 @@ namespace Spark
             var key0 = descriptor;
             var key1 = sparkViewAttrib.BuildDescriptor();
 
-            Assert.AreEqual(key0, key1);
+            Assert.That(key1, Is.EqualTo(key0));
         }
 
         [Test]
         public void DescriptorsWithNoTargetNamespace()
         {
-            var descriptor = new SparkViewDescriptor().AddTemplate(Path.Combine("Home","Index.spark"));
+            var descriptor = new SparkViewDescriptor().AddTemplate(Path.Combine("Home", "Index.spark"));
 
             var assembly = engine.BatchCompilation(new[] { descriptor });
 
@@ -123,7 +123,7 @@ namespace Spark
                     .Where(x => x.BaseType == typeof(Tests.Stubs.StubSparkView))
                     .ToArray();
 
-            Assert.AreEqual(1, types.Count());
+            Assert.That(types.Count(), Is.EqualTo(1));
 
             var attribs = types[0].GetCustomAttributes(typeof(SparkViewAttribute), false);
             var sparkViewAttrib = (SparkViewAttribute)attribs[0];
@@ -131,7 +131,7 @@ namespace Spark
             var key0 = descriptor;
             var key1 = sparkViewAttrib.BuildDescriptor();
 
-            Assert.AreEqual(key0, key1);
+            Assert.That(key1, Is.EqualTo(key0));
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace Spark
         {
             var descriptors = engine.LoadBatchCompilation(GetType().Assembly);
 
-            Assert.AreEqual(2, descriptors.Count);
+            Assert.That(descriptors.Count, Is.EqualTo(2));
 
             var view1 = engine.CreateInstance(
                 new SparkViewDescriptor()
@@ -147,7 +147,7 @@ namespace Spark
                     .AddTemplate(Path.Combine("Foo", "Bar.spark"))
                     .AddTemplate(Path.Combine("Shared", "Quux.spark")));
 
-            Assert.AreEqual(typeof(View1), view1.GetType());
+            Assert.That(view1.GetType(), Is.EqualTo(typeof(View1)));
 
             var view2 = engine.CreateInstance(
                 new SparkViewDescriptor()
@@ -155,7 +155,7 @@ namespace Spark
                     .AddTemplate(Path.Combine("Hello", "World.spark"))
                     .AddTemplate(Path.Combine("Shared", "Default.spark")));
 
-            Assert.AreEqual(typeof(View2), view2.GetType());
+            Assert.That(view2.GetType(), Is.EqualTo(typeof(View2)));
         }
 
         [Test]
@@ -170,7 +170,7 @@ namespace Spark
             var type = moduleBuilder.DefineType("DynamicType", TypeAttributes.Public).CreateType();
             assemblyBuilder.Save("DynamicAssembly.dll");
 
-            Assert.IsTrue(type.Assembly.IsDynamic());
+            Assert.That(type.Assembly.IsDynamic(), Is.True);
         }
     }
 }

@@ -38,8 +38,11 @@ namespace Spark.Tests.Visitors
                                    new TextNode("world".ToArray()),
                                    new EndElementNode("span")
                                });
-            Assert.AreEqual(1, visitor.Chunks.Count);
-            Assert.AreEqual("<span>hello&nbsp;world</span>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
+            Assert.Multiple(() =>
+            {
+                Assert.That(visitor.Chunks, Has.Count.EqualTo(1));
+                Assert.That(((SendLiteralChunk)visitor.Chunks[0]).Text, Is.EqualTo("<span>hello&nbsp;world</span>"));
+            });
         }
 
         [Test]
@@ -52,8 +55,11 @@ namespace Spark.Tests.Visitors
                                                  }, true);
             var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(elt);
-            Assert.AreEqual(1, visitor.Chunks.Count);
-            Assert.AreEqual("<img href=\"urn:picture\" alt=\"A Picture&amp;\"/>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
+            Assert.Multiple(() =>
+            {
+                Assert.That(visitor.Chunks, Has.Count.EqualTo(1));
+                Assert.That(((SendLiteralChunk)visitor.Chunks[0]).Text, Is.EqualTo("<img href=\"urn:picture\" alt=\"A Picture&amp;\"/>"));
+            });
         }
 
         [TestCase("area")]
@@ -77,18 +83,24 @@ namespace Spark.Tests.Visitors
             var elt = new ElementNode(tagName, new AttributeNode[] { }, true);
             var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(elt);
-            Assert.AreEqual(1, visitor.Chunks.Count());
-            Assert.AreEqual(string.Format("<{0}/>", tagName), ((SendLiteralChunk)visitor.Chunks[0]).Text);
+            Assert.Multiple(() =>
+            {
+                Assert.That(visitor.Chunks.Count(), Is.EqualTo(1));
+                Assert.That(((SendLiteralChunk)visitor.Chunks[0]).Text, Is.EqualTo(string.Format("<{0}/>", tagName)));
+            });
         }
 
         [Test]
         public void NonVoidElementDoesNotSelfClose()
         {
-            var elt = new ElementNode("span", new AttributeNode[]{ }, true);
+            var elt = new ElementNode("span", new AttributeNode[] { }, true);
             var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(elt);
-            Assert.AreEqual(1, visitor.Chunks.Count());
-            Assert.AreEqual("<span></span>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
+            Assert.Multiple(() =>
+            {
+                Assert.That(visitor.Chunks.Count(), Is.EqualTo(1));
+                Assert.That(((SendLiteralChunk)visitor.Chunks[0]).Text, Is.EqualTo("<span></span>"));
+            });
         }
 
         [Test]
@@ -100,8 +112,11 @@ namespace Spark.Tests.Visitors
 
             var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(new Node[] { justName, systemName, publicName });
-            Assert.AreEqual(1, visitor.Chunks.Count);
-            Assert.AreEqual("<!DOCTYPE html><!DOCTYPE html2 SYSTEM \"my-'system'-id\"><!DOCTYPE html3 PUBLIC \"my-public-id\" 'my-\"other\"system-id'>", ((SendLiteralChunk)visitor.Chunks[0]).Text);
+            Assert.Multiple(() =>
+            {
+                Assert.That(visitor.Chunks, Has.Count.EqualTo(1));
+                Assert.That(((SendLiteralChunk)visitor.Chunks[0]).Text, Is.EqualTo("<!DOCTYPE html><!DOCTYPE html2 SYSTEM \"my-'system'-id\"><!DOCTYPE html3 PUBLIC \"my-public-id\" 'my-\"other\"system-id'>"));
+            });
         }
 
         [Test]
@@ -113,11 +128,11 @@ namespace Spark.Tests.Visitors
 
             var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(nodes);
-            Assert.AreEqual(1, visitor.Chunks.Count);
+            Assert.That(visitor.Chunks, Has.Count.EqualTo(1));
             var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];
-            Assert.AreEqual(1, renderPartial.Body.Count);
+            Assert.That(renderPartial.Body, Has.Count.EqualTo(1));
             var literal = (SendLiteralChunk)renderPartial.Body[0];
-            Assert.AreEqual("hello", literal.Text);
+            Assert.That(literal.Text, Is.EqualTo("hello"));
         }
 
         [Test]
@@ -130,15 +145,21 @@ namespace Spark.Tests.Visitors
 
             var visitor = new ChunkBuilderVisitor(new VisitorContext());
             visitor.Accept(nodes);
-            Assert.AreEqual(1, visitor.Chunks.Count);
+            Assert.That(visitor.Chunks, Has.Count.EqualTo(1));
             var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];
-            Assert.AreEqual(0, renderPartial.Body.Count);
-            Assert.AreEqual(2, renderPartial.Sections.Count);
-            Assert.That(renderPartial.Sections.ContainsKey("one"));
-            Assert.That(renderPartial.Sections.ContainsKey("two"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(renderPartial.Body.Count, Is.EqualTo(0));
+                Assert.That(renderPartial.Sections, Has.Count.EqualTo(2));
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(renderPartial.Sections.ContainsKey("one"));
+                Assert.That(renderPartial.Sections.ContainsKey("two"));
+            });
             var scope = (ScopeChunk)renderPartial.Sections["one"][0];
             var literal = (SendLiteralChunk)scope.Body[0];
-            Assert.AreEqual("alpha", literal.Text);
+            Assert.That(literal.Text, Is.EqualTo("alpha"));
         }
 
         [Test]
@@ -146,24 +167,30 @@ namespace Spark.Tests.Visitors
         {
             var nodes = ParseNodes(
                 "<foo><section:two>beta</section:two><section:one>alpha</section:one></foo>",
-                new PrefixExpandingVisitor(new VisitorContext {ParseSectionTagAsSegment = true}),
+                new PrefixExpandingVisitor(new VisitorContext { ParseSectionTagAsSegment = true }),
                 new SpecialNodeVisitor(new VisitorContext
-                                           {
-                                               PartialFileNames = new[] { "foo" },
-                                               ParseSectionTagAsSegment = true
-                                           }));
+                {
+                    PartialFileNames = new[] { "foo" },
+                    ParseSectionTagAsSegment = true
+                }));
 
-            var visitor = new ChunkBuilderVisitor(new VisitorContext {ParseSectionTagAsSegment = true});
+            var visitor = new ChunkBuilderVisitor(new VisitorContext { ParseSectionTagAsSegment = true });
             visitor.Accept(nodes);
-            Assert.AreEqual(1, visitor.Chunks.Count);
+            Assert.That(visitor.Chunks, Has.Count.EqualTo(1));
             var renderPartial = (RenderPartialChunk)((ScopeChunk)visitor.Chunks[0]).Body[0];
-            Assert.AreEqual(0, renderPartial.Body.Count);
-            Assert.AreEqual(2, renderPartial.Sections.Count);
-            Assert.That(renderPartial.Sections.ContainsKey("one"));
-            Assert.That(renderPartial.Sections.ContainsKey("two"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(renderPartial.Body.Count, Is.EqualTo(0));
+                Assert.That(renderPartial.Sections, Has.Count.EqualTo(2));
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(renderPartial.Sections.ContainsKey("one"));
+                Assert.That(renderPartial.Sections.ContainsKey("two"));
+            });
             var scope = (ScopeChunk)renderPartial.Sections["one"][0];
             var literal = (SendLiteralChunk)scope.Body[0];
-            Assert.AreEqual("alpha", literal.Text);
+            Assert.That(literal.Text, Is.EqualTo("alpha"));
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Spark.Extensions
                 .AddSingleton<ISparkSettings>(settings)
                 .AddSingleton<IParserSettings>(settings)
                 .AddSingleton<ISparkViewEngine, SparkViewEngine>()
-                
+
                 .AddSingleton<ISparkSyntaxProvider, DefaultSyntaxProvider>()
                 .AddSingleton<IViewActivatorFactory, DefaultViewActivator>()
                 .AddSingleton<IResourcePathManager, DefaultResourcePathManager>()
@@ -62,7 +62,7 @@ namespace Spark.Extensions
 
             services
                 .AddSingleton<ISparkExtensionFactory>(c => null);
-                
+
             return services;
         }
     }

@@ -22,11 +22,14 @@ namespace Spark.Tests.Bindings
             var provider = new DefaultBindingProvider();
             var bindings = provider.GetBindings(new BindingRequest(viewFolder)).ToList();
 
-            Assert.That(bindings.Count, Is.EqualTo(1));
-            Assert.That(bindings[0].ElementName, Is.EqualTo("foo"));
-            Assert.That(bindings[0].Phrases.Single().Nodes.Count, Is.EqualTo(1));
-            Assert.That(((BindingLiteral)bindings[0].Phrases.Single().Nodes[0]).Text, Is.EqualTo("bar"));
-            Assert.That(bindings[0].Phrases.All(phrase => phrase.Type == BindingPhrase.PhraseType.Expression));
+            Assert.That(bindings, Has.Count.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(bindings[0].ElementName, Is.EqualTo("foo"));
+                Assert.That(bindings[0].Phrases.Single().Nodes, Has.Count.EqualTo(1));
+                Assert.That(((BindingLiteral)bindings[0].Phrases.Single().Nodes[0]).Text, Is.EqualTo("bar"));
+                Assert.That(bindings[0].Phrases.All(phrase => phrase.Type == BindingPhrase.PhraseType.Expression));
+            });
         }
 
 
@@ -47,14 +50,17 @@ namespace Spark.Tests.Bindings
             var provider = new DefaultBindingProvider();
             var bindings = provider.GetBindings(new BindingRequest(viewFolder)).ToList();
 
-            Assert.That(bindings.Count, Is.EqualTo(1));
-            Assert.That(bindings[0].ElementName, Is.EqualTo("foo"));
-            Assert.That(bindings[0].Phrases.Count(), Is.EqualTo(2));
-            Assert.That(bindings[0].Phrases.First().Nodes.Count, Is.EqualTo(1));
-            Assert.That(bindings[0].Phrases.Last().Nodes.Count, Is.EqualTo(1));
-            Assert.That(((BindingLiteral)bindings[0].Phrases.First().Nodes[0]).Text, Is.EqualTo("bar"));
-            Assert.That(((BindingLiteral)bindings[0].Phrases.Last().Nodes[0]).Text, Is.EqualTo("quux"));
-            Assert.That(bindings[0].Phrases.All(phrase => phrase.Type == BindingPhrase.PhraseType.Expression));
+            Assert.That(bindings, Has.Count.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(bindings[0].ElementName, Is.EqualTo("foo"));
+                Assert.That(bindings[0].Phrases.Count(), Is.EqualTo(2));
+                Assert.That(bindings[0].Phrases.First().Nodes, Has.Count.EqualTo(1));
+                Assert.That(bindings[0].Phrases.Last().Nodes, Has.Count.EqualTo(1));
+                Assert.That(((BindingLiteral)bindings[0].Phrases.First().Nodes[0]).Text, Is.EqualTo("bar"));
+                Assert.That(((BindingLiteral)bindings[0].Phrases.Last().Nodes[0]).Text, Is.EqualTo("quux"));
+                Assert.That(bindings[0].Phrases.All(phrase => phrase.Type == BindingPhrase.PhraseType.Expression));
+            });
         }
 
         [Test]

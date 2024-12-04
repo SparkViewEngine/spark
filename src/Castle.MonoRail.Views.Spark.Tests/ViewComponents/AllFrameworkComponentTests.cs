@@ -26,8 +26,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-AuthenticatedContent.spark", Path.DirectorySeparatorChar));
 
-            Assert.That(content.Contains("two"));
-            Assert.IsFalse(content.Contains("one"));
+            Assert.That(content, Does.Contain("two"));
+            Assert.That(content.Contains("one"), Is.False);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         {
             var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-CaptureFor.spark", Path.DirectorySeparatorChar));
 
-            Assert.That(content.Contains("onetwothreefour"));
+            Assert.That(content, Does.Contain("onetwothreefour"));
         }
 
         [Test]
@@ -69,43 +69,43 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
         [Test, Ignore("Creating a test for each built-in component")]
         public void DiggStylePagination()
         {
-            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-DiggStylePagination.spark", Path.DirectorySeparatorChar));
+            _ = ExecuteView(string.Format("Home{0}AllFrameworkComponents-DiggStylePagination.spark", Path.DirectorySeparatorChar));
         }
 
         [Test, Ignore("Creating a test for each built-in component")]
         public void Security()
         {
-            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-Security.spark", Path.DirectorySeparatorChar));
+            _ = ExecuteView(string.Format("Home{0}AllFrameworkComponents-Security.spark", Path.DirectorySeparatorChar));
         }
 
         [Test, Ignore("Creating a test for each built-in component")]
         public void SelectStylePagination()
         {
-            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-SelectStylePagination.spark", Path.DirectorySeparatorChar));
+            _ = ExecuteView(string.Format("Home{0}AllFrameworkComponents-SelectStylePagination.spark", Path.DirectorySeparatorChar));
         }
 
         [Test, Ignore("Creating a test for each built-in component")]
         public void SiteMap()
         {
-            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-SiteMap.spark", Path.DirectorySeparatorChar));
+            _ = ExecuteView(string.Format("Home{0}AllFrameworkComponents-SiteMap.spark", Path.DirectorySeparatorChar));
         }
 
         [Test, Ignore("Creating a test for each built-in component")]
         public void TreeMaker()
         {
-            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-TreeMaker.spark", Path.DirectorySeparatorChar));
+            _ = ExecuteView(string.Format("Home{0}AllFrameworkComponents-TreeMaker.spark", Path.DirectorySeparatorChar));
         }
 
         [Test, Ignore("Creating a test for each built-in component")]
         public void UpdatePage()
         {
-            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-UpdatePage.spark", Path.DirectorySeparatorChar));
+            _ = ExecuteView(string.Format("Home{0}AllFrameworkComponents-UpdatePage.spark", Path.DirectorySeparatorChar));
         }
 
         [Test, Ignore("Creating a test for each built-in component")]
         public void UpdateTag()
         {
-            var content = ExecuteView(string.Format("Home{0}AllFrameworkComponents-UpdateTag.spark", Path.DirectorySeparatorChar));
+            _ = ExecuteView(string.Format("Home{0}AllFrameworkComponents-UpdateTag.spark", Path.DirectorySeparatorChar));
         }
 
         string ExecuteView(string page)
@@ -117,8 +117,8 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
 
             mocks.VerifyAll();
 
-            Assert.IsNotNull(writer.ToString());
-            Assert.IsNotEmpty(writer.ToString());
+            Assert.That(writer.ToString(), Is.Not.Null);
+            Assert.That(writer.ToString(), Is.Not.Empty);
             return writer.ToString();
         }
 
@@ -128,7 +128,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             foreach (string value in values)
             {
                 int nextIndex = content.IndexOf(value, index);
-                Assert.GreaterOrEqual(nextIndex, 0, string.Format("Looking for {0}", value));
+                Assert.That(nextIndex, Is.GreaterThanOrEqualTo(0), () => $"Looking for {value}");
                 index = nextIndex + value.Length;
             }
         }

@@ -30,10 +30,10 @@ namespace Spark.Tests.Visitors
         public void FindLoopParameters()
         {
             var context = new VisitorContext
-                              {
-                                  SyntaxProvider = new DefaultSyntaxProvider(new SparkSettings())
-                              };
-            
+            {
+                SyntaxProvider = new DefaultSyntaxProvider(new SparkSettings())
+            };
+
             var nodes = ParseNodes(
                 "<for each='var x in new [] {1,2,3}'>${xIndex}${xIsLast}</for>",
                 new SpecialNodeVisitor(context));
@@ -48,10 +48,13 @@ namespace Spark.Tests.Visitors
             var isLast = expressionVisitor.Add("xIsLast");
             expressionVisitor.Accept(visitor.Chunks);
 
-            Assert.IsTrue(index.Detected);
-            Assert.IsFalse(count.Detected);
-            Assert.IsFalse(isFirst.Detected);
-            Assert.IsTrue(isLast.Detected);
+            Assert.That(index.Detected, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(count.Detected, Is.False);
+                Assert.That(isFirst.Detected, Is.False);
+            });
+            Assert.That(isLast.Detected, Is.True);
         }
 
         [Test]
@@ -83,8 +86,11 @@ namespace Spark.Tests.Visitors
             var count = detectCode.Add("xCount");
             detectCode.Accept(chunks);
 
-            Assert.IsTrue(index.Detected);
-            Assert.IsFalse(count.Detected);
+            Assert.Multiple(() =>
+            {
+                Assert.That(index.Detected, Is.True);
+                Assert.That(count.Detected, Is.False);
+            });
         }
 
 
@@ -117,8 +123,11 @@ namespace Spark.Tests.Visitors
             var count = detectCode.Add("xCount");
             detectCode.Accept(chunks);
 
-            Assert.IsTrue(index.Detected);
-            Assert.IsFalse(count.Detected);
+            Assert.Multiple(() =>
+            {
+                Assert.That(index.Detected, Is.True);
+                Assert.That(count.Detected, Is.False);
+            });
         }
 
         [Test]
@@ -129,7 +138,7 @@ namespace Spark.Tests.Visitors
                 { Path.Combine("home", "index.spark"), "<for each='var x in new[]{1,2,3}'><Guts><segment:foo>${xIndex}</segment:foo></Guts></for>" },
                 { Path.Combine("home", "_Guts.spark"), "<p><render:foo/></p>" }
             };
-            
+
             var settings = new SparkSettings();
 
             var partialProvider = new DefaultPartialProvider();
@@ -150,8 +159,11 @@ namespace Spark.Tests.Visitors
             var count = detectCode.Add("xCount");
             detectCode.Accept(chunks);
 
-            Assert.IsTrue(index.Detected);
-            Assert.IsFalse(count.Detected);
+            Assert.Multiple(() =>
+            {
+                Assert.That(index.Detected, Is.True);
+                Assert.That(count.Detected, Is.False);
+            });
         }
 
         [Test]
@@ -162,7 +174,7 @@ namespace Spark.Tests.Visitors
                 { Path.Combine("home", "index.spark"), "<Guts items='new[]{1,2,3}'><segment:each>${xIndex}</segment:each></Guts>" },
                 { Path.Combine("home", "_Guts.spark"), "<for each='var x in items'><render:each/></for>" }
             };
-            
+
             var settings = new SparkSettings();
 
             var partialProvider = new DefaultPartialProvider();
@@ -183,8 +195,11 @@ namespace Spark.Tests.Visitors
             var count = detectCode.Add("xCount");
             detectCode.Accept(chunks);
 
-            Assert.IsTrue(index.Detected);
-            Assert.IsFalse(count.Detected);
+            Assert.Multiple(() =>
+            {
+                Assert.That(index.Detected, Is.True);
+                Assert.That(count.Detected, Is.False);
+            });
         }
     }
 }

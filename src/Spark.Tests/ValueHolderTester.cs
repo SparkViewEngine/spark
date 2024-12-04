@@ -20,10 +20,16 @@ namespace Spark.Tests
                                                  return "hello";
                                              });
 
-            Assert.That(calls, Is.EqualTo(0));
-            Assert.That(holder.Value, Is.EqualTo("hello"));
-            Assert.That(holder.Value, Is.EqualTo("hello"));
-            Assert.That(calls, Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(calls, Is.EqualTo(0));
+                Assert.That(holder.Value, Is.EqualTo("hello"));
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(holder.Value, Is.EqualTo("hello"));
+                Assert.That(calls, Is.EqualTo(1));
+            });
         }
 
         [Test]
@@ -36,10 +42,16 @@ namespace Spark.Tests
                                                           return new string(k.Reverse().ToArray());
                                                       });
 
-            Assert.That(calls, Is.EqualTo(0));
-            Assert.That(holder.Value, Is.EqualTo("olleh"));
-            Assert.That(holder.Value, Is.EqualTo("olleh"));
-            Assert.That(calls, Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(calls, Is.EqualTo(0));
+                Assert.That(holder.Value, Is.EqualTo("olleh"));
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(holder.Value, Is.EqualTo("olleh"));
+                Assert.That(calls, Is.EqualTo(1));
+            });
         }
     }
 }
