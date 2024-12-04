@@ -16,19 +16,20 @@
         <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
     </PropertyGroup>
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Spark\Spark.csproj" />
     </ItemGroup>
+
 
     <ItemGroup>
         <None Include="..\..\license.txt">
