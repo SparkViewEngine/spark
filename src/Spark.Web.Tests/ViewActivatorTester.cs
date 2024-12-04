@@ -73,7 +73,7 @@ namespace Spark
             var activator = factory.Register(type);
             var view = activator.Activate(type);
             Assert.That(view, Is.Not.Null);
-            Assert.IsAssignableFrom(typeof(TestView), view);
+            Assert.That(view, Is.AssignableFrom(typeof(TestView)));
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace Spark
             var activator = factory.Register(type);
             var view = activator.Activate(type);
             Assert.That(view, Is.Not.Null);
-            Assert.IsAssignableFrom(typeof(TestView), view);
+            Assert.That(view, Is.AssignableFrom(typeof(TestView)));
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace Spark
             var view = engine.CreateInstance(descriptor);
 
             Assert.That(view, Is.Not.Null);
-            Assert.IsAssignableFrom(typeof(TestView), view);
+            Assert.That(view, Is.AssignableFrom(typeof(TestView)));
         }
 
         [Test, Explicit]

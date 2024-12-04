@@ -53,7 +53,7 @@ namespace Castle.MonoRail.Pdf.Tests
             Assert.That(controller.Context.Response.StatusDescription, Is.EqualTo("OK"));
             Assert.That(viewEngineManager.TemplateRendered, Is.EqualTo(string.Format("ReturnBinderTest{0}Index.pdf.spark", Path.DirectorySeparatorChar)));
             Assert.That(controller.Context.Response.ContentType, Is.EqualTo("application/pdf"));
-            Assert.Greater(controller.Context.Response.OutputStream.Length, 0);
+            Assert.That(controller.Context.Response.OutputStream.Length, Is.GreaterThan(0));
         }
 
         [SetUp]

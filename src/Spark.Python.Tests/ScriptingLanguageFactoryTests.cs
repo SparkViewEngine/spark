@@ -47,7 +47,7 @@ namespace Spark.Python.Tests
             var descriptor = new SparkViewDescriptor().SetLanguage(LanguageType.Python);
             var viewCompiler = _engine.LanguageFactory.CreateViewCompiler(_engine, descriptor);
 
-            Assert.IsAssignableFrom(typeof(PythonViewCompiler), viewCompiler);
+            Assert.That(viewCompiler, Is.AssignableFrom(typeof(PythonViewCompiler)));
         }
 
         [Test]

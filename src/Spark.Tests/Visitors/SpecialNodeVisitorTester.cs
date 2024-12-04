@@ -36,7 +36,7 @@ namespace Spark.Tests.Visitors
             visitor.Accept(nodes);
 
             Assert.That(visitor.Nodes, Has.Count.EqualTo(3));
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[1]);
+            Assert.That(visitor.Nodes[1], Is.AssignableFrom(typeof(SpecialNode)));
 
             var specialNode = (SpecialNode)visitor.Nodes[1];
             Assert.Multiple(() =>

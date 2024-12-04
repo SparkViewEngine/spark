@@ -103,9 +103,9 @@ namespace Spark.Tests.Parser
             var result = grammar.Nodes(Source("hello&nbsp;world"));
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Value, Has.Count.EqualTo(3));
-            Assert.IsAssignableFrom(typeof(TextNode), result.Value[0]);
-            Assert.IsAssignableFrom(typeof(EntityNode), result.Value[1]);
-            Assert.IsAssignableFrom(typeof(TextNode), result.Value[2]);
+            Assert.That(result.Value[0], Is.AssignableFrom(typeof(TextNode)));
+            Assert.That(result.Value[1], Is.AssignableFrom(typeof(EntityNode)));
+            Assert.That(result.Value[2], Is.AssignableFrom(typeof(TextNode)));
         }
 
         [Test]
@@ -230,7 +230,7 @@ namespace Spark.Tests.Parser
         {
             var result = grammar.EndElement(Source("</blah>"));
             Assert.That(result, Is.Not.Null);
-            Assert.IsAssignableFrom(typeof(EndElementNode), result.Value);
+            Assert.That(result.Value, Is.AssignableFrom(typeof(EndElementNode)));
             Assert.That(result.Value.Name, Is.EqualTo("blah"));
         }
 
@@ -244,7 +244,7 @@ namespace Spark.Tests.Parser
                 Assert.That(result.Rest.PotentialLength(), Is.EqualTo(0));
                 Assert.That(result.Value, Has.Count.EqualTo(8));
             });
-            Assert.IsAssignableFrom(typeof(ElementNode), result.Value[4]);
+            Assert.That(result.Value[4], Is.AssignableFrom(typeof(ElementNode)));
             var elt = result.Value[4] as ElementNode;
             Assert.Multiple(() =>
             {
@@ -258,9 +258,9 @@ namespace Spark.Tests.Parser
         public void SelfEnding()
         {
             var result = grammar.Nodes(Source("<div><br/></div>"));
-            Assert.IsAssignableFrom(typeof(ElementNode), result.Value[0]);
-            Assert.IsAssignableFrom(typeof(ElementNode), result.Value[1]);
-            Assert.IsAssignableFrom(typeof(EndElementNode), result.Value[2]);
+            Assert.That(result.Value[0], Is.AssignableFrom(typeof(ElementNode)));
+            Assert.That(result.Value[1], Is.AssignableFrom(typeof(ElementNode)));
+            Assert.That(result.Value[2], Is.AssignableFrom(typeof(EndElementNode)));
 
             var div = result.Value[0] as ElementNode;
             Assert.Multiple(() =>
@@ -333,21 +333,21 @@ namespace Spark.Tests.Parser
             var result = grammar.Nodes(Source("<hello>foo${bar}ex</hello>"));
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Value, Has.Count.EqualTo(5));
-            Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
+            Assert.That(result.Value[2], Is.AssignableFrom(typeof(ExpressionNode)));
             var code = (ExpressionNode)result.Value[2];
             Assert.That((string)code.Code, Is.EqualTo("bar"));
 
             result = grammar.Nodes(Source("<hello>foo<%=baaz%>ex</hello>"));
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Value, Has.Count.EqualTo(5));
-            Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
+            Assert.That(result.Value[2], Is.AssignableFrom(typeof(ExpressionNode)));
             var code2 = (ExpressionNode)result.Value[2];
             Assert.That((string)code2.Code, Is.EqualTo("baaz"));
 
             result = grammar.Nodes(Source("<hello href='${one}' class=\"<%=two%>\"/>"));
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Value, Has.Count.EqualTo(1));
-            Assert.IsAssignableFrom(typeof(ElementNode), result.Value[0]);
+            Assert.That(result.Value[0], Is.AssignableFrom(typeof(ElementNode)));
             var elt = (ElementNode)result.Value[0];
             Assert.Multiple(() =>
             {
@@ -363,7 +363,7 @@ namespace Spark.Tests.Parser
             var result = grammar.Nodes(Source("<hello>foo<%=bar%>ex</hello>"));
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Value, Has.Count.EqualTo(5));
-            Assert.IsAssignableFrom(typeof(ExpressionNode), result.Value[2]);
+            Assert.That(result.Value[2], Is.AssignableFrom(typeof(ExpressionNode)));
             var code = result.Value[2] as ExpressionNode;
             Assert.Multiple(() =>
             {

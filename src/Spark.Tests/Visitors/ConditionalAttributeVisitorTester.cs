@@ -32,7 +32,7 @@ namespace Spark.Tests.Visitors
             visitor.Accept(nodes);
 
             Assert.That(visitor.Nodes, Has.Count.EqualTo(1));
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[0]);
+            Assert.That(visitor.Nodes[0], Is.AssignableFrom(typeof(SpecialNode)));
 
             var ifNode = visitor.Nodes[0] as SpecialNode;
             Assert.That(ifNode, Is.Not.Null);
@@ -49,7 +49,7 @@ namespace Spark.Tests.Visitors
             visitor.Accept(nodes);
 
             Assert.That(visitor.Nodes, Has.Count.EqualTo(1));
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[0]);
+            Assert.That(visitor.Nodes[0], Is.AssignableFrom(typeof(SpecialNode)));
 
             var unlessNode = visitor.Nodes[0] as SpecialNode;
             Assert.That(unlessNode, Is.Not.Null);
@@ -69,9 +69,9 @@ namespace Spark.Tests.Visitors
             visitor.Accept(visitor0.Nodes);
 
             Assert.That(visitor.Nodes, Has.Count.EqualTo(3));
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[0]);
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[1]);
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[2]);
+            Assert.That(visitor.Nodes[0], Is.AssignableFrom(typeof(SpecialNode)));
+            Assert.That(visitor.Nodes[1], Is.AssignableFrom(typeof(SpecialNode)));
+            Assert.That(visitor.Nodes[2], Is.AssignableFrom(typeof(SpecialNode)));
 
             var ifNode = (SpecialNode)visitor.Nodes[0];
             Assert.That(ifNode.Element.Name, Is.EqualTo("if"));
