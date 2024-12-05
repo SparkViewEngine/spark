@@ -338,8 +338,6 @@ public class RoslynBatchCompiler : IBatchCompiler
         this.AddNetCoreDefaultReferences();
 #endif
 
-        // TODO: Is this needed?
-        //this.AddAssembly(typeof(System.Drawing.Color));
         foreach(var assemblyLocation in settings.UseAssemblies)
         {
             // Assumes full path to assemblies
