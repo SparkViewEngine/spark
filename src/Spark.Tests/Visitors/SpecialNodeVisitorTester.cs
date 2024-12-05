@@ -30,26 +30,29 @@ namespace Spark.Tests.Visitors
         public void WellMatchedNodesWrapContent()
         {
             var nodes = ParseNodes("<div><content name='foo'><br></etc></content></div>");
-            Assert.AreEqual(6, nodes.Count);
+            Assert.That(nodes, Has.Count.EqualTo(6));
 
             var visitor = new SpecialNodeVisitor(new VisitorContext());
             visitor.Accept(nodes);
 
-            Assert.AreEqual(3, visitor.Nodes.Count);
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[1]);
+            Assert.That(visitor.Nodes, Has.Count.EqualTo(3));
+            Assert.That(visitor.Nodes[1], Is.AssignableFrom(typeof(SpecialNode)));
 
             var specialNode = (SpecialNode)visitor.Nodes[1];
-            Assert.AreEqual("content", specialNode.Element.Name);
-            Assert.AreEqual(2, specialNode.Body.Count);
-            Assert.AreEqual("br", ((ElementNode)specialNode.Body[0]).Name);
-            Assert.AreEqual("etc", ((EndElementNode)specialNode.Body[1]).Name);
+            Assert.Multiple(() =>
+            {
+                Assert.That(specialNode.Element.Name, Is.EqualTo("content"));
+                Assert.That(specialNode.Body, Has.Count.EqualTo(2));
+                Assert.That(((ElementNode)specialNode.Body[0]).Name, Is.EqualTo("br"));
+                Assert.That(((EndElementNode)specialNode.Body[1]).Name, Is.EqualTo("etc"));
+            });
         }
 
         [Test]
         public void UnclosedNodeThrowsCompilerException()
         {
             var nodes = ParseNodes("<div><content name='foo'><br></etc></kontent></div>");
-            Assert.AreEqual(6, nodes.Count);
+            Assert.That(nodes, Has.Count.EqualTo(6));
 
             var visitor = new SpecialNodeVisitor(new VisitorContext { Paint = _paint });
             Assert.That(() => visitor.Accept(nodes), Throws.TypeOf<CompilerException>());
@@ -59,7 +62,7 @@ namespace Spark.Tests.Visitors
         public void MismatchedSpecialNodeThrowsCompilerException()
         {
             var nodes = ParseNodes("<div><content name='foo'><br></etc></for></div>");
-            Assert.AreEqual(6, nodes.Count);
+            Assert.That(nodes, Has.Count.EqualTo(6));
 
             var visitor = new SpecialNodeVisitor(new VisitorContext { Paint = _paint });
             Assert.That(() => visitor.Accept(nodes), Throws.TypeOf<CompilerException>());
@@ -69,7 +72,7 @@ namespace Spark.Tests.Visitors
         public void ExtraEndSpecialNodeThrowCompilerException()
         {
             var nodes = ParseNodes("<div><content name='foo'/><br></etc></content></div>");
-            Assert.AreEqual(6, nodes.Count);
+            Assert.That(nodes, Has.Count.EqualTo(6));
 
             var visitor = new SpecialNodeVisitor(new VisitorContext { Paint = _paint });
             Assert.That(() => visitor.Accept(nodes), Throws.TypeOf<CompilerException>());

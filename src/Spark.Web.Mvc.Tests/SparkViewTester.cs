@@ -67,25 +67,25 @@ namespace Spark.Web.Mvc.Tests
             var viewContext = new ViewContext(new ControllerContext(httpContext, new RouteData(), controller), view, new ViewDataDictionary(), new TempDataDictionary(), new StringWriter());
 
             view = new StubSparkView { ViewContext = viewContext };
-            Assert.AreEqual("", view.SiteRoot);
+            Assert.That(view.SiteRoot, Is.EqualTo(""));
 
             view = new StubSparkView { ViewContext = viewContext };
-            Assert.AreEqual("/TestApp", view.SiteRoot);
+            Assert.That(view.SiteRoot, Is.EqualTo("/TestApp"));
 
             view = new StubSparkView { ViewContext = viewContext };
-            Assert.AreEqual("/TestApp", view.SiteRoot);
+            Assert.That(view.SiteRoot, Is.EqualTo("/TestApp"));
 
             view = new StubSparkView { ViewContext = viewContext };
-            Assert.AreEqual("", view.SiteRoot);
+            Assert.That(view.SiteRoot, Is.EqualTo(""));
 
             view = new StubSparkView { ViewContext = viewContext };
-            Assert.AreEqual("", view.SiteRoot);
+            Assert.That(view.SiteRoot, Is.EqualTo(""));
 
             view = new StubSparkView { ViewContext = viewContext };
-            Assert.AreEqual("/TestApp", view.SiteRoot);
+            Assert.That(view.SiteRoot, Is.EqualTo("/TestApp"));
 
             view = new StubSparkView { ViewContext = viewContext };
-            Assert.AreEqual("/TestApp", view.SiteRoot);
+            Assert.That(view.SiteRoot, Is.EqualTo("/TestApp"));
 
             mocks.VerifyAll();
         }
@@ -104,14 +104,16 @@ namespace Spark.Web.Mvc.Tests
         public void CanAccessModelViaModel()
         {
             var view = new ModelViewTest { ViewData = { Model = "asd" } };
-            Assert.AreEqual("asd", view.Model);
+
+            Assert.That(view.Model, Is.EqualTo("asd"));
         }
 
         [Test, Ignore("Doesn't work for automated build")]
         public void CanAccessViewBagViaView()
         {
             var view = new ModelViewTest { ViewBag = { SomeProperty = "dgf" } };
-            Assert.AreEqual("dgf", view.ViewBag.SomeProperty);
+
+            Assert.That(view.ViewBag.SomeProperty, Is.EqualTo("dgf"));
         }
     }
 }

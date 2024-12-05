@@ -20,7 +20,7 @@ namespace Spark.Caching
 
             using (new CurrentCultureScope(""))
             {
-                var id1b = CacheUtilities.ToIdentifier("foo", new object[] {45.2});
+                var id1b = CacheUtilities.ToIdentifier("foo", new object[] { 45.2 });
                 Assert.That(id1b, Is.EqualTo("foo45.2"));
             }
         }
@@ -33,7 +33,7 @@ namespace Spark.Caching
 
             using (new CurrentCultureScope(""))
             {
-                var id3 = CacheUtilities.ToIdentifier("foo", new object[] {45.2, null, this});
+                var id3 = CacheUtilities.ToIdentifier("foo", new object[] { 45.2, null, this });
                 Assert.That(id3, Is.EqualTo("foo45.2\u001f\u001fSpark.Caching.CacheUtilitiesTester"));
             }
         }

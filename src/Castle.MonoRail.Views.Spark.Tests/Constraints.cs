@@ -85,7 +85,7 @@ namespace Castle.MonoRail.Views.Spark.Tests
 
                     index = nextIndex + value.Length;
                 }
-                
+
                 return new ConstraintResult(this, index, true);
             }
 

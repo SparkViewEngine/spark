@@ -59,7 +59,7 @@ namespace Castle.MonoRail.Pdf.Tests.Stubs
         public bool HasTemplate(string templateName)
         {
             return templates.Exists(
-                delegate(string item) { return item.Equals(templateName, StringComparison.InvariantCultureIgnoreCase); });
+                delegate (string item) { return item.Equals(templateName, StringComparison.InvariantCultureIgnoreCase); });
         }
 
 

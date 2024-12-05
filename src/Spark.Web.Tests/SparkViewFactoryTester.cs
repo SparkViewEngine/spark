@@ -59,7 +59,7 @@ namespace Spark.Tests
             factory = new StubViewFactory { Engine = engine };
 
             sb = new StringBuilder();
-           
+
             mocks = new MockRepository();
         }
 
@@ -94,9 +94,12 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(content.Contains(@"<li class=""odd"">1: foo</li>"));
-            Assert.That(content.Contains(@"<li class=""even"">2: bar</li>"));
-            Assert.That(content.Contains(@"<li class=""odd"">3: baaz</li>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain(@"<li class=""odd"">1: foo</li>"));
+                Assert.That(content, Does.Contain(@"<li class=""even"">2: bar</li>"));
+                Assert.That(content, Does.Contain(@"<li class=""odd"">3: baaz</li>"));
+            });
         }
 
         [Test]
@@ -110,8 +113,11 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(content.Contains("<p>default: Global set test</p>"));
-            Assert.That(content.Contains("<p>7==7</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>default: Global set test</p>"));
+                Assert.That(content, Does.Contain("<p>7==7</p>"));
+            });
         }
 
         [Test]
@@ -124,10 +130,13 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content.Contains("<title>Standalone Index View</title>"));
-            Assert.That(content.Contains("<h1>Standalone Index View</h1>"));
-            Assert.That(content.Contains("<p>no header by default</p>"));
-            Assert.That(content.Contains("<p>no footer by default</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<title>Standalone Index View</title>"));
+                Assert.That(content, Does.Contain("<h1>Standalone Index View</h1>"));
+                Assert.That(content, Does.Contain("<p>no header by default</p>"));
+                Assert.That(content, Does.Contain("<p>no footer by default</p>"));
+            });
         }
 
         [Test]
@@ -140,10 +149,13 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content.Contains("<p>main content</p>"));
-            Assert.That(content.Contains("<p>this is the header</p>"));
-            Assert.That(content.Contains("<p>footer part one</p>"));
-            Assert.That(content.Contains("<p>footer part two</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>main content</p>"));
+                Assert.That(content, Does.Contain("<p>this is the header</p>"));
+                Assert.That(content, Does.Contain("<p>footer part one</p>"));
+                Assert.That(content, Does.Contain("<p>footer part two</p>"));
+            });
         }
 
         [Test]
@@ -156,11 +168,14 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content.Contains("<li>Partial where x=\"zero\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"one\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"two\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"three\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"four\"</li>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<li>Partial where x=\"zero\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"one\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"two\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"three\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"four\"</li>"));
+            });
         }
 
         [Test]
@@ -173,11 +188,14 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content.Contains("<li>Partial where x=\"zero\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"one\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"two\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"three\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"four\"</li>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<li>Partial where x=\"zero\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"one\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"two\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"three\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"four\"</li>"));
+            });
         }
 
         [Test]
@@ -190,8 +208,11 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.That(content.Contains("<li class=\"odd\">one</li>"));
-            Assert.That(content.Contains("<li class=\"even\">two</li>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<li class=\"odd\">one</li>"));
+                Assert.That(content, Does.Contain("<li class=\"even\">two</li>"));
+            });
         }
 
         [Test]
@@ -204,9 +225,12 @@ namespace Spark.Tests
 
             mocks.VerifyAll();
             string content = sb.ToString();
-            Assert.That(content.Contains("<p>Foo</p>"));
-            Assert.That(content.Contains("<p>Bar</p>"));
-            Assert.That(content.Contains("<p>Hello</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>Foo</p>"));
+                Assert.That(content, Does.Contain("<p>Bar</p>"));
+                Assert.That(content, Does.Contain("<p>Hello</p>"));
+            });
         }
 
         [Test]
@@ -219,15 +243,21 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(!content.Contains("<if"));
-            Assert.That(!content.Contains("<else"));
+            Assert.That(content, Does.Not.Contain("<if"));
+            Assert.That(content, Does.Not.Contain("<else"));
 
-            Assert.That(content.Contains("<p>argis5</p>"));
-            Assert.That(!content.Contains("<p>argis6</p>"));
-            Assert.That(content.Contains("<p>argisstill5</p>"));
-            Assert.That(!content.Contains("<p>argisnotstill5</p>"));
-            Assert.That(!content.Contains("<p>argisnow6</p>"));
-            Assert.That(content.Contains("<p>argisstillnot6</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>argis5</p>"));
+                Assert.That(content, Does.Not.Contain("<p>argis6</p>"));
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>argisstill5</p>"));
+                Assert.That(content, Does.Not.Contain("<p>argisnotstill5</p>"));
+            });
+            Assert.That(content, Does.Not.Contain("<p>argisnow6</p>"));
+            Assert.That(content, Does.Contain("<p>argisstillnot6</p>"));
         }
 
         [Test]
@@ -240,15 +270,21 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(!content.Contains("<if"));
-            Assert.That(!content.Contains("<else"));
+            Assert.That(content, Does.Not.Contain("<if"));
+            Assert.That(content, Does.Not.Contain("<else"));
 
-            Assert.That(content.Contains("<p>argis5</p>"));
-            Assert.That(!content.Contains("<p>argis6</p>"));
-            Assert.That(content.Contains("<p>argisstill5</p>"));
-            Assert.That(!content.Contains("<p>argisnotstill5</p>"));
-            Assert.That(!content.Contains("<p>argisnow6</p>"));
-            Assert.That(content.Contains("<p>argisstillnot6</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>argis5</p>"));
+                Assert.That(content, Does.Not.Contain("<p>argis6</p>"));
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>argisstill5</p>"));
+                Assert.That(content, Does.Not.Contain("<p>argisnotstill5</p>"));
+            });
+            Assert.That(content, Does.Not.Contain("<p>argisnow6</p>"));
+            Assert.That(content, Does.Contain("<p>argisstillnot6</p>"));
         }
 
         [Test]
@@ -261,10 +297,13 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(!content.Contains("<unless"));
+            Assert.That(content, Does.Not.Contain("<unless"));
 
-            Assert.That(content.Contains("<p>argisnot6</p>"));
-            Assert.That(!content.Contains("<p>argis5</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>argisnot6</p>"));
+                Assert.That(content, Does.Not.Contain("<p>argis5</p>"));
+            });
         }
 
         [Test]
@@ -277,10 +316,13 @@ namespace Spark.Tests
 
             string content = sb.ToString();
 
-            Assert.That(!content.Contains("<unless"));
+            Assert.That(content, Does.Not.Contain("<unless"));
 
-            Assert.That(content.Contains("<p>argisnot6</p>"));
-            Assert.That(!content.Contains("<p>argis5</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>argisnot6</p>"));
+                Assert.That(content, Does.Not.Contain("<p>argis5</p>"));
+            });
         }
 
         [Test]
@@ -417,7 +459,7 @@ namespace Spark.Tests
         {
             var data = new StubViewData
                            {
-                               {"username", "Bob"}, 
+                               {"username", "Bob"},
                                {"comments", new[] {
                                    new Comment {Text = "Alpha"},
                                    new Comment {Text = "Beta"},
@@ -505,7 +547,7 @@ namespace Spark.Tests
                             "<p>out-5</p>",
                             "<p>out-6</p>"));
 
-            Assert.IsFalse(content.Contains("fail"));
+            Assert.That(content, Does.Not.Contain("fail"));
         }
 
         [Test]
@@ -518,7 +560,7 @@ namespace Spark.Tests
 
             string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
 
-            Assert.AreEqual("<p>a</p><p>b</p><p>c</p><p>d</p><p>e</p><p>f</p>", content);
+            Assert.That(content, Is.EqualTo("<p>a</p><p>b</p><p>c</p><p>d</p><p>e</p><p>f</p>"));
         }
 
         [Test]
@@ -546,7 +588,7 @@ namespace Spark.Tests
 
             string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
 
-            Assert.AreEqual("<p>a:1</p><p>b:2</p><p>c:3%></p><p>d:<%4%></p><p>e:5%></p><p>f:<%6%></p>", content);
+            Assert.That(content, Is.EqualTo("<p>a:1</p><p>b:2</p><p>c:3%></p><p>d:<%4%></p><p>e:5%></p><p>f:<%6%></p>"));
         }
 
         [Test]
@@ -559,7 +601,7 @@ namespace Spark.Tests
 
             string content = sb.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
 
-            Assert.AreEqual("<p>a\\\"b</p><p>c\\\"}d</p>", content);
+            Assert.That(content, Is.EqualTo("<p>a\\\"b</p><p>c\\\"}d</p>"));
         }
 
         [Test]
@@ -756,7 +798,7 @@ namespace Spark.Tests
                     "test456",
                     "</p>"));
 
-            Assert.IsFalse(content.Contains("<PartialWith.Dot"));
+            Assert.That(content, Does.Not.Contain("<PartialWith.Dot"));
         }
 
         [Test]
@@ -795,7 +837,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString().Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace(" ", "");
 
-            Assert.AreEqual("<ol><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol>", content);
+            Assert.That(content, Is.EqualTo("<ol><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol>"));
         }
 
         [Test]
@@ -807,7 +849,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString().Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace(" ", "");
 
-            Assert.That(content.Contains("onetwothree"));
+            Assert.That(content, Does.Contain("onetwothree"));
         }
 
         [Test]
@@ -918,10 +960,10 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.IsFalse(content.Contains("default"));
+            Assert.That(content, Does.Not.Contain("default"));
 
             Assert.That(content, Contains.InOrder("ok1", "ok2"));
-            Assert.IsFalse(content.Contains("fail"));
+            Assert.That(content, Does.Not.Contain("fail"));
         }
 
         [Test]
@@ -934,10 +976,10 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.IsFalse(content.Contains("default"));
+            Assert.That(content, Does.Not.Contain("default"));
 
             Assert.That(content, Contains.InOrder("ok1", "ok2"));
-            Assert.IsFalse(content.Contains("fail"));
+            Assert.That(content, Does.Not.Contain("fail"));
         }
 
         [Test]
@@ -950,10 +992,10 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.IsFalse(content.Contains("default"));
+            Assert.That(content, Does.Not.Contain("default"));
 
             Assert.That(content, Contains.InOrder("ok1", "ok2"));
-            Assert.IsFalse(content.Contains("fail"));
+            Assert.That(content, Does.Not.Contain("fail"));
         }
 
 
@@ -966,10 +1008,10 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.IsFalse(content.Contains("default"));
+            Assert.That(content, Does.Not.Contain("default"));
 
             Assert.That(content, Contains.InOrder("ok1", "ok2"));
-            Assert.IsFalse(content.Contains("fail"));
+            Assert.That(content, Does.Not.Contain("fail"));
         }
 
         [Test]
@@ -982,10 +1024,10 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.IsFalse(content.Contains("default"));
+            Assert.That(content, Does.Not.Contain("default"));
 
             Assert.That(content, Contains.InOrder("ok1", "ok2"));
-            Assert.IsFalse(content.Contains("fail"));
+            Assert.That(content, Does.Not.Contain("fail"));
         }
 
         [Test]
@@ -998,7 +1040,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.IsFalse(content.Contains("default"));
+            Assert.That(content, Does.Not.Contain("default"));
 
             Assert.That(content, Contains.InOrder(
                 "<p>name kaboom *${user.Name}*</p>",
@@ -1015,7 +1057,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.IsFalse(content.Contains("broken"));
+            Assert.That(content, Does.Not.Contain("broken"));
             Assert.That(content, Contains.InOrder("one", "two", "three", "four", "five"));
         }
 
@@ -1028,7 +1070,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
             string content = sb.ToString();
 
-            Assert.IsFalse(content.Contains("broken"));
+            Assert.That(content, Does.Not.Contain("broken"));
             Assert.That(content, Contains.InOrder(
                 "<h1 class=\"one three\"></h1>",
                 "<h2></h2>",
@@ -1054,11 +1096,11 @@ namespace Spark.Tests
                             "quux2",
                             "a1"));
 
-            Assert.IsFalse(content.Contains("foo2"));
-            Assert.IsFalse(content.Contains("foo3"));
-            Assert.IsFalse(content.Contains("bar1"));
-            Assert.IsFalse(content.Contains("bar3"));
-            Assert.IsFalse(content.Contains("a2"));
+            Assert.That(content, Does.Not.Contain("foo2"));
+            Assert.That(content, Does.Not.Contain("foo3"));
+            Assert.That(content, Does.Not.Contain("bar1"));
+            Assert.That(content, Does.Not.Contain("bar3"));
+            Assert.That(content, Does.Not.Contain("a2"));
         }
 
         [Test]
@@ -1094,8 +1136,8 @@ namespace Spark.Tests
                             "<span>one</span>",
                             "<span>three</span>"));
 
-            Assert.IsFalse(content.Contains("beta"));
-            Assert.IsFalse(content.Contains("two"));
+            Assert.That(content, Does.Not.Contain("beta"));
+            Assert.That(content, Does.Not.Contain("two"));
         }
 
         [Test]
@@ -1113,8 +1155,8 @@ namespace Spark.Tests
                             "<span>one</span>",
                             "<span>three</span>"));
 
-            Assert.IsFalse(content.Contains("beta"));
-            Assert.IsFalse(content.Contains("two"));
+            Assert.That(content, Does.Not.Contain("beta"));
+            Assert.That(content, Does.Not.Contain("two"));
         }
 
         [Test]
@@ -1132,12 +1174,12 @@ namespace Spark.Tests
                             "<span>bar0</span>",
                             "<span>quux2</span>"));
 
-            Assert.IsFalse(content.Contains("name-1"));
-            Assert.IsFalse(content.Contains("name-2"));
-            Assert.IsFalse(content.Contains("foo2"));
-            Assert.IsFalse(content.Contains("foo3"));
-            Assert.IsFalse(content.Contains("bar1"));
-            Assert.IsFalse(content.Contains("bar3"));
+            Assert.That(content, Does.Not.Contain("name-1"));
+            Assert.That(content, Does.Not.Contain("name-2"));
+            Assert.That(content, Does.Not.Contain("foo2"));
+            Assert.That(content, Does.Not.Contain("foo3"));
+            Assert.That(content, Does.Not.Contain("bar1"));
+            Assert.That(content, Does.Not.Contain("bar3"));
         }
 
         [Test]
@@ -1265,8 +1307,8 @@ namespace Spark.Tests
                 "Regular text ${This.isnt.code < 0}",
                 "<var dummy=\"This isn't a variable\" />",
                 "</div>"));
-            Assert.IsFalse(content.Contains("<ignore>"));
-            Assert.IsFalse(content.Contains("</ignore>"));
+            Assert.That(content, Does.Not.Contain("<ignore>"));
+            Assert.That(content, Does.Not.Contain("</ignore>"));
         }
 
         [Test]
@@ -1339,13 +1381,13 @@ namespace Spark.Tests
 
             Assert.That(content, Contains.InOrder(
                 "<html>",
-                "<head>", 
-                "<title>", 
+                "<head>",
+                "<title>",
                 "offset test",
-                "</title>", 
-                "<body>", 
-                "<div class=\"container\">", 
-                "<h1 id=\"top\">", 
+                "</title>",
+                "<body>",
+                "<div class=\"container\">",
+                "<h1 id=\"top\">",
                 "offset test",
                 "</h1>",
                 "</div>",
@@ -1442,7 +1484,7 @@ namespace Spark.Tests
             mocks.VerifyAll();
 
             var content = sb.ToString();
-            
+
             Assert.That(content, Contains.InOrder(
                 "<p>String:HelloWorld</p>",
                 "<p>Int32:42</p>"));

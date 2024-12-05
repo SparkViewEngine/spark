@@ -23,7 +23,7 @@ namespace Castle.MonoRail.Views.Spark.Tests.Stubs
         public void Index()
         {
         }
-        
+
         public void List()
         {
         }

@@ -24,8 +24,11 @@ namespace Spark.Caching
             TextWriterOriginator.Create(writer2).DoMemento(memento);
             writer2.Write("Epsilon");
 
-            Assert.That(writer.ToString(), Is.EqualTo("AlphaBetaGamma"));
-            Assert.That(writer2.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(writer.ToString(), Is.EqualTo("AlphaBetaGamma"));
+                Assert.That(writer2.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
+            });
         }
 
         [Test]
@@ -48,8 +51,11 @@ namespace Spark.Caching
             TextWriterOriginator.Create(writer2).DoMemento(memento);
             writer2.Write("Epsilon");
 
-            Assert.That(writer.ToString(), Is.EqualTo("AlphaBetaGamma"));
-            Assert.That(writer2.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(writer.ToString(), Is.EqualTo("AlphaBetaGamma"));
+                Assert.That(writer2.ToString(), Is.EqualTo("DeltaBetaEpsilon"));
+            });
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Spark.Tests.Stubs
     {
         public TMore GetMore()
         {
-            return default(TMore);
+            return default;
         }
     }
 }

@@ -49,8 +49,8 @@ namespace Spark.Caching
                 .AddSingleton<ICacheService, StubCacheService>()
                 .BuildServiceProvider();
 
-            this._viewFolder = (InMemoryViewFolder) sp.GetService<IViewFolder>();
-            this._cacheService = (StubCacheService) sp.GetService<ICacheService>();
+            this._viewFolder = (InMemoryViewFolder)sp.GetService<IViewFolder>();
+            this._cacheService = (StubCacheService)sp.GetService<ICacheService>();
 
             this._factory = new StubViewFactory
             {
@@ -85,14 +85,17 @@ namespace Spark.Caching
 </div>");
             var calls = 0;
             var contents = this.Render("index", new StubViewData<Func<string>>
-                                           {
-                                               Model = () => (++calls).ToString()
-                                           });
-            Assert.That(contents, Is.EqualTo(@"
+            {
+                Model = () => (++calls).ToString()
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
 </div>"));
-            Assert.That(calls, Is.EqualTo(1));
+                Assert.That(calls, Is.EqualTo(1));
+            });
         }
 
         [Test]
@@ -107,23 +110,29 @@ namespace Spark.Caching
 </div>");
             int calls = 0;
             var data = new StubViewData<Func<string>>
-                       {
-                           Model = () => (++calls).ToString()
-                       };
+            {
+                Model = () => (++calls).ToString()
+            };
 
             var contents = this.Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
 </div>"));
-            Assert.That(calls, Is.EqualTo(1));
+                Assert.That(calls, Is.EqualTo(1));
+            });
 
             contents = this.Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
 </div>"));
-            Assert.That(calls, Is.EqualTo(1));
+                Assert.That(calls, Is.EqualTo(1));
+            });
 
         }
 
@@ -147,18 +156,24 @@ ${foo()}
             };
 
             var contents = this.Render("index", data);
-            Assert.That(contents, Tests.Contains.InOrder(
-                "<p>1</p>",
-                "<p>1</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Tests.Contains.InOrder(
+                            "<p>1</p>",
+                            "<p>1</p>"));
 
-            Assert.That(calls, Is.EqualTo(1));
+                Assert.That(calls, Is.EqualTo(1));
+            });
 
             contents = this.Render("index", data);
-            Assert.That(contents, Tests.Contains.InOrder(
-                "<p>1</p>",
-                "<p>1</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Tests.Contains.InOrder(
+                            "<p>1</p>",
+                            "<p>1</p>"));
 
-            Assert.That(calls, Is.EqualTo(1));
+                Assert.That(calls, Is.EqualTo(1));
+            });
         }
 
         [Test]
@@ -182,21 +197,27 @@ ${foo()}
             };
 
             var contents = this.Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
 <p>2</p>
 </div>"));
-            Assert.That(calls, Is.EqualTo(2));
+                Assert.That(calls, Is.EqualTo(2));
+            });
 
 
             contents = this.Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
 <p>2</p>
 </div>"));
-            Assert.That(calls, Is.EqualTo(2));
+                Assert.That(calls, Is.EqualTo(2));
+            });
         }
 
         [Test]
@@ -236,8 +257,10 @@ placed
             };
 
             var contents = this.Render("index", data);
-            Assert.That(calls, Is.EqualTo(8));
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(calls, Is.EqualTo(8));
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 cache
 <p>2[2]c</p>
@@ -250,11 +273,14 @@ placed
 <p>b6[6]</p>
 <p>8[8]</p>
 </div>"));
+            });
 
 
             contents = this.Render("index", data);
-            Assert.That(calls, Is.EqualTo(12));
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(calls, Is.EqualTo(12));
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 cache
 <p>2[2]c</p>
@@ -267,6 +293,7 @@ placed
 <p>b10[6]</p>
 <p>12[8]</p>
 </div>"));
+            });
         }
 
 
@@ -304,8 +331,10 @@ hana
             };
 
             var contents = this.Render("index", data);
-            Assert.That(calls, Is.EqualTo(6));
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(calls, Is.EqualTo(6));
+                Assert.That(contents, Is.EqualTo(@"
 <ul>
 <li>2[2]</li>
 <li>5[5]</li>
@@ -315,11 +344,14 @@ hana
 <li>4[4]c</li>
 <li>6[6]</li>
 </ul>"));
+            });
 
 
             contents = this.Render("index", data);
-            Assert.That(calls, Is.EqualTo(10));
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(calls, Is.EqualTo(10));
+                Assert.That(contents, Is.EqualTo(@"
 <ul>
 <li>8[2]</li>
 <li>9[5]</li>
@@ -329,6 +361,7 @@ hana
 <li>4[4]c</li>
 <li>10[6]</li>
 </ul>"));
+            });
         }
 
 
@@ -356,22 +389,28 @@ hana
             };
 
             var contents = this.Render("index", data);
-            Assert.That(calls, Is.EqualTo(3));
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(calls, Is.EqualTo(3));
+                Assert.That(contents, Is.EqualTo(@"
 <ul>
 <li>1[1]</li>
 <li>2[2]</li>
 <li>3[4]</li>
 </ul>"));
+            });
 
             contents = this.Render("index", data);
-            Assert.That(calls, Is.EqualTo(5));
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(calls, Is.EqualTo(5));
+                Assert.That(contents, Is.EqualTo(@"
 <ul>
 <li>4[1]</li>
 <li>2[2]</li>
 <li>5[4]</li>
 </ul>"));
+            });
         }
 
         [Test]
@@ -484,25 +523,28 @@ foo
 
             var calls = 0;
             var data = new StubViewData<Func<string>>
-                       {
-                           Model = () => (++calls).ToString()
-                       };
+            {
+                Model = () => (++calls).ToString()
+            };
 
             var contents = this.Render("index", data);
-            Assert.That(contents, Tests.Contains.InOrder(
-                "<p>1:1</p>",
-                "<p>2:2</p>",
-                "<p>3:3</p>",
-                "<p>1:4</p>",
-                "<p>2:5</p>",
-                "<p>3:6</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Tests.Contains.InOrder(
+                            "<p>1:1</p>",
+                            "<p>2:2</p>",
+                            "<p>3:3</p>",
+                            "<p>1:4</p>",
+                            "<p>2:5</p>",
+                            "<p>3:6</p>"));
 
-            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f0"), Is.EqualTo(1));
-            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f1"), Is.EqualTo(1));
-            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f2"), Is.EqualTo(1));
-            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f3"), Is.EqualTo(1));
-            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f4"), Is.EqualTo(1));
-            Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f5"), Is.EqualTo(1));
+                Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f0"), Is.EqualTo(1));
+                Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f1"), Is.EqualTo(1));
+                Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f2"), Is.EqualTo(1));
+                Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "1\u001f3"), Is.EqualTo(1));
+                Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "2\u001f4"), Is.EqualTo(1));
+                Assert.That(this._cacheService.AllKeys.Count(x => x.Substring(32) == "3\u001f5"), Is.EqualTo(1));
+            });
         }
 
 
@@ -525,34 +567,46 @@ foo
             data["datasignal"] = signal;
 
             var contents = this.Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
 </div>"));
-            Assert.That(calls, Is.EqualTo(1));
+                Assert.That(calls, Is.EqualTo(1));
+            });
 
             contents = this.Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>1</p>
 </div>"));
-            Assert.That(calls, Is.EqualTo(1));
+                Assert.That(calls, Is.EqualTo(1));
+            });
 
             signal.FireChanged();
 
             contents = this.Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>2</p>
 </div>"));
-            Assert.That(calls, Is.EqualTo(2));
+                Assert.That(calls, Is.EqualTo(2));
+            });
 
             contents = this.Render("index", data);
-            Assert.That(contents, Is.EqualTo(@"
+            Assert.Multiple(() =>
+            {
+                Assert.That(contents, Is.EqualTo(@"
 <div>
 <p>2</p>
 </div>"));
-            Assert.That(calls, Is.EqualTo(2));
+                Assert.That(calls, Is.EqualTo(2));
+            });
         }
     }
 }

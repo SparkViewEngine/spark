@@ -281,7 +281,7 @@ ${x}
 [<use content='foo'/>]
 ");
             var contents = Render("index");
-            Assert.That(contents.Trim(), Is.EqualTo("[bar]"));            
+            Assert.That(contents.Trim(), Is.EqualTo("[bar]"));
         }
 
         [Test]
@@ -291,7 +291,7 @@ ${x}
             _viewFolder.Add(Path.Combine("shared", "_foo.spark"), @"bar");
 
             var contents = Render("index");
-            Assert.That(contents.Trim(), Is.EqualTo("[bar]"));    
+            Assert.That(contents.Trim(), Is.EqualTo("[bar]"));
         }
 
         [Test]

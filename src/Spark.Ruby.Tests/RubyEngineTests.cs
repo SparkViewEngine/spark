@@ -45,7 +45,7 @@ view.render
             scope.SetVariable("view", new View1234 { Output = output });
             compiled.Execute(scope);
 
-            Assert.AreEqual("hello, world", output.ToString());
+            Assert.That(output.ToString(), Is.EqualTo("hello, world"));
         }
     }
 

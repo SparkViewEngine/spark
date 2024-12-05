@@ -45,9 +45,12 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.VerifyAll();
 
             var content = writer.ToString();
-            Assert.That(content.Contains("<p>This is text</p>"));
-            Assert.IsFalse(content.Contains("<ComponentWithBody>"));
-            Assert.IsFalse(content.Contains("</ComponentWithBody>"));
+            Assert.That(content, Does.Contain("<p>This is text</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content.Contains("<ComponentWithBody>"), Is.False);
+                Assert.That(content.Contains("</ComponentWithBody>"), Is.False);
+            });
         }
 
 
@@ -63,13 +66,16 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.VerifyAll();
 
             var content = writer.ToString();
-            Assert.That(content.Contains("<script src=\"foo.js\"></script>"));
-            Assert.That(content.Contains("<link href=\"bar.css\"/>"));
-            Assert.IsFalse(content.Contains("<ComponentWithBody>"));
-            Assert.IsFalse(content.Contains("</ComponentWithBody>"));
+            Assert.That(content, Does.Contain("<script src=\"foo.js\"></script>"));
+            Assert.That(content, Does.Contain("<link href=\"bar.css\"/>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content.Contains("<ComponentWithBody>"), Is.False);
+                Assert.That(content.Contains("</ComponentWithBody>"), Is.False);
+            });
         }
 
-        
+
         [Test]
         public void RenderingComponentWithBodyAndNoDetailsAttrib()
         {
@@ -83,9 +89,12 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             mocks.VerifyAll();
 
             var content = writer.ToString();
-            Assert.That(content.Contains("<p>This is text</p>"));
-            Assert.IsFalse(content.Contains("<ComponentWithBodyAndNoDetailsAttrib>"));
-            Assert.IsFalse(content.Contains("</ComponentWithBodyAndNoDetailsAttrib>"));
+            Assert.That(content, Does.Contain("<p>This is text</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content.Contains("<ComponentWithBodyAndNoDetailsAttrib>"), Is.False);
+                Assert.That(content.Contains("</ComponentWithBodyAndNoDetailsAttrib>"), Is.False);
+            });
         }
     }
 

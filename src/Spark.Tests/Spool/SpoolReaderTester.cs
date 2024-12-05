@@ -18,8 +18,11 @@ namespace Spark.Tests.Spool
             var reader1 = new StringReader("");
             var reader2 = new SpoolReader(new SpoolWriter());
 
-            Assert.That(reader1.Peek(), Is.EqualTo(-1));
-            Assert.That(reader2.Peek(), Is.EqualTo(-1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(reader1.Peek(), Is.EqualTo(-1));
+                Assert.That(reader2.Peek(), Is.EqualTo(-1));
+            });
         }
 
         [Test]
@@ -56,8 +59,11 @@ namespace Spark.Tests.Spool
             writer.Write("c");
 
             var reader = new SpoolReader(writer);
-            Assert.That(reader.Peek(), Is.EqualTo((int)'a'));
-            Assert.That(reader.Read(), Is.EqualTo((int)'a'));
+            Assert.Multiple(() =>
+            {
+                Assert.That(reader.Peek(), Is.EqualTo((int)'a'));
+                Assert.That(reader.Read(), Is.EqualTo((int)'a'));
+            });
             Assert.That(reader.Peek(), Is.EqualTo((int)'b'));
             Assert.That(reader.Read(), Is.EqualTo((int)'b'));
             Assert.That(reader.Peek(), Is.EqualTo((int)'c'));
@@ -65,7 +71,7 @@ namespace Spark.Tests.Spool
             Assert.That(reader.Peek(), Is.EqualTo(-1));
             Assert.That(reader.Read(), Is.EqualTo(-1));
         }
-        
+
         [Test]
         public void Empty_and_null_writes_are_acceptable()
         {

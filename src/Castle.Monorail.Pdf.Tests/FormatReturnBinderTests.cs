@@ -8,24 +8,24 @@ using NUnit.Framework;
 namespace Castle.MonoRail.Pdf.Tests
 {
     [TestFixture]
-    public class FormatReturnBinderTests: BaseControllerTest
+    public class FormatReturnBinderTests : BaseControllerTest
     {
         protected Controller controller;
         protected StubMonoRailServices services;
         protected InjectableStubViewEngineManager viewEngineManager;
         protected StubEngineContext engineContext;
         protected IControllerContext controllerContext;
-        
+
         [Test]
         public void RequestsForNonHandledExtensionsAreIgnored()
         {
             engineContext.UrlInfo = new UrlInfo(null, "ReturnBinderTest", "Index", null, "rails");
             controller.Process(controller.Context, controllerContext);
 
-            Assert.AreEqual(200, controller.Context.Response.StatusCode);
-            Assert.AreEqual("OK", controller.Context.Response.StatusDescription);
-            Assert.AreEqual(string.Format("ReturnBinderTest{0}Index", Path.DirectorySeparatorChar), viewEngineManager.TemplateRendered);
-            Assert.AreEqual(0, controller.Context.Response.Output.ToString().Length);
+            Assert.That(controller.Context.Response.StatusCode, Is.EqualTo(200));
+            Assert.That(controller.Context.Response.StatusDescription, Is.EqualTo("OK"));
+            Assert.That(viewEngineManager.TemplateRendered, Is.EqualTo(string.Format("ReturnBinderTest{0}Index", Path.DirectorySeparatorChar)));
+            Assert.That(controller.Context.Response.Output.ToString().Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -34,12 +34,12 @@ namespace Castle.MonoRail.Pdf.Tests
             engineContext.UrlInfo = new UrlInfo(null, "ReturnBinderTest", "Index", null, "json");
             controller.Process(controller.Context, controllerContext);
 
-            Assert.AreEqual(200, controller.Context.Response.StatusCode);
-            Assert.AreEqual("OK", controller.Context.Response.StatusDescription);
-            Assert.IsNull(viewEngineManager.TemplateRendered);
-            Assert.AreEqual("application/json, text/javascript", controller.Context.Response.ContentType);
-            Assert.AreEqual("{\"Foo\":\"Bar\"}", controller.Context.Response.Output.ToString());
- 
+            Assert.That(controller.Context.Response.StatusCode, Is.EqualTo(200));
+            Assert.That(controller.Context.Response.StatusDescription, Is.EqualTo("OK"));
+            Assert.That(viewEngineManager.TemplateRendered, Is.Null);
+            Assert.That(controller.Context.Response.ContentType, Is.EqualTo("application/json, text/javascript"));
+            Assert.That(controller.Context.Response.Output.ToString(), Is.EqualTo("{\"Foo\":\"Bar\"}"));
+
         }
 
         [Test]
@@ -49,11 +49,11 @@ namespace Castle.MonoRail.Pdf.Tests
             viewEngineManager.SetRenderedOutPut("<itext><paragraph>hello</paragraph></itext>");
             controller.Process(controller.Context, controllerContext);
 
-            Assert.AreEqual(200, controller.Context.Response.StatusCode);
-            Assert.AreEqual("OK", controller.Context.Response.StatusDescription);
-            Assert.AreEqual(string.Format("ReturnBinderTest{0}Index.pdf.spark", Path.DirectorySeparatorChar), viewEngineManager.TemplateRendered);
-            Assert.AreEqual("application/pdf", controller.Context.Response.ContentType);
-            Assert.Greater(controller.Context.Response.OutputStream.Length, 0);
+            Assert.That(controller.Context.Response.StatusCode, Is.EqualTo(200));
+            Assert.That(controller.Context.Response.StatusDescription, Is.EqualTo("OK"));
+            Assert.That(viewEngineManager.TemplateRendered, Is.EqualTo(string.Format("ReturnBinderTest{0}Index.pdf.spark", Path.DirectorySeparatorChar)));
+            Assert.That(controller.Context.Response.ContentType, Is.EqualTo("application/pdf"));
+            Assert.That(controller.Context.Response.OutputStream.Length, Is.GreaterThan(0));
         }
 
         [SetUp]
@@ -75,7 +75,12 @@ namespace Castle.MonoRail.Pdf.Tests
             controller.Contextualize(controller.Context, controllerContext);
             viewEngineManager.RegisterTemplate(string.Format("ReturnBinderTest{0}Index", Path.DirectorySeparatorChar));
         }
-        
+
+        [TearDown]
+        public void TearDown()
+        {
+            controller.Dispose();
+        }
     }
 
     public class SampleViewModel

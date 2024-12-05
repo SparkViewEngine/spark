@@ -20,17 +20,17 @@ using System.Text;
 
 namespace Castle.MonoRail.Views.Spark.Tests.Models
 {
-	public class UserInfo
-	{
-		public string Name { get; set; }
-		public UserType UserType { get; set; }
-	}
+    public class UserInfo
+    {
+        public string Name { get; set; }
+        public UserType UserType { get; set; }
+    }
 
 
-	public enum UserType
-	{
-		Anonymous,
-		Registered,
-		Administrator,
-	}
+    public enum UserType
+    {
+        Anonymous,
+        Registered,
+        Administrator,
+    }
 }

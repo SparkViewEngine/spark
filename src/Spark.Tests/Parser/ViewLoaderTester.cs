@@ -47,7 +47,7 @@ namespace Spark.Tests.Parser
             viewFolder.Stub(x => x.ListViews(Arg<string>.Is.Anything)).IgnoreArguments().Return(Array.Empty<string>());
 
             syntaxProvider = MockRepository.GenerateMock<ISparkSyntaxProvider>();
-            
+
             var settings = new SparkSettings();
 
             var partialProvider = new DefaultPartialProvider();
@@ -93,8 +93,11 @@ namespace Spark.Tests.Parser
             viewFolder.VerifyAllExpectations();
             syntaxProvider.VerifyAllExpectations();
 
-            Assert.AreEqual(1, chunks.Count());
-            Assert.AreEqual(1, loader.GetEverythingLoaded().Count());
+            Assert.Multiple(() =>
+            {
+                Assert.That(chunks.Count(), Is.EqualTo(1));
+                Assert.That(loader.GetEverythingLoaded().Count(), Is.EqualTo(1));
+            });
         }
 
         [Test]
@@ -112,7 +115,7 @@ namespace Spark.Tests.Parser
             viewFolder.VerifyAllExpectations();
             syntaxProvider.AssertWasCalled(call => call.GetChunks(Arg<VisitorContext>.Is.Anything, Arg<string>.Is.Anything), options => options.Repeat.Times(2));
 
-            Assert.AreEqual(2, loader.GetEverythingLoaded().Count());
+            Assert.That(loader.GetEverythingLoaded().Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -140,14 +143,20 @@ namespace Spark.Tests.Parser
             viewFolder.VerifyAllExpectations();
             syntaxProvider.VerifyAllExpectations();
 
-            Assert.AreEqual(3, partials3.Count);
-            Assert.That(partials3.Contains("comment"));
-            Assert.That(partials3.Contains("header"));
-            Assert.That(partials3.Contains("footer"));
+            Assert.That(partials3, Has.Count.EqualTo(3));
+            Assert.Multiple(() =>
+            {
+                Assert.That(partials3.Contains("comment"));
+                Assert.That(partials3.Contains("header"));
+                Assert.That(partials3.Contains("footer"));
 
-            Assert.AreEqual(2, partials2.Count);
-            Assert.That(partials2.Contains("header"));
-            Assert.That(partials2.Contains("footer"));
+                Assert.That(partials2, Has.Count.EqualTo(2));
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(partials2.Contains("header"));
+                Assert.That(partials2.Contains("footer"));
+            });
         }
 
         [Test]
@@ -211,9 +220,9 @@ namespace Spark.Tests.Parser
             var settings = new SparkSettings();
 
             var partialProvider = new DefaultPartialProvider();
-            
+
             var viewLoader = new ViewLoader(settings, folder, partialProvider, new DefaultPartialReferenceProvider(partialProvider), null, syntaxProvider, bindingProvider);
-            
+
             viewLoader.Load(viewPath);
 
             bindingProvider.VerifyAllExpectations();
@@ -274,11 +283,10 @@ namespace Spark.Tests.Parser
                 null,
                 new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
                 null);
-
-            var chunks = viewLoader.Load(Path.Combine("home", "index.spark"));
+            _ = viewLoader.Load(Path.Combine("home", "index.spark"));
             var everything = viewLoader.GetEverythingLoaded();
-            
-            Assert.AreEqual(3, everything.Count());
+
+            Assert.That(everything.Count(), Is.EqualTo(3));
         }
 
         [Test]
@@ -311,11 +319,14 @@ namespace Spark.Tests.Parser
             var product = viewLoader.FindPartialFiles(Path.Combine("product", "two.spark"));
             var invoice = viewLoader.FindPartialFiles(Path.Combine("invoice", "five.spark"));
 
-            Assert.That(zero.Count(), Is.EqualTo(1));
-            Assert.That(zero, Has.Some.EqualTo("one"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(zero.Count(), Is.EqualTo(1));
+                Assert.That(zero, Has.Some.EqualTo("one"));
 
-            Assert.That(product.Count(), Is.EqualTo(2));
-            Assert.That(product, Has.Some.EqualTo("three"));
+                Assert.That(product.Count(), Is.EqualTo(2));
+                Assert.That(product, Has.Some.EqualTo("three"));
+            });
             Assert.That(product, Has.Some.EqualTo("four"));
 
             Assert.That(invoice.Count(), Is.EqualTo(0));
@@ -329,9 +340,12 @@ namespace Spark.Tests.Parser
 
             Assert.That(product.Count(), Is.EqualTo(2));
             Assert.That(product, Has.Some.EqualTo("three"));
-            Assert.That(product, Has.Some.EqualTo("four"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(product, Has.Some.EqualTo("four"));
 
-            Assert.That(invoice.Count(), Is.EqualTo(0));
+                Assert.That(invoice.Count(), Is.EqualTo(0));
+            });
         }
 
         [Test]
@@ -364,7 +378,7 @@ namespace Spark.Tests.Parser
                 new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
                 null);
 
-            var partials = viewLoader.FindPartialFiles(Path.Combine("area1","controller2","view3.spark"));
+            var partials = viewLoader.FindPartialFiles(Path.Combine("area1", "controller2", "view3.spark"));
 
             Assert.That(partials, Has.Some.EqualTo("alpha"));
             Assert.That(partials, Has.Some.EqualTo("beta"));
@@ -397,11 +411,10 @@ namespace Spark.Tests.Parser
                 null,
                 new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
                 null);
-
-            var chunks = viewLoader.Load(Path.Combine("home", "empty.spark"));
+            _ = viewLoader.Load(Path.Combine("home", "empty.spark"));
             var everything = viewLoader.GetEverythingLoaded();
 
-            Assert.AreEqual(1, everything.Count());
+            Assert.That(everything.Count(), Is.EqualTo(1));
         }
 
         [Test]
@@ -411,7 +424,7 @@ namespace Spark.Tests.Parser
             {
                 { Path.Combine("home", "empty.shade"), "" },
             };
-            
+
             var settings = new SparkSettings();
 
             var partialProvider = new DefaultPartialProvider();
@@ -424,11 +437,10 @@ namespace Spark.Tests.Parser
                 null,
                 new DefaultSyntaxProvider(ParserSettings.DefaultBehavior),
                 null);
-
-            var chunks = viewLoader.Load(Path.Combine("home", "empty.shade"));
+            _ = viewLoader.Load(Path.Combine("home", "empty.shade"));
             var everything = viewLoader.GetEverythingLoaded();
-            
-            Assert.AreEqual(1, everything.Count());
+
+            Assert.That(everything.Count(), Is.EqualTo(1));
         }
     }
 }

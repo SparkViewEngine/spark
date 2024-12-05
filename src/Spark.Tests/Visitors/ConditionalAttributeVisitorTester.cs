@@ -31,12 +31,12 @@ namespace Spark.Tests.Visitors
             var visitor = new ConditionalAttributeVisitor(new VisitorContext());
             visitor.Accept(nodes);
 
-            Assert.AreEqual(1, visitor.Nodes.Count);
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[0]);
+            Assert.That(visitor.Nodes, Has.Count.EqualTo(1));
+            Assert.That(visitor.Nodes[0], Is.AssignableFrom(typeof(SpecialNode)));
 
             var ifNode = visitor.Nodes[0] as SpecialNode;
-            Assert.IsNotNull(ifNode);
-            Assert.AreEqual("if", ifNode.Element.Name);
+            Assert.That(ifNode, Is.Not.Null);
+            Assert.That(ifNode.Element.Name, Is.EqualTo("if"));
         }
 
         [Test]
@@ -48,12 +48,12 @@ namespace Spark.Tests.Visitors
             var visitor = new ConditionalAttributeVisitor(new VisitorContext());
             visitor.Accept(nodes);
 
-            Assert.AreEqual(1, visitor.Nodes.Count);
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[0]);
+            Assert.That(visitor.Nodes, Has.Count.EqualTo(1));
+            Assert.That(visitor.Nodes[0], Is.AssignableFrom(typeof(SpecialNode)));
 
             var unlessNode = visitor.Nodes[0] as SpecialNode;
-            Assert.IsNotNull(unlessNode);
-            Assert.AreEqual("unless", unlessNode.Element.Name);
+            Assert.That(unlessNode, Is.Not.Null);
+            Assert.That(unlessNode.Element.Name, Is.EqualTo("unless"));
         }
 
         [Test]
@@ -68,19 +68,19 @@ namespace Spark.Tests.Visitors
             var visitor = new ConditionalAttributeVisitor(new VisitorContext());
             visitor.Accept(visitor0.Nodes);
 
-            Assert.AreEqual(3, visitor.Nodes.Count);
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[0]);
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[1]);
-            Assert.IsAssignableFrom(typeof(SpecialNode), visitor.Nodes[2]);
+            Assert.That(visitor.Nodes, Has.Count.EqualTo(3));
+            Assert.That(visitor.Nodes[0], Is.AssignableFrom(typeof(SpecialNode)));
+            Assert.That(visitor.Nodes[1], Is.AssignableFrom(typeof(SpecialNode)));
+            Assert.That(visitor.Nodes[2], Is.AssignableFrom(typeof(SpecialNode)));
 
             var ifNode = (SpecialNode)visitor.Nodes[0];
-            Assert.AreEqual("if", ifNode.Element.Name);
+            Assert.That(ifNode.Element.Name, Is.EqualTo("if"));
 
             var elseifNode = (SpecialNode)visitor.Nodes[1];
-            Assert.AreEqual("elseif", elseifNode.Element.Name);
+            Assert.That(elseifNode.Element.Name, Is.EqualTo("elseif"));
 
             var elseNode = (SpecialNode)visitor.Nodes[2];
-            Assert.AreEqual("else", elseNode.Element.Name);
+            Assert.That(elseNode.Element.Name, Is.EqualTo("else"));
         }
     }
 }

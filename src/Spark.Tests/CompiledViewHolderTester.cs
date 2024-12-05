@@ -37,9 +37,9 @@ namespace Spark.Tests
         private SparkViewDescriptor BuildKey(params string[] templates)
         {
             return new SparkViewDescriptor
-                   {
-                       Templates = templates
-                   };
+            {
+                Templates = templates
+            };
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace Spark.Tests
         {
             var key = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
             var entry = holder.Lookup(key);
-            Assert.IsNull(entry);
+            Assert.That(entry, Is.Null);
         }
 
         [Test]
@@ -69,9 +69,10 @@ namespace Spark.Tests
                 null);
 
             var entry = new CompiledViewEntry { Descriptor = key, Loader = viewLoader };
-            Assert.IsNull(holder.Lookup(key));
+            Assert.That(holder.Lookup(key), Is.Null);
             holder.Store(entry);
-            Assert.AreSame(entry, holder.Lookup(key));
+
+            Assert.That(holder.Lookup(key), Is.SameAs(entry));
         }
 
         [Test]
@@ -80,18 +81,20 @@ namespace Spark.Tests
             var key1 = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
             var key2 = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "m"));
 
-            Assert.AreNotSame(key1, key2);
-            Assert.AreEqual(key1, key2);
+            Assert.That(key2, Is.Not.SameAs(key1));
+            Assert.That(key2, Is.EqualTo(key1));
 
             var key3 = BuildKey(Path.Combine("c", "v"));
-            Assert.AreNotEqual(key1, key3);
-            Assert.AreNotEqual(key2, key3);
+            Assert.That(key3, Is.Not.EqualTo(key1));
+            Assert.That(key3, Is.Not.EqualTo(key2));
 
             var key4 = BuildKey(Path.Combine("c", "v"), Path.Combine("shared", "M"));
-            Assert.AreEqual(key1, key4);
+            Assert.Multiple(() =>
+            {
+                Assert.That(key4, Is.EqualTo(key1));
 
-            Assert.That(!Equals(key1, null));
-            Assert.That(!Equals(null, key1));
+                Assert.That(key1, Is.Not.Null);
+            });
         }
 
         public class FakeViewLoader : ViewLoader
@@ -126,11 +129,11 @@ namespace Spark.Tests
 
             holder.Store(entry);
 
-            Assert.AreSame(entry, holder.Lookup(key));
+            Assert.That(holder.Lookup(key), Is.SameAs(entry));
 
             loader.IsCurrentValue = false;
 
-            Assert.IsNull(holder.Lookup(key));
+            Assert.That(holder.Lookup(key), Is.Null);
         }
 
         [Test]

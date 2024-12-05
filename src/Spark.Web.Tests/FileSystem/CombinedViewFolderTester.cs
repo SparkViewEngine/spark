@@ -29,9 +29,12 @@ namespace Spark.FileSystem
             var second = new InMemoryViewFolder { { "two.txt", "two" } };
             var viewFolder = new CombinedViewFolder(first, second);
 
-            Assert.IsTrue(viewFolder.HasView("one.txt"));
-            Assert.IsTrue(viewFolder.HasView("two.txt"));
-            Assert.IsFalse(viewFolder.HasView("three.txt"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(viewFolder.HasView("one.txt"), Is.True);
+                Assert.That(viewFolder.HasView("two.txt"), Is.True);
+                Assert.That(viewFolder.HasView("three.txt"), Is.False);
+            });
         }
 
         [Test]
@@ -44,13 +47,13 @@ namespace Spark.FileSystem
             using (var reader = new StreamReader(viewFolder.GetViewSource("one.txt").OpenViewStream()))
             {
                 var content = reader.ReadToEnd();
-                Assert.AreEqual("one", content);
+                Assert.That(content, Is.EqualTo("one"));
             }
 
             using (var reader = new StreamReader(viewFolder.GetViewSource("two.txt").OpenViewStream()))
             {
                 var content = reader.ReadToEnd();
-                Assert.AreEqual("two", content);
+                Assert.That(content, Is.EqualTo("two"));
             }
         }
 
@@ -75,31 +78,31 @@ namespace Spark.FileSystem
             using (var reader = new StreamReader(viewFolder.GetViewSource("one.txt").OpenViewStream()))
             {
                 var content = reader.ReadToEnd();
-                Assert.AreEqual("one", content);
+                Assert.That(content, Is.EqualTo("one"));
             }
         }
 
         [Test]
         public void ListFilesWithDedupe()
         {
-            var first = new InMemoryViewFolder 
-			{ 
-				{ Path.Combine("home", "three.txt"), "three" }, 
-				{ Path.Combine("home", "one.txt"), "one" } 
-			};
-            var second = new InMemoryViewFolder 
-			{ 
-				{ Path.Combine("home", "two.txt"), "two" }, 
-				{ Path.Combine("home", "three.txt"), "three" } 
-			};
-			
+            var first = new InMemoryViewFolder
+            {
+                { Path.Combine("home", "three.txt"), "three" },
+                { Path.Combine("home", "one.txt"), "one" }
+            };
+            var second = new InMemoryViewFolder
+            {
+                { Path.Combine("home", "two.txt"), "two" },
+                { Path.Combine("home", "three.txt"), "three" }
+            };
+
             var viewFolder = new CombinedViewFolder(first, second);
             var views = viewFolder.ListViews("home");
-			
-            Assert.AreEqual(3, views.Count);
-            Assert.Contains(Path.Combine("home", "one.txt"), views.ToArray());
-            Assert.Contains(Path.Combine("home", "two.txt"), views.ToArray());
-            Assert.Contains(Path.Combine("home", "three.txt"), views.ToArray());
-        }		
+
+            Assert.That(views.Count, Is.EqualTo(3));
+            Assert.That(views.ToArray(), Does.Contain(Path.Combine("home", "one.txt")));
+            Assert.That(views.ToArray(), Does.Contain(Path.Combine("home", "two.txt")));
+            Assert.That(views.ToArray(), Does.Contain(Path.Combine("home", "three.txt")));
+        }
     }
 }

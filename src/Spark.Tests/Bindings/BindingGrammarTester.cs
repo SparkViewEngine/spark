@@ -33,8 +33,11 @@ namespace Spark.Tests.Bindings
             var result1 = grammar.NameReference(Source("@caption"));
             var result2 = grammar.NameReference(Source(" @caption"));
 
-            Assert.That(result1.Value, Is.InstanceOf(typeof(BindingNameReference)));
-            Assert.That(result2, Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result1.Value, Is.InstanceOf(typeof(BindingNameReference)));
+                Assert.That(result2, Is.Null);
+            });
 
             var value1 = (BindingNameReference)result1.Value;
             Assert.That(value1.Name, Is.EqualTo("caption"));
@@ -64,13 +67,16 @@ namespace Spark.Tests.Bindings
             var grammar = new BindingGrammar();
             var result = grammar.Nodes(Source("Html.ActionLink(@caption, @action)"));
 
-            Assert.That(result.Value.Count(), Is.EqualTo(5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Value.Count(), Is.EqualTo(5));
 
-            Assert.That(((BindingLiteral)result.Value[0]).Text, Is.EqualTo("Html.ActionLink("));
-            Assert.That(((BindingNameReference)result.Value[1]).Name, Is.EqualTo("caption"));
-            Assert.That(((BindingLiteral)result.Value[2]).Text, Is.EqualTo(", "));
-            Assert.That(((BindingNameReference)result.Value[3]).Name, Is.EqualTo("action"));
-            Assert.That(((BindingLiteral)result.Value[4]).Text, Is.EqualTo(")"));
+                Assert.That(((BindingLiteral)result.Value[0]).Text, Is.EqualTo("Html.ActionLink("));
+                Assert.That(((BindingNameReference)result.Value[1]).Name, Is.EqualTo("caption"));
+                Assert.That(((BindingLiteral)result.Value[2]).Text, Is.EqualTo(", "));
+                Assert.That(((BindingNameReference)result.Value[3]).Name, Is.EqualTo("action"));
+                Assert.That(((BindingLiteral)result.Value[4]).Text, Is.EqualTo(")"));
+            });
         }
 
         [Test]
@@ -80,13 +86,19 @@ namespace Spark.Tests.Bindings
 
             var result1 = grammar.PrefixReference(Source("@caption.*x"));
             var value1 = (BindingPrefixReference)result1.Value;
-            Assert.That(value1.Prefix, Is.EqualTo("caption."));
-            Assert.That(result1.Rest.Peek(), Is.EqualTo('x'));
+            Assert.Multiple(() =>
+            {
+                Assert.That(value1.Prefix, Is.EqualTo("caption."));
+                Assert.That(result1.Rest.Peek(), Is.EqualTo('x'));
+            });
 
             var result2 = grammar.PrefixReference(Source("@*y"));
             var value2 = (BindingPrefixReference)result2.Value;
-            Assert.That(value2.Prefix ?? "", Is.EqualTo(""));
-            Assert.That(result2.Rest.Peek(), Is.EqualTo('y'));
+            Assert.Multiple(() =>
+            {
+                Assert.That(value2.Prefix ?? "", Is.EqualTo(""));
+                Assert.That(result2.Rest.Peek(), Is.EqualTo('y'));
+            });
         }
 
         [Test]
@@ -95,13 +107,16 @@ namespace Spark.Tests.Bindings
             var grammar = new BindingGrammar();
             var result = grammar.Nodes(Source("Html.ActionLink(@caption.**, @**)"));
 
-            Assert.That(result.Value.Count(), Is.EqualTo(5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Value.Count(), Is.EqualTo(5));
 
-            Assert.That(((BindingLiteral)result.Value[0]).Text, Is.EqualTo("Html.ActionLink("));
-            Assert.That(((BindingPrefixReference)result.Value[1]).Prefix, Is.EqualTo("caption."));
-            Assert.That(((BindingLiteral)result.Value[2]).Text, Is.EqualTo("*, "));
-            Assert.That(((BindingPrefixReference)result.Value[3]).Prefix ?? "", Is.EqualTo(""));
-            Assert.That(((BindingLiteral)result.Value[4]).Text, Is.EqualTo("*)"));
+                Assert.That(((BindingLiteral)result.Value[0]).Text, Is.EqualTo("Html.ActionLink("));
+                Assert.That(((BindingPrefixReference)result.Value[1]).Prefix, Is.EqualTo("caption."));
+                Assert.That(((BindingLiteral)result.Value[2]).Text, Is.EqualTo("*, "));
+                Assert.That(((BindingPrefixReference)result.Value[3]).Prefix ?? "", Is.EqualTo(""));
+                Assert.That(((BindingLiteral)result.Value[4]).Text, Is.EqualTo("*)"));
+            });
         }
 
         [Test]
@@ -117,12 +132,15 @@ namespace Spark.Tests.Bindings
             var five = (BindingPrefixReference)result.Value[4];
             var six = (BindingPrefixReference)result.Value[5];
 
-            Assert.That(one.AssumeStringValue, Is.False);
-            Assert.That(two.AssumeStringValue, Is.True);
-            Assert.That(three.AssumeStringValue, Is.True);
-            Assert.That(four.AssumeStringValue, Is.False);
-            Assert.That(five.AssumeStringValue, Is.True);
-            Assert.That(six.AssumeStringValue, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(one.AssumeStringValue, Is.False);
+                Assert.That(two.AssumeStringValue, Is.True);
+                Assert.That(three.AssumeStringValue, Is.True);
+                Assert.That(four.AssumeStringValue, Is.False);
+                Assert.That(five.AssumeStringValue, Is.True);
+                Assert.That(six.AssumeStringValue, Is.True);
+            });
         }
 
         [Test]
@@ -139,13 +157,16 @@ namespace Spark.Tests.Bindings
             var child3 = (BindingChildReference)result.Value[5];
             var d = (BindingLiteral)result.Value[6];
 
-            Assert.That(a.Text, Is.EqualTo("a"));
-            Assert.That(b.Text, Is.EqualTo("b"));
-            Assert.That(c.Text, Is.EqualTo("c"));
-            Assert.That(d.Text, Is.EqualTo("d"));
-            Assert.That(child1, Is.Not.Null);
-            Assert.That(child2, Is.Not.Null);
-            Assert.That(child3, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(a.Text, Is.EqualTo("a"));
+                Assert.That(b.Text, Is.EqualTo("b"));
+                Assert.That(c.Text, Is.EqualTo("c"));
+                Assert.That(d.Text, Is.EqualTo("d"));
+                Assert.That(child1, Is.Not.Null);
+                Assert.That(child2, Is.Not.Null);
+                Assert.That(child3, Is.Not.Null);
+            });
         }
 
         [Test]
@@ -160,14 +181,17 @@ namespace Spark.Tests.Bindings
             var match2 = (BindingPrefixReference)result.Value[2];
             var b = (BindingLiteral)result.Value[3];
 
-            Assert.That(a.Text, Is.EqualTo("a"));
-            Assert.That(b.Text, Is.EqualTo("b"));
-            Assert.That(match1.Prefix, Is.Null);
-            Assert.That(match2.Prefix, Is.EqualTo("hello"));
-            Assert.That(match1.AssumeDictionarySyntax, Is.True);
-            Assert.That(match2.AssumeDictionarySyntax, Is.True);
-            Assert.That(match1.AssumeStringValue, Is.False);
-            Assert.That(match2.AssumeStringValue, Is.False);
+            Assert.Multiple(() =>
+            {
+                Assert.That(a.Text, Is.EqualTo("a"));
+                Assert.That(b.Text, Is.EqualTo("b"));
+                Assert.That(match1.Prefix, Is.Null);
+                Assert.That(match2.Prefix, Is.EqualTo("hello"));
+                Assert.That(match1.AssumeDictionarySyntax, Is.True);
+                Assert.That(match2.AssumeDictionarySyntax, Is.True);
+                Assert.That(match1.AssumeStringValue, Is.False);
+                Assert.That(match2.AssumeStringValue, Is.False);
+            });
         }
 
         [Test]
@@ -182,12 +206,15 @@ namespace Spark.Tests.Bindings
             var match2 = (BindingPrefixReference)result.Value[2];
             var b = (BindingLiteral)result.Value[3];
 
-            Assert.That(a.Text, Is.EqualTo("a{{"));
-            Assert.That(b.Text, Is.EqualTo("}}b"));
-            Assert.That(match1.Prefix, Is.Null);
-            Assert.That(match2.Prefix, Is.EqualTo("hello"));
-            Assert.That(match1.AssumeDictionarySyntax, Is.False);
-            Assert.That(match2.AssumeDictionarySyntax, Is.False);
+            Assert.Multiple(() =>
+            {
+                Assert.That(a.Text, Is.EqualTo("a{{"));
+                Assert.That(b.Text, Is.EqualTo("}}b"));
+                Assert.That(match1.Prefix, Is.Null);
+                Assert.That(match2.Prefix, Is.EqualTo("hello"));
+                Assert.That(match1.AssumeDictionarySyntax, Is.False);
+                Assert.That(match2.AssumeDictionarySyntax, Is.False);
+            });
         }
 
         [Test]
@@ -202,18 +229,22 @@ namespace Spark.Tests.Bindings
             var match2 = (BindingPrefixReference)result.Value[2];
             var b = (BindingLiteral)result.Value[3];
 
-            Assert.That(a.Text, Is.EqualTo("a"));
-            Assert.That(b.Text, Is.EqualTo("b"));
-            Assert.That(match1.Prefix, Is.Null);
-            Assert.That(match2.Prefix, Is.EqualTo("hello"));
-            Assert.That(match1.AssumeDictionarySyntax, Is.True);
-            Assert.That(match2.AssumeDictionarySyntax, Is.True);
-            Assert.That(match1.AssumeStringValue, Is.True);
-            Assert.That(match2.AssumeStringValue, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(a.Text, Is.EqualTo("a"));
+                Assert.That(b.Text, Is.EqualTo("b"));
+                Assert.That(match1.Prefix, Is.Null);
+                Assert.That(match2.Prefix, Is.EqualTo("hello"));
+                Assert.That(match1.AssumeDictionarySyntax, Is.True);
+                Assert.That(match2.AssumeDictionarySyntax, Is.True);
+                Assert.That(match1.AssumeStringValue, Is.True);
+                Assert.That(match2.AssumeStringValue, Is.True);
+            });
         }
 
         [Test]
-        public void DoubleSquareBracketIsAliasForAngleBracket() {
+        public void DoubleSquareBracketIsAliasForAngleBracket()
+        {
             var grammar = new BindingGrammar();
             var result = grammar.Nodes(Source("this[[that]]"));
 

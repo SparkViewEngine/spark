@@ -72,8 +72,8 @@ namespace Spark
             var factory = new DefaultViewActivator();
             var activator = factory.Register(type);
             var view = activator.Activate(type);
-            Assert.IsNotNull(view);
-            Assert.IsAssignableFrom(typeof(TestView), view);
+            Assert.That(view, Is.Not.Null);
+            Assert.That(view, Is.AssignableFrom(typeof(TestView)));
         }
 
         [Test]
@@ -83,8 +83,8 @@ namespace Spark
             var factory = new FastViewActivator();
             var activator = factory.Register(type);
             var view = activator.Activate(type);
-            Assert.IsNotNull(view);
-            Assert.IsAssignableFrom(typeof(TestView), view);
+            Assert.That(view, Is.Not.Null);
+            Assert.That(view, Is.AssignableFrom(typeof(TestView)));
         }
 
         [Test]
@@ -97,14 +97,14 @@ namespace Spark
                 .AddSingleton<IViewActivatorFactory, CustomFactory>()
                 .AddSingleton<IViewFolder>(new InMemoryViewFolder { { "hello/world.spark", "<p>hello world</p>" } })
                 .BuildServiceProvider();
-            
-            var engine = (SparkViewEngine) sp.GetService<ISparkViewEngine>();
+
+            var engine = (SparkViewEngine)sp.GetService<ISparkViewEngine>();
 
             var descriptor = new SparkViewDescriptor().AddTemplate("hello/world.spark");
             var view = engine.CreateInstance(descriptor);
 
-            Assert.IsNotNull(view);
-            Assert.IsAssignableFrom(typeof(TestView), view);
+            Assert.That(view, Is.Not.Null);
+            Assert.That(view, Is.AssignableFrom(typeof(TestView)));
         }
 
         [Test, Explicit]
@@ -123,10 +123,10 @@ namespace Spark
 
             for (int i = 0; i < iterations; i++)
             {
-                var view = activator.Activate(type);
+                _ = activator.Activate(type);
             }
             sw.Stop();
-            
+
             Console.WriteLine("Default took: {0}ms", sw.Elapsed.TotalMilliseconds);
             sw.Reset();
 
@@ -134,7 +134,7 @@ namespace Spark
 
             for (int i = 0; i < iterations; i++)
             {
-                var view = fastActivator.Activate(type);
+                _ = fastActivator.Activate(type);
             }
             sw.Stop();
             Console.WriteLine("Fast took: {0}ms", sw.Elapsed.TotalMilliseconds);

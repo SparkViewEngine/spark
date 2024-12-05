@@ -72,7 +72,7 @@ namespace Spark.Caching
             protected override void Disable()
             {
                 Assert.That(this.Enabled, Is.True);
-                this.Enabled = false;                
+                this.Enabled = false;
             }
 
             public bool Enabled { get; set; }

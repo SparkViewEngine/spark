@@ -39,15 +39,12 @@ namespace Spark.Web.Mvc.Tests
         private RouteData _routeData;
         private ControllerContext _controllerContext;
 
-        public static IServiceProvider SetupServiceProvider(ISparkSettings settings, Action<IServiceCollection> serviceOverrides = null)
+        private static IServiceProvider SetupServiceProvider(ISparkSettings settings, Action<IServiceCollection> serviceOverrides = null)
         {
             IServiceCollection services = new ServiceCollection()
                 .AddSpark(settings);
 
-            if (serviceOverrides != null)
-            {
-                serviceOverrides.Invoke(services);
-            }
+            serviceOverrides?.Invoke(services);
 
             return services.BuildServiceProvider();
         }
@@ -68,7 +65,7 @@ namespace Spark.Web.Mvc.Tests
                 });
 
             this._precompiler = sp.GetService<SparkWebPrecompiler>();
-            
+
             var httpContext = MockRepository.GenerateStub<HttpContextBase>();
             _routeData = new RouteData();
             var controller = MockRepository.GenerateStub<ControllerBase>();
@@ -80,14 +77,14 @@ namespace Spark.Web.Mvc.Tests
             ICollection<string> searchedLocations,
             params string[] templates)
         {
-            Assert.AreEqual(templates.Length, descriptor.Templates.Count, "Descriptor template count must match");
+            Assert.That(descriptor.Templates.Count, Is.EqualTo(templates.Length), "Descriptor template count must match");
 
             for (var index = 0; index != templates.Length; ++index)
             {
-                Assert.AreEqual(templates[index], descriptor.Templates[index]);
+                Assert.That(descriptor.Templates[index], Is.EqualTo(templates[index]));
             }
 
-            Assert.AreEqual(0, searchedLocations.Count, "searchedLocations must be empty");
+            Assert.That(searchedLocations.Count, Is.EqualTo(0), "searchedLocations must be empty");
         }
 
         [Test]
@@ -341,7 +338,8 @@ namespace Spark.Web.Mvc.Tests
         }
 
         [Test]
-        public void AreaRouteValueAlsoRecognizedForBackCompatWithEarlierAssumptions() {
+        public void AreaRouteValueAlsoRecognizedForBackCompatWithEarlierAssumptions()
+        {
             _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.spark", "");
@@ -359,7 +357,8 @@ namespace Spark.Web.Mvc.Tests
         }
 
         [Test]
-        public void AreaRouteValueAlsoRecognizedForBackCompatWithEarlierAssumptionsWithShade() {
+        public void AreaRouteValueAlsoRecognizedForBackCompatWithEarlierAssumptionsWithShade()
+        {
             _routeData.Values.Add("area", "Admin");
             _routeData.Values.Add("controller", "Home");
             _viewFolder.Add(@"Home\Index.shade", "");
@@ -588,11 +587,8 @@ namespace Spark.Web.Mvc.Tests
 
         private static IDictionary<string, object> Dict(IEnumerable<string> values)
         {
-            return values == null
-                       ? null
-                       : values
-                             .Select((v, k) => new {k, v})
-                             .ToDictionary(kv => kv.k.ToString(), kv => (object) kv.v);
+            return values?.Select((v, k) => new { k, v })
+                             .ToDictionary(kv => kv.k.ToString(), kv => (object)kv.v);
         }
 
         [Test]
@@ -716,12 +712,15 @@ namespace Spark.Web.Mvc.Tests
             var none = builder.ParseUseMaster(new Position(new SourceContext("  x <use etc=''/> <using master=\"def\"/> y ")));
             var g = builder.ParseUseMaster(new Position(new SourceContext("-<use master=\"g\"/>-<use master=\"h\"/>-")));
 
-            Assert.That(a.Value, Is.EqualTo("a"));
-            Assert.That(b.Value, Is.EqualTo("b"));
-            Assert.That(c.Value, Is.EqualTo("c"));
-            Assert.That(def.Value, Is.EqualTo("def"));
-            Assert.That(none, Is.Null);
-            Assert.That(g.Value, Is.EqualTo("g"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(a.Value, Is.EqualTo("a"));
+                Assert.That(b.Value, Is.EqualTo("b"));
+                Assert.That(c.Value, Is.EqualTo("c"));
+                Assert.That(def.Value, Is.EqualTo("def"));
+                Assert.That(none, Is.Null);
+                Assert.That(g.Value, Is.EqualTo("g"));
+            });
         }
 
         [Test]
@@ -741,12 +740,15 @@ namespace Spark.Web.Mvc.Tests
             var none = builder.ParseUseMaster(new Position(new SourceContext("  x <s:use etc=''/> <using master=\"def\"/> y ")));
             var g = builder.ParseUseMaster(new Position(new SourceContext("-<s:use master=\"g\"/>-<s:use master=\"h\"/>-")));
 
-            Assert.That(a.Value, Is.EqualTo("a"));
-            Assert.That(b.Value, Is.EqualTo("b"));
-            Assert.That(c.Value, Is.EqualTo("c"));
-            Assert.That(def.Value, Is.EqualTo("def"));
-            Assert.That(none, Is.Null);
-            Assert.That(g.Value, Is.EqualTo("g"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(a.Value, Is.EqualTo("a"));
+                Assert.That(b.Value, Is.EqualTo("b"));
+                Assert.That(c.Value, Is.EqualTo("c"));
+                Assert.That(def.Value, Is.EqualTo("def"));
+                Assert.That(none, Is.Null);
+                Assert.That(g.Value, Is.EqualTo("g"));
+            });
         }
     }
 }

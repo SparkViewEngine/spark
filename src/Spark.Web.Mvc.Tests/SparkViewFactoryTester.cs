@@ -38,16 +38,13 @@ namespace Spark.Web.Mvc.Tests
     {
         #region Setup/Teardown
 
-        public static IServiceProvider SetupServiceProvider(ISparkSettings settings, Action<ServiceCollection> serviceOverrides = null)
+        private static IServiceProvider SetupServiceProvider(ISparkSettings settings, Action<ServiceCollection> serviceOverrides = null)
         {
             var services = new ServiceCollection();
 
             services.AddSpark(settings);
 
-            if (serviceOverrides != null)
-            {
-                serviceOverrides.Invoke(services);
-            }
+            serviceOverrides?.Invoke(services);
 
             return services.BuildServiceProvider();
         }
@@ -58,9 +55,9 @@ namespace Spark.Web.Mvc.Tests
             // reset routes
             RouteTable.Routes.Clear();
             RouteTable.Routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
-                                      {
-                                          Defaults = new RouteValueDictionary(new { action = "Index", id = "" })
-                                      });
+            {
+                Defaults = new RouteValueDictionary(new { action = "Index", id = "" })
+            });
 
             httpContext = MockHttpContextBase.Generate("/", new StringWriter());
             //_requestBase = MockRepository.GenerateStub<HttpRequestBase>();
@@ -178,7 +175,7 @@ namespace Spark.Web.Mvc.Tests
             {
                 var nextIndex = content.IndexOf(value, index);
 
-                Assert.GreaterOrEqual(nextIndex, 0, $"Looking for {value}");
+                Assert.That(nextIndex, Is.GreaterThanOrEqualTo(0), () => $"Looking for {value}");
                 index = nextIndex + value.Length;
             }
         }
@@ -191,10 +188,13 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
             var content = output.ToString();
 
-            Assert.That(content.Contains("<p>main content</p>"));
-            Assert.That(content.Contains("<p>this is the header</p>"));
-            Assert.That(content.Contains("<p>footer part one</p>"));
-            Assert.That(content.Contains("<p>footer part two</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>main content</p>"));
+                Assert.That(content, Does.Contain("<p>this is the header</p>"));
+                Assert.That(content, Does.Contain("<p>footer part one</p>"));
+                Assert.That(content, Does.Contain("<p>footer part two</p>"));
+            });
         }
 
         [Test]
@@ -208,9 +208,12 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
             var content = output.ToString();
 
-            Assert.That(content.Contains("<h1>Hello world</h1>"));
-            Assert.That(content.Contains("<p>foo</p>"));
-            Assert.That(content.Contains("<p>bar</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<h1>Hello world</h1>"));
+                Assert.That(content, Does.Contain("<p>foo</p>"));
+                Assert.That(content, Does.Contain("<p>bar</p>"));
+            });
         }
 
 
@@ -223,9 +226,12 @@ namespace Spark.Web.Mvc.Tests
 
             var content = output.ToString();
 
-            Assert.That(content.Contains(@"<li class=""odd"">1: foo</li>"));
-            Assert.That(content.Contains(@"<li class=""even"">2: bar</li>"));
-            Assert.That(content.Contains(@"<li class=""odd"">3: baaz</li>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain(@"<li class=""odd"">1: foo</li>"));
+                Assert.That(content, Does.Contain(@"<li class=""even"">2: bar</li>"));
+                Assert.That(content, Does.Contain(@"<li class=""odd"">3: baaz</li>"));
+            });
         }
 
         [Test]
@@ -237,8 +243,11 @@ namespace Spark.Web.Mvc.Tests
 
             var content = output.ToString();
 
-            Assert.That(content.Contains("<p>default: Global set test</p>"));
-            Assert.That(content.Contains("<p>7==7</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>default: Global set test</p>"));
+                Assert.That(content, Does.Contain("<p>7==7</p>"));
+            });
         }
 
         [Test]
@@ -252,7 +261,7 @@ namespace Spark.Web.Mvc.Tests
 
             //mocks.VerifyAll();
 
-            Assert.AreEqual("<a href=\"/Home/world\">hello</a>", link);
+            Assert.That(link, Is.EqualTo("<a href=\"/Home/world\">hello</a>"));
         }
 
         [Test]
@@ -280,9 +289,9 @@ namespace Spark.Web.Mvc.Tests
 
             //mocks.VerifyAll();
 
-            Assert.AreEqual(2, descriptor.Templates.Count);
-            Assert.AreEqual($"Foo{Path.DirectorySeparatorChar}Baaz.spark", descriptor.Templates[0]);
-            Assert.AreEqual($"Shared{Path.DirectorySeparatorChar}Application.spark", descriptor.Templates[1]);
+            Assert.That(descriptor.Templates.Count, Is.EqualTo(2));
+            Assert.That(descriptor.Templates[0], Is.EqualTo($"Foo{Path.DirectorySeparatorChar}Baaz.spark"));
+            Assert.That(descriptor.Templates[1], Is.EqualTo($"Shared{Path.DirectorySeparatorChar}Application.spark"));
         }
 
         [Test]
@@ -307,8 +316,8 @@ namespace Spark.Web.Mvc.Tests
 
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
-            Assert.AreEqual(1, descriptor.Templates.Count);
-            Assert.AreEqual($"Foo{Path.DirectorySeparatorChar}Baaz.spark", descriptor.Templates[0]);
+            Assert.That(descriptor.Templates.Count, Is.EqualTo(1));
+            Assert.That(descriptor.Templates[0], Is.EqualTo($"Foo{Path.DirectorySeparatorChar}Baaz.spark"));
         }
 
         [Test]
@@ -328,15 +337,15 @@ namespace Spark.Web.Mvc.Tests
                 });
 
             factory = sp.GetService<SparkViewFactory>();
-            
+
             routeData.Values["controller"] = "Foo";
             routeData.Values["action"] = "NotBaaz";
 
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
 
-            Assert.AreEqual(2, descriptor.Templates.Count);
-            Assert.AreEqual($"Foo{Path.DirectorySeparatorChar}Baaz.spark", descriptor.Templates[0]);
-            Assert.AreEqual($"Shared{Path.DirectorySeparatorChar}Foo.spark", descriptor.Templates[1]);
+            Assert.That(descriptor.Templates.Count, Is.EqualTo(2));
+            Assert.That(descriptor.Templates[0], Is.EqualTo($"Foo{Path.DirectorySeparatorChar}Baaz.spark"));
+            Assert.That(descriptor.Templates[1], Is.EqualTo($"Shared{Path.DirectorySeparatorChar}Foo.spark"));
         }
 
         [Test]
@@ -347,10 +356,13 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
             var content = output.ToString();
 
-            Assert.That(content.Contains("<title>Standalone Index View</title>"));
-            Assert.That(content.Contains("<h1>Standalone Index View</h1>"));
-            Assert.That(content.Contains("<p>no header by default</p>"));
-            Assert.That(content.Contains("<p>no footer by default</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<title>Standalone Index View</title>"));
+                Assert.That(content, Does.Contain("<h1>Standalone Index View</h1>"));
+                Assert.That(content, Does.Contain("<p>no header by default</p>"));
+                Assert.That(content, Does.Contain("<p>no footer by default</p>"));
+            });
         }
 
         [Test]
@@ -361,7 +373,7 @@ namespace Spark.Web.Mvc.Tests
 
             var content = output.ToString();
 
-            Assert.That(content.Contains("<p>nothing</p>"));
+            Assert.That(content, Does.Contain("<p>nothing</p>"));
         }
 
         [Test]
@@ -382,9 +394,9 @@ namespace Spark.Web.Mvc.Tests
         public void RenderPlainView()
         {
             var viewContext = MakeViewContext("index");
-            
+
             var viewEngineResult = factory.FindView(controllerContext, "index", null);
-            
+
             viewEngineResult.View.Render(viewContext, output);
 
             //mocks.VerifyAll();
@@ -414,7 +426,7 @@ namespace Spark.Web.Mvc.Tests
             var descriptor = factory.CreateDescriptor(controllerContext, "Baaz", null, true, null);
             //mocks.VerifyAll();
 
-            Assert.AreEqual("Spark.Web.Mvc.Tests.Controllers", descriptor.TargetNamespace);
+            Assert.That(descriptor.TargetNamespace, Is.EqualTo("Spark.Web.Mvc.Tests.Controllers"));
         }
 
         [Test]
@@ -425,8 +437,11 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
             var content = output.ToString();
 
-            Assert.That(content.Contains("<p><a href=\"/Home/Sort\">Click me</a></p>"));
-            Assert.That(content.Contains("<p>foo&gt;bar</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p><a href=\"/Home/Sort\">Click me</a></p>"));
+                Assert.That(content, Does.Contain("<p>foo&gt;bar</p>"));
+            });
         }
 
         [Test]
@@ -437,9 +452,12 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
             var content = output.ToString();
 
-            Assert.That(content.Contains("<p>Foo</p>"));
-            Assert.That(content.Contains("<p>Bar</p>"));
-            Assert.That(content.Contains("<p>Hello</p>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<p>Foo</p>"));
+                Assert.That(content, Does.Contain("<p>Bar</p>"));
+                Assert.That(content, Does.Contain("<p>Hello</p>"));
+            });
         }
 
         [Test]
@@ -450,11 +468,14 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
             var content = output.ToString();
 
-            Assert.That(content.Contains("<li>Partial where x=\"zero\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"one\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"two\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"three\"</li>"));
-            Assert.That(content.Contains("<li>Partial where x=\"four\"</li>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<li>Partial where x=\"zero\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"one\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"two\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"three\"</li>"));
+                Assert.That(content, Does.Contain("<li>Partial where x=\"four\"</li>"));
+            });
         }
 
         [Test]
@@ -465,8 +486,11 @@ namespace Spark.Web.Mvc.Tests
             //mocks.VerifyAll();
             var content = output.ToString();
 
-            Assert.That(content.Contains("<li class=\"odd\">one</li>"));
-            Assert.That(content.Contains("<li class=\"even\">two</li>"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content, Does.Contain("<li class=\"odd\">one</li>"));
+                Assert.That(content, Does.Contain("<li class=\"even\">two</li>"));
+            });
         }
 
         [Test]
@@ -477,7 +501,7 @@ namespace Spark.Web.Mvc.Tests
 
             var content = output.ToString();
 
-            Assert.That(content.Contains("<p>Hello</p>"));
+            Assert.That(content, Does.Contain("<p>Hello</p>"));
         }
 
         [Test]
@@ -487,13 +511,16 @@ namespace Spark.Web.Mvc.Tests
 
             var existing = factory.Engine.ViewFolder;
 
-            Assert.AreNotSame(existing, replacement);
-            Assert.AreSame(existing, factory.Engine.ViewFolder);
+            Assert.Multiple(() =>
+            {
+                Assert.That(replacement, Is.Not.SameAs(existing));
+                Assert.That(factory.Engine.ViewFolder, Is.SameAs(existing));
+            });
 
             factory.Engine.ViewFolder = replacement;
 
-            Assert.AreSame(replacement, factory.Engine.ViewFolder);
-            Assert.AreNotSame(existing, factory.Engine.ViewFolder);
+            Assert.That(factory.Engine.ViewFolder, Is.SameAs(replacement));
+            Assert.That(factory.Engine.ViewFolder, Is.Not.SameAs(existing));
         }
 
         [Test]
@@ -510,14 +537,17 @@ namespace Spark.Web.Mvc.Tests
             var cacheService = sp.GetService<ICacheService>();
             var viewActivatorFactory = sp.GetService<IViewActivatorFactory>();
 
-            Assert.AreSame(settings, viewFactory.Settings);
-            Assert.AreSame(settings, viewEngine.Settings);
-            Assert.AreSame(viewEngine, viewFactory.Engine);
-            Assert.AreSame(viewFolder, viewEngine.ViewFolder);
-            Assert.AreSame(viewFolder, viewFactory.Engine.ViewFolder);
-            Assert.AreSame(descriptorBuilder, viewFactory.DescriptorBuilder);
-            Assert.AreSame(cacheService, viewFactory.CacheService);
-            Assert.AreSame(viewActivatorFactory, viewFactory.ViewActivatorFactory);
+            Assert.Multiple(() =>
+            {
+                Assert.That(viewFactory.Settings, Is.SameAs(settings));
+                Assert.That(viewEngine.Settings, Is.SameAs(settings));
+                Assert.That(viewFactory.Engine, Is.SameAs(viewEngine));
+                Assert.That(viewEngine.ViewFolder, Is.SameAs(viewFolder));
+            });
+            Assert.That(viewFactory.Engine.ViewFolder, Is.SameAs(viewFolder));
+            Assert.That(viewFactory.DescriptorBuilder, Is.SameAs(descriptorBuilder));
+            Assert.That(viewFactory.CacheService, Is.SameAs(cacheService));
+            Assert.That(viewFactory.ViewActivatorFactory, Is.SameAs(viewActivatorFactory));
         }
 
         [Test]
@@ -528,7 +558,7 @@ namespace Spark.Web.Mvc.Tests
 
             var content = output.ToString();
 
-            Assert.That(content.Contains("<p>Hello</p>"));
+            Assert.That(content, Does.Contain("<p>Hello</p>"));
         }
 
         [Test]
@@ -539,7 +569,7 @@ namespace Spark.Web.Mvc.Tests
 
             var content = output.ToString();
 
-            Assert.That(content.Contains("<p>42 Hello</p>"));
+            Assert.That(content, Does.Contain("<p>42 Hello</p>"));
         }
 
         public class ScopedCulture : IDisposable
@@ -567,8 +597,11 @@ namespace Spark.Web.Mvc.Tests
 
                 var content = output.ToString();
 
-                Assert.That(content.Contains("<p>134,567.89</p>"));
-                Assert.That(content.Contains("<p>1971/10/14</p>"));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(content, Does.Contain("<p>134,567.89</p>"));
+                    Assert.That(content, Does.Contain("<p>1971/10/14</p>"));
+                });
             }
         }
 
@@ -593,32 +626,35 @@ namespace Spark.Web.Mvc.Tests
                             "</ul>",
                             "alphabetagammadelta");
 
-            Assert.IsFalse(content.Contains("foo2"));
-            Assert.IsFalse(content.Contains("bar4"));
-            Assert.IsFalse(content.Contains("quux7"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(content.Contains("foo2"), Is.False);
+                Assert.That(content.Contains("bar4"), Is.False);
+                Assert.That(content.Contains("quux7"), Is.False);
+            });
         }
 
         [Test]
         public void CanLocateViewInArea()
         {
             controllerContext.RouteData.Values.Add("area", "admin");
-            
+
             var result = factory.FindView(controllerContext, "index", null);
 
             var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
             //mocks.VerifyAll();
 
-            Assert.AreEqual("<p>default view admin area</p>", output.ToString().Trim());
+            Assert.That(output.ToString().Trim(), Is.EqualTo("<p>default view admin area</p>"));
         }
 
         [Test]
         public void CanLocateViewInAreaWithLayout()
         {
             controllerContext.RouteData.Values.Add("area", "admin");
-            
+
             var result = factory.FindView(controllerContext, "index", "layout");
-            
+
             var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
             //mocks.VerifyAll();
@@ -634,9 +670,9 @@ namespace Spark.Web.Mvc.Tests
         public void CanLocateViewInAreaWithLayoutInArea()
         {
             controllerContext.RouteData.Values.Add("area", "admin");
-            
+
             var result = factory.FindView(controllerContext, "index", "speciallayout");
-            
+
             var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
             //mocks.VerifyAll();
@@ -652,14 +688,14 @@ namespace Spark.Web.Mvc.Tests
         public void CanLocatePartialViewInArea()
         {
             controllerContext.RouteData.Values.Add("area", "admin");
-            
+
             var result = factory.FindPartialView(controllerContext, "index");
-            
+
             var viewContext = new ViewContext(controllerContext, result.View, new ViewDataDictionary(), new TempDataDictionary(), output);
             viewContext.View.Render(viewContext, output);
             //mocks.VerifyAll();
 
-            Assert.AreEqual("<p>default view admin area</p>", output.ToString().Trim());
+            Assert.That(output.ToString().Trim(), Is.EqualTo("<p>default view admin area</p>"));
         }
 
         [Test, Ignore("Pending task #28")]
@@ -720,14 +756,14 @@ namespace Spark.Web.Mvc.Tests
                 "</form",
                 "[3]");
         }
-        
+
         [Test]
         public void AutoencodeIgnoresHtmlHelpers()
         {
-             FindViewAndRender("AutoencodeIgnoresHtmlHelpers");
+            FindViewAndRender("AutoencodeIgnoresHtmlHelpers");
 
             var content = output.ToString();
-            
+
             ContainsInOrder(content,
                             "[1:&lt;p&gt;foo&lt;/p&gt;]",
                             "[2:<p>foo</p>]",
@@ -741,7 +777,7 @@ namespace Spark.Web.Mvc.Tests
             FindViewAndRender("AutoencodeIgnoresMacros");
 
             var content = output.ToString();
-            
+
             ContainsInOrder(
                 content,
                 "[1:<p>foo</p>]",

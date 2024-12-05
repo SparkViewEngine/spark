@@ -73,15 +73,15 @@ namespace Spark.Compiler
             var contents = RenderView(new SparkViewDescriptor()
                                           .AddTemplate(Path.Combine("Home", "Index.spark")));
 
-            Assert.AreEqual("<p>Hello world</p>", contents);
-            Assert.AreEqual(1, _entry.SourceMappings.Count);
-            Assert.AreEqual("\"world\"", _entry.SourceMappings[0].Source.Value);
-            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
-            Assert.AreEqual(11, _entry.SourceMappings[0].Source.Begin.Offset);
+            Assert.That(contents, Is.EqualTo("<p>Hello world</p>"));
+            Assert.That(_entry.SourceMappings.Count, Is.EqualTo(1));
+            Assert.That(_entry.SourceMappings[0].Source.Value, Is.EqualTo("\"world\""));
+            Assert.That(_entry.SourceMappings[0].Source.Begin.SourceContext.FileName, Is.EqualTo(Path.Combine("Home", "Index.spark")));
+            Assert.That(_entry.SourceMappings[0].Source.Begin.Offset, Is.EqualTo(11));
 
             var resultOffset = _entry.SourceMappings[0].OutputBegin;
             var resultLength = _entry.SourceMappings[0].OutputEnd - _entry.SourceMappings[0].OutputBegin;
-            Assert.AreEqual("\"world\"", _entry.SourceCode.Substring(resultOffset, resultLength));
+            Assert.That(_entry.SourceCode.Substring(resultOffset, resultLength), Is.EqualTo("\"world\""));
         }
 
         [Test]
@@ -92,15 +92,15 @@ namespace Spark.Compiler
             var contents = RenderView(new SparkViewDescriptor()
                                           .AddTemplate(Path.Combine("Home", "Index.spark")));
 
-            Assert.AreEqual("<p>5</p>", contents);
-            Assert.AreEqual(2, _entry.SourceMappings.Count);
-            Assert.AreEqual("var x = 5;", _entry.SourceMappings[0].Source.Value);
-            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
-            Assert.AreEqual(5, _entry.SourceMappings[0].Source.Begin.Offset);
+            Assert.That(contents, Is.EqualTo("<p>5</p>"));
+            Assert.That(_entry.SourceMappings.Count, Is.EqualTo(2));
+            Assert.That(_entry.SourceMappings[0].Source.Value, Is.EqualTo("var x = 5;"));
+            Assert.That(_entry.SourceMappings[0].Source.Begin.SourceContext.FileName, Is.EqualTo(Path.Combine("Home", "Index.spark")));
+            Assert.That(_entry.SourceMappings[0].Source.Begin.Offset, Is.EqualTo(5));
 
             var resultOffset = _entry.SourceMappings[0].OutputBegin;
             var resultLength = _entry.SourceMappings[0].OutputEnd - _entry.SourceMappings[0].OutputBegin;
-            Assert.AreEqual("var x = 5;", _entry.SourceCode.Substring(resultOffset, resultLength));
+            Assert.That(_entry.SourceCode.Substring(resultOffset, resultLength), Is.EqualTo("var x = 5;"));
         }
 
 
@@ -112,15 +112,15 @@ namespace Spark.Compiler
             var contents = RenderView(new SparkViewDescriptor()
                                           .AddTemplate(Path.Combine("Home", "Index.spark")));
 
-            Assert.AreEqual("<p class='Hello'>World</p>", contents);
-            Assert.AreEqual(1, _entry.SourceMappings.Count);
-            Assert.AreEqual("\"Hello\"", _entry.SourceMappings[0].Source.Value);
-            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
-            Assert.AreEqual(12, _entry.SourceMappings[0].Source.Begin.Offset);
+            Assert.That(contents, Is.EqualTo("<p class='Hello'>World</p>"));
+            Assert.That(_entry.SourceMappings.Count, Is.EqualTo(1));
+            Assert.That(_entry.SourceMappings[0].Source.Value, Is.EqualTo("\"Hello\""));
+            Assert.That(_entry.SourceMappings[0].Source.Begin.SourceContext.FileName, Is.EqualTo(Path.Combine("Home", "Index.spark")));
+            Assert.That(_entry.SourceMappings[0].Source.Begin.Offset, Is.EqualTo(12));
 
             var resultOffset = _entry.SourceMappings[0].OutputBegin;
             var resultLength = _entry.SourceMappings[0].OutputEnd - _entry.SourceMappings[0].OutputBegin;
-            Assert.AreEqual("\"Hello\"", _entry.SourceCode.Substring(resultOffset, resultLength));
+            Assert.That(_entry.SourceCode.Substring(resultOffset, resultLength), Is.EqualTo("\"Hello\""));
         }
 
         [Test]
@@ -131,27 +131,28 @@ namespace Spark.Compiler
             var contents = RenderView(new SparkViewDescriptor()
                                           .AddTemplate(Path.Combine("Home", "Index.spark")));
 
-            Assert.AreEqual("<p class=\"Hello5\">World</p>", contents);
-            Assert.AreEqual(2, _entry.SourceMappings.Count);
-            Assert.AreEqual("Hello", _entry.SourceMappings[0].Source.Value);
-            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[0].Source.Begin.SourceContext.FileName);
-            Assert.AreEqual(13, _entry.SourceMappings[0].Source.Begin.Offset);
-            
-            Assert.AreEqual(" + 5", _entry.SourceMappings[1].Source.Value);
-            Assert.AreEqual(Path.Combine("Home", "Index.spark"), _entry.SourceMappings[1].Source.Begin.SourceContext.FileName);
-            Assert.AreEqual(19, _entry.SourceMappings[1].Source.Begin.Offset);
+            Assert.That(contents, Is.EqualTo("<p class=\"Hello5\">World</p>"));
+            Assert.That(_entry.SourceMappings.Count, Is.EqualTo(2));
+            Assert.That(_entry.SourceMappings[0].Source.Value, Is.EqualTo("Hello"));
+            Assert.That(_entry.SourceMappings[0].Source.Begin.SourceContext.FileName, Is.EqualTo(Path.Combine("Home", "Index.spark")));
+            Assert.That(_entry.SourceMappings[0].Source.Begin.Offset, Is.EqualTo(13));
+
+            Assert.That(_entry.SourceMappings[1].Source.Value, Is.EqualTo(" + 5"));
+            Assert.That(_entry.SourceMappings[1].Source.Begin.SourceContext.FileName, Is.EqualTo(Path.Combine("Home", "Index.spark")));
+            Assert.That(_entry.SourceMappings[1].Source.Begin.Offset, Is.EqualTo(19));
 
             var resultOffset = _entry.SourceMappings[0].OutputBegin;
             var resultLength = _entry.SourceMappings[0].OutputEnd - _entry.SourceMappings[0].OutputBegin;
-            Assert.AreEqual("Hello", _entry.SourceCode.Substring(resultOffset, resultLength));
+            Assert.That(_entry.SourceCode.Substring(resultOffset, resultLength), Is.EqualTo("Hello"));
 
             resultOffset = _entry.SourceMappings[1].OutputBegin;
             resultLength = _entry.SourceMappings[1].OutputEnd - _entry.SourceMappings[1].OutputBegin;
-            Assert.AreEqual(" + 5", _entry.SourceCode.Substring(resultOffset, resultLength));
+            Assert.That(_entry.SourceCode.Substring(resultOffset, resultLength), Is.EqualTo(" + 5"));
         }
 
         [Test]
-        public void WarningsShouldNotCauseCompilationToFail() {
+        public void WarningsShouldNotCauseCompilationToFail()
+        {
             _viewFolder.Add(Path.Combine("Home", "Index.spark"), @"
 <p>
 ## warning I am a warning

@@ -54,8 +54,8 @@ namespace Spark
 
             var contents = view.RenderView();
 
-            Assert.AreEqual("<p>hello world</p>", contents);
-            Assert.IsFalse(contents.Contains("import"));
+            Assert.That(contents, Is.EqualTo("<p>hello world</p>"));
+            Assert.That(contents, Does.Not.Contain("import"));
         }
 
         [Test]
@@ -68,11 +68,11 @@ namespace Spark
                     { Path.Combine("shared", "extra.spark"), "this is imported <global name='\"world\"'/>" }
                 },
                 Path.Combine("importing", "index.spark"));
-            
+
             var contents = view.RenderView();
-            
-            Assert.AreEqual("<p>hello world</p>", contents);
-            Assert.IsFalse(contents.Contains("import"));
+
+            Assert.That(contents, Is.EqualTo("<p>hello world</p>"));
+            Assert.That(contents, Does.Not.Contain("import"));
         }
 
         [Test]
@@ -92,8 +92,8 @@ namespace Spark
 
             var contents = view.RenderView();
 
-            Assert.AreEqual("<p>hello world</p>", contents);
-            Assert.IsFalse(contents.Contains("import"));
+            Assert.That(contents, Is.EqualTo("<p>hello world</p>"));
+            Assert.That(contents, Does.Not.Contain("import"));
         }
 
         [Test]
@@ -110,8 +110,8 @@ namespace Spark
 
             var contents = view.RenderView();
 
-            Assert.AreEqual("<p>hello world</p>", contents);
-            Assert.IsFalse(contents.Contains("import"));
+            Assert.That(contents, Is.EqualTo("<p>hello world</p>"));
+            Assert.That(contents, Does.Not.Contain("import"));
         }
 
         [Test]
@@ -124,10 +124,10 @@ namespace Spark
                     { Path.Combine("including", "stuff.spark"), "hello world" }
                 },
                 Path.Combine("including", "index.spark"));
-            
+
             var contents = view.RenderView();
-            
-            Assert.AreEqual("<p>hello world</p>", contents);
+
+            Assert.That(contents, Is.EqualTo("<p>hello world</p>"));
         }
 
         [Test]
@@ -163,10 +163,10 @@ namespace Spark
                     }
                 },
                 Path.Combine("including", "index.spark"));
-            
+
             var contents = view.RenderView();
 
-            Assert.AreEqual("<p></p>", contents);
+            Assert.That(contents, Is.EqualTo("<p></p>"));
         }
 
         [Test]
@@ -184,7 +184,7 @@ namespace Spark
 
             var contents = view.RenderView();
 
-            Assert.AreEqual("<p>hello world</p>", contents);
+            Assert.That(contents, Is.EqualTo("<p>hello world</p>"));
         }
 
         [Test]
@@ -200,10 +200,10 @@ namespace Spark
                     { Path.Combine("including", "stuff.spark"), "another file" }
                 },
                 Path.Combine("including", "index.spark"));
-            
+
             var contents = view.RenderView();
-            
-            Assert.AreEqual("<p>another file</p>", contents);
+
+            Assert.That(contents, Is.EqualTo("<p>another file</p>"));
         }
 
         [Test]
@@ -219,10 +219,10 @@ namespace Spark
                     { Path.Combine("including", "other.spark"), "other file" }
                 },
                 Path.Combine("including", "index.spark"));
-            
+
             var contents = view.RenderView();
-            
-            Assert.AreEqual("<p>other file</p>", contents);
+
+            Assert.That(contents, Is.EqualTo("<p>other file</p>"));
         }
 
         [Test]
@@ -235,10 +235,10 @@ namespace Spark
                     { Path.Combine("lib", "other.spark"), "other file" }
                 },
                 Path.Combine("including", "index.spark"));
-            
+
             var contents = view.RenderView();
 
-            Assert.AreEqual("<p>other file</p>", contents);
+            Assert.That(contents, Is.EqualTo("<p>other file</p>"));
         }
         [Test]
         public void IncludeInsideAnInclude()
@@ -252,7 +252,7 @@ namespace Spark
                 },
                 Path.Combine("including", "index.spark"));
             var contents = view.RenderView();
-            Assert.AreEqual("<p>other third file file</p>", contents);
+            Assert.That(contents, Is.EqualTo("<p>other third file file</p>"));
         }
 
         [Test]
@@ -263,10 +263,10 @@ namespace Spark
                                           {Path.Combine("including", "index.spark"), "<p xmlns:x='http://www.w3.org/2001/XInclude'><include/><x:include href='../lib/other.spark'/></p>"},
                                           {Path.Combine("lib", "other.spark"), "other file"}
                                       }, Path.Combine("including", "index.spark"));
-            
+
             var contents = view.RenderView();
-            
-            Assert.AreEqual("<p xmlns:x='http://www.w3.org/2001/XInclude\'><include></include>other file</p>", contents);
+
+            Assert.That(contents, Is.EqualTo("<p xmlns:x='http://www.w3.org/2001/XInclude\'><include></include>other file</p>"));
         }
 
         [Test]
@@ -277,10 +277,10 @@ namespace Spark
                                           {Path.Combine("including", "index.spark"), "<p><include href='item.spark' parse='text'/></p>"},
                                           {Path.Combine("including", "item.spark"), "<li>at&t</li>"}
                                       }, Path.Combine("including", "index.spark"));
-            
+
             var contents = view.RenderView();
-            
-            Assert.AreEqual("<p>&lt;li&gt;at&amp;t&lt;/li&gt;</p>", contents);
+
+            Assert.That(contents, Is.EqualTo("<p>&lt;li&gt;at&amp;t&lt;/li&gt;</p>"));
         }
 
         [Test]
@@ -291,10 +291,10 @@ namespace Spark
                                           {Path.Combine("including", "index.spark"), "<p><include href='jquery.templ.htm' parse='html'/></p>"},
                                           {Path.Combine("including", "jquery.templ.htm"), "<h4>${Title}</h4>"}
                                       }, Path.Combine("including", "index.spark"));
-            
+
             var contents = view.RenderView();
-            
-            Assert.AreEqual("<p><h4>${Title}</h4></p>", contents);
+
+            Assert.That(contents, Is.EqualTo("<p><h4>${Title}</h4></p>"));
         }
     }
 }

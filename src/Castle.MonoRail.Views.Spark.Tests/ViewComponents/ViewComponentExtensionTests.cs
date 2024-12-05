@@ -26,14 +26,14 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
     [TestFixture]
     public class ViewComponentExtensionTests : BaseViewComponentTests
     {
-        
+
 
         [Test]
         public void DiggPaginationComponent()
         {
             var writer = new StringWriter();
             IList<string> dataSource = new List<string>();
-            for(int i = 100; i != 200; i++)
+            for (int i = 100; i != 200; i++)
                 dataSource.Add(i.ToString());
 
             controllerContext.PropertyBag["items"] = PaginationHelper.CreatePagination(dataSource, 10, 3);
@@ -51,69 +51,72 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             foreach (string value in values)
             {
                 int nextIndex = content.IndexOf(value, index);
-                Assert.GreaterOrEqual(nextIndex, 0, string.Format("Looking for {0}", value));
+                Assert.That(nextIndex, Is.GreaterThanOrEqualTo(0), () => $"Looking for {value}");
                 index = nextIndex + value.Length;
             }
         }
 
 
-		[ViewComponentDetails("Simple")]
-		public class SimpleViewComponent : ViewComponent
-		{
-			[ViewComponentParam]
-			public string Caption { get; set; }
+        [ViewComponentDetails("Simple")]
+        public class SimpleViewComponent : ViewComponent
+        {
+            [ViewComponentParam]
+            public string Caption { get; set; }
 
-			public override void Render()
-			{
-				RenderText("<p>" + Caption + "</p>");
-			}
-		}
+            public override void Render()
+            {
+                RenderText("<p>" + Caption + "</p>");
+            }
+        }
 
-		[Test]
-		public void ComponentsSupportEachAttribute()
-		{
-			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
+        [Test]
+        public void ComponentsSupportEachAttribute()
+        {
+            viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
 
-			var writer = new StringWriter();
-		    factory.Process(string.Format("Home{0}ComponentsSupportEachAttribute", Path.DirectorySeparatorChar), writer,
-		                    engineContext, controller, controllerContext);
+            var writer = new StringWriter();
+            factory.Process(string.Format("Home{0}ComponentsSupportEachAttribute", Path.DirectorySeparatorChar), writer,
+                            engineContext, controller, controllerContext);
 
-			ContainsInOrder(writer.ToString(),
-							"<p>alpha</p>",
-							"<p>beta</p>",
-							"<p>gamma</p>");
-		}
+            ContainsInOrder(writer.ToString(),
+                            "<p>alpha</p>",
+                            "<p>beta</p>",
+                            "<p>gamma</p>");
+        }
 
-    	[Test]
-		public void ComponentsSupportIfAttribute()
-		{
-			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
+        [Test]
+        public void ComponentsSupportIfAttribute()
+        {
+            viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
 
-			var writer = new StringWriter();
-    	    factory.Process(string.Format("Home{0}ComponentsSupportIfAttribute", Path.DirectorySeparatorChar), writer,
-    	                    engineContext, controller, controllerContext);
+            var writer = new StringWriter();
+            factory.Process(string.Format("Home{0}ComponentsSupportIfAttribute", Path.DirectorySeparatorChar), writer,
+                            engineContext, controller, controllerContext);
 
-			ContainsInOrder(writer.ToString(),
-							"<p>foo1</p>",
-							"<p>alpha</p>",
-							"<p>gamma</p>");
-			Assert.IsFalse(writer.ToString().Contains("foo2"));
-			Assert.IsFalse(writer.ToString().Contains("beta"));
-		}
+            ContainsInOrder(writer.ToString(),
+                            "<p>foo1</p>",
+                            "<p>alpha</p>",
+                            "<p>gamma</p>");
+            Assert.Multiple(() =>
+            {
+                Assert.That(writer.ToString().Contains("foo2"), Is.False);
+                Assert.That(writer.ToString().Contains("beta"), Is.False);
+            });
+        }
 
-		[Test]
-		public void ComponentsSupportOnceAttribute()
-		{
-			viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
+        [Test]
+        public void ComponentsSupportOnceAttribute()
+        {
+            viewComponentFactory.Registry.AddViewComponent("Simple", typeof(SimpleViewComponent));
 
-			var writer = new StringWriter();
-		    factory.Process(string.Format("Home{0}ComponentsSupportOnceAttribute", Path.DirectorySeparatorChar), writer,
-		                    engineContext, controller, controllerContext);
+            var writer = new StringWriter();
+            factory.Process(string.Format("Home{0}ComponentsSupportOnceAttribute", Path.DirectorySeparatorChar), writer,
+                            engineContext, controller, controllerContext);
 
-			ContainsInOrder(writer.ToString(),
-							"<p>foo1</p>",
-							"<p>foo2</p>");
-			Assert.IsFalse(writer.ToString().Contains("foo3"));
-		}
-	}
+            ContainsInOrder(writer.ToString(),
+                            "<p>foo1</p>",
+                            "<p>foo2</p>");
+            Assert.That(writer.ToString().Contains("foo3"), Is.False);
+        }
+    }
 }

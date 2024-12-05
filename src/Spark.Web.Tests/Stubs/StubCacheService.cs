@@ -14,8 +14,7 @@ namespace Spark.Tests.Stubs
 
         public object Get(string identifier)
         {
-            Entry item;
-            return _cache.TryGetValue(identifier, out item) && IsValid(item) ? item.Value : null;
+            return _cache.TryGetValue(identifier, out Entry item) && IsValid(item) ? item.Value : null;
         }
 
         private bool IsValid(Entry item)
@@ -26,7 +25,7 @@ namespace Spark.Tests.Stubs
 
         public void Store(string identifier, CacheExpires expires, ICacheSignal signal, object item)
         {
-            _cache[identifier] = new Entry {Value = item, UtcExpires = ToAbsolute(expires)};
+            _cache[identifier] = new Entry { Value = item, UtcExpires = ToAbsolute(expires) };
 
             if (signal != null)
             {

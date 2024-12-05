@@ -23,10 +23,13 @@ namespace Castle.MonoRail.Views.Spark.Tests
         [Test]
         public void AnonymousObjectPropertiesInDictionary()
         {
-            IDictionary<string, object> args = new ModelDictionary(new {name = "foo", bar = "quux"});
-            Assert.AreEqual(2, args.Count);
-            Assert.AreEqual("foo", args["name"]);
-            Assert.AreEqual("quux", args["bar"]);
+            IDictionary<string, object> args = new ModelDictionary(new { name = "foo", bar = "quux" });
+            Assert.That(args.Count, Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(args["name"], Is.EqualTo("foo"));
+                Assert.That(args["bar"], Is.EqualTo("quux"));
+            });
         }
     }
 }

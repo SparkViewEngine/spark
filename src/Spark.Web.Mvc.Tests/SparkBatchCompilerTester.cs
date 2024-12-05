@@ -31,16 +31,13 @@ namespace Spark.Web.Mvc.Tests
     {
         #region Setup/Teardown
 
-        public static IServiceProvider SetupServiceProvider(Action<ServiceCollection> serviceOverrides = null)
+        private static IServiceProvider SetupServiceProvider(Action<ServiceCollection> serviceOverrides = null)
         {
             var services = new ServiceCollection();
 
             services.AddSpark(new SparkSettings().SetBaseClassTypeName(typeof(SparkView).FullName));
 
-            if (serviceOverrides != null)
-            {
-                serviceOverrides.Invoke(services);
-            }
+            serviceOverrides?.Invoke(services);
 
             services.AddSingleton<SparkPrecompiler>();
 
@@ -75,8 +72,8 @@ namespace Spark.Web.Mvc.Tests
 
             var assembly = this._precompiler.Precompile(batch);
 
-            Assert.IsNotNull(assembly);
-            Assert.AreEqual(3, assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)));
+            Assert.That(assembly, Is.Not.Null);
+            Assert.That(assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)), Is.EqualTo(3));
         }
 
         [Test]
@@ -139,11 +136,14 @@ namespace Spark.Web.Mvc.Tests
 
             var descriptors = this._precompiler.CreateDescriptors(batch);
 
-            Assert.AreEqual(2, descriptors.Count);
-            Assert.AreEqual(1, descriptors[0].Templates.Count);
-            Assert.AreEqual(1, descriptors[1].Templates.Count);
-            Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar))));
-            Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar))));
+            Assert.That(descriptors.Count, Is.EqualTo(2));
+            Assert.That(descriptors[0].Templates.Count, Is.EqualTo(1));
+            Assert.That(descriptors[1].Templates.Count, Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar))));
+                Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar))));
+            });
         }
 
         [Test]
@@ -155,11 +155,14 @@ namespace Spark.Web.Mvc.Tests
 
             var descriptors = this._precompiler.CreateDescriptors(batch);
 
-            Assert.AreEqual(2, descriptors.Count);
-            Assert.AreEqual(1, descriptors[0].Templates.Count);
-            Assert.AreEqual(1, descriptors[1].Templates.Count);
-            Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}_Widget.spark", Path.DirectorySeparatorChar))));
-            Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar))));
+            Assert.That(descriptors.Count, Is.EqualTo(2));
+            Assert.That(descriptors[0].Templates.Count, Is.EqualTo(1));
+            Assert.That(descriptors[1].Templates.Count, Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}_Widget.spark", Path.DirectorySeparatorChar))));
+                Assert.That(descriptors.Any(d => d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar))));
+            });
         }
 
         [Test]
@@ -176,8 +179,8 @@ namespace Spark.Web.Mvc.Tests
 
             var assembly = this._precompiler.Precompile(batch);
 
-            Assert.IsNotNull(assembly);
-            Assert.AreEqual(4, assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)));
+            Assert.That(assembly, Is.Not.Null);
+            Assert.That(assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)), Is.EqualTo(4));
         }
 
         [Test]
@@ -190,21 +193,24 @@ namespace Spark.Web.Mvc.Tests
                 .For<StubController>().Layout("ajax").Include("_*");
 
             var descriptors = this._precompiler.CreateDescriptors(batch);
-            Assert.AreEqual(3, descriptors.Count);
-            Assert.That(
-                descriptors.Any(
-                    d => d.Templates.Contains(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}layout.spark", Path.DirectorySeparatorChar))));
-            Assert.That(
-                descriptors.Any(
-                    d => d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}layout.spark", Path.DirectorySeparatorChar))));
-            Assert.That(
-                descriptors.Any(
-                    d => d.Templates.Contains(string.Format("Stub{0}_Widget.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}ajax.spark", Path.DirectorySeparatorChar))));
+            Assert.That(descriptors.Count, Is.EqualTo(3));
+            Assert.Multiple(() =>
+            {
+                Assert.That(
+                            descriptors.Any(
+                                d => d.Templates.Contains(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}layout.spark", Path.DirectorySeparatorChar))));
+                Assert.That(
+                    descriptors.Any(
+                        d => d.Templates.Contains(string.Format("Stub{0}List.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}layout.spark", Path.DirectorySeparatorChar))));
+                Assert.That(
+                    descriptors.Any(
+                        d => d.Templates.Contains(string.Format("Stub{0}_Widget.spark", Path.DirectorySeparatorChar)) && d.Templates.Contains(string.Format("Shared{0}ajax.spark", Path.DirectorySeparatorChar))));
+            });
 
             var assembly = this._precompiler.Precompile(batch);
 
-            Assert.IsNotNull(assembly);
-            Assert.AreEqual(3, assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)));
+            Assert.That(assembly, Is.Not.Null);
+            Assert.That(assembly.GetTypes().Count(x => x.BaseType == typeof(SparkView)), Is.EqualTo(3));
         }
 
         [Test]
@@ -230,10 +236,10 @@ namespace Spark.Web.Mvc.Tests
 
             var descriptors = this._precompiler.CreateDescriptors(batch);
 
-            Assert.AreEqual(1, descriptors.Count);
-            Assert.AreEqual(2, descriptors[0].Templates.Count);
-            Assert.AreEqual(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar), descriptors[0].Templates[0]);
-            Assert.AreEqual(string.Format("Layouts{0}Stub.spark", Path.DirectorySeparatorChar), descriptors[0].Templates[1]);
+            Assert.That(descriptors.Count, Is.EqualTo(1));
+            Assert.That(descriptors[0].Templates.Count, Is.EqualTo(2));
+            Assert.That(descriptors[0].Templates[0], Is.EqualTo(string.Format("Stub{0}Index.spark", Path.DirectorySeparatorChar)));
+            Assert.That(descriptors[0].Templates[1], Is.EqualTo(string.Format("Layouts{0}Stub.spark", Path.DirectorySeparatorChar)));
         }
     }
 
@@ -259,7 +265,7 @@ namespace Spark.Web.Mvc.Tests
             var codeBaseUriString = assembly.CodeBase;
             var uriBuilder = new UriBuilder(codeBaseUriString);
             var codeBasePath = Uri.UnescapeDataString(uriBuilder.Path);
-            
+
             return Path.GetDirectoryName(codeBasePath);
         }
     }

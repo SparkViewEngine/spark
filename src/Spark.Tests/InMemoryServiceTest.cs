@@ -19,7 +19,7 @@ namespace Spark.Tests
 
             var retrieved = service.Get("identifier");
 
-            Assert.AreSame(item, retrieved);
+            Assert.That(retrieved, Is.SameAs(item));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Spark.Tests
 
             var retrieved = service.Get("identifier");
 
-            Assert.IsNull(retrieved);
+            Assert.That(retrieved, Is.Null);
         }
 
         [Test]
@@ -53,14 +53,14 @@ namespace Spark.Tests
             {
                 Thread.Sleep(50);
 
-                retrieved = service.Get("identifier");
+                _ = service.Get("identifier");
             }
 
             retrieved = service.Get("identifier");
 
-            Assert.IsNotNull(retrieved);
+            Assert.That(retrieved, Is.Not.Null);
 
-            Assert.AreSame(item, retrieved);
+            Assert.That(retrieved, Is.SameAs(item));
         }
 
         [Test]
@@ -76,13 +76,13 @@ namespace Spark.Tests
 
             var retrieved = service.Get("identifier");
 
-            Assert.AreSame(item, retrieved);
+            Assert.That(retrieved, Is.SameAs(item));
 
             signal.FireChanged();
 
             retrieved = service.Get("identifier");
 
-            Assert.IsNull(retrieved);
+            Assert.That(retrieved, Is.Null);
         }
     }
 }

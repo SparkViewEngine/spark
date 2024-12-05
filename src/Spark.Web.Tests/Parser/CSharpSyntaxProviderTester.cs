@@ -40,7 +40,7 @@ namespace Spark.Parser
 
             var result = this._syntax.GetChunks(context, Path.Combine("Home", "childview.spark"));
 
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Spark.Parser
             view.ViewData["hello"] = "world";
             var code = view.RenderView();
 
-            Assert.IsNotNull(code);
+            Assert.That(code, Is.Not.Null);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Spark.Parser
             view.ViewData["hello"] = "world";
             var code = view.RenderView();
 
-            Assert.IsNotNull(code);
+            Assert.That(code, Is.Not.Null);
         }
     }
 }

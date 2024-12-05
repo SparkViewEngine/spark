@@ -20,7 +20,7 @@ namespace Spark.Tests.Precompiled
     [SparkView(
         TargetNamespace = "Spark.Tests.Precompiled",
         Templates = new[] { "Hello\\Sailor.spark", "Shared\\Default.spark" })]
-    public class View3 
+    public class View3
     {
         public void RenderView(TextWriter writer)
         {

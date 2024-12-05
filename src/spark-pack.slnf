@@ -2,6 +2,7 @@
   "solution": {
     "path": "Spark.sln",
     "projects": [
+      "Spark.AspNetCore.Mvc\\Spark.AspNetCore.Mvc.csproj",
       "Spark.Web.Mvc\\Spark.Web.Mvc.csproj",
       "Spark.Web\\Spark.Web.csproj",
       "Spark\\Spark.csproj"

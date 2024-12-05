@@ -24,19 +24,22 @@ using Spark.Tests.Stubs;
 namespace Spark.FileSystem
 {
     [TestFixture]
-    public class InMemoryViewFolderTester 
+    public class InMemoryViewFolderTester
     {
         [Test]
         public void HasViewCaseInsensitive()
         {
             var viewFolder = new InMemoryViewFolder();
 
-            Assert.IsFalse(viewFolder.HasView(Path.Combine("Home", "Index.spark")));
+            Assert.That(viewFolder.HasView(Path.Combine("Home", "Index.spark")), Is.False);
             viewFolder.Add(Path.Combine("Home", "Index.spark"), "stuff");
-            Assert.IsTrue(viewFolder.HasView(Path.Combine("Home", "Index.spark")));
-            Assert.IsFalse(viewFolder.HasView(Path.Combine("Home", "Index")));
-            Assert.IsTrue(viewFolder.HasView(Path.Combine("Home", "index.spark")));
-            Assert.IsTrue(viewFolder.HasView(Path.Combine("home", "INDEX.SPARK")));
+            Assert.Multiple(() =>
+            {
+                Assert.That(viewFolder.HasView(Path.Combine("Home", "Index.spark")), Is.True);
+                Assert.That(viewFolder.HasView(Path.Combine("Home", "Index")), Is.False);
+                Assert.That(viewFolder.HasView(Path.Combine("Home", "index.spark")), Is.True);
+                Assert.That(viewFolder.HasView(Path.Combine("home", "INDEX.SPARK")), Is.True);
+            });
         }
 
         [Test]
@@ -57,10 +60,10 @@ namespace Spark.FileSystem
                 .Select(Path.GetFileNameWithoutExtension)
                 .ToArray();
 
-            Assert.AreEqual(3, baseNames.Count());
-            Assert.Contains("Alpha", baseNames);
-            Assert.Contains("Beta", baseNames);
-            Assert.Contains("Delta", baseNames);
+            Assert.That(baseNames.Count(), Is.EqualTo(3));
+            Assert.That(baseNames, Does.Contain("Alpha"));
+            Assert.That(baseNames, Does.Contain("Beta"));
+            Assert.That(baseNames, Does.Contain("Delta"));
         }
 
         [Test]
@@ -86,10 +89,10 @@ namespace Spark.FileSystem
             var source = viewFolder.GetViewSource(Path.Combine("Home", "Index.spark"));
             using (var stream = source.OpenViewStream())
             {
-                using(var reader = new StreamReader(stream))
+                using (var reader = new StreamReader(stream))
                 {
                     var contents = reader.ReadToEnd();
-                    Assert.AreEqual("this is the file contents", contents);
+                    Assert.That(contents, Is.EqualTo("this is the file contents"));
                 }
             }
         }
@@ -104,18 +107,18 @@ namespace Spark.FileSystem
 
             var source1 = viewFolder.GetViewSource(Path.Combine("Home", "Index.spark"));
             var lastModified1 = source1.LastModified;
-            
+
             viewFolder.Set(Path.Combine("Home", "Index.spark"), "this is the file contents");
             var source2 = viewFolder.GetViewSource(Path.Combine("Home", "Index.spark"));
             var lastModified2 = source2.LastModified;
 
-            Assert.AreNotEqual(lastModified1, lastModified2);
+            Assert.That(lastModified2, Is.Not.EqualTo(lastModified1));
 
             var lastModified1b = source1.LastModified;
             var lastModified2b = source1.LastModified;
 
-            Assert.AreNotEqual(lastModified1, lastModified1b);
-            Assert.AreEqual(lastModified1b, lastModified2b);
+            Assert.That(lastModified1b, Is.Not.EqualTo(lastModified1));
+            Assert.That(lastModified2b, Is.EqualTo(lastModified1b));
         }
 
         [Test]
@@ -139,7 +142,7 @@ namespace Spark.FileSystem
             descriptor.Templates.Add(Path.Combine("home", "index.spark"));
             var view = engine.CreateInstance(descriptor);
             var contents = view.RenderView();
-            Assert.AreEqual("<p>Hello world</p>", contents);
+            Assert.That(contents, Is.EqualTo("<p>Hello world</p>"));
         }
 
         private static string ReadToEnd(IViewFolder viewFolder, string path)
@@ -159,7 +162,7 @@ namespace Spark.FileSystem
                 .AddTemplate(path);
 
             return engine
-                .CreateInstance(descriptor)                
+                .CreateInstance(descriptor)
                 .RenderView();
         }
 
@@ -173,10 +176,13 @@ namespace Spark.FileSystem
                 { Path.Combine("Home", "ja.spark"), "\u65E5\u672C\u8A9E" }
             };
 
-            Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "fr.spark")), Is.EqualTo("Français"));
-            Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));
-            Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "ja.spark")), Is.EqualTo("日本語"));
-            
+            Assert.Multiple(() =>
+            {
+                Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "fr.spark")), Is.EqualTo("Français"));
+                Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));
+                Assert.That(ReadToEnd(viewFolder, Path.Combine("Home", "ja.spark")), Is.EqualTo("日本語"));
+            });
+
             var settings = new SparkSettings().SetBaseClassTypeName(typeof(StubSparkView));
 
             var sp = new ServiceCollection()
@@ -186,9 +192,12 @@ namespace Spark.FileSystem
 
             var engine = sp.GetService<ISparkViewEngine>();
 
-            Assert.That(RenderView(engine, Path.Combine("Home", "fr.spark")), Is.EqualTo("Français"));
-            Assert.That(RenderView(engine, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));
-            Assert.That(RenderView(engine, Path.Combine("Home", "ja.spark")), Is.EqualTo("日本語"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(RenderView(engine, Path.Combine("Home", "fr.spark")), Is.EqualTo("Français"));
+                Assert.That(RenderView(engine, Path.Combine("Home", "ru.spark")), Is.EqualTo("Русский"));
+                Assert.That(RenderView(engine, Path.Combine("Home", "ja.spark")), Is.EqualTo("日本語"));
+            });
         }
     }
 }

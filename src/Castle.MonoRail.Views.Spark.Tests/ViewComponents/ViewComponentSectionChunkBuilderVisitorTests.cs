@@ -31,13 +31,16 @@ namespace Castle.MonoRail.Views.Spark.Tests.ViewComponents
             var nodes = grammar.Nodes(new Position(new SourceContext(
                                                        "<foo>1<tr>2<td>3</foo> <bar>4</td>5</tr>6</bar> stuff <baaz>yadda<baaz></baaz><quux><quux/></baaz>")));
             var details = new ViewComponentDetailsAttribute("Testing") { Sections = "foo,baaz,bar,quux" };
-            var visitor = new ViewComponentVisitor(new ChunkBuilderVisitor(new VisitorContext{Paint=nodes.Rest.GetPaint()}), new ViewComponentInfo { Details = details });
+            var visitor = new ViewComponentVisitor(new ChunkBuilderVisitor(new VisitorContext { Paint = nodes.Rest.GetPaint() }), new ViewComponentInfo { Details = details });
             visitor.Accept(nodes.Value);
-            Assert.AreEqual(3, visitor.Sections.Count);
+            Assert.That(visitor.Sections.Count, Is.EqualTo(3));
 
-            Assert.AreEqual(1, visitor.Sections["foo"].Count);
+            Assert.Multiple(() =>
+            {
+                Assert.That(visitor.Sections["foo"].Count, Is.EqualTo(1));
 
-            Assert.AreEqual("1<tr>2<td>3", ((SendLiteralChunk)visitor.Sections["foo"][0]).Text);
+                Assert.That(((SendLiteralChunk)visitor.Sections["foo"][0]).Text, Is.EqualTo("1<tr>2<td>3"));
+            });
         }
 
 

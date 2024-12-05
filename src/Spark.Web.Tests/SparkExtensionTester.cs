@@ -51,7 +51,7 @@ namespace Spark
             var descriptor = new SparkViewDescriptor();
             descriptor.Templates.Add(Path.Combine("Home", "extensionelements.spark"));
             var entry = engine.CreateEntry(descriptor);
-            Assert.That(entry.SourceCode.Contains("//this was a test"));
+            Assert.That(entry.SourceCode, Does.Contain("//this was a test"));
         }
     }
 
@@ -71,7 +71,7 @@ namespace Spark
     internal class TestExtension : ISparkExtension
     {
         public void VisitNode(INodeVisitor visitor, IList<Node> body, IList<Chunk> chunks)
-        {   
+        {
         }
 
         public void VisitChunk(IChunkVisitor visitor, OutputLocation location, IList<Chunk> chunks, StringBuilder output)

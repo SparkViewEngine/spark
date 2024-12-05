@@ -25,7 +25,7 @@ namespace Spark
         {
             var manager = new DefaultResourcePathManager(new SparkSettings());
             var path = manager.GetResourcePath("", "/content/js/jquery.1.2.6.js");
-            Assert.AreEqual("/content/js/jquery.1.2.6.js", path);
+            Assert.That(path, Is.EqualTo("/content/js/jquery.1.2.6.js"));
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace Spark
         {
             var manager = new DefaultResourcePathManager(new SparkSettings());
             var path = manager.GetResourcePath("/my/webapp", "/content/js/jquery.1.2.6.js");
-            Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);
+            Assert.That(path, Is.EqualTo("/my/webapp/content/js/jquery.1.2.6.js"));
         }
 
         [Test]
@@ -42,18 +42,18 @@ namespace Spark
             var manager = new DefaultResourcePathManager(new SparkSettings());
 
             var path = manager.GetResourcePath("/my/webapp", "content/js/jquery.1.2.6.js");
-            Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);
+            Assert.That(path, Is.EqualTo("/my/webapp/content/js/jquery.1.2.6.js"));
 
             path = manager.GetResourcePath("/my/webapp/", "/content/js/jquery.1.2.6.js");
-            Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);
+            Assert.That(path, Is.EqualTo("/my/webapp/content/js/jquery.1.2.6.js"));
         }
-        
+
         [Test]
         public void TildePrefixedPathMorphAsSiteRootPrependedByDefault()
         {
             var manager = new DefaultResourcePathManager(new SparkSettings());
             var path = manager.GetResourcePath("/my/webapp", "~/content/js/jquery.1.2.6.js");
-            Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);   
+            Assert.That(path, Is.EqualTo("/my/webapp/content/js/jquery.1.2.6.js"));
         }
 
         [Test]
@@ -65,15 +65,15 @@ namespace Spark
             var manager = new DefaultResourcePathManager(settings);
 
             var path = manager.GetResourcePath("/my/webapp", "/js/jquery.1.2.6.js");
-            Assert.AreEqual("/my/webapp/content/js/jquery.1.2.6.js", path);
+            Assert.That(path, Is.EqualTo("/my/webapp/content/js/jquery.1.2.6.js"));
 
             settings.AddResourceMapping("/ftpmirror", "/ftp/mymyrror.com", false);
             settings.AddResourceMapping("/ftp/", "ftp://");
 
             var path2 = manager.GetResourcePath("/my/webapp", "/ftpmirror/1.zip");
-            Assert.AreEqual("ftp://mymyrror.com/1.zip", path2);
+            Assert.That(path2, Is.EqualTo("ftp://mymyrror.com/1.zip"));
         }
-        
+
         [Test]
         public void ReplacingJustSomePrefixes()
         {
@@ -83,10 +83,10 @@ namespace Spark
             var manager = new DefaultResourcePathManager(settings);
 
             var path = manager.GetResourcePath("/my/webapp", "/content/js/jquery.1.2.6.js");
-            Assert.AreEqual("http://my.cdn.com/myaccount/content/js/jquery.1.2.6.js", path);
+            Assert.That(path, Is.EqualTo("http://my.cdn.com/myaccount/content/js/jquery.1.2.6.js"));
 
             var path2 = manager.GetResourcePath("/my/webapp", "/content/css/yadda.css");
-            Assert.AreEqual("/my/webapp/content/css/yadda.css", path2);
+            Assert.That(path2, Is.EqualTo("/my/webapp/content/css/yadda.css"));
         }
 
         [Test]
@@ -98,10 +98,13 @@ namespace Spark
             var path3 = manager.PathConcat("foo", "/bar");
             var path4 = manager.PathConcat("foo/", "/bar");
 
-            Assert.That(path1, Is.EqualTo("foo/bar"));
-            Assert.That(path2, Is.EqualTo("foo/bar"));
-            Assert.That(path3, Is.EqualTo("foo/bar"));
-            Assert.That(path4, Is.EqualTo("foo/bar"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(path1, Is.EqualTo("foo/bar"));
+                Assert.That(path2, Is.EqualTo("foo/bar"));
+                Assert.That(path3, Is.EqualTo("foo/bar"));
+                Assert.That(path4, Is.EqualTo("foo/bar"));
+            });
         }
 
         [Test]
@@ -113,10 +116,10 @@ namespace Spark
             var manager = new DefaultResourcePathManager(settings);
 
             var path = manager.GetResourcePath("/my/webapp", "~/content/js/jquery.1.2.6.js");
-            Assert.AreEqual("http://my.cdn.com/myaccount/content/js/jquery.1.2.6.js", path);
+            Assert.That(path, Is.EqualTo("http://my.cdn.com/myaccount/content/js/jquery.1.2.6.js"));
 
             var path2 = manager.GetResourcePath("/my/webapp", "~/content/css/yadda.css");
-            Assert.AreEqual("/my/webapp/content/css/yadda.css", path2);
+            Assert.That(path2, Is.EqualTo("/my/webapp/content/css/yadda.css"));
         }
     }
 }

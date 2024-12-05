@@ -48,7 +48,7 @@ namespace Spark
             foreach (string value in values)
             {
                 int nextIndex = content.IndexOf(value, index);
-                Assert.GreaterOrEqual(nextIndex, 0, string.Format("Looking for {0}", value));
+                Assert.That(nextIndex, Is.GreaterThanOrEqualTo(0), () => $"Looking for {value}");
                 index = nextIndex + value.Length;
             }
         }
@@ -128,11 +128,11 @@ namespace Spark
                 "ok3",
                 "ok4");
 
-            Assert.IsFalse(output.ToString().Contains("fail"));
-            Assert.IsFalse(output.ToString().Contains("if"));
-            Assert.IsFalse(output.ToString().Contains("else"));
-            Assert.IsFalse(output.ToString().Contains("condition"));
-            Assert.IsFalse(output.ToString().Contains("unless fail"));
+            Assert.That(output.ToString(), Does.Not.Contain("fail"));
+            Assert.That(output.ToString(), Does.Not.Contain("if"));
+            Assert.That(output.ToString(), Does.Not.Contain("else"));
+            Assert.That(output.ToString(), Does.Not.Contain("condition"));
+            Assert.That(output.ToString(), Does.Not.Contain("unless fail"));
         }
 
         [Test]
