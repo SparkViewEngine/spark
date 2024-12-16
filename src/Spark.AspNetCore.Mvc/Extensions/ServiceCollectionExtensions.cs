@@ -34,37 +34,37 @@ namespace Spark.AspNetCore.Mvc.Extensions
                 services.Configure(setupAction);
             }
 
-            // TODO: Reduce memory consumption cause by loading the assembly of the views compiled dynamically
             services
-                .AddSingleton<ISparkLanguageFactory, DefaultLanguageFactory>()
-                .AddSingleton<IRoslynCompilationLink, CSharpLink>()
-                .AddSingleton<IRoslynCompilationLink, VisualBasicLink>()
-                .AddSingleton<IBatchCompiler, RoslynBatchCompiler>();
+                .AddScoped<ISparkLanguageFactory, DefaultLanguageFactory>()
+                .AddScoped<IRoslynCompilationLink, CSharpLink>()
+                .AddScoped<IRoslynCompilationLink, VisualBasicLink>()
+                .AddScoped<IBatchCompiler, RoslynBatchCompiler>();
 
             services
-                .AddSingleton<Spark.ISparkViewEngine, Spark.SparkViewEngine>()
-                .AddSingleton<ISparkSyntaxProvider, DefaultSyntaxProvider>()
+                .AddScoped<Spark.ISparkViewEngine, Spark.SparkViewEngine>()
+                .AddScoped<ISparkSyntaxProvider, DefaultSyntaxProvider>()
                 .AddSingleton<IViewActivatorFactory, DefaultViewActivator>()
                 .AddSingleton<IResourcePathManager, DefaultResourcePathManager>()
                 .AddSingleton<ITemplateLocator, DefaultTemplateLocator>()
-                .AddSingleton<IBindingProvider, DefaultBindingProvider>()
+                .AddScoped<IBindingProvider, DefaultBindingProvider>()
                 .AddSingleton<IViewFolder>(f => f.GetService<ISparkSettings>().CreateDefaultViewFolder())
                 .AddSingleton<ICompiledViewHolder, CompiledViewHolder>()
                 .AddSingleton<IPartialProvider, DefaultPartialProvider>()
                 .AddSingleton<IPartialReferenceProvider, DefaultPartialReferenceProvider>();
 
-            services.AddSingleton<ISparkExtensionFactory>(c => null);
+            services
+                .AddSingleton<ISparkExtensionFactory>(f => null);
 
             services
                 .AddSingleton<IDescriptorBuilder, AspNetCoreDescriptorBuilder>();
 
             services
-                .AddSingleton<ISparkPrecompiler, SparkPrecompiler>();
+                .AddScoped<ISparkPrecompiler, SparkPrecompiler>();
 
             services
                 .AddTransient<IConfigureOptions<MvcOptions>, SparkMvcOptionsSetup>()
                 .AddTransient<IConfigureOptions<MvcViewOptions>, SparkMvcViewOptionsSetup>()
-                .AddSingleton<ISparkViewEngine, SparkViewEngine>();
+                .AddScoped<ISparkViewEngine, SparkViewEngine>();
 
             return services;
         }
