@@ -1,17 +1,15 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: CI
+name: Release to NuGet
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  release:
+    types: [published]
 
 jobs:
   build:
-
+    
     runs-on: windows-2019
 
     steps:
@@ -32,4 +30,12 @@ jobs:
       run: |
         cd src
         dotnet test --no-build --verbosity normal spark-ci.slnf
+    - name: Pack
+      run: |
+        cd src
+        dotnet pack spark-pack.slnf
+    - name: Push to NuGet
+      run: |
+        cd src
+        dotnet nuget push "*.nupkg" --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json
     
