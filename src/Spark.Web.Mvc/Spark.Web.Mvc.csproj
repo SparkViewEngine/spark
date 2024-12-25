@@ -7,8 +7,9 @@
     <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <IsPackable>True</IsPackable>
     <AssemblyVersion>1.8.2.0</AssemblyVersion>
-    <Version>1.8.2.0-alpha</Version>
-    <FileVersion>1.8.2.0-alpha</FileVersion>
+    <VersionPrefix>1.8.2.0</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
+    <FileVersion>1.8.2.0</FileVersion>
     <Authors>RobertTheGrey</Authors>
     <Company>Louis DeJardin</Company>
     <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
