@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -33,6 +33,8 @@ jobs:
     - name: Pack
       run: |
         cd src
+        choco install visualstudio2022buildtools
+        choco install visualstudio2022-workload-webbuildtools
         dotnet pack spark-pack.slnf --include-symbols --output nupkgs --no-build
     - name: Push to NuGet
       run: |
