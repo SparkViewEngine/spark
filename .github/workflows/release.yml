@@ -25,17 +25,17 @@ jobs:
     - name: Build
       run: |
         cd src
-        dotnet build --no-restore spark-ci.slnf
+        dotnet build spark-ci.slnf --no-restore
     - name: Test
       run: |
         cd src
-        dotnet test --no-build --verbosity normal spark-ci.slnf
+        dotnet test spark-ci.slnf --verbosity normal --no-build  
     - name: Pack
       run: |
         cd src
-        dotnet pack spark-pack.slnf
+        dotnet pack spark-pack.slnf --include-symbols --output nupkgs --no-build
     - name: Push to NuGet
       run: |
-        cd src
-        dotnet nuget push "*.nupkg" --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json
+        cd src/nupkgs
+        dotnet nuget push "**/*.nupkg" -s --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json -v
     
