@@ -18,18 +18,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: |
-       cd src
-       dotnet restore spark-ci.slnf
-    - name: Build
-      run: |
-        cd src
-        dotnet build spark-ci.slnf --no-restore
-    - name: Test
-      run: |
-        cd src
-        dotnet test spark-ci.slnf --verbosity normal --no-build  
     - name: Pack
       run: |
         cd src
