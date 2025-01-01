@@ -33,10 +33,7 @@ jobs:
     - name: Pack
       run: |
         cd src
-        dotnet pack Spark/Spark.csproj --include-symbols --output nupkgs --no-build
-        dotnet pack Spark.Web/Spark.Web.csproj --include-symbols --output nupkgs --no-build
-        dotnet pack Spark.Web.Mvc/Spark.Web.Mvc.csproj --include-symbols --output nupkgs --no-build
-        dotnet pack Spark.AspNetCore.Mvc/Spark.AspNetCore.MVc.csproj --include-symbols --output nupkgs --no-build
+        dotnet pack spark-pack.slnf --include-symbols --output nupkgs --no-build
     - name: Push to NuGet
       run: |
         cd src/nupkgs

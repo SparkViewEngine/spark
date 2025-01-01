@@ -20,12 +20,4 @@
 	  <Reference Include="System.Web" />
 	  <Reference Include="System.Web.Services" />
 	</ItemGroup>
-
-	<PropertyGroup>
-		<VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-		<VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-	</PropertyGroup>
-	<!-- order is important! -->
-	<Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
-	<Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" />
 </Project>
