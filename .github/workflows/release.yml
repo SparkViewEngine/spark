@@ -33,7 +33,7 @@ jobs:
     - name: Pack
       run: |
         cd src
-        dotnet pack spark-pack.slnf --include-symbols --output nupkgs --no-build
+        dotnet pack spark-pack.slnf --include-symbols --output nupkgs
     - name: Push to NuGet
       run: |
         cd src/nupkgs
