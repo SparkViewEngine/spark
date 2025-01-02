@@ -12,6 +12,7 @@
     <FileVersion>1.8.2.0</FileVersion>
     <Authors>RobertTheGrey</Authors>
     <Company>Louis DeJardin</Company>
+    <PackageId>Spark.Web.Mvc5</PackageId>
     <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/SparkViewEngine/spark</RepositoryUrl>
