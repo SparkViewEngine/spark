@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <OutputType>Exe</OutputType>
@@ -21,7 +21,7 @@
     <Description>Spark is a view engine allowing the HTML to dominate the flow and any code to fit seamlessly.</Description>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spark.Web\Spark.Web.csproj" />
+    <ProjectReference Include="..\Spark.WebLib\Spark.WebLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="XparkSamples\diggstyle.css">

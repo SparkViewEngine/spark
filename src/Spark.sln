@@ -57,9 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.MonoRail.Pdf", "Cast
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.MonoRail.Pdf.Tests", "Castle.Monorail.Pdf.Tests\Castle.MonoRail.Pdf.Tests.csproj", "{0FEC123E-DFD8-4DB0-9FC7-6C2EF2897FAD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.Web", "Spark.Web\Spark.Web.csproj", "{4A68431B-ADD3-4F99-9121-2DF0C5C93BC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.WebLib", "Spark.WebLib\Spark.WebLib.csproj", "{4A68431B-ADD3-4F99-9121-2DF0C5C93BC3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.Web.Tests", "Spark.Web.Tests\Spark.Web.Tests.csproj", "{58EE303C-D806-4917-9CA8-C2B10594A1AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spark.WebLib.Tests", "Spark.WebLib.Tests\Spark.WebLib.Tests.csproj", "{58EE303C-D806-4917-9CA8-C2B10594A1AA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AspNetCore", "AspNetCore", "{50B212B0-9638-4392-9B99-38278C1AC9BC}"
 EndProject
