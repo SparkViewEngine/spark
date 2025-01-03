@@ -7,10 +7,10 @@
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <IsPackable>True</IsPackable>
-    <AssemblyVersion>1.8.2.0</AssemblyVersion>
-    <VersionPrefix>1.8.2.0</VersionPrefix>
+    <AssemblyVersion>1.8.2.1</AssemblyVersion>
+    <VersionPrefix>1.8.2.1</VersionPrefix>
     <VersionSuffix>alpha</VersionSuffix>
-    <FileVersion>1.8.2.0</FileVersion>
+    <FileVersion>1.8.2.1</FileVersion>
     <Authors>RobertTheGrey</Authors>
     <Company>Louis DeJardin</Company>
     <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
