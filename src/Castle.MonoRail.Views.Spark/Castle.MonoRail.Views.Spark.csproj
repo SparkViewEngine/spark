@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net48</TargetFramework>
@@ -42,7 +42,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spark.Web\Spark.Web.csproj" />
+    <ProjectReference Include="..\Spark.WebLib\Spark.WebLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\license.txt">

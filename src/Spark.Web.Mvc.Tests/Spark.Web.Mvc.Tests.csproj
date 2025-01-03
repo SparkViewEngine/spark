@@ -22,7 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark.Web.Mvc\Spark.Web.Mvc.csproj" />
-    <ProjectReference Include="..\Spark.Web.Tests\Spark.Web.Tests.csproj" />
+    <ProjectReference Include="..\Spark.WebLib.Tests\Spark.WebLib.Tests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="AspNetMvc.Tests.Views\Admin\Home\Index.spark">

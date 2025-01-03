@@ -30,6 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spark.Python\Spark.Python.csproj" />
-    <ProjectReference Include="..\Spark.Web.Tests\Spark.Web.Tests.csproj" />
+    <ProjectReference Include="..\Spark.WebLib.Tests\Spark.WebLib.Tests.csproj" />
   </ItemGroup>
 </Project>

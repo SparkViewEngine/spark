@@ -18,8 +18,6 @@
       "Spark.Web.Mvc.Ruby\\Spark.Web.Mvc.Ruby.csproj",
       "Spark.Web.Mvc.Tests\\Spark.Web.Mvc.Tests.csproj",
       "Spark.Web.Mvc\\Spark.Web.Mvc.csproj",
-      "Spark.Web.Tests\\Spark.Web.Tests.csproj",
-      "Spark.Web\\Spark.Web.csproj",
       "Spark\\Spark.csproj",
       "Xpark\\Xpark.csproj"
     ]
