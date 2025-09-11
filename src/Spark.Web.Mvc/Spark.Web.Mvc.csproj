@@ -6,10 +6,10 @@
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <IsPackable>True</IsPackable>
-    <AssemblyVersion>1.8.2.3</AssemblyVersion>
-    <VersionPrefix>1.8.2.3</VersionPrefix>
+    <AssemblyVersion>1.8.2.4</AssemblyVersion>
+    <VersionPrefix>1.8.2.4</VersionPrefix>
     <VersionSuffix>alpha</VersionSuffix>
-    <FileVersion>1.8.2.3</FileVersion>
+    <FileVersion>1.8.2.4</FileVersion>
     <Authors>RobertTheGrey</Authors>
     <Company>Louis DeJardin</Company>
     <PackageId>Spark.Web.Mvc5</PackageId>
