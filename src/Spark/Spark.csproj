@@ -7,10 +7,10 @@
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>..\SparkKey.snk</AssemblyOriginatorKeyFile>
     <IsPackable>True</IsPackable>
-    <AssemblyVersion>1.8.2.2</AssemblyVersion>
-    <VersionPrefix>1.8.2.2</VersionPrefix>
+    <AssemblyVersion>1.8.2.3</AssemblyVersion>
+    <VersionPrefix>1.8.2.3</VersionPrefix>
     <VersionSuffix>alpha</VersionSuffix>
-    <FileVersion>1.8.2.2</FileVersion>
+    <FileVersion>1.8.2.3</FileVersion>
     <Authors>RobertTheGrey</Authors>
     <Company>Louis DeJardin</Company>
     <PackageProjectUrl>https://github.com/SparkViewEngine/</PackageProjectUrl>
@@ -29,9 +29,9 @@
     <PackageReference Include="MarkdownSharp" Version="2.0.5" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.14.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.9" />
     <PackageReference Include="System.CodeDom" Version="8.0.0" Condition="'${TargetFramework}' == 'net48'" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.5" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.9" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Compiler\NodeVisitors\FileReferenceVisitor.cs" />
